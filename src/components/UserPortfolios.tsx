@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { createClient } from "@/lib/supabase-browser"
 import { Plus, Briefcase, Users, MessageCircle, ChevronRight, TrendingUp, TrendingDown } from "lucide-react"
 import { getSymbolColor, getClearbitLogoFromSymbol } from "@/lib/logoService"
+import { calculatePortfolioValueWithConversion, formatCurrencyValue, convertCurrency } from "@/lib/currencyUtils"
 import type { User } from "@supabase/supabase-js"
 
 interface Investment {
@@ -334,17 +335,18 @@ export default function UserPortfolios() {
     setCreating(false)
   }
 
-  const calculatePortfolioValue = (investments: Investment[]) => {
-    return investments.reduce((sum, inv) => sum + (inv.market_value || 0), 0)
+  // Calculate portfolio value with proper currency conversion
+  const getPortfolioStats = (investments: Investment[], currency: string) => {
+    return calculatePortfolioValueWithConversion(investments, currency)
   }
 
   const formatCurrency = (value: number, currency: string = 'USD') => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency,
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(value)
+    return formatCurrencyValue(value, currency)
+  }
+
+  // Convert individual holding value from USD to portfolio currency
+  const getHoldingValueInCurrency = (valueUSD: number, currency: string) => {
+    return convertCurrency(valueUSD, 'USD', currency)
   }
 
   if (loading) {
@@ -453,8 +455,10 @@ export default function UserPortfolios() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {portfolios.map((portfolio) => {
-            const totalValue = calculatePortfolioValue(portfolio.investments)
+            // Calculate portfolio value with proper currency conversion
+            const stats = getPortfolioStats(portfolio.investments, portfolio.currency)
             const holdingsCount = portfolio.investments.length
+            const isPositive = stats.totalGainLoss >= 0
 
             return (
               <Card
@@ -495,43 +499,56 @@ export default function UserPortfolios() {
                     </div>
                   </div>
 
-                  {/* Value */}
+                  {/* Value - Now with proper currency conversion */}
                   <div className="mb-4">
                     <p className="text-3xl font-bold text-green-500 tabular-nums">
-                      {formatCurrency(totalValue, portfolio.currency)}
+                      {formatCurrency(stats.totalValueInPortfolioCurrency, portfolio.currency)}
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      {holdingsCount} {holdingsCount === 1 ? 'holding' : 'holdings'} • {portfolio.currency}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm text-muted-foreground">
+                        {holdingsCount} {holdingsCount === 1 ? 'holding' : 'holdings'} • {portfolio.currency}
+                      </p>
+                      {holdingsCount > 0 && (
+                        <span className={`text-xs px-1.5 py-0.5 rounded ${isPositive ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'}`}>
+                          {isPositive ? '+' : ''}{stats.totalGainLossPercent.toFixed(1)}%
+                        </span>
+                      )}
+                    </div>
                   </div>
 
-                  {/* Holdings Preview */}
+                  {/* Holdings Preview - Values in portfolio currency */}
                   {holdingsCount > 0 ? (
                     <div className="space-y-2 pt-4 border-t border-border/50">
-                      {portfolio.investments.slice(0, 3).map((inv) => (
-                        <div key={inv.id} className="flex items-center gap-3">
-                          <HoldingLogo symbol={inv.ticker} size={32} />
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-sm">{inv.ticker}</p>
-                            <p className="text-xs text-muted-foreground">
-                              {inv.shares} shares
-                            </p>
-                          </div>
-                          <div className="text-right">
-                            <p className="font-medium text-sm tabular-nums">
-                              {inv.market_value ? `$${inv.market_value.toLocaleString(undefined, { maximumFractionDigits: 0 })}` : '-'}
-                            </p>
-                            {inv.avg_cost && inv.current_price && (
-                              <p className={`text-xs tabular-nums ${
-                                inv.current_price >= inv.avg_cost ? 'text-green-500' : 'text-red-500'
-                              }`}>
-                                {inv.current_price >= inv.avg_cost ? '+' : ''}
-                                {(((inv.current_price - inv.avg_cost) / inv.avg_cost) * 100).toFixed(1)}%
+                      {portfolio.investments.slice(0, 3).map((inv) => {
+                        // Convert holding value from USD to portfolio currency
+                        const valueUSD = inv.market_value || inv.current_value || 0
+                        const valueInCurrency = getHoldingValueInCurrency(valueUSD, portfolio.currency)
+
+                        return (
+                          <div key={inv.id} className="flex items-center gap-3">
+                            <HoldingLogo symbol={inv.ticker} size={32} />
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-sm">{inv.ticker}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {inv.shares} shares
                               </p>
-                            )}
+                            </div>
+                            <div className="text-right">
+                              <p className="font-medium text-sm tabular-nums">
+                                {formatCurrency(valueInCurrency, portfolio.currency)}
+                              </p>
+                              {inv.avg_cost && inv.current_price && (
+                                <p className={`text-xs tabular-nums ${
+                                  inv.current_price >= inv.avg_cost ? 'text-green-500' : 'text-red-500'
+                                }`}>
+                                  {inv.current_price >= inv.avg_cost ? '+' : ''}
+                                  {(((inv.current_price - inv.avg_cost) / inv.avg_cost) * 100).toFixed(1)}%
+                                </p>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        )
+                      })}
                       {holdingsCount > 3 && (
                         <div className="flex items-center justify-center gap-2 pt-2">
                           <StackedLogos holdings={portfolio.investments.slice(3)} max={3} />
