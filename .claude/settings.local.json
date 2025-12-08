@@ -34,7 +34,8 @@
       "Bash(curl:*)",
       "Bash(source /Users/sebastianbenzianolsson/Developer/quant-platform/.env.local)",
       "Bash(true echo 'Testing EODHD forex endpoint...' curl -s \"https://eodhd.com/api/real-time/USDSEK.FOREX?api_token=$EODHD_API_KEY&fmt=json\")",
-      "Bash(source .env.local)"
+      "Bash(source .env.local)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []

@@ -40,16 +40,12 @@ export async function GET(request: NextRequest) {
 
         if (response.ok) {
           const data = await response.json()
-          // The 'close' field gives {CURRENCY}/USD rate
-          // To get USD/{CURRENCY} (how many of that currency per USD), we invert
+          // EODHD {CURRENCY}.FOREX returns USD/{CURRENCY} rate directly
+          // e.g., EUR.FOREX close=0.86 means 1 USD = 0.86 EUR
+          // e.g., SEK.FOREX close=9.39 means 1 USD = 9.39 SEK
+          // e.g., JPY.FOREX close=149.5 means 1 USD = 149.5 JPY
           if (data && data.close && data.close > 0) {
-            // For currencies like EUR where close=0.86 means EUR/USD
-            // USD/EUR = 1/0.86 = 1.16 (1 USD = 1.16 EUR) - wait that's wrong
-            // Actually EUR.FOREX close=0.86 means the EUR price in USD
-            // So 1 EUR = 0.86 USD, meaning USD/EUR = 1.16
-            // But we want how many {currency} per 1 USD
-            // If 1 EUR = 0.86 USD, then 1 USD = 1/0.86 = 1.16 EUR
-            rates[currency] = 1 / parseFloat(data.close)
+            rates[currency] = parseFloat(data.close)
           }
         } else {
           console.log(`FX API: ${currency}.FOREX returned ${response.status}`)
