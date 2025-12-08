@@ -1,23 +1,5 @@
-// Fallback FX rates (USD as base) - updated periodically
-const FX_RATES_TO_USD: Record<string, number> = {
-  USD: 1,
-  EUR: 1.09,
-  SEK: 0.092,
-  GBP: 1.27,
-  JPY: 0.0067,
-  CHF: 1.14,
-  CAD: 0.74,
-  AUD: 0.66,
-  NOK: 0.094,
-  DKK: 0.146,
-  NZD: 0.61,
-  HKD: 0.128,
-  SGD: 0.75,
-  CNY: 0.14,
-  INR: 0.012,
-}
-
-const FX_RATES_FROM_USD: Record<string, number> = {
+// Fallback FX rates (USD as base) - used when API is unavailable
+const FALLBACK_FX_RATES_FROM_USD: Record<string, number> = {
   USD: 1,
   EUR: 0.92,
   SEK: 10.85,
@@ -35,6 +17,45 @@ const FX_RATES_FROM_USD: Record<string, number> = {
   INR: 83.42,
 }
 
+// Cache for real-time FX rates
+let cachedRates: Record<string, number> | null = null
+let cacheTimestamp = 0
+const CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
+
+/**
+ * Fetch real-time FX rates from EODHD via our API
+ */
+export async function fetchFXRates(): Promise<Record<string, number>> {
+  // Return cached rates if valid
+  if (cachedRates && Date.now() - cacheTimestamp < CACHE_DURATION) {
+    return cachedRates
+  }
+
+  try {
+    const response = await fetch('/api/fx')
+    if (response.ok) {
+      const data = await response.json()
+      if (data.rates) {
+        cachedRates = data.rates
+        cacheTimestamp = Date.now()
+        return data.rates
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching FX rates:', error)
+  }
+
+  // Return fallback if API fails
+  return FALLBACK_FX_RATES_FROM_USD
+}
+
+/**
+ * Get current FX rates (sync version using cache or fallback)
+ */
+export function getFXRates(): Record<string, number> {
+  return cachedRates || FALLBACK_FX_RATES_FROM_USD
+}
+
 /**
  * Convert amount from one currency to another
  */
@@ -46,12 +67,21 @@ export function convertCurrency(
   if (!amount || isNaN(amount)) return 0
   if (fromCurrency === toCurrency) return amount
 
-  // Convert to USD first, then to target currency
-  const toUSD = FX_RATES_TO_USD[fromCurrency] || 1
-  const fromUSD = FX_RATES_FROM_USD[toCurrency] || 1
+  const rates = getFXRates()
 
-  const amountInUSD = amount * toUSD
-  return amountInUSD * fromUSD
+  // USD to target currency
+  if (fromCurrency === 'USD') {
+    return amount * (rates[toCurrency] || 1)
+  }
+
+  // Source currency to USD
+  if (toCurrency === 'USD') {
+    return amount / (rates[fromCurrency] || 1)
+  }
+
+  // Cross conversion through USD
+  const amountInUSD = amount / (rates[fromCurrency] || 1)
+  return amountInUSD * (rates[toCurrency] || 1)
 }
 
 /**
@@ -59,9 +89,21 @@ export function convertCurrency(
  */
 export function getExchangeRate(fromCurrency: string, toCurrency: string): number {
   if (fromCurrency === toCurrency) return 1
-  const toUSD = FX_RATES_TO_USD[fromCurrency] || 1
-  const fromUSD = FX_RATES_FROM_USD[toCurrency] || 1
-  return toUSD * fromUSD
+
+  const rates = getFXRates()
+
+  // USD to target currency
+  if (fromCurrency === 'USD') {
+    return rates[toCurrency] || 1
+  }
+
+  // Source currency to USD
+  if (toCurrency === 'USD') {
+    return 1 / (rates[fromCurrency] || 1)
+  }
+
+  // Cross conversion through USD
+  return (rates[toCurrency] || 1) / (rates[fromCurrency] || 1)
 }
 
 /**

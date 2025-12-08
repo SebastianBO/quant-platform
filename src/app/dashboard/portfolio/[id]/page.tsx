@@ -99,33 +99,78 @@ export default function PortfolioDetailPage() {
 
   const fetchPortfolioDetails = useCallback(async () => {
     try {
-      // Direct query with correct field names
-      const { data: portfolioData, error: queryError } = await supabase
-        .from('portfolios')
-        .select(`
-          *,
-          investments (
-            id,
-            asset_identifier,
-            quantity,
-            purchase_price,
-            total_cost_basis,
-            current_price,
-            current_value
-          )
-        `)
-        .eq('id', portfolioId)
-        .single()
+      console.log('[PortfolioDetail] Fetching portfolio:', portfolioId)
 
-      if (queryError) {
-        console.error('Error fetching portfolio:', queryError)
-        setError('Portfolio not found')
+      // Check auth status first
+      const { data: { user } } = await supabase.auth.getUser()
+      console.log('[PortfolioDetail] Auth user:', user?.id)
+
+      if (!user) {
+        console.log('[PortfolioDetail] No authenticated user')
+        setError('Please sign in to view this portfolio')
         setLoading(false)
         return
       }
 
+      // First try to get the portfolio without investments to see if we have access
+      const { data: portfolioOnly, error: portfolioError } = await supabase
+        .from('portfolios')
+        .select('*')
+        .eq('id', portfolioId)
+        .maybeSingle()
+
+      console.log('[PortfolioDetail] Portfolio query result:', portfolioOnly, portfolioError)
+
+      if (portfolioError) {
+        console.error('[PortfolioDetail] Error fetching portfolio:', portfolioError)
+        setError('Error loading portfolio')
+        setLoading(false)
+        return
+      }
+
+      if (!portfolioOnly) {
+        // Check if user has member access
+        const { data: membership } = await supabase
+          .from('portfolio_members')
+          .select('portfolio_id')
+          .eq('portfolio_id', portfolioId)
+          .eq('user_id', user.id)
+          .eq('status', 'accepted')
+          .maybeSingle()
+
+        if (!membership) {
+          console.log('[PortfolioDetail] No access to portfolio')
+          setError('Portfolio not found or access denied')
+          setLoading(false)
+          return
+        }
+
+        // Try fetching again with member access
+        const { data: memberPortfolio } = await supabase
+          .from('portfolios')
+          .select('*')
+          .eq('id', portfolioId)
+          .maybeSingle()
+
+        if (!memberPortfolio) {
+          setError('Portfolio not found')
+          setLoading(false)
+          return
+        }
+      }
+
+      const portfolioData = portfolioOnly
+
+      // Fetch investments separately (more reliable with RLS)
+      const { data: investmentsData, error: investmentsError } = await supabase
+        .from('investments')
+        .select('*')
+        .eq('portfolio_id', portfolioId)
+
+      console.log('[PortfolioDetail] Investments:', investmentsData?.length || 0, investmentsError)
+
       // Map to consistent format
-      const investments = (portfolioData.investments || []).map((inv: any) => ({
+      const investments = (investmentsData || []).map((inv: any) => ({
         id: inv.id,
         ticker: inv.asset_identifier,
         asset_identifier: inv.asset_identifier,
@@ -142,8 +187,9 @@ export default function PortfolioDetailPage() {
         ...portfolioData,
         investments
       })
+      setError(null)
     } catch (err) {
-      console.error('Error:', err)
+      console.error('[PortfolioDetail] Error:', err)
       setError('Failed to load portfolio')
     }
     setLoading(false)

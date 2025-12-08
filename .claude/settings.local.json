@@ -28,7 +28,13 @@
       "Bash(npm uninstall:*)",
       "Skill(frontend-design:frontend-design)",
       "mcp__plugin_supabase-toolkit_supabase__list_tables",
-      "WebFetch(domain:quant-platform-ir96ioh5r-finance-liciancoms-projects.vercel.app)"
+      "WebFetch(domain:quant-platform-ir96ioh5r-finance-liciancoms-projects.vercel.app)",
+      "WebSearch",
+      "WebFetch(domain:eodhd.com)",
+      "Bash(curl:*)",
+      "Bash(source /Users/sebastianbenzianolsson/Developer/quant-platform/.env.local)",
+      "Bash(true echo 'Testing EODHD forex endpoint...' curl -s \"https://eodhd.com/api/real-time/USDSEK.FOREX?api_token=$EODHD_API_KEY&fmt=json\")",
+      "Bash(source .env.local)"
     ],
     "deny": [],
     "ask": []
