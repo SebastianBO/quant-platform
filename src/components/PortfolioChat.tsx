@@ -1,7 +1,8 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
-import { useChat } from "ai/react"
+import { useState, useRef, useEffect, FormEvent, useMemo } from "react"
+import { useChat, UIMessage } from "@ai-sdk/react"
+import { DefaultChatTransport } from "ai"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -28,29 +29,56 @@ interface PortfolioChatProps {
 export default function PortfolioChat({ portfolioContext }: PortfolioChatProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [isMinimized, setIsMinimized] = useState(false)
+  const [input, setInput] = useState("")
   const scrollRef = useRef<HTMLDivElement>(null)
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading, error } = useChat({
+  const welcomeText = portfolioContext
+    ? `Hi! I'm your AI assistant for the "${portfolioContext.name}" portfolio. I can help you analyze your ${portfolioContext.positionCount} positions worth ${new Intl.NumberFormat('en-US', { style: 'currency', currency: portfolioContext.currency }).format(portfolioContext.totalValue)}. What would you like to know?`
+    : "Hi! I'm your AI financial assistant. How can I help you today?"
+
+  const initialMessages: UIMessage[] = [
+    {
+      id: "welcome",
+      role: "assistant",
+      parts: [{ type: "text" as const, text: welcomeText }],
+    },
+  ]
+
+  const transport = useMemo(() => new DefaultChatTransport({
     api: "/api/chat",
     body: {
       portfolioContext,
     },
-    initialMessages: portfolioContext
-      ? [
-          {
-            id: "welcome",
-            role: "assistant",
-            content: `Hi! I'm your AI assistant for the "${portfolioContext.name}" portfolio. I can help you analyze your ${portfolioContext.positionCount} positions worth ${new Intl.NumberFormat('en-US', { style: 'currency', currency: portfolioContext.currency }).format(portfolioContext.totalValue)}. What would you like to know?`,
-          },
-        ]
-      : [
-          {
-            id: "welcome",
-            role: "assistant",
-            content: "Hi! I'm your AI financial assistant. How can I help you today?",
-          },
-        ],
+  }), [portfolioContext])
+
+  const { messages, sendMessage, status, error } = useChat({
+    transport,
+    messages: initialMessages,
   })
+
+  const isLoading = status === "streaming" || status === "submitted"
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault()
+    if (!input.trim() || isLoading) return
+    sendMessage({
+      parts: [{ type: "text" as const, text: input }],
+      role: "user"
+    })
+    setInput("")
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value)
+  }
+
+  // Helper to get text content from message parts
+  const getMessageText = (message: UIMessage): string => {
+    return message.parts
+      .filter((part): part is { type: "text"; text: string } => part.type === "text")
+      .map((part) => part.text)
+      .join("")
+  }
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -140,7 +168,7 @@ export default function PortfolioChat({ portfolioContext }: PortfolioChatProps) 
                         : "bg-secondary"
                     }`}
                   >
-                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                    <p className="text-sm whitespace-pre-wrap">{getMessageText(message)}</p>
                   </div>
                   {message.role === "user" && (
                     <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">

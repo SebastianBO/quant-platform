@@ -17,6 +17,51 @@ import {
   MoreVertical
 } from "lucide-react"
 import PortfolioChat from "@/components/PortfolioChat"
+import { getSymbolColor, getClearbitLogoFromSymbol } from "@/lib/logoService"
+
+// Stock logo component with EODHD → Clearbit → fallback
+function HoldingLogo({ symbol, size = 40 }: { symbol: string; size?: number }) {
+  const [logoState, setLogoState] = useState<'eodhd' | 'clearbit' | 'fallback'>('eodhd')
+  const eohdUrl = `https://eodhistoricaldata.com/img/logos/US/${symbol.toUpperCase()}.png`
+  const clearbitUrl = getClearbitLogoFromSymbol(symbol)
+  const color = getSymbolColor(symbol)
+
+  const handleError = () => {
+    if (logoState === 'eodhd' && clearbitUrl) {
+      setLogoState('clearbit')
+    } else {
+      setLogoState('fallback')
+    }
+  }
+
+  if (logoState === 'fallback') {
+    return (
+      <div
+        className="rounded-full flex items-center justify-center font-bold text-white"
+        style={{
+          width: size,
+          height: size,
+          backgroundColor: color,
+          fontSize: size * 0.4
+        }}
+      >
+        {symbol.charAt(0)}
+      </div>
+    )
+  }
+
+  const currentUrl = logoState === 'eodhd' ? eohdUrl : clearbitUrl
+
+  return (
+    <img
+      src={currentUrl || eohdUrl}
+      alt={symbol}
+      className="rounded-full object-cover bg-white"
+      style={{ width: size, height: size }}
+      onError={handleError}
+    />
+  )
+}
 
 interface Investment {
   id: string
@@ -54,55 +99,19 @@ export default function PortfolioDetailPage() {
 
   const fetchPortfolioDetails = useCallback(async () => {
     try {
-      // Try RPC function first
-      const { data: rpcData, error: rpcError } = await supabase
-        .rpc('get_portfolio_by_id', {
-          p_portfolio_id: portfolioId,
-          include_holdings: true
-        })
-
-      if (!rpcError && rpcData) {
-        let portfolioData = typeof rpcData === 'string' ? JSON.parse(rpcData) : rpcData
-        if (Array.isArray(portfolioData)) {
-          portfolioData = portfolioData[0]
-        }
-
-        // Map holdings to investments
-        const investments = (portfolioData.holdings || []).map((h: any) => ({
-          id: h.id,
-          ticker: h.ticker || h.asset_identifier,
-          asset_identifier: h.asset_identifier,
-          shares: h.shares || h.quantity,
-          quantity: h.quantity,
-          avg_cost: h.avg_cost || h.average_cost || h.purchase_price,
-          purchase_price: h.purchase_price,
-          current_price: h.current_price,
-          market_value: h.market_value || h.current_value,
-          company_name: h.company_name || h.asset_name
-        }))
-
-        setPortfolio({
-          ...portfolioData,
-          investments
-        })
-        setLoading(false)
-        return
-      }
-
-      console.log('RPC failed, falling back to direct query:', rpcError)
-
-      // Fallback: Direct query
+      // Direct query with correct field names
       const { data: portfolioData, error: queryError } = await supabase
         .from('portfolios')
         .select(`
           *,
           investments (
             id,
-            ticker,
-            shares,
-            avg_cost,
+            asset_identifier,
+            quantity,
+            purchase_price,
+            total_cost_basis,
             current_price,
-            market_value
+            current_value
           )
         `)
         .eq('id', portfolioId)
@@ -115,7 +124,24 @@ export default function PortfolioDetailPage() {
         return
       }
 
-      setPortfolio(portfolioData)
+      // Map to consistent format
+      const investments = (portfolioData.investments || []).map((inv: any) => ({
+        id: inv.id,
+        ticker: inv.asset_identifier,
+        asset_identifier: inv.asset_identifier,
+        shares: inv.quantity || 0,
+        quantity: inv.quantity,
+        avg_cost: inv.purchase_price,
+        purchase_price: inv.purchase_price,
+        current_price: inv.current_price,
+        market_value: inv.current_value || (inv.quantity * (inv.current_price || inv.purchase_price || 0)),
+        company_name: inv.asset_identifier
+      }))
+
+      setPortfolio({
+        ...portfolioData,
+        investments
+      })
     } catch (err) {
       console.error('Error:', err)
       setError('Failed to load portfolio')
@@ -334,11 +360,7 @@ export default function PortfolioDetailPage() {
                     <CardContent className="py-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
-                          {/* Logo placeholder */}
-                          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
-                            <span className="font-bold text-sm">{ticker.charAt(0)}</span>
-                          </div>
-
+                          <HoldingLogo symbol={ticker} size={44} />
                           <div>
                             <p className="font-semibold">{ticker}</p>
                             <p className="text-sm text-muted-foreground">

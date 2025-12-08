@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { formatCurrency } from "@/lib/utils"
+import StockLogo from "@/components/StockLogo"
+import { TrendingUp, TrendingDown, ChevronLeft, ChevronRight, Calendar } from "lucide-react"
 
 interface EarningsEvent {
   code: string
@@ -191,16 +193,29 @@ function EarningsCard({ event }: { event: EarningsEvent }) {
   const miss = hasResults && estimate > 0 && actual < estimate
 
   return (
-    <div className={`p-2 mb-1 rounded text-xs ${beat ? 'bg-emerald-500/20' : miss ? 'bg-red-500/20' : 'bg-secondary/50'}`}>
-      <div className="flex justify-between items-center">
-        <span className="font-bold text-foreground">{ticker}</span>
-        {hasResults ? (
-          <span className={beat ? 'text-emerald-500' : 'text-red-500'}>
-            {beat ? '↑' : '↓'} {((actual - estimate) / Math.abs(estimate || 1) * 100).toFixed(0)}%
-          </span>
-        ) : (
-          <span className="text-muted-foreground">Est: ${estimate.toFixed(2) || 'N/A'}</span>
-        )}
+    <div className={`p-2 mb-1.5 rounded-lg text-xs transition-all hover:scale-[1.02] cursor-pointer ${
+      beat ? 'bg-emerald-500/20 border border-emerald-500/30' :
+      miss ? 'bg-red-500/20 border border-red-500/30' :
+      'bg-secondary/50 border border-transparent hover:border-border'
+    }`}>
+      <div className="flex items-center gap-2">
+        <StockLogo symbol={ticker} size="sm" />
+        <div className="flex-1 min-w-0">
+          <div className="flex justify-between items-center">
+            <span className="font-bold text-foreground">{ticker}</span>
+            {hasResults ? (
+              <span className={`flex items-center gap-0.5 ${beat ? 'text-emerald-500' : 'text-red-500'}`}>
+                {beat ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                {((actual - estimate) / Math.abs(estimate || 1) * 100).toFixed(0)}%
+              </span>
+            ) : (
+              <span className="text-muted-foreground">Est: ${estimate.toFixed(2) || 'N/A'}</span>
+            )}
+          </div>
+          {event.name && (
+            <p className="text-[10px] text-muted-foreground truncate">{event.name}</p>
+          )}
+        </div>
       </div>
     </div>
   )

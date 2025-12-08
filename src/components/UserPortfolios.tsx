@@ -6,16 +6,22 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { createClient } from "@/lib/supabase-browser"
-import { Plus, Briefcase, TrendingUp, TrendingDown, Users, MessageCircle, ChevronRight } from "lucide-react"
+import { Plus, Briefcase, Users, MessageCircle, ChevronRight, TrendingUp, TrendingDown } from "lucide-react"
+import { getSymbolColor, getClearbitLogoFromSymbol } from "@/lib/logoService"
 import type { User } from "@supabase/supabase-js"
 
 interface Investment {
   id: string
   ticker: string
+  asset_identifier?: string
   shares: number
+  quantity?: number
   avg_cost: number | null
+  purchase_price?: number | null
   current_price: number | null
+  current_value?: number | null
   market_value: number | null
+  total_cost_basis?: number | null
 }
 
 interface Portfolio {
@@ -36,6 +42,85 @@ interface UserProfile {
   avatar_url: string | null
 }
 
+// Stock logo component with EODHD → Clearbit → fallback
+function HoldingLogo({ symbol, size = 32 }: { symbol: string; size?: number }) {
+  const [logoState, setLogoState] = useState<'eodhd' | 'clearbit' | 'fallback'>('eodhd')
+  const eohdUrl = `https://eodhistoricaldata.com/img/logos/US/${symbol.toUpperCase()}.png`
+  const clearbitUrl = getClearbitLogoFromSymbol(symbol)
+  const color = getSymbolColor(symbol)
+
+  const handleError = () => {
+    if (logoState === 'eodhd' && clearbitUrl) {
+      setLogoState('clearbit')
+    } else {
+      setLogoState('fallback')
+    }
+  }
+
+  if (logoState === 'fallback') {
+    return (
+      <div
+        className="rounded-full flex items-center justify-center font-bold text-white border-2 border-background"
+        style={{
+          width: size,
+          height: size,
+          backgroundColor: color,
+          fontSize: size * 0.4
+        }}
+      >
+        {symbol.charAt(0)}
+      </div>
+    )
+  }
+
+  const currentUrl = logoState === 'eodhd' ? eohdUrl : clearbitUrl
+
+  return (
+    <img
+      src={currentUrl || eohdUrl}
+      alt={symbol}
+      className="rounded-full object-cover bg-white border-2 border-background"
+      style={{ width: size, height: size }}
+      onError={handleError}
+    />
+  )
+}
+
+// Stacked logos component
+function StackedLogos({ holdings, max = 4 }: { holdings: Investment[]; max?: number }) {
+  const displayHoldings = holdings.slice(0, max)
+  const remaining = holdings.length - max
+
+  if (holdings.length === 0) {
+    return (
+      <div className="flex items-center gap-2 text-muted-foreground text-sm">
+        <Briefcase className="w-4 h-4" />
+        <span>No holdings yet</span>
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex items-center">
+      <div className="flex -space-x-2">
+        {displayHoldings.map((holding, index) => (
+          <div key={holding.id} style={{ zIndex: max - index }}>
+            <HoldingLogo symbol={holding.ticker} size={28} />
+          </div>
+        ))}
+      </div>
+      {remaining > 0 && (
+        <div
+          className="rounded-full bg-secondary flex items-center justify-center text-xs font-medium border-2 border-background ml-1"
+          style={{ width: 28, height: 28, marginLeft: -8, zIndex: 0 }}
+        >
+          +{remaining}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function UserPortfolios() {
   const router = useRouter()
   const supabase = createClient()
@@ -52,7 +137,6 @@ export default function UserPortfolios() {
 
   const fetchUserData = async () => {
     try {
-      // Get current user directly from Supabase client
       const { data: { user: authUser } } = await supabase.auth.getUser()
 
       if (!authUser) {
@@ -61,7 +145,6 @@ export default function UserPortfolios() {
         return
       }
 
-      // Get user profile
       const { data: profile } = await supabase
         .from('profiles')
         .select('*')
@@ -76,54 +159,46 @@ export default function UserPortfolios() {
         avatar_url: profile?.avatar_url || null
       })
 
-      // Try the RPC function first (handles both owned and member portfolios)
-      const { data: rpcData, error: rpcError } = await supabase
-        .rpc('get_user_portfolios', {
-          p_user_id: authUser.id,
-          include_holdings: true
-        })
-
-      if (!rpcError && rpcData) {
-        let portfolios = typeof rpcData === 'string' ? JSON.parse(rpcData) : rpcData
-        if (!Array.isArray(portfolios)) {
-          portfolios = portfolios ? [portfolios] : []
-        }
-        // Map holdings to investments for consistency
-        portfolios = portfolios.map((p: any) => ({
-          ...p,
-          investments: (p.holdings || []).map((h: any) => ({
-            id: h.id,
-            ticker: h.ticker || h.asset_identifier,
-            shares: h.shares || h.quantity,
-            avg_cost: h.avg_cost || h.average_cost,
-            current_price: h.current_price,
-            market_value: h.market_value || h.current_value
-          }))
-        }))
-        setPortfolios(portfolios)
-        setLoading(false)
-        return
-      }
-
-      console.log('RPC failed, falling back to manual queries:', rpcError)
-
-      // Fallback: Get owned portfolios
-      const { data: ownedPortfolios } = await supabase
+      // Query portfolios with investments
+      const { data: ownedPortfolios, error: portfolioError } = await supabase
         .from('portfolios')
         .select(`
           *,
           investments (
             id,
-            ticker,
-            shares,
-            avg_cost,
+            asset_identifier,
+            quantity,
+            purchase_price,
+            total_cost_basis,
             current_price,
-            market_value
+            current_value
           )
         `)
         .eq('user_id', authUser.id)
 
-      // Get portfolios user is a member of
+      if (portfolioError) {
+        console.error('Error fetching portfolios:', portfolioError)
+      }
+
+      // Map to consistent format
+      const mappedPortfolios = (ownedPortfolios || []).map((p: any) => ({
+        ...p,
+        access_type: 'owner',
+        investments: (p.investments || []).map((inv: any) => ({
+          id: inv.id,
+          ticker: inv.asset_identifier,
+          asset_identifier: inv.asset_identifier,
+          shares: inv.quantity || 0,
+          quantity: inv.quantity,
+          avg_cost: inv.purchase_price,
+          purchase_price: inv.purchase_price,
+          current_price: inv.current_price,
+          current_value: inv.current_value,
+          market_value: inv.current_value || (inv.quantity * (inv.current_price || inv.purchase_price || 0)),
+          total_cost_basis: inv.total_cost_basis
+        }))
+      }))
+
       const { data: membershipData } = await supabase
         .from('portfolio_members')
         .select('portfolio_id')
@@ -139,28 +214,40 @@ export default function UserPortfolios() {
             *,
             investments (
               id,
-              ticker,
-              shares,
-              avg_cost,
+              asset_identifier,
+              quantity,
+              purchase_price,
+              total_cost_basis,
               current_price,
-              market_value
+              current_value
             )
           `)
           .in('id', memberPortfolioIds)
 
         memberPortfolios = (memberPortfoliosData || []).map((p: any) => ({
           ...p,
-          access_type: 'member'
+          access_type: 'member',
+          investments: (p.investments || []).map((inv: any) => ({
+            id: inv.id,
+            ticker: inv.asset_identifier,
+            asset_identifier: inv.asset_identifier,
+            shares: inv.quantity || 0,
+            quantity: inv.quantity,
+            avg_cost: inv.purchase_price,
+            purchase_price: inv.purchase_price,
+            current_price: inv.current_price,
+            current_value: inv.current_value,
+            market_value: inv.current_value || (inv.quantity * (inv.current_price || inv.purchase_price || 0)),
+            total_cost_basis: inv.total_cost_basis
+          }))
         }))
       }
 
-      // Combine and deduplicate
       const allPortfolios = [
-        ...(ownedPortfolios || []).map((p: any) => ({ ...p, access_type: 'owner' })),
+        ...mappedPortfolios,
         ...memberPortfolios
       ]
 
-      // Remove duplicates by id
       const uniquePortfolios = allPortfolios.filter((p, index, self) =>
         index === self.findIndex(t => t.id === p.id)
       )
@@ -179,11 +266,7 @@ export default function UserPortfolios() {
     try {
       const { data: newPortfolio, error } = await supabase
         .from('portfolios')
-        .insert([{
-          user_id: user.id,
-          name: newPortfolioName,
-          currency: 'USD'
-        }])
+        .insert([{ user_id: user.id, name: newPortfolioName, currency: 'USD' }])
         .select()
         .single()
 
@@ -202,10 +285,10 @@ export default function UserPortfolios() {
     return investments.reduce((sum, inv) => sum + (inv.market_value || 0), 0)
   }
 
-  const formatCurrency = (value: number) => {
+  const formatCurrency = (value: number, currency: string = 'USD') => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency,
       minimumFractionDigits: 0,
       maximumFractionDigits: 0
     }).format(value)
@@ -229,7 +312,7 @@ export default function UserPortfolios() {
             Create and manage your investment portfolios
           </p>
           <a href="/login">
-            <Button className="bg-foreground text-background hover:bg-foreground/90">
+            <Button className="bg-green-600 hover:bg-green-500 text-white">
               Sign in
             </Button>
           </a>
@@ -240,31 +323,29 @@ export default function UserPortfolios() {
 
   return (
     <div className="space-y-6">
-      {/* User Welcome */}
-      <Card className="bg-gradient-to-br from-green-900/20 to-emerald-900/20 border-green-500/30">
-        <CardContent className="py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white font-bold text-xl">
-                {user.full_name?.[0] || user.email?.[0]?.toUpperCase() || 'U'}
-              </div>
-              <div>
-                <h2 className="text-xl font-bold">
-                  Welcome back, {user.full_name || user.username || 'Investor'}
-                </h2>
-                <p className="text-muted-foreground text-sm">{user.email}</p>
-              </div>
+      {/* User Welcome Header */}
+      <div className="bg-gradient-to-r from-green-500/10 via-emerald-500/5 to-transparent rounded-2xl p-6 border border-green-500/20">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white font-bold text-2xl shadow-lg shadow-green-500/25">
+              {user.full_name?.[0] || user.email?.[0]?.toUpperCase() || 'U'}
             </div>
-            <Button
-              onClick={() => setShowCreateForm(!showCreateForm)}
-              className="bg-green-600 hover:bg-green-500 text-white"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              New Portfolio
-            </Button>
+            <div>
+              <h2 className="text-2xl font-bold">
+                Welcome back, {user.full_name?.split(' ')[0] || user.username || 'Investor'}
+              </h2>
+              <p className="text-muted-foreground">{user.email}</p>
+            </div>
           </div>
-        </CardContent>
-      </Card>
+          <Button
+            onClick={() => setShowCreateForm(!showCreateForm)}
+            className="bg-green-600 hover:bg-green-500 text-white shadow-lg shadow-green-500/25"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            New Portfolio
+          </Button>
+        </div>
+      </div>
 
       {/* Create Portfolio Form */}
       {showCreateForm && (
@@ -288,10 +369,7 @@ export default function UserPortfolios() {
               >
                 {creating ? 'Creating...' : 'Create'}
               </Button>
-              <Button
-                variant="outline"
-                onClick={() => setShowCreateForm(false)}
-              >
+              <Button variant="outline" onClick={() => setShowCreateForm(false)}>
                 Cancel
               </Button>
             </div>
@@ -299,14 +377,16 @@ export default function UserPortfolios() {
         </Card>
       )}
 
-      {/* Portfolios Grid */}
+      {/* Empty State */}
       {portfolios.length === 0 ? (
-        <Card className="bg-card border-border">
-          <CardContent className="py-12 text-center">
-            <Briefcase className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-            <p className="text-lg font-medium mb-2">No portfolios yet</p>
-            <p className="text-muted-foreground text-sm mb-4">
-              Create your first portfolio to start tracking your investments
+        <Card className="bg-card border-border border-dashed">
+          <CardContent className="py-16 text-center">
+            <div className="w-16 h-16 rounded-2xl bg-secondary mx-auto mb-4 flex items-center justify-center">
+              <Briefcase className="w-8 h-8 text-muted-foreground" />
+            </div>
+            <p className="text-xl font-medium mb-2">No portfolios yet</p>
+            <p className="text-muted-foreground mb-6">
+              Create your first portfolio to start tracking investments
             </p>
             <Button
               onClick={() => setShowCreateForm(true)}
@@ -326,77 +406,96 @@ export default function UserPortfolios() {
             return (
               <Card
                 key={portfolio.id}
-                className="bg-card border-border hover:border-green-500/50 transition-colors cursor-pointer group"
+                className="bg-card border-border hover:border-green-500/50 hover:shadow-lg hover:shadow-green-500/5 transition-all duration-300 cursor-pointer group overflow-hidden"
                 onClick={() => router.push(`/dashboard/portfolio/${portfolio.id}`)}
               >
-                <CardHeader className="pb-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <CardTitle className="text-lg">{portfolio.name}</CardTitle>
-                      {portfolio.access_type === 'member' && (
-                        <span className="px-2 py-0.5 text-xs bg-blue-500/20 text-blue-400 rounded-full">
-                          Shared
-                        </span>
+                <CardContent className="p-5">
+                  {/* Header */}
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-semibold text-lg truncate">{portfolio.name}</h3>
+                        {portfolio.access_type === 'member' && (
+                          <span className="px-2 py-0.5 text-[10px] bg-blue-500/20 text-blue-400 rounded-full flex-shrink-0">
+                            Shared
+                          </span>
+                        )}
+                      </div>
+                      {portfolio.description && (
+                        <p className="text-muted-foreground text-sm truncate">{portfolio.description}</p>
                       )}
                     </div>
-                    <div className="flex gap-1 items-center">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          // TODO: Open chat
-                        }}
+                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        className="p-1.5 rounded-lg hover:bg-secondary transition-colors"
+                        onClick={(e) => { e.stopPropagation() }}
                       >
-                        <MessageCircle className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          // TODO: Open members
-                        }}
+                        <MessageCircle className="w-4 h-4 text-muted-foreground" />
+                      </button>
+                      <button
+                        className="p-1.5 rounded-lg hover:bg-secondary transition-colors"
+                        onClick={(e) => { e.stopPropagation() }}
                       >
-                        <Users className="w-4 h-4" />
-                      </Button>
+                        <Users className="w-4 h-4 text-muted-foreground" />
+                      </button>
                       <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-green-500 transition-colors" />
                     </div>
                   </div>
-                  {portfolio.description && (
-                    <p className="text-muted-foreground text-sm">{portfolio.description}</p>
-                  )}
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground text-sm">Total Value</span>
-                      <span className="text-xl font-bold text-green-500">
-                        {formatCurrency(totalValue)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground text-sm">Holdings</span>
-                      <span className="font-medium">{holdingsCount} positions</span>
-                    </div>
 
-                    {/* Holdings Preview */}
-                    {portfolio.investments.slice(0, 3).map((inv) => (
-                      <div key={inv.id} className="flex justify-between items-center py-1 border-t border-border/50">
-                        <span className="font-medium text-sm">{inv.ticker}</span>
-                        <span className="text-muted-foreground text-sm">
-                          {inv.shares} shares
-                        </span>
-                      </div>
-                    ))}
-                    {holdingsCount > 3 && (
-                      <p className="text-muted-foreground text-xs text-center">
-                        +{holdingsCount - 3} more positions
-                      </p>
-                    )}
+                  {/* Value */}
+                  <div className="mb-4">
+                    <p className="text-3xl font-bold text-green-500 tabular-nums">
+                      {formatCurrency(totalValue, portfolio.currency)}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {holdingsCount} {holdingsCount === 1 ? 'holding' : 'holdings'} • {portfolio.currency}
+                    </p>
                   </div>
+
+                  {/* Holdings Preview */}
+                  {holdingsCount > 0 ? (
+                    <div className="space-y-2 pt-4 border-t border-border/50">
+                      {portfolio.investments.slice(0, 3).map((inv) => (
+                        <div key={inv.id} className="flex items-center gap-3">
+                          <HoldingLogo symbol={inv.ticker} size={32} />
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-sm">{inv.ticker}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {inv.shares} shares
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-medium text-sm tabular-nums">
+                              {inv.market_value ? `$${inv.market_value.toLocaleString(undefined, { maximumFractionDigits: 0 })}` : '-'}
+                            </p>
+                            {inv.avg_cost && inv.current_price && (
+                              <p className={`text-xs tabular-nums ${
+                                inv.current_price >= inv.avg_cost ? 'text-green-500' : 'text-red-500'
+                              }`}>
+                                {inv.current_price >= inv.avg_cost ? '+' : ''}
+                                {(((inv.current_price - inv.avg_cost) / inv.avg_cost) * 100).toFixed(1)}%
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                      {holdingsCount > 3 && (
+                        <div className="flex items-center justify-center gap-2 pt-2">
+                          <StackedLogos holdings={portfolio.investments.slice(3)} max={3} />
+                          <span className="text-xs text-muted-foreground">
+                            +{holdingsCount - 3} more
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="pt-4 border-t border-border/50">
+                      <div className="flex items-center justify-center gap-2 py-4 text-muted-foreground">
+                        <Plus className="w-4 h-4" />
+                        <span className="text-sm">Add your first holding</span>
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             )
