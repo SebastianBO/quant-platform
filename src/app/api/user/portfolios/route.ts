@@ -38,18 +38,19 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
-    // Get user's portfolios
+    // Get user's portfolios with correct column names
     const { data: portfolios, error } = await supabase
       .from('portfolios')
       .select(`
         *,
         investments (
           id,
-          ticker,
-          shares,
-          avg_cost,
+          asset_identifier,
+          quantity,
+          purchase_price,
+          total_cost_basis,
           current_price,
-          market_value
+          current_value
         )
       `)
       .eq('user_id', user.id)
@@ -67,13 +68,31 @@ export async function GET(request: NextRequest) {
       .eq('id', user.id)
       .single()
 
+    // Map investments to consistent format
+    const mappedPortfolios = (portfolios || []).map((p: any) => ({
+      ...p,
+      investments: (p.investments || []).map((inv: any) => ({
+        id: inv.id,
+        ticker: inv.asset_identifier,
+        asset_identifier: inv.asset_identifier,
+        shares: inv.quantity || 0,
+        quantity: inv.quantity,
+        avg_cost: inv.purchase_price,
+        purchase_price: inv.purchase_price,
+        current_price: inv.current_price,
+        current_value: inv.current_value,
+        market_value: inv.current_value || (inv.quantity * (inv.current_price || inv.purchase_price || 0)),
+        total_cost_basis: inv.total_cost_basis
+      }))
+    }))
+
     return NextResponse.json({
       user: {
         id: user.id,
         email: user.email,
         ...profile
       },
-      portfolios: portfolios || []
+      portfolios: mappedPortfolios
     })
   } catch (error) {
     console.error('User portfolios API error:', error)
