@@ -74,7 +74,7 @@ export default function PeerComparison({ selectedTicker = "AAPL" }: PeerComparis
       <CardContent>
         {/* Company Selector */}
         <div className="flex items-center gap-4 mb-6">
-          <span className="text-zinc-400">Compare:</span>
+          <span className="text-muted-foreground">Compare:</span>
           <div className="flex gap-2">
             {peers.map(company => (
               <button
@@ -83,7 +83,7 @@ export default function PeerComparison({ selectedTicker = "AAPL" }: PeerComparis
                 className={`px-4 py-2 rounded-lg transition-colors ${
                   highlightTicker === company.ticker
                     ? 'bg-emerald-600 text-white'
-                    : 'bg-zinc-800 hover:bg-zinc-700'
+                    : 'bg-secondary hover:bg-secondary/80'
                 }`}
               >
                 {company.ticker}
@@ -134,11 +134,11 @@ export default function PeerComparison({ selectedTicker = "AAPL" }: PeerComparis
         {/* Radar Chart */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div>
-            <p className="text-sm text-zinc-400 mb-2">Quality Metrics Radar</p>
+            <p className="text-sm text-muted-foreground mb-2">Quality Metrics Radar</p>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart data={[radarData.find(d => d.ticker === highlightTicker)!]}>
-                  <PolarGrid stroke="#3f3f46" />
+                  <PolarGrid stroke="hsl(var(--border))" />
                   <PolarAngleAxis dataKey="name" tick={false} />
                   <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} />
                   <Radar
@@ -155,14 +155,14 @@ export default function PeerComparison({ selectedTicker = "AAPL" }: PeerComparis
 
           {/* ROIC Comparison Bar Chart */}
           <div>
-            <p className="text-sm text-zinc-400 mb-2">ROIC Comparison</p>
+            <p className="text-sm text-muted-foreground mb-2">ROIC Comparison</p>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={peers} layout="vertical">
-                  <XAxis type="number" tickFormatter={(v) => `${(v * 100).toFixed(0)}%`} stroke="#71717a" />
-                  <YAxis type="category" dataKey="ticker" stroke="#71717a" width={50} />
+                  <XAxis type="number" tickFormatter={(v) => `${(v * 100).toFixed(0)}%`} stroke="hsl(var(--muted-foreground))" />
+                  <YAxis type="category" dataKey="ticker" stroke="hsl(var(--muted-foreground))" width={50} />
                   <Tooltip
-                    contentStyle={{ backgroundColor: '#18181b', border: '1px solid #27272a' }}
+                    contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }}
                     formatter={(value: number) => [`${(value * 100).toFixed(1)}%`, 'ROIC']}
                   />
                   <Bar
@@ -178,10 +178,10 @@ export default function PeerComparison({ selectedTicker = "AAPL" }: PeerComparis
 
         {/* Full Comparison Table */}
         <div className="overflow-x-auto">
-          <p className="text-sm text-zinc-400 mb-2">Full Metrics Comparison</p>
+          <p className="text-sm text-muted-foreground mb-2">Full Metrics Comparison</p>
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-zinc-700">
+              <tr className="border-b border-border">
                 <th className="p-3 text-left">Company</th>
                 <th className="p-3 text-right">Market Cap</th>
                 <th className="p-3 text-right">P/E</th>
@@ -198,23 +198,23 @@ export default function PeerComparison({ selectedTicker = "AAPL" }: PeerComparis
               {peers.map((company) => (
                 <tr
                   key={company.ticker}
-                  className={`border-b border-zinc-800 ${company.ticker === highlightTicker ? 'bg-emerald-900/20' : 'hover:bg-zinc-800/30'}`}
+                  className={`border-b border-border/50 ${company.ticker === highlightTicker ? 'bg-emerald-500/10' : 'hover:bg-secondary/30'}`}
                 >
                   <td className="p-3">
-                    <span className={`font-bold ${company.ticker === highlightTicker ? 'text-emerald-400' : ''}`}>
+                    <span className={`font-bold ${company.ticker === highlightTicker ? 'text-emerald-500' : ''}`}>
                       {company.ticker}
                     </span>
-                    <span className="text-zinc-500 ml-2">{company.name}</span>
+                    <span className="text-muted-foreground ml-2">{company.name}</span>
                   </td>
                   <td className="p-3 text-right">{formatCurrency(company.marketCap)}</td>
                   <td className="p-3 text-right">{company.pe.toFixed(1)}</td>
                   <td className="p-3 text-right">
-                    <span className={company.roic >= 0.20 ? 'text-emerald-400' : company.roic >= 0.15 ? 'text-yellow-400' : ''}>
+                    <span className={company.roic >= 0.20 ? 'text-emerald-500' : company.roic >= 0.15 ? 'text-yellow-500' : ''}>
                       {formatPercent(company.roic)}
                     </span>
                   </td>
                   <td className="p-3 text-right">
-                    <span className={company.revenueGrowth >= 0.15 ? 'text-emerald-400' : ''}>
+                    <span className={company.revenueGrowth >= 0.15 ? 'text-emerald-500' : ''}>
                       {formatPercent(company.revenueGrowth)}
                     </span>
                   </td>
@@ -222,7 +222,7 @@ export default function PeerComparison({ selectedTicker = "AAPL" }: PeerComparis
                   <td className="p-3 text-right">{formatPercent(company.operatingMargin)}</td>
                   <td className="p-3 text-right">{formatPercent(company.netMargin)}</td>
                   <td className="p-3 text-right">
-                    <span className={company.debtToEquity > 2 ? 'text-red-400' : ''}>
+                    <span className={company.debtToEquity > 2 ? 'text-red-500' : ''}>
                       {company.debtToEquity.toFixed(2)}
                     </span>
                   </td>
@@ -234,27 +234,27 @@ export default function PeerComparison({ selectedTicker = "AAPL" }: PeerComparis
         </div>
 
         {/* Industry Averages */}
-        <div className="mt-6 p-4 bg-zinc-800/30 rounded-lg">
+        <div className="mt-6 p-4 bg-secondary/30 rounded-lg">
           <p className="font-medium mb-2">Industry Averages (Tech Sector)</p>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
             <div>
-              <span className="text-zinc-400">Avg P/E:</span>
+              <span className="text-muted-foreground">Avg P/E:</span>
               <span className="ml-2 font-bold">{(peers.reduce((a, b) => a + b.pe, 0) / peers.length).toFixed(1)}</span>
             </div>
             <div>
-              <span className="text-zinc-400">Avg ROIC:</span>
+              <span className="text-muted-foreground">Avg ROIC:</span>
               <span className="ml-2 font-bold">{formatPercent(peers.reduce((a, b) => a + b.roic, 0) / peers.length)}</span>
             </div>
             <div>
-              <span className="text-zinc-400">Avg Growth:</span>
+              <span className="text-muted-foreground">Avg Growth:</span>
               <span className="ml-2 font-bold">{formatPercent(peers.reduce((a, b) => a + b.revenueGrowth, 0) / peers.length)}</span>
             </div>
             <div>
-              <span className="text-zinc-400">Avg Gross Margin:</span>
+              <span className="text-muted-foreground">Avg Gross Margin:</span>
               <span className="ml-2 font-bold">{formatPercent(peers.reduce((a, b) => a + b.grossMargin, 0) / peers.length)}</span>
             </div>
             <div>
-              <span className="text-zinc-400">Avg FCF Yield:</span>
+              <span className="text-muted-foreground">Avg FCF Yield:</span>
               <span className="ml-2 font-bold">{formatPercent(peers.reduce((a, b) => a + b.freeCashFlowYield, 0) / peers.length)}</span>
             </div>
           </div>
@@ -266,10 +266,10 @@ export default function PeerComparison({ selectedTicker = "AAPL" }: PeerComparis
 
 function MetricRank({ title, value, rank, total, isGood }: { title: string, value: string, rank: number, total: number, isGood: boolean }) {
   return (
-    <div className="bg-zinc-800/50 p-4 rounded-lg text-center">
-      <p className="text-zinc-400 text-sm">{title}</p>
+    <div className="bg-secondary/50 p-4 rounded-lg text-center">
+      <p className="text-muted-foreground text-sm">{title}</p>
       <p className="text-xl font-bold">{value}</p>
-      <p className={`text-sm ${isGood ? 'text-emerald-400' : 'text-zinc-500'}`}>
+      <p className={`text-sm ${isGood ? 'text-emerald-500' : 'text-muted-foreground'}`}>
         #{rank} of {total}
       </p>
     </div>

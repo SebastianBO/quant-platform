@@ -80,7 +80,7 @@ export default function EarningsCalendar() {
           <div className="flex gap-2">
             <button
               onClick={() => setSelectedWeek(w => w - 1)}
-              className="px-3 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-sm"
+              className="px-3 py-1 bg-secondary hover:bg-secondary/80 rounded text-sm"
             >
               ← Prev Week
             </button>
@@ -92,7 +92,7 @@ export default function EarningsCalendar() {
             </button>
             <button
               onClick={() => setSelectedWeek(w => w + 1)}
-              className="px-3 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-sm"
+              className="px-3 py-1 bg-secondary hover:bg-secondary/80 rounded text-sm"
             >
               Next Week →
             </button>
@@ -118,13 +118,13 @@ export default function EarningsCalendar() {
               const isToday = dateStr === new Date().toISOString().split('T')[0]
 
               return (
-                <div key={dayIndex} className={`bg-zinc-800/30 rounded-lg p-3 ${isToday ? 'ring-2 ring-emerald-500' : ''}`}>
-                  <div className="text-center mb-3 pb-2 border-b border-zinc-700">
+                <div key={dayIndex} className={`bg-secondary/30 rounded-lg p-3 ${isToday ? 'ring-2 ring-emerald-500' : ''}`}>
+                  <div className="text-center mb-3 pb-2 border-b border-border">
                     <p className="font-bold text-lg">{weekDays[dayIndex]}</p>
-                    <p className="text-zinc-400 text-sm">
+                    <p className="text-muted-foreground text-sm">
                       {currentDay.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </p>
-                    {isToday && <span className="text-xs text-emerald-400">TODAY</span>}
+                    {isToday && <span className="text-xs text-emerald-500">TODAY</span>}
                   </div>
 
                   {/* Before Market Open */}
@@ -135,7 +135,7 @@ export default function EarningsCalendar() {
                         <EarningsCard key={i} event={e} />
                       ))}
                       {dayData.bmo.length > 8 && (
-                        <p className="text-xs text-zinc-500">+{dayData.bmo.length - 8} more</p>
+                        <p className="text-xs text-muted-foreground">+{dayData.bmo.length - 8} more</p>
                       )}
                     </div>
                   )}
@@ -148,13 +148,13 @@ export default function EarningsCalendar() {
                         <EarningsCard key={i} event={e} />
                       ))}
                       {dayData.amc.length > 8 && (
-                        <p className="text-xs text-zinc-500">+{dayData.amc.length - 8} more</p>
+                        <p className="text-xs text-muted-foreground">+{dayData.amc.length - 8} more</p>
                       )}
                     </div>
                   )}
 
                   {dayData.bmo.length === 0 && dayData.amc.length === 0 && (
-                    <p className="text-zinc-500 text-sm text-center py-4">No earnings</p>
+                    <p className="text-muted-foreground text-sm text-center py-4">No earnings</p>
                   )}
                 </div>
               )
@@ -163,7 +163,7 @@ export default function EarningsCalendar() {
         )}
 
         {/* Legend */}
-        <div className="mt-6 flex flex-wrap gap-4 text-sm text-zinc-400">
+        <div className="mt-6 flex flex-wrap gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <span className="w-3 h-3 rounded bg-emerald-500"></span>
             <span>Beat Estimates</span>
@@ -173,7 +173,7 @@ export default function EarningsCalendar() {
             <span>Missed Estimates</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded bg-zinc-500"></span>
+            <span className="w-3 h-3 rounded bg-muted-foreground"></span>
             <span>Pending</span>
           </div>
         </div>
@@ -191,15 +191,15 @@ function EarningsCard({ event }: { event: EarningsEvent }) {
   const miss = hasResults && estimate > 0 && actual < estimate
 
   return (
-    <div className={`p-2 mb-1 rounded text-xs ${beat ? 'bg-emerald-900/30' : miss ? 'bg-red-900/30' : 'bg-zinc-900/50'}`}>
+    <div className={`p-2 mb-1 rounded text-xs ${beat ? 'bg-emerald-500/20' : miss ? 'bg-red-500/20' : 'bg-secondary/50'}`}>
       <div className="flex justify-between items-center">
-        <span className="font-bold text-white">{ticker}</span>
+        <span className="font-bold text-foreground">{ticker}</span>
         {hasResults ? (
-          <span className={beat ? 'text-emerald-400' : 'text-red-400'}>
+          <span className={beat ? 'text-emerald-500' : 'text-red-500'}>
             {beat ? '↑' : '↓'} {((actual - estimate) / Math.abs(estimate || 1) * 100).toFixed(0)}%
           </span>
         ) : (
-          <span className="text-zinc-500">Est: ${estimate.toFixed(2) || 'N/A'}</span>
+          <span className="text-muted-foreground">Est: ${estimate.toFixed(2) || 'N/A'}</span>
         )}
       </div>
     </div>

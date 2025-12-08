@@ -154,13 +154,13 @@ export default function StockScreener() {
       <CardContent>
         {/* Preset Screens */}
         <div className="mb-6">
-          <p className="text-sm text-zinc-400 mb-2">Quick Screens</p>
+          <p className="text-sm text-muted-foreground mb-2">Quick Screens</p>
           <div className="flex flex-wrap gap-2">
             {PRESET_SCREENS.map((preset, i) => (
               <button
                 key={i}
                 onClick={() => applyPreset(preset)}
-                className="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-sm transition-colors"
+                className="px-3 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-sm transition-colors"
                 title={preset.description}
               >
                 {preset.name}
@@ -170,7 +170,7 @@ export default function StockScreener() {
         </div>
 
         {/* Custom Criteria */}
-        <div className="mb-6 p-4 bg-zinc-800/30 rounded-lg">
+        <div className="mb-6 p-4 bg-secondary/30 rounded-lg">
           <div className="flex items-center justify-between mb-4">
             <p className="font-medium">Custom Criteria</p>
             <button
@@ -186,7 +186,7 @@ export default function StockScreener() {
               <select
                 value={c.metric}
                 onChange={(e) => updateCriteria(i, 'metric', e.target.value)}
-                className="bg-zinc-900 border border-zinc-700 rounded px-2 py-1 text-sm"
+                className="bg-card border border-border rounded px-2 py-1 text-sm"
               >
                 {METRICS.map(m => (
                   <option key={m.key} value={m.key}>{m.name}</option>
@@ -196,7 +196,7 @@ export default function StockScreener() {
               <select
                 value={c.operator}
                 onChange={(e) => updateCriteria(i, 'operator', e.target.value)}
-                className="bg-zinc-900 border border-zinc-700 rounded px-2 py-1 text-sm"
+                className="bg-card border border-border rounded px-2 py-1 text-sm"
               >
                 <option value="gt">Greater than</option>
                 <option value="lt">Less than</option>
@@ -207,18 +207,18 @@ export default function StockScreener() {
                 type="number"
                 value={c.value}
                 onChange={(e) => updateCriteria(i, 'value', parseFloat(e.target.value))}
-                className="bg-zinc-900 border border-zinc-700 rounded px-2 py-1 text-sm w-24"
+                className="bg-card border border-border rounded px-2 py-1 text-sm w-24"
                 step="0.01"
               />
 
               {c.operator === 'between' && (
                 <>
-                  <span className="text-zinc-400">and</span>
+                  <span className="text-muted-foreground">and</span>
                   <input
                     type="number"
                     value={c.value2 || ''}
                     onChange={(e) => updateCriteria(i, 'value2', parseFloat(e.target.value))}
-                    className="bg-zinc-900 border border-zinc-700 rounded px-2 py-1 text-sm w-24"
+                    className="bg-card border border-border rounded px-2 py-1 text-sm w-24"
                     step="0.01"
                   />
                 </>
@@ -226,7 +226,7 @@ export default function StockScreener() {
 
               <button
                 onClick={() => removeCriteria(i)}
-                className="text-red-400 hover:text-red-300"
+                className="text-red-500 hover:text-red-400"
               >
                 ✕
               </button>
@@ -247,11 +247,11 @@ export default function StockScreener() {
             <div className="flex items-center justify-between mb-4">
               <p className="font-medium">{results.length} stocks match your criteria</p>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-zinc-400">Sort by:</span>
+                <span className="text-sm text-muted-foreground">Sort by:</span>
                 <select
                   value={sortBy}
                   onChange={(e) => { setSortBy(e.target.value); applyScreen(); }}
-                  className="bg-zinc-900 border border-zinc-700 rounded px-2 py-1 text-sm"
+                  className="bg-card border border-border rounded px-2 py-1 text-sm"
                 >
                   {METRICS.map(m => (
                     <option key={m.key} value={m.key}>{m.name}</option>
@@ -259,7 +259,7 @@ export default function StockScreener() {
                 </select>
                 <button
                   onClick={() => { setSortOrder(o => o === 'asc' ? 'desc' : 'asc'); applyScreen(); }}
-                  className="px-2 py-1 bg-zinc-800 rounded text-sm"
+                  className="px-2 py-1 bg-secondary rounded text-sm"
                 >
                   {sortOrder === 'asc' ? '↑' : '↓'}
                 </button>
@@ -269,7 +269,7 @@ export default function StockScreener() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-zinc-700">
+                  <tr className="border-b border-border">
                     <th className="p-3 text-left">Ticker</th>
                     <th className="p-3 text-left">Company</th>
                     <th className="p-3 text-right">Price</th>
@@ -283,13 +283,13 @@ export default function StockScreener() {
                 </thead>
                 <tbody>
                   {results.map((stock) => (
-                    <tr key={stock.ticker} className="border-b border-zinc-800 hover:bg-zinc-800/30">
-                      <td className="p-3 font-bold text-emerald-400">{stock.ticker}</td>
+                    <tr key={stock.ticker} className="border-b border-border/50 hover:bg-secondary/30">
+                      <td className="p-3 font-bold text-emerald-500">{stock.ticker}</td>
                       <td className="p-3">{stock.name}</td>
                       <td className="p-3 text-right">${stock.price.toFixed(2)}</td>
                       <td className="p-3 text-right">{formatCurrency(stock.marketCap)}</td>
                       <td className="p-3 text-right">{stock.pe.toFixed(1)}</td>
-                      <td className="p-3 text-right text-emerald-400">{formatPercent(stock.roic)}</td>
+                      <td className="p-3 text-right text-emerald-500">{formatPercent(stock.roic)}</td>
                       <td className="p-3 text-right">{formatPercent(stock.revenueGrowth)}</td>
                       <td className="p-3 text-right">{formatPercent(stock.grossMargin)}</td>
                       <td className="p-3 text-right">{formatPercent(stock.freeCashFlowYield)}</td>
