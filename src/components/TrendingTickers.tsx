@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { TrendingUp, TrendingDown, Pause, Play } from "lucide-react"
-import { getSymbolColor } from "@/lib/logoService"
+import { getSymbolColor, getClearbitLogoFromSymbol } from "@/lib/logoService"
 
 interface Ticker {
   symbol: string
@@ -12,7 +12,11 @@ interface Ticker {
   logoUrl: string
 }
 
-export default function TrendingTickers() {
+interface TrendingTickersProps {
+  onSelectTicker?: (symbol: string) => void
+}
+
+export default function TrendingTickers({ onSelectTicker }: TrendingTickersProps = {}) {
   const [tickers, setTickers] = useState<Ticker[]>([])
   const [loading, setLoading] = useState(true)
   const [isPaused, setIsPaused] = useState(false)
@@ -59,7 +63,11 @@ export default function TrendingTickers() {
           >
             {/* Duplicate tickers for seamless loop */}
             {[...tickers, ...tickers].map((ticker, index) => (
-              <TickerItem key={`${ticker.symbol}-${index}`} ticker={ticker} />
+              <TickerItem
+                key={`${ticker.symbol}-${index}`}
+                ticker={ticker}
+                onClick={() => onSelectTicker?.(ticker.symbol)}
+              />
             ))}
           </div>
         </div>
@@ -98,21 +106,35 @@ export default function TrendingTickers() {
   )
 }
 
-function TickerItem({ ticker }: { ticker: Ticker }) {
-  const [logoError, setLogoError] = useState(false)
+function TickerItem({ ticker, onClick }: { ticker: Ticker; onClick?: () => void }) {
+  const [logoState, setLogoState] = useState<'eodhd' | 'clearbit' | 'fallback'>('eodhd')
   const isPositive = ticker.changePercent >= 0
   const color = getSymbolColor(ticker.symbol)
+  const clearbitUrl = getClearbitLogoFromSymbol(ticker.symbol)
+
+  const handleLogoError = () => {
+    if (logoState === 'eodhd' && clearbitUrl) {
+      setLogoState('clearbit')
+    } else {
+      setLogoState('fallback')
+    }
+  }
+
+  const currentLogoUrl = logoState === 'eodhd' ? ticker.logoUrl : clearbitUrl
 
   return (
-    <div className="flex items-center gap-2 flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity">
+    <button
+      onClick={onClick}
+      className="flex items-center gap-2 flex-shrink-0 cursor-pointer hover:opacity-80 hover:bg-secondary/50 px-2 py-1 rounded-lg transition-all"
+    >
       {/* Logo */}
       <div className="w-5 h-5 rounded-full overflow-hidden flex-shrink-0">
-        {!logoError ? (
+        {logoState !== 'fallback' ? (
           <img
-            src={ticker.logoUrl}
+            src={currentLogoUrl || ticker.logoUrl}
             alt={ticker.symbol}
             className="w-full h-full object-cover bg-white"
-            onError={() => setLogoError(true)}
+            onError={handleLogoError}
           />
         ) : (
           <div
@@ -138,6 +160,6 @@ function TickerItem({ ticker }: { ticker: Ticker }) {
           {isPositive ? '+' : ''}{ticker.changePercent.toFixed(2)}%
         </span>
       </div>
-    </div>
+    </button>
   )
 }

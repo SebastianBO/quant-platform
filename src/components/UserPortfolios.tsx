@@ -138,6 +138,7 @@ export default function UserPortfolios() {
   const fetchUserData = async () => {
     try {
       const { data: { user: authUser } } = await supabase.auth.getUser()
+      console.log('[UserPortfolios] Auth user:', authUser?.id)
 
       if (!authUser) {
         setUser(null)
@@ -159,56 +160,54 @@ export default function UserPortfolios() {
         avatar_url: profile?.avatar_url || null
       })
 
-      // Query portfolios with investments
-      const { data: ownedPortfolios, error: portfolioError } = await supabase
-        .from('portfolios')
-        .select(`
-          *,
-          investments (
-            id,
-            asset_identifier,
-            quantity,
-            purchase_price,
-            total_cost_basis,
-            current_price,
-            current_value
-          )
-        `)
-        .eq('user_id', authUser.id)
+      // Try RPC function first (like portfoliocare-expo)
+      let portfoliosFound = false
+      try {
+        const { data: rpcData, error: rpcError } = await supabase
+          .rpc('get_user_portfolios', {
+            p_user_id: authUser.id,
+            include_holdings: true
+          })
 
-      if (portfolioError) {
-        console.error('Error fetching portfolios:', portfolioError)
+        if (!rpcError && rpcData) {
+          console.log('[UserPortfolios] RPC returned portfolios:', rpcData.length)
+          let portfolios = typeof rpcData === 'string' ? JSON.parse(rpcData) : rpcData
+          if (!Array.isArray(portfolios)) {
+            portfolios = portfolios ? [portfolios] : []
+          }
+
+          const mappedPortfolios = portfolios.map((p: any) => ({
+            ...p,
+            investments: (p.holdings || p.investments || []).map((inv: any) => ({
+              id: inv.id,
+              ticker: inv.ticker || inv.asset_identifier,
+              asset_identifier: inv.asset_identifier,
+              shares: inv.quantity || 0,
+              quantity: inv.quantity,
+              avg_cost: inv.purchase_price,
+              purchase_price: inv.purchase_price,
+              current_price: inv.current_price,
+              current_value: inv.current_value,
+              market_value: inv.current_value || (inv.quantity * (inv.current_price || inv.purchase_price || 0)),
+              total_cost_basis: inv.total_cost_basis
+            }))
+          }))
+
+          setPortfolios(mappedPortfolios)
+          portfoliosFound = true
+        } else {
+          console.log('[UserPortfolios] RPC failed or returned no data:', rpcError)
+        }
+      } catch (rpcErr) {
+        console.log('[UserPortfolios] RPC not available:', rpcErr)
       }
 
-      // Map to consistent format
-      const mappedPortfolios = (ownedPortfolios || []).map((p: any) => ({
-        ...p,
-        access_type: 'owner',
-        investments: (p.investments || []).map((inv: any) => ({
-          id: inv.id,
-          ticker: inv.asset_identifier,
-          asset_identifier: inv.asset_identifier,
-          shares: inv.quantity || 0,
-          quantity: inv.quantity,
-          avg_cost: inv.purchase_price,
-          purchase_price: inv.purchase_price,
-          current_price: inv.current_price,
-          current_value: inv.current_value,
-          market_value: inv.current_value || (inv.quantity * (inv.current_price || inv.purchase_price || 0)),
-          total_cost_basis: inv.total_cost_basis
-        }))
-      }))
+      // Fallback to direct queries if RPC failed
+      if (!portfoliosFound) {
+        console.log('[UserPortfolios] Falling back to direct queries')
 
-      const { data: membershipData } = await supabase
-        .from('portfolio_members')
-        .select('portfolio_id')
-        .eq('user_id', authUser.id)
-        .eq('status', 'accepted')
-
-      let memberPortfolios: any[] = []
-      if (membershipData && membershipData.length > 0) {
-        const memberPortfolioIds = membershipData.map((m: any) => m.portfolio_id)
-        const { data: memberPortfoliosData } = await supabase
+        // Query portfolios with investments
+        const { data: ownedPortfolios, error: portfolioError } = await supabase
           .from('portfolios')
           .select(`
             *,
@@ -222,11 +221,18 @@ export default function UserPortfolios() {
               current_value
             )
           `)
-          .in('id', memberPortfolioIds)
+          .eq('user_id', authUser.id)
 
-        memberPortfolios = (memberPortfoliosData || []).map((p: any) => ({
+        console.log('[UserPortfolios] Owned portfolios:', ownedPortfolios?.length || 0, portfolioError)
+
+        if (portfolioError) {
+          console.error('Error fetching portfolios:', portfolioError)
+        }
+
+        // Map to consistent format
+        const mappedPortfolios = (ownedPortfolios || []).map((p: any) => ({
           ...p,
-          access_type: 'member',
+          access_type: 'owner',
           investments: (p.investments || []).map((inv: any) => ({
             id: inv.id,
             ticker: inv.asset_identifier,
@@ -241,18 +247,65 @@ export default function UserPortfolios() {
             total_cost_basis: inv.total_cost_basis
           }))
         }))
+
+        const { data: membershipData } = await supabase
+          .from('portfolio_members')
+          .select('portfolio_id')
+          .eq('user_id', authUser.id)
+          .eq('status', 'accepted')
+
+        console.log('[UserPortfolios] Membership data:', membershipData?.length || 0)
+
+        let memberPortfolios: any[] = []
+        if (membershipData && membershipData.length > 0) {
+          const memberPortfolioIds = membershipData.map((m: any) => m.portfolio_id)
+          const { data: memberPortfoliosData } = await supabase
+            .from('portfolios')
+            .select(`
+              *,
+              investments (
+                id,
+                asset_identifier,
+                quantity,
+                purchase_price,
+                total_cost_basis,
+                current_price,
+                current_value
+              )
+            `)
+            .in('id', memberPortfolioIds)
+
+          memberPortfolios = (memberPortfoliosData || []).map((p: any) => ({
+            ...p,
+            access_type: 'member',
+            investments: (p.investments || []).map((inv: any) => ({
+              id: inv.id,
+              ticker: inv.asset_identifier,
+              asset_identifier: inv.asset_identifier,
+              shares: inv.quantity || 0,
+              quantity: inv.quantity,
+              avg_cost: inv.purchase_price,
+              purchase_price: inv.purchase_price,
+              current_price: inv.current_price,
+              current_value: inv.current_value,
+              market_value: inv.current_value || (inv.quantity * (inv.current_price || inv.purchase_price || 0)),
+              total_cost_basis: inv.total_cost_basis
+            }))
+          }))
+        }
+
+        const allPortfolios = [
+          ...mappedPortfolios,
+          ...memberPortfolios
+        ]
+
+        const uniquePortfolios = allPortfolios.filter((p, index, self) =>
+          index === self.findIndex(t => t.id === p.id)
+        )
+
+        console.log('[UserPortfolios] Final portfolios:', uniquePortfolios.length)
+        setPortfolios(uniquePortfolios)
       }
-
-      const allPortfolios = [
-        ...mappedPortfolios,
-        ...memberPortfolios
-      ]
-
-      const uniquePortfolios = allPortfolios.filter((p, index, self) =>
-        index === self.findIndex(t => t.id === p.id)
-      )
-
-      setPortfolios(uniquePortfolios)
     } catch (error) {
       console.error('Error fetching user data:', error)
     }

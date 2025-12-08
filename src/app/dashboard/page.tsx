@@ -164,7 +164,7 @@ export default function Dashboard() {
       </header>
 
       {/* Trending Tickers Bar */}
-      <TrendingTickers />
+      <TrendingTickers onSelectTicker={handleSearch} />
 
       <div className="max-w-[1800px] mx-auto px-6 py-6">
         {/* Stock Header - Yahoo Finance Style */}

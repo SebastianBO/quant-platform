@@ -27,7 +27,8 @@
       "Bash(grep:*)",
       "Bash(npm uninstall:*)",
       "Skill(frontend-design:frontend-design)",
-      "mcp__plugin_supabase-toolkit_supabase__list_tables"
+      "mcp__plugin_supabase-toolkit_supabase__list_tables",
+      "WebFetch(domain:quant-platform-ir96ioh5r-finance-liciancoms-projects.vercel.app)"
     ],
     "deny": [],
     "ask": []
