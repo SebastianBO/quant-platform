@@ -171,8 +171,9 @@ export async function GET(request: NextRequest) {
 
     // Merge data - prefer EODHD for portfolio % data, FD for change details
     const mergedHolders = fdHolders.map((fd: any) => {
-      // Try to find matching EODHD holder
-      const fdNameLower = fd.investor_name.toLowerCase().replace(/_/g, ' ')
+      // Handle both investor and investor_name field names
+      const investorName = fd.investor_name || fd.investor || 'Unknown'
+      const fdNameLower = investorName.toLowerCase().replace(/_/g, ' ')
       const eodhMatch = eodhHolders.find((eh: any) => {
         const ehNameLower = eh.name.toLowerCase()
         return ehNameLower.includes(fdNameLower.split(' ')[0]) ||
@@ -180,17 +181,17 @@ export async function GET(request: NextRequest) {
       })
 
       return {
-        investor: fd.investor_name.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
-        investorType: classifyInstitution(fd.investor_name),
+        investor: investorName.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
+        investorType: classifyInstitution(investorName),
         shares: fd.shares,
         value: fd.market_value,
         percentOwnership: fd.percent_of_outstanding,
         portfolioPercent: eodhMatch?.totalAssets || null, // % of their portfolio in this stock
-        changeInShares: fd.change_in_shares,
-        changePercent: fd.change_percent,
-        isNew: fd.is_new_position,
-        filingDate: fd.filing_date,
-        reportDate: fd.report_date,
+        changeInShares: fd.change_in_shares || 0,
+        changePercent: fd.change_percent || 0,
+        isNew: fd.is_new_position || false,
+        filingDate: fd.filing_date || fd.report_period,
+        reportDate: fd.report_date || fd.report_period,
         // Additional EODHD data if available
         eodhChange: eodhMatch?.change || null,
         eodhChangePercent: eodhMatch?.change_p || null
