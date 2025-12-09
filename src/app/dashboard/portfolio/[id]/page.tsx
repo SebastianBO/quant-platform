@@ -78,6 +78,7 @@ interface Investment {
   current_price: number | null
   market_value: number | null
   company_name?: string
+  currency?: string // The currency the investment prices are stored in (e.g., USD, EUR, SEK)
   // Live price data
   live_price?: number | null
   price_change?: number | null
@@ -224,7 +225,8 @@ export default function PortfolioDetailPage() {
         purchase_price: inv.purchase_price,
         current_price: inv.current_price,
         market_value: inv.current_value || (inv.quantity * (inv.current_price || inv.purchase_price || 0)),
-        company_name: inv.asset_identifier
+        company_name: inv.asset_identifier,
+        currency: inv.currency // Currency the prices are stored in (from Tink/Plaid or manual entry)
       }))
 
       setPortfolio({
@@ -279,16 +281,22 @@ export default function PortfolioDetailPage() {
     return storedPrice || avgCost || 0
   }
 
-  // Determine stock's native currency based on ticker suffix
-  const getStockCurrency = (ticker: string) => {
-    if (ticker.endsWith('.ST')) return 'SEK'
-    if (ticker.endsWith('.L')) return 'GBP'
-    if (ticker.endsWith('.DE') || ticker.endsWith('.F')) return 'EUR'
-    if (ticker.endsWith('.PA')) return 'EUR'
-    if (ticker.endsWith('.TO')) return 'CAD'
-    if (ticker.endsWith('.AX')) return 'AUD'
-    if (ticker.endsWith('.HK')) return 'HKD'
-    if (ticker.endsWith('.T')) return 'JPY'
+  // Determine stock's native currency
+  // Priority: 1) Stored currency from database, 2) Ticker suffix detection, 3) Default USD
+  const getStockCurrency = (ticker: string, storedCurrency?: string | null) => {
+    // If we have a stored currency from Tink/Plaid/manual entry, use it
+    if (storedCurrency) return storedCurrency.toUpperCase()
+
+    // Otherwise, detect from ticker suffix
+    const t = ticker.toUpperCase()
+    if (t.endsWith('.ST')) return 'SEK'
+    if (t.endsWith('.L')) return 'GBP'
+    if (t.endsWith('.DE') || t.endsWith('.F')) return 'EUR'
+    if (t.endsWith('.PA')) return 'EUR'
+    if (t.endsWith('.TO')) return 'CAD'
+    if (t.endsWith('.AX')) return 'AUD'
+    if (t.endsWith('.HK')) return 'HKD'
+    if (t.endsWith('.T')) return 'JPY'
     return 'USD' // Default for US stocks
   }
 
@@ -296,7 +304,7 @@ export default function PortfolioDetailPage() {
   const calculateTotalValue = (investments: Investment[], portfolioCurrency: string) => {
     return investments.reduce((sum, inv) => {
       const ticker = (inv.ticker || inv.asset_identifier || '').toUpperCase()
-      const stockCurrency = getStockCurrency(ticker)
+      const stockCurrency = getStockCurrency(ticker, inv.currency)
       const shares = inv.shares || inv.quantity || 0
       const price = getBestPrice(ticker, inv.current_price, inv.avg_cost)
       const valueInStockCurrency = shares * price
@@ -308,7 +316,7 @@ export default function PortfolioDetailPage() {
   const calculateTotalCost = (investments: Investment[], portfolioCurrency: string) => {
     return investments.reduce((sum, inv) => {
       const ticker = (inv.ticker || inv.asset_identifier || '').toUpperCase()
-      const stockCurrency = getStockCurrency(ticker)
+      const stockCurrency = getStockCurrency(ticker, inv.currency)
       const shares = inv.shares || inv.quantity || 0
       const avgCost = inv.avg_cost || inv.purchase_price || 0
       const costInStockCurrency = shares * avgCost
@@ -497,7 +505,7 @@ export default function PortfolioDetailPage() {
               {portfolio.investments.map((investment) => {
                 const ticker = (investment.ticker || investment.asset_identifier || 'Unknown').toUpperCase()
                 const shares = investment.shares || investment.quantity || 0
-                const stockCurrency = getStockCurrency(ticker)
+                const stockCurrency = getStockCurrency(ticker, investment.currency)
 
                 // Purchase price is in the stock's native currency
                 const avgCostInStockCurrency = investment.avg_cost || investment.purchase_price || 0

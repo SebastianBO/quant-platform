@@ -190,7 +190,8 @@ export default function UserPortfolios() {
               current_price: inv.current_price,
               current_value: inv.current_value,
               market_value: inv.current_value || (inv.quantity * (inv.current_price || inv.purchase_price || 0)),
-              total_cost_basis: inv.total_cost_basis
+              total_cost_basis: inv.total_cost_basis,
+              currency: inv.currency
             }))
           }))
 
@@ -219,7 +220,8 @@ export default function UserPortfolios() {
               purchase_price,
               total_cost_basis,
               current_price,
-              current_value
+              current_value,
+              currency
             )
           `)
           .eq('user_id', authUser.id)
@@ -245,7 +247,8 @@ export default function UserPortfolios() {
             current_price: inv.current_price,
             current_value: inv.current_value,
             market_value: inv.current_value || (inv.quantity * (inv.current_price || inv.purchase_price || 0)),
-            total_cost_basis: inv.total_cost_basis
+            total_cost_basis: inv.total_cost_basis,
+            currency: inv.currency // Include stored currency for proper conversion
           }))
         }))
 
@@ -271,7 +274,8 @@ export default function UserPortfolios() {
                 purchase_price,
                 total_cost_basis,
                 current_price,
-                current_value
+                current_value,
+                currency
               )
             `)
             .in('id', memberPortfolioIds)
@@ -290,7 +294,8 @@ export default function UserPortfolios() {
               current_price: inv.current_price,
               current_value: inv.current_value,
               market_value: inv.current_value || (inv.quantity * (inv.current_price || inv.purchase_price || 0)),
-              total_cost_basis: inv.total_cost_basis
+              total_cost_basis: inv.total_cost_basis,
+              currency: inv.currency
             }))
           }))
         }

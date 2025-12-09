@@ -137,11 +137,15 @@ export function formatCurrencyValue(value: number, currency: string = 'USD'): st
 }
 
 /**
- * Determine stock's native currency based on ticker suffix
+ * Determine stock's native currency
+ * Priority: 1) Stored currency from database, 2) Ticker suffix detection, 3) Default USD
  * .ST = Stockholm (SEK), .L = London (GBP), .DE = Germany (EUR), etc.
- * Default to USD for US stocks (no suffix)
  */
-export function getStockCurrency(ticker: string): string {
+export function getStockCurrency(ticker: string, storedCurrency?: string | null): string {
+  // If we have a stored currency from Tink/Plaid/manual entry, use it
+  if (storedCurrency) return storedCurrency.toUpperCase()
+
+  // Otherwise, detect from ticker suffix
   const t = ticker.toUpperCase()
   if (t.endsWith('.ST')) return 'SEK'
   if (t.endsWith('.L')) return 'GBP'
@@ -169,6 +173,7 @@ export function calculatePortfolioValueWithConversion(
     avg_cost?: number | null
     market_value?: number | null
     current_value?: number | null
+    currency?: string | null // Stored currency from database
   }>,
   portfolioCurrency: string = 'USD'
 ): {
@@ -183,7 +188,8 @@ export function calculatePortfolioValueWithConversion(
 
   for (const inv of investments) {
     const ticker = (inv.ticker || inv.asset_identifier || '').toUpperCase()
-    const stockCurrency = getStockCurrency(ticker)
+    // Use stored currency if available, otherwise detect from ticker
+    const stockCurrency = getStockCurrency(ticker, inv.currency)
     const shares = inv.quantity || inv.shares || 0
     const currentPrice = inv.current_price || inv.purchase_price || inv.avg_cost || 0
     const avgCost = inv.purchase_price || inv.avg_cost || currentPrice
