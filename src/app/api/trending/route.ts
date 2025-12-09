@@ -2,44 +2,18 @@ import { NextResponse } from 'next/server'
 
 const EODHD_API_KEY = process.env.EODHD_API_KEY
 
-// Large universe of liquid stocks to find today's movers
-// S&P 100 + popular volatile stocks
-const STOCK_UNIVERSE = [
-  // Mega caps
-  'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA', 'META', 'TSLA', 'BRK-B', 'UNH', 'JNJ',
-  'V', 'XOM', 'JPM', 'WMT', 'MA', 'PG', 'HD', 'CVX', 'MRK', 'ABBV',
-  'LLY', 'PFE', 'COST', 'KO', 'PEP', 'AVGO', 'TMO', 'MCD', 'CSCO', 'ABT',
-  'ACN', 'DHR', 'NKE', 'ADBE', 'CRM', 'TXN', 'NEE', 'VZ', 'CMCSA', 'PM',
-  'INTC', 'AMD', 'QCOM', 'HON', 'UPS', 'IBM', 'AMGN', 'CAT', 'BA', 'GE',
-  // Tech & Growth
-  'NFLX', 'CRM', 'ORCL', 'NOW', 'UBER', 'ABNB', 'SQ', 'SHOP', 'SNOW', 'PLTR',
-  'COIN', 'HOOD', 'RBLX', 'U', 'DKNG', 'CRWD', 'ZS', 'PANW', 'OKTA', 'DDOG',
-  // Volatile/Meme
-  'GME', 'AMC', 'RIVN', 'LCID', 'NIO', 'XPEV', 'SOFI', 'AFRM', 'UPST', 'PATH',
-  // Financials
-  'BAC', 'WFC', 'GS', 'MS', 'C', 'BLK', 'SCHW', 'AXP',
-  // Healthcare/Biotech
-  'MRNA', 'BNTX', 'REGN', 'VRTX', 'GILD', 'BMY', 'BIIB',
-  // Energy
-  'OXY', 'SLB', 'COP', 'EOG', 'DVN',
-  // ETFs for market context
-  'SPY', 'QQQ', 'IWM', 'DIA', 'XLF', 'XLE', 'XLK', 'ARKK'
+// Base tickers we always want (ETFs + mega caps for context)
+const BASE_TICKERS = [
+  'SPY', 'QQQ', 'IWM', 'DIA', // ETFs
+  'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA', 'META', 'TSLA' // Mega caps
 ]
 
-// Popular tickers for the trending bar
-const TRENDING_DISPLAY = [
-  'SPY', 'QQQ', 'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA', 'TSLA', 'META',
-  'AMD', 'COIN', 'PLTR', 'GME', 'RIVN'
-]
-
-interface RealTimeQuote {
+interface ScreenerStock {
   code: string
-  close: number
-  previousClose: number
-  change: number
-  change_p: number
-  volume: number
-  timestamp: number
+  name: string
+  adjusted_close?: number
+  refund_1d_p?: number
+  market_capitalization?: number
 }
 
 export async function GET() {
@@ -54,20 +28,75 @@ export async function GET() {
       losers: []
     }
 
-    // Fetch real-time quotes for entire universe (batched)
-    // EODHD allows multiple tickers in one request
-    const allQuotes: RealTimeQuote[] = []
+    // STEP 1: Get DYNAMIC universe from EOD screener
+    // Find stocks that moved significantly yesterday (they often continue moving)
+    const dynamicTickers: string[] = [...BASE_TICKERS]
 
-    // Split into batches of 50 to avoid URL length issues
+    // Get yesterday's big gainers (>5% move, >$300M market cap)
+    const gainersFilters = JSON.stringify([
+      ["market_capitalization", ">", 300000000],
+      ["refund_1d_p", ">", 5],
+      ["exchange", "=", "us"]
+    ])
+
+    // Get yesterday's big losers
+    const losersFilters = JSON.stringify([
+      ["market_capitalization", ">", 300000000],
+      ["refund_1d_p", "<", -5],
+      ["exchange", "=", "us"]
+    ])
+
+    // Fetch both in parallel
+    const [gainersRes, losersRes] = await Promise.all([
+      fetch(
+        `https://eodhd.com/api/screener?api_token=${EODHD_API_KEY}&filters=${encodeURIComponent(gainersFilters)}&sort=refund_1d_p.desc&limit=30`,
+        { next: { revalidate: 300 } } // Cache screener for 5 min
+      ),
+      fetch(
+        `https://eodhd.com/api/screener?api_token=${EODHD_API_KEY}&filters=${encodeURIComponent(losersFilters)}&sort=refund_1d_p.asc&limit=30`,
+        { next: { revalidate: 300 } }
+      )
+    ])
+
+    // Add screener results to our dynamic universe
+    if (gainersRes.ok) {
+      const data = await gainersRes.json()
+      if (data.data) {
+        data.data.forEach((stock: ScreenerStock) => {
+          const symbol = stock.code?.split('.')[0]
+          if (symbol && !dynamicTickers.includes(symbol)) {
+            dynamicTickers.push(symbol)
+          }
+        })
+      }
+    }
+
+    if (losersRes.ok) {
+      const data = await losersRes.json()
+      if (data.data) {
+        data.data.forEach((stock: ScreenerStock) => {
+          const symbol = stock.code?.split('.')[0]
+          if (symbol && !dynamicTickers.includes(symbol)) {
+            dynamicTickers.push(symbol)
+          }
+        })
+      }
+    }
+
+    console.log(`Dynamic universe: ${dynamicTickers.length} stocks`)
+
+    // STEP 2: Fetch REAL-TIME prices for our dynamic universe
+    const allQuotes: any[] = []
     const batchSize = 50
-    for (let i = 0; i < STOCK_UNIVERSE.length; i += batchSize) {
-      const batch = STOCK_UNIVERSE.slice(i, i + batchSize)
+
+    for (let i = 0; i < dynamicTickers.length; i += batchSize) {
+      const batch = dynamicTickers.slice(i, i + batchSize)
       const tickerString = batch.map(t => `${t}.US`).join(',')
 
       try {
         const response = await fetch(
           `https://eodhistoricaldata.com/api/real-time/${tickerString}?api_token=${EODHD_API_KEY}&fmt=json`,
-          { next: { revalidate: 60 } } // Cache for 1 minute
+          { next: { revalidate: 60 } } // Real-time cached 1 min
         )
 
         if (response.ok) {
@@ -76,25 +105,21 @@ export async function GET() {
           allQuotes.push(...quotes.filter((q: any) => q && q.code))
         }
       } catch (e) {
-        console.error(`Error fetching batch ${i}:`, e)
+        console.error(`Error fetching batch:`, e)
       }
     }
 
-    // Process all quotes
+    // STEP 3: Process quotes and calculate TODAY's movers
     const processedQuotes = allQuotes
       .map((item: any) => {
         const symbol = item.code?.replace('.US', '') || ''
         const price = parseFloat(item.close || 0)
-        const prevClose = parseFloat(item.previousClose || 0)
         const change = parseFloat(item.change || 0)
-        // Use API's change_p if available, otherwise calculate
-        const changePercent = item.change_p !== undefined
-          ? parseFloat(item.change_p)
-          : (prevClose > 0 ? (change / prevClose) * 100 : 0)
+        const changePercent = parseFloat(item.change_p || 0)
 
         return {
           symbol,
-          name: symbol, // Would need separate call for company names
+          name: symbol,
           price,
           change,
           changePercent,
@@ -103,24 +128,28 @@ export async function GET() {
       })
       .filter((t: any) => t.symbol && t.price > 0 && !isNaN(t.changePercent))
 
-    // 1. Trending tickers (for the scrolling bar)
+    // Trending = base tickers for the scrolling bar
     results.trending = processedQuotes.filter(q =>
-      TRENDING_DISPLAY.includes(q.symbol)
+      BASE_TICKERS.includes(q.symbol)
     )
 
-    // 2. Today's top gainers (real-time!)
+    // TODAY's top gainers from our dynamic universe
     results.gainers = [...processedQuotes]
       .sort((a, b) => b.changePercent - a.changePercent)
       .filter(t => t.changePercent > 0)
       .slice(0, 10)
 
-    // 3. Today's top losers (real-time!)
+    // TODAY's top losers from our dynamic universe
     results.losers = [...processedQuotes]
       .sort((a, b) => a.changePercent - b.changePercent)
       .filter(t => t.changePercent < 0)
       .slice(0, 10)
 
-    return NextResponse.json(results)
+    return NextResponse.json({
+      ...results,
+      universeSize: dynamicTickers.length,
+      timestamp: new Date().toISOString()
+    })
   } catch (error) {
     console.error('Trending error:', error)
     return NextResponse.json({ trending: [], gainers: [], losers: [] })
