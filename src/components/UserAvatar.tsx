@@ -184,16 +184,14 @@ export default function UserAvatar() {
               <span className="text-sm">Subscription</span>
             </Link>
 
-            <button
-              onClick={() => {
-                setDropdownOpen(false)
-                // TODO: Implement settings page
-              }}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-secondary/50 transition-colors group"
+            <Link
+              href="/settings"
+              onClick={() => setDropdownOpen(false)}
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-secondary/50 transition-colors group"
             >
               <Settings className="w-4 h-4 text-muted-foreground group-hover:text-green-500" />
               <span className="text-sm">Settings</span>
-            </button>
+            </Link>
 
             <div className="my-2 border-t border-border" />
 

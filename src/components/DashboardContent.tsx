@@ -39,6 +39,7 @@ import StockChartSwitcher from "@/components/StockChartSwitcher"
 import MarketDataTable from "@/components/MarketDataTable"
 import MarketSidebar from "@/components/MarketSidebar"
 import UserAvatar from "@/components/UserAvatar"
+import StockDiscussions from "@/components/StockDiscussions"
 import { formatCurrency, formatPercent } from "@/lib/utils"
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts"
 import { TrendingUp, TrendingDown, Star, Share2 } from "lucide-react"
@@ -357,6 +358,9 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
                   <div className="space-y-6">
                     {/* Chart Switcher - Simple or TradingView */}
                     <StockChartSwitcher ticker={ticker} />
+
+                    {/* Community Discussion */}
+                    <StockDiscussions ticker={ticker} />
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Financial Health */}
