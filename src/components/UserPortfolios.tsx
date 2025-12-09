@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { createClient } from "@/lib/supabase-browser"
 import { Plus, Briefcase, Users, MessageCircle, ChevronRight, TrendingUp, TrendingDown } from "lucide-react"
 import { getSymbolColor, getClearbitLogoFromSymbol } from "@/lib/logoService"
-import { calculatePortfolioValueWithConversion, formatCurrencyValue, convertCurrency } from "@/lib/currencyUtils"
+import { calculatePortfolioValueWithConversion, formatCurrencyValue, convertCurrency, getStockCurrency } from "@/lib/currencyUtils"
 import type { User } from "@supabase/supabase-js"
 
 interface Investment {
@@ -520,9 +520,11 @@ export default function UserPortfolios() {
                   {holdingsCount > 0 ? (
                     <div className="space-y-2 pt-4 border-t border-border/50">
                       {portfolio.investments.slice(0, 3).map((inv) => {
-                        // Convert holding value from USD to portfolio currency
-                        const valueUSD = inv.market_value || inv.current_value || 0
-                        const valueInCurrency = getHoldingValueInCurrency(valueUSD, portfolio.currency)
+                        // Get stock's native currency based on ticker
+                        const stockCurrency = getStockCurrency(inv.ticker || '')
+                        // Value is in stock's native currency, convert to portfolio currency
+                        const valueInStockCurrency = inv.market_value || inv.current_value || 0
+                        const valueInPortfolioCurrency = convertCurrency(valueInStockCurrency, stockCurrency, portfolio.currency)
 
                         return (
                           <div key={inv.id} className="flex items-center gap-3">
@@ -535,7 +537,7 @@ export default function UserPortfolios() {
                             </div>
                             <div className="text-right">
                               <p className="font-medium text-sm tabular-nums">
-                                {formatCurrency(valueInCurrency, portfolio.currency)}
+                                {formatCurrency(valueInPortfolioCurrency, portfolio.currency)}
                               </p>
                               {inv.avg_cost && inv.current_price && (
                                 <p className={`text-xs tabular-nums ${

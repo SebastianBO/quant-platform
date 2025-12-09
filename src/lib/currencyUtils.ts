@@ -137,11 +137,31 @@ export function formatCurrencyValue(value: number, currency: string = 'USD'): st
 }
 
 /**
+ * Determine stock's native currency based on ticker suffix
+ * .ST = Stockholm (SEK), .L = London (GBP), .DE = Germany (EUR), etc.
+ * Default to USD for US stocks (no suffix)
+ */
+export function getStockCurrency(ticker: string): string {
+  const t = ticker.toUpperCase()
+  if (t.endsWith('.ST')) return 'SEK'
+  if (t.endsWith('.L')) return 'GBP'
+  if (t.endsWith('.DE') || t.endsWith('.F')) return 'EUR'
+  if (t.endsWith('.PA')) return 'EUR'
+  if (t.endsWith('.TO')) return 'CAD'
+  if (t.endsWith('.AX')) return 'AUD'
+  if (t.endsWith('.HK')) return 'HKD'
+  if (t.endsWith('.T')) return 'JPY'
+  return 'USD' // Default for US stocks
+}
+
+/**
  * Calculate portfolio value with currency conversion
- * All stock prices are assumed to be in USD
+ * Stock prices are in their native currency based on exchange
  */
 export function calculatePortfolioValueWithConversion(
   investments: Array<{
+    ticker?: string
+    asset_identifier?: string
     quantity?: number
     shares?: number
     current_price?: number | null
@@ -158,33 +178,32 @@ export function calculatePortfolioValueWithConversion(
   totalGainLossPercent: number
   exchangeRate: number
 } {
-  // Stock prices from EODHD are in USD
-  const stockPriceCurrency = 'USD'
-  const exchangeRate = getExchangeRate(stockPriceCurrency, portfolioCurrency)
-
-  let totalValueUSD = 0
-  let totalCostUSD = 0
+  let totalValueInPortfolioCurrency = 0
+  let totalCostInPortfolioCurrency = 0
 
   for (const inv of investments) {
+    const ticker = (inv.ticker || inv.asset_identifier || '').toUpperCase()
+    const stockCurrency = getStockCurrency(ticker)
     const shares = inv.quantity || inv.shares || 0
     const currentPrice = inv.current_price || inv.purchase_price || inv.avg_cost || 0
     const avgCost = inv.purchase_price || inv.avg_cost || currentPrice
 
-    // Values in USD
-    const valueUSD = inv.current_value || inv.market_value || (shares * currentPrice)
-    const costUSD = shares * avgCost
+    // Values in stock's native currency
+    const valueInStockCurrency = inv.current_value || inv.market_value || (shares * currentPrice)
+    const costInStockCurrency = shares * avgCost
 
-    totalValueUSD += valueUSD
-    totalCostUSD += costUSD
+    // Convert from stock currency to portfolio currency
+    totalValueInPortfolioCurrency += convertCurrency(valueInStockCurrency, stockCurrency, portfolioCurrency)
+    totalCostInPortfolioCurrency += convertCurrency(costInStockCurrency, stockCurrency, portfolioCurrency)
   }
 
-  // Convert to portfolio currency
-  const totalValueInPortfolioCurrency = totalValueUSD * exchangeRate
-  const totalCostInPortfolioCurrency = totalCostUSD * exchangeRate
   const totalGainLoss = totalValueInPortfolioCurrency - totalCostInPortfolioCurrency
   const totalGainLossPercent = totalCostInPortfolioCurrency > 0
     ? (totalGainLoss / totalCostInPortfolioCurrency) * 100
     : 0
+
+  // Exchange rate is now per-stock, so return average or USD rate as reference
+  const exchangeRate = getExchangeRate('USD', portfolioCurrency)
 
   return {
     totalValueInPortfolioCurrency,
