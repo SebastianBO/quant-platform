@@ -21,6 +21,7 @@ import PortfolioChat from "@/components/PortfolioChat"
 import PortfolioMemberChat from "@/components/PortfolioMemberChat"
 import PortfolioPerformanceChart from "@/components/PortfolioPerformanceChart"
 import { getSymbolColor, getClearbitLogoFromSymbol } from "@/lib/logoService"
+import { convertCurrency, fetchFXRates, getExchangeRate } from "@/lib/currencyUtils"
 
 // Stock logo component with EODHD → Clearbit → fallback
 function HoldingLogo({ symbol, size = 40 }: { symbol: string; size?: number }) {

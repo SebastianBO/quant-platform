@@ -8,7 +8,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import {
   Building2, TrendingUp, TrendingDown, Plus, Minus,
   Search, ArrowUpRight, ArrowDownRight, PieChart,
-  Briefcase, ChevronRight, X, Loader2, Database, Globe
+  Briefcase, ChevronRight, X, Loader2, Database, Globe,
+  Gauge, AlertTriangle, Target, Activity
 } from "lucide-react"
 import Link from "next/link"
 
@@ -26,6 +27,15 @@ interface Holder {
   reportDate: string
 }
 
+interface ConcentrationData {
+  hhi: number
+  hhiNormalized: number
+  top5Percent: number
+  top10Percent: number
+  effectiveHolders: number
+  rating: 'LOW' | 'MODERATE' | 'HIGH' | 'VERY_HIGH'
+}
+
 interface InstitutionalData {
   ticker: string
   summary: {
@@ -38,6 +48,9 @@ interface InstitutionalData {
     newPositions: number
     avgPosition: number
     holdersByType: Record<string, { count: number; value: number }>
+    flowScore?: number
+    flowSignal?: 'STRONG_BUY' | 'BUY' | 'NEUTRAL' | 'SELL' | 'STRONG_SELL'
+    concentration?: ConcentrationData
   }
   holders: Holder[]
   increasedHolders: Holder[]
@@ -546,6 +559,91 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                 <p className="text-xl font-bold">{formatValue(data?.summary.avgPosition || 0)}</p>
               </div>
             </div>
+
+            {/* Flow Score & Concentration Analysis */}
+            {(data?.summary.flowScore !== undefined || data?.summary.concentration) && (
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                {/* Flow Score */}
+                {data?.summary.flowScore !== undefined && (
+                  <div className={`p-3 rounded-lg border ${
+                    data.summary.flowSignal === 'STRONG_BUY' ? 'bg-emerald-500/10 border-emerald-500/30' :
+                    data.summary.flowSignal === 'BUY' ? 'bg-green-500/10 border-green-500/30' :
+                    data.summary.flowSignal === 'SELL' ? 'bg-orange-500/10 border-orange-500/30' :
+                    data.summary.flowSignal === 'STRONG_SELL' ? 'bg-red-500/10 border-red-500/30' :
+                    'bg-secondary/30 border-border'
+                  }`}>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <Activity className="w-4 h-4" />
+                        <span className="text-sm font-medium">Institutional Flow</span>
+                      </div>
+                      <span className={`text-xs px-2 py-0.5 rounded font-bold ${
+                        data.summary.flowSignal === 'STRONG_BUY' ? 'bg-emerald-500 text-white' :
+                        data.summary.flowSignal === 'BUY' ? 'bg-green-500 text-white' :
+                        data.summary.flowSignal === 'SELL' ? 'bg-orange-500 text-white' :
+                        data.summary.flowSignal === 'STRONG_SELL' ? 'bg-red-500 text-white' :
+                        'bg-secondary text-muted-foreground'
+                      }`}>
+                        {data.summary.flowSignal?.replace('_', ' ')}
+                      </span>
+                    </div>
+                    <div className="flex items-end gap-2">
+                      <span className="text-2xl font-bold">{data.summary.flowScore.toFixed(0)}</span>
+                      <span className="text-xs text-muted-foreground mb-1">/100</span>
+                    </div>
+                    <div className="w-full h-2 bg-secondary rounded-full mt-2 overflow-hidden">
+                      <div
+                        className={`h-full transition-all ${
+                          data.summary.flowScore >= 60 ? 'bg-green-500' :
+                          data.summary.flowScore >= 40 ? 'bg-yellow-500' : 'bg-red-500'
+                        }`}
+                        style={{ width: `${data.summary.flowScore}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Concentration Analysis */}
+                {data?.summary.concentration && (
+                  <div className={`p-3 rounded-lg border ${
+                    data.summary.concentration.rating === 'VERY_HIGH' ? 'bg-red-500/10 border-red-500/30' :
+                    data.summary.concentration.rating === 'HIGH' ? 'bg-orange-500/10 border-orange-500/30' :
+                    data.summary.concentration.rating === 'MODERATE' ? 'bg-yellow-500/10 border-yellow-500/30' :
+                    'bg-secondary/30 border-border'
+                  }`}>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <Target className="w-4 h-4" />
+                        <span className="text-sm font-medium">Concentration (HHI)</span>
+                      </div>
+                      {data.summary.concentration.rating === 'VERY_HIGH' || data.summary.concentration.rating === 'HIGH' ? (
+                        <span className="text-xs px-2 py-0.5 rounded bg-orange-500/20 text-orange-500 flex items-center gap-1">
+                          <AlertTriangle className="w-3 h-3" />
+                          {data.summary.concentration.rating.replace('_', ' ')}
+                        </span>
+                      ) : (
+                        <span className="text-xs px-2 py-0.5 rounded bg-secondary text-muted-foreground">
+                          {data.summary.concentration.rating}
+                        </span>
+                      )}
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div>
+                        <span className="text-muted-foreground">Top 5:</span>
+                        <span className="ml-1 font-medium">{data.summary.concentration.top5Percent.toFixed(1)}%</span>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Top 10:</span>
+                        <span className="ml-1 font-medium">{data.summary.concentration.top10Percent.toFixed(1)}%</span>
+                      </div>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      ~{Math.round(data.summary.concentration.effectiveHolders)} effective equal-sized holders
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Activity Summary */}
             <div className="flex gap-3 mb-4">

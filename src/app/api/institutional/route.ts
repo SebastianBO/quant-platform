@@ -307,6 +307,37 @@ export async function GET(request: NextRequest) {
       return acc
     }, {})
 
+    // Calculate HHI concentration metrics
+    const hhi = totalShares > 0 ? mergedHolders.reduce((sum: number, h: any) => {
+      const marketShare = (h.shares || 0) / totalShares
+      return sum + (marketShare * marketShare)
+    }, 0) : 0
+
+    const sortedByShares = [...mergedHolders].sort((a: any, b: any) => (b.shares || 0) - (a.shares || 0))
+    const top5Shares = sortedByShares.slice(0, 5).reduce((sum: number, h: any) => sum + (h.shares || 0), 0)
+    const top10Shares = sortedByShares.slice(0, 10).reduce((sum: number, h: any) => sum + (h.shares || 0), 0)
+
+    const concentration = {
+      hhi: hhi,
+      hhiNormalized: hhi * 10000,
+      top5Percent: totalShares > 0 ? (top5Shares / totalShares) * 100 : 0,
+      top10Percent: totalShares > 0 ? (top10Shares / totalShares) * 100 : 0,
+      effectiveHolders: hhi > 0 ? 1 / hhi : 0,
+      rating: hhi > 0.25 ? 'VERY_HIGH' :
+              hhi > 0.15 ? 'HIGH' :
+              hhi > 0.10 ? 'MODERATE' : 'LOW'
+    }
+
+    // Calculate flow score based on changes
+    const flowScore = mergedHolders.length > 0 ? Math.max(0, Math.min(100,
+      ((newPositions.length * 3) + (increased.length * 2) - (decreased.length * 1)) / mergedHolders.length * 50 + 50
+    )) : 50
+
+    const flowSignal = flowScore >= 75 ? 'STRONG_BUY' :
+                       flowScore >= 60 ? 'BUY' :
+                       flowScore >= 40 ? 'NEUTRAL' :
+                       flowScore >= 25 ? 'SELL' : 'STRONG_SELL'
+
     return NextResponse.json({
       ticker,
       summary: {
@@ -318,7 +349,11 @@ export async function GET(request: NextRequest) {
         unchangedPositions: unchanged.length,
         newPositions: newPositions.length,
         avgPosition: mergedHolders.length > 0 ? totalValue / mergedHolders.length : 0,
-        holdersByType
+        holdersByType,
+        // New metrics
+        flowScore,
+        flowSignal,
+        concentration
       },
       holders: mergedHolders,
       // Separate lists for UI
