@@ -279,25 +279,42 @@ export default function PortfolioDetailPage() {
     return storedPrice || avgCost || 0
   }
 
-  // Calculate total value in USD first, then convert to portfolio currency
-  const calculateTotalValue = (investments: Investment[], currency: string) => {
-    const totalUSD = investments.reduce((sum, inv) => {
-      const ticker = (inv.ticker || inv.asset_identifier || '').toUpperCase()
-      const shares = inv.shares || inv.quantity || 0
-      const price = getBestPrice(ticker, inv.current_price, inv.avg_cost)
-      return sum + (shares * price)
-    }, 0)
-    // Stock prices are in USD, convert to portfolio currency
-    return convertCurrency(totalUSD, 'USD', currency)
+  // Determine stock's native currency based on ticker suffix
+  const getStockCurrency = (ticker: string) => {
+    if (ticker.endsWith('.ST')) return 'SEK'
+    if (ticker.endsWith('.L')) return 'GBP'
+    if (ticker.endsWith('.DE') || ticker.endsWith('.F')) return 'EUR'
+    if (ticker.endsWith('.PA')) return 'EUR'
+    if (ticker.endsWith('.TO')) return 'CAD'
+    if (ticker.endsWith('.AX')) return 'AUD'
+    if (ticker.endsWith('.HK')) return 'HKD'
+    if (ticker.endsWith('.T')) return 'JPY'
+    return 'USD' // Default for US stocks
   }
 
-  const calculateTotalCost = (investments: Investment[], currency: string) => {
-    const totalCostUSD = investments.reduce((sum, inv) => {
-      const cost = (inv.shares || inv.quantity || 0) * (inv.avg_cost || inv.purchase_price || 0)
-      return sum + cost
+  // Calculate total value - convert each stock from its native currency to portfolio currency
+  const calculateTotalValue = (investments: Investment[], portfolioCurrency: string) => {
+    return investments.reduce((sum, inv) => {
+      const ticker = (inv.ticker || inv.asset_identifier || '').toUpperCase()
+      const stockCurrency = getStockCurrency(ticker)
+      const shares = inv.shares || inv.quantity || 0
+      const price = getBestPrice(ticker, inv.current_price, inv.avg_cost)
+      const valueInStockCurrency = shares * price
+      // Convert from stock's native currency to portfolio currency
+      return sum + convertCurrency(valueInStockCurrency, stockCurrency, portfolioCurrency)
     }, 0)
-    // Cost basis is in USD, convert to portfolio currency
-    return convertCurrency(totalCostUSD, 'USD', currency)
+  }
+
+  const calculateTotalCost = (investments: Investment[], portfolioCurrency: string) => {
+    return investments.reduce((sum, inv) => {
+      const ticker = (inv.ticker || inv.asset_identifier || '').toUpperCase()
+      const stockCurrency = getStockCurrency(ticker)
+      const shares = inv.shares || inv.quantity || 0
+      const avgCost = inv.avg_cost || inv.purchase_price || 0
+      const costInStockCurrency = shares * avgCost
+      // Convert from stock's native currency to portfolio currency
+      return sum + convertCurrency(costInStockCurrency, stockCurrency, portfolioCurrency)
+    }, 0)
   }
 
   const formatCurrency = (value: number, currency: string = 'USD') => {
@@ -480,20 +497,27 @@ export default function PortfolioDetailPage() {
               {portfolio.investments.map((investment) => {
                 const ticker = (investment.ticker || investment.asset_identifier || 'Unknown').toUpperCase()
                 const shares = investment.shares || investment.quantity || 0
-                const avgCostUSD = investment.avg_cost || investment.purchase_price || 0
+                const stockCurrency = getStockCurrency(ticker)
 
-                // Use live price if available, otherwise fall back to stored price (all in USD)
+                // Purchase price is in the stock's native currency
+                const avgCostInStockCurrency = investment.avg_cost || investment.purchase_price || 0
+
+                // Use live price if available (in stock's native currency)
                 const liveData = livePrices[ticker]
-                const currentPriceUSD = liveData?.price || investment.current_price || avgCostUSD
-                const marketValueUSD = shares * currentPriceUSD
-                const costBasisUSD = shares * avgCostUSD
+                const currentPriceInStockCurrency = liveData?.price || investment.current_price || avgCostInStockCurrency
+
+                // Calculate values in stock's native currency
+                const marketValueInStockCurrency = shares * currentPriceInStockCurrency
+                const costBasisInStockCurrency = shares * avgCostInStockCurrency
 
                 // Convert to portfolio currency for display
-                const marketValue = convertCurrency(marketValueUSD, 'USD', portfolio.currency)
-                const costBasis = convertCurrency(costBasisUSD, 'USD', portfolio.currency)
-                const avgCost = convertCurrency(avgCostUSD, 'USD', portfolio.currency)
+                const marketValue = convertCurrency(marketValueInStockCurrency, stockCurrency, portfolio.currency)
+                const costBasis = convertCurrency(costBasisInStockCurrency, stockCurrency, portfolio.currency)
                 const gain = marketValue - costBasis
-                const gainPercent = costBasis > 0 ? (gain / costBasis) * 100 : 0
+                // Gain percent is the same regardless of currency (it's a ratio)
+                const gainPercent = costBasisInStockCurrency > 0
+                  ? ((currentPriceInStockCurrency - avgCostInStockCurrency) / avgCostInStockCurrency) * 100
+                  : 0
                 const positionIsPositive = gain >= 0
 
                 // Day change from live data (percentage stays the same regardless of currency)
@@ -525,7 +549,7 @@ export default function PortfolioDetailPage() {
                                 )}
                               </div>
                               <p className="text-sm text-muted-foreground">
-                                {shares.toLocaleString()} shares @ {formatCurrency(avgCost, portfolio.currency)}
+                                {shares.toLocaleString()} shares @ {formatCurrency(avgCostInStockCurrency, stockCurrency)}
                               </p>
                             </div>
                           </div>

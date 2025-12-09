@@ -128,10 +128,10 @@ export default function UserAvatar() {
   const displayName = profile?.full_name || profile?.username || user.email?.split('@')[0] || 'User'
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative z-50" ref={dropdownRef}>
       <button
         onClick={() => setDropdownOpen(!dropdownOpen)}
-        className="relative flex items-center gap-2 p-0.5 rounded-full hover:ring-2 hover:ring-green-500/50 transition-all"
+        className="relative flex items-center gap-2 p-0.5 rounded-full hover:ring-2 hover:ring-green-500/50 transition-all cursor-pointer"
       >
         <img
           src={avatarUrl}
