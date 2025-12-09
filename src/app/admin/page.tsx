@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,7 +9,8 @@ import {
   XCircle, Clock, RefreshCw, Shield, Zap, Globe, HardDrive,
   TrendingUp, AlertOctagon, Loader2, ChevronDown, ChevronRight,
   Users, Briefcase, BarChart3, FileText, Bot, Wallet,
-  Bell, Building, Settings, Link2, Eye, Play, Search, Filter
+  Bell, Building, Settings, Link2, Eye, Play, Search, Filter,
+  Terminal, CircleDot, Pause, AlertCircle, Timer, Sparkles
 } from "lucide-react"
 
 interface TableInfo {
@@ -21,6 +22,15 @@ interface TableInfo {
 interface EdgeFunctionInfo {
   name: string
   status: 'active' | 'error' | 'unknown'
+}
+
+interface FunctionLog {
+  id: string
+  functionName: string
+  status: 'success' | 'error' | 'running'
+  duration?: number
+  timestamp: string
+  message?: string
 }
 
 interface SystemStatus {
@@ -62,6 +72,7 @@ interface SystemStatus {
     lastEarningsSync: string | null
     lastPriceSync: string | null
   }
+  functionLogs?: FunctionLog[]
 }
 
 // Category icons mapping
@@ -92,6 +103,14 @@ const categoryIcons: Record<string, React.ReactNode> = {
   'System & Logs': <Server className="w-4 h-4" />
 }
 
+// Data freshness thresholds (in hours)
+const FRESHNESS_THRESHOLDS = {
+  prices: { fresh: 1, stale: 4, critical: 24 },
+  earnings: { fresh: 24, stale: 72, critical: 168 },
+  fundamentals: { fresh: 24, stale: 168, critical: 720 },
+  shortInterest: { fresh: 24, stale: 72, critical: 168 }
+}
+
 export default function AdminDashboard() {
   const [password, setPassword] = useState("")
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -102,8 +121,12 @@ export default function AdminDashboard() {
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set())
   const [activeTab, setActiveTab] = useState<'overview' | 'functions' | 'tables' | 'apis' | 'logs'>('overview')
   const [searchTerm, setSearchTerm] = useState("")
+  const [testingFunction, setTestingFunction] = useState<string | null>(null)
+  const [functionTestResults, setFunctionTestResults] = useState<Record<string, { success: boolean; message: string; duration?: number }>>({})
+  const [functionLogs, setFunctionLogs] = useState<FunctionLog[]>([])
+  const [isPollingLogs, setIsPollingLogs] = useState(false)
 
-  const fetchStatus = async () => {
+  const fetchStatus = useCallback(async () => {
     if (!password) return
 
     setLoading(true)
@@ -126,10 +149,68 @@ export default function AdminDashboard() {
       setStatus(data)
       setIsAuthenticated(true)
       setLastRefresh(new Date())
+
+      // Update function logs if available
+      if (data.functionLogs) {
+        setFunctionLogs(data.functionLogs)
+      }
     } catch (err) {
       setError('Failed to fetch status')
     } finally {
       setLoading(false)
+    }
+  }, [password])
+
+  // Test edge function
+  const testFunction = async (functionName: string) => {
+    setTestingFunction(functionName)
+    const startTime = Date.now()
+
+    try {
+      const response = await fetch('/api/admin/status', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${password}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          action: 'test-edge-function',
+          functionName
+        })
+      })
+
+      const result = await response.json()
+      const duration = Date.now() - startTime
+
+      setFunctionTestResults(prev => ({
+        ...prev,
+        [functionName]: {
+          success: result.success,
+          message: result.error || 'Function executed successfully',
+          duration
+        }
+      }))
+
+      // Add to logs
+      setFunctionLogs(prev => [{
+        id: `${functionName}-${Date.now()}`,
+        functionName,
+        status: result.success ? 'success' : 'error',
+        duration,
+        timestamp: new Date().toISOString(),
+        message: result.error || 'Test invocation completed'
+      }, ...prev.slice(0, 49)])
+
+    } catch (err) {
+      setFunctionTestResults(prev => ({
+        ...prev,
+        [functionName]: {
+          success: false,
+          message: String(err)
+        }
+      }))
+    } finally {
+      setTestingFunction(null)
     }
   }
 
@@ -139,7 +220,30 @@ export default function AdminDashboard() {
 
     const interval = setInterval(fetchStatus, 30000)
     return () => clearInterval(interval)
-  }, [isAuthenticated, password])
+  }, [isAuthenticated, fetchStatus])
+
+  // Poll for live logs when enabled
+  useEffect(() => {
+    if (!isPollingLogs || !isAuthenticated) return
+
+    const pollInterval = setInterval(async () => {
+      try {
+        const response = await fetch('/api/admin/status?logsOnly=true', {
+          headers: { 'Authorization': `Bearer ${password}` }
+        })
+        if (response.ok) {
+          const data = await response.json()
+          if (data.functionLogs) {
+            setFunctionLogs(data.functionLogs)
+          }
+        }
+      } catch (e) {
+        // Silent fail for log polling
+      }
+    }, 5000)
+
+    return () => clearInterval(pollInterval)
+  }, [isPollingLogs, isAuthenticated, password])
 
   const formatNumber = (num: number) => {
     if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`
@@ -161,6 +265,22 @@ export default function AdminDashboard() {
     return `${diffDays}d ago`
   }
 
+  const getDataFreshness = (tableName: string, count: number): 'fresh' | 'stale' | 'critical' | 'empty' => {
+    if (count === 0) return 'empty'
+
+    // Check based on table type
+    if (tableName.includes('price') || tableName.includes('realtime')) {
+      return 'fresh' // Would need lastUpdated timestamp for accurate check
+    }
+    if (tableName.includes('earnings')) {
+      return count > 100 ? 'fresh' : 'stale'
+    }
+    if (tableName.includes('short')) {
+      return count > 1000 ? 'fresh' : 'stale'
+    }
+    return 'fresh'
+  }
+
   const toggleCategory = (category: string) => {
     const newExpanded = new Set(expandedCategories)
     if (newExpanded.has(category)) {
@@ -174,8 +294,8 @@ export default function AdminDashboard() {
   const expandAll = () => {
     if (status?.edgeFunctions?.byCategory) {
       setExpandedCategories(new Set([
-        ...Object.keys(status.edgeFunctions.byCategory),
-        ...Object.keys(status.database.tablesByCategory || {})
+        ...Object.keys(status.edgeFunctions.byCategory).map(k => `fn-${k}`),
+        ...Object.keys(status.database.tablesByCategory || {}).map(k => `db-${k}`)
       ]))
     }
   }
@@ -195,7 +315,7 @@ export default function AdminDashboard() {
             </div>
             <CardTitle>Lician Admin Dashboard</CardTitle>
             <p className="text-sm text-muted-foreground mt-2">
-              System monitoring for 170+ edge functions and 60+ database tables
+              System monitoring for 150+ edge functions and 90+ database tables
             </p>
           </CardHeader>
           <CardContent>
@@ -235,6 +355,17 @@ export default function AdminDashboard() {
   const healthyApis = status?.externalApis?.filter(a => a.status === 'healthy').length || 0
   const totalApis = status?.externalApis?.length || 0
 
+  // Calculate data freshness alerts
+  const emptyTables = status?.database?.tablesByCategory
+    ? Object.values(status.database.tablesByCategory).flat().filter(t => t.count === 0).length
+    : 0
+  const criticalTables = status?.database?.tablesByCategory
+    ? Object.values(status.database.tablesByCategory).flat().filter(t => {
+        const freshness = getDataFreshness(t.name, t.count)
+        return freshness === 'critical' || freshness === 'empty'
+      }).length
+    : 0
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -251,6 +382,15 @@ export default function AdminDashboard() {
               </p>
             </div>
             <div className="flex items-center gap-4">
+              {/* Data Freshness Alert Badge */}
+              {(emptyTables > 0 || criticalTables > 0) && (
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+                  <AlertCircle className="w-4 h-4 text-yellow-500" />
+                  <span className="text-xs text-yellow-500 font-medium">
+                    {emptyTables} empty, {criticalTables} need attention
+                  </span>
+                </div>
+              )}
               {lastRefresh && (
                 <span className="text-sm text-muted-foreground">
                   Updated {formatTimeAgo(lastRefresh.toISOString())}
@@ -270,13 +410,13 @@ export default function AdminDashboard() {
               { id: 'functions', label: `Functions (${totalFunctions})`, icon: <Zap className="w-4 h-4" /> },
               { id: 'tables', label: `Tables (${totalTables})`, icon: <Database className="w-4 h-4" /> },
               { id: 'apis', label: `APIs (${healthyApis}/${totalApis})`, icon: <Globe className="w-4 h-4" /> },
-              { id: 'logs', label: `Logs (${status?.errors?.length || 0})`, icon: <AlertOctagon className="w-4 h-4" /> }
+              { id: 'logs', label: `Logs`, icon: <Terminal className="w-4 h-4" /> }
             ].map(tab => (
               <Button
                 key={tab.id}
                 variant={activeTab === tab.id ? 'default' : 'ghost'}
                 size="sm"
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => setActiveTab(tab.id as typeof activeTab)}
                 className="gap-2"
               >
                 {tab.icon}
@@ -384,6 +524,41 @@ export default function AdminDashboard() {
               </Card>
             </div>
 
+            {/* Data Freshness Alerts */}
+            {emptyTables > 0 && (
+              <Card className="border-yellow-500/20 bg-yellow-500/5">
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2 text-base text-yellow-500">
+                    <AlertCircle className="w-5 h-5" />
+                    Data Freshness Alerts
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {status?.database?.tablesByCategory && Object.entries(status.database.tablesByCategory).map(([category, tables]) => {
+                      const emptyInCategory = tables.filter(t => t.count === 0)
+                      if (emptyInCategory.length === 0) return null
+
+                      return (
+                        <div key={category} className="flex items-center justify-between py-2 px-3 bg-yellow-500/10 rounded-lg">
+                          <div className="flex items-center gap-2">
+                            <AlertTriangle className="w-4 h-4 text-yellow-500" />
+                            <span className="text-sm font-medium">{category}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs text-yellow-600">
+                              {emptyInCategory.length} empty tables: {emptyInCategory.slice(0, 3).map(t => t.name).join(', ')}
+                              {emptyInCategory.length > 3 ? ` +${emptyInCategory.length - 3} more` : ''}
+                            </span>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Quick Status Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* External APIs */}
@@ -435,50 +610,117 @@ export default function AdminDashboard() {
                 </CardContent>
               </Card>
 
-              {/* Sync Status */}
+              {/* Recent Function Invocations */}
               <Card>
                 <CardHeader className="pb-3">
-                  <CardTitle className="flex items-center gap-2 text-base">
-                    <RefreshCw className="w-5 h-5" />
-                    Data Sync Status
+                  <CardTitle className="flex items-center justify-between text-base">
+                    <div className="flex items-center gap-2">
+                      <Terminal className="w-5 h-5" />
+                      Recent Function Activity
+                    </div>
+                    <Button
+                      variant={isPollingLogs ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setIsPollingLogs(!isPollingLogs)}
+                      className="h-7 text-xs"
+                    >
+                      {isPollingLogs ? (
+                        <>
+                          <Pause className="w-3 h-3 mr-1" />
+                          Live
+                        </>
+                      ) : (
+                        <>
+                          <Play className="w-3 h-3 mr-1" />
+                          Start Live
+                        </>
+                      )}
+                    </Button>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-2 max-h-[300px] overflow-y-auto">
-                    {status?.syncStatus?.length ? status.syncStatus.map((sync) => (
+                  <div className="space-y-2 max-h-[250px] overflow-y-auto">
+                    {functionLogs.length > 0 ? functionLogs.slice(0, 10).map((log) => (
                       <div
-                        key={sync.name}
-                        className="flex items-center justify-between py-2 px-3 bg-secondary/30 rounded-lg"
+                        key={log.id}
+                        className={`flex items-center justify-between py-2 px-3 rounded-lg ${
+                          log.status === 'success' ? 'bg-green-500/5' :
+                          log.status === 'error' ? 'bg-red-500/5' :
+                          'bg-blue-500/5'
+                        }`}
                       >
                         <div className="flex items-center gap-2">
-                          <div className={`w-2 h-2 rounded-full ${
-                            sync.status === 'fresh' ? 'bg-green-500' :
-                            sync.status === 'stale' ? 'bg-yellow-500' : 'bg-red-500'
-                          }`} />
-                          <span className="text-sm">{sync.name}</span>
+                          {log.status === 'success' ? (
+                            <CheckCircle2 className="w-4 h-4 text-green-500" />
+                          ) : log.status === 'error' ? (
+                            <XCircle className="w-4 h-4 text-red-500" />
+                          ) : (
+                            <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />
+                          )}
+                          <span className="text-xs font-mono">{log.functionName}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          {sync.recordsProcessed && (
-                            <span className="text-xs text-muted-foreground">
-                              {formatNumber(sync.recordsProcessed)} records
-                            </span>
+                          {log.duration && (
+                            <span className="text-xs text-muted-foreground">{log.duration}ms</span>
                           )}
-                          <span className={`text-xs px-1.5 py-0.5 rounded ${
-                            sync.status === 'fresh' ? 'bg-green-500/20 text-green-500' :
-                            sync.status === 'stale' ? 'bg-yellow-500/20 text-yellow-500' :
-                            'bg-red-500/20 text-red-500'
-                          }`}>
-                            {sync.lastSync ? formatTimeAgo(sync.lastSync) : 'Never'}
+                          <span className="text-xs text-muted-foreground">
+                            {formatTimeAgo(log.timestamp)}
                           </span>
                         </div>
                       </div>
                     )) : (
-                      <p className="text-muted-foreground text-center py-4">No sync data available</p>
+                      <p className="text-muted-foreground text-center py-4 text-sm">
+                        No recent function activity. Test a function to see logs here.
+                      </p>
                     )}
                   </div>
                 </CardContent>
               </Card>
             </div>
+
+            {/* Sync Status */}
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <RefreshCw className="w-5 h-5" />
+                  Data Sync Status
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  {status?.syncStatus?.length ? status.syncStatus.map((sync) => (
+                    <div
+                      key={sync.name}
+                      className={`py-3 px-4 rounded-lg border ${
+                        sync.status === 'fresh' ? 'bg-green-500/5 border-green-500/20' :
+                        sync.status === 'stale' ? 'bg-yellow-500/5 border-yellow-500/20' :
+                        'bg-red-500/5 border-red-500/20'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        <div className={`w-2 h-2 rounded-full ${
+                          sync.status === 'fresh' ? 'bg-green-500' :
+                          sync.status === 'stale' ? 'bg-yellow-500' : 'bg-red-500'
+                        }`} />
+                        <span className="text-sm font-medium truncate">{sync.name}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-muted-foreground">
+                          {sync.lastSync ? formatTimeAgo(sync.lastSync) : 'Never'}
+                        </span>
+                        {sync.recordsProcessed && (
+                          <span className="text-xs text-muted-foreground">
+                            {formatNumber(sync.recordsProcessed)}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )) : (
+                    <p className="text-muted-foreground text-center py-4 col-span-4">No sync data available</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
 
             {/* Recent Errors */}
             {status?.errors && status.errors.length > 0 && (
@@ -568,22 +810,55 @@ export default function AdminDashboard() {
                       </CardHeader>
                       {isExpanded && (
                         <CardContent className="pt-0">
-                          <div className="grid grid-cols-2 gap-1">
-                            {(searchTerm ? filteredFunctions : functions).map((fn) => (
-                              <div
-                                key={fn.name}
-                                className={`flex items-center gap-2 py-1.5 px-2 rounded text-xs ${
-                                  fn.status === 'active' ? 'bg-green-500/10' :
-                                  fn.status === 'error' ? 'bg-red-500/10' : 'bg-secondary/30'
-                                }`}
-                              >
-                                <div className={`w-1.5 h-1.5 rounded-full ${
-                                  fn.status === 'active' ? 'bg-green-500' :
-                                  fn.status === 'error' ? 'bg-red-500' : 'bg-gray-500'
-                                }`} />
-                                <span className="font-mono truncate" title={fn.name}>{fn.name}</span>
-                              </div>
-                            ))}
+                          <div className="space-y-1">
+                            {(searchTerm ? filteredFunctions : functions).map((fn) => {
+                              const testResult = functionTestResults[fn.name]
+                              const isTestingThis = testingFunction === fn.name
+
+                              return (
+                                <div
+                                  key={fn.name}
+                                  className={`flex items-center justify-between py-1.5 px-2 rounded text-xs group ${
+                                    testResult?.success === false ? 'bg-red-500/10' :
+                                    testResult?.success === true ? 'bg-green-500/10' :
+                                    fn.status === 'active' ? 'bg-green-500/5' :
+                                    fn.status === 'error' ? 'bg-red-500/10' : 'bg-secondary/30'
+                                  }`}
+                                >
+                                  <div className="flex items-center gap-2">
+                                    <div className={`w-1.5 h-1.5 rounded-full ${
+                                      testResult?.success === false ? 'bg-red-500' :
+                                      testResult?.success === true ? 'bg-green-500' :
+                                      fn.status === 'active' ? 'bg-green-500' :
+                                      fn.status === 'error' ? 'bg-red-500' : 'bg-gray-500'
+                                    }`} />
+                                    <span className="font-mono truncate" title={fn.name}>{fn.name}</span>
+                                    {testResult?.duration && (
+                                      <span className="text-[10px] text-muted-foreground">{testResult.duration}ms</span>
+                                    )}
+                                  </div>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-6 px-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      testFunction(fn.name)
+                                    }}
+                                    disabled={isTestingThis}
+                                  >
+                                    {isTestingThis ? (
+                                      <Loader2 className="w-3 h-3 animate-spin" />
+                                    ) : (
+                                      <>
+                                        <Play className="w-3 h-3 mr-1" />
+                                        Test
+                                      </>
+                                    )}
+                                  </Button>
+                                </div>
+                              )
+                            })}
                           </div>
                         </CardContent>
                       )}
@@ -631,9 +906,10 @@ export default function AdminDashboard() {
 
                   const isExpanded = expandedCategories.has(`db-${category}`) || searchTerm.length > 0
                   const categoryTotal = tables.reduce((sum, t) => sum + (t.count || 0), 0)
+                  const emptyCount = tables.filter(t => t.count === 0).length
 
                   return (
-                    <Card key={category}>
+                    <Card key={category} className={emptyCount > tables.length / 2 ? 'border-yellow-500/20' : ''}>
                       <CardHeader
                         className="pb-2 cursor-pointer hover:bg-secondary/50 rounded-t-lg transition-colors"
                         onClick={() => toggleCategory(`db-${category}`)}
@@ -643,13 +919,18 @@ export default function AdminDashboard() {
                             {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
                             {categoryIcons[category] || <Database className="w-4 h-4" />}
                             {category}
+                            {emptyCount > 0 && (
+                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-yellow-500/20 text-yellow-500">
+                                {emptyCount} empty
+                              </span>
+                            )}
                           </div>
                           <div className="flex items-center gap-2">
                             <span className="text-xs font-normal text-muted-foreground">
                               {tables.length} tables
                             </span>
                             <span className="text-xs font-bold text-primary">
-                              {formatNumber(categoryTotal)} rows
+                              {formatNumber(categoryTotal)}
                             </span>
                           </div>
                         </CardTitle>
@@ -657,19 +938,35 @@ export default function AdminDashboard() {
                       {isExpanded && (
                         <CardContent className="pt-0">
                           <div className="space-y-1">
-                            {(searchTerm ? filteredTables : tables).map((table) => (
-                              <div
-                                key={table.name}
-                                className={`flex items-center justify-between py-1.5 px-2 rounded text-xs ${
-                                  table.error ? 'bg-red-500/10' : 'bg-secondary/30'
-                                }`}
-                              >
-                                <span className="font-mono truncate" title={table.name}>{table.name}</span>
-                                <span className={`font-bold ${table.error ? 'text-red-500' : ''}`}>
-                                  {table.error ? 'Error' : formatNumber(table.count)}
-                                </span>
-                              </div>
-                            ))}
+                            {(searchTerm ? filteredTables : tables).map((table) => {
+                              const freshness = getDataFreshness(table.name, table.count)
+
+                              return (
+                                <div
+                                  key={table.name}
+                                  className={`flex items-center justify-between py-1.5 px-2 rounded text-xs ${
+                                    table.error ? 'bg-red-500/10' :
+                                    freshness === 'empty' ? 'bg-yellow-500/10' :
+                                    freshness === 'critical' ? 'bg-orange-500/10' :
+                                    'bg-secondary/30'
+                                  }`}
+                                >
+                                  <div className="flex items-center gap-2">
+                                    {freshness === 'empty' && (
+                                      <AlertCircle className="w-3 h-3 text-yellow-500" />
+                                    )}
+                                    <span className="font-mono truncate" title={table.name}>{table.name}</span>
+                                  </div>
+                                  <span className={`font-bold ${
+                                    table.error ? 'text-red-500' :
+                                    freshness === 'empty' ? 'text-yellow-500' :
+                                    ''
+                                  }`}>
+                                    {table.error ? 'Error' : formatNumber(table.count)}
+                                  </span>
+                                </div>
+                              )
+                            })}
                           </div>
                         </CardContent>
                       )}
@@ -745,6 +1042,93 @@ export default function AdminDashboard() {
         {/* Logs Tab */}
         {activeTab === 'logs' && (
           <div className="space-y-4">
+            {/* Live Function Logs */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Terminal className="w-5 h-5" />
+                    Function Invocation Logs
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {isPollingLogs && (
+                      <div className="flex items-center gap-1 text-green-500">
+                        <CircleDot className="w-3 h-3 animate-pulse" />
+                        <span className="text-xs">Live</span>
+                      </div>
+                    )}
+                    <Button
+                      variant={isPollingLogs ? "destructive" : "default"}
+                      size="sm"
+                      onClick={() => setIsPollingLogs(!isPollingLogs)}
+                    >
+                      {isPollingLogs ? (
+                        <>
+                          <Pause className="w-4 h-4 mr-1" />
+                          Stop
+                        </>
+                      ) : (
+                        <>
+                          <Play className="w-4 h-4 mr-1" />
+                          Start Live Feed
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {functionLogs.length > 0 ? (
+                  <div className="space-y-2 max-h-[400px] overflow-y-auto font-mono text-xs">
+                    {functionLogs.map((log) => (
+                      <div
+                        key={log.id}
+                        className={`flex items-start gap-3 py-2 px-3 rounded border ${
+                          log.status === 'success' ? 'bg-green-500/5 border-green-500/20' :
+                          log.status === 'error' ? 'bg-red-500/5 border-red-500/20' :
+                          'bg-blue-500/5 border-blue-500/20'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2 min-w-[120px]">
+                          {log.status === 'success' ? (
+                            <CheckCircle2 className="w-4 h-4 text-green-500" />
+                          ) : log.status === 'error' ? (
+                            <XCircle className="w-4 h-4 text-red-500" />
+                          ) : (
+                            <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />
+                          )}
+                          <span className="text-muted-foreground">
+                            {new Date(log.timestamp).toLocaleTimeString()}
+                          </span>
+                        </div>
+                        <div className="flex-1">
+                          <span className="font-semibold">{log.functionName}</span>
+                          {log.message && (
+                            <span className="text-muted-foreground ml-2">{log.message}</span>
+                          )}
+                        </div>
+                        {log.duration && (
+                          <div className="flex items-center gap-1 text-muted-foreground">
+                            <Timer className="w-3 h-3" />
+                            {log.duration}ms
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <Terminal className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+                    <p className="text-lg font-medium">No Function Logs</p>
+                    <p className="text-sm text-muted-foreground">
+                      Test a function from the Functions tab or enable live feed to see logs
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Error Logs */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -791,7 +1175,10 @@ export default function AdminDashboard() {
 
         {/* Footer */}
         <div className="text-center text-sm text-muted-foreground pt-4 border-t border-border">
-          <p>Lician Admin Dashboard v2.0</p>
+          <p className="flex items-center justify-center gap-2">
+            <Sparkles className="w-4 h-4" />
+            Lician Admin Dashboard v3.0
+          </p>
           <p className="text-xs mt-1">
             {totalFunctions} edge functions | {totalTables} database tables | {totalApis} external APIs
           </p>
