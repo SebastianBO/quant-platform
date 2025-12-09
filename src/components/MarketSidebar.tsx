@@ -21,6 +21,8 @@ interface TrendingStock {
   price: number
   change: number
   changePercent: number
+  signals?: string[] // WHY it's moving - our competitive edge
+  score?: number
 }
 
 interface RecentStock {
@@ -85,28 +87,43 @@ function MarketCard({ index }: { index: MarketIndex }) {
   )
 }
 
-// Trending ticker row
+// Trending ticker row with signals
 function TrendingRow({ stock, onSelect }: { stock: TrendingStock, onSelect: (symbol: string) => void }) {
   const isPositive = stock.changePercent >= 0
 
   return (
     <button
       onClick={() => onSelect(stock.symbol)}
-      className="w-full flex items-center justify-between py-2.5 px-1 hover:bg-secondary/30 rounded transition-colors group"
+      className="w-full py-2.5 px-2 hover:bg-secondary/30 rounded transition-colors group text-left"
     >
-      <div className="flex-1 min-w-0">
-        <p className="font-medium text-sm group-hover:text-green-500 transition-colors">{stock.symbol}</p>
-        <p className="text-xs text-muted-foreground truncate">{stock.name}</p>
+      <div className="flex items-center justify-between">
+        <div className="flex-1 min-w-0">
+          <p className="font-medium text-sm group-hover:text-green-500 transition-colors">{stock.symbol}</p>
+          <p className="text-xs text-muted-foreground truncate">{stock.name}</p>
+        </div>
+        <div className="text-right ml-3">
+          <p className="font-medium tabular-nums text-sm">{stock.price.toFixed(2)}</p>
+          <p className={cn(
+            "text-xs tabular-nums",
+            isPositive ? "text-green-500" : "text-red-500"
+          )}>
+            {isPositive ? "+" : ""}{stock.changePercent.toFixed(2)}%
+          </p>
+        </div>
       </div>
-      <div className="text-right ml-3">
-        <p className="font-medium tabular-nums text-sm">{stock.price.toFixed(2)}</p>
-        <p className={cn(
-          "text-xs tabular-nums",
-          isPositive ? "text-green-500" : "text-red-500"
-        )}>
-          {isPositive ? "+" : ""}{stock.change.toFixed(2)} ({isPositive ? "+" : ""}{stock.changePercent.toFixed(2)}%)
-        </p>
-      </div>
+      {/* Signals - our competitive edge */}
+      {stock.signals && stock.signals.length > 0 && (
+        <div className="flex flex-wrap gap-1 mt-1.5">
+          {stock.signals.slice(0, 3).map((signal, i) => (
+            <span
+              key={i}
+              className="text-[10px] px-1.5 py-0.5 rounded bg-secondary/50 text-muted-foreground"
+            >
+              {signal}
+            </span>
+          ))}
+        </div>
+      )}
     </button>
   )
 }

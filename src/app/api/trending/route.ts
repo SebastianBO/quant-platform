@@ -1,34 +1,29 @@
 import { NextResponse } from 'next/server'
 
-const EODHD_API_KEY = process.env.EODHD_API_KEY
-
 /**
  * PROPRIETARY MOVER DETECTION SYSTEM
  *
- * Instead of just showing "top % gainers", we build a multi-signal score:
- * 1. Price change % (what everyone shows)
- * 2. Volume spike vs average (unusual activity = something is happening)
- * 3. 52-week high/low breakout (institutional attention)
- * 4. Market cap filter (tradeable, liquid stocks only)
+ * Data source: Yahoo Finance (free, real-time, entire market)
+ * Our value-add: Multi-signal scoring and filtering
  *
- * This creates competitive advantage - not just copying Yahoo Finance
+ * Why this is better than raw Yahoo data:
+ * 1. Volume spike detection (unusual activity = opportunity)
+ * 2. Liquidity filtering (only tradeable stocks)
+ * 3. Signal tagging (why it's moving)
+ * 4. Combined score for ranking
  */
 
-interface BulkStock {
-  code: string
-  exchange_short_name: string
-  name: string
-  close: number
-  adjusted_close: number
-  prev_close: number
-  change: number
-  change_p: number
-  volume: number
-  avgVolume?: number
-  high?: number
-  low?: number
-  yearHigh?: number
-  yearLow?: number
+interface YahooQuote {
+  symbol: string
+  shortName?: string
+  longName?: string
+  regularMarketPrice: number
+  regularMarketChange: number
+  regularMarketChangePercent: number
+  regularMarketVolume: number
+  averageDailyVolume3Month?: number
+  fiftyTwoWeekHigh?: number
+  fiftyTwoWeekLow?: number
   marketCap?: number
 }
 
@@ -39,180 +34,184 @@ interface ScoredMover {
   change: number
   changePercent: number
   volume: number
-  volumeRatio: number // vs average - key signal!
-  score: number // our proprietary score
-  signals: string[] // why it's moving
+  volumeRatio: number
+  score: number
+  signals: string[]
 }
 
-// Calculate our proprietary "Mover Score"
-function calculateMoverScore(stock: BulkStock, isGainer: boolean): { score: number; signals: string[] } {
+// Calculate proprietary score
+function scoreMover(quote: YahooQuote): { score: number; signals: string[]; volumeRatio: number } {
   const signals: string[] = []
   let score = 0
 
-  // 1. Price change magnitude (40% weight)
-  const absChange = Math.abs(stock.change_p || 0)
-  const priceScore = Math.min(absChange * 4, 40) // Cap at 40 points
-  score += priceScore
+  const absChange = Math.abs(quote.regularMarketChangePercent || 0)
+
+  // 1. Price magnitude (40%)
+  score += Math.min(absChange * 4, 40)
   if (absChange > 10) signals.push('Big move >10%')
-  else if (absChange > 5) signals.push('Strong move >5%')
+  else if (absChange > 5) signals.push('Strong >5%')
 
-  // 2. Volume spike (30% weight) - THIS IS KEY
-  // Unusual volume = institutional activity, news, etc.
-  const volumeRatio = stock.avgVolume ? stock.volume / stock.avgVolume : 1
+  // 2. Volume spike (35%) - KEY SIGNAL
+  const avgVol = quote.averageDailyVolume3Month || quote.regularMarketVolume
+  const volumeRatio = avgVol > 0 ? quote.regularMarketVolume / avgVol : 1
+
   if (volumeRatio > 5) {
-    score += 30
-    signals.push(`Volume 🔥 ${volumeRatio.toFixed(1)}x avg`)
+    score += 35
+    signals.push(`Vol 🔥${volumeRatio.toFixed(1)}x`)
   } else if (volumeRatio > 3) {
-    score += 25
-    signals.push(`High volume ${volumeRatio.toFixed(1)}x avg`)
+    score += 28
+    signals.push(`High vol ${volumeRatio.toFixed(1)}x`)
   } else if (volumeRatio > 2) {
-    score += 15
-    signals.push(`Above avg volume`)
-  } else if (volumeRatio > 1) {
-    score += 5
-  }
-
-  // 3. 52-week breakout (20% weight)
-  if (stock.yearHigh && stock.close >= stock.yearHigh * 0.98) {
-    score += 20
-    signals.push('Near 52-week high')
-  } else if (stock.yearLow && stock.close <= stock.yearLow * 1.02) {
-    score += 20
-    signals.push('Near 52-week low')
-  }
-
-  // 4. Liquidity bonus (10% weight)
-  // More liquid = more tradeable = more relevant
-  if (stock.volume > 10000000) {
+    score += 18
+    signals.push(`Above avg vol`)
+  } else if (volumeRatio > 1.5) {
     score += 10
-    signals.push('Very liquid')
-  } else if (stock.volume > 1000000) {
+  }
+
+  // 3. 52-week extremes (15%)
+  if (quote.fiftyTwoWeekHigh && quote.regularMarketPrice >= quote.fiftyTwoWeekHigh * 0.98) {
+    score += 15
+    signals.push('52wk high')
+  } else if (quote.fiftyTwoWeekLow && quote.regularMarketPrice <= quote.fiftyTwoWeekLow * 1.02) {
+    score += 15
+    signals.push('52wk low')
+  }
+
+  // 4. Liquidity (10%)
+  if (quote.regularMarketVolume > 10000000) {
+    score += 10
+    signals.push('Liquid')
+  } else if (quote.regularMarketVolume > 1000000) {
     score += 5
   }
 
-  return { score, signals }
+  return { score, signals, volumeRatio }
+}
+
+async function fetchYahooMovers(type: 'day_gainers' | 'day_losers'): Promise<YahooQuote[]> {
+  try {
+    const response = await fetch(
+      `https://query1.finance.yahoo.com/v1/finance/screener/predefined/saved?scrIds=${type}&count=50`,
+      {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
+        },
+        next: { revalidate: 60 } // Cache 1 min
+      }
+    )
+
+    if (!response.ok) {
+      console.error(`Yahoo ${type} failed:`, response.status)
+      return []
+    }
+
+    const data = await response.json()
+    return data.finance?.result?.[0]?.quotes || []
+  } catch (error) {
+    console.error(`Error fetching ${type}:`, error)
+    return []
+  }
+}
+
+async function fetchYahooTrending(): Promise<YahooQuote[]> {
+  try {
+    const response = await fetch(
+      `https://query1.finance.yahoo.com/v1/finance/screener/predefined/saved?scrIds=most_actives&count=30`,
+      {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
+        },
+        next: { revalidate: 60 }
+      }
+    )
+
+    if (!response.ok) return []
+    const data = await response.json()
+    return data.finance?.result?.[0]?.quotes || []
+  } catch (error) {
+    console.error('Error fetching trending:', error)
+    return []
+  }
 }
 
 export async function GET() {
   try {
-    const results: {
-      trending: ScoredMover[]
-      gainers: ScoredMover[]
-      losers: ScoredMover[]
-      meta: {
-        universeSize: number
-        method: string
-        timestamp: string
-      }
-    } = {
-      trending: [],
-      gainers: [],
-      losers: [],
-      meta: {
-        universeSize: 0,
-        method: 'proprietary-multi-signal',
-        timestamp: new Date().toISOString()
-      }
-    }
+    // Fetch all data in parallel
+    const [gainersRaw, losersRaw, trendingRaw] = await Promise.all([
+      fetchYahooMovers('day_gainers'),
+      fetchYahooMovers('day_losers'),
+      fetchYahooTrending()
+    ])
 
-    // STEP 1: Get bulk data for ALL US stocks
-    // This gives us the entire market in one call
-    const bulkResponse = await fetch(
-      `https://eodhd.com/api/eod-bulk-last-day/US?api_token=${EODHD_API_KEY}&fmt=json`,
-      { next: { revalidate: 300 } } // Cache 5 min
-    )
-
-    if (!bulkResponse.ok) {
-      console.error('Bulk API failed:', bulkResponse.status)
-      return NextResponse.json(results)
-    }
-
-    const bulkData: BulkStock[] = await bulkResponse.json()
-    console.log(`Loaded ${bulkData.length} stocks from bulk API`)
-
-    // STEP 2: Filter to tradeable stocks
-    const tradeableStocks = bulkData.filter(stock => {
-      // Must have valid data
-      if (!stock.code || !stock.close || stock.close <= 0) return false
-      if (!stock.change_p && stock.change_p !== 0) return false
-
-      // Price filter: $1-$10000 (no penny stocks, no weird stuff)
-      if (stock.close < 1 || stock.close > 10000) return false
-
-      // Volume filter: must have some activity
-      if (!stock.volume || stock.volume < 100000) return false
-
-      // Skip ETFs for the movers list (keep for trending)
-      // Common ETF patterns
-      const symbol = stock.code
-      if (symbol.length > 5) return false // Most ETFs have 3-4 chars
-
-      return true
-    })
-
-    console.log(`Filtered to ${tradeableStocks.length} tradeable stocks`)
-    results.meta.universeSize = tradeableStocks.length
-
-    // STEP 3: Score all stocks with our proprietary algorithm
-    const scoredGainers: ScoredMover[] = []
-    const scoredLosers: ScoredMover[] = []
-
-    for (const stock of tradeableStocks) {
-      const changePercent = stock.change_p || 0
-      const isGainer = changePercent > 0
-      const { score, signals } = calculateMoverScore(stock, isGainer)
-
-      const volumeRatio = stock.avgVolume ? stock.volume / stock.avgVolume : 1
-
-      const mover: ScoredMover = {
-        symbol: stock.code,
-        name: stock.name || stock.code,
-        price: stock.close,
-        change: stock.change || 0,
-        changePercent,
-        volume: stock.volume,
-        volumeRatio,
-        score,
-        signals
-      }
-
-      // Only include if meaningful move (>1%)
-      if (changePercent > 1) {
-        scoredGainers.push(mover)
-      } else if (changePercent < -1) {
-        scoredLosers.push(mover)
-      }
-    }
-
-    // STEP 4: Sort by our PROPRIETARY SCORE, not just % change
-    // This is the competitive advantage!
-    results.gainers = scoredGainers
+    // Process and score gainers
+    const gainers: ScoredMover[] = gainersRaw
+      .filter(q => q.regularMarketVolume > 100000 && q.regularMarketPrice > 1)
+      .map(quote => {
+        const { score, signals, volumeRatio } = scoreMover(quote)
+        return {
+          symbol: quote.symbol,
+          name: quote.shortName || quote.longName || quote.symbol,
+          price: quote.regularMarketPrice,
+          change: quote.regularMarketChange,
+          changePercent: quote.regularMarketChangePercent,
+          volume: quote.regularMarketVolume,
+          volumeRatio,
+          score,
+          signals
+        }
+      })
       .sort((a, b) => b.score - a.score)
       .slice(0, 15)
 
-    results.losers = scoredLosers
+    // Process and score losers
+    const losers: ScoredMover[] = losersRaw
+      .filter(q => q.regularMarketVolume > 100000 && q.regularMarketPrice > 1)
+      .map(quote => {
+        const { score, signals, volumeRatio } = scoreMover(quote)
+        return {
+          symbol: quote.symbol,
+          name: quote.shortName || quote.longName || quote.symbol,
+          price: quote.regularMarketPrice,
+          change: quote.regularMarketChange,
+          changePercent: quote.regularMarketChangePercent,
+          volume: quote.regularMarketVolume,
+          volumeRatio,
+          score,
+          signals
+        }
+      })
       .sort((a, b) => b.score - a.score)
       .slice(0, 15)
 
-    // STEP 5: Trending = top traded stocks (for the ticker bar)
-    const topByVolume = [...tradeableStocks]
-      .sort((a, b) => (b.volume || 0) - (a.volume || 0))
+    // Trending (most active by volume)
+    const trending: ScoredMover[] = trendingRaw
       .slice(0, 20)
-      .map(stock => ({
-        symbol: stock.code,
-        name: stock.name || stock.code,
-        price: stock.close,
-        change: stock.change || 0,
-        changePercent: stock.change_p || 0,
-        volume: stock.volume,
-        volumeRatio: stock.avgVolume ? stock.volume / stock.avgVolume : 1,
-        score: 0,
-        signals: []
-      }))
+      .map(quote => {
+        const { score, signals, volumeRatio } = scoreMover(quote)
+        return {
+          symbol: quote.symbol,
+          name: quote.shortName || quote.longName || quote.symbol,
+          price: quote.regularMarketPrice,
+          change: quote.regularMarketChange,
+          changePercent: quote.regularMarketChangePercent,
+          volume: quote.regularMarketVolume,
+          volumeRatio,
+          score,
+          signals
+        }
+      })
 
-    results.trending = topByVolume
-
-    return NextResponse.json(results)
+    return NextResponse.json({
+      trending,
+      gainers,
+      losers,
+      meta: {
+        method: 'proprietary-scoring-yahoo-data',
+        timestamp: new Date().toISOString(),
+        gainersCount: gainers.length,
+        losersCount: losers.length
+      }
+    })
   } catch (error) {
     console.error('Trending error:', error)
     return NextResponse.json({
