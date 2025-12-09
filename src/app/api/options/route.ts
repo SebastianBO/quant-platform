@@ -131,6 +131,54 @@ export async function GET(request: NextRequest) {
     // Sort by volume descending
     unusualActivity.sort((a, b) => b.volume - a.volume)
 
+    // Calculate Expected Move (ATM straddle price)
+    // Find the ATM strike (closest to current price)
+    let atmCall = calls[0]
+    let atmPut = puts[0]
+    let minCallDiff = Infinity
+    let minPutDiff = Infinity
+
+    calls.forEach(c => {
+      const diff = Math.abs(c.strike - currentPrice)
+      if (diff < minCallDiff) {
+        minCallDiff = diff
+        atmCall = c
+      }
+    })
+
+    puts.forEach(p => {
+      const diff = Math.abs(p.strike - currentPrice)
+      if (diff < minPutDiff) {
+        minPutDiff = diff
+        atmPut = p
+      }
+    })
+
+    // Expected Move = ATM Call Price + ATM Put Price
+    const atmCallPrice = atmCall?.lastPrice || 0
+    const atmPutPrice = atmPut?.lastPrice || 0
+    const expectedMove = atmCallPrice + atmPutPrice
+    const expectedMovePercent = currentPrice > 0 ? (expectedMove / currentPrice) * 100 : 0
+    const expectedHigh = currentPrice + expectedMove
+    const expectedLow = currentPrice - expectedMove
+
+    // Calculate average IV from ATM options
+    const atmIV = ((atmCall?.impliedVolatility || 0) + (atmPut?.impliedVolatility || 0)) / 2
+
+    // Calculate IV Rank approximation (compare current ATM IV to all strikes)
+    // In production, you'd compare to historical 52-week IV range
+    const allIVs = allOptions.map(o => o.impliedVolatility).filter(iv => iv > 0)
+    const maxIV = Math.max(...allIVs, 0.01)
+    const minIV = Math.min(...allIVs, 0)
+    const ivRange = maxIV - minIV
+    const ivRank = ivRange > 0 ? ((atmIV - minIV) / ivRange) * 100 : 50
+    const ivPercentile = ivRank // Simplified - in production use historical data
+
+    // Calculate days until expiration for Expected Move context
+    const today = new Date()
+    const expDate = expirationDate ? new Date(expirationDate) : today
+    const daysToExpiration = Math.ceil((expDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+
     return NextResponse.json({
       calls: calls.slice(0, 20),
       puts: puts.slice(0, 20),
@@ -142,7 +190,26 @@ export async function GET(request: NextRequest) {
         sentiment,
         expirationDate,
         currentPrice,
-        unusualActivity: unusualActivity.slice(0, 5)
+        unusualActivity: unusualActivity.slice(0, 5),
+        // New Expected Move data
+        expectedMove: {
+          amount: expectedMove,
+          percent: expectedMovePercent,
+          high: expectedHigh,
+          low: expectedLow,
+          daysToExpiration,
+          atmStrike: atmCall?.strike || atmPut?.strike || 0,
+          atmCallPrice,
+          atmPutPrice
+        },
+        // IV data
+        iv: {
+          atm: atmIV * 100, // Convert to percentage
+          rank: ivRank,
+          percentile: ivPercentile,
+          min: minIV * 100,
+          max: maxIV * 100
+        }
       }
     })
   } catch (error) {
