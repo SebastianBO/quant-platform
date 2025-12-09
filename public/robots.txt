@@ -13,8 +13,33 @@ Disallow: /auth/
 # Allow specific API endpoints for preview
 Allow: /api/og/
 
-# Sitemaps
-Sitemap: https://lician.com/sitemap.xml
+# Googlebot specific
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
 
-# Crawl-delay for polite crawling
+# Bingbot specific
+User-agent: Bingbot
+Allow: /
 Crawl-delay: 1
+
+# Block AI crawlers from training data (optional)
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+# Sitemaps - Primary
+Sitemap: https://lician.com/sitemap.xml
+Sitemap: https://lician.com/sitemap-index.xml
+
+# Sitemaps - Tiered
+Sitemap: https://lician.com/sitemap-seo.xml
+Sitemap: https://lician.com/sitemap-stocks-hot.xml
+
+# Host
+Host: https://lician.com
