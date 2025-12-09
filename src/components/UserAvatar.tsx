@@ -109,14 +109,14 @@ export default function UserAvatar() {
 
   if (loading) {
     return (
-      <div className="w-9 h-9 rounded-full bg-secondary animate-pulse" />
+      <div className="w-10 h-10 rounded-full bg-secondary animate-pulse" />
     )
   }
 
   if (!user) {
     return (
       <Link href="/login">
-        <button className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-600 hover:bg-green-500 text-white text-sm font-medium transition-colors">
+        <button className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-600 hover:bg-green-500 text-white text-sm font-medium transition-colors">
           <User className="w-4 h-4" />
           Sign in
         </button>
@@ -131,19 +131,19 @@ export default function UserAvatar() {
     <div className="relative z-50" ref={dropdownRef}>
       <button
         onClick={() => setDropdownOpen(!dropdownOpen)}
-        className="relative flex items-center gap-2 p-0.5 rounded-full hover:ring-2 hover:ring-green-500/50 transition-all cursor-pointer"
+        className="relative flex items-center gap-2 p-1 rounded-full hover:ring-2 hover:ring-green-500/50 transition-all cursor-pointer bg-secondary/50 hover:bg-secondary"
       >
         <img
           src={avatarUrl}
           alt={displayName}
-          className="w-9 h-9 rounded-full object-cover bg-secondary"
+          className="w-10 h-10 rounded-full object-cover bg-secondary border-2 border-green-500/30"
           onError={(e) => {
             // Fallback to default avatar on error
             (e.target as HTMLImageElement).src = getDefaultAvatar(user.id)
           }}
         />
         {/* Online indicator */}
-        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-background" />
+        <span className="absolute bottom-0.5 right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-background" />
       </button>
 
       {/* Dropdown Menu */}
