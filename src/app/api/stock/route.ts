@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 const FINANCIAL_DATASETS_API_KEY = process.env.FINANCIAL_DATASETS_API_KEY || ""
+const EODHD_API_KEY = process.env.EODHD_API_KEY || ""
 const FD_BASE_URL = "https://api.financialdatasets.ai"
 
 async function fetchFD(endpoint: string, params: Record<string, string>) {
@@ -27,6 +28,13 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    // Calculate date range for 52-week data
+    const today = new Date()
+    const oneYearAgo = new Date(today)
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1)
+    const startDate = oneYearAgo.toISOString().split('T')[0]
+    const endDate = today.toISOString().split('T')[0]
+
     // Fetch ALL available data in parallel
     const [
       snapshot,
@@ -41,7 +49,11 @@ export async function GET(request: NextRequest) {
       companyFacts,
       quarterlyIncome,
       quarterlyBalance,
-      quarterlyCashFlow
+      quarterlyCashFlow,
+      priceHistory,
+      priceTargets,
+      eohdRealtime,
+      eohdFundamentals
     ] = await Promise.all([
       fetchFD('/prices/snapshot/', { ticker }),
       fetchFD('/financials/income-statements/', { ticker, period: 'annual', limit: '5' }),
@@ -56,6 +68,14 @@ export async function GET(request: NextRequest) {
       fetchFD('/financials/income-statements/', { ticker, period: 'quarterly', limit: '8' }).catch(() => ({ income_statements: [] })),
       fetchFD('/financials/balance-sheets/', { ticker, period: 'quarterly', limit: '8' }).catch(() => ({ balance_sheets: [] })),
       fetchFD('/financials/cash-flow-statements/', { ticker, period: 'quarterly', limit: '8' }).catch(() => ({ cash_flow_statements: [] })),
+      fetchFD('/prices/', { ticker, interval: 'day', start_date: startDate, end_date: endDate }).catch(() => ({ prices: [] })),
+      fetchFD('/analyst/price-targets/', { ticker, limit: '10' }).catch(() => ({ price_targets: [] })),
+      // EODHD real-time for bid/ask and intraday data
+      fetch(`https://eodhd.com/api/real-time/${ticker}.US?api_token=${EODHD_API_KEY}&fmt=json`, { next: { revalidate: 60 } })
+        .then(r => r.ok ? r.json() : null).catch(() => null),
+      // EODHD fundamentals for additional data
+      fetch(`https://eodhd.com/api/fundamentals/${ticker}.US?api_token=${EODHD_API_KEY}&fmt=json`, { next: { revalidate: 3600 } })
+        .then(r => r.ok ? r.json() : null).catch(() => null),
     ])
 
     // Parse segmented revenues - extract product segments and geographic segments
@@ -91,8 +111,74 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    // Calculate 52-week high/low and average volume from price history
+    const prices = priceHistory?.prices || []
+    let yearHigh = 0
+    let yearLow = Infinity
+    let totalVolume = 0
+    let volumeCount = 0
+
+    prices.forEach((p: { high: number; low: number; volume: number }) => {
+      if (p.high > yearHigh) yearHigh = p.high
+      if (p.low < yearLow) yearLow = p.low
+      if (p.volume) {
+        totalVolume += p.volume
+        volumeCount++
+      }
+    })
+
+    const avgVolume = volumeCount > 0 ? Math.round(totalVolume / volumeCount) : 0
+    if (yearLow === Infinity) yearLow = 0
+
+    // Get today's OHLC from the most recent price data
+    const todayPrice = prices[prices.length - 1] || {}
+    const yesterdayPrice = prices[prices.length - 2] || {}
+
+    // Get price target from analyst data
+    const latestPriceTarget = priceTargets?.price_targets?.[0]
+    const avgPriceTarget = latestPriceTarget?.price_target || null
+
+    // Get company facts for beta, dividend, etc.
+    const facts = companyFacts?.company_facts || {}
+
+    // Get EODHD data
+    const eohdTechnicals = eohdFundamentals?.Technicals || {}
+    const eohdHighlights = eohdFundamentals?.Highlights || {}
+    const eohdGeneral = eohdFundamentals?.General || {}
+
+    // Enhance snapshot with calculated data
+    const enhancedSnapshot = {
+      ...snapshot.snapshot,
+      // Day's OHLC - prefer EODHD real-time data
+      open: eohdRealtime?.open || todayPrice.open || snapshot.snapshot?.open,
+      dayHigh: eohdRealtime?.high || todayPrice.high || snapshot.snapshot?.day_high,
+      dayLow: eohdRealtime?.low || todayPrice.low || snapshot.snapshot?.day_low,
+      previousClose: eohdRealtime?.previousClose || yesterdayPrice.close || snapshot.snapshot?.previous_close,
+      // Bid/Ask from EODHD real-time
+      bid: eohdRealtime?.bid,
+      ask: eohdRealtime?.ask,
+      // 52-week range - prefer EODHD technicals
+      yearHigh: eohdTechnicals['52WeekHigh'] || yearHigh || snapshot.snapshot?.year_high,
+      yearLow: eohdTechnicals['52WeekLow'] || yearLow || snapshot.snapshot?.year_low,
+      // Volume
+      avgVolume,
+      // From EODHD technicals
+      beta: eohdTechnicals.Beta || facts.beta,
+      fiftyDayMA: eohdTechnicals['50DayMA'],
+      twoHundredDayMA: eohdTechnicals['200DayMA'],
+      // Dividend info from EODHD
+      dividendYield: eohdHighlights.DividendYield || facts.dividend_yield,
+      forwardDividendYield: eohdHighlights.ForwardAnnualDividendYield || facts.forward_dividend_yield,
+      dividendShare: eohdHighlights.DividendShare,
+      exDividendDate: eohdGeneral.ExDividendDate || facts.ex_dividend_date,
+      // Earnings info
+      earningsDate: eohdGeneral.MostRecentQuarter || facts.earnings_date || facts.next_earnings_date,
+      // Price target from EODHD or Financial Datasets
+      priceTarget: eohdHighlights.WallStreetTargetPrice || avgPriceTarget,
+    }
+
     return NextResponse.json({
-      snapshot: snapshot.snapshot,
+      snapshot: enhancedSnapshot,
       companyFacts: companyFacts?.company_facts || null,
       // Annual statements
       incomeStatements: incomeStatements.income_statements || [],

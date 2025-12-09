@@ -15,12 +15,23 @@ interface EarningsEvent {
   before_after_market?: string
   surprise?: number
   surprisePercent?: number
+  market_cap?: number
 }
+
+// Notable tickers to highlight
+const NOTABLE_TICKERS = [
+  'AAPL', 'MSFT', 'GOOGL', 'GOOG', 'AMZN', 'NVDA', 'META', 'TSLA', 'BRK.A', 'BRK.B',
+  'JPM', 'V', 'JNJ', 'WMT', 'MA', 'PG', 'HD', 'DIS', 'BAC', 'NFLX',
+  'CRM', 'ADBE', 'ORCL', 'AMD', 'INTC', 'CSCO', 'QCOM', 'TXN', 'AVGO', 'MU',
+  'NKE', 'KO', 'PEP', 'MCD', 'SBUX', 'CMG', 'COST', 'TGT', 'LOW',
+  'GS', 'MS', 'C', 'WFC', 'AXP', 'BLK', 'SCHW'
+]
 
 export default function EarningsCalendar() {
   const [earnings, setEarnings] = useState<EarningsEvent[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedWeek, setSelectedWeek] = useState(0) // 0 = this week, 1 = next week, etc.
+  const [filter, setFilter] = useState<'all' | 'notable'>('all')
 
   useEffect(() => {
     fetchEarnings()
@@ -57,8 +68,13 @@ export default function EarningsCalendar() {
     setLoading(false)
   }
 
+  // Filter earnings if needed
+  const filteredEarnings = filter === 'notable'
+    ? earnings.filter(e => NOTABLE_TICKERS.includes(e.code?.replace('.US', '')))
+    : earnings
+
   // Group by date
-  const groupedByDate = earnings.reduce((acc, e) => {
+  const groupedByDate = filteredEarnings.reduce((acc, e) => {
     const date = e.report_date
     if (!acc[date]) acc[date] = { bmo: [], amc: [] }
     if (e.before_after_market === 'bmo') {
@@ -71,34 +87,91 @@ export default function EarningsCalendar() {
 
   const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
+  // Calculate statistics
+  const totalEarnings = earnings.length
+  const notableEarnings = earnings.filter(e => NOTABLE_TICKERS.includes(e.code?.replace('.US', '')))
+  const reported = earnings.filter(e => e.actual !== undefined && e.actual !== null)
+  const beatCount = reported.filter(e => (e.estimate || 0) > 0 && (e.actual || 0) > (e.estimate || 0)).length
+  const missCount = reported.filter(e => (e.estimate || 0) > 0 && (e.actual || 0) < (e.estimate || 0)).length
+
   return (
     <Card className="w-full">
-      <CardHeader>
+      <CardHeader className="space-y-4">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
-            <span className="text-2xl">📅</span>
+            <Calendar className="w-6 h-6 text-green-500" />
             Earnings Calendar
           </CardTitle>
           <div className="flex gap-2">
             <button
               onClick={() => setSelectedWeek(w => w - 1)}
-              className="px-3 py-1 bg-secondary hover:bg-secondary/80 rounded text-sm"
+              className="px-3 py-1.5 bg-secondary hover:bg-secondary/80 rounded-lg text-sm font-medium"
             >
-              ← Prev Week
+              <ChevronLeft className="w-4 h-4 inline" /> Prev
             </button>
             <button
               onClick={() => setSelectedWeek(0)}
-              className="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 rounded text-sm"
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium ${
+                selectedWeek === 0 ? 'bg-green-600 text-white' : 'bg-secondary hover:bg-secondary/80'
+              }`}
             >
               This Week
             </button>
             <button
               onClick={() => setSelectedWeek(w => w + 1)}
-              className="px-3 py-1 bg-secondary hover:bg-secondary/80 rounded text-sm"
+              className="px-3 py-1.5 bg-secondary hover:bg-secondary/80 rounded-lg text-sm font-medium"
             >
-              Next Week →
+              Next <ChevronRight className="w-4 h-4 inline" />
             </button>
           </div>
+        </div>
+
+        {/* Statistics Bar */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div className="bg-secondary/50 rounded-lg p-3 text-center">
+            <p className="text-2xl font-bold">{totalEarnings}</p>
+            <p className="text-xs text-muted-foreground">Total Reports</p>
+          </div>
+          <div className="bg-secondary/50 rounded-lg p-3 text-center">
+            <p className="text-2xl font-bold text-amber-500">{notableEarnings.length}</p>
+            <p className="text-xs text-muted-foreground">Notable</p>
+          </div>
+          <div className="bg-secondary/50 rounded-lg p-3 text-center">
+            <p className="text-2xl font-bold text-green-500">{beatCount}</p>
+            <p className="text-xs text-muted-foreground">Beat</p>
+          </div>
+          <div className="bg-secondary/50 rounded-lg p-3 text-center">
+            <p className="text-2xl font-bold text-red-500">{missCount}</p>
+            <p className="text-xs text-muted-foreground">Missed</p>
+          </div>
+          <div className="bg-secondary/50 rounded-lg p-3 text-center">
+            <p className="text-2xl font-bold text-muted-foreground">{totalEarnings - reported.length}</p>
+            <p className="text-xs text-muted-foreground">Pending</p>
+          </div>
+        </div>
+
+        {/* Filter Toggle */}
+        <div className="flex gap-2">
+          <button
+            onClick={() => setFilter('all')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              filter === 'all'
+                ? 'bg-green-600 text-white'
+                : 'bg-secondary text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            All Earnings ({totalEarnings})
+          </button>
+          <button
+            onClick={() => setFilter('notable')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              filter === 'notable'
+                ? 'bg-amber-500 text-white'
+                : 'bg-secondary text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            Notable Only ({notableEarnings.length})
+          </button>
         </div>
       </CardHeader>
       <CardContent>
@@ -191,25 +264,32 @@ function EarningsCard({ event }: { event: EarningsEvent }) {
   const estimate = event.estimate ?? 0
   const beat = hasResults && estimate > 0 && actual > estimate
   const miss = hasResults && estimate > 0 && actual < estimate
+  const isNotable = NOTABLE_TICKERS.includes(ticker)
 
   return (
     <div className={`p-2 mb-1.5 rounded-lg text-xs transition-all hover:scale-[1.02] cursor-pointer ${
       beat ? 'bg-emerald-500/20 border border-emerald-500/30' :
       miss ? 'bg-red-500/20 border border-red-500/30' :
+      isNotable ? 'bg-amber-500/10 border border-amber-500/30' :
       'bg-secondary/50 border border-transparent hover:border-border'
     }`}>
       <div className="flex items-center gap-2">
         <StockLogo symbol={ticker} size="sm" />
         <div className="flex-1 min-w-0">
           <div className="flex justify-between items-center">
-            <span className="font-bold text-foreground">{ticker}</span>
+            <div className="flex items-center gap-1">
+              <span className="font-bold text-foreground">{ticker}</span>
+              {isNotable && !hasResults && (
+                <span className="text-[9px] px-1 py-0.5 bg-amber-500/20 text-amber-500 rounded">Notable</span>
+              )}
+            </div>
             {hasResults ? (
               <span className={`flex items-center gap-0.5 ${beat ? 'text-emerald-500' : 'text-red-500'}`}>
                 {beat ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
                 {((actual - estimate) / Math.abs(estimate || 1) * 100).toFixed(0)}%
               </span>
             ) : (
-              <span className="text-muted-foreground">Est: ${estimate.toFixed(2) || 'N/A'}</span>
+              <span className="text-muted-foreground">Est: ${estimate?.toFixed(2) || 'N/A'}</span>
             )}
           </div>
           {event.name && (

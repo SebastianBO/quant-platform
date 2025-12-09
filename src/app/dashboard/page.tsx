@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
+import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
@@ -18,12 +19,22 @@ import FinancialStatements from "@/components/FinancialStatements"
 import OptionsFlow from "@/components/OptionsFlow"
 import TreasuryYields from "@/components/TreasuryYields"
 import TechnicalAnalysis from "@/components/TechnicalAnalysis"
+import ShortVolume from "@/components/ShortVolume"
+import BorrowData from "@/components/BorrowData"
+import OptionsChain from "@/components/OptionsChain"
 import PortfolioAnalyzer from "@/components/PortfolioAnalyzer"
 import UserPortfolios from "@/components/UserPortfolios"
 import StockSearch from "@/components/StockSearch"
 import StockLogo from "@/components/StockLogo"
 import StockSidebar from "@/components/StockSidebar"
 import TrendingTickers from "@/components/TrendingTickers"
+import MarketOverview from "@/components/MarketOverview"
+import InstitutionalOwnership from "@/components/InstitutionalOwnership"
+import SECFilings from "@/components/SECFilings"
+import InteractiveStockChart from "@/components/InteractiveStockChart"
+import StockChartSwitcher from "@/components/StockChartSwitcher"
+import ExtendedHoursPrice from "@/components/ExtendedHoursPrice"
+import MarketDataTable from "@/components/MarketDataTable"
 import { formatCurrency, formatPercent } from "@/lib/utils"
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts"
 import { TrendingUp, TrendingDown, Star, Share2, ChevronDown, User } from "lucide-react"
@@ -43,6 +54,15 @@ interface StockData {
     dayLow?: number
     yearHigh?: number
     yearLow?: number
+    avgVolume?: number
+    beta?: number
+    dividendYield?: number
+    forwardDividendYield?: number
+    exDividendDate?: string
+    earningsDate?: string
+    priceTarget?: number
+    bid?: number
+    ask?: number
   }
   companyFacts: any
   metrics: {
@@ -72,11 +92,25 @@ interface StockData {
   geoSegments: { name: string; revenue: number }[]
 }
 
-export default function Dashboard() {
+function DashboardContent() {
+  const searchParams = useSearchParams()
   const [ticker, setTicker] = useState("AAPL")
   const [stockData, setStockData] = useState<StockData | null>(null)
   const [loading, setLoading] = useState(false)
   const [activeTab, setActiveTab] = useState("myportfolios")
+
+  // Handle URL parameters for deep linking
+  useEffect(() => {
+    const tickerParam = searchParams.get('ticker')
+    const tabParam = searchParams.get('tab')
+
+    if (tickerParam) {
+      setTicker(tickerParam.toUpperCase())
+    }
+    if (tabParam) {
+      setActiveTab(tabParam)
+    }
+  }, [searchParams])
 
   const fetchStockData = async () => {
     setLoading(true)
@@ -105,8 +139,8 @@ export default function Dashboard() {
   const insiderBuys = stockData?.insiderTrades?.filter(t => t.transaction_shares > 0)?.length || 0
   const insiderSells = stockData?.insiderTrades?.filter(t => t.transaction_shares < 0)?.length || 0
 
-  // Check if we're viewing a stock (not on portfolios or earnings tabs)
-  const isViewingStock = activeTab !== "myportfolios" && activeTab !== "earnings" && activeTab !== "screener"
+  // Check if we're viewing a stock (not on top-level navigation tabs)
+  const isViewingStock = !["myportfolios", "earnings", "screener", "market", "watchlist", "advisor"].includes(activeTab)
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -123,29 +157,59 @@ export default function Dashboard() {
               <span className="text-xs text-muted-foreground bg-secondary px-2 py-1 rounded hidden sm:inline">Dashboard</span>
             </Link>
 
-            {/* My Portfolios & Earnings buttons */}
-            <div className="flex items-center gap-2">
+            {/* Main Navigation - Matches App Structure */}
+            <nav className="flex items-center gap-1">
+              <button
+                onClick={() => setActiveTab('market')}
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                  activeTab === 'market' || activeTab === 'overview'
+                    ? 'bg-green-500 text-white'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                }`}
+              >
+                Market
+              </button>
+              <button
+                onClick={() => setActiveTab('watchlist')}
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                  activeTab === 'watchlist'
+                    ? 'bg-green-500 text-white'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                }`}
+              >
+                Watchlist
+              </button>
               <button
                 onClick={() => setActiveTab('myportfolios')}
                 className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                   activeTab === 'myportfolios'
                     ? 'bg-green-500 text-white'
-                    : 'bg-secondary text-foreground hover:bg-secondary/80'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
                 }`}
               >
-                My Portfolios
+                Portfolio
+              </button>
+              <button
+                onClick={() => setActiveTab('advisor')}
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                  activeTab === 'advisor' || activeTab === 'screener' || activeTab === 'dcf'
+                    ? 'bg-green-500 text-white'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                }`}
+              >
+                Advisor
               </button>
               <button
                 onClick={() => setActiveTab('earnings')}
                 className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                   activeTab === 'earnings'
                     ? 'bg-green-500 text-white'
-                    : 'bg-secondary text-foreground hover:bg-secondary/80'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
                 }`}
               >
                 Earnings
               </button>
-            </div>
+            </nav>
 
             {/* Search */}
             <div className="flex-1 max-w-2xl">
@@ -237,21 +301,21 @@ export default function Dashboard() {
             {/* Key Statistics Grid - Yahoo Finance Style */}
             <div className="grid grid-cols-4 md:grid-cols-8 gap-4 mt-6 p-4 bg-secondary/30 rounded-xl">
               <KeyStat label="Previous Close" value={stockData.snapshot.previousClose?.toFixed(2) || stockData.snapshot.price?.toFixed(2)} />
-              <KeyStat label="Day's Range" value={`${stockData.snapshot.dayLow?.toFixed(2) || '-'} - ${stockData.snapshot.dayHigh?.toFixed(2) || '-'}`} />
+              <KeyStat label="Day's Range" value={stockData.snapshot.dayLow && stockData.snapshot.dayHigh ? `${stockData.snapshot.dayLow.toFixed(2)} - ${stockData.snapshot.dayHigh.toFixed(2)}` : '-'} />
               <KeyStat label="Market Cap" value={formatMarketCap(stockData.snapshot.market_cap)} />
-              <KeyStat label="Earnings Date" value="N/A" />
+              <KeyStat label="Earnings Date" value={stockData.snapshot.earningsDate || '-'} />
               <KeyStat label="Open" value={stockData.snapshot.open?.toFixed(2) || '-'} />
-              <KeyStat label="52 Week Range" value={`${stockData.snapshot.yearLow?.toFixed(2) || '-'} - ${stockData.snapshot.yearHigh?.toFixed(2) || '-'}`} />
-              <KeyStat label="Beta (5Y Monthly)" value={stockData.metrics?.debt_to_equity?.toFixed(2) || '-'} />
-              <KeyStat label="Forward Dividend & Yield" value="--" />
-              <KeyStat label="Bid" value="-" />
+              <KeyStat label="52 Week Range" value={stockData.snapshot.yearLow && stockData.snapshot.yearHigh ? `${stockData.snapshot.yearLow.toFixed(2)} - ${stockData.snapshot.yearHigh.toFixed(2)}` : '-'} />
+              <KeyStat label="Beta (5Y Monthly)" value={stockData.snapshot.beta?.toFixed(2) || '-'} />
+              <KeyStat label="Forward Dividend & Yield" value={stockData.snapshot.forwardDividendYield ? `${(stockData.snapshot.forwardDividendYield * 100).toFixed(2)}%` : '-'} />
+              <KeyStat label="Bid" value={stockData.snapshot.bid?.toFixed(2) || '-'} />
               <KeyStat label="Volume" value={stockData.snapshot.volume?.toLocaleString() || '-'} />
               <KeyStat label="PE Ratio (TTM)" value={stockData.metrics?.price_to_earnings_ratio?.toFixed(2) || '-'} />
-              <KeyStat label="Ex-Dividend Date" value="--" />
-              <KeyStat label="Ask" value="-" />
-              <KeyStat label="Avg. Volume" value="-" />
+              <KeyStat label="Ex-Dividend Date" value={stockData.snapshot.exDividendDate || '-'} />
+              <KeyStat label="Ask" value={stockData.snapshot.ask?.toFixed(2) || '-'} />
+              <KeyStat label="Avg. Volume" value={stockData.snapshot.avgVolume?.toLocaleString() || '-'} />
               <KeyStat label="EPS (TTM)" value={stockData.metrics?.earnings_per_share?.toFixed(2) || '-'} />
-              <KeyStat label="1y Target Est" value="-" />
+              <KeyStat label="1y Target Est" value={stockData.snapshot.priceTarget ? `$${stockData.snapshot.priceTarget.toFixed(2)}` : '-'} />
             </div>
           </div>
         )}
@@ -274,7 +338,11 @@ export default function Dashboard() {
                 {loading ? (
                   <LoadingState />
                 ) : stockData ? (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="space-y-6">
+                    {/* Chart Switcher - Simple or TradingView */}
+                    <StockChartSwitcher ticker={ticker} />
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Financial Health */}
                     <Card className="bg-card border-border">
                       <CardHeader>
@@ -391,6 +459,7 @@ export default function Dashboard() {
                         )}
                       </CardContent>
                     </Card>
+                    </div>
                   </div>
                 ) : (
                   <p className="text-muted-foreground">Enter a ticker to analyze</p>
@@ -465,7 +534,16 @@ export default function Dashboard() {
                 )}
               </TabsContent>
 
-              <TabsContent value="options">
+              <TabsContent value="short">
+                <ShortVolume ticker={ticker} />
+              </TabsContent>
+
+              <TabsContent value="borrow">
+                <BorrowData ticker={ticker} />
+              </TabsContent>
+
+              <TabsContent value="options" className="space-y-6">
+                <OptionsChain ticker={ticker} />
                 <OptionsFlow ticker={ticker} />
               </TabsContent>
 
@@ -499,6 +577,14 @@ export default function Dashboard() {
                 <PeerComparison selectedTicker={ticker} />
               </TabsContent>
 
+              <TabsContent value="institutional">
+                <InstitutionalOwnership ticker={ticker} />
+              </TabsContent>
+
+              <TabsContent value="sec">
+                <SECFilings ticker={ticker} />
+              </TabsContent>
+
               <TabsContent value="screener">
                 <StockScreener />
               </TabsContent>
@@ -513,6 +599,111 @@ export default function Dashboard() {
 
               <TabsContent value="myportfolios">
                 <UserPortfolios />
+              </TabsContent>
+
+              {/* Market Tab - Market Overview */}
+              <TabsContent value="market">
+                <div className="space-y-6">
+                  {/* Market Overview with Futures, VIX, Gold */}
+                  <MarketOverview />
+
+                  {/* Full Market Data Table */}
+                  <MarketDataTable />
+
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* News Sentiment */}
+                    <NewsSentiment ticker="AAPL" />
+
+                    {/* Treasury Yields */}
+                    <TreasuryYields />
+                  </div>
+                </div>
+              </TabsContent>
+
+              {/* Watchlist Tab */}
+              <TabsContent value="watchlist">
+                <Card className="bg-card border-border">
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      <span>Your Watchlist</span>
+                      <Button size="sm" className="bg-green-600 hover:bg-green-500 text-white">
+                        + Add Stock
+                      </Button>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground text-center py-12">
+                      Your watchlist is empty. Search for stocks and click "Follow" to add them here.
+                    </p>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Advisor Tab - Research Tools */}
+              <TabsContent value="advisor">
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <Button
+                      onClick={() => setActiveTab('screener')}
+                      variant="outline"
+                      className="h-24 flex flex-col items-center justify-center gap-2"
+                    >
+                      <span className="text-2xl">🔍</span>
+                      <span>Stock Screener</span>
+                    </Button>
+                    <Button
+                      onClick={() => setActiveTab('dcf')}
+                      variant="outline"
+                      className="h-24 flex flex-col items-center justify-center gap-2"
+                    >
+                      <span className="text-2xl">📊</span>
+                      <span>DCF Calculator</span>
+                    </Button>
+                    <Button
+                      onClick={() => setActiveTab('portfolio')}
+                      variant="outline"
+                      className="h-24 flex flex-col items-center justify-center gap-2"
+                    >
+                      <span className="text-2xl">📈</span>
+                      <span>Portfolio Analyzer</span>
+                    </Button>
+                  </div>
+
+                  {/* Quick Research Tips */}
+                  <Card className="bg-card border-border">
+                    <CardHeader>
+                      <CardTitle>Research Tips</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="p-4 bg-secondary/30 rounded-lg">
+                          <p className="font-medium mb-2">Stock Screener</p>
+                          <p className="text-sm text-muted-foreground">
+                            Filter stocks by market cap, P/E ratio, revenue growth, and more.
+                          </p>
+                        </div>
+                        <div className="p-4 bg-secondary/30 rounded-lg">
+                          <p className="font-medium mb-2">DCF Calculator</p>
+                          <p className="text-sm text-muted-foreground">
+                            Calculate intrinsic value using discounted cash flow analysis.
+                          </p>
+                        </div>
+                        <div className="p-4 bg-secondary/30 rounded-lg">
+                          <p className="font-medium mb-2">Portfolio Analyzer</p>
+                          <p className="text-sm text-muted-foreground">
+                            Upload a screenshot of your portfolio for AI analysis.
+                          </p>
+                        </div>
+                        <div className="p-4 bg-secondary/30 rounded-lg">
+                          <p className="font-medium mb-2">AI Summary</p>
+                          <p className="text-sm text-muted-foreground">
+                            Search for any stock and click "AI" tab for instant analysis.
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
               </TabsContent>
             </Tabs>
           </div>
@@ -564,5 +755,13 @@ function LoadingState() {
     <div className="flex items-center justify-center h-64">
       <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-green-500"></div>
     </div>
+  )
+}
+
+export default function Dashboard() {
+  return (
+    <Suspense fallback={<LoadingState />}>
+      <DashboardContent />
+    </Suspense>
   )
 }

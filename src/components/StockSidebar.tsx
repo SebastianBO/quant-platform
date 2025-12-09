@@ -16,7 +16,11 @@ import {
   Users,
   Search,
   Briefcase,
-  ChevronRight
+  ChevronRight,
+  AlertTriangle,
+  Building2,
+  ScrollText,
+  Banknote
 } from "lucide-react"
 
 interface StockSidebarProps {
@@ -33,7 +37,11 @@ const sidebarItems = [
   { id: 'dcf', label: 'DCF', icon: Calculator },
   { id: 'ai', label: 'AI Analysis', icon: Brain },
   { id: 'technical', label: 'Technical', icon: Activity },
+  { id: 'short', label: 'Short Volume', icon: AlertTriangle },
+  { id: 'borrow', label: 'Borrow Cost', icon: Banknote },
   { id: 'options', label: 'Options', icon: BarChart3 },
+  { id: 'institutional', label: 'Institutional', icon: Building2 },
+  { id: 'sec', label: 'SEC Filings', icon: ScrollText },
   { id: 'treasury', label: 'Yields', icon: Percent },
   { id: 'news', label: 'News', icon: Newspaper },
   { id: 'financials', label: 'Financials', icon: FileText },

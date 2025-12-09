@@ -17,6 +17,8 @@ import {
   MoreVertical
 } from "lucide-react"
 import PortfolioChat from "@/components/PortfolioChat"
+import PortfolioMemberChat from "@/components/PortfolioMemberChat"
+import PortfolioPerformanceChart from "@/components/PortfolioPerformanceChart"
 import { getSymbolColor, getClearbitLogoFromSymbol } from "@/lib/logoService"
 
 // Stock logo component with EODHD → Clearbit → fallback
@@ -74,6 +76,10 @@ interface Investment {
   current_price: number | null
   market_value: number | null
   company_name?: string
+  // Live price data
+  live_price?: number | null
+  price_change?: number | null
+  price_change_percent?: number | null
 }
 
 interface Portfolio {
@@ -96,6 +102,32 @@ export default function PortfolioDetailPage() {
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [livePrices, setLivePrices] = useState<Record<string, { price: number; change: number; changePercent: number }>>({})
+  const [pricesLoading, setPricesLoading] = useState(false)
+  const [chatMode, setChatMode] = useState<'ai' | 'team'>('ai')
+
+  // Fetch live prices from EODHD
+  const fetchLivePrices = useCallback(async (investments: Investment[]) => {
+    if (investments.length === 0) return
+
+    setPricesLoading(true)
+    try {
+      const tickers = investments
+        .map(inv => inv.ticker || inv.asset_identifier)
+        .filter(Boolean)
+        .join(',')
+
+      const response = await fetch(`/api/prices?tickers=${tickers}`)
+      if (response.ok) {
+        const data = await response.json()
+        setLivePrices(data.prices || {})
+        console.log('[PortfolioDetail] Live prices fetched:', Object.keys(data.prices || {}).length)
+      }
+    } catch (err) {
+      console.error('[PortfolioDetail] Error fetching live prices:', err)
+    }
+    setPricesLoading(false)
+  }, [])
 
   const fetchPortfolioDetails = useCallback(async () => {
     try {
@@ -112,24 +144,23 @@ export default function PortfolioDetailPage() {
         return
       }
 
-      // First try to get the portfolio without investments to see if we have access
-      const { data: portfolioOnly, error: portfolioError } = await supabase
+      // First try to get portfolio where user is the owner (RLS requires user_id filter)
+      let portfolioData = null
+
+      const { data: ownedPortfolio, error: ownedError } = await supabase
         .from('portfolios')
         .select('*')
         .eq('id', portfolioId)
+        .eq('user_id', user.id)
         .maybeSingle()
 
-      console.log('[PortfolioDetail] Portfolio query result:', portfolioOnly, portfolioError)
+      console.log('[PortfolioDetail] Owned portfolio query:', ownedPortfolio, ownedError)
 
-      if (portfolioError) {
-        console.error('[PortfolioDetail] Error fetching portfolio:', portfolioError)
-        setError('Error loading portfolio')
-        setLoading(false)
-        return
-      }
-
-      if (!portfolioOnly) {
+      if (ownedPortfolio) {
+        portfolioData = ownedPortfolio
+      } else {
         // Check if user has member access
+        console.log('[PortfolioDetail] Checking member access...')
         const { data: membership } = await supabase
           .from('portfolio_members')
           .select('portfolio_id')
@@ -138,28 +169,39 @@ export default function PortfolioDetailPage() {
           .eq('status', 'accepted')
           .maybeSingle()
 
-        if (!membership) {
+        console.log('[PortfolioDetail] Membership:', membership)
+
+        if (membership) {
+          // User is a member, try RPC to get portfolio (bypasses RLS)
+          try {
+            const { data: rpcData, error: rpcError } = await supabase
+              .rpc('get_user_portfolios', {
+                p_user_id: user.id,
+                include_holdings: false
+              })
+
+            if (!rpcError && rpcData) {
+              const portfolios = typeof rpcData === 'string' ? JSON.parse(rpcData) : rpcData
+              const foundPortfolio = Array.isArray(portfolios)
+                ? portfolios.find((p: any) => p.id === portfolioId)
+                : null
+
+              if (foundPortfolio) {
+                portfolioData = foundPortfolio
+              }
+            }
+          } catch (rpcErr) {
+            console.log('[PortfolioDetail] RPC failed:', rpcErr)
+          }
+        }
+
+        if (!portfolioData) {
           console.log('[PortfolioDetail] No access to portfolio')
           setError('Portfolio not found or access denied')
           setLoading(false)
           return
         }
-
-        // Try fetching again with member access
-        const { data: memberPortfolio } = await supabase
-          .from('portfolios')
-          .select('*')
-          .eq('id', portfolioId)
-          .maybeSingle()
-
-        if (!memberPortfolio) {
-          setError('Portfolio not found')
-          setLoading(false)
-          return
-        }
       }
-
-      const portfolioData = portfolioOnly
 
       // Fetch investments separately (more reliable with RLS)
       const { data: investmentsData, error: investmentsError } = await supabase
@@ -188,33 +230,63 @@ export default function PortfolioDetailPage() {
         investments
       })
       setError(null)
+
+      // Fetch live prices after portfolio loads
+      if (investments.length > 0) {
+        fetchLivePrices(investments)
+      }
     } catch (err) {
       console.error('[PortfolioDetail] Error:', err)
       setError('Failed to load portfolio')
     }
     setLoading(false)
-  }, [portfolioId, supabase])
+  }, [portfolioId, supabase, fetchLivePrices])
 
   useEffect(() => {
     fetchPortfolioDetails()
   }, [fetchPortfolioDetails])
 
+  // Refresh live prices every 60 seconds
+  useEffect(() => {
+    if (!portfolio?.investments.length) return
+
+    const interval = setInterval(() => {
+      fetchLivePrices(portfolio.investments)
+    }, 60000) // 60 seconds
+
+    return () => clearInterval(interval)
+  }, [portfolio?.investments, fetchLivePrices])
+
   const handleRefresh = async () => {
     setRefreshing(true)
     await fetchPortfolioDetails()
+    if (portfolio?.investments) {
+      await fetchLivePrices(portfolio.investments)
+    }
     setRefreshing(false)
+  }
+
+  // Get best available price (live > stored > avg_cost)
+  const getBestPrice = (ticker: string, storedPrice: number | null, avgCost: number | null) => {
+    const liveData = livePrices[ticker?.toUpperCase()]
+    if (liveData?.price && liveData.price > 0) {
+      return liveData.price
+    }
+    return storedPrice || avgCost || 0
   }
 
   const calculateTotalValue = (investments: Investment[]) => {
     return investments.reduce((sum, inv) => {
-      const value = inv.market_value || (inv.shares * (inv.current_price || inv.avg_cost || 0))
-      return sum + value
+      const ticker = (inv.ticker || inv.asset_identifier || '').toUpperCase()
+      const shares = inv.shares || inv.quantity || 0
+      const price = getBestPrice(ticker, inv.current_price, inv.avg_cost)
+      return sum + (shares * price)
     }, 0)
   }
 
   const calculateTotalCost = (investments: Investment[]) => {
     return investments.reduce((sum, inv) => {
-      const cost = inv.shares * (inv.avg_cost || inv.purchase_price || 0)
+      const cost = (inv.shares || inv.quantity || 0) * (inv.avg_cost || inv.purchase_price || 0)
       return sum + cost
     }, 0)
   }
@@ -365,6 +437,15 @@ export default function PortfolioDetailPage() {
           </CardContent>
         </Card>
 
+        {/* Performance Chart */}
+        <PortfolioPerformanceChart
+          portfolioId={portfolio.id}
+          portfolioName={portfolio.name}
+          currency={portfolio.currency}
+          totalValue={totalValue}
+          totalCost={totalCost}
+        />
+
         {/* Positions Section */}
         <div>
           <div className="flex items-center justify-between mb-4">
@@ -388,29 +469,48 @@ export default function PortfolioDetailPage() {
           ) : (
             <div className="space-y-2">
               {portfolio.investments.map((investment) => {
-                const ticker = investment.ticker || investment.asset_identifier || 'Unknown'
+                const ticker = (investment.ticker || investment.asset_identifier || 'Unknown').toUpperCase()
                 const shares = investment.shares || investment.quantity || 0
                 const avgCost = investment.avg_cost || investment.purchase_price || 0
-                const currentPrice = investment.current_price || avgCost
-                const marketValue = investment.market_value || (shares * currentPrice)
+
+                // Use live price if available, otherwise fall back to stored price
+                const liveData = livePrices[ticker]
+                const currentPrice = liveData?.price || investment.current_price || avgCost
+                const marketValue = shares * currentPrice
                 const costBasis = shares * avgCost
                 const gain = marketValue - costBasis
                 const gainPercent = costBasis > 0 ? (gain / costBasis) * 100 : 0
                 const positionIsPositive = gain >= 0
 
+                // Day change from live data
+                const dayChange = liveData?.change || 0
+                const dayChangePercent = liveData?.changePercent || 0
+                const dayChangePositive = dayChange >= 0
+
                 return (
                   <Card
                     key={investment.id}
                     className="bg-card border-border hover:border-green-500/50 transition-colors cursor-pointer"
+                    onClick={() => router.push(`/dashboard?ticker=${ticker}`)}
                   >
                     <CardContent className="py-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                           <HoldingLogo symbol={ticker} size={44} />
                           <div>
-                            <p className="font-semibold">{ticker}</p>
+                            <div className="flex items-center gap-2">
+                              <span className="font-bold text-lg">{ticker}</span>
+                              {liveData && (
+                                <span className={`text-xs px-1.5 py-0.5 rounded ${dayChangePositive ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'}`}>
+                                  {dayChangePositive ? '+' : ''}{dayChangePercent.toFixed(2)}%
+                                </span>
+                              )}
+                              {pricesLoading && !liveData && (
+                                <span className="text-xs text-muted-foreground animate-pulse">updating...</span>
+                              )}
+                            </div>
                             <p className="text-sm text-muted-foreground">
-                              {shares} shares @ {formatCurrency(avgCost, portfolio.currency)}
+                              {shares.toLocaleString()} shares @ {formatCurrency(avgCost, portfolio.currency)}
                             </p>
                           </div>
                         </div>
@@ -434,21 +534,57 @@ export default function PortfolioDetailPage() {
         </div>
       </div>
 
-      {/* AI Chat */}
-      <PortfolioChat
-        portfolioContext={{
-          name: portfolio.name,
-          currency: portfolio.currency,
-          totalValue,
-          positionCount: portfolio.investments.length,
-          holdings: portfolio.investments.map((inv) => ({
-            ticker: inv.ticker || inv.asset_identifier || 'Unknown',
-            shares: inv.shares || inv.quantity || 0,
-            avgCost: inv.avg_cost || inv.purchase_price || 0,
-            marketValue: inv.market_value || ((inv.shares || 0) * (inv.current_price || inv.avg_cost || 0)),
-          })),
-        }}
-      />
+      {/* Chat Section */}
+      <div className="space-y-4">
+        {/* Chat Mode Tabs */}
+        <div className="flex gap-2">
+          <button
+            onClick={() => setChatMode('ai')}
+            className={`flex-1 py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${
+              chatMode === 'ai'
+                ? 'bg-green-500 text-white'
+                : 'bg-secondary text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            <MessageCircle className="w-4 h-4" />
+            AI Advisor
+          </button>
+          <button
+            onClick={() => setChatMode('team')}
+            className={`flex-1 py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${
+              chatMode === 'team'
+                ? 'bg-green-500 text-white'
+                : 'bg-secondary text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            <Users className="w-4 h-4" />
+            Team Chat
+          </button>
+        </div>
+
+        {/* Chat Content */}
+        {chatMode === 'ai' ? (
+          <PortfolioChat
+            portfolioContext={{
+              name: portfolio.name,
+              currency: portfolio.currency,
+              totalValue,
+              positionCount: portfolio.investments.length,
+              holdings: portfolio.investments.map((inv) => ({
+                ticker: inv.ticker || inv.asset_identifier || 'Unknown',
+                shares: inv.shares || inv.quantity || 0,
+                avgCost: inv.avg_cost || inv.purchase_price || 0,
+                marketValue: inv.market_value || ((inv.shares || 0) * (inv.current_price || inv.avg_cost || 0)),
+              })),
+            }}
+          />
+        ) : (
+          <PortfolioMemberChat
+            portfolioId={portfolio.id}
+            portfolioName={portfolio.name}
+          />
+        )}
+      </div>
     </div>
   )
 }
