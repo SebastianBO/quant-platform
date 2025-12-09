@@ -246,6 +246,8 @@ export default function PortfolioDetailPage() {
 
   useEffect(() => {
     fetchPortfolioDetails()
+    // Pre-fetch FX rates for currency conversion
+    fetchFXRates()
   }, [fetchPortfolioDetails])
 
   // Refresh live prices every 60 seconds
@@ -277,20 +279,25 @@ export default function PortfolioDetailPage() {
     return storedPrice || avgCost || 0
   }
 
-  const calculateTotalValue = (investments: Investment[]) => {
-    return investments.reduce((sum, inv) => {
+  // Calculate total value in USD first, then convert to portfolio currency
+  const calculateTotalValue = (investments: Investment[], currency: string) => {
+    const totalUSD = investments.reduce((sum, inv) => {
       const ticker = (inv.ticker || inv.asset_identifier || '').toUpperCase()
       const shares = inv.shares || inv.quantity || 0
       const price = getBestPrice(ticker, inv.current_price, inv.avg_cost)
       return sum + (shares * price)
     }, 0)
+    // Stock prices are in USD, convert to portfolio currency
+    return convertCurrency(totalUSD, 'USD', currency)
   }
 
-  const calculateTotalCost = (investments: Investment[]) => {
-    return investments.reduce((sum, inv) => {
+  const calculateTotalCost = (investments: Investment[], currency: string) => {
+    const totalCostUSD = investments.reduce((sum, inv) => {
       const cost = (inv.shares || inv.quantity || 0) * (inv.avg_cost || inv.purchase_price || 0)
       return sum + cost
     }, 0)
+    // Cost basis is in USD, convert to portfolio currency
+    return convertCurrency(totalCostUSD, 'USD', currency)
   }
 
   const formatCurrency = (value: number, currency: string = 'USD') => {
@@ -353,8 +360,8 @@ export default function PortfolioDetailPage() {
     )
   }
 
-  const totalValue = calculateTotalValue(portfolio.investments)
-  const totalCost = calculateTotalCost(portfolio.investments)
+  const totalValue = calculateTotalValue(portfolio.investments, portfolio.currency)
+  const totalCost = calculateTotalCost(portfolio.investments, portfolio.currency)
   const totalGain = totalValue - totalCost
   const totalGainPercent = totalCost > 0 ? (totalGain / totalCost) * 100 : 0
   const isPositive = totalGain >= 0
@@ -473,18 +480,23 @@ export default function PortfolioDetailPage() {
               {portfolio.investments.map((investment) => {
                 const ticker = (investment.ticker || investment.asset_identifier || 'Unknown').toUpperCase()
                 const shares = investment.shares || investment.quantity || 0
-                const avgCost = investment.avg_cost || investment.purchase_price || 0
+                const avgCostUSD = investment.avg_cost || investment.purchase_price || 0
 
-                // Use live price if available, otherwise fall back to stored price
+                // Use live price if available, otherwise fall back to stored price (all in USD)
                 const liveData = livePrices[ticker]
-                const currentPrice = liveData?.price || investment.current_price || avgCost
-                const marketValue = shares * currentPrice
-                const costBasis = shares * avgCost
+                const currentPriceUSD = liveData?.price || investment.current_price || avgCostUSD
+                const marketValueUSD = shares * currentPriceUSD
+                const costBasisUSD = shares * avgCostUSD
+
+                // Convert to portfolio currency for display
+                const marketValue = convertCurrency(marketValueUSD, 'USD', portfolio.currency)
+                const costBasis = convertCurrency(costBasisUSD, 'USD', portfolio.currency)
+                const avgCost = convertCurrency(avgCostUSD, 'USD', portfolio.currency)
                 const gain = marketValue - costBasis
                 const gainPercent = costBasis > 0 ? (gain / costBasis) * 100 : 0
                 const positionIsPositive = gain >= 0
 
-                // Day change from live data
+                // Day change from live data (percentage stays the same regardless of currency)
                 const dayChange = liveData?.change || 0
                 const dayChangePercent = liveData?.changePercent || 0
                 const dayChangePositive = dayChange >= 0

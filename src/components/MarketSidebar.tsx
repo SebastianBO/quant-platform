@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { TrendingUp, TrendingDown, ChevronLeft, ChevronRight, LogIn } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { TrendingUp, TrendingDown, ChevronLeft, ChevronRight, LogIn, Briefcase, ChevronRight as ChevronRightIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { createClient } from "@/lib/supabase-browser"
 
 interface MarketIndex {
   symbol: string
@@ -31,6 +33,15 @@ interface RecentStock {
   price: number
   changePercent: number
   timestamp: number
+}
+
+interface UserPortfolio {
+  id: string
+  name: string
+  currency: string
+  totalValue: number
+  changePercent: number
+  holdingsCount: number
 }
 
 // Mini sparkline component
@@ -157,10 +168,11 @@ function RecentRow({ stock, onSelect }: { stock: RecentStock, onSelect: (symbol:
 interface MarketSidebarProps {
   onSelectTicker: (symbol: string) => void
   currentTicker?: string
-  isAuthenticated?: boolean
 }
 
-export default function MarketSidebar({ onSelectTicker, currentTicker, isAuthenticated = false }: MarketSidebarProps) {
+export default function MarketSidebar({ onSelectTicker, currentTicker }: MarketSidebarProps) {
+  const router = useRouter()
+  const supabase = createClient()
   const [marketIndices, setMarketIndices] = useState<MarketIndex[]>([])
   const [trendingStocks, setTrendingStocks] = useState<TrendingStock[]>([])
   const [topGainers, setTopGainers] = useState<TrendingStock[]>([])
@@ -168,6 +180,9 @@ export default function MarketSidebar({ onSelectTicker, currentTicker, isAuthent
   const [recentlyViewed, setRecentlyViewed] = useState<RecentStock[]>([])
   const [marketPage, setMarketPage] = useState(0)
   const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState<any>(null)
+  const [portfolios, setPortfolios] = useState<UserPortfolio[]>([])
+  const [portfolioLoading, setPortfolioLoading] = useState(true)
 
   // Load recently viewed from localStorage
   useEffect(() => {
@@ -180,6 +195,101 @@ export default function MarketSidebar({ onSelectTicker, currentTicker, isAuthent
         console.error('Error parsing recently viewed:', e)
       }
     }
+  }, [])
+
+  // Fetch user and portfolios
+  useEffect(() => {
+    const fetchUserAndPortfolios = async () => {
+      try {
+        const { data: { user: authUser } } = await supabase.auth.getUser()
+        setUser(authUser)
+
+        if (authUser) {
+          // Try RPC function first
+          try {
+            const { data: rpcData, error: rpcError } = await supabase
+              .rpc('get_user_portfolios', {
+                p_user_id: authUser.id,
+                include_holdings: true
+              })
+
+            if (!rpcError && rpcData) {
+              let portfolioData = typeof rpcData === 'string' ? JSON.parse(rpcData) : rpcData
+              if (!Array.isArray(portfolioData)) {
+                portfolioData = portfolioData ? [portfolioData] : []
+              }
+
+              const mapped: UserPortfolio[] = portfolioData.map((p: any) => {
+                const holdings = p.holdings || p.investments || []
+                const totalValue = holdings.reduce((sum: number, h: any) => {
+                  return sum + (h.current_value || h.market_value || (h.quantity * (h.current_price || h.purchase_price || 0)))
+                }, 0)
+                const totalCost = holdings.reduce((sum: number, h: any) => {
+                  return sum + (h.total_cost_basis || (h.quantity * (h.purchase_price || 0)))
+                }, 0)
+                const changePercent = totalCost > 0 ? ((totalValue - totalCost) / totalCost) * 100 : 0
+
+                return {
+                  id: p.id,
+                  name: p.name,
+                  currency: p.currency || 'USD',
+                  totalValue,
+                  changePercent,
+                  holdingsCount: holdings.length
+                }
+              })
+
+              setPortfolios(mapped)
+            }
+          } catch (rpcErr) {
+            // Fallback to direct query
+            const { data: portfolioData } = await supabase
+              .from('portfolios')
+              .select(`*, investments (id, quantity, purchase_price, current_price, current_value)`)
+              .eq('user_id', authUser.id)
+
+            if (portfolioData) {
+              const mapped: UserPortfolio[] = portfolioData.map((p: any) => {
+                const holdings = p.investments || []
+                const totalValue = holdings.reduce((sum: number, h: any) => {
+                  return sum + (h.current_value || (h.quantity * (h.current_price || h.purchase_price || 0)))
+                }, 0)
+                const totalCost = holdings.reduce((sum: number, h: any) => {
+                  return sum + (h.quantity * (h.purchase_price || 0))
+                }, 0)
+                const changePercent = totalCost > 0 ? ((totalValue - totalCost) / totalCost) * 100 : 0
+
+                return {
+                  id: p.id,
+                  name: p.name,
+                  currency: p.currency || 'USD',
+                  totalValue,
+                  changePercent,
+                  holdingsCount: holdings.length
+                }
+              })
+
+              setPortfolios(mapped)
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user/portfolios:', error)
+      }
+      setPortfolioLoading(false)
+    }
+
+    fetchUserAndPortfolios()
+
+    // Listen for auth changes
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
+      setUser(session?.user ?? null)
+      if (!session?.user) {
+        setPortfolios([])
+      }
+    })
+
+    return () => authListener?.subscription?.unsubscribe?.()
   }, [])
 
   // Save current ticker to recently viewed
@@ -369,12 +479,69 @@ export default function MarketSidebar({ onSelectTicker, currentTicker, isAuthent
         {/* Portfolio */}
         <section className="bg-secondary/20 rounded-xl p-4">
           <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">Portfolio</h3>
-          {isAuthenticated ? (
-            <div className="text-center py-2">
-              <Link href="/dashboard" className="text-sm text-green-500 hover:underline">
-                View your portfolios
-              </Link>
+          {portfolioLoading ? (
+            <div className="space-y-2">
+              {[1, 2].map(i => (
+                <div key={i} className="h-16 bg-secondary/30 rounded-lg animate-pulse" />
+              ))}
             </div>
+          ) : user ? (
+            portfolios.length > 0 ? (
+              <div className="space-y-2">
+                {portfolios.slice(0, 3).map((portfolio) => {
+                  const isPositive = portfolio.changePercent >= 0
+                  const currencySymbol = portfolio.currency === 'USD' ? '$' : portfolio.currency === 'EUR' ? '€' : portfolio.currency === 'SEK' ? 'kr' : portfolio.currency
+
+                  return (
+                    <button
+                      key={portfolio.id}
+                      onClick={() => router.push(`/dashboard/portfolio/${portfolio.id}`)}
+                      className="w-full p-3 bg-secondary/30 hover:bg-secondary/50 rounded-lg transition-all group text-left"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-sm truncate group-hover:text-green-500 transition-colors">
+                            {portfolio.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {portfolio.holdingsCount} {portfolio.holdingsCount === 1 ? 'holding' : 'holdings'}
+                          </p>
+                        </div>
+                        <div className="text-right ml-2">
+                          <p className="font-medium text-sm tabular-nums">
+                            {currencySymbol}{portfolio.totalValue.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                          </p>
+                          <p className={cn(
+                            "text-xs font-medium tabular-nums flex items-center justify-end gap-0.5",
+                            isPositive ? "text-green-500" : "text-red-500"
+                          )}>
+                            {isPositive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                            {isPositive ? '+' : ''}{portfolio.changePercent.toFixed(1)}%
+                          </p>
+                        </div>
+                      </div>
+                    </button>
+                  )
+                })}
+                {portfolios.length > 3 && (
+                  <Link href="/dashboard" className="block text-center py-2">
+                    <span className="text-xs text-muted-foreground hover:text-green-500 transition-colors">
+                      +{portfolios.length - 3} more portfolios
+                    </span>
+                  </Link>
+                )}
+              </div>
+            ) : (
+              <div className="text-center py-4">
+                <Briefcase className="w-8 h-8 mx-auto mb-2 text-muted-foreground/50" />
+                <p className="text-sm text-muted-foreground mb-3">No portfolios yet</p>
+                <Link href="/dashboard">
+                  <Button size="sm" variant="outline" className="gap-2">
+                    Create Portfolio
+                  </Button>
+                </Link>
+              </div>
+            )
           ) : (
             <div className="text-center py-4">
               <p className="text-sm text-muted-foreground mb-3">Sign in to access your portfolio</p>
