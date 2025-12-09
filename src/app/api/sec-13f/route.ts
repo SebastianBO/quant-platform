@@ -86,7 +86,9 @@ async function getInstitutionFilings(cik: string): Promise<InstitutionInfo | nul
 async function getFilingHoldings(cik: string, accessionNumber: string): Promise<Holding[]> {
   // Remove dashes from accession number for URL
   const accessionNoDashes = accessionNumber.replace(/-/g, '')
-  const baseUrl = `https://www.sec.gov/Archives/edgar/data/${cik}/${accessionNoDashes}`
+  // SEC wants CIK without leading zeros in the URL path
+  const cikNoLeadingZeros = cik.replace(/^0+/, '')
+  const baseUrl = `https://www.sec.gov/Archives/edgar/data/${cikNoLeadingZeros}/${accessionNoDashes}`
 
   // First, fetch the directory listing to find the correct XML file
   try {
