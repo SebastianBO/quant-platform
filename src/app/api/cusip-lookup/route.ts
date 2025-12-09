@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-// Common CUSIP to ticker mappings (top ~200 stocks)
+// Common CUSIP to ticker mappings (top ~100 stocks)
 // CUSIP format: 9 characters, first 6 = issuer, next 2 = issue, last = check digit
 const CUSIP_TO_TICKER: Record<string, string> = {
   // Mega caps
@@ -17,13 +17,11 @@ const CUSIP_TO_TICKER: Record<string, string> = {
 
   // Large caps - Tech
   '00724F101': 'ADBE',   // Adobe
-  '79466L302': 'SALESFORCE', // Salesforce (CRM)
   '79466L302': 'CRM',    // Salesforce
   '458140100': 'INTC',   // Intel
   '00206R102': 'T',      // AT&T
   '92343V104': 'VZ',     // Verizon
   '17275R102': 'CSCO',   // Cisco
-  '571903202': 'MRK',    // Merck (actually pharma)
   '00507V109': 'ADSK',   // Autodesk
   '22160K105': 'COST',   // Costco
 
@@ -37,7 +35,6 @@ const CUSIP_TO_TICKER: Record<string, string> = {
   '025816109': 'AXP',    // American Express
   '92826C839': 'V',      // Visa
   '585055106': 'MA',     // Mastercard
-  '0258161092': 'AXP',   // American Express (alternate)
 
   // Healthcare/Pharma
   '478160104': 'JNJ',    // Johnson & Johnson
@@ -46,7 +43,6 @@ const CUSIP_TO_TICKER: Record<string, string> = {
   '58933Y105': 'MRK',    // Merck
   '002824100': 'ABBV',   // AbbVie
   '09857L108': 'BMY',    // Bristol-Myers
-  '49456B101': 'KMB',    // Kimberly-Clark
   '532457108': 'LLY',    // Eli Lilly
 
   // Consumer
@@ -73,20 +69,15 @@ const CUSIP_TO_TICKER: Record<string, string> = {
   // Energy
   '30231G102': 'XOM',    // Exxon Mobil
   '166764100': 'CVX',    // Chevron
-  '163852103': 'CHTR',   // Charter Communications
   '20825C104': 'COP',    // ConocoPhillips
   '81369Y506': 'SLB',    // Schlumberger
 
   // Entertainment/Media
   '254687106': 'DIS',    // Disney
   '64110L106': 'NFLX',   // Netflix
-  '22160N109': 'COST',   // Costco (alternate)
-  '925524303': 'ABNB',   // Airbnb (use full)
 
   // Semiconductors
   '032654105': 'AMAT',   // Applied Materials
-  '458140100': 'INTC',   // Intel
-  '00724F101': 'ADBE',   // Adobe
   '59517P701': 'MU',     // Micron
   '882508104': 'TXN',    // Texas Instruments
   '00790A105': 'ADI',    // Analog Devices
@@ -95,35 +86,22 @@ const CUSIP_TO_TICKER: Record<string, string> = {
 
   // Other Large Caps
   '02005N100': 'ALLY',   // Ally Financial
-  '00287Y109': 'ABBV',   // AbbVie (alternate)
-  '023135106': 'AMZN',   // Amazon (confirm)
   '98138H101': 'WBD',    // Warner Bros Discovery
   '872540109': 'TJX',    // TJX Companies
   '057224107': 'BKNG',   // Booking Holdings
   '693718108': 'OXY',    // Occidental Petroleum
-  '91529Y106': 'VEEV',   // Veeva Systems
-  '552953101': 'MCHP',   // Microchip Technology
-  '44919P508': 'IBKR',   // Interactive Brokers
-  '30063P105': 'EXPE',   // Expedia
-  '81464W409': 'SQ',     // Block (Square)
-  '761152107': 'RCL',    // Royal Caribbean
   '126650100': 'CVS',    // CVS Health
-  '02687478': 'AON',     // Aon
   '22788C105': 'CRWD',   // CrowdStrike
   '03027X100': 'AMT',    // American Tower
   '29444U700': 'EQIX',   // Equinix
   '761152107': 'RCL',    // Royal Caribbean
-  '929160109': 'VMC',    // Vulcan Materials
-  '91913Y100': 'VALE',   // Vale
-  '879868107': 'TDG',    // TransDigm
   '90384S303': 'UBER',   // Uber
-  '53814L108': 'LYFT',   // Lyft
   '70450Y103': 'PYPL',   // PayPal
   '68268K103': 'ON',     // ON Semiconductor
   '742935101': 'PLD',    // Prologis
-  '49271V100': 'KEY',    // KeyCorp
   '09062X103': 'BIIB',   // Biogen
   '56585A102': 'MRNA',   // Moderna
+  '163852103': 'CHTR',   // Charter Communications
 
   // ETFs that might appear
   '78462F103': 'SPY',    // SPDR S&P 500
