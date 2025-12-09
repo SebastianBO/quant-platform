@@ -66,21 +66,20 @@ function formatRelativeTime(dateStr: string): string {
 
 export async function GET(request: NextRequest) {
   const limit = parseInt(request.nextUrl.searchParams.get('limit') || '20')
-  const category = request.nextUrl.searchParams.get('category') // latest, trending, etc.
 
   try {
-    // Fetch news for major tickers
-    const tickerParam = MAJOR_TICKERS.slice(0, 10).join(',')
-    const response = await fetch(
-      `https://eodhd.com/api/news?s=${tickerParam}&api_token=${EODHD_API_KEY}&fmt=json&limit=${limit * 2}`,
-      { next: { revalidate: 300 } } // Cache for 5 minutes
+    // Fetch news for multiple tickers in parallel
+    const tickersToFetch = MAJOR_TICKERS.slice(0, 5)
+    const newsPromises = tickersToFetch.map(ticker =>
+      fetch(
+        `https://eodhd.com/api/news?s=${ticker}&api_token=${EODHD_API_KEY}&fmt=json&limit=5`,
+        { next: { revalidate: 300 } }
+      ).then(res => res.ok ? res.json() : [])
+        .catch(() => [])
     )
 
-    if (!response.ok) {
-      throw new Error(`EODHD API error: ${response.status}`)
-    }
-
-    const rawNews: NewsArticle[] = await response.json()
+    const newsArrays = await Promise.all(newsPromises)
+    const rawNews: NewsArticle[] = newsArrays.flat()
 
     // Process and deduplicate news
     const seenTitles = new Set<string>()
