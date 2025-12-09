@@ -6,7 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { createClient } from "@/lib/supabase-browser"
-import { Plus, Briefcase, Users, MessageCircle, ChevronRight, TrendingUp, TrendingDown, Link2 } from "lucide-react"
+import { Plus, Briefcase, Users, MessageCircle, ChevronRight, TrendingUp, TrendingDown, Link2, RefreshCw, CheckCircle, AlertCircle, Clock } from "lucide-react"
 import ConnectBrokerage from "./ConnectBrokerage"
 import { getSymbolColor, getClearbitLogoFromSymbol } from "@/lib/logoService"
 import { calculatePortfolioValueWithConversion, formatCurrencyValue, convertCurrency, getStockCurrency } from "@/lib/currencyUtils"
@@ -34,6 +34,17 @@ interface Portfolio {
   created_at: string
   investments: Investment[]
   access_type?: 'owner' | 'member'
+  // Sync status fields
+  plaid_item_id?: string | null
+  tink_connected?: boolean
+  last_synced?: string | null
+}
+
+interface SyncStatus {
+  provider: 'plaid' | 'tink' | null
+  lastSynced: Date | null
+  isSyncing: boolean
+  error: string | null
 }
 
 interface UserProfile {
@@ -133,6 +144,69 @@ export default function UserPortfolios() {
   const [showConnectBrokerage, setShowConnectBrokerage] = useState(false)
   const [newPortfolioName, setNewPortfolioName] = useState("")
   const [creating, setCreating] = useState(false)
+  const [syncingPortfolios, setSyncingPortfolios] = useState<Set<string>>(new Set())
+  const [lastSyncTimes, setLastSyncTimes] = useState<Record<string, string>>({})
+
+  // Sync a connected portfolio
+  const syncPortfolio = async (portfolio: Portfolio) => {
+    if (!user) return
+
+    const portfolioId = portfolio.id
+    setSyncingPortfolios(prev => new Set(prev).add(portfolioId))
+
+    try {
+      if (portfolio.plaid_item_id) {
+        // Sync Plaid portfolio
+        const response = await fetch('/api/plaid/get-investments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: user.id }),
+        })
+        if (!response.ok) throw new Error('Sync failed')
+      } else if (portfolio.tink_connected) {
+        // Sync Tink portfolio
+        const response = await fetch('/api/tink/get-investments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: user.id }),
+        })
+        if (!response.ok) throw new Error('Sync failed')
+      }
+
+      // Update last sync time
+      setLastSyncTimes(prev => ({
+        ...prev,
+        [portfolioId]: new Date().toISOString()
+      }))
+
+      // Refresh portfolio data
+      await fetchUserData()
+    } catch (error) {
+      console.error('Error syncing portfolio:', error)
+    } finally {
+      setSyncingPortfolios(prev => {
+        const next = new Set(prev)
+        next.delete(portfolioId)
+        return next
+      })
+    }
+  }
+
+  // Format relative time
+  const formatRelativeTime = (dateString: string | null | undefined) => {
+    if (!dateString) return 'Never'
+    const date = new Date(dateString)
+    const now = new Date()
+    const diffMs = now.getTime() - date.getTime()
+    const diffMins = Math.floor(diffMs / 60000)
+    const diffHours = Math.floor(diffMins / 60)
+    const diffDays = Math.floor(diffHours / 24)
+
+    if (diffMins < 1) return 'Just now'
+    if (diffMins < 60) return `${diffMins}m ago`
+    if (diffHours < 24) return `${diffHours}h ago`
+    return `${diffDays}d ago`
+  }
 
   useEffect(() => {
     fetchUserData()
@@ -516,15 +590,29 @@ export default function UserPortfolios() {
                         <p className="text-muted-foreground text-sm truncate">{portfolio.description}</p>
                       )}
                     </div>
-                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex items-center gap-1">
+                      {/* Sync button for connected portfolios */}
+                      {(portfolio.plaid_item_id || portfolio.tink_connected) && (
+                        <button
+                          className={`p-1.5 rounded-lg hover:bg-secondary transition-colors ${syncingPortfolios.has(portfolio.id) ? 'animate-pulse' : ''}`}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            syncPortfolio(portfolio)
+                          }}
+                          disabled={syncingPortfolios.has(portfolio.id)}
+                          title={`Last synced: ${formatRelativeTime(lastSyncTimes[portfolio.id] || portfolio.last_synced)}`}
+                        >
+                          <RefreshCw className={`w-4 h-4 ${syncingPortfolios.has(portfolio.id) ? 'animate-spin text-green-500' : 'text-muted-foreground'}`} />
+                        </button>
+                      )}
                       <button
-                        className="p-1.5 rounded-lg hover:bg-secondary transition-colors"
+                        className="p-1.5 rounded-lg hover:bg-secondary transition-colors opacity-0 group-hover:opacity-100"
                         onClick={(e) => { e.stopPropagation() }}
                       >
                         <MessageCircle className="w-4 h-4 text-muted-foreground" />
                       </button>
                       <button
-                        className="p-1.5 rounded-lg hover:bg-secondary transition-colors"
+                        className="p-1.5 rounded-lg hover:bg-secondary transition-colors opacity-0 group-hover:opacity-100"
                         onClick={(e) => { e.stopPropagation() }}
                       >
                         <Users className="w-4 h-4 text-muted-foreground" />
@@ -538,7 +626,7 @@ export default function UserPortfolios() {
                     <p className="text-3xl font-bold text-green-500 tabular-nums">
                       {formatCurrency(stats.totalValueInPortfolioCurrency, portfolio.currency)}
                     </p>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <p className="text-sm text-muted-foreground">
                         {holdingsCount} {holdingsCount === 1 ? 'holding' : 'holdings'} • {portfolio.currency}
                       </p>
@@ -547,7 +635,27 @@ export default function UserPortfolios() {
                           {isPositive ? '+' : ''}{stats.totalGainLossPercent.toFixed(1)}%
                         </span>
                       )}
+                      {/* Connected broker indicator */}
+                      {portfolio.plaid_item_id && (
+                        <span className="text-xs px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 flex items-center gap-1">
+                          <CheckCircle className="w-3 h-3" />
+                          Plaid
+                        </span>
+                      )}
+                      {portfolio.tink_connected && (
+                        <span className="text-xs px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-400 flex items-center gap-1">
+                          <CheckCircle className="w-3 h-3" />
+                          Tink
+                        </span>
+                      )}
                     </div>
+                    {/* Last sync time for connected portfolios */}
+                    {(portfolio.plaid_item_id || portfolio.tink_connected) && (
+                      <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
+                        <Clock className="w-3 h-3" />
+                        <span>Synced {formatRelativeTime(lastSyncTimes[portfolio.id] || portfolio.last_synced)}</span>
+                      </div>
+                    )}
                   </div>
 
                   {/* Holdings Preview - Values in portfolio currency */}
