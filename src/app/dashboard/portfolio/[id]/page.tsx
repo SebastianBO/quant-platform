@@ -504,7 +504,7 @@ export default function PortfolioDetailPage() {
                 return (
                   <Link
                     key={investment.id}
-                    href={`/dashboard?ticker=${ticker}`}
+                    href={`/stock/${ticker}`}
                     className="block"
                   >
                     <Card className="bg-card border-border hover:border-green-500/50 transition-colors cursor-pointer">

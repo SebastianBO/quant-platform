@@ -38,9 +38,10 @@ import OwnershipBreakdown from "@/components/OwnershipBreakdown"
 import StockChartSwitcher from "@/components/StockChartSwitcher"
 import MarketDataTable from "@/components/MarketDataTable"
 import MarketSidebar from "@/components/MarketSidebar"
+import UserAvatar from "@/components/UserAvatar"
 import { formatCurrency, formatPercent } from "@/lib/utils"
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts"
-import { TrendingUp, TrendingDown, Star, Share2, User } from "lucide-react"
+import { TrendingUp, TrendingDown, Star, Share2 } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 interface StockData {
@@ -236,9 +237,7 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
             {/* Right side */}
             <div className="flex items-center gap-3 flex-shrink-0">
               <ThemeToggle />
-              <Button variant="ghost" size="icon" className="rounded-full">
-                <User className="w-5 h-5" />
-              </Button>
+              <UserAvatar />
             </div>
           </div>
         </div>
