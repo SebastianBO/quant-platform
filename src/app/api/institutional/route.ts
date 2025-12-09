@@ -97,43 +97,95 @@ export async function GET(request: NextRequest) {
   // Get all holdings for a specific investor
   if (type === 'investor' && investor) {
     try {
+      // First try Financial Datasets API
       const holdings = await fetchFD('/institutional-ownership/', {
         investor: investor,
         limit: '100'
-      })
+      }).catch(() => null)
 
-      const holdingsList = holdings.institutional_ownership || []
+      const holdingsList = holdings?.institutional_ownership || []
 
-      // Calculate total AUM from all holdings
-      const totalAUM = holdingsList.reduce((sum: number, h: any) => sum + (h.market_value || 0), 0)
+      // If Financial Datasets returns data, use it
+      if (holdingsList.length > 0) {
+        const totalAUM = holdingsList.reduce((sum: number, h: any) => sum + (h.market_value || 0), 0)
+        const increased = holdingsList.filter((h: any) => h.change_in_shares > 0)
+        const decreased = holdingsList.filter((h: any) => h.change_in_shares < 0)
+        const newPositions = holdingsList.filter((h: any) => h.is_new_position)
 
-      // Calculate metrics
-      const increased = holdingsList.filter((h: any) => h.change_in_shares > 0)
-      const decreased = holdingsList.filter((h: any) => h.change_in_shares < 0)
-      const newPositions = holdingsList.filter((h: any) => h.is_new_position)
+        return NextResponse.json({
+          investor: investor.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
+          investorType: classifyInstitution(investor),
+          source: 'financial-datasets',
+          summary: {
+            totalAUM,
+            totalPositions: holdingsList.length,
+            increasedPositions: increased.length,
+            decreasedPositions: decreased.length,
+            newPositions: newPositions.length,
+            reportDate: holdingsList[0]?.report_date || null
+          },
+          holdings: holdingsList.map((h: any) => ({
+            ticker: h.ticker,
+            shares: h.shares,
+            value: h.market_value,
+            portfolioPercent: totalAUM > 0 ? (h.market_value / totalAUM) * 100 : 0,
+            percentOfCompany: h.percent_of_outstanding,
+            changeInShares: h.change_in_shares,
+            changePercent: h.change_percent,
+            isNew: h.is_new_position,
+            reportDate: h.report_date
+          })).sort((a: any, b: any) => b.value - a.value)
+        })
+      }
 
+      // Fallback to SEC EDGAR 13F data
+      const secResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL || 'https://lician.com'}/api/sec-13f?investor=${encodeURIComponent(investor)}`,
+        { next: { revalidate: 3600 } }
+      ).catch(() => null)
+
+      if (secResponse?.ok) {
+        const secData = await secResponse.json()
+
+        if (secData.holdings && secData.holdings.length > 0) {
+          return NextResponse.json({
+            investor: secData.institution?.name || investor.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
+            investorType: classifyInstitution(investor),
+            source: 'sec-edgar',
+            summary: {
+              totalAUM: secData.summary?.totalValue || 0,
+              totalPositions: secData.summary?.totalPositions || 0,
+              increasedPositions: 0, // SEC doesn't track changes
+              decreasedPositions: 0,
+              newPositions: 0,
+              reportDate: secData.filing?.reportDate || null
+            },
+            holdings: secData.holdings.map((h: any) => ({
+              ticker: h.cusip, // Use CUSIP as identifier (would need CUSIP->ticker mapping)
+              issuer: h.issuer,
+              titleOfClass: h.class,
+              shares: h.shares,
+              value: h.value,
+              portfolioPercent: h.portfolioPercent,
+              percentOfCompany: null,
+              changeInShares: 0,
+              changePercent: 0,
+              isNew: false,
+              reportDate: secData.filing?.reportDate
+            })),
+            filing: secData.filing,
+            availableQuarters: secData.availableQuarters
+          })
+        }
+      }
+
+      // No data from either source
       return NextResponse.json({
         investor: investor.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
         investorType: classifyInstitution(investor),
-        summary: {
-          totalAUM,
-          totalPositions: holdingsList.length,
-          increasedPositions: increased.length,
-          decreasedPositions: decreased.length,
-          newPositions: newPositions.length,
-          reportDate: holdingsList[0]?.report_date || null
-        },
-        holdings: holdingsList.map((h: any) => ({
-          ticker: h.ticker,
-          shares: h.shares,
-          value: h.market_value,
-          portfolioPercent: totalAUM > 0 ? (h.market_value / totalAUM) * 100 : 0,
-          percentOfCompany: h.percent_of_outstanding,
-          changeInShares: h.change_in_shares,
-          changePercent: h.change_percent,
-          isNew: h.is_new_position,
-          reportDate: h.report_date
-        })).sort((a: any, b: any) => b.value - a.value)
+        source: 'none',
+        summary: { totalAUM: 0, totalPositions: 0 },
+        holdings: []
       })
     } catch (error) {
       console.error('Investor holdings error:', error)

@@ -58,15 +58,23 @@ interface InvestorData {
   }
   holdings: {
     ticker: string
+    issuer?: string
+    titleOfClass?: string
     shares: number
     value: number
     portfolioPercent: number
-    percentOfCompany: number
+    percentOfCompany: number | null
     changeInShares: number
     changePercent: number
     isNew: boolean
     reportDate: string
   }[]
+  source?: string
+  filing?: {
+    reportDate: string
+    filingDate: string
+  }
+  availableQuarters?: { reportDate: string; filingDate: string }[]
 }
 
 interface InvestorSearch {
@@ -248,40 +256,50 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
               {/* Holdings Table */}
               <div className="space-y-1">
                 <div className="grid grid-cols-12 gap-2 px-2 py-1 text-xs text-muted-foreground font-medium border-b border-border">
-                  <div className="col-span-3">Ticker</div>
+                  <div className="col-span-4">Holding</div>
                   <div className="col-span-2 text-right">Value</div>
                   <div className="col-span-2 text-right">% Portfolio</div>
                   <div className="col-span-2 text-right">Shares</div>
-                  <div className="col-span-3 text-right">Change</div>
+                  <div className="col-span-2 text-right">Change</div>
                 </div>
                 <div className="max-h-[400px] overflow-y-auto space-y-1">
-                  {selectedInvestor.holdings.map((h, i) => (
-                    <Link
-                      key={i}
-                      href={`/stock/${h.ticker}`}
-                      className="grid grid-cols-12 gap-2 px-2 py-2 text-sm rounded hover:bg-secondary/50 transition-colors"
-                    >
-                      <div className="col-span-3 font-medium flex items-center gap-2">
-                        {h.ticker}
-                        {h.isNew && (
-                          <span className="px-1 py-0.5 bg-blue-500/20 text-blue-400 text-[10px] rounded">NEW</span>
-                        )}
+                  {selectedInvestor.holdings.map((h, i) => {
+                    // For SEC data, show issuer name; for Financial Datasets, show ticker
+                    const displayName = h.issuer || h.ticker
+                    const isSECData = selectedInvestor.source === 'sec-edgar'
+
+                    return (
+                      <div
+                        key={i}
+                        className="grid grid-cols-12 gap-2 px-2 py-2 text-sm rounded hover:bg-secondary/50 transition-colors"
+                      >
+                        <div className="col-span-4 font-medium">
+                          <div className="flex items-center gap-2">
+                            <span className="truncate">{displayName}</span>
+                            {h.isNew && (
+                              <span className="px-1 py-0.5 bg-blue-500/20 text-blue-400 text-[10px] rounded shrink-0">NEW</span>
+                            )}
+                          </div>
+                          {h.titleOfClass && (
+                            <span className="text-xs text-muted-foreground">{h.titleOfClass}</span>
+                          )}
+                        </div>
+                        <div className="col-span-2 text-right">{formatValue(h.value)}</div>
+                        <div className="col-span-2 text-right">
+                          <span className="text-primary">{h.portfolioPercent?.toFixed(2)}%</span>
+                        </div>
+                        <div className="col-span-2 text-right text-muted-foreground">{formatShares(h.shares)}</div>
+                        <div className={`col-span-2 text-right flex items-center justify-end gap-1 ${
+                          h.changeInShares > 0 ? 'text-green-500' :
+                          h.changeInShares < 0 ? 'text-red-500' : 'text-muted-foreground'
+                        }`}>
+                          {!isSECData && h.changeInShares > 0 ? <ArrowUpRight className="w-3 h-3" /> :
+                           !isSECData && h.changeInShares < 0 ? <ArrowDownRight className="w-3 h-3" /> : null}
+                          {!isSECData && h.changeInShares !== 0 ? `${h.changePercent > 0 ? '+' : ''}${h.changePercent?.toFixed(1)}%` : '-'}
+                        </div>
                       </div>
-                      <div className="col-span-2 text-right">{formatValue(h.value)}</div>
-                      <div className="col-span-2 text-right">
-                        <span className="text-primary">{h.portfolioPercent?.toFixed(2)}%</span>
-                      </div>
-                      <div className="col-span-2 text-right text-muted-foreground">{formatShares(h.shares)}</div>
-                      <div className={`col-span-3 text-right flex items-center justify-end gap-1 ${
-                        h.changeInShares > 0 ? 'text-green-500' :
-                        h.changeInShares < 0 ? 'text-red-500' : 'text-muted-foreground'
-                      }`}>
-                        {h.changeInShares > 0 ? <ArrowUpRight className="w-3 h-3" /> :
-                         h.changeInShares < 0 ? <ArrowDownRight className="w-3 h-3" /> : null}
-                        {h.changeInShares !== 0 ? `${h.changePercent > 0 ? '+' : ''}${h.changePercent?.toFixed(1)}%` : '-'}
-                      </div>
-                    </Link>
-                  ))}
+                    )
+                  })}
                 </div>
               </div>
             </>
