@@ -55,14 +55,14 @@ export async function GET(request: NextRequest) {
       eohdRealtime,
       eohdFundamentals
     ] = await Promise.all([
-      fetchFD('/prices/snapshot/', { ticker }),
-      fetchFD('/financials/income-statements/', { ticker, period: 'annual', limit: '5' }),
-      fetchFD('/financials/balance-sheets/', { ticker, period: 'annual', limit: '5' }),
-      fetchFD('/financials/cash-flow-statements/', { ticker, period: 'annual', limit: '5' }),
-      fetchFD('/financial-metrics/', { ticker, period: 'annual', limit: '1' }),
-      fetchFD('/financial-metrics/', { ticker, period: 'annual', limit: '5' }),
-      fetchFD('/insider-trades/', { ticker, limit: '20' }),
-      fetchFD('/analyst-estimates/', { ticker, limit: '8' }),
+      fetchFD('/prices/snapshot/', { ticker }).catch(() => ({ snapshot: null })),
+      fetchFD('/financials/income-statements/', { ticker, period: 'annual', limit: '5' }).catch(() => ({ income_statements: [] })),
+      fetchFD('/financials/balance-sheets/', { ticker, period: 'annual', limit: '5' }).catch(() => ({ balance_sheets: [] })),
+      fetchFD('/financials/cash-flow-statements/', { ticker, period: 'annual', limit: '5' }).catch(() => ({ cash_flow_statements: [] })),
+      fetchFD('/financial-metrics/', { ticker, period: 'annual', limit: '1' }).catch(() => ({ financial_metrics: [] })),
+      fetchFD('/financial-metrics/', { ticker, period: 'annual', limit: '5' }).catch(() => ({ financial_metrics: [] })),
+      fetchFD('/insider-trades/', { ticker, limit: '20' }).catch(() => ({ insider_trades: [] })),
+      fetchFD('/analyst-estimates/', { ticker, limit: '8' }).catch(() => ({ analyst_estimates: [] })),
       fetchFD('/financials/segmented-revenues/', { ticker, period: 'annual', limit: '3' }).catch(() => ({ segmented_revenues: [] })),
       fetchFD('/company/facts/', { ticker }).catch(() => ({ company_facts: null })),
       fetchFD('/financials/income-statements/', { ticker, period: 'quarterly', limit: '8' }).catch(() => ({ income_statements: [] })),
@@ -146,14 +146,24 @@ export async function GET(request: NextRequest) {
     const eohdHighlights = eohdFundamentals?.Highlights || {}
     const eohdGeneral = eohdFundamentals?.General || {}
 
+    // Create fallback snapshot from EODHD if Financial Datasets doesn't have the ticker
+    const baseSnapshot = snapshot.snapshot || {
+      ticker: ticker.toUpperCase(),
+      price: eohdRealtime?.close || eohdRealtime?.previousClose || 0,
+      day_change: eohdRealtime?.change || 0,
+      day_change_percent: eohdRealtime?.change_p || 0,
+      volume: eohdRealtime?.volume || 0,
+      market_cap: eohdHighlights?.MarketCapitalization || 0,
+    }
+
     // Enhance snapshot with calculated data
     const enhancedSnapshot = {
-      ...snapshot.snapshot,
+      ...baseSnapshot,
       // Day's OHLC - prefer EODHD real-time data
-      open: eohdRealtime?.open || todayPrice.open || snapshot.snapshot?.open,
-      dayHigh: eohdRealtime?.high || todayPrice.high || snapshot.snapshot?.day_high,
-      dayLow: eohdRealtime?.low || todayPrice.low || snapshot.snapshot?.day_low,
-      previousClose: eohdRealtime?.previousClose || yesterdayPrice.close || snapshot.snapshot?.previous_close,
+      open: eohdRealtime?.open || todayPrice.open || baseSnapshot?.open,
+      dayHigh: eohdRealtime?.high || todayPrice.high || baseSnapshot?.day_high,
+      dayLow: eohdRealtime?.low || todayPrice.low || baseSnapshot?.day_low,
+      previousClose: eohdRealtime?.previousClose || yesterdayPrice.close || baseSnapshot?.previous_close,
       // Bid/Ask from EODHD real-time
       bid: eohdRealtime?.bid,
       ask: eohdRealtime?.ask,
@@ -179,7 +189,15 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       snapshot: enhancedSnapshot,
-      companyFacts: companyFacts?.company_facts || null,
+      companyFacts: companyFacts?.company_facts || {
+        name: eohdGeneral?.Name || ticker.toUpperCase(),
+        description: eohdGeneral?.Description || null,
+        sector: eohdGeneral?.Sector || null,
+        industry: eohdGeneral?.Industry || null,
+        exchange: eohdGeneral?.Exchange || null,
+        cik: eohdGeneral?.CIK || null,
+        website: eohdGeneral?.WebURL || null,
+      },
       // Annual statements
       incomeStatements: incomeStatements.income_statements || [],
       balanceSheets: balanceSheets.balance_sheets || [],
