@@ -6,7 +6,8 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { createClient } from "@/lib/supabase-browser"
-import { Plus, Briefcase, Users, MessageCircle, ChevronRight, TrendingUp, TrendingDown } from "lucide-react"
+import { Plus, Briefcase, Users, MessageCircle, ChevronRight, TrendingUp, TrendingDown, Link2 } from "lucide-react"
+import ConnectBrokerage from "./ConnectBrokerage"
 import { getSymbolColor, getClearbitLogoFromSymbol } from "@/lib/logoService"
 import { calculatePortfolioValueWithConversion, formatCurrencyValue, convertCurrency, getStockCurrency } from "@/lib/currencyUtils"
 import type { User } from "@supabase/supabase-js"
@@ -129,6 +130,7 @@ export default function UserPortfolios() {
   const [portfolios, setPortfolios] = useState<Portfolio[]>([])
   const [loading, setLoading] = useState(true)
   const [showCreateForm, setShowCreateForm] = useState(false)
+  const [showConnectBrokerage, setShowConnectBrokerage] = useState(false)
   const [newPortfolioName, setNewPortfolioName] = useState("")
   const [creating, setCreating] = useState(false)
 
@@ -397,15 +399,42 @@ export default function UserPortfolios() {
               <p className="text-muted-foreground">{user.email}</p>
             </div>
           </div>
-          <Button
-            onClick={() => setShowCreateForm(!showCreateForm)}
-            className="bg-green-600 hover:bg-green-500 text-white shadow-lg shadow-green-500/25"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            New Portfolio
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={() => {
+                setShowConnectBrokerage(!showConnectBrokerage)
+                setShowCreateForm(false)
+              }}
+              variant="outline"
+              className="border-green-500/50 hover:bg-green-500/10"
+            >
+              <Link2 className="w-4 h-4 mr-2" />
+              Connect Brokerage
+            </Button>
+            <Button
+              onClick={() => {
+                setShowCreateForm(!showCreateForm)
+                setShowConnectBrokerage(false)
+              }}
+              className="bg-green-600 hover:bg-green-500 text-white shadow-lg shadow-green-500/25"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              New Portfolio
+            </Button>
+          </div>
         </div>
       </div>
+
+      {/* Connect Brokerage Section */}
+      {showConnectBrokerage && user && (
+        <ConnectBrokerage
+          userId={user.id}
+          onConnectionSuccess={() => {
+            setShowConnectBrokerage(false)
+            fetchUserData() // Refresh portfolios after connection
+          }}
+        />
+      )}
 
       {/* Create Portfolio Form */}
       {showCreateForm && (
