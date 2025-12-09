@@ -52,6 +52,22 @@ const CUSIP_TO_TICKER: Record<string, string> = {
   // Other
   '02005N100': 'ALLY', '693718108': 'OXY', '126650100': 'CVS', '70450Y103': 'PYPL',
   '90384S303': 'UBER', '56585A102': 'MRNA', '742935101': 'PLD', '03027X100': 'AMT',
+  // Additional common holdings
+  'H1467J104': 'CB',   // Chubb Limited
+  '500754106': 'KHC',  // Kraft Heinz
+  '74460D109': 'PSX',  // Phillips 66
+  '576323109': 'MDLZ', // Mondelez
+  '45866F104': 'ICE',  // Intercontinental Exchange
+  '92343E102': 'VRSN', // Verisign
+  '031162100': 'AMGN', // Amgen
+  '053332102': 'ATVI', // Activision (now MSFT)
+  '98978V103': 'ZTS',  // Zoetis
+  '88579Y101': 'MMM',  // 3M
+  '24478K103': 'DE',   // Deere
+  '826809100': 'SHW',  // Sherwin-Williams
+  '571900102': 'MAR',  // Marriott
+  '74834L100': 'QGEN', // Qiagen
+  '46284V101': 'ISRG', // Intuitive Surgical
 }
 
 interface InstitutionInfo {
