@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: 'article',
     },
     alternates: {
-      canonical: `https://quant-platform.vercel.app/compare/${slugs.toLowerCase()}`,
+      canonical: `https://lician.com/compare/${slugs.toLowerCase()}`,
     },
   }
 }

@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: 'article',
     },
     alternates: {
-      canonical: `https://quant-platform.vercel.app/prediction/${ticker.toLowerCase()}`,
+      canonical: `https://lician.com/prediction/${ticker.toLowerCase()}`,
     },
   }
 }

@@ -9,7 +9,7 @@ const geist = Geist({ subsets: ["latin"], variable: "--font-geist" })
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://quant-platform.vercel.app'),
+  metadataBase: new URL('https://lician.com'),
   title: {
     default: "Lician - AI-Powered Stock Research & Analysis Platform",
     template: "%s | Lician"
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://quant-platform.vercel.app",
+    url: "https://lician.com",
     siteName: "Lician",
     title: "Lician - AI-Powered Stock Research & Analysis Platform",
     description: "Make better investment decisions with AI-powered stock analysis, real-time quotes, DCF valuations, and institutional ownership tracking.",
@@ -74,7 +74,7 @@ export const metadata: Metadata = {
     google: "your-google-verification-code",
   },
   alternates: {
-    canonical: "https://quant-platform.vercel.app",
+    canonical: "https://lician.com",
   },
 }
 

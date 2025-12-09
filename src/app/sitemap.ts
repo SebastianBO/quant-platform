@@ -27,7 +27,7 @@ const FILTER_CATEGORIES = [
 ]
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://quant-platform.vercel.app'
+  const baseUrl = 'https://lician.com'
   const currentDate = new Date().toISOString()
 
   const routes: MetadataRoute.Sitemap = [

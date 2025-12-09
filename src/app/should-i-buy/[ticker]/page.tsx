@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: 'article',
     },
     alternates: {
-      canonical: `https://quant-platform.vercel.app/should-i-buy/${ticker.toLowerCase()}`,
+      canonical: `https://lician.com/should-i-buy/${ticker.toLowerCase()}`,
     },
   }
 }
@@ -92,7 +92,7 @@ export default async function ShouldIBuyPage({ params }: Props) {
       name: 'Lician',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://quant-platform.vercel.app/logo.png',
+        url: 'https://lician.com/logo.png',
       },
     },
     datePublished: new Date().toISOString(),
