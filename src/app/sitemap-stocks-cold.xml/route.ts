@@ -23,7 +23,7 @@ export async function GET(request: Request) {
           'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
         },
-        next: { revalidate: 7200 },
+        cache: 'no-store', // Disable cache for now
       }
     )
 
