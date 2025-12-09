@@ -14,6 +14,7 @@ interface Holding {
   issuer: string
   class: string
   cusip: string
+  ticker?: string // Resolved from CUSIP
   value: number // in dollars (SEC reports in $1000s)
   shares: number
   shareType: string // 'SH' for shares, 'PRN' for principal
@@ -22,6 +23,35 @@ interface Holding {
   votingShared: number
   votingNone: number
   putCall?: string
+}
+
+// Common CUSIP to ticker mappings (top stocks)
+const CUSIP_TO_TICKER: Record<string, string> = {
+  // Mega caps
+  '037833100': 'AAPL', '594918104': 'MSFT', '02079K305': 'GOOGL', '02079K107': 'GOOG',
+  '023135106': 'AMZN', '67066G104': 'NVDA', '88160R101': 'TSLA', '30303M102': 'META',
+  '084670702': 'BRK.B', '084670108': 'BRK.A',
+  // Financials
+  '060505104': 'BAC', '46625H100': 'JPM', '172967424': 'C', '949746101': 'WFC',
+  '38141G104': 'GS', '617446448': 'MS', '025816109': 'AXP', '92826C839': 'V', '585055106': 'MA',
+  // Healthcare
+  '478160104': 'JNJ', '91324P102': 'UNH', '718172109': 'PFE', '58933Y105': 'MRK',
+  '002824100': 'ABBV', '532457108': 'LLY',
+  // Consumer
+  '191216100': 'KO', '713448108': 'PEP', '742718109': 'PG', '931142103': 'WMT',
+  '437076102': 'HD', '580135101': 'MCD', '654106103': 'NKE', '853061100': 'SBUX', '22160K105': 'COST',
+  // Industrial
+  '097023105': 'BA', '149123101': 'CAT', '369550108': 'GE', '443556101': 'HON',
+  '912909108': 'UNP', '902973304': 'UPS', '345370860': 'F', '370334104': 'GM',
+  // Energy
+  '30231G102': 'XOM', '166764100': 'CVX', '20825C104': 'COP',
+  // Tech
+  '00724F101': 'ADBE', '79466L302': 'CRM', '458140100': 'INTC', '17275R102': 'CSCO',
+  '254687106': 'DIS', '64110L106': 'NFLX', '747525103': 'QCOM', '09061G101': 'AVGO',
+  '882508104': 'TXN', '59517P701': 'MU',
+  // Other
+  '02005N100': 'ALLY', '693718108': 'OXY', '126650100': 'CVS', '70450Y103': 'PYPL',
+  '90384S303': 'UBER', '56585A102': 'MRNA', '742935101': 'PLD', '03027X100': 'AMT',
 }
 
 interface InstitutionInfo {
@@ -195,10 +225,12 @@ function parseInfoTable(xml: string): Holding[] {
     // Modern filings report actual dollar amounts
     const rawValue = getNumeric('value')
 
+    const cusip = getValue('cusip')
     const holding: Holding = {
       issuer: getValue('nameOfIssuer'),
       class: getValue('titleOfClass'),
-      cusip: getValue('cusip'),
+      cusip,
+      ticker: CUSIP_TO_TICKER[cusip] || undefined, // Resolve ticker from CUSIP
       value: rawValue, // Already in dollars
       shares: getNumeric('sshPrnamt'),
       shareType: getValue('sshPrnamtType') || 'SH',

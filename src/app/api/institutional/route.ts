@@ -161,7 +161,8 @@ export async function GET(request: NextRequest) {
               reportDate: secData.filing?.reportDate || null
             },
             holdings: secData.holdings.map((h: any) => ({
-              ticker: h.cusip, // Use CUSIP as identifier (would need CUSIP->ticker mapping)
+              ticker: h.ticker || h.cusip, // Use resolved ticker, fallback to CUSIP
+              cusip: h.cusip,
               issuer: h.issuer,
               titleOfClass: h.class,
               shares: h.shares,

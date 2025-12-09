@@ -8,7 +8,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import {
   Building2, TrendingUp, TrendingDown, Plus, Minus,
   Search, ArrowUpRight, ArrowDownRight, PieChart,
-  Briefcase, ChevronRight, X, Loader2
+  Briefcase, ChevronRight, X, Loader2, Database, Globe
 } from "lucide-react"
 import Link from "next/link"
 
@@ -58,6 +58,7 @@ interface InvestorData {
   }
   holdings: {
     ticker: string
+    cusip?: string
     issuer?: string
     titleOfClass?: string
     shares: number
@@ -77,6 +78,8 @@ interface InvestorData {
   availableQuarters?: { reportDate: string; filingDate: string }[]
 }
 
+type DataSource = 'auto' | 'sec-edgar' | 'financial-datasets'
+
 interface InvestorSearch {
   name: string
   rawName: string
@@ -93,6 +96,7 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
   const [searchResults, setSearchResults] = useState<InvestorSearch[]>([])
   const [searchLoading, setSearchLoading] = useState(false)
   const [showSearch, setShowSearch] = useState(false)
+  const [dataSource, setDataSource] = useState<DataSource>('auto')
 
   useEffect(() => {
     fetchData()
@@ -135,9 +139,49 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
     return () => clearTimeout(timer)
   }, [searchQuery, searchInstitutions])
 
-  const fetchInvestorDetails = async (investorName: string) => {
+  const fetchInvestorDetails = async (investorName: string, source: DataSource = dataSource) => {
     setInvestorLoading(true)
     try {
+      // If SEC data source is selected, fetch directly from SEC 13F API
+      if (source === 'sec-edgar') {
+        const response = await fetch(`/api/sec-13f?investor=${encodeURIComponent(investorName)}`)
+        const result = await response.json()
+        if (result.holdings && result.holdings.length > 0) {
+          setSelectedInvestor({
+            investor: result.institution?.name || investorName,
+            investorType: classifyInstitutionType(investorName),
+            source: 'sec-edgar',
+            summary: {
+              totalAUM: result.summary?.totalValue || 0,
+              totalPositions: result.summary?.totalPositions || 0,
+              increasedPositions: 0,
+              decreasedPositions: 0,
+              newPositions: 0,
+              reportDate: result.filing?.reportDate || ''
+            },
+            holdings: result.holdings.map((h: any) => ({
+              ticker: h.ticker || h.cusip,
+              cusip: h.cusip,
+              issuer: h.issuer,
+              titleOfClass: h.class,
+              shares: h.shares,
+              value: h.value,
+              portfolioPercent: h.portfolioPercent,
+              percentOfCompany: null,
+              changeInShares: 0,
+              changePercent: 0,
+              isNew: false,
+              reportDate: result.filing?.reportDate || ''
+            })),
+            filing: result.filing,
+            availableQuarters: result.availableQuarters
+          })
+          setInvestorLoading(false)
+          return
+        }
+      }
+
+      // Default: use institutional API (which tries Financial Datasets first, then SEC)
       const response = await fetch(`/api/institutional?type=investor&investor=${encodeURIComponent(investorName)}`)
       const result = await response.json()
       setSelectedInvestor(result)
@@ -145,6 +189,18 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
       console.error('Error fetching investor details:', error)
     }
     setInvestorLoading(false)
+  }
+
+  // Simple institution type classifier
+  const classifyInstitutionType = (name: string): string => {
+    const lowerName = name.toLowerCase()
+    if (lowerName.includes('vanguard') || lowerName.includes('blackrock') || lowerName.includes('state street') || lowerName.includes('fidelity')) return 'Index Fund'
+    if (lowerName.includes('hedge') || lowerName.includes('capital management') || lowerName.includes('advisors')) return 'Hedge Fund'
+    if (lowerName.includes('pension') || lowerName.includes('retirement')) return 'Pension Fund'
+    if (lowerName.includes('bank') || lowerName.includes('morgan') || lowerName.includes('goldman')) return 'Bank'
+    if (lowerName.includes('berkshire')) return 'Conglomerate'
+    if (lowerName.includes('norges') || lowerName.includes('sovereign')) return 'Sovereign Wealth'
+    return 'Investment Manager'
   }
 
   const formatValue = (value: number | null) => {
@@ -183,6 +239,13 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
     return name.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())
   }
 
+  // Check if a ticker is a valid symbol (not a CUSIP)
+  const isValidTicker = (ticker: string) => {
+    if (!ticker) return false
+    // CUSIPs are 9 chars, mostly digits; tickers are 1-5 chars, mostly letters
+    return ticker.length <= 5 && /^[A-Z.]+$/.test(ticker)
+  }
+
   // Investor Detail Modal/Panel
   if (selectedInvestor) {
     const hasData = selectedInvestor.holdings && selectedInvestor.holdings.length > 0
@@ -202,9 +265,46 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                 Back to Holders
               </Button>
               <CardTitle className="text-lg">{formatInvestorName(selectedInvestor.investor)}</CardTitle>
-              <span className={`text-xs px-2 py-0.5 rounded ${getTypeColor(selectedInvestor.investorType)}`}>
-                {selectedInvestor.investorType}
-              </span>
+              <div className="flex items-center gap-2 mt-1">
+                <span className={`text-xs px-2 py-0.5 rounded ${getTypeColor(selectedInvestor.investorType)}`}>
+                  {selectedInvestor.investorType}
+                </span>
+                {selectedInvestor.source && (
+                  <span className="text-xs px-2 py-0.5 rounded bg-primary/10 text-primary flex items-center gap-1">
+                    {selectedInvestor.source === 'sec-edgar' ? <Database className="w-3 h-3" /> : <Globe className="w-3 h-3" />}
+                    {selectedInvestor.source === 'sec-edgar' ? 'SEC EDGAR' : 'Financial Datasets'}
+                  </span>
+                )}
+              </div>
+            </div>
+            {/* Data Source Toggle */}
+            <div className="flex flex-col items-end gap-1">
+              <span className="text-xs text-muted-foreground">Data Source</span>
+              <div className="flex gap-1">
+                <Button
+                  variant={dataSource === 'auto' ? 'default' : 'outline'}
+                  size="sm"
+                  className="h-7 px-2 text-xs"
+                  onClick={() => {
+                    setDataSource('auto')
+                    fetchInvestorDetails(selectedInvestor.investor.toUpperCase().replace(/ /g, '_'), 'auto')
+                  }}
+                >
+                  Auto
+                </Button>
+                <Button
+                  variant={dataSource === 'sec-edgar' ? 'default' : 'outline'}
+                  size="sm"
+                  className="h-7 px-2 text-xs"
+                  onClick={() => {
+                    setDataSource('sec-edgar')
+                    fetchInvestorDetails(selectedInvestor.investor.toUpperCase().replace(/ /g, '_'), 'sec-edgar')
+                  }}
+                >
+                  <Database className="w-3 h-3 mr-1" />
+                  SEC
+                </Button>
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -222,17 +322,39 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
               <p className="text-xs text-muted-foreground">
                 Full portfolio data is available for select institutions including Berkshire Hathaway, BlackRock, and others.
               </p>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setSelectedInvestor(null)}
-                className="mt-4"
-              >
-                Back to Holders List
-              </Button>
+              <div className="flex gap-2 justify-center mt-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSelectedInvestor(null)}
+                >
+                  Back to Holders List
+                </Button>
+                {dataSource !== 'sec-edgar' && (
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() => {
+                      setDataSource('sec-edgar')
+                      fetchInvestorDetails(selectedInvestor.investor.toUpperCase().replace(/ /g, '_'), 'sec-edgar')
+                    }}
+                  >
+                    <Database className="w-3 h-3 mr-1" />
+                    Try SEC Data
+                  </Button>
+                )}
+              </div>
             </div>
           ) : (
             <>
+              {/* Filing Info */}
+              {selectedInvestor.filing && (
+                <div className="mb-4 p-2 bg-secondary/20 rounded text-xs text-muted-foreground flex items-center justify-between">
+                  <span>Report Date: {selectedInvestor.filing.reportDate}</span>
+                  <span>Filed: {selectedInvestor.filing.filingDate}</span>
+                </div>
+              )}
+
               {/* Investor Summary */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
                 <div className="p-3 bg-secondary/30 rounded-lg text-center">
@@ -264,9 +386,9 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                 </div>
                 <div className="max-h-[400px] overflow-y-auto space-y-1">
                   {selectedInvestor.holdings.map((h, i) => {
-                    // For SEC data, show issuer name; for Financial Datasets, show ticker
-                    const displayName = h.issuer || h.ticker
                     const isSECData = selectedInvestor.source === 'sec-edgar'
+                    const tickerSymbol = h.ticker && isValidTicker(h.ticker) ? h.ticker : null
+                    const displayName = h.issuer || h.ticker
 
                     return (
                       <div
@@ -275,12 +397,25 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                       >
                         <div className="col-span-4 font-medium">
                           <div className="flex items-center gap-2">
-                            <span className="truncate">{displayName}</span>
+                            {tickerSymbol ? (
+                              <Link
+                                href={`/stock/${tickerSymbol}`}
+                                className="text-primary hover:underline truncate"
+                              >
+                                {tickerSymbol}
+                              </Link>
+                            ) : (
+                              <span className="truncate">{displayName}</span>
+                            )}
                             {h.isNew && (
                               <span className="px-1 py-0.5 bg-blue-500/20 text-blue-400 text-[10px] rounded shrink-0">NEW</span>
                             )}
                           </div>
-                          {h.titleOfClass && (
+                          {/* Show issuer name below ticker if available */}
+                          {tickerSymbol && h.issuer && (
+                            <span className="text-xs text-muted-foreground truncate block">{h.issuer}</span>
+                          )}
+                          {!tickerSymbol && h.titleOfClass && (
                             <span className="text-xs text-muted-foreground">{h.titleOfClass}</span>
                           )}
                         </div>
