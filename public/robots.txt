@@ -1,0 +1,21 @@
+# Robots.txt for Lician Quant Platform
+# https://quant-platform.vercel.app
+
+User-agent: *
+Allow: /
+
+# Disallow internal paths
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+Disallow: /auth/
+
+# Allow specific API endpoints for preview
+Allow: /api/og/
+
+# Sitemaps
+Sitemap: https://quant-platform.vercel.app/sitemap.xml
+Sitemap: https://quant-platform.vercel.app/sitemap-stocks.xml
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1
