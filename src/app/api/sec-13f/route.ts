@@ -86,69 +86,77 @@ async function getInstitutionFilings(cik: string): Promise<InstitutionInfo | nul
 async function getFilingHoldings(cik: string, accessionNumber: string): Promise<Holding[]> {
   // Remove dashes from accession number for URL
   const accessionNoDashes = accessionNumber.replace(/-/g, '')
+  const baseUrl = `https://www.sec.gov/Archives/edgar/data/${cik}/${accessionNoDashes}`
 
-  // Try different XML file names (SEC uses various naming conventions)
-  const possibleFiles = [
-    'infotable.xml',
-    'primary_doc.xml',
-    'form13fInfoTable.xml',
-    'INFOTABLE.XML'
-  ]
-
-  for (const filename of possibleFiles) {
-    try {
-      const url = `https://www.sec.gov/Archives/edgar/data/${cik}/${accessionNoDashes}/${filename}`
-
-      const response = await fetch(url, {
-        headers: {
-          'User-Agent': SEC_USER_AGENT,
-          'Accept': 'application/xml, text/xml',
-        },
-        next: { revalidate: 86400 } // Cache for 24 hours (historical data doesn't change)
-      })
-
-      if (!response.ok) continue
-
-      const xmlText = await response.text()
-
-      // Parse XML to extract holdings
-      const holdings = parseInfoTable(xmlText)
-      if (holdings.length > 0) {
-        return holdings
-      }
-    } catch (error) {
-      continue
-    }
-  }
-
-  // Try to find the XML file from the filing index
+  // First, fetch the directory listing to find the correct XML file
   try {
-    const indexUrl = `https://www.sec.gov/Archives/edgar/data/${cik}/${accessionNoDashes}/index.json`
-    const indexResponse = await fetch(indexUrl, {
+    const dirResponse = await fetch(baseUrl, {
       headers: { 'User-Agent': SEC_USER_AGENT }
     })
 
-    if (indexResponse.ok) {
-      const indexData = await indexResponse.json()
-      const xmlFile = indexData.directory?.item?.find((f: any) =>
-        f.name.toLowerCase().includes('infotable') ||
-        f.name.toLowerCase().includes('13f') && f.name.endsWith('.xml')
-      )
+    if (dirResponse.ok) {
+      const dirHtml = await dirResponse.text()
 
-      if (xmlFile) {
-        const xmlUrl = `https://www.sec.gov/Archives/edgar/data/${cik}/${accessionNoDashes}/${xmlFile.name}`
+      // Find XML files that might contain the info table
+      // Look for files that contain 'informationtable' in href or numbered .xml files
+      const xmlMatches = dirHtml.match(/href="([^"]+\.xml)"/gi) || []
+      const xmlFiles = xmlMatches
+        .map(m => m.replace(/href="|"/g, ''))
+        .filter(f => !f.includes('primary_doc') && !f.includes('index')) // Skip primary_doc, it's metadata
+        .sort((a, b) => {
+          // Prefer files with numbers (like 46994.xml) as they're usually the info table
+          const aNum = a.match(/\d+/)
+          const bNum = b.match(/\d+/)
+          if (aNum && !bNum) return -1
+          if (!aNum && bNum) return 1
+          return 0
+        })
+
+      for (const xmlFile of xmlFiles) {
+        const xmlUrl = `${baseUrl}/${xmlFile}`
         const xmlResponse = await fetch(xmlUrl, {
-          headers: { 'User-Agent': SEC_USER_AGENT }
+          headers: { 'User-Agent': SEC_USER_AGENT },
+          next: { revalidate: 86400 }
         })
 
         if (xmlResponse.ok) {
           const xmlText = await xmlResponse.text()
-          return parseInfoTable(xmlText)
+
+          // Check if this file contains infoTable elements
+          if (xmlText.includes('infoTable') || xmlText.includes('informationTable')) {
+            const holdings = parseInfoTable(xmlText)
+            if (holdings.length > 0) {
+              return holdings
+            }
+          }
         }
       }
     }
   } catch (error) {
-    console.error('Error finding XML file:', error)
+    console.error('Error fetching filing directory:', error)
+  }
+
+  // Fallback: Try common file names
+  const possibleFiles = ['infotable.xml', 'INFOTABLE.XML', 'form13fInfoTable.xml']
+
+  for (const filename of possibleFiles) {
+    try {
+      const url = `${baseUrl}/${filename}`
+      const response = await fetch(url, {
+        headers: { 'User-Agent': SEC_USER_AGENT },
+        next: { revalidate: 86400 }
+      })
+
+      if (response.ok) {
+        const xmlText = await response.text()
+        const holdings = parseInfoTable(xmlText)
+        if (holdings.length > 0) {
+          return holdings
+        }
+      }
+    } catch (error) {
+      continue
+    }
   }
 
   return []
@@ -158,15 +166,16 @@ async function getFilingHoldings(cik: string, accessionNumber: string): Promise<
 function parseInfoTable(xml: string): Holding[] {
   const holdings: Holding[] = []
 
-  // Match each infoTable entry (handles various namespace formats)
-  const entryRegex = /<(?:ns1:|)infoTable[^>]*>([\s\S]*?)<\/(?:ns1:|)infoTable>/gi
+  // Match each infoTable entry (handles various namespace formats and casing)
+  const entryRegex = /<infoTable[^>]*>([\s\S]*?)<\/infoTable>/gi
   let match
 
   while ((match = entryRegex.exec(xml)) !== null) {
     const entry = match[1]
 
     const getValue = (tag: string): string => {
-      const regex = new RegExp(`<(?:ns1:|)${tag}[^>]*>([^<]*)<\/(?:ns1:|)${tag}>`, 'i')
+      // Handle various tag formats (with/without namespace, different casing)
+      const regex = new RegExp(`<(?:\\w+:)?${tag}[^>]*>([^<]*)<\/(?:\\w+:)?${tag}>`, 'i')
       const m = entry.match(regex)
       return m ? m[1].trim() : ''
     }
@@ -176,11 +185,15 @@ function parseInfoTable(xml: string): Holding[] {
       return val ? parseInt(val.replace(/,/g, ''), 10) || 0 : 0
     }
 
+    // SEC 13F values are already in dollars (despite documentation saying $1000s)
+    // Modern filings report actual dollar amounts
+    const rawValue = getNumeric('value')
+
     const holding: Holding = {
       issuer: getValue('nameOfIssuer'),
       class: getValue('titleOfClass'),
       cusip: getValue('cusip'),
-      value: getNumeric('value') * 1000, // SEC reports in $1000s
+      value: rawValue, // Already in dollars
       shares: getNumeric('sshPrnamt'),
       shareType: getValue('sshPrnamtType') || 'SH',
       investmentDiscretion: getValue('investmentDiscretion'),
