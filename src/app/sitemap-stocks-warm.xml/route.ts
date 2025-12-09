@@ -16,6 +16,7 @@ export async function GET(request: Request) {
 
   try {
     // Fetch from Supabase edge function - warm tier
+    // Add timestamp to bust cache during development
     const response = await fetch(
       `https://wcckhqxkmhyzfpynthte.supabase.co/functions/v1/dynamic-sitemap?tier=warm&page=${page}`,
       {
@@ -23,19 +24,25 @@ export async function GET(request: Request) {
           'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
         },
-        next: { revalidate: 3600 },
+        cache: 'no-store', // Disable cache for now
       }
     )
 
+    console.log('Warm tier fetch response status:', response.status)
+
     if (response.ok) {
       let sitemap = await response.text()
+      console.log('Warm sitemap raw response length:', sitemap.length)
 
       // Transform URLs from portfoliocare format to quant-platform format
       sitemap = sitemap.replace(/https:\/\/www\.lician\.com\/stocks\//g, `${baseUrl}/stock/`)
+      console.log('Transformed sitemap:', sitemap.substring(0, 500))
 
       // Extract unique stock symbols (letters, numbers, dots, hyphens)
       const stockMatches = sitemap.match(/\/stock\/([A-Za-z0-9._-]+)/g) || []
+      console.log('Stock matches count:', stockMatches.length)
       const uniqueStocks = [...new Set(stockMatches.map(m => m.replace('/stock/', '')))]
+      console.log('Unique stocks count:', uniqueStocks.length)
 
       const urls = uniqueStocks.map(ticker => `
   <url>
