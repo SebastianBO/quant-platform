@@ -14,6 +14,7 @@ import IPValuation from "@/components/IPValuation"
 import QuantAnalysis from "@/components/QuantAnalysis"
 import FinancialSnowflake from "@/components/FinancialSnowflake"
 import NewsSentiment from "@/components/NewsSentiment"
+import MarketNewsFeed from "@/components/MarketNewsFeed"
 import AIInvestmentSummary from "@/components/AIInvestmentSummary"
 import FinancialStatements from "@/components/FinancialStatements"
 import OptionsFlow from "@/components/OptionsFlow"
@@ -607,13 +608,13 @@ function DashboardContent() {
                   {/* Market Overview with Futures, VIX, Gold */}
                   <MarketOverview />
 
+                  {/* Market News Feed - Yahoo Finance Style */}
+                  <MarketNewsFeed limit={20} />
+
                   {/* Full Market Data Table */}
                   <MarketDataTable />
 
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* News Sentiment */}
-                    <NewsSentiment ticker="AAPL" />
-
                     {/* Treasury Yields */}
                     <TreasuryYields />
                   </div>
