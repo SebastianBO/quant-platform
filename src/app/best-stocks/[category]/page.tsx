@@ -1,6 +1,13 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { CategoryLinks } from '@/components/seo/RelatedLinks'
+import {
+  getBreadcrumbSchema,
+  getArticleSchema,
+  getItemListSchema,
+  SITE_URL,
+} from '@/lib/seo'
 
 interface Props {
   params: Promise<{ category: string }>
@@ -103,23 +110,40 @@ export default async function BestStocksPage({ params }: Props) {
   }
 
   const currentYear = new Date().getFullYear()
+  const pageUrl = `${SITE_URL}/best-stocks/${category.toLowerCase()}`
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: `${cat.title} ${currentYear}`,
+  // Breadcrumb Schema
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: 'Home', url: SITE_URL },
+    { name: 'Best Stocks', url: `${SITE_URL}/best-stocks` },
+    { name: cat.title, url: pageUrl },
+  ])
+
+  // Article Schema
+  const articleSchema = getArticleSchema({
+    headline: `${cat.title} ${currentYear} - Top Picks & Analysis`,
     description: cat.description,
-    author: { '@type': 'Organization', name: 'Lician' },
-    publisher: { '@type': 'Organization', name: 'Lician' },
-    datePublished: new Date().toISOString(),
-    dateModified: new Date().toISOString(),
-  }
+    url: pageUrl,
+    keywords: cat.keywords,
+  })
+
+  // ItemList Schema for the stock list
+  const itemListSchema = getItemListSchema({
+    name: `${cat.title} ${currentYear}`,
+    description: cat.description,
+    url: pageUrl,
+    items: cat.stocks.map((stock, index) => ({
+      name: stock,
+      url: `${SITE_URL}/stock/${stock}`,
+      position: index + 1,
+    })),
+  })
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbSchema, articleSchema, itemListSchema]) }}
       />
       <main className="min-h-screen bg-background text-foreground">
         <div className="max-w-5xl mx-auto px-6 py-12">
@@ -173,21 +197,24 @@ export default async function BestStocksPage({ params }: Props) {
             </div>
           </section>
 
-          {/* Related Categories */}
+          {/* Quick Analysis Links for Each Stock */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Explore More</h2>
-            <div className="flex flex-wrap gap-2">
-              {Object.entries(CATEGORIES)
-                .filter(([key]) => key !== category.toLowerCase())
-                .map(([key, value]) => (
-                  <Link
-                    key={key}
-                    href={`/best-stocks/${key}`}
-                    className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 text-sm"
-                  >
-                    {value.title}
-                  </Link>
-                ))}
+            <h2 className="text-2xl font-bold mb-4">Quick Analysis</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {cat.stocks.slice(0, 6).map((stock) => (
+                <div key={stock} className="bg-card p-4 rounded-lg border border-border">
+                  <p className="font-bold text-lg mb-2">{stock}</p>
+                  <div className="flex flex-wrap gap-2 text-sm">
+                    <Link href={`/should-i-buy/${stock.toLowerCase()}`} className="text-green-500 hover:underline">
+                      Should I Buy?
+                    </Link>
+                    <span className="text-muted-foreground">|</span>
+                    <Link href={`/prediction/${stock.toLowerCase()}`} className="text-green-500 hover:underline">
+                      Prediction
+                    </Link>
+                  </div>
+                </div>
+              ))}
             </div>
           </section>
 
@@ -204,6 +231,9 @@ export default async function BestStocksPage({ params }: Props) {
               Start Research
             </Link>
           </section>
+
+          {/* Category Links */}
+          <CategoryLinks currentCategory={category} />
         </div>
       </main>
     </>

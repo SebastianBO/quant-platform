@@ -1,6 +1,13 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { RelatedLinks } from '@/components/seo/RelatedLinks'
+import {
+  getBreadcrumbSchema,
+  getArticleSchema,
+  getFAQSchema,
+  SITE_URL,
+} from '@/lib/seo'
 
 interface Props {
   params: Promise<{ ticker: string }>
@@ -68,22 +75,51 @@ export default async function PredictionPage({ params }: Props) {
   const baseCase = price * 1.15
   const bearCase = price * 0.90
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: `${symbol} Stock Price Prediction ${currentYear}`,
-    description: `AI-powered price prediction for ${symbol} stock.`,
-    author: { '@type': 'Organization', name: 'Lician' },
-    publisher: { '@type': 'Organization', name: 'Lician' },
-    datePublished: new Date().toISOString(),
-    dateModified: new Date().toISOString(),
-  }
+  const companyName = companyFacts?.name || symbol
+  const pageUrl = `${SITE_URL}/prediction/${ticker.toLowerCase()}`
+
+  // Breadcrumb Schema
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: 'Home', url: SITE_URL },
+    { name: 'Stocks', url: `${SITE_URL}/dashboard` },
+    { name: `${symbol} Prediction`, url: pageUrl },
+  ])
+
+  // Article Schema
+  const articleSchema = getArticleSchema({
+    headline: `${symbol} Stock Price Prediction ${currentYear}-${currentYear + 1}`,
+    description: `AI-powered price forecast and analysis for ${symbol} (${companyName}) with bull, base, and bear case price targets.`,
+    url: pageUrl,
+    keywords: [
+      `${symbol} stock prediction`,
+      `${symbol} price forecast ${currentYear}`,
+      `${symbol} price target`,
+      `${symbol} stock forecast`,
+    ],
+  })
+
+  // FAQ Schema for prediction page
+  const predictionFaqs = [
+    {
+      question: `What is the ${symbol} stock price prediction for ${currentYear + 1}?`,
+      answer: `Our AI model predicts ${symbol} could reach $${bullCase.toFixed(2)} in a bull case (+30%), $${baseCase.toFixed(2)} in a base case (+15%), or $${bearCase.toFixed(2)} in a bear case (-10%) by ${currentYear + 1}.`,
+    },
+    {
+      question: `Is ${symbol} expected to go up or down?`,
+      answer: `Based on our analysis, ${symbol}'s trajectory depends on market conditions, company performance, and sector trends. Our base case suggests moderate upside potential.`,
+    },
+    {
+      question: `What factors affect ${symbol}'s stock price?`,
+      answer: `Key factors include earnings growth, revenue trends, market conditions, competitive position, macroeconomic environment, and sector-specific developments.`,
+    },
+  ]
+  const faqSchema = getFAQSchema(predictionFaqs)
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema]) }}
       />
       <main className="min-h-screen bg-background text-foreground">
         <div className="max-w-4xl mx-auto px-6 py-12">
@@ -169,18 +205,21 @@ export default async function PredictionPage({ params }: Props) {
             </Link>
           </section>
 
+          {/* FAQ Section */}
           <section className="mt-12">
-            <h3 className="text-lg font-bold mb-4">Related</h3>
-            <div className="flex flex-wrap gap-2">
-              <Link href={`/should-i-buy/${symbol.toLowerCase()}`} className="text-sm text-green-500 hover:underline">
-                Should I Buy {symbol}?
-              </Link>
-              <span className="text-muted-foreground">|</span>
-              <Link href={`/stock/${symbol}`} className="text-sm text-green-500 hover:underline">
-                {symbol} Stock Analysis
-              </Link>
+            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <div className="space-y-4">
+              {predictionFaqs.map((faq, index) => (
+                <div key={index} className="bg-card p-5 rounded-lg border border-border">
+                  <h3 className="font-bold text-lg mb-2">{faq.question}</h3>
+                  <p className="text-muted-foreground">{faq.answer}</p>
+                </div>
+              ))}
             </div>
           </section>
+
+          {/* Internal Linking */}
+          <RelatedLinks ticker={symbol} currentPage="prediction" companyName={companyName} />
         </div>
       </main>
     </>

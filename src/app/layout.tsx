@@ -71,7 +71,10 @@ export const metadata: Metadata = {
     creator: "@lician",
   },
   verification: {
-    google: "your-google-verification-code",
+    // Add your Google Search Console verification code here
+    // Get it from: https://search.google.com/search-console
+    // Settings > Ownership verification > HTML tag
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "your-google-verification-code",
   },
   alternates: {
     canonical: "https://lician.com",

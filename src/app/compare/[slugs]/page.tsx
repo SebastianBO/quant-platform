@@ -1,6 +1,13 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { PopularComparisons } from '@/components/seo/RelatedLinks'
+import {
+  getBreadcrumbSchema,
+  getArticleSchema,
+  getFAQSchema,
+  SITE_URL,
+} from '@/lib/seo'
 
 interface Props {
   params: Promise<{ slugs: string }>
@@ -116,22 +123,50 @@ export default async function ComparePage({ params }: Props) {
     return val1 < val2 ? 'stock1' : val1 > val2 ? 'stock2' : 'tie'
   }
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: `${ticker1} vs ${ticker2}: Stock Comparison ${currentYear}`,
-    description: `Side-by-side comparison of ${ticker1} and ${ticker2} stocks.`,
-    author: { '@type': 'Organization', name: 'Lician' },
-    publisher: { '@type': 'Organization', name: 'Lician' },
-    datePublished: new Date().toISOString(),
-    dateModified: new Date().toISOString(),
-  }
+  const pageUrl = `${SITE_URL}/compare/${slugs.toLowerCase()}`
+
+  // Breadcrumb Schema
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: 'Home', url: SITE_URL },
+    { name: 'Stocks', url: `${SITE_URL}/dashboard` },
+    { name: `${ticker1} vs ${ticker2}`, url: pageUrl },
+  ])
+
+  // Article Schema
+  const articleSchema = getArticleSchema({
+    headline: `${ticker1} vs ${ticker2}: Which Stock is Better in ${currentYear}?`,
+    description: `Head-to-head comparison of ${stock1.name} (${ticker1}) and ${stock2.name} (${ticker2}). Compare valuation, growth, profitability, and investment potential.`,
+    url: pageUrl,
+    keywords: [
+      `${ticker1} vs ${ticker2}`,
+      `${ticker1} or ${ticker2}`,
+      `compare ${ticker1} ${ticker2}`,
+      `which stock is better ${ticker1} ${ticker2}`,
+    ],
+  })
+
+  // FAQ Schema for comparison
+  const comparisonFaqs = [
+    {
+      question: `Is ${ticker1} or ${ticker2} a better investment?`,
+      answer: `Comparing ${ticker1} and ${ticker2}: ${stock1.name} has a market cap of ${formatMarketCap(stock1.marketCap)} while ${stock2.name} has ${formatMarketCap(stock2.marketCap)}. Both companies have their strengths - use our detailed metrics comparison to make an informed decision.`,
+    },
+    {
+      question: `What is the difference between ${ticker1} and ${ticker2}?`,
+      answer: `${ticker1} (${stock1.name}) and ${ticker2} (${stock2.name}) differ in valuation, growth rates, and profitability metrics. Our comparison shows which company leads in each category.`,
+    },
+    {
+      question: `Which stock has better value: ${ticker1} or ${ticker2}?`,
+      answer: `Based on P/E ratios, ${stock1.pe > 0 && stock2.pe > 0 ? (stock1.pe < stock2.pe ? `${ticker1} trades at a lower multiple (${stock1.pe.toFixed(1)}x vs ${stock2.pe.toFixed(1)}x)` : `${ticker2} trades at a lower multiple (${stock2.pe.toFixed(1)}x vs ${stock1.pe.toFixed(1)}x)`) : 'compare detailed valuation metrics on our dashboard'}.`,
+    },
+  ]
+  const faqSchema = getFAQSchema(comparisonFaqs)
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema]) }}
       />
       <main className="min-h-screen bg-background text-foreground">
         <div className="max-w-5xl mx-auto px-6 py-12">
@@ -251,16 +286,50 @@ export default async function ComparePage({ params }: Props) {
             </Link>
           </section>
 
+          {/* Individual Stock Analysis Links */}
           <section className="mt-12">
-            <h3 className="text-lg font-bold mb-4">Related Comparisons</h3>
-            <div className="flex flex-wrap gap-2">
-              <Link href="/compare/aapl-vs-msft" className="text-sm text-green-500 hover:underline">AAPL vs MSFT</Link>
-              <span className="text-muted-foreground">|</span>
-              <Link href="/compare/nvda-vs-amd" className="text-sm text-green-500 hover:underline">NVDA vs AMD</Link>
-              <span className="text-muted-foreground">|</span>
-              <Link href="/compare/googl-vs-meta" className="text-sm text-green-500 hover:underline">GOOGL vs META</Link>
+            <h3 className="text-lg font-bold mb-4">Analyze Each Stock</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <h4 className="font-medium text-green-500">{stock1.symbol}</h4>
+                <div className="flex flex-wrap gap-2">
+                  <Link href={`/should-i-buy/${stock1.symbol.toLowerCase()}`} className="text-sm text-muted-foreground hover:text-foreground">
+                    Should I Buy {stock1.symbol}?
+                  </Link>
+                  <Link href={`/prediction/${stock1.symbol.toLowerCase()}`} className="text-sm text-muted-foreground hover:text-foreground">
+                    {stock1.symbol} Prediction
+                  </Link>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <h4 className="font-medium text-blue-500">{stock2.symbol}</h4>
+                <div className="flex flex-wrap gap-2">
+                  <Link href={`/should-i-buy/${stock2.symbol.toLowerCase()}`} className="text-sm text-muted-foreground hover:text-foreground">
+                    Should I Buy {stock2.symbol}?
+                  </Link>
+                  <Link href={`/prediction/${stock2.symbol.toLowerCase()}`} className="text-sm text-muted-foreground hover:text-foreground">
+                    {stock2.symbol} Prediction
+                  </Link>
+                </div>
+              </div>
             </div>
           </section>
+
+          {/* FAQ Section */}
+          <section className="mt-12">
+            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <div className="space-y-4">
+              {comparisonFaqs.map((faq, index) => (
+                <div key={index} className="bg-card p-5 rounded-lg border border-border">
+                  <h3 className="font-bold text-lg mb-2">{faq.question}</h3>
+                  <p className="text-muted-foreground">{faq.answer}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Popular Comparisons */}
+          <PopularComparisons currentSlug={slugs} />
         </div>
       </main>
     </>

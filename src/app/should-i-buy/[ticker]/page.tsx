@@ -1,6 +1,15 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { RelatedLinks } from '@/components/seo/RelatedLinks'
+import {
+  getBreadcrumbSchema,
+  getArticleSchema,
+  getFAQSchema,
+  getStockFAQs,
+  SITE_URL,
+  combineSchemas,
+} from '@/lib/seo'
 
 interface Props {
   params: Promise<{ ticker: string }>
@@ -77,33 +86,38 @@ export default async function ShouldIBuyPage({ params }: Props) {
 
   const recommendation = getRecommendation()
 
-  // JSON-LD structured data
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
+  const companyName = companyFacts?.name || symbol
+  const pageUrl = `${SITE_URL}/should-i-buy/${ticker.toLowerCase()}`
+
+  // Breadcrumb Schema
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: 'Home', url: SITE_URL },
+    { name: 'Stocks', url: `${SITE_URL}/dashboard` },
+    { name: `Should I Buy ${symbol}?`, url: pageUrl },
+  ])
+
+  // Article Schema
+  const articleSchema = getArticleSchema({
     headline: `Should I Buy ${symbol} Stock in ${currentYear}?`,
-    description: `Expert analysis and AI prediction for ${symbol} stock investment.`,
-    author: {
-      '@type': 'Organization',
-      name: 'Lician',
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: 'Lician',
-      logo: {
-        '@type': 'ImageObject',
-        url: 'https://lician.com/logo.png',
-      },
-    },
-    datePublished: new Date().toISOString(),
-    dateModified: new Date().toISOString(),
-  }
+    description: `Expert analysis and AI prediction for ${symbol} (${companyName}) stock investment decision.`,
+    url: pageUrl,
+    keywords: [
+      `should i buy ${symbol}`,
+      `${symbol} stock buy or sell`,
+      `${symbol} stock analysis`,
+      `${symbol} investment advice`,
+    ],
+  })
+
+  // FAQ Schema
+  const faqs = getStockFAQs(symbol, companyName, price)
+  const faqSchema = getFAQSchema(faqs)
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema]) }}
       />
       <main className="min-h-screen bg-background text-foreground">
         <div className="max-w-4xl mx-auto px-6 py-12">
@@ -217,23 +231,21 @@ export default async function ShouldIBuyPage({ params }: Props) {
             </Link>
           </section>
 
-          {/* Related Links */}
+          {/* FAQ Section */}
           <section className="mt-12">
-            <h3 className="text-lg font-bold mb-4">Related Analysis</h3>
-            <div className="flex flex-wrap gap-2">
-              <Link href={`/stock/${symbol}`} className="text-sm text-green-500 hover:underline">
-                {symbol} Stock Price
-              </Link>
-              <span className="text-muted-foreground">|</span>
-              <Link href={`/${symbol.toLowerCase()}-stock-prediction-2025`} className="text-sm text-green-500 hover:underline">
-                {symbol} Price Prediction {currentYear}
-              </Link>
-              <span className="text-muted-foreground">|</span>
-              <Link href={`/dashboard?ticker=${symbol}&tab=financials`} className="text-sm text-green-500 hover:underline">
-                {symbol} Financials
-              </Link>
+            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <div className="space-y-4">
+              {faqs.map((faq, index) => (
+                <div key={index} className="bg-card p-5 rounded-lg border border-border">
+                  <h3 className="font-bold text-lg mb-2">{faq.question}</h3>
+                  <p className="text-muted-foreground">{faq.answer}</p>
+                </div>
+              ))}
             </div>
           </section>
+
+          {/* Internal Linking */}
+          <RelatedLinks ticker={symbol} currentPage="should-i-buy" companyName={companyName} />
         </div>
       </main>
     </>
