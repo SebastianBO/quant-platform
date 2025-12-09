@@ -98,11 +98,15 @@ async function getFilingHoldings(cik: string, accessionNumber: string): Promise<
       const dirHtml = await dirResponse.text()
 
       // Find XML files that might contain the info table
-      // Look for files that contain 'informationtable' in href or numbered .xml files
-      const xmlMatches = dirHtml.match(/href="([^"]+\.xml)"/gi) || []
+      // SEC returns full paths like href="/Archives/edgar/data/.../filename.xml"
+      const xmlMatches = dirHtml.match(/href="[^"]*\/([^"\/]+\.xml)"/gi) || []
       const xmlFiles = xmlMatches
-        .map(m => m.replace(/href="|"/g, ''))
-        .filter(f => !f.includes('primary_doc') && !f.includes('index')) // Skip primary_doc, it's metadata
+        .map(m => {
+          // Extract just the filename from the path
+          const match = m.match(/\/([^"\/]+\.xml)"$/i)
+          return match ? match[1] : ''
+        })
+        .filter(f => f && !f.includes('primary_doc') && !f.includes('index')) // Skip primary_doc, it's metadata
         .sort((a, b) => {
           // Prefer files with numbers (like 46994.xml) as they're usually the info table
           const aNum = a.match(/\d+/)
