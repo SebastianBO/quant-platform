@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 const FINANCIAL_DATASETS_API_KEY = process.env.FINANCIAL_DATASETS_API_KEY || ""
+const EODHD_API_KEY = process.env.EODHD_API_KEY || ""
 const FD_BASE_URL = "https://api.financialdatasets.ai"
 
 async function fetchFD(endpoint: string, params: Record<string, string>) {
@@ -9,7 +10,7 @@ async function fetchFD(endpoint: string, params: Record<string, string>) {
 
   const response = await fetch(url.toString(), {
     headers: { "X-API-KEY": FINANCIAL_DATASETS_API_KEY },
-    next: { revalidate: 3600 } // Cache for 1 hour
+    next: { revalidate: 3600 }
   })
 
   if (!response.ok) {
@@ -19,66 +20,247 @@ async function fetchFD(endpoint: string, params: Record<string, string>) {
   return response.json()
 }
 
+async function fetchEODHD(ticker: string) {
+  const response = await fetch(
+    `https://eodhd.com/api/fundamentals/${ticker}.US?api_token=${EODHD_API_KEY}&fmt=json`,
+    { next: { revalidate: 3600 } }
+  )
+
+  if (!response.ok) return null
+  return response.json()
+}
+
+// Institution type classification based on name patterns
+function classifyInstitution(name: string): string {
+  const lowerName = name.toLowerCase()
+
+  if (lowerName.includes('vanguard') || lowerName.includes('blackrock') ||
+      lowerName.includes('state street') || lowerName.includes('fidelity') ||
+      lowerName.includes('schwab') || lowerName.includes('index')) {
+    return 'Index Fund'
+  }
+  if (lowerName.includes('hedge') || lowerName.includes('capital management') ||
+      lowerName.includes('partners') || lowerName.includes('advisors')) {
+    return 'Hedge Fund'
+  }
+  if (lowerName.includes('pension') || lowerName.includes('retirement') ||
+      lowerName.includes('teachers') || lowerName.includes('public employees')) {
+    return 'Pension Fund'
+  }
+  if (lowerName.includes('bank') || lowerName.includes('morgan') ||
+      lowerName.includes('goldman') || lowerName.includes('jpmorgan')) {
+    return 'Bank'
+  }
+  if (lowerName.includes('insurance') || lowerName.includes('life')) {
+    return 'Insurance'
+  }
+  if (lowerName.includes('berkshire')) {
+    return 'Conglomerate'
+  }
+  if (lowerName.includes('norges') || lowerName.includes('sovereign')) {
+    return 'Sovereign Wealth'
+  }
+  return 'Investment Manager'
+}
+
 export async function GET(request: NextRequest) {
   const ticker = request.nextUrl.searchParams.get('ticker')
-  const type = request.nextUrl.searchParams.get('type') || 'holders' // 'holders' or 'investor'
-  const investor = request.nextUrl.searchParams.get('investor') // For investor lookup
+  const type = request.nextUrl.searchParams.get('type') || 'holders'
+  const investor = request.nextUrl.searchParams.get('investor')
+  const search = request.nextUrl.searchParams.get('search')
 
-  if (!ticker && !investor) {
-    return NextResponse.json({ error: 'Ticker or investor is required' }, { status: 400 })
+  // Search for institutions
+  if (type === 'search' && search) {
+    try {
+      // Get list of available investors from Financial Datasets
+      const investorsData = await fetchFD('/institutional-ownership/investors/', {})
+      const investors = investorsData.investors || []
+
+      // Filter by search term
+      const searchLower = search.toLowerCase()
+      const matches = investors
+        .filter((inv: string) => inv.toLowerCase().includes(searchLower))
+        .slice(0, 20)
+        .map((name: string) => ({
+          name: name.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
+          rawName: name,
+          type: classifyInstitution(name)
+        }))
+
+      return NextResponse.json({ investors: matches })
+    } catch (error) {
+      console.error('Institution search error:', error)
+      return NextResponse.json({ investors: [] })
+    }
+  }
+
+  // Get all holdings for a specific investor
+  if (type === 'investor' && investor) {
+    try {
+      const holdings = await fetchFD('/institutional-ownership/', {
+        investor_name: investor,
+        limit: '100'
+      })
+
+      const holdingsList = holdings.institutional_ownership || []
+
+      // Calculate total AUM from all holdings
+      const totalAUM = holdingsList.reduce((sum: number, h: any) => sum + (h.market_value || 0), 0)
+
+      // Calculate metrics
+      const increased = holdingsList.filter((h: any) => h.change_in_shares > 0)
+      const decreased = holdingsList.filter((h: any) => h.change_in_shares < 0)
+      const newPositions = holdingsList.filter((h: any) => h.is_new_position)
+
+      return NextResponse.json({
+        investor: investor.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
+        investorType: classifyInstitution(investor),
+        summary: {
+          totalAUM,
+          totalPositions: holdingsList.length,
+          increasedPositions: increased.length,
+          decreasedPositions: decreased.length,
+          newPositions: newPositions.length,
+          reportDate: holdingsList[0]?.report_date || null
+        },
+        holdings: holdingsList.map((h: any) => ({
+          ticker: h.ticker,
+          shares: h.shares,
+          value: h.market_value,
+          portfolioPercent: totalAUM > 0 ? (h.market_value / totalAUM) * 100 : 0,
+          percentOfCompany: h.percent_of_outstanding,
+          changeInShares: h.change_in_shares,
+          changePercent: h.change_percent,
+          isNew: h.is_new_position,
+          reportDate: h.report_date
+        })).sort((a: any, b: any) => b.value - a.value)
+      })
+    } catch (error) {
+      console.error('Investor holdings error:', error)
+      return NextResponse.json({
+        investor,
+        summary: { totalAUM: 0, totalPositions: 0 },
+        holdings: []
+      })
+    }
+  }
+
+  if (!ticker) {
+    return NextResponse.json({ error: 'Ticker is required' }, { status: 400 })
   }
 
   try {
-    if (type === 'investor' && investor) {
-      // Get all holdings for a specific institutional investor
-      const holdings = await fetchFD('/institutional-ownership/', {
-        investor_name: investor,
-        limit: '50'
+    // Fetch from both APIs in parallel
+    const [fdData, eodhData] = await Promise.all([
+      fetchFD('/institutional-ownership/', { ticker, limit: '50' }).catch(() => null),
+      fetchEODHD(ticker).catch(() => null)
+    ])
+
+    // Process EODHD holders data
+    const eodhInstitutions = eodhData?.Holders?.Institutions || {}
+    const eodhFunds = eodhData?.Holders?.Funds || {}
+
+    // Convert EODHD objects to arrays
+    const eodhHolders = [
+      ...Object.values(eodhInstitutions).map((h: any) => ({ ...h, holderType: 'Institution' })),
+      ...Object.values(eodhFunds).map((h: any) => ({ ...h, holderType: 'Mutual Fund' }))
+    ]
+
+    // Process Financial Datasets holders
+    const fdHolders = fdData?.institutional_ownership || []
+
+    // Merge data - prefer EODHD for portfolio % data, FD for change details
+    const mergedHolders = fdHolders.map((fd: any) => {
+      // Try to find matching EODHD holder
+      const fdNameLower = fd.investor_name.toLowerCase().replace(/_/g, ' ')
+      const eodhMatch = eodhHolders.find((eh: any) => {
+        const ehNameLower = eh.name.toLowerCase()
+        return ehNameLower.includes(fdNameLower.split(' ')[0]) ||
+               fdNameLower.includes(ehNameLower.split(' ')[0])
       })
 
-      return NextResponse.json({
-        investor,
-        holdings: holdings.institutional_ownership || []
-      })
-    }
-
-    // Get all institutional holders for a ticker
-    const ownership = await fetchFD('/institutional-ownership/', {
-      ticker: ticker!,
-      limit: '20'
+      return {
+        investor: fd.investor_name.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
+        investorType: classifyInstitution(fd.investor_name),
+        shares: fd.shares,
+        value: fd.market_value,
+        percentOwnership: fd.percent_of_outstanding,
+        portfolioPercent: eodhMatch?.totalAssets || null, // % of their portfolio in this stock
+        changeInShares: fd.change_in_shares,
+        changePercent: fd.change_percent,
+        isNew: fd.is_new_position,
+        filingDate: fd.filing_date,
+        reportDate: fd.report_date,
+        // Additional EODHD data if available
+        eodhChange: eodhMatch?.change || null,
+        eodhChangePercent: eodhMatch?.change_p || null
+      }
     })
 
-    // Calculate summary statistics
-    const holders = ownership.institutional_ownership || []
-    const totalShares = holders.reduce((sum: number, h: any) => sum + (h.shares || 0), 0)
-    const totalValue = holders.reduce((sum: number, h: any) => sum + (h.market_value || 0), 0)
+    // Add EODHD-only holders that aren't in FD data
+    eodhHolders.forEach((eh: any) => {
+      const ehNameLower = eh.name.toLowerCase()
+      const alreadyExists = mergedHolders.some((h: any) =>
+        h.investor.toLowerCase().includes(ehNameLower.split(' ')[0])
+      )
 
-    // Categorize by change
-    const increased = holders.filter((h: any) => h.change_in_shares > 0)
-    const decreased = holders.filter((h: any) => h.change_in_shares < 0)
-    const newPositions = holders.filter((h: any) => h.is_new_position)
+      if (!alreadyExists && eh.currentShares > 0) {
+        mergedHolders.push({
+          investor: eh.name,
+          investorType: eh.holderType === 'Mutual Fund' ? 'Mutual Fund' : classifyInstitution(eh.name),
+          shares: eh.currentShares,
+          value: null, // EODHD doesn't provide market value
+          percentOwnership: eh.totalShares,
+          portfolioPercent: eh.totalAssets,
+          changeInShares: eh.change,
+          changePercent: eh.change_p,
+          isNew: false,
+          filingDate: eh.date,
+          reportDate: eh.date,
+          eodhChange: eh.change,
+          eodhChangePercent: eh.change_p
+        })
+      }
+    })
+
+    // Sort by value (or shares if no value)
+    mergedHolders.sort((a: any, b: any) => (b.value || b.shares) - (a.value || a.shares))
+
+    // Calculate summary statistics
+    const totalShares = mergedHolders.reduce((sum: number, h: any) => sum + (h.shares || 0), 0)
+    const totalValue = mergedHolders.reduce((sum: number, h: any) => sum + (h.value || 0), 0)
+    const increased = mergedHolders.filter((h: any) => (h.changeInShares || 0) > 0)
+    const decreased = mergedHolders.filter((h: any) => (h.changeInShares || 0) < 0)
+    const unchanged = mergedHolders.filter((h: any) => (h.changeInShares || 0) === 0)
+    const newPositions = mergedHolders.filter((h: any) => h.isNew)
+
+    // Categorize holders by type
+    const holdersByType = mergedHolders.reduce((acc: any, h: any) => {
+      const type = h.investorType || 'Other'
+      if (!acc[type]) acc[type] = { count: 0, value: 0 }
+      acc[type].count++
+      acc[type].value += h.value || 0
+      return acc
+    }, {})
 
     return NextResponse.json({
       ticker,
       summary: {
-        totalInstitutionalHolders: holders.length,
+        totalInstitutionalHolders: mergedHolders.length,
         totalShares,
         totalValue,
         increasedPositions: increased.length,
         decreasedPositions: decreased.length,
-        newPositions: newPositions.length
+        unchangedPositions: unchanged.length,
+        newPositions: newPositions.length,
+        avgPosition: mergedHolders.length > 0 ? totalValue / mergedHolders.length : 0,
+        holdersByType
       },
-      holders: holders.map((h: any) => ({
-        investor: h.investor_name,
-        shares: h.shares,
-        value: h.market_value,
-        percentOwnership: h.percent_of_outstanding,
-        changeInShares: h.change_in_shares,
-        changePercent: h.change_percent,
-        isNew: h.is_new_position,
-        filingDate: h.filing_date,
-        reportDate: h.report_date
-      }))
+      holders: mergedHolders,
+      // Separate lists for UI
+      increasedHolders: increased.slice(0, 10),
+      decreasedHolders: decreased.slice(0, 10),
+      topHolders: mergedHolders.slice(0, 20)
     })
   } catch (error) {
     console.error('Institutional API error:', error)
@@ -90,9 +272,15 @@ export async function GET(request: NextRequest) {
         totalValue: 0,
         increasedPositions: 0,
         decreasedPositions: 0,
-        newPositions: 0
+        unchangedPositions: 0,
+        newPositions: 0,
+        avgPosition: 0,
+        holdersByType: {}
       },
-      holders: []
+      holders: [],
+      increasedHolders: [],
+      decreasedHolders: [],
+      topHolders: []
     })
   }
 }
