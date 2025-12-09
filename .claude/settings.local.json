@@ -51,7 +51,9 @@
       "Bash(brew list:*)",
       "Bash(export:*)",
       "WebFetch(domain:www.iborrowdesk.com)",
-      "WebFetch(domain:iborrowdesk.com)"
+      "WebFetch(domain:iborrowdesk.com)",
+      "Bash(npx shadcn@latest:*)",
+      "Bash(ls:*)"
     ],
     "deny": [],
     "ask": []

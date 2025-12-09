@@ -21,6 +21,7 @@ interface NewsArticle {
     neu: number
     pos: number
   }
+  image?: string | null
 }
 
 interface MarketNewsFeedProps {
@@ -39,10 +40,34 @@ export default function MarketNewsFeed({
   const [news, setNews] = useState<NewsArticle[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [images, setImages] = useState<Record<string, string | null>>({})
 
   useEffect(() => {
     fetchNews()
   }, [limit])
+
+  // Fetch og:image for articles in background
+  const fetchImage = async (url: string) => {
+    if (images[url] !== undefined) return // Already fetched
+
+    try {
+      const response = await fetch(`/api/og-image?url=${encodeURIComponent(url)}`)
+      const data = await response.json()
+      setImages(prev => ({ ...prev, [url]: data.image }))
+    } catch {
+      setImages(prev => ({ ...prev, [url]: null }))
+    }
+  }
+
+  // Fetch images for first few articles
+  useEffect(() => {
+    if (news.length > 0) {
+      // Fetch images for featured and main articles (first 6)
+      news.slice(0, 6).forEach(article => {
+        fetchImage(article.link)
+      })
+    }
+  }, [news])
 
   const fetchNews = async () => {
     setLoading(true)
@@ -61,6 +86,19 @@ export default function MarketNewsFeed({
       setError('Failed to load news')
     }
     setLoading(false)
+  }
+
+  // Get image for article (og:image or stock logo fallback)
+  const getArticleImage = (article: NewsArticle): string | null => {
+    const ogImage = images[article.link]
+    if (ogImage) return ogImage
+
+    // Use first stock symbol logo as fallback
+    if (article.displaySymbols.length > 0) {
+      return `https://assets.parqet.com/logos/symbol/${article.displaySymbols[0]}?format=png`
+    }
+
+    return null
   }
 
   const getSentimentColor = (polarity: number): string => {
@@ -178,14 +216,36 @@ export default function MarketNewsFeed({
               className="block group"
             >
               <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="p-6">
-                  <h3 className="text-xl font-bold leading-tight group-hover:text-primary transition-colors line-clamp-3">
-                    {featuredNews.title.replace(/&amp;/g, '&').replace(/&#39;/g, "'")}
-                  </h3>
-                  <p className="mt-3 text-muted-foreground text-sm line-clamp-3">
-                    {featuredNews.content?.slice(0, 200)}...
+                {/* Featured image */}
+                {getArticleImage(featuredNews) && (
+                  <div className="relative h-64 bg-secondary overflow-hidden">
+                    <img
+                      src={getArticleImage(featuredNews)!}
+                      alt=""
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      onError={(e) => {
+                        // Hide image on error
+                        (e.target as HTMLImageElement).style.display = 'none'
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-4 left-4 right-4">
+                      <h3 className="text-xl font-bold leading-tight text-white line-clamp-2">
+                        {featuredNews.title.replace(/&amp;/g, '&').replace(/&#39;/g, "'")}
+                      </h3>
+                    </div>
+                  </div>
+                )}
+                <div className="p-4">
+                  {!getArticleImage(featuredNews) && (
+                    <h3 className="text-xl font-bold leading-tight group-hover:text-primary transition-colors line-clamp-3 mb-3">
+                      {featuredNews.title.replace(/&amp;/g, '&').replace(/&#39;/g, "'")}
+                    </h3>
+                  )}
+                  <p className="text-muted-foreground text-sm line-clamp-2">
+                    {featuredNews.content?.slice(0, 150)}...
                   </p>
-                  <div className="flex items-center gap-3 mt-4">
+                  <div className="flex items-center gap-3 mt-3">
                     <span className="text-xs text-muted-foreground">
                       {featuredNews.source} • {featuredNews.relativeTime}
                     </span>
@@ -210,42 +270,57 @@ export default function MarketNewsFeed({
 
           {/* Main news grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {mainNews.map((article, i) => (
-              <a
-                key={i}
-                href={article.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block group"
-              >
-                <Card className="h-full hover:shadow-md transition-shadow">
-                  <CardContent className="p-4">
-                    <h4 className="font-semibold text-sm leading-tight group-hover:text-primary transition-colors line-clamp-3">
-                      {article.title.replace(/&amp;/g, '&').replace(/&#39;/g, "'")}
-                    </h4>
-                    <div className="flex items-center flex-wrap gap-2 mt-3">
-                      <span className="text-xs text-muted-foreground">
-                        {article.source} • {article.relativeTime}
-                      </span>
-                      {article.displaySymbols.slice(0, 2).map((symbol, j) => (
-                        <Link
-                          key={j}
-                          href={`/stock/${symbol}`}
-                          onClick={(e) => e.stopPropagation()}
-                          className={cn(
-                            "text-xs px-1.5 py-0.5 rounded border",
-                            getSentimentColor(article.sentiment.polarity),
-                            "hover:bg-secondary/50"
-                          )}
-                        >
-                          {symbol}
-                        </Link>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </a>
-            ))}
+            {mainNews.map((article, i) => {
+              const articleImage = getArticleImage(article)
+              return (
+                <a
+                  key={i}
+                  href={article.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block group"
+                >
+                  <Card className="h-full hover:shadow-md transition-shadow overflow-hidden">
+                    {articleImage && (
+                      <div className="relative h-32 bg-secondary overflow-hidden">
+                        <img
+                          src={articleImage}
+                          alt=""
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = 'none'
+                          }}
+                        />
+                      </div>
+                    )}
+                    <CardContent className="p-4">
+                      <h4 className="font-semibold text-sm leading-tight group-hover:text-primary transition-colors line-clamp-2">
+                        {article.title.replace(/&amp;/g, '&').replace(/&#39;/g, "'")}
+                      </h4>
+                      <div className="flex items-center flex-wrap gap-2 mt-2">
+                        <span className="text-xs text-muted-foreground">
+                          {article.source} • {article.relativeTime}
+                        </span>
+                        {article.displaySymbols.slice(0, 2).map((symbol, j) => (
+                          <Link
+                            key={j}
+                            href={`/stock/${symbol}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className={cn(
+                              "text-xs px-1.5 py-0.5 rounded border",
+                              getSentimentColor(article.sentiment.polarity),
+                              "hover:bg-secondary/50"
+                            )}
+                          >
+                            {symbol}
+                          </Link>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </a>
+              )
+            })}
           </div>
         </div>
 

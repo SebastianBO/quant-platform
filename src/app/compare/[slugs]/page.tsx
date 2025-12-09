@@ -54,7 +54,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 // Dynamic rendering - no static params to avoid slow build
 export const dynamic = 'force-dynamic'
-export const revalidate = 3600 // Revalidate every hour
 
 async function getStockData(ticker: string) {
   try {

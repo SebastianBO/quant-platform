@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { useParams, useRouter } from "next/navigation"
+import Link from "next/link"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { createClient } from "@/lib/supabase-browser"
@@ -488,45 +489,47 @@ export default function PortfolioDetailPage() {
                 const dayChangePositive = dayChange >= 0
 
                 return (
-                  <Card
+                  <Link
                     key={investment.id}
-                    className="bg-card border-border hover:border-green-500/50 transition-colors cursor-pointer"
-                    onClick={() => router.push(`/dashboard?ticker=${ticker}`)}
+                    href={`/dashboard?ticker=${ticker}`}
+                    className="block"
                   >
-                    <CardContent className="py-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          <HoldingLogo symbol={ticker} size={44} />
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-bold text-lg">{ticker}</span>
-                              {liveData && (
-                                <span className={`text-xs px-1.5 py-0.5 rounded ${dayChangePositive ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'}`}>
-                                  {dayChangePositive ? '+' : ''}{dayChangePercent.toFixed(2)}%
-                                </span>
-                              )}
-                              {pricesLoading && !liveData && (
-                                <span className="text-xs text-muted-foreground animate-pulse">updating...</span>
-                              )}
+                    <Card className="bg-card border-border hover:border-green-500/50 transition-colors cursor-pointer">
+                      <CardContent className="py-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <HoldingLogo symbol={ticker} size={44} />
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="font-bold text-lg">{ticker}</span>
+                                {liveData && (
+                                  <span className={`text-xs px-1.5 py-0.5 rounded ${dayChangePositive ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'}`}>
+                                    {dayChangePositive ? '+' : ''}{dayChangePercent.toFixed(2)}%
+                                  </span>
+                                )}
+                                {pricesLoading && !liveData && (
+                                  <span className="text-xs text-muted-foreground animate-pulse">updating...</span>
+                                )}
+                              </div>
+                              <p className="text-sm text-muted-foreground">
+                                {shares.toLocaleString()} shares @ {formatCurrency(avgCost, portfolio.currency)}
+                              </p>
                             </div>
-                            <p className="text-sm text-muted-foreground">
-                              {shares.toLocaleString()} shares @ {formatCurrency(avgCost, portfolio.currency)}
-                            </p>
                           </div>
-                        </div>
 
-                        <div className="text-right">
-                          <p className="font-semibold">{formatCurrency(marketValue, portfolio.currency)}</p>
-                          <div className={`flex items-center justify-end gap-1 text-sm ${positionIsPositive ? 'text-green-500' : 'text-red-500'}`}>
-                            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${positionIsPositive ? 'bg-green-500/20' : 'bg-red-500/20'}`}>
-                              {positionIsPositive ? '↗' : '↘'} {Math.abs(gainPercent).toFixed(2)}%
-                            </span>
-                            <span>{formatCurrency(Math.abs(gain), portfolio.currency)}</span>
+                          <div className="text-right">
+                            <p className="font-semibold">{formatCurrency(marketValue, portfolio.currency)}</p>
+                            <div className={`flex items-center justify-end gap-1 text-sm ${positionIsPositive ? 'text-green-500' : 'text-red-500'}`}>
+                              <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${positionIsPositive ? 'bg-green-500/20' : 'bg-red-500/20'}`}>
+                                {positionIsPositive ? '↗' : '↘'} {Math.abs(gainPercent).toFixed(2)}%
+                              </span>
+                              <span>{formatCurrency(Math.abs(gain), portfolio.currency)}</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                      </CardContent>
+                    </Card>
+                  </Link>
                 )
               })}
             </div>
