@@ -53,7 +53,8 @@
       "WebFetch(domain:www.iborrowdesk.com)",
       "WebFetch(domain:iborrowdesk.com)",
       "Bash(npx shadcn@latest:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(git fetch:*)"
     ],
     "deny": [],
     "ask": []
