@@ -32,6 +32,9 @@ import TrendingTickers from "@/components/TrendingTickers"
 import MarketOverview from "@/components/MarketOverview"
 import InstitutionalOwnership from "@/components/InstitutionalOwnership"
 import SECFilings from "@/components/SECFilings"
+import AnalystRatings from "@/components/AnalystRatings"
+import InsiderTrading from "@/components/InsiderTrading"
+import OwnershipBreakdown from "@/components/OwnershipBreakdown"
 import StockChartSwitcher from "@/components/StockChartSwitcher"
 import MarketDataTable from "@/components/MarketDataTable"
 import MarketSidebar from "@/components/MarketSidebar"
@@ -539,6 +542,15 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
                 )}
               </TabsContent>
 
+              <TabsContent value="analysts">
+                {stockData && (
+                  <AnalystRatings
+                    ticker={ticker}
+                    currentPrice={stockData.snapshot?.price || 0}
+                  />
+                )}
+              </TabsContent>
+
               <TabsContent value="technical">
                 {stockData && (
                   <TechnicalAnalysis
@@ -591,8 +603,16 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
                 <PeerComparison selectedTicker={ticker} />
               </TabsContent>
 
+              <TabsContent value="insiders">
+                <InsiderTrading ticker={ticker} />
+              </TabsContent>
+
               <TabsContent value="institutional">
                 <InstitutionalOwnership ticker={ticker} />
+              </TabsContent>
+
+              <TabsContent value="ownership">
+                <OwnershipBreakdown ticker={ticker} />
               </TabsContent>
 
               <TabsContent value="sec">

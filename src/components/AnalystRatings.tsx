@@ -11,9 +11,12 @@ interface AnalystRatingsProps {
   currentPrice: number
 }
 
-export default function AnalystRatings({ ticker, currentPrice }: AnalystRatingsProps) {
+export default function AnalystRatings({ ticker, currentPrice: rawPrice }: AnalystRatingsProps) {
   const [data, setData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+
+  // Ensure currentPrice is a valid number
+  const currentPrice = typeof rawPrice === 'number' ? rawPrice : parseFloat(rawPrice) || 0
 
   useEffect(() => {
     fetchData()
