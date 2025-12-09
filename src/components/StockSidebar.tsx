@@ -20,7 +20,10 @@ import {
   AlertTriangle,
   Building2,
   ScrollText,
-  Banknote
+  Banknote,
+  Target,
+  UserCheck,
+  PieChart
 } from "lucide-react"
 
 interface StockSidebarProps {
@@ -36,11 +39,14 @@ const sidebarItems = [
   { id: 'ip', label: 'IP Valuation', icon: Calculator },
   { id: 'dcf', label: 'DCF', icon: Calculator },
   { id: 'ai', label: 'AI Analysis', icon: Brain },
+  { id: 'analysts', label: 'Analysts', icon: Target },
   { id: 'technical', label: 'Technical', icon: Activity },
   { id: 'short', label: 'Short Volume', icon: AlertTriangle },
   { id: 'borrow', label: 'Borrow Cost', icon: Banknote },
   { id: 'options', label: 'Options', icon: BarChart3 },
+  { id: 'insiders', label: 'Insiders', icon: UserCheck },
   { id: 'institutional', label: 'Institutional', icon: Building2 },
+  { id: 'ownership', label: 'Ownership', icon: PieChart },
   { id: 'sec', label: 'SEC Filings', icon: ScrollText },
   { id: 'treasury', label: 'Yields', icon: Percent },
   { id: 'news', label: 'News', icon: Newspaper },
