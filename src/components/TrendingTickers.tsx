@@ -31,9 +31,22 @@ export default function TrendingTickers({ onSelectTicker }: TrendingTickersProps
   const fetchTrending = async () => {
     try {
       const response = await fetch('/api/trending')
+      if (!response.ok) {
+        console.error('Trending API error:', response.status)
+        setLoading(false)
+        return
+      }
       const data = await response.json()
-      if (data.tickers) {
-        setTickers(data.tickers)
+      // API returns { trending: [], gainers: [], losers: [] }
+      const trendingData = data.trending || data.tickers || []
+      if (trendingData.length > 0) {
+        setTickers(trendingData.map((t: any) => ({
+          symbol: t.symbol,
+          price: t.price,
+          change: t.change || 0,
+          changePercent: t.changePercent || 0,
+          logoUrl: t.logoUrl || `https://eodhistoricaldata.com/img/logos/US/${t.symbol}.png`
+        })))
       }
     } catch (error) {
       console.error('Error fetching trending:', error)

@@ -14,7 +14,9 @@ interface ScreenerResult {
   exchange: string
   market_capitalization?: number
   refund_1d_p?: number
+  refund_1d?: number
   close?: number
+  adjusted_close?: number
 }
 
 export async function GET() {
@@ -80,8 +82,8 @@ export async function GET() {
         results.gainers = gainersData.data.map((item: ScreenerResult) => ({
           symbol: item.code?.split('.')[0] || item.code,
           name: item.name || item.code,
-          price: item.close || 0,
-          change: 0, // Screener doesn't provide absolute change
+          price: item.adjusted_close || item.close || 0,
+          change: item.refund_1d || 0,
           changePercent: item.refund_1d_p || 0,
           marketCap: item.market_capitalization
         }))
@@ -107,8 +109,8 @@ export async function GET() {
         results.losers = losersData.data.map((item: ScreenerResult) => ({
           symbol: item.code?.split('.')[0] || item.code,
           name: item.name || item.code,
-          price: item.close || 0,
-          change: 0,
+          price: item.adjusted_close || item.close || 0,
+          change: item.refund_1d || 0,
           changePercent: item.refund_1d_p || 0,
           marketCap: item.market_capitalization
         }))
