@@ -147,6 +147,7 @@ export default function MarketSidebar({ onSelectTicker, currentTicker, isAuthent
   const [marketIndices, setMarketIndices] = useState<MarketIndex[]>([])
   const [trendingStocks, setTrendingStocks] = useState<TrendingStock[]>([])
   const [topGainers, setTopGainers] = useState<TrendingStock[]>([])
+  const [topLosers, setTopLosers] = useState<TrendingStock[]>([])
   const [recentlyViewed, setRecentlyViewed] = useState<RecentStock[]>([])
   const [marketPage, setMarketPage] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -275,6 +276,7 @@ export default function MarketSidebar({ onSelectTicker, currentTicker, isAuthent
           const data = await trendingRes.json()
           setTrendingStocks(data.trending?.slice(0, 8) || [])
           setTopGainers(data.gainers?.slice(0, 5) || [])
+          setTopLosers(data.losers?.slice(0, 5) || [])
         }
       } catch (e) {
         console.error('Error fetching market data:', e)
@@ -384,9 +386,21 @@ export default function MarketSidebar({ onSelectTicker, currentTicker, isAuthent
         {/* Top Gainers */}
         {topGainers.length > 0 && (
           <section>
-            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">Top gainers</h3>
+            <h3 className="text-sm font-semibold text-green-500/80 uppercase tracking-wider mb-3">Top gainers</h3>
             <div className="space-y-0.5">
               {topGainers.map((stock) => (
+                <TrendingRow key={stock.symbol} stock={stock} onSelect={onSelectTicker} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Top Losers */}
+        {topLosers.length > 0 && (
+          <section>
+            <h3 className="text-sm font-semibold text-red-500/80 uppercase tracking-wider mb-3">Top losers</h3>
+            <div className="space-y-0.5">
+              {topLosers.map((stock) => (
                 <TrendingRow key={stock.symbol} stock={stock} onSelect={onSelectTicker} />
               ))}
             </div>
