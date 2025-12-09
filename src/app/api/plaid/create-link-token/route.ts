@@ -50,7 +50,11 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create link token request
+    // Get webhook URL
+    const webhookUrl = process.env.PLAID_WEBHOOK_URL ||
+      `${process.env.NEXT_PUBLIC_APP_URL || 'https://lician.com'}/api/plaid/webhook`
+
+    // Create link token request with webhook
     const linkTokenResponse = await client.linkTokenCreate({
       user: {
         client_user_id: userId,
@@ -59,6 +63,7 @@ export async function POST(request: NextRequest) {
       products: [Products.Investments],
       country_codes: [CountryCode.Us],
       language: 'en',
+      webhook: webhookUrl, // Register webhook for real-time updates
     })
 
     return NextResponse.json({

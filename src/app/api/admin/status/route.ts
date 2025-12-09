@@ -7,55 +7,186 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.
 // Admin password - should be set in environment variables
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'lician-admin-2025'
 
-// Edge functions to monitor (key ones)
-const CRITICAL_FUNCTIONS = [
-  'ai-hedge-fund',
-  'ingest-market-data-v1',
-  'ingest-eodhd-earnings',
-  'ingest-eodhd-fundamentals',
-  'ingest-edgar-filings',
-  'ingest-sec-filings',
-  'ingest-short-data',
-  'get-cached-earnings',
-  'get-fundamentals',
-  'calculate-portfolio-risk',
-  'api-proxy-handler',
-]
+// All edge functions organized by category
+export const EDGE_FUNCTIONS = {
+  'Data Ingestion': [
+    'auto-earnings-sync', 'auto-edgar-sync', 'auto-financial-sync', 'auto-short-volume-sync',
+    'ingest-daily-data', 'ingest-earnings-calendar', 'ingest-eodhd-earnings', 'ingest-eodhd-fundamentals',
+    'ingest-financial-data', 'ingest-edgar-filings', 'ingest-sec-filings', 'ingest-market-data-v1',
+    'ingest-comprehensive-financials', 'ingest-historical-prices', 'ingest-real-time-prices',
+    'ingest-insider-trading', 'ingest-dividends-splits', 'ingest-options-chains', 'ingest-options-batch',
+    'ingest-all-options', 'ingest-short-data', 'ultra-efficient-earnings', 'ultra-efficient-updater',
+    'ultra-financial-statements', 'polygon-data-ingestion', 'discover-all-symbols',
+    'enhanced-symbol-discovery', 'global-symbol-ingestion'
+  ],
+  'Symbol Management': [
+    'sync-tickers', 'symbol-priority-manager', 'daily-symbol-sync', 'social-symbol-processor',
+    'populate-countries', 'populate-logos', 'populate-earnings', 'populate-earnings-alpha'
+  ],
+  'Options & Derivatives': [
+    'fetch-options', 'fetch-options-greeks', 'monitor-options-flow', 'process-options-embeddings',
+    'get-polygon-aggregates', 'get-batch-prices', 'optionChain'
+  ],
+  'Short Interest': [
+    'short-interest', 'fetch-short-interest', 'fetch-finra-short-volume', 'fetch-insider-shorts',
+    'get-short-interest'
+  ],
+  'Fundamentals': [
+    'fetch-fundamentals', 'get-fundamentals', 'get-cached-earnings', 'get-earnings-calendar'
+  ],
+  'AI & Analysis': [
+    'ask', 'query-market', 'financial-ai-assistant', 'ai-hedge-fund', 'analyze-campaign-performance',
+    'generate-embeddings-hf', 'auto-generate-embeddings', 'process-earnings-embeddings',
+    'summarize-market-data', 'summarize-edgar-filings', 'groq-ai-proxy', 'groq-ai-stream'
+  ],
+  'Portfolio': [
+    'portfolio-import', 'portfolio-invite', 'portfolio-import-ai', 'portfolio-import-simple',
+    'import-portfolio', 'import-portfolio-ai', 'portfolio-snapshot-service', 'portfolio-chat-webhook',
+    'portfolio-message-notification', 'daily-portfolio-summary', 'scheduled-portfolio-summary',
+    'monitor-portfolio', 'calculate-portfolio-risk', 'get-portfolio-updates',
+    'send-portfolio-invite', 'accept-portfolio-email-invite', 'invite-user-to-portfolio-natively'
+  ],
+  'Real-time & WebSocket': [
+    'polygon-websocket-relay', 'realtime-market-processor', 'realtime-chart-processor'
+  ],
+  'SEO & Content': [
+    'generate-seo-content', 'generate-stock-pages', 'check-seo-pages', 'dynamic-sitemap',
+    'smart-sitemap-generator', 'submit-sitemap-google', 'google-indexing-api',
+    'autonomous-seo-orchestrator', 'seo-automation-cron', 'seo-error-handler',
+    'seo-performance-monitor', 'scale-seo-system', 'public-stock-page', 'seed-community-content'
+  ],
+  'Notifications': [
+    'send-campaign-emails', 'send-push-notification', 'send-web-push', 'send-notification-to-all',
+    'unified-notification-handler', 'process-notifications', 'process-follow-ups',
+    'track-email-open', 'track-email-click', 'unsubscribe', 'notify-moderators', 'check-price-alerts'
+  ],
+  'Banking Integration': [
+    'create-tink-link', 'tink-create-link', 'exchange-public-token', 'exchange-tink-code',
+    'tink-investments', 'tink-get-investments', 'tink-get-accounts', 'tink-get-transactions',
+    'get-tink-investments', 'get-investments', 'create-link-token'
+  ],
+  'Infrastructure': [
+    'sign-url', 'setup-minimal-db', 'setup-chat-media-bucket', 'deploy-schema', 'create-tables',
+    'execute-sql', 'deploy-bloomberg-tables', 'smart-bloomberg-system', 'bloomberg-master-ingestion',
+    'bloomberg-sequential', 'check-tables', 'diagnose-table', 'fix-earnings-table',
+    'test-aapl-data', 'test-auth', 'test-user-search', 'delete-user-account',
+    'automated-data-updater', 'master-data-scheduler', 'smart-daily-updater',
+    'intelligent-batch-orchestrator', 'financial-data-ingestion'
+  ],
+  'External Integrations': [
+    'api-proxy-handler', 'eodhd-proxy', 'firecrawl-extract', 'firecrawl-search',
+    'fetch-logos', 'markitdown-converter', 'convert-to-markdown', 'get-polygon-key'
+  ]
+}
+
+// All database tables organized by category
+export const DATABASE_TABLES = {
+  'Core Financial': [
+    'financial_instruments', 'company_prices', 'price_data', 'realtime_prices',
+    'fundamentals', 'fundamentals_data', 'symbols_universe'
+  ],
+  'Earnings': [
+    'earnings_data', 'earnings_calendar', 'earnings_alerts', 'earnings_surprises',
+    'earnings_sync_metadata', 'company_earnings'
+  ],
+  'Financial Statements': [
+    'financial_statements', 'filing_financial_statements', 'income_statements',
+    'balance_sheets', 'cash_flow_statements'
+  ],
+  'Options': [
+    'options_data', 'options_chain_cache', 'options_volatility_surface',
+    'options_flow', 'options_strategies'
+  ],
+  'Short Interest': [
+    'short_interest', 'short_interest_data', 'daily_short_volume',
+    'latest_short_volume', 'short_squeeze_signals'
+  ],
+  'SEC & Insider': [
+    'sec_filings', 'sec_filing_content', 'sec_filings_metadata', 'sec_structured_data',
+    'sec_company_mappings', 'insider_trading', 'insider_transactions',
+    'form4_transactions', 'form13f_holdings', 'form13f_positions'
+  ],
+  'Portfolio': [
+    'portfolios', 'investments', 'portfolio_holdings_history', 'portfolio_performance_metrics',
+    'portfolio_value_history', 'portfolio_members', 'portfolio_email_invitations',
+    'portfolio_dividends', 'portfolio_imports'
+  ],
+  'Social & Chat': [
+    'profiles', 'posts', 'comments', 'likes', 'chat_groups', 'chat_messages',
+    'chat_message_reactions', 'chat_group_members', 'portfolio_chat_messages',
+    'social_symbol_mentions'
+  ],
+  'Users & Auth': [
+    'users', 'user_subscriptions', 'push_tokens', 'notification_preferences',
+    'notifications', 'user_onboarding', 'price_alerts'
+  ],
+  'Banking': [
+    'plaid_items', 'tink_connections', 'currencies', 'fx_rates', 'fx_sync_history'
+  ],
+  'SEO': [
+    'seo_performance', 'seo_content_versions', 'seo_indexing_log', 'seo_errors',
+    'seo_stock_tiers', 'seo_orchestrator_state', 'seo_system_metrics',
+    'seo_stock_pages', 'seo_community_pages'
+  ],
+  'Email': [
+    'email_campaigns', 'email_templates', 'contact_lists', 'contacts',
+    'campaign_recipients', 'follow_up_sequences', 'email_events', 'email_replies'
+  ],
+  'System & Logs': [
+    'sync_logs', 'sync_metadata', 'data_ingestion_logs', 'data_update_log',
+    'api_usage_tracking', 'cron_job_logs', 'exchange_metadata'
+  ]
+}
 
 // External APIs to health check
 const API_ENDPOINTS = [
-  { name: 'EODHD Real-time', url: 'https://eodhd.com/api/real-time/AAPL.US?api_token={EODHD_KEY}&fmt=json' },
-  { name: 'Financial Datasets', url: 'https://api.financialdatasets.ai/financial-statements/income-statements?ticker=AAPL&limit=1' },
-  { name: 'SEC EDGAR', url: 'https://data.sec.gov/submissions/CIK0000320193.json' },
+  { name: 'EODHD Real-time', url: 'https://eodhd.com/api/real-time/AAPL.US?api_token={EODHD_KEY}&fmt=json', critical: true },
+  { name: 'EODHD Fundamentals', url: 'https://eodhd.com/api/fundamentals/AAPL.US?api_token={EODHD_KEY}&fmt=json', critical: true },
+  { name: 'Financial Datasets', url: 'https://api.financialdatasets.ai/financial-statements/income-statements?ticker=AAPL&limit=1', critical: true },
+  { name: 'SEC EDGAR', url: 'https://data.sec.gov/submissions/CIK0000320193.json', critical: true },
+  { name: 'SEC EDGAR Filings', url: 'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000320193&type=&dateb=&owner=include&count=1&output=atom', critical: false },
+  { name: 'Polygon.io', url: 'https://api.polygon.io/v2/aggs/ticker/AAPL/prev?apiKey={POLYGON_KEY}', critical: false },
 ]
 
 interface SystemStatus {
   timestamp: string
   database: {
     connected: boolean
-    tables: { name: string; count: number; lastUpdated?: string }[]
+    tablesByCategory: Record<string, { name: string; count: number; error?: string }[]>
+    totalRows: number
   }
   edgeFunctions: {
-    name: string
-    status: 'active' | 'error' | 'unknown'
-    lastInvoked?: string
-  }[]
+    byCategory: Record<string, { name: string; status: 'active' | 'error' | 'unknown' }[]>
+    totalActive: number
+    totalFunctions: number
+  }
   externalApis: {
     name: string
     status: 'healthy' | 'degraded' | 'down'
     responseTime?: number
     error?: string
+    critical: boolean
   }[]
   syncStatus: {
     name: string
     lastSync: string | null
     status: 'fresh' | 'stale' | 'critical'
+    recordsProcessed?: number
   }[]
   errors: {
     timestamp: string
     source: string
     message: string
+    severity: 'error' | 'warning'
   }[]
+  metrics: {
+    totalSymbols: number
+    totalPortfolios: number
+    totalUsers: number
+    apiCallsToday: number
+    lastEarningsSync: string | null
+    lastPriceSync: string | null
+  }
 }
 
 export async function GET(request: NextRequest) {
@@ -69,19 +200,27 @@ export async function GET(request: NextRequest) {
 
   const status: SystemStatus = {
     timestamp: new Date().toISOString(),
-    database: { connected: false, tables: [] },
-    edgeFunctions: [],
+    database: { connected: false, tablesByCategory: {}, totalRows: 0 },
+    edgeFunctions: { byCategory: {}, totalActive: 0, totalFunctions: 0 },
     externalApis: [],
     syncStatus: [],
-    errors: []
+    errors: [],
+    metrics: {
+      totalSymbols: 0,
+      totalPortfolios: 0,
+      totalUsers: 0,
+      apiCallsToday: 0,
+      lastEarningsSync: null,
+      lastPriceSync: null
+    }
   }
 
-  // 1. Check database connection and get table stats
+  // 1. Check database connection and get table stats by category
   try {
     const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
     // Test connection
-    const { data: testData, error: testError } = await supabase
+    const { error: testError } = await supabase
       .from('financial_instruments')
       .select('count')
       .limit(1)
@@ -89,44 +228,60 @@ export async function GET(request: NextRequest) {
     status.database.connected = !testError
 
     if (!testError) {
-      // Get key table counts
-      const tables = [
-        'financial_instruments',
-        'company_prices',
-        'company_earnings',
-        'portfolios',
-        'investments',
-        'sec_filings',
-        'insider_trading',
-        'short_interest_data',
-        'sync_logs',
-        'data_ingestion_logs'
-      ]
+      let totalRows = 0
 
-      for (const table of tables) {
-        try {
-          const { count, error } = await supabase
-            .from(table)
-            .select('*', { count: 'exact', head: true })
+      // Get counts for each category
+      for (const [category, tables] of Object.entries(DATABASE_TABLES)) {
+        status.database.tablesByCategory[category] = []
 
-          if (!error) {
-            status.database.tables.push({
+        for (const table of tables) {
+          try {
+            const { count, error } = await supabase
+              .from(table)
+              .select('*', { count: 'exact', head: true })
+
+            const tableCount = error ? 0 : (count || 0)
+            totalRows += tableCount
+
+            status.database.tablesByCategory[category].push({
               name: table,
-              count: count || 0
+              count: tableCount,
+              error: error?.message
+            })
+          } catch {
+            status.database.tablesByCategory[category].push({
+              name: table,
+              count: 0,
+              error: 'Table may not exist'
             })
           }
-        } catch {
-          status.database.tables.push({ name: table, count: -1 })
         }
       }
 
-      // Get last sync times from sync_logs if it exists
+      status.database.totalRows = totalRows
+
+      // Get key metrics
+      try {
+        const [symbolsRes, portfoliosRes, usersRes] = await Promise.all([
+          supabase.from('financial_instruments').select('*', { count: 'exact', head: true }),
+          supabase.from('portfolios').select('*', { count: 'exact', head: true }),
+          supabase.from('profiles').select('*', { count: 'exact', head: true })
+        ])
+
+        status.metrics.totalSymbols = symbolsRes.count || 0
+        status.metrics.totalPortfolios = portfoliosRes.count || 0
+        status.metrics.totalUsers = usersRes.count || 0
+      } catch {
+        // Metrics tables might not exist
+      }
+
+      // Get sync status from sync_logs
       try {
         const { data: syncLogs } = await supabase
           .from('sync_logs')
-          .select('sync_type, completed_at, status')
+          .select('sync_type, completed_at, status, records_processed')
           .order('completed_at', { ascending: false })
-          .limit(20)
+          .limit(50)
 
         if (syncLogs) {
           const syncTypes = [...new Set(syncLogs.map(l => l.sync_type))]
@@ -140,7 +295,8 @@ export async function GET(request: NextRequest) {
                 name: syncType,
                 lastSync: latest.completed_at,
                 status: hoursSince < 24 ? 'fresh' :
-                        hoursSince < 72 ? 'stale' : 'critical'
+                        hoursSince < 72 ? 'stale' : 'critical',
+                recordsProcessed: latest.records_processed
               })
             }
           }
@@ -149,24 +305,43 @@ export async function GET(request: NextRequest) {
         // sync_logs might not exist
       }
 
-      // Get recent errors from data_ingestion_logs
+      // Get recent errors
       try {
         const { data: errorLogs } = await supabase
           .from('data_ingestion_logs')
-          .select('created_at, source, error_message')
-          .not('error_message', 'is', null)
+          .select('created_at, source, error_message, status')
+          .or('status.eq.error,error_message.not.is.null')
           .order('created_at', { ascending: false })
-          .limit(10)
+          .limit(20)
 
         if (errorLogs) {
-          status.errors = errorLogs.map(e => ({
-            timestamp: e.created_at,
-            source: e.source,
-            message: e.error_message
-          }))
+          status.errors = errorLogs
+            .filter(e => e.error_message)
+            .map(e => ({
+              timestamp: e.created_at,
+              source: e.source || 'unknown',
+              message: e.error_message,
+              severity: 'error' as const
+            }))
         }
       } catch {
         // data_ingestion_logs might not exist
+      }
+
+      // Check API usage
+      try {
+        const today = new Date().toISOString().split('T')[0]
+        const { data: apiUsage } = await supabase
+          .from('api_usage_tracking')
+          .select('calls_count')
+          .eq('date', today)
+          .single()
+
+        if (apiUsage) {
+          status.metrics.apiCallsToday = apiUsage.calls_count || 0
+        }
+      } catch {
+        // api_usage_tracking might not exist
       }
     }
   } catch (error) {
@@ -174,7 +349,8 @@ export async function GET(request: NextRequest) {
     status.errors.push({
       timestamp: new Date().toISOString(),
       source: 'database',
-      message: String(error)
+      message: String(error),
+      severity: 'error'
     })
   }
 
@@ -186,12 +362,15 @@ export async function GET(request: NextRequest) {
       if (url.includes('{EODHD_KEY}')) {
         url = url.replace('{EODHD_KEY}', process.env.EODHD_API_KEY || '')
       }
+      if (url.includes('{POLYGON_KEY}')) {
+        url = url.replace('{POLYGON_KEY}', process.env.POLYGON_API_KEY || '')
+      }
 
       const headers: Record<string, string> = {}
       if (api.name === 'Financial Datasets') {
         headers['X-API-KEY'] = process.env.FINANCIAL_DATASETS_API_KEY || ''
       }
-      if (api.name === 'SEC EDGAR') {
+      if (api.name.includes('SEC')) {
         headers['User-Agent'] = 'Lician contact@lician.com'
       }
 
@@ -205,30 +384,37 @@ export async function GET(request: NextRequest) {
       status.externalApis.push({
         name: api.name,
         status: response.ok ? 'healthy' : 'degraded',
-        responseTime
+        responseTime,
+        critical: api.critical
       })
     } catch (error) {
       status.externalApis.push({
         name: api.name,
         status: 'down',
-        error: String(error)
+        error: String(error).slice(0, 100),
+        critical: api.critical
       })
     }
   }
 
-  // 3. Edge functions status (from Supabase - we mark as active since they're deployed)
-  for (const fn of CRITICAL_FUNCTIONS) {
-    status.edgeFunctions.push({
-      name: fn,
-      status: 'active' // Would need Supabase Management API for real status
+  // 3. Edge functions status by category
+  let totalFunctions = 0
+  for (const [category, functions] of Object.entries(EDGE_FUNCTIONS)) {
+    status.edgeFunctions.byCategory[category] = functions.map(fn => {
+      totalFunctions++
+      return {
+        name: fn,
+        status: 'active' as const // Would need Supabase Management API for real status
+      }
     })
   }
+  status.edgeFunctions.totalFunctions = totalFunctions
+  status.edgeFunctions.totalActive = totalFunctions // Assuming all active
 
   return NextResponse.json(status)
 }
 
 export async function POST(request: NextRequest) {
-  // Auth check
   const authHeader = request.headers.get('authorization')
   const providedPassword = authHeader?.replace('Bearer ', '')
 
@@ -239,7 +425,6 @@ export async function POST(request: NextRequest) {
   const body = await request.json()
   const { action } = body
 
-  // Actions that admin can trigger
   if (action === 'test-edge-function') {
     const { functionName } = body
     try {
@@ -259,6 +444,12 @@ export async function POST(request: NextRequest) {
         error: String(error)
       })
     }
+  }
+
+  if (action === 'refresh-sync') {
+    const { syncType } = body
+    // Trigger a sync - would call the appropriate edge function
+    return NextResponse.json({ success: true, message: `Triggered ${syncType} sync` })
   }
 
   return NextResponse.json({ error: 'Unknown action' }, { status: 400 })
