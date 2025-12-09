@@ -170,8 +170,15 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
     return colors[type] || 'bg-secondary text-secondary-foreground'
   }
 
+  // Format investor name properly
+  const formatInvestorName = (name: string) => {
+    return name.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())
+  }
+
   // Investor Detail Modal/Panel
   if (selectedInvestor) {
+    const hasData = selectedInvestor.holdings && selectedInvestor.holdings.length > 0
+
     return (
       <Card className="bg-card border-border">
         <CardHeader className="pb-3">
@@ -186,7 +193,7 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                 <ChevronRight className="w-4 h-4 rotate-180 mr-1" />
                 Back to Holders
               </Button>
-              <CardTitle className="text-lg">{selectedInvestor.investor}</CardTitle>
+              <CardTitle className="text-lg">{formatInvestorName(selectedInvestor.investor)}</CardTitle>
               <span className={`text-xs px-2 py-0.5 rounded ${getTypeColor(selectedInvestor.investorType)}`}>
                 {selectedInvestor.investorType}
               </span>
@@ -197,6 +204,24 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
           {investorLoading ? (
             <div className="flex items-center justify-center py-8">
               <Loader2 className="w-6 h-6 animate-spin" />
+            </div>
+          ) : !hasData ? (
+            <div className="text-center py-8">
+              <Building2 className="w-12 h-12 mx-auto mb-4 text-muted-foreground opacity-50" />
+              <p className="text-muted-foreground mb-2">
+                Detailed holdings data not available for this institution
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Full portfolio data is available for select institutions including Berkshire Hathaway, BlackRock, and others.
+              </p>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setSelectedInvestor(null)}
+                className="mt-4"
+              >
+                Back to Holders List
+              </Button>
             </div>
           ) : (
             <>

@@ -34,6 +34,7 @@ import InstitutionalOwnership from "@/components/InstitutionalOwnership"
 import SECFilings from "@/components/SECFilings"
 import StockChartSwitcher from "@/components/StockChartSwitcher"
 import MarketDataTable from "@/components/MarketDataTable"
+import MarketSidebar from "@/components/MarketSidebar"
 import { formatCurrency, formatPercent } from "@/lib/utils"
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts"
 import { TrendingUp, TrendingDown, Star, Share2, User } from "lucide-react"
@@ -720,6 +721,12 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
               </TabsContent>
             </Tabs>
           </div>
+
+          {/* Right Sidebar - Market Data */}
+          <MarketSidebar
+            onSelectTicker={handleSearch}
+            currentTicker={ticker}
+          />
         </div>
       </div>
     </main>
