@@ -9,8 +9,8 @@ export async function GET() {
   const today = new Date().toISOString().split('T')[0]
   const baseUrl = 'https://lician.com'
 
-  // Number of warm sitemap pages (10k stocks each, ~9 pages for 90k stocks)
-  const warmSitemapCount = 9
+  // Number of warm sitemap pages (10k stocks each, 6 pages for 60k stocks after hot tier)
+  const warmSitemapCount = 6
 
   const sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

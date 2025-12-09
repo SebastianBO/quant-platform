@@ -45,6 +45,9 @@ Sitemap: https://lician.com/sitemap-stocks-hot.xml
 Sitemap: https://lician.com/sitemap-stocks-warm.xml?page=1
 Sitemap: https://lician.com/sitemap-stocks-warm.xml?page=2
 Sitemap: https://lician.com/sitemap-stocks-warm.xml?page=3
+Sitemap: https://lician.com/sitemap-stocks-warm.xml?page=4
+Sitemap: https://lician.com/sitemap-stocks-warm.xml?page=5
+Sitemap: https://lician.com/sitemap-stocks-warm.xml?page=6
 Sitemap: https://lician.com/sitemap-stocks-cold.xml?page=1
 
 # Host

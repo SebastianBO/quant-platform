@@ -33,8 +33,8 @@ export async function GET(request: Request) {
       // Transform URLs from portfoliocare format to quant-platform format
       sitemap = sitemap.replace(/https:\/\/www\.lician\.com\/stocks\//g, `${baseUrl}/stock/`)
 
-      // Extract unique stock symbols and create clean URLs
-      const stockMatches = sitemap.match(/\/stock\/([A-Z0-9.]+)/g) || []
+      // Extract unique stock symbols (letters, numbers, dots, hyphens)
+      const stockMatches = sitemap.match(/\/stock\/([A-Za-z0-9._-]+)/g) || []
       const uniqueStocks = [...new Set(stockMatches.map(m => m.replace('/stock/', '')))]
 
       const urls = uniqueStocks.map(ticker => `
