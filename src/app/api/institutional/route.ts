@@ -98,7 +98,7 @@ export async function GET(request: NextRequest) {
   if (type === 'investor' && investor) {
     try {
       const holdings = await fetchFD('/institutional-ownership/', {
-        investor_name: investor,
+        investor: investor,
         limit: '100'
       })
 
