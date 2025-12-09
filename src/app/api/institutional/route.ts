@@ -156,6 +156,11 @@ export async function GET(request: NextRequest) {
       fetchEODHD(ticker).catch(() => null)
     ])
 
+    // Get current stock price for value calculation
+    const currentPrice = eodhData?.Highlights?.MarketCapitalization && eodhData?.SharesStats?.SharesOutstanding
+      ? eodhData.Highlights.MarketCapitalization / eodhData.SharesStats.SharesOutstanding
+      : null
+
     // Process EODHD holders data
     const eodhInstitutions = eodhData?.Holders?.Institutions || {}
     const eodhFunds = eodhData?.Holders?.Funds || {}
@@ -180,18 +185,22 @@ export async function GET(request: NextRequest) {
                fdNameLower.includes(ehNameLower.split(' ')[0])
       })
 
+      // Calculate value if not provided
+      const shares = fd.shares || eodhMatch?.currentShares || 0
+      const value = fd.market_value || (currentPrice && shares ? shares * currentPrice : null)
+
       return {
         investor: investorName.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
         investorType: classifyInstitution(investorName),
-        shares: fd.shares,
-        value: fd.market_value,
-        percentOwnership: fd.percent_of_outstanding,
+        shares,
+        value,
+        percentOwnership: fd.percent_of_outstanding || eodhMatch?.totalShares,
         portfolioPercent: eodhMatch?.totalAssets || null, // % of their portfolio in this stock
-        changeInShares: fd.change_in_shares || 0,
-        changePercent: fd.change_percent || 0,
+        changeInShares: fd.change_in_shares || eodhMatch?.change || 0,
+        changePercent: fd.change_percent || eodhMatch?.change_p || 0,
         isNew: fd.is_new_position || false,
-        filingDate: fd.filing_date || fd.report_period,
-        reportDate: fd.report_date || fd.report_period,
+        filingDate: fd.filing_date || fd.report_period || eodhMatch?.date,
+        reportDate: fd.report_date || fd.report_period || eodhMatch?.date,
         // Additional EODHD data if available
         eodhChange: eodhMatch?.change || null,
         eodhChangePercent: eodhMatch?.change_p || null
@@ -206,11 +215,12 @@ export async function GET(request: NextRequest) {
       )
 
       if (!alreadyExists && eh.currentShares > 0) {
+        const ehValue = currentPrice ? eh.currentShares * currentPrice : null
         mergedHolders.push({
           investor: eh.name,
           investorType: eh.holderType === 'Mutual Fund' ? 'Mutual Fund' : classifyInstitution(eh.name),
           shares: eh.currentShares,
-          value: null, // EODHD doesn't provide market value
+          value: ehValue,
           percentOwnership: eh.totalShares,
           portfolioPercent: eh.totalAssets,
           changeInShares: eh.change,
