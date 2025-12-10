@@ -7,10 +7,6 @@
     {
       "path": "/api/cron/sync-financials?mode=continue&limit=5",
       "schedule": "0 6 * * *"
-    },
-    {
-      "path": "/api/cron/sync-short-volume?priority=true",
-      "schedule": "30 21 * * 1-5"
     }
   ]
 }
