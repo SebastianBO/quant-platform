@@ -36,6 +36,7 @@ import AnalystRatings from "@/components/AnalystRatings"
 import InsiderTrading from "@/components/InsiderTrading"
 import OwnershipBreakdown from "@/components/OwnershipBreakdown"
 import CompanyDebt from "@/components/CompanyDebt"
+import DebtAnalysis from "@/components/DebtAnalysis"
 import StockChartSwitcher from "@/components/StockChartSwitcher"
 import MarketDataTable from "@/components/MarketDataTable"
 import MarketSidebar from "@/components/MarketSidebar"
@@ -594,6 +595,10 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
 
               <TabsContent value="bonds">
                 <CompanyDebt ticker={ticker} />
+              </TabsContent>
+
+              <TabsContent value="debt">
+                <DebtAnalysis ticker={ticker} />
               </TabsContent>
 
               <TabsContent value="news">

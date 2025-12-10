@@ -51,6 +51,7 @@ const sidebarItems = [
   { id: 'sec', label: 'SEC Filings', icon: ScrollText },
   { id: 'treasury', label: 'Yields', icon: Percent },
   { id: 'bonds', label: 'Bonds Corr', icon: Landmark },
+  { id: 'debt', label: 'Debt', icon: Banknote },
   { id: 'news', label: 'News', icon: Newspaper },
   { id: 'financials', label: 'Financials', icon: FileText },
   { id: 'peers', label: 'Peers', icon: Users },
