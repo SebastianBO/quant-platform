@@ -135,6 +135,11 @@ export const DATABASE_TABLES = {
   'System & Logs': [
     'sync_logs', 'sync_metadata', 'data_ingestion_logs', 'data_update_log',
     'api_usage_tracking', 'cron_job_logs', 'exchange_metadata'
+  ],
+  'Financial Sync': [
+    'sync_state', 'sync_queue', 'financial_sync_log', 'data_freshness',
+    'insider_trades', 'institutional_holdings', 'institutional_investors',
+    'institutional_filings', 'short_volume'
   ]
 }
 
@@ -186,6 +191,28 @@ interface SystemStatus {
     apiCallsToday: number
     lastEarningsSync: string | null
     lastPriceSync: string | null
+  }
+  financialSync?: {
+    syncProgress: {
+      companiesSynced: number
+      totalCompanies: number
+      percentComplete: number
+      isRunning: boolean
+      lastBatchAt: string | null
+    }
+    dataFreshness: {
+      dataType: string
+      recordCount: number
+      latestDate: string | null
+      lastSync: string | null
+    }[]
+    pendingQueue: number
+    recentSyncs: {
+      ticker: string
+      status: string
+      syncedAt: string
+      itemsCreated: number
+    }[]
   }
 }
 
@@ -343,6 +370,60 @@ export async function GET(request: NextRequest) {
       } catch {
         // api_usage_tracking might not exist
       }
+
+      // Get Financial Sync status
+      try {
+        // Get sync progress from sync_state
+        const { data: syncState } = await supabase
+          .from('sync_state')
+          .select('*')
+          .eq('sync_type', 'financials')
+          .single()
+
+        // Get pending queue count
+        const { count: pendingQueue } = await supabase
+          .from('sync_queue')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'pending')
+
+        // Get data freshness
+        const { data: freshness } = await supabase
+          .from('data_freshness')
+          .select('*')
+
+        // Get recent syncs from financial_sync_log
+        const { data: recentSyncs } = await supabase
+          .from('financial_sync_log')
+          .select('ticker, status, completed_at, statements_created')
+          .order('completed_at', { ascending: false })
+          .limit(10)
+
+        status.financialSync = {
+          syncProgress: {
+            companiesSynced: syncState?.companies_synced || 0,
+            totalCompanies: syncState?.total_companies || 10196,
+            percentComplete: syncState ?
+              Math.round((syncState.companies_synced / syncState.total_companies) * 100 * 10) / 10 : 0,
+            isRunning: syncState?.is_running || false,
+            lastBatchAt: syncState?.last_batch_at || null
+          },
+          dataFreshness: (freshness || []).map(f => ({
+            dataType: f.data_type,
+            recordCount: f.record_count || 0,
+            latestDate: f.latest_data_date,
+            lastSync: f.last_sync
+          })),
+          pendingQueue: pendingQueue || 0,
+          recentSyncs: (recentSyncs || []).map(s => ({
+            ticker: s.ticker || 'unknown',
+            status: s.status || 'unknown',
+            syncedAt: s.completed_at,
+            itemsCreated: s.statements_created || 0
+          }))
+        }
+      } catch {
+        // Financial sync tables might not exist yet
+      }
     }
   } catch (error) {
     status.database.connected = false
@@ -450,6 +531,54 @@ export async function POST(request: NextRequest) {
     const { syncType } = body
     // Trigger a sync - would call the appropriate edge function
     return NextResponse.json({ success: true, message: `Triggered ${syncType} sync` })
+  }
+
+  // Financial sync actions
+  if (action === 'sync-financials') {
+    const { mode, limit } = body
+    try {
+      // Call our own cron endpoint
+      const baseUrl = process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}`
+        : process.env.NEXT_PUBLIC_BASE_URL || 'https://lician.com'
+
+      const response = await fetch(
+        `${baseUrl}/api/cron/sync-financials?mode=${mode || 'priority'}&limit=${limit || 5}`,
+        { method: 'GET' }
+      )
+      const result = await response.json()
+      return NextResponse.json({
+        success: result.success,
+        message: `Synced ${result.summary?.itemsSynced || 0} items`,
+        details: result
+      })
+    } catch (error) {
+      return NextResponse.json({
+        success: false,
+        error: String(error)
+      })
+    }
+  }
+
+  if (action === 'watch-filings') {
+    try {
+      const baseUrl = process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}`
+        : process.env.NEXT_PUBLIC_BASE_URL || 'https://lician.com'
+
+      const response = await fetch(`${baseUrl}/api/cron/watch-filings`, { method: 'GET' })
+      const result = await response.json()
+      return NextResponse.json({
+        success: result.success,
+        message: `Found ${result.summary?.totalFilingsFound || 0} filings, synced ${result.summary?.earningsProcessed || 0}`,
+        details: result
+      })
+    } catch (error) {
+      return NextResponse.json({
+        success: false,
+        error: String(error)
+      })
+    }
   }
 
   return NextResponse.json({ error: 'Unknown action' }, { status: 400 })
