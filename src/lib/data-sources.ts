@@ -14,6 +14,7 @@ export type DataSourceId =
   | 'supabase-cache'
   | 'iborrowdesk'
   | 'openai'
+  | 'openfigi'
   | 'mock'
 
 export interface DataSource {
@@ -98,6 +99,15 @@ export const DATA_SOURCES: Record<DataSourceId, DataSource> = {
     isPaid: true,
     color: 'emerald'
   },
+  'openfigi': {
+    id: 'openfigi',
+    name: 'OpenFIGI',
+    shortName: 'FIGI',
+    url: 'https://openfigi.com',
+    description: 'Bond and security identifiers - corporate bonds, TRACE data',
+    isPaid: false,
+    color: 'cyan'
+  },
   'mock': {
     id: 'mock',
     name: 'Mock Data',
@@ -129,6 +139,7 @@ export const FEATURE_DATA_SOURCES: Record<string, DataSourceId[]> = {
   'market-overview': ['eodhd', 'yahoo-finance'],
   'treasury-yields': ['eodhd'],
   'company-debt': ['sec-edgar'],
+  'company-bonds': ['openfigi'],
   'bonds-correlation': ['yahoo-finance'],
 
   // Ownership & Filings
