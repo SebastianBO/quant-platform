@@ -142,3 +142,71 @@ export function DataSourceIndicator({
     </span>
   )
 }
+
+/**
+ * Dynamic source badge that shows the actual runtime data source
+ * Used to indicate whether data came from Supabase cache or API fallback
+ */
+export function DynamicSourceBadge({
+  source,
+  className
+}: {
+  source: string | undefined // 'supabase' | 'financialdatasets.ai' | 'yahoo-finance' | etc.
+  className?: string
+}) {
+  if (!source) return null
+
+  // Map source string to display info
+  const sourceConfig: Record<string, { label: string; colorClass: string; description: string }> = {
+    'supabase': {
+      label: 'Cached',
+      colorClass: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/30',
+      description: 'Data from synced database cache'
+    },
+    'financialdatasets.ai': {
+      label: 'API',
+      colorClass: 'bg-blue-500/10 text-blue-500 border-blue-500/30',
+      description: 'Live data from Financial Datasets API'
+    },
+    'yahoo-finance': {
+      label: 'Yahoo',
+      colorClass: 'bg-purple-500/10 text-purple-500 border-purple-500/30',
+      description: 'Live data from Yahoo Finance'
+    },
+    'eodhd': {
+      label: 'EODHD',
+      colorClass: 'bg-green-500/10 text-green-500 border-green-500/30',
+      description: 'Live data from EODHD API'
+    },
+    'mock-data': {
+      label: 'Mock',
+      colorClass: 'bg-slate-500/10 text-slate-400 border-slate-500/30',
+      description: 'Placeholder demo data'
+    },
+    'error': {
+      label: 'Error',
+      colorClass: 'bg-red-500/10 text-red-500 border-red-500/30',
+      description: 'Failed to load data'
+    }
+  }
+
+  const config = sourceConfig[source] || {
+    label: source.split('.')[0].toUpperCase().slice(0, 6),
+    colorClass: 'bg-gray-500/10 text-gray-400 border-gray-500/30',
+    description: `Data from ${source}`
+  }
+
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium border cursor-help",
+        config.colorClass,
+        className
+      )}
+      title={config.description}
+    >
+      <Database className="w-2.5 h-2.5" />
+      {config.label}
+    </span>
+  )
+}

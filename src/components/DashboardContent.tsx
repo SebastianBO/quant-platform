@@ -46,6 +46,16 @@ import { XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from "rec
 import { TrendingUp, TrendingDown, Star, Share2 } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 
+interface DataSources {
+  incomeStatements?: string
+  balanceSheets?: string
+  cashFlows?: string
+  segmentedRevenues?: string
+  quarterlyIncome?: string
+  quarterlyBalance?: string
+  quarterlyCashFlow?: string
+}
+
 interface StockData {
   snapshot: {
     ticker: string
@@ -96,6 +106,7 @@ interface StockData {
   segments: { name: string; revenue: number }[]
   productSegments: { name: string; revenue: number }[]
   geoSegments: { name: string; revenue: number }[]
+  dataSources?: DataSources
 }
 
 interface DashboardContentProps {
@@ -603,6 +614,7 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
                     metricsHistory={stockData.metricsHistory || []}
                     productSegments={stockData.productSegments || []}
                     geoSegments={stockData.geoSegments || []}
+                    dataSources={stockData.dataSources}
                   />
                 )}
               </TabsContent>

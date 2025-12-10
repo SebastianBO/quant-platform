@@ -4,6 +4,17 @@ import { useState } from "react"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { formatCurrency, formatPercent } from "@/lib/utils"
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis } from "recharts"
+import { DynamicSourceBadge } from "@/components/DataSourceBadge"
+
+interface DataSources {
+  incomeStatements?: string
+  balanceSheets?: string
+  cashFlows?: string
+  segmentedRevenues?: string
+  quarterlyIncome?: string
+  quarterlyBalance?: string
+  quarterlyCashFlow?: string
+}
 
 interface FinancialStatementsProps {
   ticker: string
@@ -17,6 +28,7 @@ interface FinancialStatementsProps {
   metricsHistory: any[]
   productSegments: { name: string; revenue: number }[]
   geoSegments: { name: string; revenue: number }[]
+  dataSources?: DataSources
 }
 
 type StatementType = 'income' | 'balance' | 'cashflow' | 'metrics' | 'segments'
@@ -35,7 +47,8 @@ export default function FinancialStatements({
   quarterlyCashFlow,
   metricsHistory,
   productSegments,
-  geoSegments
+  geoSegments,
+  dataSources
 }: FinancialStatementsProps) {
   const [activeStatement, setActiveStatement] = useState<StatementType>('income')
   const [period, setPeriod] = useState<PeriodType>('annual')
@@ -156,32 +169,41 @@ export default function FinancialStatements({
         return {
           data: period === 'annual' ? incomeStatements : quarterlyIncome,
           rows: incomeRows,
-          title: 'Income Statement'
+          title: 'Income Statement',
+          source: period === 'annual' ? dataSources?.incomeStatements : dataSources?.quarterlyIncome
         }
       case 'balance':
         return {
           data: period === 'annual' ? balanceSheets : quarterlyBalance,
           rows: balanceRows,
-          title: 'Balance Sheet'
+          title: 'Balance Sheet',
+          source: period === 'annual' ? dataSources?.balanceSheets : dataSources?.quarterlyBalance
         }
       case 'cashflow':
         return {
           data: period === 'annual' ? cashFlows : quarterlyCashFlow,
           rows: cashFlowRows,
-          title: 'Cash Flow Statement'
+          title: 'Cash Flow Statement',
+          source: period === 'annual' ? dataSources?.cashFlows : dataSources?.quarterlyCashFlow
         }
       case 'metrics':
         return {
           data: metricsHistory,
           rows: metricsRows,
-          title: 'Financial Metrics'
+          title: 'Financial Metrics',
+          source: 'financialdatasets.ai' // Metrics always come from API currently
         }
       case 'segments':
-        return { data: [], rows: [], title: 'Revenue Segments' }
+        return {
+          data: [],
+          rows: [],
+          title: 'Revenue Segments',
+          source: dataSources?.segmentedRevenues
+        }
     }
   }
 
-  const { data, rows, title } = getStatementData()
+  const { data, rows, title, source } = getStatementData()
 
   // Export to CSV
   const exportToCSV = () => {
@@ -244,6 +266,7 @@ export default function FinancialStatements({
                 {companyFacts.sector} | {companyFacts.industry}
               </span>
             )}
+            <DynamicSourceBadge source={source} />
           </CardTitle>
           <button
             onClick={exportToCSV}
@@ -459,9 +482,13 @@ export default function FinancialStatements({
         )}
 
         {/* Data Source Note */}
-        <div className="mt-6 p-3 bg-secondary/20 rounded text-xs text-muted-foreground">
-          Data from Financial Datasets API. {period === 'annual' ? 'Annual' : 'Quarterly'} periods shown.
-          {data?.length > 0 && ` Showing ${data.length} periods.`}
+        <div className="mt-6 p-3 bg-secondary/20 rounded text-xs text-muted-foreground flex items-center gap-2">
+          <span>Data source:</span>
+          <DynamicSourceBadge source={source} />
+          <span>
+            {period === 'annual' ? 'Annual' : 'Quarterly'} periods shown.
+            {data?.length > 0 && ` Showing ${data.length} periods.`}
+          </span>
         </div>
       </CardContent>
     </Card>

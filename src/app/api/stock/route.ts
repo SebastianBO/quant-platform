@@ -4,6 +4,16 @@ const FINANCIAL_DATASETS_API_KEY = process.env.FINANCIAL_DATASETS_API_KEY || ""
 const EODHD_API_KEY = process.env.EODHD_API_KEY || ""
 const FD_BASE_URL = "https://api.financialdatasets.ai"
 
+// Get base URL for internal API calls
+function getBaseUrl() {
+  // In production, use the absolute URL
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`
+  }
+  // In development, use localhost
+  return process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+}
+
 async function fetchFD(endpoint: string, params: Record<string, string>) {
   const url = new URL(`${FD_BASE_URL}${endpoint}`)
   Object.entries(params).forEach(([key, value]) => url.searchParams.append(key, value))
@@ -18,6 +28,28 @@ async function fetchFD(endpoint: string, params: Record<string, string>) {
   }
 
   return response.json()
+}
+
+// Fetch from internal v1 APIs (which check Supabase first, then fallback to FD API)
+async function fetchInternal(endpoint: string, params: Record<string, string>) {
+  const baseUrl = getBaseUrl()
+  const url = new URL(`${baseUrl}/api/v1${endpoint}`)
+  Object.entries(params).forEach(([key, value]) => url.searchParams.append(key, value))
+
+  try {
+    const response = await fetch(url.toString(), {
+      next: { revalidate: 300 }
+    })
+
+    if (!response.ok) {
+      return { data: null, _meta: { source: 'error' } }
+    }
+
+    return response.json()
+  } catch (error) {
+    console.error(`Internal API error for ${endpoint}:`, error)
+    return { data: null, _meta: { source: 'error' } }
+  }
 }
 
 export async function GET(request: NextRequest) {
@@ -36,38 +68,40 @@ export async function GET(request: NextRequest) {
     const endDate = today.toISOString().split('T')[0]
 
     // Fetch ALL available data in parallel
+    // Use internal v1 APIs for financial statements (they check Supabase cache first)
     const [
       snapshot,
-      incomeStatements,
-      balanceSheets,
-      cashFlows,
+      incomeResult,
+      balanceResult,
+      cashFlowResult,
       metrics,
       allMetrics,
       insiderTrades,
       analystEstimates,
-      segmentedRevenues,
+      segmentedResult,
       companyFacts,
-      quarterlyIncome,
-      quarterlyBalance,
-      quarterlyCashFlow,
+      quarterlyIncomeResult,
+      quarterlyBalanceResult,
+      quarterlyCashFlowResult,
       priceHistory,
       priceTargets,
       eohdRealtime,
       eohdFundamentals
     ] = await Promise.all([
       fetchFD('/prices/snapshot/', { ticker }).catch(() => ({ snapshot: null })),
-      fetchFD('/financials/income-statements/', { ticker, period: 'annual', limit: '5' }).catch(() => ({ income_statements: [] })),
-      fetchFD('/financials/balance-sheets/', { ticker, period: 'annual', limit: '5' }).catch(() => ({ balance_sheets: [] })),
-      fetchFD('/financials/cash-flow-statements/', { ticker, period: 'annual', limit: '5' }).catch(() => ({ cash_flow_statements: [] })),
+      // Use internal APIs (Supabase-first with fallback)
+      fetchInternal('/financials/income-statements', { ticker, period: 'annual', limit: '5' }),
+      fetchInternal('/financials/balance-sheets', { ticker, period: 'annual', limit: '5' }),
+      fetchInternal('/financials/cash-flow-statements', { ticker, period: 'annual', limit: '5' }),
       fetchFD('/financial-metrics/', { ticker, period: 'annual', limit: '1' }).catch(() => ({ financial_metrics: [] })),
       fetchFD('/financial-metrics/', { ticker, period: 'annual', limit: '5' }).catch(() => ({ financial_metrics: [] })),
       fetchFD('/insider-trades/', { ticker, limit: '20' }).catch(() => ({ insider_trades: [] })),
       fetchFD('/analyst-estimates/', { ticker, limit: '8' }).catch(() => ({ analyst_estimates: [] })),
-      fetchFD('/financials/segmented-revenues/', { ticker, period: 'annual', limit: '3' }).catch(() => ({ segmented_revenues: [] })),
+      fetchInternal('/financials/segmented-revenues', { ticker, period: 'annual', limit: '3' }),
       fetchFD('/company/facts/', { ticker }).catch(() => ({ company_facts: null })),
-      fetchFD('/financials/income-statements/', { ticker, period: 'quarterly', limit: '8' }).catch(() => ({ income_statements: [] })),
-      fetchFD('/financials/balance-sheets/', { ticker, period: 'quarterly', limit: '8' }).catch(() => ({ balance_sheets: [] })),
-      fetchFD('/financials/cash-flow-statements/', { ticker, period: 'quarterly', limit: '8' }).catch(() => ({ cash_flow_statements: [] })),
+      fetchInternal('/financials/income-statements', { ticker, period: 'quarterly', limit: '8' }),
+      fetchInternal('/financials/balance-sheets', { ticker, period: 'quarterly', limit: '8' }),
+      fetchInternal('/financials/cash-flow-statements', { ticker, period: 'quarterly', limit: '8' }),
       fetchFD('/prices/', { ticker, interval: 'day', start_date: startDate, end_date: endDate }).catch(() => ({ prices: [] })),
       fetchFD('/analyst/price-targets/', { ticker, limit: '10' }).catch(() => ({ price_targets: [] })),
       // EODHD real-time for bid/ask and intraday data
@@ -77,6 +111,26 @@ export async function GET(request: NextRequest) {
       fetch(`https://eodhd.com/api/fundamentals/${ticker}.US?api_token=${EODHD_API_KEY}&fmt=json`, { next: { revalidate: 3600 } })
         .then(r => r.ok ? r.json() : null).catch(() => null),
     ])
+
+    // Extract data and sources from internal API responses
+    const incomeStatements = { income_statements: incomeResult.income_statements || [] }
+    const balanceSheets = { balance_sheets: balanceResult.balance_sheets || [] }
+    const cashFlows = { cash_flow_statements: cashFlowResult.cash_flow_statements || [] }
+    const segmentedRevenues = { segmented_revenues: segmentedResult.segmented_revenues || [] }
+    const quarterlyIncome = { income_statements: quarterlyIncomeResult.income_statements || [] }
+    const quarterlyBalance = { balance_sheets: quarterlyBalanceResult.balance_sheets || [] }
+    const quarterlyCashFlow = { cash_flow_statements: quarterlyCashFlowResult.cash_flow_statements || [] }
+
+    // Collect data sources for each statement type
+    const dataSources = {
+      incomeStatements: incomeResult._meta?.source || 'financialdatasets.ai',
+      balanceSheets: balanceResult._meta?.source || 'financialdatasets.ai',
+      cashFlows: cashFlowResult._meta?.source || 'financialdatasets.ai',
+      segmentedRevenues: segmentedResult._meta?.source || 'financialdatasets.ai',
+      quarterlyIncome: quarterlyIncomeResult._meta?.source || 'financialdatasets.ai',
+      quarterlyBalance: quarterlyBalanceResult._meta?.source || 'financialdatasets.ai',
+      quarterlyCashFlow: quarterlyCashFlowResult._meta?.source || 'financialdatasets.ai',
+    }
 
     // Parse segmented revenues - extract product segments and geographic segments
     const latestSegmented = segmentedRevenues?.segmented_revenues?.[0]
@@ -218,6 +272,8 @@ export async function GET(request: NextRequest) {
       productSegments,
       geoSegments,
       rawSegmentedRevenues: segmentedRevenues?.segmented_revenues || [],
+      // Data source tracking - shows whether data came from Supabase cache or API
+      dataSources,
     })
   } catch (error) {
     console.error('Stock API error:', error)
