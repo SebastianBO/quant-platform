@@ -553,7 +553,6 @@ INSERT INTO cusip_mappings (cusip, ticker, issuer_name, source, verified) VALUES
 ('53578A108', 'LRCX', 'Lam Research Corp', 'MANUAL', TRUE),
 ('032654105', 'AMD', 'Advanced Micro Devices Inc', 'MANUAL', TRUE),
 -- More financials
-('92826C839', 'V', 'Visa Inc', 'MANUAL', TRUE),
 ('06738C101', 'BX', 'Blackstone Inc', 'MANUAL', TRUE),
 ('14913Q104', 'SCHW', 'Charles Schwab Corp', 'MANUAL', TRUE),
 ('075887109', 'BLK', 'BlackRock Inc', 'MANUAL', TRUE),
@@ -598,7 +597,6 @@ INSERT INTO institutional_investors (cik, name, normalized_name, investor_type) 
 ('1510199', 'D. E. Shaw & Co., L.P.', 'DE_SHAW_LP', 'Hedge Fund'),
 ('1582202', 'Norges Bank', 'NORGES_BANK', 'Sovereign Wealth'),
 ('909012', 'T. Rowe Price Associates, Inc.', 'T_ROWE_PRICE_ASSOCIATES_INC', 'Asset Manager'),
-('1037389', 'RENAISSANCE TECHNOLOGIES LLC', 'RENAISSANCE_TECHNOLOGIES_LLC', 'Hedge Fund'),
 ('807985', 'CAPITAL WORLD INVESTORS', 'CAPITAL_WORLD_INVESTORS', 'Asset Manager'),
 ('1037644', 'CAPITAL RESEARCH GLOBAL INVESTORS', 'CAPITAL_RESEARCH_GLOBAL_INVESTORS', 'Asset Manager')
 ON CONFLICT (cik) DO UPDATE SET
