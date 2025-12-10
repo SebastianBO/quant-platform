@@ -306,7 +306,7 @@ export default function MarketDataTable() {
                               </td>
                               {isRealCommodities && (
                                 <td className="p-3 text-right tabular-nums font-medium">
-                                  ${item.price.toFixed(2)}
+                                  ${typeof item.price === 'number' ? item.price.toFixed(2) : '—'}
                                 </td>
                               )}
                               <td className="p-3 text-right">

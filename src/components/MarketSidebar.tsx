@@ -113,12 +113,12 @@ function TrendingRow({ stock, onSelect }: { stock: TrendingStock, onSelect: (sym
           <p className="text-xs text-muted-foreground truncate">{stock.name}</p>
         </div>
         <div className="text-right ml-3">
-          <p className="font-medium tabular-nums text-sm">{stock.price.toFixed(2)}</p>
+          <p className="font-medium tabular-nums text-sm">{typeof stock.price === 'number' ? stock.price.toFixed(2) : '—'}</p>
           <p className={cn(
             "text-xs tabular-nums",
             isPositive ? "text-green-500" : "text-red-500"
           )}>
-            {isPositive ? "+" : ""}{stock.changePercent.toFixed(2)}%
+            {isPositive ? "+" : ""}{typeof stock.changePercent === 'number' ? stock.changePercent.toFixed(2) : '0.00'}%
           </p>
         </div>
       </div>
@@ -153,12 +153,12 @@ function RecentRow({ stock, onSelect }: { stock: RecentStock, onSelect: (symbol:
         <p className="text-xs text-muted-foreground truncate">{stock.name}</p>
       </div>
       <div className="text-right ml-3">
-        <p className="font-medium tabular-nums text-sm">{stock.price.toFixed(2)}</p>
+        <p className="font-medium tabular-nums text-sm">{typeof stock.price === 'number' ? stock.price.toFixed(2) : '—'}</p>
         <p className={cn(
           "text-xs tabular-nums",
           isPositive ? "text-green-500" : "text-red-500"
         )}>
-          {isPositive ? "+" : ""}{stock.changePercent.toFixed(2)}%
+          {isPositive ? "+" : ""}{typeof stock.changePercent === 'number' ? stock.changePercent.toFixed(2) : '0.00'}%
         </p>
       </div>
     </button>

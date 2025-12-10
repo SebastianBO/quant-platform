@@ -3,6 +3,9 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
 // Financial Datasets API Compatible Endpoint
 // Matches: https://api.financialdatasets.ai/financials/cash-flow-statements
+// Falls back to Financial Datasets API if Supabase has no data
+
+const FINANCIAL_DATASETS_API_KEY = process.env.FINANCIAL_DATASETS_API_KEY
 
 let supabase: SupabaseClient | null = null
 
@@ -14,6 +17,26 @@ function getSupabase() {
     )
   }
   return supabase
+}
+
+// Fallback to Financial Datasets API
+async function fetchFromFinancialDatasets(ticker: string, period: string, limit: number) {
+  if (!FINANCIAL_DATASETS_API_KEY) return null
+
+  try {
+    const url = `https://api.financialdatasets.ai/financials/cash-flow-statements?ticker=${ticker}&period=${period}&limit=${limit}`
+    const response = await fetch(url, {
+      headers: { 'X-API-Key': FINANCIAL_DATASETS_API_KEY }
+    })
+
+    if (!response.ok) return null
+
+    const data = await response.json()
+    return data.cash_flow_statements || []
+  } catch (error) {
+    console.error('Financial Datasets API error:', error)
+    return null
+  }
 }
 
 // Parse date filter parameters
@@ -80,32 +103,55 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Database error' }, { status: 500 })
     }
 
-    // Transform to Financial Datasets format
-    const cashFlowStatements = (data || []).map(row => ({
-      ticker: row.ticker,
-      report_period: row.report_period,
-      fiscal_period: row.fiscal_period,
-      period: row.period,
-      currency: row.currency,
-      net_income: row.net_income,
-      depreciation_and_amortization: row.depreciation_and_amortization,
-      share_based_compensation: row.share_based_compensation,
-      net_cash_flow_from_operations: row.net_cash_flow_from_operations,
-      capital_expenditure: row.capital_expenditure,
-      business_acquisitions_and_disposals: row.acquisitions,
-      investment_acquisitions_and_disposals: (row.purchases_of_investments || 0) + (row.sales_of_investments || 0),
-      net_cash_flow_from_investing: row.net_cash_flow_from_investing,
-      issuance_or_repayment_of_debt_securities: (row.debt_issuance || 0) + (row.debt_repayment || 0),
-      issuance_or_purchase_of_equity_shares: (row.common_stock_issuance || 0) + (row.common_stock_repurchase || 0),
-      dividends_and_other_cash_distributions: row.dividends_paid,
-      net_cash_flow_from_financing: row.net_cash_flow_from_financing,
-      change_in_cash_and_equivalents: row.change_in_cash_and_equivalents,
-      effect_of_exchange_rate_changes: row.effect_of_exchange_rate_changes,
-      ending_cash_balance: row.ending_cash_balance,
-      free_cash_flow: row.free_cash_flow,
-    }))
+    // Check if we have local data
+    let cashFlowStatements: unknown[] = []
+    let dataSource = 'supabase'
+    let dataTimestamp = new Date().toISOString()
 
-    return NextResponse.json({ cash_flow_statements: cashFlowStatements })
+    if (data && data.length > 0) {
+      // Use Supabase data
+      cashFlowStatements = data.map(row => ({
+        ticker: row.ticker,
+        report_period: row.report_period,
+        fiscal_period: row.fiscal_period,
+        period: row.period,
+        currency: row.currency,
+        net_income: row.net_income,
+        depreciation_and_amortization: row.depreciation_and_amortization,
+        share_based_compensation: row.share_based_compensation,
+        net_cash_flow_from_operations: row.net_cash_flow_from_operations,
+        capital_expenditure: row.capital_expenditure,
+        business_acquisitions_and_disposals: row.acquisitions,
+        investment_acquisitions_and_disposals: (row.purchases_of_investments || 0) + (row.sales_of_investments || 0),
+        net_cash_flow_from_investing: row.net_cash_flow_from_investing,
+        issuance_or_repayment_of_debt_securities: (row.debt_issuance || 0) + (row.debt_repayment || 0),
+        issuance_or_purchase_of_equity_shares: (row.common_stock_issuance || 0) + (row.common_stock_repurchase || 0),
+        dividends_and_other_cash_distributions: row.dividends_paid,
+        net_cash_flow_from_financing: row.net_cash_flow_from_financing,
+        change_in_cash_and_equivalents: row.change_in_cash_and_equivalents,
+        effect_of_exchange_rate_changes: row.effect_of_exchange_rate_changes,
+        ending_cash_balance: row.ending_cash_balance,
+        free_cash_flow: row.free_cash_flow,
+      }))
+      dataTimestamp = data[0]?.updated_at || dataTimestamp
+    } else if (ticker) {
+      // Fallback to Financial Datasets API
+      const fallbackData = await fetchFromFinancialDatasets(ticker.toUpperCase(), period, limit)
+      if (fallbackData && fallbackData.length > 0) {
+        cashFlowStatements = fallbackData
+        dataSource = 'financialdatasets.ai'
+        dataTimestamp = new Date().toISOString()
+      }
+    }
+
+    return NextResponse.json({
+      cash_flow_statements: cashFlowStatements,
+      _meta: {
+        source: dataSource,
+        fetched_at: dataTimestamp,
+        count: cashFlowStatements.length,
+      }
+    })
   } catch (error) {
     console.error('Cash flow statements API error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

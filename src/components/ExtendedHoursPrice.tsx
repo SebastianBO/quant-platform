@@ -115,11 +115,11 @@ export default function ExtendedHoursPrice({
             <span className={`text-xs ${sessionInfo.color}`}>{sessionInfo.label}</span>
           </div>
           <span className="text-xl font-bold tabular-nums">
-            {extendedData.price.toFixed(2)}
+            {typeof extendedData.price === 'number' ? extendedData.price.toFixed(2) : '—'}
           </span>
           <div className={`flex items-center gap-1 text-xs ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
             <span>
-              {isPositive ? '+' : ''}{extendedData.change.toFixed(2)} ({isPositive ? '+' : ''}{extendedData.changePercent.toFixed(2)}%)
+              {isPositive ? '+' : ''}{typeof extendedData.change === 'number' ? extendedData.change.toFixed(2) : '0.00'} ({isPositive ? '+' : ''}{typeof extendedData.changePercent === 'number' ? extendedData.changePercent.toFixed(2) : '0.00'}%)
             </span>
           </div>
           <p className="text-xs text-muted-foreground">{extendedData.timestamp} EST</p>

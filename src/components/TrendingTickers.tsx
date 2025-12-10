@@ -188,13 +188,13 @@ function MoverCard({
 
         {/* Price & Change */}
         <div className="text-right">
-          <p className="text-sm font-medium tabular-nums">${mover.price.toFixed(2)}</p>
+          <p className="text-sm font-medium tabular-nums">${typeof mover.price === 'number' ? mover.price.toFixed(2) : '—'}</p>
           <p className={cn(
             "text-xs font-semibold tabular-nums flex items-center justify-end gap-0.5",
             isPositive ? "text-green-500" : "text-red-500"
           )}>
             {isPositive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
-            {isPositive ? '+' : ''}{mover.changePercent.toFixed(2)}%
+            {isPositive ? '+' : ''}{typeof mover.changePercent === 'number' ? mover.changePercent.toFixed(2) : '0.00'}%
           </p>
         </div>
       </div>

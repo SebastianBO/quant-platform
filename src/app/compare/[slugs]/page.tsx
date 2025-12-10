@@ -189,12 +189,12 @@ export default async function ComparePage({ params }: Props) {
             <div className="bg-card p-6 rounded-xl border border-border text-center">
               <h2 className="text-2xl font-bold text-green-500 mb-2">{stock1.symbol}</h2>
               <p className="text-muted-foreground mb-4">{stock1.name}</p>
-              <p className="text-3xl font-bold">${stock1.price.toFixed(2)}</p>
+              <p className="text-3xl font-bold">${typeof stock1.price === 'number' ? stock1.price.toFixed(2) : '—'}</p>
             </div>
             <div className="bg-card p-6 rounded-xl border border-border text-center">
               <h2 className="text-2xl font-bold text-blue-500 mb-2">{stock2.symbol}</h2>
               <p className="text-muted-foreground mb-4">{stock2.name}</p>
-              <p className="text-3xl font-bold">${stock2.price.toFixed(2)}</p>
+              <p className="text-3xl font-bold">${typeof stock2.price === 'number' ? stock2.price.toFixed(2) : '—'}</p>
             </div>
           </div>
 

@@ -3,6 +3,9 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
 // Financial Datasets API Compatible Endpoint
 // Matches: https://api.financialdatasets.ai/financials/balance-sheets
+// Falls back to Financial Datasets API if Supabase has no data
+
+const FINANCIAL_DATASETS_API_KEY = process.env.FINANCIAL_DATASETS_API_KEY
 
 let supabase: SupabaseClient | null = null
 
@@ -14,6 +17,26 @@ function getSupabase() {
     )
   }
   return supabase
+}
+
+// Fallback to Financial Datasets API
+async function fetchFromFinancialDatasets(ticker: string, period: string, limit: number) {
+  if (!FINANCIAL_DATASETS_API_KEY) return null
+
+  try {
+    const url = `https://api.financialdatasets.ai/financials/balance-sheets?ticker=${ticker}&period=${period}&limit=${limit}`
+    const response = await fetch(url, {
+      headers: { 'X-API-Key': FINANCIAL_DATASETS_API_KEY }
+    })
+
+    if (!response.ok) return null
+
+    const data = await response.json()
+    return data.balance_sheets || []
+  } catch (error) {
+    console.error('Financial Datasets API error:', error)
+    return null
+  }
 }
 
 // Parse date filter parameters
@@ -80,42 +103,65 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Database error' }, { status: 500 })
     }
 
-    // Transform to Financial Datasets format
-    const balanceSheets = (data || []).map(row => ({
-      ticker: row.ticker,
-      report_period: row.report_period,
-      fiscal_period: row.fiscal_period,
-      period: row.period,
-      currency: row.currency,
-      total_assets: row.total_assets,
-      current_assets: row.current_assets,
-      cash_and_equivalents: row.cash_and_equivalents,
-      inventory: row.inventory,
-      current_investments: row.short_term_investments,
-      trade_and_non_trade_receivables: row.accounts_receivable,
-      non_current_assets: row.non_current_assets,
-      property_plant_and_equipment: row.property_plant_and_equipment,
-      goodwill_and_intangible_assets: (row.goodwill || 0) + (row.intangible_assets || 0),
-      investments: row.investments,
-      non_current_investments: row.investments,
-      outstanding_shares: row.outstanding_shares,
-      tax_assets: row.tax_assets,
-      total_liabilities: row.total_liabilities,
-      current_liabilities: row.current_liabilities,
-      current_debt: row.current_debt,
-      trade_and_non_trade_payables: row.accounts_payable,
-      deferred_revenue: row.deferred_revenue,
-      deposit_liabilities: row.deposit_liabilities,
-      non_current_liabilities: row.non_current_liabilities,
-      non_current_debt: row.long_term_debt,
-      tax_liabilities: row.tax_liabilities,
-      shareholders_equity: row.shareholders_equity,
-      retained_earnings: row.retained_earnings,
-      accumulated_other_comprehensive_income: row.accumulated_other_comprehensive_income,
-      total_debt: row.total_debt,
-    }))
+    // Check if we have local data
+    let balanceSheets: unknown[] = []
+    let dataSource = 'supabase'
+    let dataTimestamp = new Date().toISOString()
 
-    return NextResponse.json({ balance_sheets: balanceSheets })
+    if (data && data.length > 0) {
+      // Use Supabase data
+      balanceSheets = data.map(row => ({
+        ticker: row.ticker,
+        report_period: row.report_period,
+        fiscal_period: row.fiscal_period,
+        period: row.period,
+        currency: row.currency,
+        total_assets: row.total_assets,
+        current_assets: row.current_assets,
+        cash_and_equivalents: row.cash_and_equivalents,
+        inventory: row.inventory,
+        current_investments: row.short_term_investments,
+        trade_and_non_trade_receivables: row.accounts_receivable,
+        non_current_assets: row.non_current_assets,
+        property_plant_and_equipment: row.property_plant_and_equipment,
+        goodwill_and_intangible_assets: (row.goodwill || 0) + (row.intangible_assets || 0),
+        investments: row.investments,
+        non_current_investments: row.investments,
+        outstanding_shares: row.outstanding_shares,
+        tax_assets: row.tax_assets,
+        total_liabilities: row.total_liabilities,
+        current_liabilities: row.current_liabilities,
+        current_debt: row.current_debt,
+        trade_and_non_trade_payables: row.accounts_payable,
+        deferred_revenue: row.deferred_revenue,
+        deposit_liabilities: row.deposit_liabilities,
+        non_current_liabilities: row.non_current_liabilities,
+        non_current_debt: row.long_term_debt,
+        tax_liabilities: row.tax_liabilities,
+        shareholders_equity: row.shareholders_equity,
+        retained_earnings: row.retained_earnings,
+        accumulated_other_comprehensive_income: row.accumulated_other_comprehensive_income,
+        total_debt: row.total_debt,
+      }))
+      dataTimestamp = data[0]?.updated_at || dataTimestamp
+    } else if (ticker) {
+      // Fallback to Financial Datasets API
+      const fallbackData = await fetchFromFinancialDatasets(ticker.toUpperCase(), period, limit)
+      if (fallbackData && fallbackData.length > 0) {
+        balanceSheets = fallbackData
+        dataSource = 'financialdatasets.ai'
+        dataTimestamp = new Date().toISOString()
+      }
+    }
+
+    return NextResponse.json({
+      balance_sheets: balanceSheets,
+      _meta: {
+        source: dataSource,
+        fetched_at: dataTimestamp,
+        count: balanceSheets.length,
+      }
+    })
   } catch (error) {
     console.error('Balance sheets API error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

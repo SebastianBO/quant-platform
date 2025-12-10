@@ -286,9 +286,9 @@ export default function StockScreener() {
                     <tr key={stock.ticker} className="border-b border-border/50 hover:bg-secondary/30">
                       <td className="p-3 font-bold text-emerald-500">{stock.ticker}</td>
                       <td className="p-3">{stock.name}</td>
-                      <td className="p-3 text-right">${stock.price.toFixed(2)}</td>
+                      <td className="p-3 text-right">${typeof stock.price === 'number' ? stock.price.toFixed(2) : '—'}</td>
                       <td className="p-3 text-right">{formatCurrency(stock.marketCap)}</td>
-                      <td className="p-3 text-right">{stock.pe.toFixed(1)}</td>
+                      <td className="p-3 text-right">{typeof stock.pe === 'number' ? stock.pe.toFixed(1) : '—'}</td>
                       <td className="p-3 text-right text-emerald-500">{formatPercent(stock.roic)}</td>
                       <td className="p-3 text-right">{formatPercent(stock.revenueGrowth)}</td>
                       <td className="p-3 text-right">{formatPercent(stock.grossMargin)}</td>

@@ -292,10 +292,10 @@ function SearchResultItem({
       </div>
 
       {/* Price Info (if available) */}
-      {result.price !== undefined && (
+      {result.price !== undefined && typeof result.price === 'number' && (
         <div className="text-right flex-shrink-0">
           <p className="font-medium text-foreground">${result.price.toFixed(2)}</p>
-          {result.changePercent !== undefined && (
+          {result.changePercent !== undefined && typeof result.changePercent === 'number' && (
             <div className={`flex items-center justify-end gap-1 text-sm ${result.changePercent >= 0 ? 'text-green-500' : 'text-red-500'
               }`}>
               {result.changePercent >= 0 ? (
