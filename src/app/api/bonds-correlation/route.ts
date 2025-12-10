@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const EODHD_API_KEY = process.env.EODHD_API_KEY || ""
-
-// Treasury symbols for correlation analysis
-const TREASURY_SYMBOLS = [
-  { symbol: 'US2YT=X', maturity: '2Y', name: '2 Year Treasury' },
-  { symbol: 'US10YT=X', maturity: '10Y', name: '10 Year Treasury' },
-  { symbol: 'US30YT=X', maturity: '30Y', name: '30 Year Treasury' },
-]
+/**
+ * BONDS CORRELATION API
+ *
+ * Data source: Yahoo Finance Chart API (free, no API key required)
+ * Shows how a stock correlates with bond ETFs for interest rate sensitivity analysis
+ */
 
 // Corporate bond ETFs for comparison
 const BOND_ETFS = [
@@ -18,80 +16,80 @@ const BOND_ETFS = [
   { symbol: 'SHY', name: 'Short Treasury', description: 'iShares 1-3 Year Treasury Bond ETF' },
 ]
 
-interface HistoricalPrice {
-  date: string
-  close: number
+interface HistoricalData {
+  timestamps: number[]
+  closes: number[]
 }
 
-async function fetchHistoricalPrices(symbol: string, days: number = 252): Promise<HistoricalPrice[]> {
+// Fetch historical data from Yahoo Finance (FREE)
+async function fetchYahooHistory(symbol: string, range: string = '1y'): Promise<HistoricalData | null> {
   try {
-    const toDate = new Date()
-    const fromDate = new Date()
-    fromDate.setDate(fromDate.getDate() - days)
-
-    const from = fromDate.toISOString().split('T')[0]
-    const to = toDate.toISOString().split('T')[0]
-
     const response = await fetch(
-      `https://eodhd.com/api/eod/${symbol}.US?api_token=${EODHD_API_KEY}&from=${from}&to=${to}&fmt=json`,
-      { next: { revalidate: 3600 } }
+      `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=${range}`,
+      {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
+        },
+        next: { revalidate: 3600 } // Cache 1 hour
+      }
     )
 
-    if (response.ok) {
-      const data = await response.json()
-      return data.map((d: { date: string; close: number }) => ({
-        date: d.date,
-        close: d.close
-      }))
+    if (!response.ok) {
+      console.error(`Yahoo chart failed for ${symbol}:`, response.status)
+      return null
     }
-  } catch (e) {
-    console.error(`Error fetching historical for ${symbol}:`, e)
-  }
-  return []
-}
 
-async function fetchTreasuryHistorical(symbol: string, days: number = 252): Promise<HistoricalPrice[]> {
-  try {
-    const toDate = new Date()
-    const fromDate = new Date()
-    fromDate.setDate(fromDate.getDate() - days)
+    const data = await response.json()
+    const result = data.chart?.result?.[0]
 
-    const from = fromDate.toISOString().split('T')[0]
-    const to = toDate.toISOString().split('T')[0]
+    if (!result) return null
 
-    // Treasury symbols use different format
-    const response = await fetch(
-      `https://eodhd.com/api/eod/${symbol}?api_token=${EODHD_API_KEY}&from=${from}&to=${to}&fmt=json`,
-      { next: { revalidate: 3600 } }
-    )
+    const timestamps = result.timestamp || []
+    const closes = result.indicators?.quote?.[0]?.close || []
 
-    if (response.ok) {
-      const data = await response.json()
-      return data.map((d: { date: string; close: number }) => ({
-        date: d.date,
-        close: d.close
-      }))
+    // Filter out nulls and align
+    const validData: { timestamps: number[], closes: number[] } = { timestamps: [], closes: [] }
+    for (let i = 0; i < timestamps.length; i++) {
+      if (closes[i] !== null && closes[i] !== undefined) {
+        validData.timestamps.push(timestamps[i])
+        validData.closes.push(closes[i])
+      }
     }
-  } catch (e) {
-    console.error(`Error fetching treasury historical for ${symbol}:`, e)
+
+    return validData
+  } catch (error) {
+    console.error(`Error fetching Yahoo history for ${symbol}:`, error)
+    return null
   }
-  return []
 }
 
 function calculateCorrelation(prices1: number[], prices2: number[]): number {
   if (prices1.length !== prices2.length || prices1.length < 10) return 0
 
-  const n = prices1.length
-  const mean1 = prices1.reduce((a, b) => a + b, 0) / n
-  const mean2 = prices2.reduce((a, b) => a + b, 0) / n
+  // Calculate returns
+  const returns1: number[] = []
+  const returns2: number[] = []
+
+  for (let i = 1; i < prices1.length; i++) {
+    if (prices1[i - 1] > 0 && prices2[i - 1] > 0) {
+      returns1.push((prices1[i] - prices1[i - 1]) / prices1[i - 1])
+      returns2.push((prices2[i] - prices2[i - 1]) / prices2[i - 1])
+    }
+  }
+
+  if (returns1.length < 10) return 0
+
+  const n = returns1.length
+  const mean1 = returns1.reduce((a, b) => a + b, 0) / n
+  const mean2 = returns2.reduce((a, b) => a + b, 0) / n
 
   let numerator = 0
   let denom1 = 0
   let denom2 = 0
 
   for (let i = 0; i < n; i++) {
-    const diff1 = prices1[i] - mean1
-    const diff2 = prices2[i] - mean2
+    const diff1 = returns1[i] - mean1
+    const diff2 = returns2[i] - mean2
     numerator += diff1 * diff2
     denom1 += diff1 * diff1
     denom2 += diff2 * diff2
@@ -101,24 +99,25 @@ function calculateCorrelation(prices1: number[], prices2: number[]): number {
   return denominator === 0 ? 0 : numerator / denominator
 }
 
-function calculateReturns(prices: HistoricalPrice[]): number[] {
-  const returns: number[] = []
-  for (let i = 1; i < prices.length; i++) {
-    if (prices[i - 1].close > 0) {
-      returns.push((prices[i].close - prices[i - 1].close) / prices[i - 1].close)
+function alignData(data1: HistoricalData, data2: HistoricalData): { aligned1: number[], aligned2: number[] } {
+  const map2 = new Map<number, number>()
+  for (let i = 0; i < data2.timestamps.length; i++) {
+    // Round to day (remove time component)
+    const dayKey = Math.floor(data2.timestamps[i] / 86400) * 86400
+    map2.set(dayKey, data2.closes[i])
+  }
+
+  const aligned1: number[] = []
+  const aligned2: number[] = []
+
+  for (let i = 0; i < data1.timestamps.length; i++) {
+    const dayKey = Math.floor(data1.timestamps[i] / 86400) * 86400
+    const price2 = map2.get(dayKey)
+    if (price2 !== undefined) {
+      aligned1.push(data1.closes[i])
+      aligned2.push(price2)
     }
   }
-  return returns
-}
-
-function alignPrices(prices1: HistoricalPrice[], prices2: HistoricalPrice[]): { aligned1: number[], aligned2: number[] } {
-  const dateMap1 = new Map(prices1.map(p => [p.date, p.close]))
-  const dateMap2 = new Map(prices2.map(p => [p.date, p.close]))
-
-  const commonDates = [...dateMap1.keys()].filter(d => dateMap2.has(d))
-
-  const aligned1 = commonDates.map(d => dateMap1.get(d)!)
-  const aligned2 = commonDates.map(d => dateMap2.get(d)!)
 
   return { aligned1, aligned2 }
 }
@@ -142,8 +141,16 @@ function generateInterestRateSensitivity(ticker: string, correlations: { name: s
   direction: 'positive' | 'negative' | 'neutral'
   explanation: string
 } {
-  const avgCorr = correlations.reduce((sum, c) => sum + c.correlation, 0) / correlations.length
-  const absAvg = Math.abs(avgCorr)
+  // Focus on treasury correlations for rate sensitivity
+  const treasuryCorrs = correlations.filter(c =>
+    c.name.includes('Treasury') || c.name === 'TLT' || c.name === 'IEF' || c.name === 'SHY'
+  )
+
+  const avgTreasuryCorr = treasuryCorrs.length > 0
+    ? treasuryCorrs.reduce((sum, c) => sum + c.correlation, 0) / treasuryCorrs.length
+    : 0
+
+  const absAvg = Math.abs(avgTreasuryCorr)
 
   let sensitivity: 'high' | 'medium' | 'low' = 'low'
   let direction: 'positive' | 'negative' | 'neutral' = 'neutral'
@@ -154,21 +161,21 @@ function generateInterestRateSensitivity(ticker: string, correlations: { name: s
     sensitivity = 'medium'
   }
 
-  if (avgCorr > 0.15) {
+  if (avgTreasuryCorr > 0.15) {
     direction = 'positive'
-  } else if (avgCorr < -0.15) {
+  } else if (avgTreasuryCorr < -0.15) {
     direction = 'negative'
   }
 
   let explanation = ''
   if (sensitivity === 'high' && direction === 'negative') {
-    explanation = `${ticker} tends to fall when interest rates rise. Consider hedging interest rate risk or being cautious in rising rate environments.`
+    explanation = `${ticker} tends to move opposite to bonds - when rates rise (bonds fall), ${ticker} typically rises. This is common for financial stocks that benefit from higher rates.`
   } else if (sensitivity === 'high' && direction === 'positive') {
-    explanation = `${ticker} tends to rise with interest rates, suggesting the company benefits from higher rates (possibly a financial stock).`
+    explanation = `${ticker} moves with bonds - when rates rise (bonds fall), ${ticker} typically falls. Growth stocks often show this pattern as higher rates reduce their present value.`
   } else if (sensitivity === 'medium') {
-    explanation = `${ticker} shows moderate sensitivity to interest rates. Monitor Fed policy for potential impact.`
+    explanation = `${ticker} shows moderate sensitivity to interest rates. Monitor Fed policy announcements for potential short-term impact.`
   } else {
-    explanation = `${ticker} shows low correlation with interest rates, suggesting other factors drive its performance.`
+    explanation = `${ticker} shows low correlation with bonds, suggesting company-specific factors drive performance more than interest rate changes.`
   }
 
   return { sensitivity, direction, explanation }
@@ -182,19 +189,22 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Fetch stock historical data
-    const stockPrices = await fetchHistoricalPrices(ticker, 252)
+    // Fetch stock and bond ETF data in parallel from Yahoo Finance
+    const [stockData, ...bondDataArr] = await Promise.all([
+      fetchYahooHistory(ticker, '1y'),
+      ...BOND_ETFS.map(bond => fetchYahooHistory(bond.symbol, '1y'))
+    ])
 
-    if (stockPrices.length < 50) {
+    if (!stockData || stockData.closes.length < 50) {
       // Return mock data for stocks without sufficient history
       return NextResponse.json(generateMockData(ticker))
     }
 
-    // Fetch bond ETF historical data in parallel
-    const bondPromises = BOND_ETFS.map(async (bond) => {
-      const bondPrices = await fetchHistoricalPrices(bond.symbol, 252)
+    // Calculate correlations for each bond ETF
+    const bondCorrelations = BOND_ETFS.map((bond, i) => {
+      const bondData = bondDataArr[i]
 
-      if (bondPrices.length < 50) {
+      if (!bondData || bondData.closes.length < 50) {
         return {
           symbol: bond.symbol,
           name: bond.name,
@@ -204,11 +214,8 @@ export async function GET(request: NextRequest) {
         }
       }
 
-      const { aligned1, aligned2 } = alignPrices(stockPrices, bondPrices)
-      const returns1 = calculateReturns(aligned1.map((c, i) => ({ date: '', close: c })))
-      const returns2 = calculateReturns(aligned2.map((c, i) => ({ date: '', close: c })))
-
-      const correlation = calculateCorrelation(returns1, returns2)
+      const { aligned1, aligned2 } = alignData(stockData, bondData)
+      const correlation = calculateCorrelation(aligned1, aligned2)
 
       return {
         symbol: bond.symbol,
@@ -219,51 +226,65 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    // Fetch treasury yield correlations (using TLT, IEF as proxies)
-    const treasuryCorrelations = TREASURY_SYMBOLS.map((t) => {
-      // For now, estimate based on bond ETF correlations
-      return {
-        maturity: t.maturity,
-        name: t.name,
-        correlation: 0,
-        yieldChange: 0
-      }
-    })
-
-    const bondCorrelations = await Promise.all(bondPromises)
-
     // Calculate interest rate sensitivity
-    const sensitivity = generateInterestRateSensitivity(ticker, bondCorrelations)
+    const sensitivity = generateInterestRateSensitivity(
+      ticker,
+      bondCorrelations.map(b => ({ name: b.name, correlation: b.correlation }))
+    )
 
-    // Generate chart data (last 60 days of normalized prices)
-    const last60 = stockPrices.slice(-60)
-    const tltPrices = await fetchHistoricalPrices('TLT', 60)
+    // Generate chart data (last 60 days)
+    const tltData = bondDataArr[2] // TLT is index 2
+    const last60Stock = stockData.closes.slice(-60)
+    const last60Timestamps = stockData.timestamps.slice(-60)
 
-    const chartData = last60.map((sp, i) => {
-      const tltPrice = tltPrices.find(t => t.date === sp.date)
-      const baseStock = last60[0]?.close || 1
-      const baseTLT = tltPrices[0]?.close || 1
+    const chartData: { date: string; stock: number; tlt: number | null }[] = []
 
-      return {
-        date: sp.date,
-        stock: ((sp.close / baseStock) - 1) * 100,
-        tlt: tltPrice ? ((tltPrice.close / baseTLT) - 1) * 100 : null
+    if (tltData && last60Stock.length > 0) {
+      const tltMap = new Map<number, number>()
+      for (let i = 0; i < tltData.timestamps.length; i++) {
+        const dayKey = Math.floor(tltData.timestamps[i] / 86400) * 86400
+        tltMap.set(dayKey, tltData.closes[i])
       }
-    })
+
+      const baseStock = last60Stock[0]
+      const baseTLT = tltData.closes[tltData.closes.length - 60] || tltData.closes[0]
+
+      for (let i = 0; i < last60Stock.length; i++) {
+        const dayKey = Math.floor(last60Timestamps[i] / 86400) * 86400
+        const tltPrice = tltMap.get(dayKey)
+
+        chartData.push({
+          date: new Date(last60Timestamps[i] * 1000).toISOString().split('T')[0],
+          stock: ((last60Stock[i] / baseStock) - 1) * 100,
+          tlt: tltPrice ? ((tltPrice / baseTLT) - 1) * 100 : null
+        })
+      }
+    }
+
+    // Find most correlated
+    const mostCorrelated = bondCorrelations.reduce((max, c) =>
+      Math.abs(c.correlation) > Math.abs(max.correlation) ? c : max
+    )
 
     return NextResponse.json({
       ticker,
       bondCorrelations,
-      treasuryCorrelations,
       sensitivity,
       chartData,
       summary: {
-        mostCorrelated: bondCorrelations.reduce((max, c) =>
-          Math.abs(c.correlation) > Math.abs(max.correlation) ? c : max
-        ),
+        mostCorrelated: {
+          symbol: mostCorrelated.symbol,
+          name: mostCorrelated.name,
+          correlation: mostCorrelated.correlation
+        },
         avgCorrelation: Math.round(
           bondCorrelations.reduce((sum, c) => sum + c.correlation, 0) / bondCorrelations.length * 100
         ) / 100
+      },
+      meta: {
+        source: 'yahoo-finance',
+        dataPoints: stockData.closes.length,
+        timestamp: new Date().toISOString()
       }
     })
 
@@ -274,23 +295,16 @@ export async function GET(request: NextRequest) {
 }
 
 function generateMockData(ticker: string) {
-  // Generate reasonable mock correlations based on sector
-  const baseCorr = (Math.random() - 0.5) * 0.6 // -0.3 to 0.3
+  const baseCorr = (Math.random() - 0.5) * 0.6
 
   return {
     ticker,
-    bondCorrelations: BOND_ETFS.map((bond, i) => ({
+    bondCorrelations: BOND_ETFS.map((bond) => ({
       symbol: bond.symbol,
       name: bond.name,
       description: bond.description,
       correlation: Math.round((baseCorr + (Math.random() - 0.5) * 0.4) * 100) / 100,
       interpretation: 'Based on estimated correlation'
-    })),
-    treasuryCorrelations: TREASURY_SYMBOLS.map(t => ({
-      maturity: t.maturity,
-      name: t.name,
-      correlation: Math.round((baseCorr + (Math.random() - 0.5) * 0.3) * 100) / 100,
-      yieldChange: Math.round((Math.random() - 0.5) * 20) / 100
     })),
     sensitivity: {
       sensitivity: 'medium' as const,
@@ -305,6 +319,10 @@ function generateMockData(ticker: string) {
     summary: {
       mostCorrelated: { symbol: 'TLT', name: 'Long Treasury', correlation: baseCorr },
       avgCorrelation: Math.round(baseCorr * 100) / 100
+    },
+    meta: {
+      source: 'mock-data',
+      reason: 'insufficient-history'
     }
   }
 }
