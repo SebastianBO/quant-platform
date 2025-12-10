@@ -31,6 +31,37 @@ interface DebtMaturity {
   percentOfTotal: number
 }
 
+interface ParsedBond {
+  figi: string
+  issuer: string
+  ticker: string
+  couponRate: number | null
+  maturityDate: string | null
+  maturityYear: number | null
+  description: string
+  exchange: string
+  isMatured: boolean
+  yearsToMaturity: number | null
+}
+
+interface CompanyBondsData {
+  ticker: string
+  issuer: string
+  summary: {
+    totalBonds: number
+    totalMatured: number
+    avgCouponRate: number | null
+    maturingSoonCount: number
+    maturityYears: number[]
+  }
+  bonds: ParsedBond[]
+  maturingSoon: ParsedBond[]
+  _meta: {
+    source: string
+    fetched_at: string
+  }
+}
+
 interface CompanyDebtData {
   ticker: string
   companyName: string
@@ -101,8 +132,11 @@ export default function DebtPage() {
   const ticker = (params.ticker as string)?.toUpperCase()
 
   const [data, setData] = useState<CompanyDebtData | null>(null)
+  const [bondsData, setBondsData] = useState<CompanyBondsData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [bondsLoading, setBondsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [showAllBonds, setShowAllBonds] = useState(false)
 
   useEffect(() => {
     if (!ticker) return
@@ -124,7 +158,22 @@ export default function DebtPage() {
       setLoading(false)
     }
 
+    const fetchBonds = async () => {
+      setBondsLoading(true)
+      try {
+        const response = await fetch(`/api/company-bonds?ticker=${ticker}`)
+        if (response.ok) {
+          const result = await response.json()
+          setBondsData(result)
+        }
+      } catch (err) {
+        console.error('Error fetching bonds:', err)
+      }
+      setBondsLoading(false)
+    }
+
     fetchData()
+    fetchBonds()
   }, [ticker])
 
   if (loading) {
@@ -390,6 +439,122 @@ export default function DebtPage() {
                     <span className="text-lg font-bold">{formatCurrency(debt.interestExpense)}</span>
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+
+            {/* Individual Bonds */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <DollarSign className="w-5 h-5" />
+                    Corporate Bonds
+                    <DataSourceIndicator source="openfigi" />
+                  </div>
+                  {bondsData && (
+                    <div className="flex items-center gap-4 text-sm font-normal">
+                      <span className="text-muted-foreground">
+                        {bondsData.summary.totalBonds} active bonds
+                      </span>
+                      {bondsData.summary.avgCouponRate && (
+                        <span className="text-muted-foreground">
+                          Avg coupon: {bondsData.summary.avgCouponRate.toFixed(2)}%
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {bondsLoading ? (
+                  <div className="space-y-2">
+                    {[1, 2, 3, 4, 5].map(i => (
+                      <div key={i} className="h-12 bg-secondary/30 rounded animate-pulse" />
+                    ))}
+                  </div>
+                ) : bondsData && bondsData.bonds.length > 0 ? (
+                  <>
+                    {/* Maturing Soon Alert */}
+                    {bondsData.maturingSoon.length > 0 && (
+                      <div className="mb-4 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+                        <div className="flex items-center gap-2 mb-2">
+                          <AlertTriangle className="w-4 h-4 text-yellow-500" />
+                          <span className="font-medium text-sm">
+                            {bondsData.maturingSoon.length} bonds maturing within 2 years
+                          </span>
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {bondsData.maturingSoon.slice(0, 3).map((bond, i) => (
+                            <span key={bond.figi}>
+                              {bond.couponRate?.toFixed(2)}% due {bond.maturityDate}
+                              {i < Math.min(2, bondsData.maturingSoon.length - 1) ? ' • ' : ''}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Bonds Table */}
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b border-border">
+                            <th className="text-left py-2 px-2 font-medium text-muted-foreground">Bond</th>
+                            <th className="text-right py-2 px-2 font-medium text-muted-foreground">Coupon</th>
+                            <th className="text-right py-2 px-2 font-medium text-muted-foreground">Maturity</th>
+                            <th className="text-right py-2 px-2 font-medium text-muted-foreground">Years Left</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {(showAllBonds ? bondsData.bonds : bondsData.bonds.slice(0, 10)).map((bond) => (
+                            <tr key={bond.figi} className="border-b border-border/50 hover:bg-secondary/20">
+                              <td className="py-2.5 px-2">
+                                <span className="font-mono text-xs">{bond.ticker}</span>
+                              </td>
+                              <td className="py-2.5 px-2 text-right">
+                                <span className={cn(
+                                  "font-medium",
+                                  bond.couponRate && bond.couponRate >= 5 ? "text-green-500" :
+                                  bond.couponRate && bond.couponRate >= 3 ? "text-foreground" :
+                                  "text-muted-foreground"
+                                )}>
+                                  {bond.couponRate ? `${bond.couponRate.toFixed(2)}%` : 'Float'}
+                                </span>
+                              </td>
+                              <td className="py-2.5 px-2 text-right text-muted-foreground">
+                                {bond.maturityDate ? new Date(bond.maturityDate).toLocaleDateString() : '-'}
+                              </td>
+                              <td className="py-2.5 px-2 text-right">
+                                <span className={cn(
+                                  bond.yearsToMaturity && bond.yearsToMaturity <= 2 ? "text-yellow-500" :
+                                  bond.yearsToMaturity && bond.yearsToMaturity <= 5 ? "text-orange-400" :
+                                  "text-muted-foreground"
+                                )}>
+                                  {bond.yearsToMaturity ? `${bond.yearsToMaturity.toFixed(1)}y` : '-'}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {bondsData.bonds.length > 10 && (
+                      <Button
+                        variant="ghost"
+                        className="w-full mt-4"
+                        onClick={() => setShowAllBonds(!showAllBonds)}
+                      >
+                        {showAllBonds ? 'Show Less' : `Show All ${bondsData.bonds.length} Bonds`}
+                      </Button>
+                    )}
+                  </>
+                ) : (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <DollarSign className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                    <p>No bond data available for this company</p>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
