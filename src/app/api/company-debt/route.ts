@@ -202,7 +202,16 @@ export async function GET(request: NextRequest) {
     const longTermDebtCurrent = usGaap.LongTermDebtCurrent?.units?.USD
     const commercialPaper = usGaap.CommercialPaper?.units?.USD
     const shortTermBorrowings = usGaap.ShortTermBorrowings?.units?.USD
-    const interestExpense = usGaap.InterestExpenseDebt?.units?.USD
+    const interestExpense = usGaap.InterestExpenseDebt?.units?.USD || usGaap.InterestExpense?.units?.USD
+
+    // Additional financial data for ratios
+    const operatingIncome = usGaap.OperatingIncomeLoss?.units?.USD
+    const stockholdersEquity = usGaap.StockholdersEquity?.units?.USD
+    const totalAssets = usGaap.Assets?.units?.USD
+    const cashAndEquivalents = usGaap.CashAndCashEquivalentsAtCarryingValue?.units?.USD
+    const operatingCashFlow = usGaap.NetCashProvidedByUsedInOperatingActivities?.units?.USD
+    const debtIssuances = usGaap.ProceedsFromIssuanceOfLongTermDebt?.units?.USD
+    const debtRepayments = usGaap.RepaymentsOfLongTermDebt?.units?.USD
 
     // Debt maturities
     const maturitiesYear1 = usGaap.LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths?.units?.USD
@@ -218,6 +227,15 @@ export async function GET(request: NextRequest) {
     const commercialPaperValue = getLatestValue(commercialPaper)
     const shortTermDebtValue = getLatestValue(shortTermBorrowings)
     const interestExpenseValue = getLatestValue(interestExpense)
+
+    // Get values for ratios
+    const operatingIncomeValue = getLatestValue(operatingIncome)
+    const stockholdersEquityValue = getLatestValue(stockholdersEquity)
+    const totalAssetsValue = getLatestValue(totalAssets)
+    const cashValue = getLatestValue(cashAndEquivalents)
+    const operatingCashFlowValue = getLatestValue(operatingCashFlow)
+    const debtIssuancesValue = getLatestValue(debtIssuances)
+    const debtRepaymentsValue = getLatestValue(debtRepayments)
 
     // Build maturity schedule
     const latestFiling = getLatestAnnualValue(maturitiesYear1)
@@ -288,6 +306,38 @@ export async function GET(request: NextRequest) {
     const totalShortTermDebt = (currentPortionOfDebt || 0) + (commercialPaperValue || 0) + (shortTermDebtValue || 0)
     const totalDebt = (totalLongTermDebt || 0) + totalShortTermDebt
 
+    // Calculate ratios
+    const netDebt = totalDebt - (cashValue || 0)
+    const debtToEquity = stockholdersEquityValue && stockholdersEquityValue > 0
+      ? totalDebt / stockholdersEquityValue
+      : null
+    const debtToAssets = totalAssetsValue && totalAssetsValue > 0
+      ? totalDebt / totalAssetsValue
+      : null
+    const interestCoverage = interestExpenseValue && interestExpenseValue > 0 && operatingIncomeValue
+      ? operatingIncomeValue / interestExpenseValue
+      : null
+    const debtServiceCoverage = interestExpenseValue && interestExpenseValue > 0 && operatingCashFlowValue
+      ? operatingCashFlowValue / interestExpenseValue
+      : null
+    const netDebtChange = (debtIssuancesValue || 0) - (debtRepaymentsValue || 0)
+
+    // Debt health rating
+    let debtHealthRating: 'EXCELLENT' | 'GOOD' | 'MODERATE' | 'CONCERN' | 'HIGH_RISK' = 'MODERATE'
+    if (interestCoverage !== null) {
+      if (interestCoverage >= 10 && (debtToEquity === null || debtToEquity < 0.5)) {
+        debtHealthRating = 'EXCELLENT'
+      } else if (interestCoverage >= 5 && (debtToEquity === null || debtToEquity < 1)) {
+        debtHealthRating = 'GOOD'
+      } else if (interestCoverage >= 2.5) {
+        debtHealthRating = 'MODERATE'
+      } else if (interestCoverage >= 1.5) {
+        debtHealthRating = 'CONCERN'
+      } else {
+        debtHealthRating = 'HIGH_RISK'
+      }
+    }
+
     // Get company name from facts
     const companyName = facts.entityName || ticker.toUpperCase()
 
@@ -305,6 +355,27 @@ export async function GET(request: NextRequest) {
         interestExpense: interestExpenseValue,
         maturitySchedule,
         totalScheduledMaturities: totalScheduledDebt,
+      },
+      ratios: {
+        netDebt,
+        debtToEquity,
+        debtToAssets,
+        interestCoverage,
+        debtServiceCoverage,
+        debtHealthRating,
+      },
+      cashFlow: {
+        debtIssuances: debtIssuancesValue,
+        debtRepayments: debtRepaymentsValue,
+        netDebtChange,
+        isPayingDownDebt: netDebtChange < 0,
+      },
+      balanceSheet: {
+        cash: cashValue,
+        totalAssets: totalAssetsValue,
+        stockholdersEquity: stockholdersEquityValue,
+        operatingIncome: operatingIncomeValue,
+        operatingCashFlow: operatingCashFlowValue,
       },
       _meta: {
         source: 'SEC_EDGAR',
