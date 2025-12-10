@@ -128,6 +128,7 @@ export const FEATURE_DATA_SOURCES: Record<string, DataSourceId[]> = {
   'trending': ['yahoo-finance'],
   'market-overview': ['eodhd', 'yahoo-finance'],
   'treasury-yields': ['eodhd'],
+  'company-debt': ['sec-edgar'],
   'bonds-correlation': ['yahoo-finance'],
 
   // Ownership & Filings
