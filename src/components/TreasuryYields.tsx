@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area, ReferenceLine } from "recharts"
+import { DataSourceIndicator } from "@/components/DataSourceBadge"
 
 interface TreasuryData {
   yieldCurve: { maturity: string; yield: number; name: string }[]
@@ -34,9 +35,12 @@ export default function TreasuryYields() {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <span className="text-2xl">🏛️</span>
-          Treasury Yields & Yield Curve
+        <CardTitle className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">🏛️</span>
+            Treasury Yields & Yield Curve
+          </div>
+          <DataSourceIndicator source="eodhd" />
         </CardTitle>
       </CardHeader>
       <CardContent>

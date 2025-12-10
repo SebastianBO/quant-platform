@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import { TrendingUp, TrendingDown, Minus, AlertTriangle, Info } from "lucide-react"
+import { DataSourceIndicator } from "@/components/DataSourceBadge"
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, ReferenceLine } from "recharts"
 
 interface BondCorrelation {
@@ -168,6 +169,7 @@ export default function BondsCorrelation({ ticker }: BondsCorrelationProps) {
           <div className="flex items-center gap-2">
             <span className="text-xl">📈</span>
             <span>Bonds & Rate Correlation</span>
+            <DataSourceIndicator source="yahoo-finance" />
           </div>
           <SensitivityBadge
             sensitivity={data.sensitivity.sensitivity}
