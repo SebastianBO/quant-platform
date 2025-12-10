@@ -91,7 +91,7 @@ function MarketCard({ index }: { index: MarketIndex }) {
           "text-xs tabular-nums",
           isPositive ? "text-green-500" : "text-red-500"
         )}>
-          {isPositive ? "+" : ""}{index.changePercent.toFixed(2)}%
+          {isPositive ? "+" : ""}{typeof index.changePercent === 'number' ? index.changePercent.toFixed(2) : '0.00'}%
         </span>
       </div>
     </div>
@@ -516,7 +516,7 @@ export default function MarketSidebar({ onSelectTicker, currentTicker }: MarketS
                             isPositive ? "text-green-500" : "text-red-500"
                           )}>
                             {isPositive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
-                            {isPositive ? '+' : ''}{portfolio.changePercent.toFixed(1)}%
+                            {isPositive ? '+' : ''}{typeof portfolio.changePercent === 'number' ? portfolio.changePercent.toFixed(1) : '0.0'}%
                           </p>
                         </div>
                       </div>

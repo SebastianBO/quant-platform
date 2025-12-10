@@ -101,7 +101,7 @@ export default function ExtendedHoursPrice({
         </span>
         <div className={`flex items-center gap-1 ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
           <span>
-            {isPositive ? '+' : ''}{extendedData.change.toFixed(2)} ({isPositive ? '+' : ''}{extendedData.changePercent.toFixed(2)}%)
+            {isPositive ? '+' : ''}{typeof extendedData.change === 'number' ? extendedData.change.toFixed(2) : '0.00'} ({isPositive ? '+' : ''}{typeof extendedData.changePercent === 'number' ? extendedData.changePercent.toFixed(2) : '0.00'}%)
           </span>
         </div>
         <p className="text-xs text-muted-foreground">At close</p>

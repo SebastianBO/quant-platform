@@ -132,8 +132,8 @@ export default function MarketOverview() {
                     <MiniSparkline data={index.sparkline} isPositive={isPositive} />
                   </div>
                   <div className={`text-sm ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
-                    <span>{isPositive ? '+' : ''}{index.change.toFixed(2)}</span>
-                    <span className="ml-1">({isPositive ? '+' : ''}{index.changePercent.toFixed(2)}%)</span>
+                    <span>{isPositive ? '+' : ''}{typeof index.change === 'number' ? index.change.toFixed(2) : '0.00'}</span>
+                    <span className="ml-1">({isPositive ? '+' : ''}{typeof index.changePercent === 'number' ? index.changePercent.toFixed(2) : '0.00'}%)</span>
                   </div>
                 </div>
               )

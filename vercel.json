@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/sync-portfolios",
       "schedule": "0 21 * * 1-5"
+    },
+    {
+      "path": "/api/cron/sync-financials?mode=continue&limit=5",
+      "schedule": "0 6 * * *"
     }
   ]
 }
