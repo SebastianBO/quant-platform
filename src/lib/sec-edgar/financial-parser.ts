@@ -147,24 +147,51 @@ export function getReportingPeriods(facts: SECCompanyFacts): { start?: string; e
 
   const usGaap = facts.facts['us-gaap'] || {}
 
-  // Look at Revenue or NetIncome to find all periods
-  const revenueFact = usGaap['Revenues'] || usGaap['RevenueFromContractWithCustomerExcludingAssessedTax']
+  // Look at all revenue concepts and NetIncome to find all periods
+  // Companies use different revenue concepts, and may switch over time
+  const revenueConcepts = [
+    'RevenueFromContractWithCustomerExcludingAssessedTax', // ASC 606 (2018+)
+    'Revenues', // Legacy
+    'SalesRevenueNet',
+    'SalesRevenueGoodsNet',
+    'TotalRevenuesAndOtherIncome',
+  ]
+
+  // Collect all periods from all revenue-related concepts
+  for (const concept of revenueConcepts) {
+    const fact = usGaap[concept]
+    if (!fact?.units?.USD) continue
+
+    for (const unit of fact.units.USD) {
+      const key = `${unit.start || ''}-${unit.end}`
+      if (!periods.has(key)) {
+        periods.set(key, {
+          start: unit.start,
+          end: unit.end,
+          form: unit.form || '',
+          filed: unit.filed || '',
+          fy: unit.fy,
+          fp: unit.fp,
+        })
+      }
+    }
+  }
+
+  // Also check NetIncomeLoss for any periods we might have missed
   const netIncomeFact = usGaap['NetIncomeLoss']
-
-  const factToScan = revenueFact || netIncomeFact
-  if (!factToScan?.units?.USD) return []
-
-  for (const unit of factToScan.units.USD) {
-    const key = `${unit.start || ''}-${unit.end}`
-    if (!periods.has(key)) {
-      periods.set(key, {
-        start: unit.start,
-        end: unit.end,
-        form: unit.form || '',
-        filed: unit.filed || '',
-        fy: unit.fy,
-        fp: unit.fp,
-      })
+  if (netIncomeFact?.units?.USD) {
+    for (const unit of netIncomeFact.units.USD) {
+      const key = `${unit.start || ''}-${unit.end}`
+      if (!periods.has(key)) {
+        periods.set(key, {
+          start: unit.start,
+          end: unit.end,
+          form: unit.form || '',
+          filed: unit.filed || '',
+          fy: unit.fy,
+          fp: unit.fp,
+        })
+      }
     }
   }
 
