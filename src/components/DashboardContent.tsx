@@ -35,6 +35,7 @@ import SECFilings from "@/components/SECFilings"
 import AnalystRatings from "@/components/AnalystRatings"
 import InsiderTrading from "@/components/InsiderTrading"
 import OwnershipBreakdown from "@/components/OwnershipBreakdown"
+import BondsCorrelation from "@/components/BondsCorrelation"
 import StockChartSwitcher from "@/components/StockChartSwitcher"
 import MarketDataTable from "@/components/MarketDataTable"
 import MarketSidebar from "@/components/MarketSidebar"
@@ -578,6 +579,10 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
 
               <TabsContent value="treasury">
                 <TreasuryYields />
+              </TabsContent>
+
+              <TabsContent value="bonds">
+                <BondsCorrelation ticker={ticker} />
               </TabsContent>
 
               <TabsContent value="news">

@@ -23,7 +23,8 @@ import {
   Banknote,
   Target,
   UserCheck,
-  PieChart
+  PieChart,
+  Landmark
 } from "lucide-react"
 
 interface StockSidebarProps {
@@ -49,6 +50,7 @@ const sidebarItems = [
   { id: 'ownership', label: 'Ownership', icon: PieChart },
   { id: 'sec', label: 'SEC Filings', icon: ScrollText },
   { id: 'treasury', label: 'Yields', icon: Percent },
+  { id: 'bonds', label: 'Bonds Corr', icon: Landmark },
   { id: 'news', label: 'News', icon: Newspaper },
   { id: 'financials', label: 'Financials', icon: FileText },
   { id: 'peers', label: 'Peers', icon: Users },
