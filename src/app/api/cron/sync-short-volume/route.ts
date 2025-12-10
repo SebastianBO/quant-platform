@@ -14,8 +14,6 @@ interface ShortVolumeRecord {
   short_volume: number
   short_exempt_volume: number
   total_volume: number
-  short_percent: number
-  market: string
 }
 
 // Parse FINRA daily short volume file
@@ -35,7 +33,6 @@ function parseFinraFile(content: string, date: string): ShortVolumeRecord[] {
       const shortVolume = parseInt(parts[2]) || 0
       const shortExemptVolume = parseInt(parts[3]) || 0
       const totalVolume = parseInt(parts[4]) || 0
-      const market = parts[5] || ''
 
       // Aggregate if symbol already exists (multiple markets)
       const existing = result.get(symbol)
@@ -43,18 +40,13 @@ function parseFinraFile(content: string, date: string): ShortVolumeRecord[] {
         existing.short_volume += shortVolume
         existing.short_exempt_volume += shortExemptVolume
         existing.total_volume += totalVolume
-        existing.short_percent = existing.total_volume > 0
-          ? (existing.short_volume / existing.total_volume) * 100
-          : 0
       } else {
         result.set(symbol, {
           symbol,
           trade_date: date,
           short_volume: shortVolume,
           short_exempt_volume: shortExemptVolume,
-          total_volume: totalVolume,
-          short_percent: totalVolume > 0 ? (shortVolume / totalVolume) * 100 : 0,
-          market
+          total_volume: totalVolume
         })
       }
     }
