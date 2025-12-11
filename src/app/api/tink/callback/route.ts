@@ -41,6 +41,8 @@ async function exchangeCodeForToken(code: string, redirectUri: string) {
 }
 
 export async function GET(request: NextRequest) {
+  console.log('Tink callback received:', request.url)
+
   try {
     const supabaseAdmin = getSupabaseAdmin()
 
@@ -49,6 +51,8 @@ export async function GET(request: NextRequest) {
     const state = searchParams.get('state')
     const error = searchParams.get('error')
     const errorDescription = searchParams.get('error_description')
+
+    console.log('Tink callback params:', { code: code ? 'present' : 'missing', state, error, errorDescription })
 
     // Handle errors from Tink
     if (error) {
@@ -82,9 +86,12 @@ export async function GET(request: NextRequest) {
     const redirectUri = process.env.TINK_REDIRECT_URI || `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/tink/callback`
 
     // Exchange code for access token
+    console.log('Exchanging code for token with redirectUri:', redirectUri)
     const tokenData = await exchangeCodeForToken(code, redirectUri)
+    console.log('Token exchange successful, got scopes:', tokenData.scope)
 
     // Store the connection in Supabase
+    console.log('Storing connection for userId:', userId)
     const { error: dbError } = await supabaseAdmin
       .from('tink_connections')
       .upsert({
@@ -99,6 +106,8 @@ export async function GET(request: NextRequest) {
 
     if (dbError) {
       console.error('Error storing Tink connection:', dbError)
+    } else {
+      console.log('Tink connection stored successfully for user:', userId)
     }
 
     // Redirect back to dashboard with success
