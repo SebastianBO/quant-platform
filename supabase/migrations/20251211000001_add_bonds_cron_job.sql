@@ -2,6 +2,7 @@
 -- Bonds don't change frequently, so weekly sync is sufficient
 
 -- Function to sync bonds data via HTTP
+-- Syncs 5 tickers at a time due to OpenFIGI rate limits (6 req/min)
 CREATE OR REPLACE FUNCTION sync_bonds_cron()
 RETURNS void
 LANGUAGE plpgsql
@@ -12,9 +13,9 @@ DECLARE
 BEGIN
   SELECT value INTO api_url FROM cron_config WHERE key = 'api_base_url';
 
-  -- Sync bonds in batches of 10 (rate limited by OpenFIGI)
+  -- Sync bonds in batches of 5 (OpenFIGI: 6 req/min limit)
   PERFORM net.http_post(
-    url := api_url || '/api/cron/sync-bonds?limit=10',
+    url := api_url || '/api/cron/sync-bonds?limit=5',
     headers := '{"Content-Type": "application/json"}'::jsonb,
     body := '{}'::jsonb
   );

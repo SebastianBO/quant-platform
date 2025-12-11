@@ -238,9 +238,13 @@ export async function GET(request: NextRequest) {
 
     console.log(`Syncing bonds for ${tickersToSync.length} tickers...`)
 
-    for (const t of tickersToSync) {
+    for (let i = 0; i < tickersToSync.length; i++) {
+      const t = tickersToSync[i]
       // Add delay to respect OpenFIGI rate limits (6 requests/minute without API key)
-      await new Promise(resolve => setTimeout(resolve, 500))
+      // Skip delay for first request
+      if (i > 0) {
+        await new Promise(resolve => setTimeout(resolve, 11000))
+      }
 
       const { bonds, summary } = await fetchBondsForTicker(t)
 
