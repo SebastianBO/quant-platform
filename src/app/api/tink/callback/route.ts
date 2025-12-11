@@ -40,6 +40,74 @@ async function exchangeCodeForToken(code: string, redirectUri: string) {
   return response.json()
 }
 
+// Get a client access token (for server-to-server API calls)
+async function getClientAccessToken() {
+  const response = await fetch(`${TINK_API_URL}/api/v1/oauth/token`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+      client_id: TINK_CLIENT_ID,
+      client_secret: TINK_CLIENT_SECRET,
+      grant_type: 'client_credentials',
+      scope: 'authorization:grant',
+    }),
+  })
+
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(`Client token failed: ${error}`)
+  }
+
+  return response.json()
+}
+
+// Get a user authorization code using the client token
+async function getUserAuthorizationCode(clientAccessToken: string, userId: string) {
+  const response = await fetch(`${TINK_API_URL}/api/v1/oauth/authorization-grant`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': `Bearer ${clientAccessToken}`,
+    },
+    body: new URLSearchParams({
+      user_id: userId,
+      scope: 'accounts:read,transactions:read,user:read,credentials:read,investments:read',
+    }),
+  })
+
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(`User auth grant failed: ${error}`)
+  }
+
+  return response.json()
+}
+
+// Exchange user authorization code for user access token
+async function getUserAccessToken(authCode: string) {
+  const response = await fetch(`${TINK_API_URL}/api/v1/oauth/token`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+      client_id: TINK_CLIENT_ID,
+      client_secret: TINK_CLIENT_SECRET,
+      grant_type: 'authorization_code',
+      code: authCode,
+    }),
+  })
+
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(`User token exchange failed: ${error}`)
+  }
+
+  return response.json()
+}
+
 async function handleCallback(
   request: NextRequest,
   code: string | null,
@@ -56,12 +124,84 @@ async function handleCallback(
     credentialsId: credentialsId ? 'present' : 'missing'
   })
 
-  // If we have no code but have credentialsId, Tink Products flow was used
-  // In this case, we need to redirect user to connect via OAuth flow instead
-  if (!code && credentialsId) {
-    console.log('Tink Products flow detected (credentialsId only), redirecting to OAuth')
+  // If we have no code but have credentialsId and state, Tink Products flow was used
+  // We need to get a user access token using the server-side flow
+  if (!code && credentialsId && state) {
+    console.log('Tink Products flow detected (credentialsId only), getting user token via server flow')
+
+    try {
+      const supabaseAdmin = getSupabaseAdmin()
+
+      // Parse userId from state
+      const [userId] = state.split('_')
+      if (!userId) {
+        return NextResponse.redirect(
+          new URL('/dashboard?error=tink_invalid_state', request.url)
+        )
+      }
+
+      if (!supabaseAdmin) {
+        return NextResponse.redirect(
+          new URL('/dashboard?error=database_not_configured', request.url)
+        )
+      }
+
+      // Step 1: Get a client access token
+      console.log('Getting client access token...')
+      const clientTokenData = await getClientAccessToken()
+      console.log('Got client token')
+
+      // Step 2: Get a user authorization code
+      // Note: For Tink, the user_id here is the TINK user id, not our app user id
+      // We need to first create or get a Tink user. For now, use our userId as external_user_id
+      console.log('Getting user authorization code for userId:', userId)
+      const authGrantData = await getUserAuthorizationCode(clientTokenData.access_token, userId)
+      console.log('Got auth grant code')
+
+      // Step 3: Exchange for user access token
+      console.log('Exchanging for user access token...')
+      const tokenData = await getUserAccessToken(authGrantData.code)
+      console.log('Got user access token, scopes:', tokenData.scope)
+
+      // Store the connection in Supabase
+      const { data: upsertData, error: dbError } = await supabaseAdmin
+        .from('tink_connections')
+        .upsert({
+          user_id: userId,
+          access_token: tokenData.access_token,
+          refresh_token: tokenData.refresh_token,
+          token_type: tokenData.token_type,
+          expires_in: tokenData.expires_in,
+          scope: tokenData.scope,
+          credentials_id: credentialsId,
+          last_updated: new Date().toISOString(),
+        }, { onConflict: 'user_id' })
+        .select()
+
+      if (dbError) {
+        console.error('Error storing Tink connection:', dbError.message, dbError.code, dbError.details)
+        return NextResponse.redirect(
+          new URL(`/dashboard?error=tink_db_error&message=${encodeURIComponent(dbError.message)}`, request.url)
+        )
+      }
+
+      console.log('Tink connection stored successfully for user:', userId)
+      return NextResponse.redirect(
+        new URL('/dashboard?success=tink_connected', request.url)
+      )
+    } catch (err: any) {
+      console.error('Error in Products flow token acquisition:', err.message)
+      return NextResponse.redirect(
+        new URL(`/dashboard?error=tink_token_error&message=${encodeURIComponent(err.message)}`, request.url)
+      )
+    }
+  }
+
+  // If we have credentialsId but no state, we can't get the user token
+  if (!code && credentialsId && !state) {
+    console.log('Tink Products flow with credentialsId but no state - cannot get token')
     return NextResponse.redirect(
-      new URL('/dashboard?success=tink_credentials_added&credentials_id=' + credentialsId, request.url)
+      new URL('/dashboard?error=tink_missing_state&credentials_id=' + credentialsId, request.url)
     )
   }
 
@@ -96,9 +236,12 @@ async function handleCallback(
     if (code && state) {
       // Redirect to same endpoint with query params
       window.location.href = '/api/tink/callback?code=' + encodeURIComponent(code) + '&state=' + encodeURIComponent(state);
+    } else if (credentialsId && state) {
+      // Products flow with credentialsId and state - redirect to callback to get token
+      window.location.href = '/api/tink/callback?credentials_id=' + encodeURIComponent(credentialsId) + '&state=' + encodeURIComponent(state);
     } else if (credentialsId) {
-      // Products flow - just credentialsId
-      window.location.href = '/dashboard?success=tink_credentials_added&credentials_id=' + encodeURIComponent(credentialsId);
+      // Products flow with credentialsId but no state - can't get token
+      window.location.href = '/dashboard?error=tink_missing_state&credentials_id=' + encodeURIComponent(credentialsId);
     } else {
       window.location.href = '/dashboard?error=tink_missing_params&hash=' + encodeURIComponent(hash);
     }
