@@ -292,7 +292,7 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
                 {/* Price Row */}
                 <div className="flex items-baseline gap-4">
                   <span className="text-4xl font-bold tabular-nums">
-                    {stockData.snapshot.price?.toFixed(2)}
+                    {typeof stockData.snapshot.price === 'number' ? stockData.snapshot.price.toFixed(2) : Number(stockData.snapshot.price || 0).toFixed(2)}
                   </span>
                   <div className={`flex items-center gap-2 text-lg ${
                     (stockData.snapshot.day_change_percent || 0) >= 0 ? 'text-green-500' : 'text-red-500'
@@ -330,7 +330,7 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
 
             {/* Key Statistics Grid - Yahoo Finance Style */}
             <div className="grid grid-cols-4 md:grid-cols-8 gap-4 mt-6 p-4 bg-secondary/30 rounded-xl">
-              <KeyStat label="Previous Close" value={stockData.snapshot.previousClose?.toFixed(2) || stockData.snapshot.price?.toFixed(2)} />
+              <KeyStat label="Previous Close" value={Number(stockData.snapshot.previousClose || stockData.snapshot.price || 0).toFixed(2)} />
               <KeyStat label="Day's Range" value={stockData.snapshot.dayLow && stockData.snapshot.dayHigh ? `${stockData.snapshot.dayLow.toFixed(2)} - ${stockData.snapshot.dayHigh.toFixed(2)}` : '-'} />
               <KeyStat label="Market Cap" value={formatMarketCap(stockData.snapshot.market_cap)} />
               <KeyStat label="Earnings Date" value={stockData.snapshot.earningsDate || '-'} />

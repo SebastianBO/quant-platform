@@ -25,9 +25,10 @@ const EUROPEAN_MARKETS = [
   { code: 'PL', name: 'Poland', locale: 'pl_PL' },
 ]
 
+// Standard Tink scopes - investments:read requires Wealth product
 const TINK_SCOPES = [
+  'authorization:grant',
   'accounts:read',
-  'investments:read',
   'transactions:read',
   'user:read',
   'credentials:read'
