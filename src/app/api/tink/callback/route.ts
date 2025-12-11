@@ -139,7 +139,11 @@ async function handleCallback(
 
     // Store the connection in Supabase
     console.log('Storing connection for userId:', userId)
-    const { error: dbError } = await supabaseAdmin
+    console.log('Token data keys:', Object.keys(tokenData))
+    console.log('Access token present:', !!tokenData.access_token)
+    console.log('Refresh token present:', !!tokenData.refresh_token)
+
+    const { data: upsertData, error: dbError } = await supabaseAdmin
       .from('tink_connections')
       .upsert({
         user_id: userId,
@@ -150,12 +154,17 @@ async function handleCallback(
         scope: tokenData.scope,
         last_updated: new Date().toISOString(),
       }, { onConflict: 'user_id' })
+      .select()
 
     if (dbError) {
-      console.error('Error storing Tink connection:', dbError)
-    } else {
-      console.log('Tink connection stored successfully for user:', userId)
+      console.error('Error storing Tink connection:', dbError.message, dbError.code, dbError.details)
+      return NextResponse.redirect(
+        new URL(`/dashboard?error=tink_db_error&message=${encodeURIComponent(dbError.message)}`, request.url)
+      )
     }
+
+    console.log('Tink connection stored successfully for user:', userId)
+    console.log('Upsert result:', upsertData)
 
     // Redirect back to dashboard with success
     return NextResponse.redirect(
