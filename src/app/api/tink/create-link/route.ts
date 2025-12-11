@@ -61,14 +61,17 @@ export async function POST(request: NextRequest) {
     // Get the redirect URL from environment or construct it
     const redirectUri = process.env.TINK_REDIRECT_URI || `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/tink/callback`
 
-    // Build Tink Link URL
+    // Build Tink Link URL using Products flow (for Investments)
+    // This matches the URL format from Tink Console
     const params = new URLSearchParams({
       client_id: TINK_CLIENT_ID,
       redirect_uri: redirectUri,
-      scope: TINK_SCOPES,
       market: market,
       locale: marketConfig.locale,
       state: state,
+      products: 'INVESTMENTS',
+      // Request authorization code to be included in callback
+      include_authorization_code: 'true',
     })
 
     // Add test parameter for sandbox
@@ -76,7 +79,8 @@ export async function POST(request: NextRequest) {
       params.append('test', 'true')
     }
 
-    const tinkLinkUrl = `https://link.tink.com/1.0/authorize?${params.toString()}`
+    // Use Products flow URL which supports investments
+    const tinkLinkUrl = `https://link.tink.com/1.0/products/connect-accounts/?${params.toString()}`
 
     return NextResponse.json({
       linkUrl: tinkLinkUrl,
