@@ -40,19 +40,33 @@ async function exchangeCodeForToken(code: string, redirectUri: string) {
   return response.json()
 }
 
-export async function GET(request: NextRequest) {
-  console.log('Tink callback received:', request.url)
+async function handleCallback(
+  request: NextRequest,
+  code: string | null,
+  state: string | null,
+  error: string | null,
+  errorDescription: string | null,
+  credentialsId: string | null
+) {
+  console.log('Tink callback processing:', {
+    code: code ? 'present' : 'missing',
+    state,
+    error,
+    errorDescription,
+    credentialsId: credentialsId ? 'present' : 'missing'
+  })
+
+  // If we have no code but have credentialsId, Tink Products flow was used
+  // In this case, we need to redirect user to connect via OAuth flow instead
+  if (!code && credentialsId) {
+    console.log('Tink Products flow detected (credentialsId only), redirecting to OAuth')
+    return NextResponse.redirect(
+      new URL('/dashboard?success=tink_credentials_added&credentials_id=' + credentialsId, request.url)
+    )
+  }
 
   try {
     const supabaseAdmin = getSupabaseAdmin()
-
-    const searchParams = request.nextUrl.searchParams
-    const code = searchParams.get('code')
-    const state = searchParams.get('state')
-    const error = searchParams.get('error')
-    const errorDescription = searchParams.get('error_description')
-
-    console.log('Tink callback params:', { code: code ? 'present' : 'missing', state, error, errorDescription })
 
     // Handle errors from Tink
     if (error) {
@@ -63,9 +77,42 @@ export async function GET(request: NextRequest) {
     }
 
     if (!code || !state) {
-      return NextResponse.redirect(
-        new URL('/dashboard?error=tink_missing_params', request.url)
-      )
+      console.log('Missing code or state, returning HTML page to extract hash params')
+      // Return an HTML page that can read hash fragments and redirect properly
+      const html = `<!DOCTYPE html>
+<html>
+<head><title>Processing Tink Connection...</title></head>
+<body>
+<p>Processing your bank connection...</p>
+<script>
+  // Check if params are in hash fragment
+  const hash = window.location.hash.substring(1);
+  if (hash) {
+    const params = new URLSearchParams(hash);
+    const code = params.get('code');
+    const state = params.get('state');
+    const credentialsId = params.get('credentials_id') || params.get('credentialsId');
+
+    if (code && state) {
+      // Redirect to same endpoint with query params
+      window.location.href = '/api/tink/callback?code=' + encodeURIComponent(code) + '&state=' + encodeURIComponent(state);
+    } else if (credentialsId) {
+      // Products flow - just credentialsId
+      window.location.href = '/dashboard?success=tink_credentials_added&credentials_id=' + encodeURIComponent(credentialsId);
+    } else {
+      window.location.href = '/dashboard?error=tink_missing_params&hash=' + encodeURIComponent(hash);
+    }
+  } else {
+    // No hash params either
+    window.location.href = '/dashboard?error=tink_missing_params';
+  }
+</script>
+</body>
+</html>`
+      return new NextResponse(html, {
+        status: 200,
+        headers: { 'Content-Type': 'text/html' }
+      })
     }
 
     // Parse userId from state
@@ -119,5 +166,56 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(
       new URL(`/dashboard?error=tink_exchange_failed&message=${encodeURIComponent(error.message)}`, request.url)
     )
+  }
+}
+
+// Handle GET requests (standard OAuth flow)
+export async function GET(request: NextRequest) {
+  console.log('Tink callback GET:', request.url)
+
+  const searchParams = request.nextUrl.searchParams
+  const code = searchParams.get('code')
+  const state = searchParams.get('state')
+  const error = searchParams.get('error')
+  const errorDescription = searchParams.get('error_description')
+  const credentialsId = searchParams.get('credentials_id') || searchParams.get('credentialsId')
+
+  return handleCallback(request, code, state, error, errorDescription, credentialsId)
+}
+
+// Handle POST requests (some Tink flows use POST)
+export async function POST(request: NextRequest) {
+  console.log('Tink callback POST:', request.url)
+
+  try {
+    const body = await request.json()
+    console.log('Tink callback POST body:', JSON.stringify(body))
+
+    const code = body.code || null
+    const state = body.state || null
+    const error = body.error || null
+    const errorDescription = body.error_description || null
+    const credentialsId = body.credentials_id || body.credentialsId || null
+
+    return handleCallback(request, code, state, error, errorDescription, credentialsId)
+  } catch (e) {
+    // If body isn't JSON, try form data
+    try {
+      const formData = await request.formData()
+      console.log('Tink callback POST form data')
+
+      const code = formData.get('code') as string | null
+      const state = formData.get('state') as string | null
+      const error = formData.get('error') as string | null
+      const errorDescription = formData.get('error_description') as string | null
+      const credentialsId = formData.get('credentials_id') as string | null || formData.get('credentialsId') as string | null
+
+      return handleCallback(request, code, state, error, errorDescription, credentialsId)
+    } catch (e2) {
+      console.error('Failed to parse POST body:', e2)
+      return NextResponse.redirect(
+        new URL('/dashboard?error=tink_invalid_request', request.url)
+      )
+    }
   }
 }
