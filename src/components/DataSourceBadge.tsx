@@ -22,6 +22,9 @@ const colorMap: Record<string, string> = {
   yellow: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30',
   emerald: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/30',
   slate: 'bg-slate-500/10 text-slate-400 border-slate-500/30',
+  cyan: 'bg-cyan-500/10 text-cyan-500 border-cyan-500/30',
+  teal: 'bg-teal-500/10 text-teal-500 border-teal-500/30',
+  indigo: 'bg-indigo-500/10 text-indigo-500 border-indigo-500/30',
 }
 
 export default function DataSourceBadge({

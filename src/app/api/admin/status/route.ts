@@ -140,6 +140,12 @@ export const DATABASE_TABLES = {
     'sync_state', 'sync_queue', 'financial_sync_log', 'data_freshness',
     'insider_trades', 'institutional_holdings', 'institutional_investors',
     'institutional_filings', 'short_volume'
+  ],
+  'Biotech & Clinical': [
+    'clinical_trials', 'fda_drug_approvals', 'biotech_catalysts',
+    'biotech_company_mapping', 'pdufa_dates', 'drug_pipeline',
+    'biotech_financials', 'biotech_8k_alerts', 'indication_competitors',
+    'biotech_watchlist'
   ]
 }
 
@@ -151,6 +157,8 @@ const API_ENDPOINTS = [
   { name: 'SEC EDGAR', url: 'https://data.sec.gov/submissions/CIK0000320193.json', critical: true },
   { name: 'SEC EDGAR Filings', url: 'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000320193&type=&dateb=&owner=include&count=1&output=atom', critical: false },
   { name: 'Polygon.io', url: 'https://api.polygon.io/v2/aggs/ticker/AAPL/prev?apiKey={POLYGON_KEY}', critical: false },
+  { name: 'ClinicalTrials.gov', url: 'https://clinicaltrials.gov/api/v2/studies?pageSize=1&format=json', critical: false },
+  { name: 'openFDA', url: 'https://api.fda.gov/drug/drugsfda.json?limit=1', critical: false },
 ]
 
 interface SystemStatus {
@@ -571,6 +579,62 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: result.success,
         message: `Found ${result.summary?.totalFilingsFound || 0} filings, synced ${result.summary?.earningsProcessed || 0}`,
+        details: result
+      })
+    } catch (error) {
+      return NextResponse.json({
+        success: false,
+        error: String(error)
+      })
+    }
+  }
+
+  // Biotech clinical trials sync
+  if (action === 'sync-clinical-trials') {
+    const { ticker, limit } = body
+    try {
+      const baseUrl = process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}`
+        : process.env.NEXT_PUBLIC_BASE_URL || 'https://lician.com'
+
+      const params = new URLSearchParams()
+      if (ticker) params.set('ticker', ticker)
+      if (limit) params.set('limit', String(limit))
+
+      const response = await fetch(
+        `${baseUrl}/api/cron/sync-clinical-trials?${params}`,
+        { method: 'GET' }
+      )
+      const result = await response.json()
+      return NextResponse.json({
+        success: result.success,
+        message: `Synced ${result.summary?.totalTrialsInserted || 0} trials, created ${result.summary?.totalCatalystsCreated || 0} catalysts`,
+        details: result
+      })
+    } catch (error) {
+      return NextResponse.json({
+        success: false,
+        error: String(error)
+      })
+    }
+  }
+
+  // Biotech company auto-discovery
+  if (action === 'discover-biotech') {
+    const { limit } = body
+    try {
+      const baseUrl = process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}`
+        : process.env.NEXT_PUBLIC_BASE_URL || 'https://lician.com'
+
+      const response = await fetch(
+        `${baseUrl}/api/biotech-mapper?action=discover&limit=${limit || 10}`,
+        { method: 'GET' }
+      )
+      const result = await response.json()
+      return NextResponse.json({
+        success: result.success,
+        message: `Discovered ${result.discovered || 0} biotech companies`,
         details: result
       })
     } catch (error) {

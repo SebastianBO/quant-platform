@@ -15,6 +15,8 @@ export type DataSourceId =
   | 'iborrowdesk'
   | 'openai'
   | 'openfigi'
+  | 'clinicaltrials-gov'
+  | 'openfda'
   | 'mock'
 
 export interface DataSource {
@@ -108,6 +110,24 @@ export const DATA_SOURCES: Record<DataSourceId, DataSource> = {
     isPaid: false,
     color: 'cyan'
   },
+  'clinicaltrials-gov': {
+    id: 'clinicaltrials-gov',
+    name: 'ClinicalTrials.gov',
+    shortName: 'CT',
+    url: 'https://clinicaltrials.gov',
+    description: 'NIH clinical trials registry - trial phases, completion dates, results',
+    isPaid: false,
+    color: 'teal'
+  },
+  'openfda': {
+    id: 'openfda',
+    name: 'openFDA',
+    shortName: 'FDA',
+    url: 'https://open.fda.gov',
+    description: 'FDA drug approvals, NDA/BLA submissions, labels',
+    isPaid: false,
+    color: 'indigo'
+  },
   'mock': {
     id: 'mock',
     name: 'Mock Data',
@@ -161,6 +181,11 @@ export const FEATURE_DATA_SOURCES: Record<string, DataSourceId[]> = {
   'earnings-calendar': ['financial-datasets'],
   'options': ['eodhd'],
   'fx-rates': ['eodhd'],
+
+  // Biotech / Clinical Trials
+  'clinical-trials': ['clinicaltrials-gov', 'supabase-cache'],
+  'fda-approvals': ['openfda', 'supabase-cache'],
+  'biotech-catalysts': ['clinicaltrials-gov', 'openfda', 'supabase-cache'],
 }
 
 /**
