@@ -38,6 +38,7 @@ import OwnershipBreakdown from "@/components/OwnershipBreakdown"
 import CompanyDebt from "@/components/CompanyDebt"
 import DebtAnalysis from "@/components/DebtAnalysis"
 import StockChartSwitcher from "@/components/StockChartSwitcher"
+import { BiotechCatalysts } from "@/components/BiotechCatalysts"
 import MarketDataTable from "@/components/MarketDataTable"
 import MarketSidebar from "@/components/MarketSidebar"
 import UserAvatar from "@/components/UserAvatar"
@@ -371,6 +372,14 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
                   <div className="space-y-6">
                     {/* Chart Switcher - Simple or TradingView */}
                     <StockChartSwitcher ticker={ticker} />
+
+                    {/* Clinical Trials & Catalysts for Biotech/Pharma stocks */}
+                    {(stockData.companyFacts?.sector?.toLowerCase().includes('health') ||
+                      stockData.companyFacts?.industry?.toLowerCase().includes('biotech') ||
+                      stockData.companyFacts?.industry?.toLowerCase().includes('pharma') ||
+                      stockData.companyFacts?.industry?.toLowerCase().includes('therapeutic')) && (
+                      <BiotechCatalysts ticker={ticker} />
+                    )}
 
                     {/* Community Discussion */}
                     <StockDiscussions ticker={ticker} />
