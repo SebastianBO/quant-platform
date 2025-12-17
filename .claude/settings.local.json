@@ -78,7 +78,9 @@
       "Bash(python3:*)",
       "Bash(for t in AAPL MSFT NVDA GOOGL AMZN)",
       "Bash(do echo -n \"$t: \")",
-      "Bash(done)"
+      "Bash(done)",
+      "WebFetch(domain:www.benzinga.com)",
+      "WebFetch(domain:finance.yahoo.com)"
     ],
     "deny": [],
     "ask": []
