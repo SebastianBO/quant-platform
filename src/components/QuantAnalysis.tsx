@@ -75,6 +75,18 @@ export default function QuantAnalysis({ ticker, metrics, currentPrice }: QuantAn
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [analysisComplete, setAnalysisComplete] = useState(false)
 
+  // Check if we have actual metrics data (not empty object)
+  const hasMetrics = metrics && Object.keys(metrics).length > 0 && (
+    metrics.price_to_earnings_ratio !== undefined ||
+    metrics.debt_to_equity !== undefined ||
+    metrics.revenue_growth !== undefined ||
+    metrics.gross_margin !== undefined ||
+    metrics.return_on_equity !== undefined
+  )
+
+  // Count how many metrics we have
+  const metricsCount = metrics ? Object.values(metrics).filter(v => v !== undefined && v !== null).length : 0
+
   const runAnalysis = async () => {
     setIsAnalyzing(true)
     setStages([])
@@ -524,7 +536,7 @@ export default function QuantAnalysis({ ticker, metrics, currentPrice }: QuantAn
             <span className="text-2xl">🎯</span>
             7-Stage Quant Analysis - {ticker}
           </CardTitle>
-          {!analysisComplete && (
+          {!analysisComplete && hasMetrics && (
             <button
               onClick={runAnalysis}
               disabled={isAnalyzing}
@@ -536,10 +548,23 @@ export default function QuantAnalysis({ ticker, metrics, currentPrice }: QuantAn
         </div>
       </CardHeader>
       <CardContent>
-        {stages.length === 0 && !isAnalyzing && (
+        {stages.length === 0 && !isAnalyzing && !hasMetrics && (
+          <div className="text-center py-12">
+            <div className="text-4xl mb-4">📊</div>
+            <p className="text-muted-foreground">No financial metrics available for {ticker}</p>
+            <p className="text-sm text-muted-foreground mt-2">
+              Metrics will be synced automatically when SEC filings are processed.
+            </p>
+            <p className="text-xs text-muted-foreground mt-4">
+              Data syncs every 5 minutes from SEC EDGAR
+            </p>
+          </div>
+        )}
+
+        {stages.length === 0 && !isAnalyzing && hasMetrics && (
           <div className="text-center py-12 text-muted-foreground">
             <p>Click "Run Analysis" to perform institutional-grade quantitative analysis</p>
-            <p className="text-sm mt-2">7 stages with 30+ guard rails</p>
+            <p className="text-sm mt-2">7 stages with 30+ guard rails • {metricsCount} metrics available</p>
           </div>
         )}
 
