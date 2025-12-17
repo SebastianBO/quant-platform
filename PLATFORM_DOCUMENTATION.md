@@ -1,7 +1,7 @@
 # Lician Platform Documentation
 
-> **Last Updated:** December 15, 2025
-> **Version:** 1.0.0
+> **Last Updated:** December 17, 2025
+> **Version:** 2.0.0
 > **Status:** Production
 
 ---
@@ -308,22 +308,35 @@ GET /api/cron/watch-filings         # Watch SEC RSS
 
 Cron jobs are managed via Supabase's `pg_cron` extension. Jobs make HTTP requests to API endpoints using `pg_net`.
 
-#### Active Jobs (as of Dec 15, 2025)
+#### Active Jobs (as of Dec 17, 2025)
 
+**Primary Data Sync (Every 5 Minutes)**
+| Job Name | Schedule | Endpoint | Purpose |
+|----------|----------|----------|---------|
+| `watch-sec-filings` | `*/5 * * * *` | `/api/cron/watch-filings` | **MAIN SYNC** - ALL SEC filings (10-K, 10-Q, 8-K, Form 4) |
+
+**Financial Data**
 | Job Name | Schedule | Endpoint | Purpose |
 |----------|----------|----------|---------|
 | `sync-short-volume-daily` | `30 21 * * 1-5` | `/api/cron/sync-short-volume` | FINRA short data |
 | `sync-financials-daily` | `0 6 * * *` | `/api/cron/sync-financials` | SEC financials |
-| `sync-portfolios-daily` | `0 21 * * 1-5` | `/api/cron/sync-portfolios` | User portfolios |
-| `sync-13f-holdings-v2` | `0 6 * * *` | `/api/admin/sync/batch` | Institutional holdings |
-| `sync-financials-batch-v2` | `0 7 * * *` | `/api/admin/sync/batch` | Top 10 companies |
-| `sync-insider-trades-v2` | `0 15 * * 1-5` | `/api/cron/sync-financials` | Form 4 trades |
-| `sync-top-institutions-weekly` | `0 5 * * 0` | `/api/admin/sync/batch` | Full institutional sync |
-| `sync-clinical-trials-4h` | `0 */4 * * *` | `/api/cron/sync-biotech` | Clinical trials |
-| `sync-clinical-trials-weekday-1` | `0 10 * * 1-5` | `/api/cron/sync-biotech` | Trials (morning) |
-| `sync-clinical-trials-weekday-2` | `0 16 * * 1-5` | `/api/cron/sync-biotech` | Trials (afternoon) |
-| `discover-biotech-weekly` | `0 4 * * 0` | `/api/biotech-discovery` | Find new biotechs |
-| `update-data-freshness` | `0 * * * *` | Internal function | Freshness metrics |
+| `sync-financials-continuous` | `*/15 * * * *` | `/api/cron/sync-financials` | Continuous updates |
+| `turbo-fundamentals-boost` | `0 */3 * * *` | `/api/cron/sync-financials` | Top stocks refresh |
+
+**Institutional & Insider**
+| Job Name | Schedule | Endpoint | Purpose |
+|----------|----------|----------|---------|
+| `sync-13f-holdings-v2` | `0 6 * * *` | `/api/admin/sync/batch` | 13F institutional holdings |
+| `sync-insider-trades-daily` | `0 15 * * 1-5` | `/api/cron/sync-insider-trades` | Form 4 insider trades |
+| `sync-8k-filings` | `15 */2 * * *` | `/api/cron/sync-8k-filings` | 8-K material events |
+
+**Biotech**
+| Job Name | Schedule | Endpoint | Purpose |
+|----------|----------|----------|---------|
+| `sync-clinical-trials-daily` | `0 6 * * *` | `/api/cron/sync-clinical-trials` | ClinicalTrials.gov |
+| `sync-biotech-data` | `0 6,18 * * *` | `/api/cron/sync-biotech` | Biotech catalysts |
+
+**Total: 38 active jobs, 89% healthy**
 
 #### Vercel Cron Backup
 
