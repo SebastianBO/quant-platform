@@ -125,7 +125,7 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
   const [ticker, setTicker] = useState(initialTicker || "AAPL")
   const [stockData, setStockData] = useState<StockData | null>(null)
   const [loading, setLoading] = useState(false)
-  const [activeTab, setActiveTab] = useState(initialTab || "myportfolios")
+  const [activeTab, setActiveTab] = useState(initialTab || "market")
 
   // Handle URL parameters for deep linking (only when no initialTicker provided)
   useEffect(() => {
@@ -387,124 +387,6 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
                     {/* Community Discussion */}
                     <StockDiscussions ticker={ticker} />
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Financial Health */}
-                    <Card className="bg-card border-border">
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                          <span>Financial Health</span>
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-4">
-                          <MetricBar label="ROIC" value={stockData.metrics?.return_on_invested_capital || 0} max={0.5} threshold={0.15} />
-                          <MetricBar label="Gross Margin" value={stockData.metrics?.gross_margin || 0} max={1} threshold={0.4} />
-                          <MetricBar label="Operating Margin" value={stockData.metrics?.operating_margin || 0} max={0.5} threshold={0.15} />
-                          <MetricBar label="Net Margin" value={stockData.metrics?.net_margin || 0} max={0.4} threshold={0.1} />
-                          <MetricBar label="FCF Yield" value={stockData.metrics?.free_cash_flow_yield || 0} max={0.1} threshold={0.04} />
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Insider Activity */}
-                    <Card className="bg-card border-border">
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                          <span>Insider Activity</span>
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="flex items-center justify-between mb-6">
-                          <div className="text-center">
-                            <p className="text-3xl font-bold text-green-500">{insiderBuys}</p>
-                            <p className="text-muted-foreground text-sm">Buys</p>
-                          </div>
-                          <div className="text-center">
-                            <p className="text-3xl font-bold text-red-500">{insiderSells}</p>
-                            <p className="text-muted-foreground text-sm">Sells</p>
-                          </div>
-                          <div className="text-center">
-                            <p className={`text-3xl font-bold ${insiderBuys > insiderSells ? 'text-green-500' : 'text-red-500'}`}>
-                              {insiderBuys > insiderSells ? 'BULLISH' : 'BEARISH'}
-                            </p>
-                            <p className="text-muted-foreground text-sm">Signal</p>
-                          </div>
-                        </div>
-
-                        <div className="space-y-2 max-h-64 overflow-y-auto">
-                          {stockData.insiderTrades?.slice(0, 10).map((trade, i) => (
-                            <div key={i} className="flex items-center justify-between p-2 bg-secondary/50 rounded-lg text-sm">
-                              <div>
-                                <p className="font-medium">{trade.name}</p>
-                                <p className="text-muted-foreground text-xs">{trade.title}</p>
-                              </div>
-                              <div className="text-right">
-                                <p className={trade.transaction_shares > 0 ? 'text-green-500' : 'text-red-500'}>
-                                  {trade.transaction_shares > 0 ? '+' : ''}{trade.transaction_shares?.toLocaleString()} shares
-                                </p>
-                                <p className="text-muted-foreground text-xs">{trade.transaction_date}</p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Revenue History */}
-                    <Card className="bg-card border-border">
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                          <span>Revenue & Profit History</span>
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="h-64">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={stockData.incomeStatements?.slice().reverse()}>
-                              <XAxis dataKey="fiscal_period" stroke="hsl(var(--muted-foreground))" />
-                              <YAxis stroke="hsl(var(--muted-foreground))" tickFormatter={(v) => formatCurrency(v)} />
-                              <Tooltip
-                                contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }}
-                                formatter={(value: number) => [formatCurrency(value), '']}
-                              />
-                              <Area type="monotone" dataKey="revenue" stroke="#10b981" fill="#10b981" fillOpacity={0.2} name="Revenue" />
-                              <Area type="monotone" dataKey="net_income" stroke="#6366f1" fill="#6366f1" fillOpacity={0.2} name="Net Income" />
-                            </AreaChart>
-                          </ResponsiveContainer>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Analyst Estimates */}
-                    <Card className="bg-card border-border">
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                          <span>Analyst Estimates</span>
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        {stockData.analystEstimates?.length > 0 ? (
-                          <div className="space-y-4">
-                            {stockData.analystEstimates.slice(0, 4).map((est, i) => (
-                              <div key={i} className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg">
-                                <div>
-                                  <p className="font-medium">{est.period}</p>
-                                </div>
-                                <div className="text-right">
-                                  <p className="text-green-500">EPS: ${est.eps_estimate_avg?.toFixed(2) || 'N/A'}</p>
-                                  <p className="text-muted-foreground text-sm">
-                                    Range: ${est.eps_estimate_low?.toFixed(2)} - ${est.eps_estimate_high?.toFixed(2)}
-                                  </p>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <p className="text-muted-foreground">No analyst estimates available</p>
-                        )}
-                      </CardContent>
-                    </Card>
-                    </div>
                   </div>
                 ) : (
                   <p className="text-muted-foreground">Enter a ticker to analyze</p>
