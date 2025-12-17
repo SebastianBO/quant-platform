@@ -56,6 +56,8 @@ interface DataSources {
   quarterlyIncome?: string
   quarterlyBalance?: string
   quarterlyCashFlow?: string
+  metrics?: string
+  insiderTrades?: string
 }
 
 interface StockData {
@@ -514,6 +516,7 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
                     ticker={ticker}
                     metrics={stockData.metrics}
                     currentPrice={stockData.snapshot?.price || 0}
+                    dataSource={stockData.dataSources?.metrics}
                   />
                 )}
               </TabsContent>

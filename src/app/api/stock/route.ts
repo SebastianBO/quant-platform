@@ -93,9 +93,9 @@ export async function GET(request: NextRequest) {
       fetchInternal('/financials/income-statements', { ticker, period: 'annual', limit: '5' }),
       fetchInternal('/financials/balance-sheets', { ticker, period: 'annual', limit: '5' }),
       fetchInternal('/financials/cash-flow-statements', { ticker, period: 'annual', limit: '5' }),
-      fetchFD('/financial-metrics/', { ticker, period: 'annual', limit: '1' }).catch(() => ({ financial_metrics: [] })),
-      fetchFD('/financial-metrics/', { ticker, period: 'annual', limit: '5' }).catch(() => ({ financial_metrics: [] })),
-      fetchFD('/insider-trades/', { ticker, limit: '20' }).catch(() => ({ insider_trades: [] })),
+      fetchInternal('/financial-metrics', { ticker, period: 'annual', limit: '1' }),
+      fetchInternal('/financial-metrics', { ticker, period: 'annual', limit: '5' }),
+      fetchInternal('/insider-trades', { ticker, limit: '20' }),
       fetchFD('/analyst-estimates/', { ticker, limit: '8' }).catch(() => ({ analyst_estimates: [] })),
       fetchInternal('/financials/segmented-revenues', { ticker, period: 'annual', limit: '3' }),
       fetchFD('/company/facts/', { ticker }).catch(() => ({ company_facts: null })),
@@ -121,7 +121,7 @@ export async function GET(request: NextRequest) {
     const quarterlyBalance = { balance_sheets: quarterlyBalanceResult.balance_sheets || [] }
     const quarterlyCashFlow = { cash_flow_statements: quarterlyCashFlowResult.cash_flow_statements || [] }
 
-    // Collect data sources for each statement type
+    // Collect data sources for each data type
     const dataSources = {
       incomeStatements: incomeResult._meta?.source || 'financialdatasets.ai',
       balanceSheets: balanceResult._meta?.source || 'financialdatasets.ai',
@@ -130,6 +130,8 @@ export async function GET(request: NextRequest) {
       quarterlyIncome: quarterlyIncomeResult._meta?.source || 'financialdatasets.ai',
       quarterlyBalance: quarterlyBalanceResult._meta?.source || 'financialdatasets.ai',
       quarterlyCashFlow: quarterlyCashFlowResult._meta?.source || 'financialdatasets.ai',
+      metrics: metrics._meta?.source || 'financialdatasets.ai',
+      insiderTrades: insiderTrades._meta?.source || 'financialdatasets.ai',
     }
 
     // Parse segmented revenues - extract product segments and geographic segments

@@ -3,6 +3,9 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
 // Financial Datasets API Compatible Endpoint
 // Matches: https://api.financialdatasets.ai/financial-metrics
+// Falls back to Financial Datasets API if Supabase has no data
+
+const FINANCIAL_DATASETS_API_KEY = process.env.FINANCIAL_DATASETS_API_KEY
 
 let supabase: SupabaseClient | null = null
 
@@ -14,6 +17,26 @@ function getSupabase() {
     )
   }
   return supabase
+}
+
+// Fallback to Financial Datasets API
+async function fetchFromFinancialDatasets(ticker: string, period: string, limit: number) {
+  if (!FINANCIAL_DATASETS_API_KEY) return null
+
+  try {
+    const url = `https://api.financialdatasets.ai/financial-metrics?ticker=${ticker}&period=${period}&limit=${limit}`
+    const response = await fetch(url, {
+      headers: { 'X-API-Key': FINANCIAL_DATASETS_API_KEY }
+    })
+
+    if (!response.ok) return null
+
+    const data = await response.json()
+    return data.financial_metrics || []
+  } catch (error) {
+    console.error('Financial Datasets API error:', error)
+    return null
+  }
 }
 
 export async function GET(request: NextRequest) {
@@ -51,8 +74,12 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Database error' }, { status: 500 })
     }
 
-    // Transform to Financial Datasets format - exact 44 fields
-    const metrics = (data || []).map(row => ({
+    let metrics: unknown[] = []
+    let dataSource = 'supabase'
+
+    if (data && data.length > 0) {
+      // Use Supabase data
+      metrics = data.map(row => ({
       // Identity (5 fields)
       ticker: row.ticker,
       report_period: row.report_period,
@@ -106,8 +133,23 @@ export async function GET(request: NextRequest) {
       book_value_per_share: row.book_value_per_share,
       free_cash_flow_per_share: row.free_cash_flow_per_share,
     }))
+    } else if (ticker) {
+      // Fallback to Financial Datasets API
+      const fallbackData = await fetchFromFinancialDatasets(ticker.toUpperCase(), period, limit)
+      if (fallbackData && fallbackData.length > 0) {
+        metrics = fallbackData
+        dataSource = 'financialdatasets.ai'
+      }
+    }
 
-    return NextResponse.json({ financial_metrics: metrics })
+    return NextResponse.json({
+      financial_metrics: metrics,
+      _meta: {
+        source: dataSource,
+        count: metrics.length,
+        fetched_at: new Date().toISOString(),
+      }
+    })
   } catch (error) {
     console.error('Financial metrics API error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

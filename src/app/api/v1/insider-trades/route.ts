@@ -3,6 +3,9 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
 // Financial Datasets API Compatible Endpoint
 // Matches: https://api.financialdatasets.ai/insider-trades
+// Falls back to Financial Datasets API if Supabase has no data
+
+const FINANCIAL_DATASETS_API_KEY = process.env.FINANCIAL_DATASETS_API_KEY
 
 let supabase: SupabaseClient | null = null
 
@@ -14,6 +17,26 @@ function getSupabase() {
     )
   }
   return supabase
+}
+
+// Fallback to Financial Datasets API
+async function fetchFromFinancialDatasets(ticker: string, limit: number) {
+  if (!FINANCIAL_DATASETS_API_KEY) return null
+
+  try {
+    const url = `https://api.financialdatasets.ai/insider-trades?ticker=${ticker}&limit=${limit}`
+    const response = await fetch(url, {
+      headers: { 'X-API-Key': FINANCIAL_DATASETS_API_KEY }
+    })
+
+    if (!response.ok) return null
+
+    const data = await response.json()
+    return data.insider_trades || []
+  } catch (error) {
+    console.error('Financial Datasets API error:', error)
+    return null
+  }
 }
 
 // Parse date filter parameters
@@ -71,24 +94,43 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Database error' }, { status: 500 })
     }
 
-    // Transform to Financial Datasets format
-    const insiderTrades = (data || []).map(row => ({
-      ticker: row.ticker,
-      issuer: row.issuer,
-      name: row.name,
-      title: row.title,
-      is_board_director: row.is_board_director,
-      transaction_date: row.transaction_date,
-      transaction_shares: row.transaction_shares,
-      transaction_price_per_share: row.transaction_price_per_share,
-      transaction_value: row.transaction_value,
-      shares_owned_before_transaction: row.shares_owned_before_transaction,
-      shares_owned_after_transaction: row.shares_owned_after_transaction,
-      security_title: row.security_title,
-      filing_date: row.filing_date,
-    }))
+    let insiderTrades: unknown[] = []
+    let dataSource = 'supabase'
 
-    return NextResponse.json({ insider_trades: insiderTrades })
+    if (data && data.length > 0) {
+      // Use Supabase data
+      insiderTrades = data.map(row => ({
+        ticker: row.ticker,
+        issuer: row.issuer,
+        name: row.name,
+        title: row.title,
+        is_board_director: row.is_board_director,
+        transaction_date: row.transaction_date,
+        transaction_shares: row.transaction_shares,
+        transaction_price_per_share: row.transaction_price_per_share,
+        transaction_value: row.transaction_value,
+        shares_owned_before_transaction: row.shares_owned_before_transaction,
+        shares_owned_after_transaction: row.shares_owned_after_transaction,
+        security_title: row.security_title,
+        filing_date: row.filing_date,
+      }))
+    } else {
+      // Fallback to Financial Datasets API
+      const fallbackData = await fetchFromFinancialDatasets(ticker.toUpperCase(), limit)
+      if (fallbackData && fallbackData.length > 0) {
+        insiderTrades = fallbackData
+        dataSource = 'financialdatasets.ai'
+      }
+    }
+
+    return NextResponse.json({
+      insider_trades: insiderTrades,
+      _meta: {
+        source: dataSource,
+        count: insiderTrades.length,
+        fetched_at: new Date().toISOString(),
+      }
+    })
   } catch (error) {
     console.error('Insider trades API error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

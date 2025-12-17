@@ -6,6 +6,7 @@ import { formatCurrency, formatPercent } from "@/lib/utils"
 
 interface QuantAnalysisProps {
   ticker: string
+  dataSource?: 'supabase' | 'financialdatasets.ai' | string
   metrics: {
     // Valuation
     price_to_earnings_ratio?: number
@@ -70,7 +71,7 @@ const GUARD_RAILS = {
   }
 }
 
-export default function QuantAnalysis({ ticker, metrics, currentPrice }: QuantAnalysisProps) {
+export default function QuantAnalysis({ ticker, metrics, currentPrice, dataSource }: QuantAnalysisProps) {
   const [stages, setStages] = useState<StageResult[]>([])
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [analysisComplete, setAnalysisComplete] = useState(false)
@@ -535,6 +536,15 @@ export default function QuantAnalysis({ ticker, metrics, currentPrice }: QuantAn
           <CardTitle className="flex items-center gap-2">
             <span className="text-2xl">🎯</span>
             7-Stage Quant Analysis - {ticker}
+            {hasMetrics && dataSource && (
+              <span className={`text-xs px-2 py-0.5 rounded-full ml-2 ${
+                dataSource === 'supabase'
+                  ? 'bg-green-500/20 text-green-400'
+                  : 'bg-blue-500/20 text-blue-400'
+              }`}>
+                {dataSource === 'supabase' ? 'Cached' : 'API'}
+              </span>
+            )}
           </CardTitle>
           {!analysisComplete && hasMetrics && (
             <button
