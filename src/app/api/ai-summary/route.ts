@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/auth'
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || ""
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || ""
@@ -325,6 +326,20 @@ What price would provide adequate margin of safety?`
 
 export async function POST(request: NextRequest) {
   try {
+    // Require authentication to prevent API abuse
+    const { user, error: authError } = await requireAuth(request)
+    if (authError) {
+      return authError
+    }
+
+    // Require premium for AI analysis features
+    if (!user.isPremium) {
+      return NextResponse.json(
+        { error: 'Premium subscription required for AI analysis', upgrade_url: '/premium' },
+        { status: 403 }
+      )
+    }
+
     const body: AnalysisRequest = await request.json()
     const { ticker, analysisType = 'comprehensive', data } = body
 

@@ -527,7 +527,7 @@ export async function syncInsiderTrades(
           transaction_value: t.transactionShares && t.transactionPricePerShare
             ? t.transactionShares * t.transactionPricePerShare
             : null,
-          shares_owned_after_transaction: t.sharesOwnedAfterTransaction,
+          shares_owned_after_transaction: Math.round(t.sharesOwnedAfterTransaction || 0),
           security_title: t.securityTitle,
           acquired_disposed_code: t.acquiredDisposed,
           ownership_nature: t.directOrIndirect,

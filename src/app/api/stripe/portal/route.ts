@@ -1,29 +1,35 @@
 import { NextRequest, NextResponse } from "next/server"
 import Stripe from "stripe"
 import { createClient } from "@supabase/supabase-js"
+import { requireAuth } from "@/lib/auth"
 
 function getStripe() {
-  return new Stripe(process.env.STRIPE_SECRET_KEY || "")
+  const stripeKey = process.env.STRIPE_SECRET_KEY
+  if (!stripeKey) {
+    throw new Error('STRIPE_SECRET_KEY environment variable is not set')
+  }
+  return new Stripe(stripeKey)
 }
 
 function getSupabase() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
-  )
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Supabase environment variables are not set')
+  }
+  return createClient(supabaseUrl, supabaseKey)
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
-    const { userId } = body
-
-    if (!userId) {
-      return NextResponse.json(
-        { error: "User ID is required" },
-        { status: 400 }
-      )
+    // Require authentication - user must be logged in
+    const { user, error: authError } = await requireAuth(request)
+    if (authError) {
+      return authError
     }
+
+    // Use authenticated user's ID (NOT from request body for security)
+    const userId = user.userId
 
     // Get user's Stripe customer ID
     const { data: profile, error } = await getSupabase()

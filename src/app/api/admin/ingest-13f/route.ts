@@ -4,7 +4,8 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js'
 // SEC 13F Data Ingestion API
 // Fetches and stores institutional ownership data from SEC EDGAR
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'lician-admin-2025'
+// Admin password - MUST be set in environment variables (no fallback for security)
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
 const SEC_USER_AGENT = 'Lician contact@lician.com'
 
 let supabase: SupabaseClient | null = null
@@ -466,9 +467,14 @@ async function calculateChanges(cik: string): Promise<number> {
 }
 
 export async function POST(request: NextRequest) {
-  // Auth check
+  // Auth check - ADMIN_PASSWORD must be configured
+  if (!ADMIN_PASSWORD) {
+    console.error('CRITICAL: ADMIN_PASSWORD environment variable is not set')
+    return NextResponse.json({ error: 'Server misconfigured' }, { status: 500 })
+  }
+
   const authHeader = request.headers.get('Authorization')
-  if (authHeader !== `Bearer ${ADMIN_PASSWORD}`) {
+  if (!authHeader || authHeader !== `Bearer ${ADMIN_PASSWORD}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
@@ -568,9 +574,14 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  // Auth check
+  // Auth check - ADMIN_PASSWORD must be configured
+  if (!ADMIN_PASSWORD) {
+    console.error('CRITICAL: ADMIN_PASSWORD environment variable is not set')
+    return NextResponse.json({ error: 'Server misconfigured' }, { status: 500 })
+  }
+
   const authHeader = request.headers.get('Authorization')
-  if (authHeader !== `Bearer ${ADMIN_PASSWORD}`) {
+  if (!authHeader || authHeader !== `Bearer ${ADMIN_PASSWORD}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

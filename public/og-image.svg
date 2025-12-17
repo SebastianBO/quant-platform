@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0a0a0a"/>
+
+  <!-- Grid pattern -->
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1a1a1a" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <!-- Logo -->
+  <g transform="translate(80, 200)">
+    <rect width="120" height="120" rx="24" fill="#000000" stroke="#22c55e" stroke-width="2"/>
+    <path d="M35 30v60h50v-12H47V30h-12z" fill="#22c55e"/>
+    <path d="M68 45l15 20-15 20h14l15-20-15-20h-14z" fill="#22c55e" opacity="0.7"/>
+  </g>
+
+  <!-- Title -->
+  <text x="230" y="260" font-family="system-ui, -apple-system, sans-serif" font-size="64" font-weight="bold" fill="#ffffff">Lician</text>
+
+  <!-- Tagline -->
+  <text x="230" y="310" font-family="system-ui, -apple-system, sans-serif" font-size="28" fill="#a1a1aa">AI-Powered Stock Research Platform</text>
+
+  <!-- Features -->
+  <g transform="translate(80, 400)">
+    <rect x="0" y="0" width="200" height="80" rx="12" fill="#18181b"/>
+    <text x="100" y="35" font-family="system-ui" font-size="14" fill="#22c55e" text-anchor="middle">Real-time Data</text>
+    <text x="100" y="58" font-family="system-ui" font-size="12" fill="#71717a" text-anchor="middle">Live market quotes</text>
+
+    <rect x="220" y="0" width="200" height="80" rx="12" fill="#18181b"/>
+    <text x="320" y="35" font-family="system-ui" font-size="14" fill="#22c55e" text-anchor="middle">AI Analysis</text>
+    <text x="320" y="58" font-family="system-ui" font-size="12" fill="#71717a" text-anchor="middle">Smart insights</text>
+
+    <rect x="440" y="0" width="200" height="80" rx="12" fill="#18181b"/>
+    <text x="540" y="35" font-family="system-ui" font-size="14" fill="#22c55e" text-anchor="middle">DCF Valuations</text>
+    <text x="540" y="58" font-family="system-ui" font-size="12" fill="#71717a" text-anchor="middle">Intrinsic value</text>
+
+    <rect x="660" y="0" width="200" height="80" rx="12" fill="#18181b"/>
+    <text x="760" y="35" font-family="system-ui" font-size="14" fill="#22c55e" text-anchor="middle">Ownership Data</text>
+    <text x="760" y="58" font-family="system-ui" font-size="12" fill="#71717a" text-anchor="middle">13F filings</text>
+  </g>
+
+  <!-- Stock chart decoration -->
+  <path d="M900 150 L920 180 L950 140 L980 170 L1020 120 L1060 160 L1100 100" stroke="#22c55e" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="1100" cy="100" r="6" fill="#22c55e"/>
+
+  <!-- URL -->
+  <text x="1120" y="590" font-family="system-ui" font-size="20" fill="#52525b" text-anchor="end">lician.com</text>
+</svg>

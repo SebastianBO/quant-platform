@@ -4,8 +4,8 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() || ''
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim() || ''
 
-// Admin password - should be set in environment variables
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'lician-admin-2025'
+// Admin password - MUST be set in environment variables (no fallback for security)
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
 
 // All edge functions organized by category
 export const EDGE_FUNCTIONS = {
@@ -225,11 +225,16 @@ interface SystemStatus {
 }
 
 export async function GET(request: NextRequest) {
-  // Check auth
+  // Check auth - ADMIN_PASSWORD must be configured
+  if (!ADMIN_PASSWORD) {
+    console.error('CRITICAL: ADMIN_PASSWORD environment variable is not set')
+    return NextResponse.json({ error: 'Server misconfigured' }, { status: 500 })
+  }
+
   const authHeader = request.headers.get('authorization')
   const providedPassword = authHeader?.replace('Bearer ', '')
 
-  if (providedPassword !== ADMIN_PASSWORD) {
+  if (!providedPassword || providedPassword !== ADMIN_PASSWORD) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

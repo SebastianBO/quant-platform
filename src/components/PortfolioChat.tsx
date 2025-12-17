@@ -7,7 +7,9 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { MessageCircle, Send, X, Bot, User, Loader2, Minimize2, Maximize2 } from "lucide-react"
+import { MessageCircle, Send, X, Bot, User, Loader2, Minimize2, Maximize2, Lock, Sparkles } from "lucide-react"
+import { usePremium } from "@/hooks/usePremium"
+import Link from "next/link"
 
 interface PortfolioContext {
   name: string
@@ -31,6 +33,7 @@ export default function PortfolioChat({ portfolioContext }: PortfolioChatProps) 
   const [isMinimized, setIsMinimized] = useState(false)
   const [input, setInput] = useState("")
   const scrollRef = useRef<HTMLDivElement>(null)
+  const { isPremium, isLoading: isPremiumLoading } = usePremium()
 
   const welcomeText = portfolioContext
     ? `Hi! I'm your AI assistant for the "${portfolioContext.name}" portfolio. I can help you analyze your ${portfolioContext.positionCount} positions worth ${new Intl.NumberFormat('en-US', { style: 'currency', currency: portfolioContext.currency }).format(portfolioContext.totalValue)}. What would you like to know?`
@@ -96,6 +99,49 @@ export default function PortfolioChat({ portfolioContext }: PortfolioChatProps) 
       >
         <MessageCircle className="h-6 w-6" />
       </Button>
+    )
+  }
+
+  // Show upgrade prompt for non-premium users
+  if (!isPremiumLoading && !isPremium) {
+    return (
+      <Card className="fixed z-50 shadow-2xl border-primary/30 bg-card bottom-6 right-6 w-96 h-auto">
+        <CardHeader className="py-3 px-4 border-b border-border flex flex-row items-center justify-between space-y-0">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+              <Lock className="w-4 h-4 text-primary" />
+            </div>
+            <CardTitle className="text-sm font-medium">AI Assistant</CardTitle>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => setIsOpen(false)}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </CardHeader>
+        <CardContent className="p-6 text-center">
+          <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+            <Sparkles className="w-8 h-8 text-primary" />
+          </div>
+          <h3 className="text-lg font-semibold mb-2">Premium Feature</h3>
+          <p className="text-muted-foreground text-sm mb-4">
+            Get instant AI-powered analysis of your portfolio, market insights, and personalized investment advice.
+          </p>
+          <Link
+            href="/premium"
+            className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-6 py-2.5 rounded-lg font-medium hover:bg-primary/90 transition-colors w-full"
+          >
+            <Sparkles className="w-4 h-4" />
+            Upgrade to Premium
+          </Link>
+          <p className="text-xs text-muted-foreground mt-3">
+            Starting at $109/month • 3-day free trial
+          </p>
+        </CardContent>
+      </Card>
     )
   }
 

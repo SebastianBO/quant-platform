@@ -1,4 +1,6 @@
 import { streamText, createGateway } from 'ai'
+import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/auth'
 
 export const maxDuration = 30
 
@@ -7,7 +9,21 @@ const gateway = createGateway({
   apiKey: process.env.AI_GATEWAY_API_KEY,
 })
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  // Require authentication to prevent API abuse
+  const { user, error: authError } = await requireAuth(req)
+  if (authError) {
+    return authError
+  }
+
+  // Require premium for AI chat features
+  if (!user.isPremium) {
+    return NextResponse.json(
+      { error: 'Premium subscription required for AI chat', upgrade_url: '/premium' },
+      { status: 403 }
+    )
+  }
+
   const { messages, portfolioContext } = await req.json()
 
   // Build system prompt with portfolio context if available

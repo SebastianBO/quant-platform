@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'lician-admin-2025'
+// Admin password - MUST be set in environment variables (no fallback for security)
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
 
 let supabase: SupabaseClient | null = null
 
@@ -16,9 +17,14 @@ function getSupabase() {
 }
 
 export async function POST(request: NextRequest) {
-  // Auth check
+  // Auth check - ADMIN_PASSWORD must be configured
+  if (!ADMIN_PASSWORD) {
+    console.error('CRITICAL: ADMIN_PASSWORD environment variable is not set')
+    return NextResponse.json({ error: 'Server misconfigured' }, { status: 500 })
+  }
+
   const authHeader = request.headers.get('Authorization')
-  if (authHeader !== `Bearer ${ADMIN_PASSWORD}`) {
+  if (!authHeader || authHeader !== `Bearer ${ADMIN_PASSWORD}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

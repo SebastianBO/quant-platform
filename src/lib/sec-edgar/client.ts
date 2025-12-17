@@ -269,14 +269,24 @@ export async function parseForm4Filing(
 }
 
 function parseForm4XML(xml: string, accessionNumber: string): Form4Filing {
-  const getValue = (tag: string): string => {
-    const regex = new RegExp(`<${tag}[^>]*>([^<]*)<\\/${tag}>`, 'i')
-    const m = xml.match(regex)
-    return m ? m[1].trim() : ''
+  // SEC Form 4 XML has nested <value> tags, e.g. <securityTitle><value>Common Stock</value></securityTitle>
+  // This helper extracts either the direct value or the nested <value> content
+  const getValue = (tag: string, context: string = xml): string => {
+    // First try to match nested <value> pattern
+    const nestedRegex = new RegExp(`<${tag}[^>]*>[\\s\\S]*?<value>([^<]*)</value>[\\s\\S]*?</${tag}>`, 'i')
+    const nestedMatch = context.match(nestedRegex)
+    if (nestedMatch) {
+      return nestedMatch[1].trim()
+    }
+    // Fallback to direct value
+    const directRegex = new RegExp(`<${tag}[^>]*>([^<]*)</${tag}>`, 'i')
+    const directMatch = context.match(directRegex)
+    return directMatch ? directMatch[1].trim() : ''
   }
 
   const getBoolean = (tag: string): boolean => {
-    return getValue(tag) === '1' || getValue(tag).toLowerCase() === 'true'
+    const val = getValue(tag)
+    return val === '1' || val.toLowerCase() === 'true'
   }
 
   const transactions: Form4Transaction[] = []
@@ -290,9 +300,7 @@ function parseForm4XML(xml: string, accessionNumber: string): Form4Filing {
     const trans = match[1]
 
     const getTransValue = (tag: string): string => {
-      const regex = new RegExp(`<${tag}[^>]*>([^<]*)<\\/${tag}>`, 'i')
-      const m = trans.match(regex)
-      return m ? m[1].trim() : ''
+      return getValue(tag, trans)
     }
 
     const getTransNumeric = (tag: string): number | undefined => {
@@ -321,9 +329,7 @@ function parseForm4XML(xml: string, accessionNumber: string): Form4Filing {
     const trans = match[1]
 
     const getTransValue = (tag: string): string => {
-      const regex = new RegExp(`<${tag}[^>]*>([^<]*)<\\/${tag}>`, 'i')
-      const m = trans.match(regex)
-      return m ? m[1].trim() : ''
+      return getValue(tag, trans)
     }
 
     const getTransNumeric = (tag: string): number | undefined => {

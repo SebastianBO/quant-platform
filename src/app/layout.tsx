@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { ThemeProvider } from "@/components/theme-provider"
+import { getOrganizationSchema, getWebSiteSchema } from "@/lib/seo"
 import "./globals.css"
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist" })
@@ -44,9 +45,16 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
   },
+  manifest: "/site.webmanifest",
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -71,15 +79,16 @@ export const metadata: Metadata = {
     creator: "@lician",
   },
   verification: {
-    // Add your Google Search Console verification code here
-    // Get it from: https://search.google.com/search-console
-    // Settings > Ownership verification > HTML tag
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "your-google-verification-code",
   },
   alternates: {
     canonical: "https://lician.com",
   },
 }
+
+// Global structured data schemas
+const organizationSchema = getOrganizationSchema()
+const websiteSchema = getWebSiteSchema()
 
 export default function RootLayout({
   children,
@@ -88,6 +97,29 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Preconnect to critical external domains for performance */}
+        <link rel="preconnect" href="https://supabase.co" />
+        <link rel="preconnect" href="https://eodhd.com" />
+        <link rel="preconnect" href="https://financialdatasets.ai" />
+        <link rel="dns-prefetch" href="https://supabase.co" />
+        <link rel="dns-prefetch" href="https://eodhd.com" />
+        <link rel="dns-prefetch" href="https://financialdatasets.ai" />
+        <link rel="dns-prefetch" href="https://api.openai.com" />
+        <link rel="dns-prefetch" href="https://api.anthropic.com" />
+
+        {/* Theme color for browser chrome */}
+        <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+
+        {/* Global Organization and Website Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([organizationSchema, websiteSchema]),
+          }}
+        />
+      </head>
       <body className={`${geist.variable} ${geistMono.variable} font-sans antialiased`}>
         <ThemeProvider
           attribute="class"
