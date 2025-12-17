@@ -58,6 +58,7 @@ interface DataSources {
   quarterlyCashFlow?: string
   metrics?: string
   insiderTrades?: string
+  analystEstimates?: string
 }
 
 interface StockData {

@@ -96,7 +96,7 @@ export async function GET(request: NextRequest) {
       fetchInternal('/financial-metrics', { ticker, period: 'annual', limit: '1' }),
       fetchInternal('/financial-metrics', { ticker, period: 'annual', limit: '5' }),
       fetchInternal('/insider-trades', { ticker, limit: '20' }),
-      fetchFD('/analyst-estimates/', { ticker, limit: '8' }).catch(() => ({ analyst_estimates: [] })),
+      fetchInternal('/analyst-estimates', { ticker, limit: '8' }),
       fetchInternal('/financials/segmented-revenues', { ticker, period: 'annual', limit: '3' }),
       fetchFD('/company/facts/', { ticker }).catch(() => ({ company_facts: null })),
       fetchInternal('/financials/income-statements', { ticker, period: 'quarterly', limit: '8' }),
@@ -132,6 +132,7 @@ export async function GET(request: NextRequest) {
       quarterlyCashFlow: quarterlyCashFlowResult._meta?.source || 'financialdatasets.ai',
       metrics: metrics._meta?.source || 'financialdatasets.ai',
       insiderTrades: insiderTrades._meta?.source || 'financialdatasets.ai',
+      analystEstimates: analystEstimates._meta?.source || 'financialdatasets.ai',
     }
 
     // Parse segmented revenues - extract product segments and geographic segments

@@ -3,6 +3,9 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
 // Financial Datasets API Compatible Endpoint
 // Matches: https://api.financialdatasets.ai/analyst-estimates
+// Falls back to Financial Datasets API if Supabase has no data
+
+const FINANCIAL_DATASETS_API_KEY = process.env.FINANCIAL_DATASETS_API_KEY
 
 let supabase: SupabaseClient | null = null
 
@@ -14,6 +17,26 @@ function getSupabase() {
     )
   }
   return supabase
+}
+
+// Fallback to Financial Datasets API
+async function fetchFromFinancialDatasets(ticker: string, limit: number) {
+  if (!FINANCIAL_DATASETS_API_KEY) return null
+
+  try {
+    const url = `https://api.financialdatasets.ai/analyst-estimates/?ticker=${ticker}&limit=${limit}`
+    const response = await fetch(url, {
+      headers: { 'X-API-Key': FINANCIAL_DATASETS_API_KEY }
+    })
+
+    if (!response.ok) return null
+
+    const data = await response.json()
+    return data.analyst_estimates || []
+  } catch (error) {
+    console.error('Financial Datasets API error:', error)
+    return null
+  }
 }
 
 export async function GET(request: NextRequest) {
@@ -42,23 +65,42 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Database error' }, { status: 500 })
     }
 
-    // Transform to Financial Datasets format
-    const estimates = (data || []).map(row => ({
-      ticker: row.ticker,
-      fiscal_period: row.fiscal_period,
-      period: row.period,
-      eps_estimate: row.eps_estimate,
-      eps_actual: row.eps_actual,
-      eps_surprise: row.eps_surprise,
-      eps_surprise_percent: row.eps_surprise_percent,
-      revenue_estimate: row.revenue_estimate,
-      revenue_actual: row.revenue_actual,
-      revenue_surprise: row.revenue_surprise,
-      revenue_surprise_percent: row.revenue_surprise_percent,
-      num_analysts: row.num_analysts,
-    }))
+    let estimates: unknown[] = []
+    let dataSource = 'supabase'
 
-    return NextResponse.json({ analyst_estimates: estimates })
+    if (data && data.length > 0) {
+      // Use Supabase data
+      estimates = data.map(row => ({
+        ticker: row.ticker,
+        fiscal_period: row.fiscal_period,
+        period: row.period,
+        eps_estimate: row.eps_estimate,
+        eps_actual: row.eps_actual,
+        eps_surprise: row.eps_surprise,
+        eps_surprise_percent: row.eps_surprise_percent,
+        revenue_estimate: row.revenue_estimate,
+        revenue_actual: row.revenue_actual,
+        revenue_surprise: row.revenue_surprise,
+        revenue_surprise_percent: row.revenue_surprise_percent,
+        num_analysts: row.num_analysts,
+      }))
+    } else {
+      // Fallback to Financial Datasets API
+      const fallbackData = await fetchFromFinancialDatasets(ticker.toUpperCase(), limit)
+      if (fallbackData && fallbackData.length > 0) {
+        estimates = fallbackData
+        dataSource = 'financialdatasets.ai'
+      }
+    }
+
+    return NextResponse.json({
+      analyst_estimates: estimates,
+      _meta: {
+        source: dataSource,
+        count: estimates.length,
+        fetched_at: new Date().toISOString(),
+      }
+    })
   } catch (error) {
     console.error('Analyst estimates API error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
