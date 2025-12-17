@@ -95,7 +95,20 @@ async function fetchAnalystEstimates(ticker: string, limit: number = 8): Promise
     })
     if (!response.ok) return []
     const data = await response.json()
-    return data.analyst_estimates || []
+    // Map API response and add ticker (API doesn't return ticker in response)
+    // Also map earnings_per_share to eps_estimate
+    return (data.analyst_estimates || []).map((e: Record<string, unknown>) => ({
+      ticker: ticker.toUpperCase(),
+      fiscal_period: e.fiscal_period,
+      period: e.period,
+      eps_estimate: e.earnings_per_share || e.eps_estimate,
+      eps_actual: e.eps_actual,
+      eps_surprise: e.eps_surprise,
+      eps_surprise_percent: e.eps_surprise_percent,
+      revenue_estimate: e.revenue_estimate,
+      revenue_actual: e.revenue_actual,
+      num_analysts: e.num_analysts,
+    }))
   } catch {
     return []
   }
@@ -109,7 +122,17 @@ async function fetchPriceTargets(ticker: string, limit: number = 10): Promise<Pr
     })
     if (!response.ok) return []
     const data = await response.json()
-    return data.price_targets || []
+    // Add ticker to each price target (API may not include it)
+    return (data.price_targets || []).map((t: Record<string, unknown>) => ({
+      ticker: t.ticker || ticker.toUpperCase(),
+      analyst_name: t.analyst_name,
+      analyst_company: t.analyst_company,
+      rating: t.rating,
+      rating_prior: t.rating_prior,
+      price_target: t.price_target,
+      price_target_prior: t.price_target_prior,
+      reported_date: t.reported_date,
+    }))
   } catch {
     return []
   }
