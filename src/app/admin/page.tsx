@@ -141,7 +141,21 @@ export default function AdminDashboard() {
   const [error, setError] = useState<string | null>(null)
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null)
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set())
-  const [activeTab, setActiveTab] = useState<'overview' | 'functions' | 'tables' | 'apis' | 'logs' | 'sync'>('overview')
+  const [activeTab, setActiveTab] = useState<'overview' | 'functions' | 'tables' | 'apis' | 'logs' | 'sync' | 'analysts'>('overview')
+  const [analystStats, setAnalystStats] = useState<{
+    totalRatings: number
+    totalAnalysts: number
+    totalFirms: number
+    recentRatings: Array<{
+      ticker: string
+      firm: string
+      rating: string
+      priceTarget: number | null
+      ratingDate: string
+    }>
+    newsSources: string[]
+  } | null>(null)
+  const [analystLoading, setAnalystLoading] = useState(false)
   const [syncActionLoading, setSyncActionLoading] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
   const [testingFunction, setTestingFunction] = useState<string | null>(null)
@@ -234,6 +248,85 @@ export default function AdminDashboard() {
       }))
     } finally {
       setTestingFunction(null)
+    }
+  }
+
+  // Fetch analyst ratings stats
+  const fetchAnalystStats = async () => {
+    if (!password) return
+    setAnalystLoading(true)
+
+    try {
+      // Fetch from multiple endpoints
+      const [ratingsRes, firmsRes] = await Promise.all([
+        fetch('/api/v1/analyst-ratings?limit=10', {
+          headers: { 'Authorization': `Bearer ${password}` }
+        }),
+        fetch('/api/admin/status', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${password}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ action: 'get-analyst-stats' })
+        })
+      ])
+
+      const ratingsData = await ratingsRes.json()
+      const statsData = await firmsRes.json()
+
+      setAnalystStats({
+        totalRatings: statsData.analystStats?.totalRatings || ratingsData._meta?.count || 0,
+        totalAnalysts: statsData.analystStats?.totalAnalysts || 0,
+        totalFirms: statsData.analystStats?.totalFirms || 37,
+        recentRatings: (ratingsData.analyst_ratings || []).map((r: Record<string, unknown>) => ({
+          ticker: r.ticker,
+          firm: (r.firm as Record<string, unknown>)?.name || 'Unknown',
+          rating: r.rating,
+          priceTarget: r.priceTarget,
+          ratingDate: r.ratingDate
+        })),
+        newsSources: statsData.analystStats?.newsSources || []
+      })
+    } catch (err) {
+      console.error('Failed to fetch analyst stats:', err)
+    } finally {
+      setAnalystLoading(false)
+    }
+  }
+
+  // Trigger analyst ratings scraper
+  const triggerAnalystScraper = async () => {
+    setSyncActionLoading('analyst-scraper')
+
+    try {
+      const response = await fetch('/api/cron/sync-analyst-ratings', {
+        headers: { 'Authorization': `Bearer ${password}` }
+      })
+
+      const result = await response.json()
+
+      setFunctionLogs(prev => [{
+        id: `analyst-scraper-${Date.now()}`,
+        functionName: 'sync-analyst-ratings',
+        status: result.success ? 'success' : 'error',
+        duration: result.summary?.duration,
+        timestamp: new Date().toISOString(),
+        message: `Processed ${result.summary?.sourcesProcessed || 0} sources, extracted ${result.summary?.ratingsExtracted || 0} ratings`
+      }, ...prev.slice(0, 49)])
+
+      // Refresh stats after scrape
+      setTimeout(fetchAnalystStats, 2000)
+    } catch (err) {
+      setFunctionLogs(prev => [{
+        id: `analyst-scraper-${Date.now()}`,
+        functionName: 'sync-analyst-ratings',
+        status: 'error',
+        timestamp: new Date().toISOString(),
+        message: String(err)
+      }, ...prev.slice(0, 49)])
+    } finally {
+      setSyncActionLoading(null)
     }
   }
 
@@ -480,6 +573,7 @@ export default function AdminDashboard() {
             {[
               { id: 'overview', label: 'Overview', icon: <BarChart3 className="w-4 h-4" /> },
               { id: 'sync', label: 'Financial Sync', icon: <RefreshCw className="w-4 h-4" /> },
+              { id: 'analysts', label: 'Analyst Ratings', icon: <TrendingUp className="w-4 h-4" /> },
               { id: 'functions', label: `Functions (${totalFunctions})`, icon: <Zap className="w-4 h-4" /> },
               { id: 'tables', label: `Tables (${totalTables})`, icon: <Database className="w-4 h-4" /> },
               { id: 'apis', label: `APIs (${healthyApis}/${totalApis})`, icon: <Globe className="w-4 h-4" /> },
@@ -825,6 +919,191 @@ export default function AdminDashboard() {
               </Card>
             )}
           </>
+        )}
+
+        {/* Analyst Ratings Tab */}
+        {activeTab === 'analysts' && (
+          <div className="space-y-6">
+            {/* Scraper Controls */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5" />
+                    Analyst Ratings Scraper
+                  </div>
+                  <Button
+                    onClick={fetchAnalystStats}
+                    disabled={analystLoading}
+                    variant="outline"
+                    size="sm"
+                  >
+                    <RefreshCw className={`w-4 h-4 mr-2 ${analystLoading ? 'animate-spin' : ''}`} />
+                    Refresh Stats
+                  </Button>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                  <div className="p-4 bg-secondary/30 rounded-lg text-center">
+                    <p className="text-3xl font-bold text-primary">{formatNumber(analystStats?.totalRatings || 0)}</p>
+                    <p className="text-sm text-muted-foreground">Total Ratings</p>
+                  </div>
+                  <div className="p-4 bg-secondary/30 rounded-lg text-center">
+                    <p className="text-3xl font-bold text-blue-500">{formatNumber(analystStats?.totalAnalysts || 0)}</p>
+                    <p className="text-sm text-muted-foreground">Analysts Tracked</p>
+                  </div>
+                  <div className="p-4 bg-secondary/30 rounded-lg text-center">
+                    <p className="text-3xl font-bold text-green-500">{analystStats?.totalFirms || 37}</p>
+                    <p className="text-sm text-muted-foreground">Firms Covered</p>
+                  </div>
+                  <div className="p-4 bg-secondary/30 rounded-lg text-center">
+                    <p className="text-3xl font-bold text-orange-500">26</p>
+                    <p className="text-sm text-muted-foreground">News Sources</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <Button
+                    onClick={triggerAnalystScraper}
+                    disabled={syncActionLoading !== null}
+                    className="flex-1"
+                  >
+                    {syncActionLoading === 'analyst-scraper' ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <Play className="w-4 h-4 mr-2" />
+                    )}
+                    Run Scraper Now
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => window.open('/api/v1/analyst-ratings?limit=100', '_blank')}
+                  >
+                    <Eye className="w-4 h-4 mr-2" />
+                    View API
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => window.open('/api/v1/analysts?limit=50', '_blank')}
+                  >
+                    <Users className="w-4 h-4 mr-2" />
+                    Analyst Leaderboard
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Recent Ratings */}
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <FileText className="w-5 h-5" />
+                    Recent Analyst Ratings
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2 max-h-[300px] overflow-y-auto">
+                    {analystStats?.recentRatings?.length ? (
+                      analystStats.recentRatings.map((rating, i) => (
+                        <div
+                          key={i}
+                          className={`flex items-center justify-between py-2 px-3 rounded-lg ${
+                            rating.rating?.toLowerCase().includes('buy') ? 'bg-green-500/10' :
+                            rating.rating?.toLowerCase().includes('sell') ? 'bg-red-500/10' :
+                            'bg-secondary/30'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="font-mono font-bold">{rating.ticker}</span>
+                            <span className="text-sm text-muted-foreground">{rating.firm}</span>
+                          </div>
+                          <div className="text-right">
+                            <span className={`text-sm font-medium ${
+                              rating.rating?.toLowerCase().includes('buy') ? 'text-green-500' :
+                              rating.rating?.toLowerCase().includes('sell') ? 'text-red-500' :
+                              'text-yellow-500'
+                            }`}>
+                              {rating.rating}
+                            </span>
+                            {rating.priceTarget && (
+                              <p className="text-xs text-muted-foreground">${rating.priceTarget}</p>
+                            )}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-center text-muted-foreground py-8">
+                        No ratings yet. Run the scraper to collect data.
+                      </p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* News Sources */}
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <Globe className="w-5 h-5" />
+                    News Sources (26 Active)
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-1 max-h-[300px] overflow-y-auto text-xs">
+                    {[
+                      'PR Newswire - Business', 'PR Newswire - All News',
+                      'GlobeNewswire - Analyst', 'GlobeNewswire - All',
+                      'Business Wire', 'AccessWire',
+                      'MarketWatch - Market Pulse', 'MarketWatch - Top Stories', 'MarketWatch - Stocks',
+                      'Seeking Alpha - Market Currents', 'Seeking Alpha - Stock Ideas',
+                      'Yahoo Finance', 'Benzinga - General', 'Benzinga - Analyst Ratings',
+                      'TheStreet', 'Investor Place', 'Motley Fool',
+                      'Reuters - Business', 'CNBC - Top News', 'CNBC - Stock Blog',
+                      'Zacks - Commentary', 'Barrons', 'Financial Times', 'WSJ Markets',
+                      'TechCrunch', 'BioPharma Dive'
+                    ].map((source) => (
+                      <div key={source} className="flex items-center gap-2 py-1.5 px-2 bg-secondary/30 rounded">
+                        <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                        <span className="font-mono">{source}</span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Cron Schedule */}
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Clock className="w-5 h-5" />
+                  Automated Sync Schedule
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-4 bg-secondary/30 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <RefreshCw className="w-4 h-4 text-primary" />
+                      <span className="font-medium">scrape-analyst-ratings</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Every 2 hours on weekdays</p>
+                    <p className="text-xs text-muted-foreground mt-1 font-mono">0 */2 * * 1-5</p>
+                  </div>
+                  <div className="p-4 bg-secondary/30 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <BarChart3 className="w-4 h-4 text-blue-500" />
+                      <span className="font-medium">update-analyst-performance</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Daily at 6 AM UTC</p>
+                    <p className="text-xs text-muted-foreground mt-1 font-mono">0 6 * * *</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         )}
 
         {/* Financial Sync Tab */}
