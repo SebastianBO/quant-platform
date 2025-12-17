@@ -3,16 +3,27 @@
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
-// RSS feed sources for analyst ratings news
+// RSS feed sources for analyst ratings news - comprehensive coverage
 export const NEWS_SOURCES = [
+  // Press Release Wires (Primary Sources)
   {
     name: 'PR Newswire - Business',
     url: 'https://www.prnewswire.com/rss/financial-services-news.rss',
     type: 'press_release'
   },
   {
-    name: 'GlobeNewswire - Business',
+    name: 'PR Newswire - All News',
+    url: 'https://www.prnewswire.com/rss/news-releases-list.rss',
+    type: 'press_release'
+  },
+  {
+    name: 'GlobeNewswire - Analyst',
     url: 'https://www.globenewswire.com/RssFeed/subjectcode/14-Analyst%20Comment%2FRating/feedTitle/GlobeNewswire%20-%20Analyst%20Comment%2FRating',
+    type: 'press_release'
+  },
+  {
+    name: 'GlobeNewswire - All',
+    url: 'https://www.globenewswire.com/RssFeed/orgclass/1-All%20Sources/feedTitle/GlobeNewswire%20-%20All%20News',
     type: 'press_release'
   },
   {
@@ -21,25 +32,171 @@ export const NEWS_SOURCES = [
     type: 'press_release'
   },
   {
-    name: 'MarketWatch',
+    name: 'AccessWire',
+    url: 'https://www.accesswire.com/rss/news.xml',
+    type: 'press_release'
+  },
+  // Major Financial News
+  {
+    name: 'MarketWatch - Market Pulse',
     url: 'https://feeds.marketwatch.com/marketwatch/marketpulse/',
     type: 'news_article'
   },
   {
-    name: 'Seeking Alpha',
+    name: 'MarketWatch - Top Stories',
+    url: 'https://feeds.marketwatch.com/marketwatch/topstories/',
+    type: 'news_article'
+  },
+  {
+    name: 'MarketWatch - Stocks',
+    url: 'https://feeds.marketwatch.com/marketwatch/StockstoWatch/',
+    type: 'news_article'
+  },
+  {
+    name: 'Seeking Alpha - Market Currents',
     url: 'https://seekingalpha.com/market_currents.xml',
+    type: 'news_article'
+  },
+  {
+    name: 'Seeking Alpha - Stock Ideas',
+    url: 'https://seekingalpha.com/feed.xml',
+    type: 'news_article'
+  },
+  {
+    name: 'Yahoo Finance - Top',
+    url: 'https://finance.yahoo.com/news/rssindex',
+    type: 'news_article'
+  },
+  {
+    name: 'Benzinga - General',
+    url: 'https://www.benzinga.com/feeds/benzinga.xml',
+    type: 'news_article'
+  },
+  {
+    name: 'Benzinga - Analyst Ratings',
+    url: 'https://www.benzinga.com/feeds/analyst-ratings.xml',
+    type: 'news_article'
+  },
+  {
+    name: 'TheStreet',
+    url: 'https://www.thestreet.com/feeds/rss/all-stories.rss',
+    type: 'news_article'
+  },
+  {
+    name: 'Investor Place',
+    url: 'https://investorplace.com/feed/',
+    type: 'news_article'
+  },
+  {
+    name: 'Motley Fool',
+    url: 'https://www.fool.com/feeds/index.aspx',
+    type: 'news_article'
+  },
+  // Reuters & Bloomberg alternatives
+  {
+    name: 'Reuters - Business',
+    url: 'https://www.reutersagency.com/feed/?best-topics=business-finance',
+    type: 'news_article'
+  },
+  {
+    name: 'CNBC - Top News',
+    url: 'https://www.cnbc.com/id/100003114/device/rss/rss.html',
+    type: 'news_article'
+  },
+  {
+    name: 'CNBC - Stock Blog',
+    url: 'https://www.cnbc.com/id/10000664/device/rss/rss.html',
+    type: 'news_article'
+  },
+  // Specialty Financial
+  {
+    name: 'Zacks - Commentary',
+    url: 'https://www.zacks.com/commentary/rss/',
+    type: 'news_article'
+  },
+  {
+    name: 'Barrons',
+    url: 'https://www.barrons.com/xml/rss/3_7510.xml',
+    type: 'news_article'
+  },
+  {
+    name: 'Financial Times - Markets',
+    url: 'https://www.ft.com/markets?format=rss',
+    type: 'news_article'
+  },
+  {
+    name: 'WSJ - Markets',
+    url: 'https://feeds.a.dj.com/rss/RSSMarketsMain.xml',
+    type: 'news_article'
+  },
+  // Sector Specific
+  {
+    name: 'TechCrunch',
+    url: 'https://techcrunch.com/feed/',
+    type: 'news_article'
+  },
+  {
+    name: 'BioPharma Dive',
+    url: 'https://www.biopharmadive.com/feeds/news/',
     type: 'news_article'
   }
 ]
 
-// Known analyst firms for matching
+// Known analyst firms for matching - comprehensive list
 const ANALYST_FIRMS = [
-  'Goldman Sachs', 'Morgan Stanley', 'JPMorgan', 'JP Morgan', 'Bank of America', 'BofA',
-  'Citigroup', 'Citi', 'Wells Fargo', 'Barclays', 'UBS', 'Credit Suisse', 'Deutsche Bank',
-  'HSBC', 'RBC Capital', 'Jefferies', 'Piper Sandler', 'Stifel', 'Raymond James',
-  'Wedbush', 'Needham', 'Oppenheimer', 'Cowen', 'Canaccord', 'BMO Capital', 'KeyBanc',
-  'Wolfe Research', 'Bernstein', 'Evercore', 'Loop Capital', 'DA Davidson', 'Rosenblatt',
-  'Mizuho', 'Susquehanna', 'Truist', 'Argus', 'CFRA', 'Morningstar', 'Zacks'
+  // Tier 1 - Bulge Bracket
+  'Goldman Sachs', 'Morgan Stanley', 'JPMorgan', 'JP Morgan', 'J.P. Morgan',
+  'Bank of America', 'BofA', 'BofA Securities', 'Merrill Lynch',
+  'Citigroup', 'Citi', 'Citibank',
+  'Wells Fargo', 'Barclays', 'UBS', 'Credit Suisse', 'Deutsche Bank',
+  'HSBC', 'BNP Paribas', 'Societe Generale',
+  // Tier 1 - Regional Leaders
+  'RBC Capital', 'RBC', 'Royal Bank of Canada',
+  'TD Securities', 'TD Cowen', 'Scotiabank',
+  'Nomura', 'Daiwa', 'SMBC Nikko',
+  // Tier 2 - Major Independent
+  'Jefferies', 'Piper Sandler', 'Piper Jaffray',
+  'Stifel', 'Stifel Nicolaus', 'Raymond James',
+  'Wedbush', 'Wedbush Securities',
+  'Needham', 'Needham & Company',
+  'Oppenheimer', 'Cowen', 'Cowen and Company',
+  'Canaccord', 'Canaccord Genuity',
+  'BMO Capital', 'BMO', 'KeyBanc', 'KeyBanc Capital Markets',
+  'Wolfe Research', 'Bernstein', 'Sanford Bernstein', 'AllianceBernstein',
+  'Evercore', 'Evercore ISI',
+  'William Blair', 'Baird', 'Robert W. Baird',
+  // Boutique
+  'Loop Capital', 'DA Davidson', 'D.A. Davidson',
+  'Rosenblatt', 'Rosenblatt Securities',
+  'Mizuho', 'Mizuho Securities',
+  'Susquehanna', 'Susquehanna International', 'SIG',
+  'Truist', 'Truist Securities', 'SunTrust',
+  'Ladenburg Thalmann', 'Ladenburg',
+  'B. Riley', 'B Riley', 'Craig-Hallum',
+  'Lake Street', 'Lake Street Capital',
+  'HC Wainwright', 'H.C. Wainwright',
+  'Roth Capital', 'Roth MKM',
+  'Benchmark', 'Benchmark Company',
+  'Maxim Group', 'Northland Securities', 'Northland Capital',
+  // Research Firms
+  'Argus', 'Argus Research',
+  'CFRA', 'CFRA Research',
+  'Morningstar', 'Zacks', 'Zacks Investment Research',
+  'S&P Global', 'S&P Capital IQ',
+  'New Street Research', 'New Street',
+  'Redburn', 'Atlantic Equities',
+  // Tech Focused
+  'Wedbush Securities', 'D.A. Davidson',
+  'Monness Crespi', 'Monness Crespi Hardt',
+  'Guggenheim', 'Guggenheim Securities',
+  'JMP Securities', 'JMP',
+  'Citic Securities', 'CLSA',
+  // European
+  'Berenberg', 'Exane BNP', 'Kepler Cheuvreux',
+  'Liberum', 'Numis', 'Peel Hunt', 'Shore Capital',
+  // Asian
+  'Macquarie', 'CLSA', 'Haitong',
+  'China Renaissance', 'CICC'
 ]
 
 // Rating action keywords
