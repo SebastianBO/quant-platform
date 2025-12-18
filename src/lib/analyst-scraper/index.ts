@@ -304,10 +304,11 @@ const KNOWN_TICKERS = new Set([
 // Common false positives to exclude
 const EXCLUDED_WORDS = new Set([
   'THE', 'FOR', 'AND', 'WITH', 'FROM', 'INC', 'LLC', 'CEO', 'CFO', 'IPO', 'ETF',
-  'NYSE', 'SEC', 'FDA', 'USA', 'COO', 'CTO', 'CIO', 'CMO',
+  'NYSE', 'SEC', 'FDA', 'USA', 'COO', 'CTO', 'CIO', 'CMO', 'ESG', 'EPS',
   'BUY', 'SELL', 'HOLD', 'NEW', 'OLD', 'TOP', 'ALL', 'ARE', 'HAS', 'WAS',
   'EST', 'PST', 'UTC', 'GMT', 'USD', 'EUR', 'GBP', 'JPY', 'CNY', 'CAD',
-  'AI', 'ML', 'IT', 'PR', 'HR', 'QA', 'API', 'AWS', 'GCP'
+  'AI', 'ML', 'IT', 'PR', 'HR', 'QA', 'API', 'AWS', 'GCP',
+  'PRICE', 'TARGET', 'RATING', 'STOCK', 'SHARE', 'MARKET', 'FIRM', 'REPORT'
 ])
 
 // Extract ticker symbols from text
