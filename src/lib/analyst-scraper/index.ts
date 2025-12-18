@@ -278,23 +278,81 @@ function cleanHtml(text: string): string {
     .trim()
 }
 
+// Common stock tickers to match directly
+const KNOWN_TICKERS = new Set([
+  'AAPL', 'MSFT', 'GOOGL', 'GOOG', 'AMZN', 'NVDA', 'META', 'TSLA', 'BRK', 'TSM',
+  'AMD', 'INTC', 'CRM', 'ORCL', 'ADBE', 'NFLX', 'AVGO', 'QCOM', 'TXN', 'CSCO',
+  'IBM', 'INTU', 'AMAT', 'ADI', 'LRCX', 'MU', 'KLAC', 'SNPS', 'CDNS', 'NOW',
+  'PANW', 'SNOW', 'CRWD', 'DDOG', 'ZS', 'NET', 'FTNT', 'TEAM', 'WDAY', 'SPLK',
+  'JPM', 'V', 'MA', 'BAC', 'WFC', 'GS', 'MS', 'BLK', 'C', 'USB', 'AXP', 'SCHW',
+  'UNH', 'JNJ', 'LLY', 'PFE', 'MRK', 'ABBV', 'TMO', 'ABT', 'DHR', 'BMY', 'AMGN',
+  'GILD', 'VRTX', 'REGN', 'ISRG', 'SYK', 'MDT', 'ELV', 'CI', 'CVS', 'HCA',
+  'WMT', 'PG', 'KO', 'PEP', 'COST', 'HD', 'MCD', 'NKE', 'LOW', 'TGT', 'SBUX',
+  'CAT', 'DE', 'BA', 'RTX', 'HON', 'UPS', 'FDX', 'GE', 'LMT', 'NOC', 'MMM',
+  'XOM', 'CVX', 'COP', 'SLB', 'EOG', 'PXD', 'MPC', 'VLO', 'PSX', 'OXY', 'DVN',
+  'DIS', 'CMCSA', 'VZ', 'T', 'TMUS', 'CHTR', 'NXPI', 'ATVI', 'EA', 'TTWO',
+  'GME', 'AMC', 'PLTR', 'SOFI', 'RIVN', 'LCID', 'HOOD', 'COIN', 'RBLX', 'U',
+  'UBER', 'LYFT', 'ABNB', 'DASH', 'SNAP', 'PINS', 'ZM', 'PTON', 'DOCU', 'OKTA',
+  'BABA', 'PDD', 'JD', 'NIO', 'BIDU', 'NTES', 'LI', 'XPEV', 'BILI', 'TME',
+  'MRNA', 'BNTX', 'SGEN', 'ALNY', 'IONS', 'SRPT', 'BMRN', 'EXEL', 'NBIX',
+  'SPY', 'QQQ', 'IWM', 'DIA', 'VOO', 'VTI', 'ARKK', 'XLF', 'XLE', 'XLK',
+  'AMT', 'PLD', 'CCI', 'EQIX', 'PSA', 'SPG', 'O', 'WELL', 'DLR', 'AVB',
+  'NEE', 'DUK', 'SO', 'D', 'AEP', 'EXC', 'SRE', 'XEL', 'ED', 'PEG',
+  'LIN', 'APD', 'SHW', 'FCX', 'NEM', 'ECL', 'DD', 'NUE', 'VMC', 'MLM'
+])
+
+// Common false positives to exclude
+const EXCLUDED_WORDS = new Set([
+  'THE', 'FOR', 'AND', 'WITH', 'FROM', 'INC', 'LLC', 'CEO', 'CFO', 'IPO', 'ETF',
+  'NYSE', 'SEC', 'FDA', 'USA', 'COO', 'CTO', 'CIO', 'CMO',
+  'BUY', 'SELL', 'HOLD', 'NEW', 'OLD', 'TOP', 'ALL', 'ARE', 'HAS', 'WAS',
+  'EST', 'PST', 'UTC', 'GMT', 'USD', 'EUR', 'GBP', 'JPY', 'CNY', 'CAD',
+  'AI', 'ML', 'IT', 'PR', 'HR', 'QA', 'API', 'AWS', 'GCP'
+])
+
 // Extract ticker symbols from text
 function extractTickers(text: string): string[] {
-  // Match patterns like (NASDAQ: AAPL) or (NYSE: MSFT) or just $AAPL
-  const patterns = [
-    /\((?:NASDAQ|NYSE|AMEX|NYSEARCA|OTC):\s*([A-Z]{1,5})\)/gi,
-    /\$([A-Z]{1,5})\b/g,
-    /\b([A-Z]{2,5})\b(?=\s+(?:stock|shares|common stock))/gi
-  ]
-
   const tickers = new Set<string>()
+  let match
 
-  for (const pattern of patterns) {
-    let match
-    while ((match = pattern.exec(text)) !== null) {
-      const ticker = match[1].toUpperCase()
-      // Filter out common false positives
-      if (!['THE', 'FOR', 'AND', 'WITH', 'FROM', 'INC', 'LLC', 'CEO', 'CFO', 'IPO', 'ETF', 'NYSE', 'SEC'].includes(ticker)) {
+  // Pattern 1: Exchange format (NASDAQ: AAPL), (NYSE: MSFT)
+  const exchangePattern = /\((?:NASDAQ|NYSE|AMEX|NYSEARCA|OTC|OTCQX|OTCQB):\s*([A-Z]{1,5})\)/gi
+  while ((match = exchangePattern.exec(text)) !== null) {
+    tickers.add(match[1].toUpperCase())
+  }
+
+  // Pattern 2: Cashtag format $AAPL
+  const cashtagPattern = /\$([A-Z]{1,5})\b/g
+  while ((match = cashtagPattern.exec(text)) !== null) {
+    const ticker = match[1].toUpperCase()
+    if (!EXCLUDED_WORDS.has(ticker)) {
+      tickers.add(ticker)
+    }
+  }
+
+  // Pattern 3: Stock/shares/price context "AAPL stock" "TSLA shares" "NVDA price target"
+  const stockPattern = /\b([A-Z]{2,5})\b(?=\s+(?:stock|shares|common\s+stock|price|target|rating))/gi
+  while ((match = stockPattern.exec(text)) !== null) {
+    const ticker = match[1].toUpperCase()
+    if (!EXCLUDED_WORDS.has(ticker)) {
+      tickers.add(ticker)
+    }
+  }
+
+  // Pattern 4: Known tickers mentioned standalone (most important!)
+  for (const knownTicker of KNOWN_TICKERS) {
+    const regex = new RegExp(`\\b${knownTicker}\\b`, 'g')
+    if (regex.test(text.toUpperCase())) {
+      tickers.add(knownTicker)
+    }
+  }
+
+  // Pattern 5: Ticker in parentheses after company name "Apple (AAPL)"
+  const parenPattern = /\(([A-Z]{2,5})\)/g
+  while ((match = parenPattern.exec(text)) !== null) {
+    const ticker = match[1].toUpperCase()
+    if (!EXCLUDED_WORDS.has(ticker)) {
+      if (KNOWN_TICKERS.has(ticker) || ticker.length >= 3) {
         tickers.add(ticker)
       }
     }
