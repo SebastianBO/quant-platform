@@ -173,6 +173,8 @@ const LEARNING_PAGES = [
   'how-to-invest',
   'technical-analysis',
   'day-trading',
+  'value-investing',
+  'growth-investing',
 ]
 
 // Popular stock screener filter combinations for SEO
@@ -411,6 +413,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Penny Stocks - High search volume
     {
       url: `${baseUrl}/penny-stocks`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    // Blue Chip Stocks - High search volume
+    {
+      url: `${baseUrl}/blue-chip-stocks`,
       lastModified: currentDate,
       changeFrequency: 'weekly',
       priority: 0.9,
