@@ -156,7 +156,7 @@ export default async function ShouldIBuyPage({ params }: Props) {
   const faqSchema = getFAQSchema(extendedFaqs)
 
   // Combine all schemas
-  const schemas = [
+  const schemas: object[] = [
     breadcrumbSchema,
     articleSchema,
     corporationSchema,

@@ -137,7 +137,7 @@ export default async function PredictionPage({ params }: Props) {
   const faqSchema = getFAQSchema(extendedFaqs)
 
   // Combine all schemas
-  const schemas = [
+  const schemas: object[] = [
     breadcrumbSchema,
     articleSchema,
     corporationSchema,

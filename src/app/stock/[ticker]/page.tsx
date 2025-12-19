@@ -212,7 +212,7 @@ export default async function StockPage({ params }: Props) {
   const faqSchema = getFAQSchema(extendedFaqs)
 
   // Combine all schemas
-  const schemas = [
+  const schemas: object[] = [
     breadcrumbSchema,
     articleSchema,
     financialProductSchema,

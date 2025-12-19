@@ -50,7 +50,7 @@ export function Footer() {
               <ul className="space-y-3">
                 {Array.isArray(links) && typeof links[0] === 'object' ? (
                   // Markets with href
-                  links.map((link: any) => (
+                  (links as Array<{label: string, href: string}>).map((link) => (
                     <li key={link.label}>
                       <Link href={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                         {link.label}
@@ -59,7 +59,7 @@ export function Footer() {
                   ))
                 ) : (
                   // Other categories
-                  links.map((link: string) => (
+                  (links as string[]).map((link) => (
                     <li key={link}>
                       <Link href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                         {link}
