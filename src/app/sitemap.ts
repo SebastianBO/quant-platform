@@ -276,6 +276,94 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'hourly',
       priority: 0.95,
     },
+    // Short Interest - High-value SEO page
+    {
+      url: `${baseUrl}/short-interest`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    // Asset Class Pages - Major SEO pages
+    {
+      url: `${baseUrl}/bonds`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/forex`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/commodities`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/crypto`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/etfs`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    // Calendar Pages
+    {
+      url: `${baseUrl}/dividends`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/economic-calendar`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    // Market Movers Pages
+    {
+      url: `${baseUrl}/markets`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/markets/most-active`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/markets/top-gainers`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/markets/top-losers`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/markets/52-week-high`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/markets/52-week-low`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly',
+      priority: 0.9,
+    },
   ]
 
   // Stock Screener filter pages
