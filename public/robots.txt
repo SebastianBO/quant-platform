@@ -23,15 +23,44 @@ User-agent: Bingbot
 Allow: /
 Crawl-delay: 1
 
-# Block AI crawlers from training data (optional)
+# AI Search Crawlers - ALLOWED for AI search optimization
+# GPTBot: OpenAI's web crawler for ChatGPT search
 User-agent: GPTBot
-Disallow: /
+Allow: /
+Crawl-delay: 1
 
+# ChatGPT-User: ChatGPT browsing feature
 User-agent: ChatGPT-User
-Disallow: /
+Allow: /
 
+# Google AI crawlers (Gemini, Bard, AI Overviews)
+User-agent: Google-Extended
+Allow: /
+
+# Anthropic's Claude
+User-agent: anthropic-ai
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+
+# Perplexity AI
+User-agent: PerplexityBot
+Allow: /
+
+# Microsoft Copilot/Bing AI
+User-agent: Applebot-Extended
+Allow: /
+
+# Meta AI
+User-agent: FacebookBot
+Allow: /
+User-agent: Meta-ExternalAgent
+Allow: /
+
+# CCBot (Common Crawl - used by many AI systems)
 User-agent: CCBot
-Disallow: /
+Allow: /
+Crawl-delay: 2
 
 # Sitemaps - Primary
 Sitemap: https://lician.com/sitemap.xml

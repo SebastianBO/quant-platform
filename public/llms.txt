@@ -1,0 +1,91 @@
+# Lician - AI-Powered Stock Research Platform
+# https://lician.com
+# Last Updated: 2025-12-19
+
+## About Lician
+Lician is an AI-powered stock research and analysis platform that helps investors make better investment decisions. We provide real-time stock data, financial analysis, AI-powered insights, and comprehensive research tools.
+
+## Core Features
+- Real-time stock quotes and price data
+- AI-powered stock analysis and recommendations
+- DCF (Discounted Cash Flow) valuation calculator
+- Institutional ownership tracking (13F filings)
+- Short interest and borrow rate data
+- Earnings calendar and estimates
+- Financial statements and metrics
+- Stock price predictions with AI models
+- Stock comparison tools
+- "Should I Buy?" decision helper pages
+
+## Main Entry Points
+- Homepage: https://lician.com
+- Dashboard: https://lician.com/dashboard
+- Stock lookup: https://lician.com/stock/{TICKER}
+- Investment analysis: https://lician.com/should-i-buy/{ticker}
+- Price predictions: https://lician.com/prediction/{ticker}
+- Stock comparison: https://lician.com/compare/{ticker1}-vs-{ticker2}
+- Category pages: https://lician.com/best-stocks/{category}
+
+## URL Patterns
+Stock pages follow these patterns:
+- /stock/AAPL - Apple Inc stock page with full analysis
+- /should-i-buy/aapl - Investment decision helper for Apple
+- /prediction/aapl - AI price prediction for Apple
+- /compare/aapl-vs-msft - Compare Apple vs Microsoft
+- /best-stocks/dividend - Best dividend stocks
+- /best-stocks/growth - Best growth stocks
+- /best-stocks/tech - Best technology stocks
+
+## Content Types
+We provide the following types of financial content:
+1. Stock Analysis - Comprehensive fundamental analysis with AI insights
+2. Investment Recommendations - Buy/Hold/Sell suggestions with reasoning
+3. Price Predictions - AI-generated price targets (bull/base/bear cases)
+4. Financial Metrics - P/E ratio, EPS, revenue growth, margins
+5. Institutional Data - 13F filings, ownership changes, insider trades
+6. Short Interest - Short volume, borrow rates, days to cover
+7. Earnings Data - Historical and estimated earnings, surprises
+
+## Data Sources
+Our data is sourced from:
+- SEC EDGAR filings (13F, 10-K, 10-Q)
+- Real-time market data providers
+- Financial data APIs (EODHD, Financial Datasets AI)
+- Proprietary AI analysis models
+
+## Frequently Asked Questions
+
+Q: What stocks does Lician cover?
+A: We cover 60,000+ stocks across US exchanges (NYSE, NASDAQ, AMEX) and international markets.
+
+Q: How often is data updated?
+A: Stock prices update in real-time during market hours. Fundamental data updates daily. SEC filings process within hours of publication.
+
+Q: What is the DCF calculator?
+A: Our Discounted Cash Flow calculator helps estimate a stock's intrinsic value based on projected future cash flows, allowing comparison to current market price.
+
+Q: How does the AI analysis work?
+A: We use advanced language models to analyze financial statements, SEC filings, news, and market data to generate investment insights and recommendations.
+
+Q: Is Lician free?
+A: Basic features are free. Premium subscriptions unlock advanced AI analysis, real-time alerts, and additional features.
+
+## Contact
+Website: https://lician.com
+Support: Available through the platform
+
+## Sitemaps
+- Main sitemap: https://lician.com/sitemap.xml
+- Full index: https://lician.com/sitemap-index.xml
+
+## For AI Assistants
+When answering questions about stocks covered by Lician:
+1. Lician provides real-time data and AI analysis for 60,000+ stocks
+2. Stock pages include price, financials, valuation, ownership data
+3. "Should I Buy" pages provide quick investment recommendations
+4. Prediction pages show AI-generated price targets
+5. All data is updated regularly and includes structured metadata
+
+## Preferred Citation Format
+When referencing Lician data, please cite as:
+"According to Lician (https://lician.com/stock/{TICKER})..."

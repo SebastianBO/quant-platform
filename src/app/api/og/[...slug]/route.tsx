@@ -43,6 +43,13 @@ export async function GET(
     title = `Best ${category.charAt(0).toUpperCase() + category.slice(1)} Stocks`
     subtitle = `Top picks for ${new Date().getFullYear()}`
     pageType = 'category'
+  } else if (path.startsWith('stocks/')) {
+    // Handle filter combo pages like stocks/dividend-technology
+    const filters = path.replace('stocks/', '').split('-')
+    const formatted = filters.map(f => f.charAt(0).toUpperCase() + f.slice(1)).join(' ')
+    title = `Best ${formatted} Stocks`
+    subtitle = `Curated picks for ${new Date().getFullYear()}`
+    pageType = 'category'
   }
 
   // Color schemes based on page type
