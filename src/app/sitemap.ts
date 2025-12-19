@@ -172,6 +172,30 @@ const LEARNING_PAGES = [
   'ai-stock-analysis',
 ]
 
+// Popular stock screener filter combinations for SEO
+const SCREENER_FILTERS = [
+  // By sector
+  { query: 'sector=technology', priority: 0.8 },
+  { query: 'sector=healthcare', priority: 0.8 },
+  { query: 'sector=financial', priority: 0.8 },
+  { query: 'sector=energy', priority: 0.8 },
+  { query: 'sector=consumer', priority: 0.7 },
+  // By market cap
+  { query: 'market_cap=large', priority: 0.8 },
+  { query: 'market_cap=mid', priority: 0.7 },
+  { query: 'market_cap=small', priority: 0.7 },
+  // By valuation
+  { query: 'pe_max=10', priority: 0.8 },
+  { query: 'pe_max=15', priority: 0.8 },
+  { query: 'pe_max=25', priority: 0.7 },
+  // Combined filters (high-value searches)
+  { query: 'sector=technology&market_cap=large', priority: 0.8 },
+  { query: 'sector=healthcare&pe_max=15', priority: 0.8 },
+  { query: 'market_cap=large&pe_max=15', priority: 0.8 },
+  { query: 'sector=energy&market_cap=large', priority: 0.7 },
+  { query: 'sector=financial&market_cap=large', priority: 0.7 },
+]
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://lician.com'
   const currentDate = new Date().toISOString()
@@ -209,7 +233,39 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'daily',
       priority: 0.9,
     },
+    // Insider Trading - High-value SEO page
+    {
+      url: `${baseUrl}/insider-trading`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    // Institutional Ownership - High-value SEO page
+    {
+      url: `${baseUrl}/institutional`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+
+    // Stock Screener - High-value SEO page (74K searches/month)
+    {
+      url: `${baseUrl}/screener`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly',
+      priority: 0.95,
+    },
   ]
+
+  // Stock Screener filter pages
+  SCREENER_FILTERS.forEach(({ query, priority }) => {
+    routes.push({
+      url: `${baseUrl}/screener?${query}`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority,
+    })
+  })
 
   // Insights hub and trending content pages
   routes.push({
