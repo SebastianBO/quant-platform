@@ -364,6 +364,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'hourly',
       priority: 0.9,
     },
+    {
+      url: `${baseUrl}/markets/premarket`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly',
+      priority: 0.9,
+    },
+    // Stock Splits - High-value SEO page
+    {
+      url: `${baseUrl}/stock-splits`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
   ]
 
   // Stock Screener filter pages
