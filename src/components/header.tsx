@@ -16,6 +16,7 @@ const navMenus = {
       {
         title: "Research",
         links: [
+          { label: "Market News", href: "/news", desc: "Latest headlines" },
           { label: "Stock Screener", href: "/screener", desc: "Filter stocks by metrics" },
           { label: "Analyst Ratings", href: "/analyst-ratings", desc: "Upgrades & downgrades" },
           { label: "Insider Trading", href: "/insider-trading", desc: "CEO & CFO transactions" },

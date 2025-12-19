@@ -377,6 +377,34 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.9,
     },
+    // After-Hours Trading
+    {
+      url: `${baseUrl}/markets/after-hours`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly',
+      priority: 0.9,
+    },
+    // Biotech Catalysts - High-value niche page
+    {
+      url: `${baseUrl}/biotech`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    // Options Trading Guide
+    {
+      url: `${baseUrl}/options`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    // Stock Market News
+    {
+      url: `${baseUrl}/news`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly',
+      priority: 0.95,
+    },
   ]
 
   // Stock Screener filter pages

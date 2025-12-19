@@ -23,6 +23,20 @@ export const metadata: Metadata = {
 
 const marketPages = [
   {
+    title: 'Premarket Movers',
+    description: 'Stocks moving before the market opens (4 AM - 9:30 AM ET)',
+    href: '/markets/premarket',
+    icon: '🌅',
+    keywords: 'Premarket trading, stock futures',
+  },
+  {
+    title: 'After Hours Trading',
+    description: 'Stocks moving after the market closes (4 PM - 8 PM ET)',
+    href: '/markets/after-hours',
+    icon: '🌙',
+    keywords: 'Extended hours, post-market',
+  },
+  {
     title: 'Most Active Stocks',
     description: 'Stocks with the highest trading volume today',
     href: '/markets/most-active',

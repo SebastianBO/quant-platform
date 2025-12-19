@@ -4,19 +4,19 @@ import { Twitter, Linkedin, Github, Youtube } from "lucide-react"
 export function Footer() {
   const footerLinks = {
     Stocks: [
+      { label: "Market News", href: "/news" },
       { label: "Stock Screener", href: "/screener" },
       { label: "Analyst Ratings", href: "/analyst-ratings" },
       { label: "Insider Trading", href: "/insider-trading" },
       { label: "Institutional Holdings", href: "/institutional" },
       { label: "Short Interest", href: "/short-interest" },
-      { label: "IPO Calendar", href: "/ipo" },
     ],
     Markets: [
-      { label: "Most Active", href: "/markets/most-active" },
+      { label: "Premarket", href: "/markets/premarket" },
+      { label: "After Hours", href: "/markets/after-hours" },
       { label: "Top Gainers", href: "/markets/top-gainers" },
       { label: "Top Losers", href: "/markets/top-losers" },
-      { label: "52-Week Highs", href: "/markets/52-week-high" },
-      { label: "52-Week Lows", href: "/markets/52-week-low" },
+      { label: "Most Active", href: "/markets/most-active" },
     ],
     "Asset Classes": [
       { label: "Bonds & Treasury", href: "/bonds" },
@@ -24,12 +24,15 @@ export function Footer() {
       { label: "Commodities", href: "/commodities" },
       { label: "Crypto", href: "/crypto" },
       { label: "ETFs", href: "/etfs" },
+      { label: "Options", href: "/options" },
+      { label: "Biotech", href: "/biotech" },
     ],
     Calendars: [
       { label: "Earnings Calendar", href: "/earnings" },
-      { label: "Earnings Surprises", href: "/earnings/surprises" },
       { label: "Dividends Calendar", href: "/dividends" },
       { label: "Economic Calendar", href: "/economic-calendar" },
+      { label: "IPO Calendar", href: "/ipo" },
+      { label: "Stock Splits", href: "/stock-splits" },
     ],
     Learn: [
       { label: "Stock Analysis Guide", href: "/learn/stock-analysis" },
