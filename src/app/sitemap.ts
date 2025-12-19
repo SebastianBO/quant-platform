@@ -170,6 +170,9 @@ const LEARNING_PAGES = [
   'pe-ratio',
   'dividend-investing',
   'ai-stock-analysis',
+  'how-to-invest',
+  'technical-analysis',
+  'day-trading',
 ]
 
 // Popular stock screener filter combinations for SEO
@@ -404,6 +407,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: currentDate,
       changeFrequency: 'hourly',
       priority: 0.95,
+    },
+    // Penny Stocks - High search volume
+    {
+      url: `${baseUrl}/penny-stocks`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.9,
     },
   ]
 

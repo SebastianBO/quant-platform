@@ -33,6 +33,15 @@ export const metadata: Metadata = {
 
 const learningTopics = [
   {
+    title: 'How to Invest in Stocks',
+    description: 'Complete beginner\'s guide to investing in the stock market',
+    href: '/learn/how-to-invest',
+    icon: '🎯',
+    topics: ['Opening accounts', 'Picking stocks', 'Building portfolios'],
+    difficulty: 'Beginner',
+    badge: 'Start Here',
+  },
+  {
     title: 'Stock Analysis Fundamentals',
     description: 'Learn how to analyze stocks like a professional investor',
     href: '/learn/stock-analysis',
@@ -242,9 +251,13 @@ export default function LearnPage() {
                     1
                   </div>
                   <div>
-                    <h3 className="font-bold mb-1">Start with Stock Analysis Fundamentals</h3>
+                    <h3 className="font-bold mb-1">
+                      <Link href="/learn/how-to-invest" className="hover:text-green-500">
+                        Start with How to Invest in Stocks
+                      </Link>
+                    </h3>
                     <p className="text-muted-foreground">
-                      Learn to read financial statements, understand key metrics, and evaluate business quality.
+                      Learn the absolute basics: opening accounts, placing orders, building portfolios, and avoiding beginner mistakes.
                     </p>
                   </div>
                 </div>
@@ -253,15 +266,26 @@ export default function LearnPage() {
                     2
                   </div>
                   <div>
-                    <h3 className="font-bold mb-1">Master P/E Ratios and Valuation Multiples</h3>
+                    <h3 className="font-bold mb-1">Master Stock Analysis Fundamentals</h3>
                     <p className="text-muted-foreground">
-                      Understand relative valuation and how to compare stocks within industries.
+                      Learn to read financial statements, understand key metrics, and evaluate business quality.
                     </p>
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold">
                     3
+                  </div>
+                  <div>
+                    <h3 className="font-bold mb-1">Understand P/E Ratios and Valuation Multiples</h3>
+                    <p className="text-muted-foreground">
+                      Master relative valuation and how to compare stocks within industries.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold">
+                    4
                   </div>
                   <div>
                     <h3 className="font-bold mb-1">Learn DCF Valuation</h3>
@@ -272,7 +296,7 @@ export default function LearnPage() {
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold">
-                    4
+                    5
                   </div>
                   <div>
                     <h3 className="font-bold mb-1">Explore Specialized Strategies</h3>
@@ -283,7 +307,7 @@ export default function LearnPage() {
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold">
-                    5
+                    6
                   </div>
                   <div>
                     <h3 className="font-bold mb-1">Leverage AI for Enhanced Analysis</h3>
