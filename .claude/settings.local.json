@@ -80,7 +80,21 @@
       "Bash(do echo -n \"$t: \")",
       "Bash(done)",
       "WebFetch(domain:www.benzinga.com)",
-      "WebFetch(domain:finance.yahoo.com)"
+      "WebFetch(domain:finance.yahoo.com)",
+      "Bash(gcloud --version:*)",
+      "Bash(gcloud config get-value:*)",
+      "Bash(gcloud services enable:*)",
+      "Bash(gcloud iam service-accounts create:*)",
+      "Bash(gcloud iam service-accounts keys create:*)",
+      "Bash(claude mcp add gsc -- npx -y mcp-server-gsc --env GOOGLE_APPLICATION_CREDENTIALS=\"/Users/sebastianbenzianolsson/gsc-key.json\")",
+      "Bash(claude mcp list:*)",
+      "Bash(GOOGLE_APPLICATION_CREDENTIALS=\"/Users/sebastianbenzianolsson/gsc-key.json\" npx -y mcp-server-gsc:*)",
+      "Bash(claude mcp remove:*)",
+      "Bash(claude mcp add gsc -e GOOGLE_APPLICATION_CREDENTIALS=\"/Users/sebastianbenzianolsson/gsc-key.json\" -- npx -y mcp-server-gsc)",
+      "Bash(GOOGLE_APPLICATION_CREDENTIALS=\"/Users/sebastianbenzianolsson/gsc-key.json\" npx:*)",
+      "Bash(npx -y googleapis-cli sites:list --key-file=/Users/sebastianbenzianolsson/gsc-key.json)",
+      "Bash(npx:*)",
+      "Bash(GOOGLE_APPLICATION_CREDENTIALS=\"/Users/sebastianbenzianolsson/gsc-key.json\" timeout 10 npx:*)"
     ],
     "deny": [],
     "ask": []

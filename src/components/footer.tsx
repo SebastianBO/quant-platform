@@ -4,6 +4,13 @@ import { Twitter, Linkedin, Github, Youtube } from "lucide-react"
 export function Footer() {
   const footerLinks = {
     Product: ["Features", "Pricing", "API", "Mobile App", "Integrations"],
+    Markets: [
+      { label: "Most Active", href: "/markets/most-active" },
+      { label: "Top Gainers", href: "/markets/top-gainers" },
+      { label: "Top Losers", href: "/markets/top-losers" },
+      { label: "52-Week Highs", href: "/markets/52-week-high" },
+      { label: "52-Week Lows", href: "/markets/52-week-low" },
+    ],
     Company: ["About", "Blog", "Careers", "Press", "Contact"],
     Resources: ["Documentation", "Help Center", "Community", "Newsletter", "Status"],
     Legal: ["Privacy", "Terms", "Security", "Cookies"],
@@ -12,7 +19,7 @@ export function Footer() {
   return (
     <footer className="bg-secondary/30 border-t border-border py-16 px-6">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-8 mb-12">
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
               <div className="w-8 h-8 bg-foreground rounded-lg flex items-center justify-center">
@@ -41,13 +48,25 @@ export function Footer() {
             <div key={category}>
               <h3 className="text-sm font-semibold text-foreground mb-4">{category}</h3>
               <ul className="space-y-3">
-                {links.map((link) => (
-                  <li key={link}>
-                    <Link href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                      {link}
-                    </Link>
-                  </li>
-                ))}
+                {Array.isArray(links) && typeof links[0] === 'object' ? (
+                  // Markets with href
+                  links.map((link: any) => (
+                    <li key={link.label}>
+                      <Link href={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))
+                ) : (
+                  // Other categories
+                  links.map((link: string) => (
+                    <li key={link}>
+                      <Link href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                        {link}
+                      </Link>
+                    </li>
+                  ))
+                )}
               </ul>
             </div>
           ))}

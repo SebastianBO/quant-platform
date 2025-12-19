@@ -6,7 +6,9 @@ import {
   getBreadcrumbSchema,
   getArticleSchema,
   getFAQSchema,
-  getStockFAQs,
+  getStockFAQsExtended,
+  getCorporationSchema,
+  getAggregateRatingSchema,
   SITE_URL,
   combineSchemas,
 } from '@/lib/seo'
@@ -87,6 +89,20 @@ export default async function ShouldIBuyPage({ params }: Props) {
 
   const companyName = companyFacts?.name || symbol
   const pageUrl = `${SITE_URL}/should-i-buy/${ticker.toLowerCase()}`
+  const sector = companyFacts?.sector
+  const industry = companyFacts?.industry
+  const description = companyFacts?.description || `${companyName} (${symbol}) common stock`
+
+  // Prepare metrics for extended FAQ
+  const metricsData = {
+    price_to_earnings_ratio: metrics?.price_to_earnings_ratio,
+    price_to_book_ratio: metrics?.price_to_book_ratio,
+    market_cap: snapshot?.market_cap,
+    earnings_per_share: metrics?.earnings_per_share,
+    dividend_yield: metrics?.dividend_yield,
+    revenue_growth: metrics?.revenue_growth,
+    profit_margin: metrics?.profit_margin,
+  }
 
   // Breadcrumb Schema
   const breadcrumbSchema = getBreadcrumbSchema([
@@ -108,15 +124,54 @@ export default async function ShouldIBuyPage({ params }: Props) {
     ],
   })
 
-  // FAQ Schema
-  const faqs = getStockFAQs(symbol, companyName, price)
-  const faqSchema = getFAQSchema(faqs)
+  // Corporation Schema
+  const corporationSchema = getCorporationSchema({
+    ticker: symbol,
+    name: companyName,
+    description: description.slice(0, 200),
+    sector,
+    industry,
+    url: pageUrl,
+  })
+
+  // Aggregate Rating Schema (if we have analyst data)
+  let aggregateRatingSchema = null
+  if (stockData?.analystRatings?.length > 0) {
+    const ratings = stockData.analystRatings
+    const ratingMap = { 'Strong Buy': 5, 'Buy': 4, 'Hold': 3, 'Sell': 2, 'Strong Sell': 1 }
+    const avgRating = ratings.reduce((sum: number, r: any) => {
+      return sum + (ratingMap[r.rating as keyof typeof ratingMap] || 3)
+    }, 0) / ratings.length
+
+    aggregateRatingSchema = getAggregateRatingSchema({
+      ticker: symbol,
+      ratingValue: avgRating,
+      ratingCount: ratings.length,
+      url: pageUrl,
+    })
+  }
+
+  // Extended FAQ Schema with 18 questions
+  const extendedFaqs = getStockFAQsExtended(symbol, companyName, price, metricsData)
+  const faqSchema = getFAQSchema(extendedFaqs)
+
+  // Combine all schemas
+  const schemas = [
+    breadcrumbSchema,
+    articleSchema,
+    corporationSchema,
+    faqSchema,
+  ]
+
+  if (aggregateRatingSchema) {
+    schemas.push(aggregateRatingSchema)
+  }
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema]) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
       />
       <main className="min-h-screen bg-background text-foreground">
         <div className="max-w-4xl mx-auto px-6 py-12">
@@ -230,11 +285,11 @@ export default async function ShouldIBuyPage({ params }: Props) {
             </Link>
           </section>
 
-          {/* FAQ Section */}
+          {/* FAQ Section - using extended FAQs */}
           <section className="mt-12">
             <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
             <div className="space-y-4">
-              {faqs.map((faq, index) => (
+              {extendedFaqs.map((faq, index) => (
                 <div key={index} className="bg-card p-5 rounded-lg border border-border">
                   <h3 className="font-bold text-lg mb-2">{faq.question}</h3>
                   <p className="text-muted-foreground">{faq.answer}</p>

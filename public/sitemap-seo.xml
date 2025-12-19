@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Core Pages -->
+  <url>
+    <loc>https://lician.com</loc>
+    <lastmod>2025-12-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://lician.com/dashboard</loc>
+    <lastmod>2025-12-19</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://lician.com/premium</loc>
+    <lastmod>2025-12-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Tech Giants Comparisons -->
+  <url><loc>https://lician.com/compare/aapl-vs-msft</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/aapl-vs-googl</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/msft-vs-googl</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/meta-vs-googl</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/amzn-vs-msft</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/amzn-vs-googl</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/aapl-vs-amzn</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/meta-vs-aapl</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/meta-vs-msft</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/meta-vs-amzn</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/aapl-vs-nvda</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/msft-vs-nvda</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/googl-vs-nvda</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/amzn-vs-meta</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/aapl-vs-tsla</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/msft-vs-tsla</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/googl-vs-tsla</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/meta-vs-tsla</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/amzn-vs-tsla</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/nvda-vs-tsla</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+
+  <!-- Semiconductors Comparisons -->
+  <url><loc>https://lician.com/compare/nvda-vs-amd</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/nvda-vs-intc</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/amd-vs-intc</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/avgo-vs-qcom</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/nvda-vs-avgo</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/amd-vs-avgo</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/intc-vs-avgo</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/nvda-vs-qcom</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/amd-vs-qcom</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/intc-vs-qcom</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/nvda-vs-txn</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/amd-vs-txn</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/intc-vs-txn</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/avgo-vs-txn</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/qcom-vs-txn</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/nvda-vs-lrcx</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/amd-vs-lrcx</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/intc-vs-lrcx</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/avgo-vs-lrcx</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/qcom-vs-adi</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+
+  <!-- Auto/EV Comparisons -->
+  <url><loc>https://lician.com/compare/tsla-vs-f</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/tsla-vs-gm</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/tsla-vs-rivn</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/f-vs-gm</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/rivn-vs-lcid</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/tsla-vs-lcid</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/f-vs-rivn</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/gm-vs-rivn</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/f-vs-lcid</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/gm-vs-lcid</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/tsla-vs-nio</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/rivn-vs-nio</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/lcid-vs-nio</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/f-vs-nio</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/gm-vs-nio</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+
+  <!-- Finance/Banks Comparisons -->
+  <url><loc>https://lician.com/compare/jpm-vs-bac</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/jpm-vs-wfc</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/bac-vs-c</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/bac-vs-wfc</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/gs-vs-ms</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/v-vs-ma</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/jpm-vs-c</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/jpm-vs-gs</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/bac-vs-gs</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/wfc-vs-c</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/wfc-vs-gs</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/c-vs-gs</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/jpm-vs-ms</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/bac-vs-ms</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/wfc-vs-ms</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/c-vs-ms</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/jpm-vs-schw</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/bac-vs-schw</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/c-vs-schw</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/wfc-vs-schw</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+
+  <!-- Payment/Fintech Comparisons -->
+  <url><loc>https://lician.com/compare/sq-vs-pypl</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/hood-vs-coin</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/sofi-vs-hood</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/v-vs-pypl</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/ma-vs-pypl</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/sq-vs-v</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/sq-vs-ma</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/pypl-vs-coin</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/sq-vs-coin</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/sofi-vs-coin</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/sofi-vs-pypl</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/hood-vs-pypl</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/sq-vs-sofi</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/v-vs-coin</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/ma-vs-coin</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+
+  <!-- Streaming/Media Comparisons -->
+  <url><loc>https://lician.com/compare/nflx-vs-dis</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/nflx-vs-para</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/dis-vs-wbd</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/spot-vs-aapl</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/nflx-vs-wbd</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/dis-vs-para</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/para-vs-wbd</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/nflx-vs-spot</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/dis-vs-spot</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/spot-vs-googl</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/spot-vs-amzn</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/nflx-vs-googl</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/dis-vs-googl</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/nflx-vs-amzn</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/dis-vs-amzn</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+
+  <!-- Retail Comparisons -->
+  <url><loc>https://lician.com/compare/wmt-vs-tgt</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/hd-vs-low</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/cost-vs-wmt</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/amzn-vs-wmt</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/amzn-vs-tgt</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/wmt-vs-low</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/tgt-vs-low</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/cost-vs-tgt</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/cost-vs-hd</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/cost-vs-low</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/hd-vs-tgt</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/amzn-vs-cost</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/amzn-vs-hd</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/amzn-vs-low</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/wmt-vs-hd</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/tgt-vs-hd</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/wmt-vs-cost</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/tgt-vs-cost</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/hd-vs-wmt</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/low-vs-wmt</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+
+  <!-- Cloud/SaaS Comparisons -->
+  <url><loc>https://lician.com/compare/crm-vs-msft</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/snow-vs-pltr</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/ddog-vs-crwd</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/net-vs-crwd</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/crm-vs-snow</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/crm-vs-pltr</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/msft-vs-snow</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/msft-vs-pltr</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/snow-vs-crwd</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/pltr-vs-crwd</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/crm-vs-ddog</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/crm-vs-net</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/snow-vs-ddog</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/snow-vs-net</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/pltr-vs-ddog</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/pltr-vs-net</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/now-vs-crm</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/now-vs-snow</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/now-vs-pltr</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/ddog-vs-net</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+
+  <!-- Consumer Comparisons -->
+  <url><loc>https://lician.com/compare/ko-vs-pep</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/nke-vs-lulu</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/sbux-vs-cmg</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/mcd-vs-yum</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/ko-vs-mdlz</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/pep-vs-mdlz</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/nke-vs-uaa</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/sbux-vs-mcd</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/cmg-vs-yum</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/mcd-vs-cmg</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/sbux-vs-yum</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/lulu-vs-uaa</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/ko-vs-sbux</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/pep-vs-sbux</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/nke-vs-addyy</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+
+  <!-- Healthcare/Pharma Comparisons -->
+  <url><loc>https://lician.com/compare/pfe-vs-mrk</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/jnj-vs-abbv</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/lly-vs-nvo</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/unh-vs-cvs</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/pfe-vs-abbv</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/mrk-vs-abbv</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/jnj-vs-mrk</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/jnj-vs-pfe</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/lly-vs-abbv</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/lly-vs-jnj</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/unh-vs-ci</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/cvs-vs-ci</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/unh-vs-abbv</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/unh-vs-jnj</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/cvs-vs-abbv</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/tmo-vs-dhr</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/isrg-vs-abbv</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/vrtx-vs-regn</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/gild-vs-abbv</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/amgn-vs-gild</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+
+  <!-- Energy Comparisons -->
+  <url><loc>https://lician.com/compare/xom-vs-cvx</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/cop-vs-xom</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/slb-vs-hal</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/nee-vs-duk</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/xom-vs-hal</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/cvx-vs-hal</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/cop-vs-cvx</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/cop-vs-hal</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/slb-vs-xom</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/slb-vs-cvx</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/slb-vs-cop</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/nee-vs-so</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/duk-vs-so</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/xom-vs-cop</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/cvx-vs-cop</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+
+  <!-- AI Stocks Comparisons -->
+  <url><loc>https://lician.com/compare/nvda-vs-msft</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/googl-vs-meta</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/pltr-vs-snow</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/crm-vs-msft</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/nvda-vs-googl</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/nvda-vs-meta</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/msft-vs-meta</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/msft-vs-googl</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://lician.com/compare/pltr-vs-msft</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/pltr-vs-googl</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/snow-vs-msft</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/snow-vs-googl</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/crm-vs-googl</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/nvda-vs-pltr</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/nvda-vs-snow</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/meta-vs-pltr</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/meta-vs-snow</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/googl-vs-pltr</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/googl-vs-snow</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://lician.com/compare/crm-vs-pltr</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+
+  <!-- Filter/Category Pages -->
+  <url>
+    <loc>https://lician.com/best-stocks/dividend</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lician.com/best-stocks/growth</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lician.com/best-stocks/value</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lician.com/best-stocks/tech</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lician.com/best-stocks/healthcare</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lician.com/best-stocks/energy</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lician.com/best-stocks/ai</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>

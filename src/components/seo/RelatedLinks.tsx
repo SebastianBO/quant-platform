@@ -112,6 +112,9 @@ export function RelatedLinks({ ticker, currentPage, companyName }: RelatedLinksP
           <Link href="/best-stocks/value" className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors">
             Best Value Stocks
           </Link>
+          <Link href="/sectors" className="px-3 py-1.5 bg-green-600/20 text-green-500 rounded-lg text-sm hover:bg-green-600/30 transition-colors">
+            Browse All Sectors
+          </Link>
         </div>
       </div>
     </section>
@@ -161,10 +164,17 @@ export function CategoryLinks({ currentCategory }: { currentCategory: string }) 
     { key: 'ai', label: 'AI Stocks' },
   ]
 
+  const sectors = [
+    { key: 'technology', label: 'Technology Sector' },
+    { key: 'healthcare', label: 'Healthcare Sector' },
+    { key: 'financials', label: 'Financial Sector' },
+    { key: 'energy', label: 'Energy Sector' },
+  ]
+
   return (
     <section className="mt-12 border-t border-border pt-8">
       <h3 className="text-lg font-bold mb-4">Explore Other Categories</h3>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 mb-4">
         {categories
           .filter((cat) => cat.key !== currentCategory.toLowerCase())
           .map((cat) => (
@@ -176,6 +186,24 @@ export function CategoryLinks({ currentCategory }: { currentCategory: string }) 
               Best {cat.label}
             </Link>
           ))}
+      </div>
+      <h4 className="text-sm font-medium text-muted-foreground mb-3">Browse by Sector</h4>
+      <div className="flex flex-wrap gap-2">
+        {sectors.map((sector) => (
+          <Link
+            key={sector.key}
+            href={`/sectors/${sector.key}`}
+            className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors"
+          >
+            {sector.label}
+          </Link>
+        ))}
+        <Link
+          href="/sectors"
+          className="px-3 py-1.5 bg-green-600/20 text-green-500 rounded-lg text-sm hover:bg-green-600/30 transition-colors"
+        >
+          View All Sectors
+        </Link>
       </div>
     </section>
   )

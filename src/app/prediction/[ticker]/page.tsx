@@ -6,6 +6,9 @@ import {
   getBreadcrumbSchema,
   getArticleSchema,
   getFAQSchema,
+  getStockFAQsExtended,
+  getCorporationSchema,
+  getDatasetSchema,
   SITE_URL,
 } from '@/lib/seo'
 
@@ -76,6 +79,20 @@ export default async function PredictionPage({ params }: Props) {
 
   const companyName = companyFacts?.name || symbol
   const pageUrl = `${SITE_URL}/prediction/${ticker.toLowerCase()}`
+  const sector = companyFacts?.sector
+  const industry = companyFacts?.industry
+  const description = companyFacts?.description || `${companyName} (${symbol}) common stock`
+
+  // Prepare metrics for extended FAQ
+  const metricsData = {
+    price_to_earnings_ratio: metrics?.price_to_earnings_ratio,
+    price_to_book_ratio: metrics?.price_to_book_ratio,
+    market_cap: snapshot?.market_cap,
+    earnings_per_share: metrics?.earnings_per_share,
+    dividend_yield: metrics?.dividend_yield,
+    revenue_growth: metrics?.revenue_growth,
+    profit_margin: metrics?.profit_margin,
+  }
 
   // Breadcrumb Schema
   const breadcrumbSchema = getBreadcrumbSchema([
@@ -97,28 +114,42 @@ export default async function PredictionPage({ params }: Props) {
     ],
   })
 
-  // FAQ Schema for prediction page
-  const predictionFaqs = [
-    {
-      question: `What is the ${symbol} stock price prediction for ${currentYear + 1}?`,
-      answer: `Our AI model predicts ${symbol} could reach $${bullCase.toFixed(2)} in a bull case (+30%), $${baseCase.toFixed(2)} in a base case (+15%), or $${bearCase.toFixed(2)} in a bear case (-10%) by ${currentYear + 1}.`,
-    },
-    {
-      question: `Is ${symbol} expected to go up or down?`,
-      answer: `Based on our analysis, ${symbol}'s trajectory depends on market conditions, company performance, and sector trends. Our base case suggests moderate upside potential.`,
-    },
-    {
-      question: `What factors affect ${symbol}'s stock price?`,
-      answer: `Key factors include earnings growth, revenue trends, market conditions, competitive position, macroeconomic environment, and sector-specific developments.`,
-    },
+  // Corporation Schema
+  const corporationSchema = getCorporationSchema({
+    ticker: symbol,
+    name: companyName,
+    description: description.slice(0, 200),
+    sector,
+    industry,
+    url: pageUrl,
+  })
+
+  // Dataset Schema for historical prediction data
+  const datasetSchema = getDatasetSchema({
+    ticker: symbol,
+    name: companyName,
+    description: `Historical price predictions and forecasts for ${companyName} (${symbol})`,
+    url: pageUrl,
+  })
+
+  // Extended FAQ Schema with 18 questions
+  const extendedFaqs = getStockFAQsExtended(symbol, companyName, price, metricsData)
+  const faqSchema = getFAQSchema(extendedFaqs)
+
+  // Combine all schemas
+  const schemas = [
+    breadcrumbSchema,
+    articleSchema,
+    corporationSchema,
+    datasetSchema,
+    faqSchema,
   ]
-  const faqSchema = getFAQSchema(predictionFaqs)
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema]) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
       />
       <main className="min-h-screen bg-background text-foreground">
         <div className="max-w-4xl mx-auto px-6 py-12">
@@ -204,11 +235,11 @@ export default async function PredictionPage({ params }: Props) {
             </Link>
           </section>
 
-          {/* FAQ Section */}
+          {/* FAQ Section - using extended FAQs */}
           <section className="mt-12">
             <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
             <div className="space-y-4">
-              {predictionFaqs.map((faq, index) => (
+              {extendedFaqs.map((faq, index) => (
                 <div key={index} className="bg-card p-5 rounded-lg border border-border">
                   <h3 className="font-bold text-lg mb-2">{faq.question}</h3>
                   <p className="text-muted-foreground">{faq.answer}</p>
