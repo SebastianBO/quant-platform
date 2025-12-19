@@ -233,6 +233,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'daily',
       priority: 0.9,
     },
+    // Earnings Surprises - High-value SEO page
+    {
+      url: `${baseUrl}/earnings/surprises`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    // IPO Calendar - High-value SEO page (IPO calendar has high search volume)
+    {
+      url: `${baseUrl}/ipo`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
     // Insider Trading - High-value SEO page
     {
       url: `${baseUrl}/insider-trading`,
@@ -243,6 +257,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Institutional Ownership - High-value SEO page
     {
       url: `${baseUrl}/institutional`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    // Analyst Ratings - High-value SEO page
+    {
+      url: `${baseUrl}/analyst-ratings`,
       lastModified: currentDate,
       changeFrequency: 'daily',
       priority: 0.9,

@@ -9,6 +9,9 @@ import {
   SITE_URL,
 } from '@/lib/seo'
 
+// Dynamic rendering - Supabase needs env vars at runtime
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Insider Trading - Track Corporate Insider Buys & Sells | Real-Time Data',
   description: 'Track insider trading activity with real-time data on insider buys and sells. Monitor CEO stock purchases, CFO transactions, and notable insider trades from SEC Form 4 filings.',

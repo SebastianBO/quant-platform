@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { supabase, CompanyFundamentals } from '@/lib/supabase'
 import {
   getBreadcrumbSchema,
   getArticleSchema,
@@ -13,13 +14,27 @@ interface Props {
   params: Promise<{ sector: string }>
 }
 
-// Sector definitions with top 20 stocks per sector
+// Sector mapping: slug -> database sector values
+const SECTOR_MAPPINGS: Record<string, string[]> = {
+  'technology': ['Technology'],
+  'healthcare': ['Healthcare'],
+  'financials': ['Financial Services', 'Financials'],
+  'energy': ['Energy'],
+  'consumer-discretionary': ['Consumer Cyclical', 'Consumer Discretionary'],
+  'consumer-staples': ['Consumer Defensive', 'Consumer Staples'],
+  'industrials': ['Industrials'],
+  'materials': ['Basic Materials', 'Materials'],
+  'utilities': ['Utilities'],
+  'real-estate': ['Real Estate'],
+  'communication-services': ['Communication Services'],
+}
+
+// Sector definitions with metadata (stocks are now fetched dynamically)
 const SECTORS: Record<string, {
   title: string
   description: string
   longDescription: string
   keywords: string[]
-  stocks: string[]
   relatedSectors: string[]
   faqs: { question: string; answer: string }[]
 }> = {
@@ -28,7 +43,6 @@ const SECTORS: Record<string, {
     description: 'Top technology stocks including software, semiconductors, cloud computing, AI, and tech hardware companies.',
     longDescription: 'The technology sector encompasses companies driving digital transformation, from mega-cap tech giants to innovative software startups. This sector includes semiconductors, cloud infrastructure, enterprise software, cybersecurity, and artificial intelligence companies.',
     keywords: ['tech stocks', 'technology stocks', 'best tech stocks', 'semiconductor stocks', 'software stocks', 'cloud computing stocks'],
-    stocks: ['AAPL', 'MSFT', 'NVDA', 'GOOGL', 'META', 'AVGO', 'AMD', 'CRM', 'ADBE', 'ORCL', 'CSCO', 'INTC', 'QCOM', 'NOW', 'PANW', 'CRWD', 'SNOW', 'PLTR', 'DDOG', 'NET'],
     relatedSectors: ['communication-services', 'consumer-discretionary', 'industrials'],
     faqs: [
       {
@@ -54,7 +68,6 @@ const SECTORS: Record<string, {
     description: 'Top healthcare stocks including pharmaceuticals, biotechnology, medical devices, and health insurance companies.',
     longDescription: 'The healthcare sector includes pharmaceutical companies, biotechnology innovators, medical device manufacturers, health insurers, and healthcare services. This defensive sector benefits from aging demographics and continuous medical innovation.',
     keywords: ['healthcare stocks', 'biotech stocks', 'pharma stocks', 'best healthcare stocks', 'medical device stocks', 'health insurance stocks'],
-    stocks: ['UNH', 'LLY', 'JNJ', 'ABBV', 'MRK', 'PFE', 'TMO', 'ABT', 'DHR', 'AMGN', 'ISRG', 'VRTX', 'REGN', 'BMY', 'GILD', 'CVS', 'CI', 'HUM', 'ELV', 'BSX'],
     relatedSectors: ['consumer-staples', 'industrials'],
     faqs: [
       {
@@ -80,7 +93,6 @@ const SECTORS: Record<string, {
     description: 'Top financial stocks including banks, investment firms, insurance companies, payment processors, and asset managers.',
     longDescription: 'The financial sector encompasses banking, insurance, asset management, payment processing, and financial services. These companies benefit from economic growth, interest rates, and increasing financial activity.',
     keywords: ['financial stocks', 'bank stocks', 'best financial stocks', 'insurance stocks', 'payment stocks', 'fintech stocks'],
-    stocks: ['BRK.B', 'JPM', 'V', 'MA', 'BAC', 'WFC', 'MS', 'GS', 'AXP', 'SPGI', 'BLK', 'C', 'SCHW', 'CB', 'PGR', 'MMC', 'AIG', 'USB', 'PNC', 'TFC'],
     relatedSectors: ['real-estate', 'technology', 'industrials'],
     faqs: [
       {
@@ -106,7 +118,6 @@ const SECTORS: Record<string, {
     description: 'Top energy stocks including oil & gas producers, refiners, midstream companies, and renewable energy firms.',
     longDescription: 'The energy sector includes oil and gas exploration and production, refining, midstream infrastructure, and renewable energy. Energy stocks are cyclical and influenced by commodity prices, geopolitics, and the energy transition.',
     keywords: ['energy stocks', 'oil stocks', 'best energy stocks', 'renewable energy stocks', 'natural gas stocks', 'clean energy stocks'],
-    stocks: ['XOM', 'CVX', 'COP', 'EOG', 'SLB', 'PSX', 'MPC', 'VLO', 'OXY', 'PXD', 'WMB', 'KMI', 'HAL', 'DVN', 'FANG', 'NEE', 'SO', 'DUK', 'AEP', 'ENPH'],
     relatedSectors: ['utilities', 'materials', 'industrials'],
     faqs: [
       {
@@ -132,7 +143,6 @@ const SECTORS: Record<string, {
     description: 'Top consumer discretionary stocks including retail, automotive, restaurants, travel, and entertainment companies.',
     longDescription: 'Consumer discretionary includes companies selling non-essential goods and services like automobiles, retail, restaurants, hotels, and entertainment. These cyclical stocks benefit from economic growth and consumer confidence.',
     keywords: ['consumer discretionary stocks', 'retail stocks', 'best retail stocks', 'restaurant stocks', 'auto stocks', 'e-commerce stocks'],
-    stocks: ['AMZN', 'TSLA', 'HD', 'MCD', 'NKE', 'LOW', 'SBUX', 'TJX', 'BKNG', 'ABNB', 'MAR', 'GM', 'F', 'CMG', 'LULU', 'ROST', 'DG', 'YUM', 'DHI', 'LEN'],
     relatedSectors: ['communication-services', 'technology', 'consumer-staples'],
     faqs: [
       {
@@ -158,7 +168,6 @@ const SECTORS: Record<string, {
     description: 'Top consumer staples stocks including food, beverage, household products, and personal care companies.',
     longDescription: 'Consumer staples companies produce essential products like food, beverages, household items, and personal care products. This defensive sector offers stable demand and consistent dividends regardless of economic conditions.',
     keywords: ['consumer staples stocks', 'food stocks', 'beverage stocks', 'best consumer staples', 'dividend stocks', 'defensive stocks'],
-    stocks: ['PG', 'KO', 'PEP', 'COST', 'WMT', 'PM', 'MO', 'MDLZ', 'CL', 'KMB', 'GIS', 'KHC', 'STZ', 'KR', 'SYY', 'ADM', 'HSY', 'K', 'CPB', 'TSN'],
     relatedSectors: ['healthcare', 'consumer-discretionary', 'materials'],
     faqs: [
       {
@@ -184,7 +193,6 @@ const SECTORS: Record<string, {
     description: 'Top industrial stocks including aerospace, manufacturing, defense, construction, and transportation companies.',
     longDescription: 'The industrial sector includes aerospace, defense, machinery, construction, transportation, and industrial conglomerates. These cyclical companies benefit from economic growth, infrastructure spending, and global trade.',
     keywords: ['industrial stocks', 'aerospace stocks', 'defense stocks', 'manufacturing stocks', 'construction stocks', 'transportation stocks'],
-    stocks: ['CAT', 'BA', 'GE', 'HON', 'UNP', 'RTX', 'UPS', 'DE', 'LMT', 'NOC', 'GD', 'ETN', 'EMR', 'ITW', 'CSX', 'NSC', 'FDX', 'WM', 'RSG', 'PCAR'],
     relatedSectors: ['materials', 'technology', 'energy'],
     faqs: [
       {
@@ -210,7 +218,6 @@ const SECTORS: Record<string, {
     description: 'Top materials stocks including chemicals, metals & mining, packaging, and specialty materials companies.',
     longDescription: 'The materials sector produces industrial commodities including chemicals, metals, mining, packaging, paper, and construction materials. These cyclical companies are sensitive to commodity prices and global economic growth.',
     keywords: ['materials stocks', 'mining stocks', 'chemical stocks', 'metals stocks', 'commodity stocks', 'materials sector'],
-    stocks: ['LIN', 'APD', 'SHW', 'ECL', 'NEM', 'FCX', 'CTVA', 'NUE', 'DD', 'DOW', 'PPG', 'VMC', 'MLM', 'STLD', 'ALB', 'CE', 'IFF', 'BALL', 'PKG', 'MOS'],
     relatedSectors: ['industrials', 'energy', 'utilities'],
     faqs: [
       {
@@ -236,7 +243,6 @@ const SECTORS: Record<string, {
     description: 'Top utility stocks including electric, natural gas, water utilities, and renewable energy infrastructure.',
     longDescription: 'Utilities provide essential services including electricity, natural gas, and water. This defensive sector offers stable cash flows, consistent dividends, and regulated returns, making it popular with income investors.',
     keywords: ['utility stocks', 'electric utility stocks', 'best utility stocks', 'dividend utility stocks', 'renewable utilities', 'power stocks'],
-    stocks: ['NEE', 'SO', 'DUK', 'AEP', 'EXC', 'SRE', 'D', 'PCG', 'XEL', 'ED', 'WEC', 'ES', 'AWK', 'DTE', 'EIX', 'PEG', 'FE', 'CMS', 'CNP', 'VST'],
     relatedSectors: ['energy', 'real-estate', 'consumer-staples'],
     faqs: [
       {
@@ -262,7 +268,6 @@ const SECTORS: Record<string, {
     description: 'Top real estate stocks including REITs across residential, commercial, data centers, cell towers, and healthcare properties.',
     longDescription: 'The real estate sector includes Real Estate Investment Trusts (REITs) that own and operate property portfolios. Subsectors include residential, commercial, retail, industrial, data centers, cell towers, and specialized healthcare properties.',
     keywords: ['REIT stocks', 'real estate stocks', 'best REITs', 'real estate investment', 'property stocks', 'commercial real estate'],
-    stocks: ['PLD', 'AMT', 'EQIX', 'CCI', 'PSA', 'WELL', 'DLR', 'O', 'CBRE', 'SPG', 'AVB', 'EQR', 'VTR', 'VICI', 'ARE', 'INVH', 'SUI', 'EXR', 'IRM', 'KIM'],
     relatedSectors: ['financials', 'utilities', 'consumer-discretionary'],
     faqs: [
       {
@@ -288,7 +293,6 @@ const SECTORS: Record<string, {
     description: 'Top communication services stocks including social media, telecom, streaming, gaming, and entertainment companies.',
     longDescription: 'Communication services includes traditional telecom providers, social media platforms, streaming services, gaming companies, and entertainment conglomerates. This diverse sector combines growth tech companies with stable telecom utilities.',
     keywords: ['communication stocks', 'telecom stocks', 'media stocks', 'social media stocks', 'streaming stocks', 'entertainment stocks'],
-    stocks: ['GOOGL', 'META', 'NFLX', 'DIS', 'CMCSA', 'VZ', 'T', 'TMUS', 'CHTR', 'EA', 'TTWO', 'WBD', 'PARA', 'NXST', 'DISH', 'FOXA', 'OMC', 'IPG', 'MTCH', 'RBLX'],
     relatedSectors: ['technology', 'consumer-discretionary', 'industrials'],
     faqs: [
       {
@@ -309,6 +313,39 @@ const SECTORS: Record<string, {
       }
     ]
   }
+}
+
+// Helper functions for formatting
+function formatMarketCap(marketCap: number): string {
+  if (marketCap >= 1e12) return `$${(marketCap / 1e12).toFixed(2)}T`
+  if (marketCap >= 1e9) return `$${(marketCap / 1e9).toFixed(2)}B`
+  if (marketCap >= 1e6) return `$${(marketCap / 1e6).toFixed(2)}M`
+  return `$${marketCap.toLocaleString()}`
+}
+
+// Fetch stocks from Supabase based on sector
+async function fetchSectorStocks(sectorSlug: string): Promise<CompanyFundamentals[]> {
+  const sectorNames = SECTOR_MAPPINGS[sectorSlug]
+  if (!sectorNames) {
+    return []
+  }
+
+  // Build OR condition for multiple sector names
+  const sectorConditions = sectorNames.map(name => `sector.ilike.%${name}%`).join(',')
+
+  const { data, error } = await supabase
+    .from('company_fundamentals')
+    .select('*')
+    .or(sectorConditions)
+    .order('market_cap', { ascending: false, nullsFirst: false })
+    .limit(100)
+
+  if (error) {
+    console.error('Error fetching sector stocks:', error)
+    return []
+  }
+
+  return (data || []) as CompanyFundamentals[]
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -336,9 +373,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export async function generateStaticParams() {
-  return Object.keys(SECTORS).map((sector) => ({ sector }))
-}
+// Dynamic rendering - Supabase needs env vars at runtime
+export const dynamic = 'force-dynamic'
+
+// No static params - render on demand
+// export async function generateStaticParams() {
+//   return Object.keys(SECTORS).map((sector) => ({ sector }))
+// }
 
 export default async function SectorPage({ params }: Props) {
   const { sector } = await params
@@ -347,6 +388,10 @@ export default async function SectorPage({ params }: Props) {
   if (!sectorData) {
     notFound()
   }
+
+  // Fetch real stocks from Supabase
+  const allStocks = await fetchSectorStocks(sector.toLowerCase())
+  const topStocks = allStocks.slice(0, 20)
 
   const currentYear = new Date().getFullYear()
   const pageUrl = `${SITE_URL}/sectors/${sector.toLowerCase()}`
@@ -368,12 +413,12 @@ export default async function SectorPage({ params }: Props) {
 
   // ItemList Schema for the stock list
   const itemListSchema = getItemListSchema({
-    name: `Top 20 ${sectorData.title} ${currentYear}`,
+    name: `Top ${topStocks.length} ${sectorData.title} ${currentYear}`,
     description: sectorData.description,
     url: pageUrl,
-    items: sectorData.stocks.map((stock, index) => ({
-      name: stock,
-      url: `${SITE_URL}/stock/${stock}`,
+    items: topStocks.map((stock, index) => ({
+      name: stock.ticker,
+      url: `${SITE_URL}/stock/${stock.ticker}`,
       position: index + 1,
     })),
   })
@@ -411,82 +456,121 @@ export default async function SectorPage({ params }: Props) {
             {sectorData.longDescription}
           </p>
 
-          {/* Top 20 Stocks Grid */}
+          {/* Top Stocks Grid */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Top 20 {sectorData.title}</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {sectorData.stocks.map((stock, i) => (
-                <Link
-                  key={stock}
-                  href={`/dashboard?ticker=${stock}`}
-                  className="bg-card p-4 rounded-lg border border-border hover:border-green-500/50 transition-colors"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-muted-foreground">#{i + 1}</span>
-                    <span className="text-xs text-green-500">View</span>
-                  </div>
-                  <p className="text-lg font-bold">{stock}</p>
-                </Link>
-              ))}
-            </div>
+            <h2 className="text-2xl font-bold mb-6">
+              Top {topStocks.length} {sectorData.title}
+            </h2>
+            {topStocks.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {topStocks.map((stock, i) => (
+                  <Link
+                    key={stock.ticker}
+                    href={`/dashboard?ticker=${stock.ticker}`}
+                    className="bg-card p-5 rounded-lg border border-border hover:border-green-500/50 transition-colors"
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs text-muted-foreground">#{i + 1}</span>
+                          <span className="text-xl font-bold">{stock.ticker}</span>
+                        </div>
+                        <p className="text-sm text-muted-foreground line-clamp-1">
+                          {stock.company_name || stock.ticker}
+                        </p>
+                      </div>
+                      <span className="text-xs text-green-500">View</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <p className="text-muted-foreground text-xs mb-1">Market Cap</p>
+                        <p className="font-semibold">
+                          {stock.market_cap ? formatMarketCap(stock.market_cap) : '—'}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground text-xs mb-1">P/E Ratio</p>
+                        <p className={`font-semibold ${
+                          stock.pe_ratio && stock.pe_ratio < 15
+                            ? 'text-green-500'
+                            : stock.pe_ratio && stock.pe_ratio > 30
+                            ? 'text-red-500'
+                            : ''
+                        }`}>
+                          {stock.pe_ratio ? stock.pe_ratio.toFixed(2) : '—'}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="bg-card p-8 rounded-lg border border-border text-center">
+                <p className="text-muted-foreground">No stocks found in this sector.</p>
+              </div>
+            )}
           </section>
 
           {/* Quick Analysis Links */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Stock Analysis Tools</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {sectorData.stocks.slice(0, 6).map((stock) => (
-                <div key={stock} className="bg-card p-5 rounded-lg border border-border">
-                  <p className="font-bold text-lg mb-3">{stock}</p>
-                  <div className="flex flex-col gap-2 text-sm">
-                    <Link
-                      href={`/should-i-buy/${stock.toLowerCase()}`}
-                      className="text-green-500 hover:underline"
-                    >
-                      Should I Buy {stock}?
-                    </Link>
-                    <Link
-                      href={`/prediction/${stock.toLowerCase()}`}
-                      className="text-green-500 hover:underline"
-                    >
-                      {stock} Price Prediction {currentYear}
-                    </Link>
-                    <Link
-                      href={`/stock/${stock}`}
-                      className="text-green-500 hover:underline"
-                    >
-                      {stock} Stock Analysis
-                    </Link>
+          {topStocks.length > 0 && (
+            <section className="mb-12">
+              <h2 className="text-2xl font-bold mb-6">Stock Analysis Tools</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {topStocks.slice(0, 6).map((stock) => (
+                  <div key={stock.ticker} className="bg-card p-5 rounded-lg border border-border">
+                    <p className="font-bold text-lg mb-3">{stock.ticker}</p>
+                    <div className="flex flex-col gap-2 text-sm">
+                      <Link
+                        href={`/should-i-buy/${stock.ticker.toLowerCase()}`}
+                        className="text-green-500 hover:underline"
+                      >
+                        Should I Buy {stock.ticker}?
+                      </Link>
+                      <Link
+                        href={`/prediction/${stock.ticker.toLowerCase()}`}
+                        className="text-green-500 hover:underline"
+                      >
+                        {stock.ticker} Price Prediction {currentYear}
+                      </Link>
+                      <Link
+                        href={`/stock/${stock.ticker}`}
+                        className="text-green-500 hover:underline"
+                      >
+                        {stock.ticker} Stock Analysis
+                      </Link>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </section>
+                ))}
+              </div>
+            </section>
+          )}
 
           {/* Stock Comparisons */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Compare Top Stocks</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {sectorData.stocks.slice(0, 5).map((stock1, i) => {
-                const stock2 = sectorData.stocks[i + 1]
-                if (!stock2) return null
-                return (
-                  <Link
-                    key={`${stock1}-${stock2}`}
-                    href={`/compare/${stock1.toLowerCase()}-vs-${stock2.toLowerCase()}`}
-                    className="bg-card p-4 rounded-lg border border-border hover:border-green-500/50 transition-colors"
-                  >
-                    <p className="font-medium text-green-500">
-                      {stock1} vs {stock2}
-                    </p>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Compare fundamentals, valuation & performance
-                    </p>
-                  </Link>
-                )
-              })}
-            </div>
-          </section>
+          {topStocks.length > 1 && (
+            <section className="mb-12">
+              <h2 className="text-2xl font-bold mb-6">Compare Top Stocks</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {topStocks.slice(0, 5).map((stock1, i) => {
+                  const stock2 = topStocks[i + 1]
+                  if (!stock2) return null
+                  return (
+                    <Link
+                      key={`${stock1.ticker}-${stock2.ticker}`}
+                      href={`/compare/${stock1.ticker.toLowerCase()}-vs-${stock2.ticker.toLowerCase()}`}
+                      className="bg-card p-4 rounded-lg border border-border hover:border-green-500/50 transition-colors"
+                    >
+                      <p className="font-medium text-green-500">
+                        {stock1.ticker} vs {stock2.ticker}
+                      </p>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Compare fundamentals, valuation & performance
+                      </p>
+                    </Link>
+                  )
+                })}
+              </div>
+            </section>
+          )}
 
           {/* FAQ Section */}
           <section className="mb-12">
