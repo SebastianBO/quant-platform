@@ -2,6 +2,8 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { supabase, CompanyFundamentals } from '@/lib/supabase'
+import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
 import {
   getBreadcrumbSchema,
   getArticleSchema,
@@ -434,7 +436,8 @@ export default async function SectorPage({ params }: Props) {
           __html: JSON.stringify([breadcrumbSchema, articleSchema, itemListSchema, faqSchema])
         }}
       />
-      <main className="min-h-screen bg-background text-foreground">
+      <Header />
+      <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-5xl mx-auto px-6 py-12">
           {/* Breadcrumbs */}
           <nav className="text-sm text-muted-foreground mb-6">
@@ -625,6 +628,7 @@ export default async function SectorPage({ params }: Props) {
           </section>
         </div>
       </main>
+      <Footer />
     </>
   )
 }

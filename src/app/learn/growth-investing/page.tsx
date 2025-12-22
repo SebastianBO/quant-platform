@@ -7,6 +7,8 @@ import {
   getHowToSchema,
   SITE_URL,
 } from '@/lib/seo'
+import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
 
 export const metadata: Metadata = {
   title: 'Growth Investing Guide: How to Find and Invest in High Growth Stocks (2025)',
@@ -254,7 +256,8 @@ export default function GrowthInvestingPage() {
           __html: JSON.stringify([breadcrumbSchema, articleSchema, howToSchema, faqSchema]),
         }}
       />
-      <main className="min-h-screen bg-background text-foreground">
+      <Header />
+      <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-4xl mx-auto px-6 py-12">
           {/* Breadcrumbs */}
           <nav className="text-sm text-muted-foreground mb-6">
@@ -678,6 +681,7 @@ export default function GrowthInvestingPage() {
           </section>
         </div>
       </main>
+      <Footer />
     </>
   )
 }

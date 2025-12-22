@@ -6,6 +6,8 @@ import {
   getFAQSchema,
   SITE_URL,
 } from '@/lib/seo'
+import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
 
 export const metadata: Metadata = {
   title: 'Day Trading Guide: Strategies, Rules, and Risks (2025) - Learn Day Trading',
@@ -202,7 +204,8 @@ export default function DayTradingPage() {
           __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema]),
         }}
       />
-      <main className="min-h-screen bg-background text-foreground">
+      <Header />
+      <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-4xl mx-auto px-6 py-12">
           {/* Breadcrumbs */}
           <nav className="text-sm text-muted-foreground mb-6">
@@ -869,6 +872,7 @@ export default function DayTradingPage() {
           </section>
         </div>
       </main>
+      <Footer />
     </>
   )
 }

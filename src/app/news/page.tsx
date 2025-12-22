@@ -6,6 +6,8 @@ import {
   getFAQSchema,
   SITE_URL,
 } from '@/lib/seo'
+import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
 import NewsArticleCard from './NewsArticleCard'
 import NewsCategories from './NewsCategories'
 
@@ -206,13 +208,14 @@ export default async function NewsPage() {
 
   return (
     <>
+      <Header />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(combinedSchemas),
         }}
       />
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
           {/* Breadcrumbs */}
           <nav className="text-sm text-muted-foreground mb-6">
@@ -369,6 +372,7 @@ export default async function NewsPage() {
           </section>
         </div>
       </main>
+      <Footer />
     </>
   )
 }

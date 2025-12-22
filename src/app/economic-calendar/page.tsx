@@ -1,7 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card"
-import { ThemeToggle } from "@/components/theme-toggle"
+import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
 import { getBreadcrumbSchema, getFAQSchema, SITE_URL } from "@/lib/seo"
 import { Calendar, TrendingUp, DollarSign, Users, Building2, AlertCircle, ChevronRight } from "lucide-react"
 
@@ -299,6 +300,7 @@ const eventSchemas = upcomingEvents.slice(0, 5).map(event => ({
 export default function EconomicCalendarPage() {
   return (
     <>
+      <Header />
       {/* Structured Data */}
       <script
         type="application/ld+json"
@@ -307,22 +309,7 @@ export default function EconomicCalendarPage() {
         }}
       />
 
-      <main className="min-h-screen bg-background text-foreground">
-        {/* Header */}
-        <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
-          <div className="max-w-[1800px] mx-auto px-6 py-3">
-            <div className="flex items-center justify-between">
-              <Link href="/" className="flex items-center gap-2">
-                <div className="w-9 h-9 bg-foreground rounded-xl flex items-center justify-center">
-                  <span className="text-background font-bold text-lg">L</span>
-                </div>
-                <span className="font-semibold text-lg">Lician</span>
-              </Link>
-              <ThemeToggle />
-            </div>
-          </div>
-        </header>
-
+      <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-[1400px] mx-auto px-6 py-8">
           {/* Breadcrumb Navigation */}
           <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
@@ -835,6 +822,7 @@ export default function EconomicCalendarPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </>
   )
 }

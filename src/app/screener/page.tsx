@@ -2,6 +2,8 @@ import { Metadata } from 'next'
 import { Suspense } from 'react'
 import Link from 'next/link'
 import { supabase, CompanyFundamentals } from '@/lib/supabase'
+import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
 import {
   getBreadcrumbSchema,
   getArticleSchema,
@@ -199,17 +201,18 @@ function LoadingState() {
 }
 
 // Main screener content component
+// Main screener content component
 async function ScreenerContent({ params }: { params: SearchParams }) {
   const stocks = await fetchStocks(params)
 
   const activeFilters: string[] = []
-  if (params.sector) activeFilters.push(`Sector: ${params.sector.replace(/-/g, ' ')}`)
+  if (params.sector) activeFilters.push(`Sector: ${params.sector.replace(/-/g, ' ')}`) 
   if (params.market_cap) activeFilters.push(`Market Cap: ${params.market_cap}`)
   if (params.pe_max) activeFilters.push(`P/E ≤ ${params.pe_max}`)
   if (params.revenue_min) activeFilters.push(`Revenue ≥ $${(parseFloat(params.revenue_min) / 1e9).toFixed(1)}B`)
 
   return (
-    <div className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background pt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
@@ -514,7 +517,7 @@ async function ScreenerContent({ params }: { params: SearchParams }) {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   )
 }
 
@@ -606,9 +609,11 @@ export default async function ScreenerPage({ searchParams }: Props) {
           __html: JSON.stringify(schemas),
         }}
       />
+      <Header />
       <Suspense fallback={<LoadingState />}>
         <ScreenerContent params={params} />
       </Suspense>
+      <Footer />
     </>
   )
 }

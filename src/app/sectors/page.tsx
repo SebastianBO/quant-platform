@@ -5,6 +5,8 @@ import {
   getArticleSchema,
   SITE_URL,
 } from '@/lib/seo'
+import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
 
 export const metadata: Metadata = {
   title: 'Stock Market Sectors - Explore All 11 Sectors | Lician',
@@ -146,7 +148,8 @@ export default function SectorsHubPage() {
           __html: JSON.stringify([breadcrumbSchema, articleSchema])
         }}
       />
-      <main className="min-h-screen bg-background text-foreground">
+      <Header />
+      <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-6xl mx-auto px-6 py-12">
           {/* Breadcrumbs */}
           <nav className="text-sm text-muted-foreground mb-6">
@@ -365,6 +368,7 @@ export default function SectorsHubPage() {
           </section>
         </div>
       </main>
+      <Footer />
     </>
   )
 }

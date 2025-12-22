@@ -1,6 +1,8 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getItemListSchema, SITE_URL } from '@/lib/seo'
+import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
 
 export const metadata: Metadata = {
   title: 'Best Dividend Stocks for 2026 - High Yield Income Investments | Lician',
@@ -316,11 +318,12 @@ export default function DividendStocks2026Page() {
 
   return (
     <>
+      <Header />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema, itemListSchema]) }}
       />
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-5xl mx-auto px-6 py-12">
           <nav className="text-sm text-muted-foreground mb-6">
             <Link href="/" className="hover:text-foreground">Home</Link>
@@ -589,6 +592,7 @@ export default function DividendStocks2026Page() {
           </section>
         </div>
       </main>
+      <Footer />
     </>
   )
 }

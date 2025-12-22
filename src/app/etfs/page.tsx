@@ -7,6 +7,8 @@ import {
   getItemListSchema,
   SITE_URL,
 } from '@/lib/seo'
+import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
 
 export const metadata: Metadata = {
   title: 'Best ETFs 2025 - Top Index Funds & ETF List | Lician',
@@ -367,13 +369,14 @@ export default function ETFsPage() {
 
   return (
     <>
+      <Header />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema, itemListSchema])
         }}
       />
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-6xl mx-auto px-6 py-12">
           {/* Breadcrumbs */}
           <nav className="text-sm text-muted-foreground mb-6">
@@ -685,6 +688,7 @@ export default function ETFsPage() {
           </section>
         </div>
       </main>
+      <Footer />
     </>
   )
 }

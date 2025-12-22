@@ -1,5 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
 import {
   getBreadcrumbSchema,
   getFAQSchema,
@@ -304,13 +306,14 @@ export default function IPOCalendarPage() {
 
   return (
     <>
+      <Header />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify([breadcrumbSchema, eventSchema, ipoListSchema, faqSchema]),
         }}
       />
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           {/* Breadcrumbs */}
           <nav className="text-sm text-muted-foreground mb-6" aria-label="Breadcrumb">
@@ -839,6 +842,7 @@ export default function IPOCalendarPage() {
           </section>
         </div>
       </main>
+      <Footer />
     </>
   )
 }

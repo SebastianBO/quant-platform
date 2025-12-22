@@ -1,6 +1,8 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { getBreadcrumbSchema, getArticleSchema, SITE_URL } from '@/lib/seo'
+import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
 
 export const metadata: Metadata = {
   title: 'Stock Market Insights 2026 - Predictions, Analysis & Trends | Lician',
@@ -68,7 +70,8 @@ export default function InsightsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbSchema, articleSchema]) }}
       />
-      <main className="min-h-screen bg-background text-foreground">
+      <Header />
+      <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-6xl mx-auto px-6 py-12">
           <nav className="text-sm text-muted-foreground mb-6">
             <Link href="/" className="hover:text-foreground">Home</Link>
@@ -202,6 +205,7 @@ export default function InsightsPage() {
           </section>
         </div>
       </main>
+      <Footer />
     </>
   )
 }

@@ -7,6 +7,8 @@ import {
   getHowToSchema,
   SITE_URL,
 } from '@/lib/seo'
+import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
 
 export const metadata: Metadata = {
   title: 'How to Invest in Stocks: Complete Beginner\'s Guide (2025)',
@@ -269,7 +271,8 @@ export default function HowToInvestPage() {
           __html: JSON.stringify([breadcrumbSchema, articleSchema, howToSchema, faqSchema]),
         }}
       />
-      <main className="min-h-screen bg-background text-foreground">
+      <Header />
+      <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-4xl mx-auto px-6 py-12">
           {/* Breadcrumbs */}
           <nav className="text-sm text-muted-foreground mb-6">
@@ -691,6 +694,7 @@ export default function HowToInvestPage() {
           </section>
         </div>
       </main>
+      <Footer />
     </>
   )
 }

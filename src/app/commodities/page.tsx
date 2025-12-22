@@ -2,9 +2,9 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { TrendingUp, TrendingDown, ArrowRight, ChevronRight } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ThemeToggle } from '@/components/theme-toggle'
-import UserAvatar from '@/components/UserAvatar'
 import { getBreadcrumbSchema, getFAQSchema, getArticleSchema, SITE_URL } from '@/lib/seo'
+import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
 
 export const dynamic = 'force-dynamic'
 
@@ -201,6 +201,7 @@ export default async function CommoditiesPage() {
 
   return (
     <>
+      <Header />
       {/* Structured Data */}
       <script
         type="application/ld+json"
@@ -209,46 +210,7 @@ export default async function CommoditiesPage() {
         }}
       />
 
-      <main className="min-h-screen bg-background text-foreground">
-        {/* Header */}
-        <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
-          <div className="max-w-[1800px] mx-auto px-6 py-3">
-            <div className="flex items-center gap-6">
-              {/* Logo */}
-              <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-                <div className="w-9 h-9 bg-foreground rounded-xl flex items-center justify-center">
-                  <span className="text-background font-bold text-lg">L</span>
-                </div>
-                <span className="font-semibold text-lg hidden sm:inline">Lician</span>
-              </Link>
-
-              {/* Navigation */}
-              <nav className="flex items-center gap-1">
-                <Link
-                  href="/"
-                  className="px-4 py-2 text-sm font-medium rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
-                >
-                  Market
-                </Link>
-                <Link
-                  href="/commodities"
-                  className="px-4 py-2 text-sm font-medium rounded-lg bg-green-500 text-white"
-                >
-                  Commodities
-                </Link>
-              </nav>
-
-              <div className="flex-1" />
-
-              {/* Right side */}
-              <div className="flex items-center gap-3 flex-shrink-0">
-                <ThemeToggle />
-                <UserAvatar />
-              </div>
-            </div>
-          </div>
-        </header>
-
+      <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-[1800px] mx-auto px-6 py-8">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6" aria-label="Breadcrumb">
@@ -458,6 +420,7 @@ export default async function CommoditiesPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </>
   )
 }

@@ -8,6 +8,8 @@ import {
   getFAQSchema,
   SITE_URL,
 } from '@/lib/seo'
+import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
 import { TrendingUp, TrendingDown, Calendar, Target, Award } from 'lucide-react'
 import StockLogo from '@/components/StockLogo'
 
@@ -216,6 +218,7 @@ export default async function EarningsSurprisesPage() {
 
   return (
     <>
+      <Header />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -227,7 +230,7 @@ export default async function EarningsSurprisesPage() {
           ]),
         }}
       />
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           {/* Breadcrumbs */}
           <nav className="text-sm text-muted-foreground mb-6" aria-label="Breadcrumb">
@@ -694,6 +697,7 @@ export default async function EarningsSurprisesPage() {
           </section>
         </div>
       </main>
+      <Footer />
     </>
   )
 }

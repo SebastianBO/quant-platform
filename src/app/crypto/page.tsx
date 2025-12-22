@@ -2,6 +2,8 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { TrendingUp, TrendingDown, ChevronRight, Bitcoin, Coins, TrendingUpIcon, Shield, Wallet, LineChart } from 'lucide-react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
 
 export const dynamic = 'force-dynamic'
 
@@ -157,6 +159,7 @@ export default async function CryptoPage() {
 
   return (
     <>
+      <Header />
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
@@ -306,7 +309,7 @@ export default async function CryptoPage() {
         }}
       />
 
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-background text-foreground pt-20">
         {/* Header */}
         <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
           <div className="max-w-[1800px] mx-auto px-6 py-3">
@@ -913,6 +916,7 @@ export default async function CryptoPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </>
   )
 }

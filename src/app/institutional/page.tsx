@@ -6,6 +6,8 @@ import {
   getItemListSchema,
   SITE_URL,
 } from '@/lib/seo'
+import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
 
 export const metadata: Metadata = {
   title: '13F Filings & Institutional Ownership - What Stocks Are Hedge Funds Buying?',
@@ -251,6 +253,7 @@ export default async function InstitutionalPage() {
 
   return (
     <>
+      <Header />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -262,7 +265,7 @@ export default async function InstitutionalPage() {
           ]),
         }}
       />
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           {/* Breadcrumbs */}
           <nav className="text-sm text-muted-foreground mb-6" aria-label="Breadcrumb">
@@ -729,6 +732,7 @@ export default async function InstitutionalPage() {
           </section>
         </div>
       </main>
+      <Footer />
     </>
   )
 }

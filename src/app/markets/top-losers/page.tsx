@@ -7,10 +7,12 @@ import {
   getFAQSchema,
   SITE_URL,
 } from '@/lib/seo'
+import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
 
 export const metadata: Metadata = {
   title: 'Top Losing Stocks Today - Biggest Stock Losers | Real-Time Data',
-  description: 'Track today\'s top losing stocks with the biggest percentage declines. View real-time price movements, volume data, and identify potential value opportunities or risks.',
+  description: 'Track today\'s top losing stocks with the biggest percentage declines. View real-time price movements, volume data, and trading signals for the worst performing stocks.',
   keywords: ['top losers', 'biggest losers', 'worst performing stocks', 'stocks down today', 'stock losers', 'declining stocks'],
   openGraph: {
     title: 'Top Losing Stocks Today - Live Market Data',
@@ -57,23 +59,23 @@ async function getTopLosers(): Promise<StockMover[]> {
 const faqs = [
   {
     question: 'What are top losing stocks?',
-    answer: 'Top losing stocks are those with the largest percentage price decreases during a given period, typically measured daily. These stocks are experiencing downward momentum and often reflect negative news, earnings misses, or unfavorable market conditions.',
+    answer: 'Top losing stocks are those with the largest percentage price declines during a given period, typically measured daily. These stocks are experiencing significant selling pressure often due to negative news, earnings misses, or unfavorable market conditions.',
   },
   {
     question: 'Should I buy stocks that are down the most today?',
-    answer: 'It depends. While some losers represent oversold value opportunities ("buy the dip"), others may have legitimate fundamental problems. Always research why the stock is declining, analyze the company\'s financials, and assess if the sell-off is justified before buying.',
+    answer: 'Be cautious. While some declining stocks represent value opportunities ("catching a falling knife"), others are falling for good reasons like deteriorating fundamentals, competitive threats, or regulatory issues. Always research why a stock is declining before considering it.',
   },
   {
     question: 'What causes stocks to be top losers?',
-    answer: 'Common catalysts include disappointing earnings, negative analyst downgrades, product failures or recalls, regulatory issues, management scandals, industry headwinds, or technical breakdowns. Understanding the cause is crucial for determining if it\'s temporary or systemic.',
+    answer: 'Common catalysts include disappointing earnings, negative analyst downgrades, product failures, regulatory setbacks, legal issues, competitive threats, sector-wide selloffs, or general market downturns. Understanding the catalyst is crucial for assessing recovery potential.',
   },
   {
-    question: 'How do I identify oversold stocks vs. falling knives?',
-    answer: 'Oversold stocks have temporary setbacks with solid fundamentals intact - look for strong balance sheets, consistent revenue, and specific addressable issues. Falling knives have deteriorating fundamentals, structural problems, or existential threats. Our AI analysis helps distinguish between the two.',
+    question: 'Are stocks at their lows good buying opportunities?',
+    answer: 'Sometimes, but not always. Stocks at lows may be oversold and present value opportunities, or they may be "value traps" with deteriorating fundamentals. Look for temporary setbacks in quality companies rather than structural problems. Our AI analysis helps identify genuine opportunities.',
   },
   {
-    question: 'What is panic selling?',
-    answer: 'Panic selling occurs when investors rush to exit positions, often due to fear rather than fundamental analysis. This can create oversold conditions with high volume. Stocks with volume ratios above 3x combined with sharp declines may indicate panic selling and potential reversal opportunities.',
+    question: 'What is capitulation in declining stocks?',
+    answer: 'Capitulation occurs when investors give up and sell in panic, often marking a bottom. Signs include extreme volume spikes, rapid price drops, and widespread negativity. However, timing capitulation is difficult - stocks can always fall further.',
   },
 ]
 
@@ -115,6 +117,7 @@ export default async function TopLosersPage() {
 
   return (
     <>
+      <Header />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -126,7 +129,7 @@ export default async function TopLosersPage() {
           ]),
         }}
       />
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-7xl mx-auto px-6 py-12">
           {/* Breadcrumbs */}
           <nav className="text-sm text-muted-foreground mb-6">
@@ -145,8 +148,8 @@ export default async function TopLosersPage() {
           <div className="mb-8">
             <h1 className="text-4xl font-bold mb-4">Top Losing Stocks Today</h1>
             <p className="text-xl text-muted-foreground">
-              Stocks with the biggest percentage losses. Identify risks or find
-              oversold opportunities.
+              Stocks with the biggest percentage losses. Real-time data with
+              opportunity scoring.
             </p>
           </div>
 
@@ -161,24 +164,22 @@ export default async function TopLosersPage() {
               <p className="text-2xl font-bold text-red-500">{avgLoss}%</p>
             </div>
             <div className="bg-card p-4 rounded-lg border border-border">
-              <p className="text-sm text-muted-foreground mb-1">
-                Worst Performer
-              </p>
+              <p className="text-sm text-muted-foreground mb-1">Worst Performer</p>
               <p className="text-2xl font-bold">
                 {stocks[0]?.symbol || 'N/A'}
               </p>
             </div>
             <div className="bg-card p-4 rounded-lg border border-border">
-              <p className="text-sm text-muted-foreground mb-1">Panic Sells</p>
+              <p className="text-sm text-muted-foreground mb-1">High Volume</p>
               <p className="text-2xl font-bold">
-                {stocks.filter((s) => s.volumeRatio > 3).length}
+                {stocks.filter((s) => s.volumeRatio > 2).length}
               </p>
             </div>
           </div>
 
           {/* Stock Cards Grid */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Today's Biggest Decliners</h2>
+            <h2 className="text-2xl font-bold mb-6">Today's Worst Performers</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {stocks.map((stock, index) => (
                 <Link
@@ -186,19 +187,21 @@ export default async function TopLosersPage() {
                   href={`/dashboard?ticker=${stock.symbol}`}
                   className="bg-card p-5 rounded-lg border border-border hover:border-red-500/50 transition-all hover:shadow-lg group relative overflow-hidden"
                 >
-                  {/* Warning badge for large drops */}
-                  {Math.abs(stock.changePercent) > 15 && (
+                  {/* Rank badge */}
+                  {index < 3 && (
                     <div className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
-                      Large Drop
+                      #{index + 1}
                     </div>
                   )}
 
                   <div className="flex items-start justify-between mb-3">
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-xs text-muted-foreground">
-                          #{index + 1}
-                        </span>
+                        {index >= 3 && (
+                          <span className="text-xs text-muted-foreground">
+                            #{index + 1}
+                          </span>
+                        )}
                         <h3 className="text-xl font-bold group-hover:text-red-500 transition-colors">
                           {stock.symbol}
                         </h3>
@@ -249,7 +252,7 @@ export default async function TopLosersPage() {
                         {stock.signals.slice(0, 2).map((signal, i) => (
                           <span
                             key={i}
-                            className="text-xs px-2 py-0.5 bg-red-500/20 text-red-500 rounded"
+                            className="text-xs px-2 py-0.5 bg-yellow-500/20 text-yellow-500 rounded"
                           >
                             {signal}
                           </span>
@@ -270,123 +273,83 @@ export default async function TopLosersPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-card p-6 rounded-xl border border-border">
                 <h3 className="text-lg font-bold mb-3 text-red-500">
-                  Common Causes of Declines
+                  Common Catalysts for Declines
                 </h3>
                 <ul className="space-y-2 text-muted-foreground">
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">📉</span>
+                    <span className="text-red-500 mt-1">📊</span>
                     <span>
                       <strong>Earnings Misses:</strong> Revenue or profit below
                       expectations
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">⬇️</span>
+                    <span className="text-red-500 mt-1">📉</span>
                     <span>
                       <strong>Analyst Downgrades:</strong> Price target cuts or
-                      rating reductions
+                      rating downgrades
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-red-500 mt-1">⚠️</span>
                     <span>
-                      <strong>Product Issues:</strong> Recalls, failures, or
-                      safety concerns
+                      <strong>Product Failures:</strong> Recalls, failed trials,
+                      or poor reception
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-red-500 mt-1">⚖️</span>
                     <span>
-                      <strong>Regulatory Problems:</strong> FDA rejections,
-                      lawsuits, fines
+                      <strong>Regulatory Issues:</strong> FDA rejections,
+                      lawsuits, or fines
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">📰</span>
+                    <span className="text-red-500 mt-1">🔄</span>
                     <span>
-                      <strong>Negative News:</strong> Management changes,
-                      scandals, guidance cuts
+                      <strong>Competitive Threats:</strong> Market share loss or
+                      new competitors
                     </span>
                   </li>
                 </ul>
               </div>
               <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 text-green-500">
-                  Evaluating Losers Safely
+                <h3 className="text-lg font-bold mb-3 text-yellow-500">
+                  Evaluating Decline Opportunities
                 </h3>
                 <ul className="space-y-2 text-muted-foreground">
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">✓</span>
+                    <span className="text-yellow-500 mt-1">✓</span>
                     <span>
-                      Research the catalyst - understand WHY it's falling
+                      Identify if decline is temporary or structural
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">✓</span>
+                    <span className="text-yellow-500 mt-1">✓</span>
                     <span>
-                      Check fundamentals - balance sheet, debt levels, cash flow
+                      Check if fundamentals remain strong despite selloff
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">✓</span>
+                    <span className="text-yellow-500 mt-1">✓</span>
                     <span>
-                      Assess if temporary - one-time issue vs. structural problem
+                      Look for oversold conditions with quality companies
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">✓</span>
+                    <span className="text-yellow-500 mt-1">✓</span>
                     <span>
-                      Watch for capitulation - extreme volume may signal bottom
+                      Avoid catching falling knives without research
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">✓</span>
+                    <span className="text-yellow-500 mt-1">✓</span>
                     <span>
-                      Use our AI analysis to evaluate recovery potential
+                      Use our AI analysis to identify recovery candidates
                     </span>
                   </li>
                 </ul>
               </div>
-            </div>
-          </section>
-
-          {/* Risk Warning */}
-          <section className="mb-12">
-            <div className="bg-red-500/10 border border-red-500/30 p-6 rounded-xl">
-              <h3 className="text-lg font-bold mb-3 text-red-500">
-                ⚠️ Important Risk Disclosure
-              </h3>
-              <p className="text-muted-foreground mb-3">
-                Stocks on the top losers list are experiencing significant
-                downward pressure. While some may represent value opportunities,
-                others may continue declining due to fundamental issues.
-              </p>
-              <ul className="space-y-2 text-muted-foreground">
-                <li className="flex items-start gap-2">
-                  <span className="text-red-500 mt-1">•</span>
-                  <span>
-                    Never catch a "falling knife" without proper research
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-500 mt-1">•</span>
-                  <span>
-                    Use stop losses to protect capital if buying dips
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-500 mt-1">•</span>
-                  <span>
-                    Consider dollar-cost averaging rather than lump sum purchases
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-500 mt-1">•</span>
-                  <span>
-                    Monitor position size - don't overexpose to risky situations
-                  </span>
-                </li>
-              </ul>
             </div>
           </section>
 
@@ -446,11 +409,12 @@ export default async function TopLosersPage() {
           {/* CTA */}
           <section className="bg-card p-8 rounded-xl border border-border text-center">
             <h2 className="text-2xl font-bold mb-4">
-              Evaluate Losers with AI Analysis
+              Analyze Declining Stocks
             </h2>
             <p className="text-muted-foreground mb-6">
-              Use our AI-powered fundamental analysis to distinguish between
-              temporary setbacks and permanent value destruction.
+              Use our AI-powered analysis to determine if today's losers are
+              value opportunities or value traps. Get fundamental insights to
+              make informed decisions.
             </p>
             <Link
               href="/dashboard"
@@ -461,6 +425,7 @@ export default async function TopLosersPage() {
           </section>
         </div>
       </main>
+      <Footer />
     </>
   )
 }

@@ -5,6 +5,8 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import UserAvatar from "@/components/UserAvatar"
 import { getBreadcrumbSchema, getFAQSchema } from "@/lib/seo"
 import { TrendingUp, TrendingDown, AlertCircle, Calculator, BookOpen, Shield } from "lucide-react"
+import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
 
 export const metadata: Metadata = {
   title: "Options Trading Guide - Unusual Options Activity & Options Flow Analysis",
@@ -130,6 +132,7 @@ const faqSchema = getFAQSchema([
 export default function OptionsPage() {
   return (
     <>
+      <Header />
       {/* Structured Data */}
       <script
         type="application/ld+json"
@@ -138,7 +141,7 @@ export default function OptionsPage() {
         }}
       />
 
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-background text-foreground pt-20">
         {/* Header */}
         <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
           <div className="max-w-[1400px] mx-auto px-6 py-3">
@@ -893,6 +896,7 @@ export default function OptionsPage() {
           </div>
         </footer>
       </main>
+      <Footer />
     </>
   )
 }
