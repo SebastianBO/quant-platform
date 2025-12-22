@@ -2,12 +2,8 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
-import {
-  getBreadcrumbSchema,
-  getArticleSchema,
-  getFAQSchema,
-  SITE_URL,
-} from '@/lib/seo'
+import { SITE_URL } from '@/lib/seo'
+import { FAQSchema, BreadcrumbSchema, ArticleSchema } from '@/components/seo/StructuredData'
 
 export const metadata: Metadata = {
   title: 'How to Invest in Stocks - Complete Beginner\'s Guide 2025',
@@ -162,36 +158,32 @@ const faqs = [
 export default function HowToInvestPage() {
   const pageUrl = `${SITE_URL}/learn/how-to-invest`
 
-  const breadcrumbSchema = getBreadcrumbSchema([
-    { name: 'Home', url: SITE_URL },
-    { name: 'Learn', url: `${SITE_URL}/learn` },
-    { name: 'How to Invest in Stocks', url: pageUrl },
-  ])
-
-  const articleSchema = getArticleSchema({
-    headline: 'How to Invest in Stocks - Complete Beginner\'s Guide',
-    description: 'Comprehensive guide to stock investing covering basics, strategies, risk management, and portfolio building for beginners.',
-    url: pageUrl,
-    keywords: [
-      'how to invest',
-      'stock investing guide',
-      'investment strategies',
-      'portfolio building',
-      'risk management',
-    ],
-  })
-
-  const faqSchema = getFAQSchema(faqs)
-
   return (
     <>
       <Header />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema]),
-        }}
+
+      {/* Structured Data for SEO */}
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: SITE_URL },
+          { name: 'Learn', url: `${SITE_URL}/learn` },
+          { name: 'How to Invest in Stocks', url: pageUrl },
+        ]}
       />
+      <ArticleSchema
+        headline="How to Invest in Stocks - Complete Beginner's Guide"
+        description="Comprehensive guide to stock investing covering basics, strategies, risk management, and portfolio building for beginners."
+        url={pageUrl}
+        keywords={[
+          'how to invest',
+          'stock investing guide',
+          'investment strategies',
+          'portfolio building',
+          'risk management',
+        ]}
+      />
+      <FAQSchema faqs={faqs} />
+
       <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
           {/* Breadcrumbs */}

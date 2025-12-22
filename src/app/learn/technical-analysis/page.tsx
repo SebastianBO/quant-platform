@@ -1,14 +1,9 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import {
-  getBreadcrumbSchema,
-  getArticleSchema,
-  getFAQSchema,
-  getHowToSchema,
-  SITE_URL,
-} from '@/lib/seo'
+import { SITE_URL } from '@/lib/seo'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
+import { FAQSchema, BreadcrumbSchema, ArticleSchema, HowToSchema } from '@/components/seo/StructuredData'
 
 export const metadata: Metadata = {
   title: 'Technical Analysis Guide: Chart Patterns, Indicators & Trading Strategies (2025)',
@@ -271,36 +266,30 @@ const exampleStocks = [
 export default function TechnicalAnalysisPage() {
   const pageUrl = `${SITE_URL}/learn/technical-analysis`
 
-  const breadcrumbSchema = getBreadcrumbSchema([
-    { name: 'Home', url: SITE_URL },
-    { name: 'Learn', url: `${SITE_URL}/learn` },
-    { name: 'Technical Analysis', url: pageUrl },
-  ])
-
-  const articleSchema = getArticleSchema({
-    headline: 'Complete Technical Analysis Guide: Chart Patterns, Indicators & Trading Strategies',
-    description: 'Comprehensive guide to technical analysis including chart patterns, RSI, MACD, moving averages, and candlestick patterns.',
-    url: pageUrl,
-    keywords: ['technical analysis', 'chart patterns', 'RSI', 'MACD', 'support resistance', 'candlestick patterns'],
-  })
-
-  const howToSchema = getHowToSchema({
-    name: 'How to Use Technical Analysis for Trading',
-    description: 'Step-by-step guide to analyzing stock charts using technical analysis.',
-    steps: howToSteps,
-  })
-
-  const faqSchema = getFAQSchema(faqs)
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify([breadcrumbSchema, articleSchema, howToSchema, faqSchema]),
-        }}
-      />
       <Header />
+
+      {/* Structured Data for SEO */}
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: SITE_URL },
+          { name: 'Learn', url: `${SITE_URL}/learn` },
+          { name: 'Technical Analysis', url: pageUrl },
+        ]}
+      />
+      <ArticleSchema
+        headline="Complete Technical Analysis Guide: Chart Patterns, Indicators & Trading Strategies"
+        description="Comprehensive guide to technical analysis including chart patterns, RSI, MACD, moving averages, and candlestick patterns."
+        url={pageUrl}
+        keywords={['technical analysis', 'chart patterns', 'RSI', 'MACD', 'support resistance', 'candlestick patterns']}
+      />
+      <HowToSchema
+        name="How to Use Technical Analysis for Trading"
+        description="Step-by-step guide to analyzing stock charts using technical analysis."
+        steps={howToSteps}
+      />
+      <FAQSchema faqs={faqs} />
       <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-4xl mx-auto px-6 py-12">
           {/* Breadcrumbs */}

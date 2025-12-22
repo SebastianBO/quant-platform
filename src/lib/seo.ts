@@ -1,4 +1,5 @@
 // SEO Utility Functions and JSON-LD Schema Generators
+import { Metadata } from 'next'
 
 export const SITE_URL = 'https://lician.com'
 export const SITE_NAME = 'Lician'
@@ -537,4 +538,202 @@ export function getRelatedStocks(ticker: string): string[] {
 export function getComparisonPairs(ticker: string): string[] {
   const related = getRelatedStocks(ticker)
   return related.slice(0, 3).map((t) => `${ticker.toLowerCase()}-vs-${t.toLowerCase()}`)
+}
+
+/**
+ * Generate comprehensive SEO metadata for any page
+ * Use this helper in your page's generateMetadata() function
+ */
+export interface SEOMetadataOptions {
+  title: string
+  description: string
+  path: string
+  keywords?: string[]
+  image?: string
+  imageAlt?: string
+  type?: 'website' | 'article' | 'profile'
+  publishedTime?: string
+  modifiedTime?: string
+  author?: string
+  noIndex?: boolean
+  canonical?: string
+}
+
+export function generateSEOMetadata({
+  title,
+  description,
+  path,
+  keywords = [],
+  image,
+  imageAlt,
+  type = 'website',
+  publishedTime,
+  modifiedTime,
+  author,
+  noIndex = false,
+  canonical,
+}: SEOMetadataOptions): Metadata {
+  const url = `${SITE_URL}${path}`
+  const canonicalUrl = canonical || url
+  const ogImage = image || OG_IMAGE_URL
+  const ogImageAlt = imageAlt || `${title} - ${SITE_NAME}`
+
+  const metadata: Metadata = {
+    title,
+    description,
+    keywords: keywords.length > 0 ? keywords : undefined,
+    authors: author ? [{ name: author }] : undefined,
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: SITE_NAME,
+      type,
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: ogImageAlt,
+        },
+      ],
+      ...(type === 'article' && publishedTime && { publishedTime }),
+      ...(type === 'article' && modifiedTime && { modifiedTime }),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [ogImage],
+      creator: '@lician',
+    },
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    robots: noIndex
+      ? {
+          index: false,
+          follow: false,
+        }
+      : undefined,
+  }
+
+  return metadata
+}
+
+/**
+ * Generate stock-specific SEO metadata
+ * Optimized for stock ticker pages
+ */
+export interface StockSEOOptions {
+  ticker: string
+  companyName: string
+  price?: number
+  description?: string
+  sector?: string
+  exchange?: string
+}
+
+export function generateStockMetadata({
+  ticker,
+  companyName,
+  price,
+  description,
+  sector,
+  exchange,
+}: StockSEOOptions): Metadata {
+  const symbol = ticker.toUpperCase()
+  const currentYear = new Date().getFullYear()
+
+  const priceText = price ? `Current price $${price.toFixed(2)}.` : ''
+  const sectorText = sector ? `${sector} sector.` : ''
+
+  const fullDescription =
+    description ||
+    `${symbol} (${companyName}) stock analysis: ${priceText} ${sectorText} View real-time quotes, financial statements, DCF valuation, institutional ownership, insider trades, and AI-powered investment insights.`
+
+  const keywords = [
+    `${symbol} stock`,
+    `${symbol} stock price`,
+    `${symbol} analysis`,
+    `${companyName} stock`,
+    `${symbol} financials`,
+    `${symbol} earnings`,
+    `${symbol} valuation`,
+    `${symbol} institutional ownership`,
+    `buy ${symbol} stock`,
+    `${symbol} forecast ${currentYear}`,
+    `${symbol} stock news`,
+    `${symbol} dividend`,
+    `${symbol} PE ratio`,
+    `${symbol} market cap`,
+  ]
+
+  return generateSEOMetadata({
+    title: `${symbol} Stock Price, Analysis & News - ${companyName}`,
+    description: fullDescription,
+    path: `/stock/${ticker.toLowerCase()}`,
+    keywords,
+    image: `${SITE_URL}/api/og/stock/${ticker.toLowerCase()}`,
+    imageAlt: `${symbol} Stock Analysis - ${companyName}`,
+    type: 'article',
+    modifiedTime: new Date().toISOString(),
+  })
+}
+
+/**
+ * Generate comparison page SEO metadata
+ * For stock vs stock comparison pages
+ */
+export function generateComparisonMetadata(
+  ticker1: string,
+  ticker2: string,
+  name1?: string,
+  name2?: string
+): Metadata {
+  const t1 = ticker1.toUpperCase()
+  const t2 = ticker2.toUpperCase()
+  const n1 = name1 || t1
+  const n2 = name2 || t2
+
+  return generateSEOMetadata({
+    title: `${t1} vs ${t2}: Stock Comparison - Which is Better?`,
+    description: `Compare ${t1} (${n1}) vs ${t2} (${n2}) stocks. Side-by-side analysis of financials, valuation, growth metrics, and investment potential. Make better investment decisions with AI-powered comparison.`,
+    path: `/compare/${ticker1.toLowerCase()}-vs-${ticker2.toLowerCase()}`,
+    keywords: [
+      `${t1} vs ${t2}`,
+      `${t1} ${t2} comparison`,
+      `${t1} or ${t2}`,
+      `compare ${t1} ${t2}`,
+      `${t1} ${t2} stock comparison`,
+      `which is better ${t1} or ${t2}`,
+      `${n1} vs ${n2}`,
+    ],
+    type: 'article',
+  })
+}
+
+/**
+ * Generate sector page SEO metadata
+ */
+export function generateSectorMetadata(sector: string): Metadata {
+  const sectorName = sector
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+
+  return generateSEOMetadata({
+    title: `${sectorName} Stocks - Top Companies & Analysis`,
+    description: `Explore top ${sectorName.toLowerCase()} stocks. Compare companies, view sector performance, analyze financials, and discover investment opportunities in the ${sectorName.toLowerCase()} sector.`,
+    path: `/sectors/${sector}`,
+    keywords: [
+      `${sectorName} stocks`,
+      `best ${sectorName} stocks`,
+      `${sectorName} sector`,
+      `${sectorName} companies`,
+      `top ${sectorName} stocks`,
+      `${sectorName} stock analysis`,
+    ],
+    type: 'article',
+  })
 }

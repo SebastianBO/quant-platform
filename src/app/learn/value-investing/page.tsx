@@ -1,14 +1,9 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import {
-  getBreadcrumbSchema,
-  getArticleSchema,
-  getFAQSchema,
-  getHowToSchema,
-  SITE_URL,
-} from '@/lib/seo'
+import { SITE_URL } from '@/lib/seo'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
+import { FAQSchema, BreadcrumbSchema, ArticleSchema, HowToSchema } from '@/components/seo/StructuredData'
 
 export const metadata: Metadata = {
   title: 'Value Investing Guide: How to Find Undervalued Stocks Like Warren Buffett (2025)',
@@ -290,36 +285,31 @@ const valueVsGrowth = [
 export default function ValueInvestingPage() {
   const pageUrl = `${SITE_URL}/learn/value-investing`
 
-  const breadcrumbSchema = getBreadcrumbSchema([
-    { name: 'Home', url: SITE_URL },
-    { name: 'Learn', url: `${SITE_URL}/learn` },
-    { name: 'Value Investing', url: pageUrl },
-  ])
-
-  const articleSchema = getArticleSchema({
-    headline: 'Value Investing Guide: How to Find Undervalued Stocks Like Warren Buffett',
-    description: 'Complete guide to value investing including Warren Buffett\'s approach, intrinsic value calculation, margin of safety, key metrics, and avoiding value traps.',
-    url: pageUrl,
-    keywords: ['value investing', 'Warren Buffett', 'undervalued stocks', 'intrinsic value', 'margin of safety', 'value stocks'],
-  })
-
-  const howToSchema = getHowToSchema({
-    name: 'How to Start Value Investing',
-    description: 'Step-by-step guide to value investing including finding undervalued stocks, calculating intrinsic value, and applying Warren Buffett\'s principles.',
-    steps: howToSteps,
-  })
-
-  const faqSchema = getFAQSchema(faqs)
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify([breadcrumbSchema, articleSchema, howToSchema, faqSchema]),
-        }}
-      />
       <Header />
+
+      {/* Structured Data for SEO */}
+      <BreadcrumbSchema
+        items={[
+          { name: 'Home', url: SITE_URL },
+          { name: 'Learn', url: `${SITE_URL}/learn` },
+          { name: 'Value Investing', url: pageUrl },
+        ]}
+      />
+      <ArticleSchema
+        headline="Value Investing Guide: How to Find Undervalued Stocks Like Warren Buffett"
+        description="Complete guide to value investing including Warren Buffett's approach, intrinsic value calculation, margin of safety, key metrics, and avoiding value traps."
+        url={pageUrl}
+        keywords={['value investing', 'Warren Buffett', 'undervalued stocks', 'intrinsic value', 'margin of safety', 'value stocks']}
+      />
+      <HowToSchema
+        name="How to Start Value Investing"
+        description="Step-by-step guide to value investing including finding undervalued stocks, calculating intrinsic value, and applying Warren Buffett's principles."
+        steps={howToSteps}
+      />
+      <FAQSchema faqs={faqs} />
+
       <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-4xl mx-auto px-6 py-12">
           {/* Breadcrumbs */}

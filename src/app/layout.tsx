@@ -1,5 +1,5 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -8,6 +8,18 @@ import "./globals.css"
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist" })
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" })
+
+// Viewport configuration for responsive design and mobile optimization
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#000000' },
+  ],
+}
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://lician.com'),
@@ -33,6 +45,11 @@ export const metadata: Metadata = {
   authors: [{ name: "Lician" }],
   creator: "Lician",
   publisher: "Lician",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   robots: {
     index: true,
     follow: true,
@@ -84,6 +101,8 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://lician.com",
   },
+  category: 'finance',
+  classification: 'Financial Services',
 }
 
 // Global structured data schemas
@@ -118,11 +137,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
 
-        {/* Theme color for browser chrome */}
-        <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
-        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-
-        {/* Global Organization and Website Schema */}
+        {/* Global Organization and Website Schema for search engines and AI */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

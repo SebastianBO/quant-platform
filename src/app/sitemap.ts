@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next'
 
-// S&P 500 stocks - comprehensive coverage for SEO
-const TOP_STOCKS = [
+// S&P 500 + Popular stocks + ETFs (comprehensive list from index-all-stocks.ts)
+const ALL_STOCKS = [
+  // S&P 500
   'AAPL', 'ABBV', 'ABT', 'ACN', 'ADBE', 'ADI', 'ADP', 'ADSK', 'AEP', 'AES',
   'AFL', 'AIG', 'AIZ', 'AJG', 'AKAM', 'ALB', 'ALGN', 'ALL', 'ALLE', 'AMAT',
   'AMCR', 'AMD', 'AME', 'AMGN', 'AMP', 'AMT', 'AMZN', 'ANET', 'ANSS', 'AON',
@@ -50,10 +51,16 @@ const TOP_STOCKS = [
   'VRSN', 'VRTX', 'VTR', 'VTRS', 'VZ', 'WAB', 'WAT', 'WBA', 'WBD', 'WDC',
   'WEC', 'WELL', 'WFC', 'WHR', 'WM', 'WMB', 'WMT', 'WRB', 'WRK', 'WST',
   'WTW', 'WY', 'WYNN', 'XEL', 'XOM', 'XRAY', 'XYL', 'YUM', 'ZBH', 'ZBRA',
-  'ZION', 'ZTS'
+  'ZION', 'ZTS',
+  // Popular non-S&P stocks
+  'PLTR', 'COIN', 'RIVN', 'LCID', 'NIO', 'SOFI', 'HOOD', 'GME', 'AMC',
+  'MARA', 'RIOT', 'PLUG', 'SPCE', 'DKNG', 'RBLX', 'U', 'SNAP', 'PINS',
+  'ROKU', 'ZM', 'DOCU', 'CRWD', 'SNOW', 'NET', 'DDOG', 'MDB', 'OKTA',
+  // Popular ETFs
+  'SPY', 'QQQ', 'VOO', 'VTI', 'IWM', 'DIA', 'ARKK', 'XLF', 'XLE', 'XLK',
 ]
 
-// Popular comparison pairs organized by category (215 pairs for comprehensive SEO coverage)
+// Comparison pairs organized by category (comprehensive coverage)
 const COMPARISON_PAIRS = [
   // Tech Giants (20 pairs)
   ['AAPL', 'MSFT'], ['AAPL', 'GOOGL'], ['MSFT', 'GOOGL'], ['META', 'GOOGL'],
@@ -83,16 +90,16 @@ const COMPARISON_PAIRS = [
   ['JPM', 'SCHW'], ['BAC', 'SCHW'], ['C', 'SCHW'], ['WFC', 'SCHW'],
 
   // Payment/Fintech (15 pairs)
-  ['SQ', 'PYPL'], ['HOOD', 'COIN'], ['SOFI', 'HOOD'], ['V', 'PYPL'],
-  ['MA', 'PYPL'], ['SQ', 'V'], ['SQ', 'MA'], ['PYPL', 'COIN'],
-  ['SQ', 'COIN'], ['SOFI', 'COIN'], ['SOFI', 'PYPL'], ['HOOD', 'PYPL'],
-  ['SQ', 'SOFI'], ['V', 'COIN'], ['MA', 'COIN'],
+  ['PYPL', 'V'], ['PYPL', 'MA'], ['HOOD', 'COIN'], ['SOFI', 'HOOD'],
+  ['V', 'PYPL'], ['MA', 'PYPL'], ['PYPL', 'COIN'], ['SOFI', 'COIN'],
+  ['SOFI', 'PYPL'], ['HOOD', 'PYPL'], ['V', 'COIN'], ['MA', 'COIN'],
+  ['PYPL', 'SQ'], ['SOFI', 'SQ'], ['HOOD', 'SQ'],
 
   // Streaming/Media (15 pairs)
-  ['NFLX', 'DIS'], ['NFLX', 'PARA'], ['DIS', 'WBD'], ['SPOT', 'AAPL'],
-  ['NFLX', 'WBD'], ['DIS', 'PARA'], ['PARA', 'WBD'], ['NFLX', 'SPOT'],
-  ['DIS', 'SPOT'], ['SPOT', 'GOOGL'], ['SPOT', 'AMZN'], ['NFLX', 'GOOGL'],
-  ['DIS', 'GOOGL'], ['NFLX', 'AMZN'], ['DIS', 'AMZN'],
+  ['NFLX', 'DIS'], ['NFLX', 'PARA'], ['DIS', 'WBD'], ['NFLX', 'WBD'],
+  ['DIS', 'PARA'], ['PARA', 'WBD'], ['NFLX', 'GOOGL'], ['DIS', 'GOOGL'],
+  ['NFLX', 'AMZN'], ['DIS', 'AMZN'], ['RBLX', 'EA'], ['SNAP', 'PINS'],
+  ['ROKU', 'NFLX'], ['ZM', 'DOCU'], ['SNAP', 'META'],
 
   // Retail (20 pairs)
   ['WMT', 'TGT'], ['HD', 'LOW'], ['COST', 'WMT'], ['AMZN', 'WMT'],
@@ -110,9 +117,9 @@ const COMPARISON_PAIRS = [
 
   // Consumer (15 pairs)
   ['KO', 'PEP'], ['NKE', 'LULU'], ['SBUX', 'CMG'], ['MCD', 'YUM'],
-  ['KO', 'MDLZ'], ['PEP', 'MDLZ'], ['NKE', 'UAA'], ['SBUX', 'MCD'],
-  ['CMG', 'YUM'], ['MCD', 'CMG'], ['SBUX', 'YUM'], ['LULU', 'UAA'],
-  ['KO', 'SBUX'], ['PEP', 'SBUX'], ['NKE', 'ADDYY'],
+  ['KO', 'MDLZ'], ['PEP', 'MDLZ'], ['SBUX', 'MCD'], ['CMG', 'YUM'],
+  ['MCD', 'CMG'], ['SBUX', 'YUM'], ['KO', 'SBUX'], ['PEP', 'SBUX'],
+  ['NKE', 'ADDYY'], ['LULU', 'UAA'], ['MCD', 'SBUX'],
 
   // Healthcare/Pharma (20 pairs)
   ['PFE', 'MRK'], ['JNJ', 'ABBV'], ['LLY', 'NVO'], ['UNH', 'CVS'],
@@ -133,11 +140,10 @@ const COMPARISON_PAIRS = [
   ['PLTR', 'MSFT'], ['PLTR', 'GOOGL'], ['SNOW', 'MSFT'], ['SNOW', 'GOOGL'],
   ['CRM', 'GOOGL'], ['NVDA', 'PLTR'], ['NVDA', 'SNOW'], ['META', 'PLTR'],
   ['META', 'SNOW'], ['GOOGL', 'PLTR'], ['GOOGL', 'SNOW'], ['CRM', 'PLTR'],
-]
 
-// Filter categories for programmatic pages
-const FILTER_CATEGORIES = [
-  'dividend', 'growth', 'value', 'tech', 'healthcare', 'energy', 'ai'
+  // ETFs
+  ['SPY', 'VOO'], ['SPY', 'QQQ'], ['VOO', 'VTI'], ['QQQ', 'ARKK'],
+  ['SPY', 'VTI'], ['QQQ', 'SPY'], ['ARKK', 'SPY'], ['IWM', 'SPY'],
 ]
 
 // All 11 stock market sectors
@@ -177,266 +183,237 @@ const LEARNING_PAGES = [
   'growth-investing',
 ]
 
-// Popular stock screener filter combinations for SEO
-const SCREENER_FILTERS = [
-  // By sector
-  { query: 'sector=technology', priority: 0.8 },
-  { query: 'sector=healthcare', priority: 0.8 },
-  { query: 'sector=financial', priority: 0.8 },
-  { query: 'sector=energy', priority: 0.8 },
-  { query: 'sector=consumer', priority: 0.7 },
-  // By market cap
-  { query: 'market_cap=large', priority: 0.8 },
-  { query: 'market_cap=mid', priority: 0.7 },
-  { query: 'market_cap=small', priority: 0.7 },
-  // By valuation
-  { query: 'pe_max=10', priority: 0.8 },
-  { query: 'pe_max=15', priority: 0.8 },
-  { query: 'pe_max=25', priority: 0.7 },
-  // Combined filters (high-value searches)
-  { query: 'sector=technology&market_cap=large', priority: 0.8 },
-  { query: 'sector=healthcare&pe_max=15', priority: 0.8 },
-  { query: 'market_cap=large&pe_max=15', priority: 0.8 },
-  { query: 'sector=energy&market_cap=large', priority: 0.7 },
-  { query: 'sector=financial&market_cap=large', priority: 0.7 },
+// Filter categories for programmatic pages
+const FILTER_CATEGORIES = [
+  'dividend', 'growth', 'value', 'tech', 'healthcare', 'energy', 'ai'
+]
+
+// Market movers pages
+const MARKET_PAGES = [
+  'most-active',
+  'top-gainers',
+  'top-losers',
+  '52-week-high',
+  '52-week-low',
+  'premarket',
+  'after-hours',
 ]
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://lician.com'
   const currentDate = new Date().toISOString()
 
-  const routes: MetadataRoute.Sitemap = [
-    // Core pages
-    {
-      url: baseUrl,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/dashboard`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/premium`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/login`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.5,
-    },
-    // Earnings Calendar - High-value SEO page
-    {
-      url: `${baseUrl}/earnings`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    // Earnings Surprises - High-value SEO page
-    {
-      url: `${baseUrl}/earnings/surprises`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    // IPO Calendar - High-value SEO page (IPO calendar has high search volume)
-    {
-      url: `${baseUrl}/ipo`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    // Insider Trading - High-value SEO page
-    {
-      url: `${baseUrl}/insider-trading`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    // Institutional Ownership - High-value SEO page
-    {
-      url: `${baseUrl}/institutional`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    // Analyst Ratings - High-value SEO page
-    {
-      url: `${baseUrl}/analyst-ratings`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
+  const routes: MetadataRoute.Sitemap = []
 
-    // Stock Screener - High-value SEO page (74K searches/month)
-    {
-      url: `${baseUrl}/screener`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly',
-      priority: 0.95,
-    },
-    // Short Interest - High-value SEO page
-    {
-      url: `${baseUrl}/short-interest`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    // Asset Class Pages - Major SEO pages
-    {
-      url: `${baseUrl}/bonds`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly',
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/forex`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly',
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/commodities`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly',
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/crypto`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly',
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/etfs`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    // Calendar Pages
-    {
-      url: `${baseUrl}/dividends`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/economic-calendar`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    // Market Movers Pages
-    {
-      url: `${baseUrl}/markets`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/markets/most-active`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/markets/top-gainers`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/markets/top-losers`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/markets/52-week-high`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/markets/52-week-low`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/markets/premarket`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly',
-      priority: 0.9,
-    },
-    // Stock Splits - High-value SEO page
-    {
-      url: `${baseUrl}/stock-splits`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    // After-Hours Trading
-    {
-      url: `${baseUrl}/markets/after-hours`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly',
-      priority: 0.9,
-    },
-    // Biotech Catalysts - High-value niche page
-    {
-      url: `${baseUrl}/biotech`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    // Options Trading Guide
-    {
-      url: `${baseUrl}/options`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    // Stock Market News
-    {
-      url: `${baseUrl}/news`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly',
-      priority: 0.95,
-    },
-    // Penny Stocks - High search volume
-    {
-      url: `${baseUrl}/penny-stocks`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    // Blue Chip Stocks - High search volume
-    {
-      url: `${baseUrl}/blue-chip-stocks`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-  ]
+  // ============================================================================
+  // HOMEPAGE - Maximum Priority
+  // ============================================================================
+  routes.push({
+    url: baseUrl,
+    lastModified: currentDate,
+    changeFrequency: 'daily',
+    priority: 1.0,
+  })
 
-  // Stock Screener filter pages
-  SCREENER_FILTERS.forEach(({ query, priority }) => {
+  // ============================================================================
+  // MAIN PLATFORM PAGES - Very High Priority
+  // ============================================================================
+  routes.push({
+    url: `${baseUrl}/dashboard`,
+    lastModified: currentDate,
+    changeFrequency: 'hourly',
+    priority: 0.9,
+  })
+
+  routes.push({
+    url: `${baseUrl}/screener`,
+    lastModified: currentDate,
+    changeFrequency: 'hourly',
+    priority: 0.95,
+  })
+
+  routes.push({
+    url: `${baseUrl}/news`,
+    lastModified: currentDate,
+    changeFrequency: 'hourly',
+    priority: 0.95,
+  })
+
+  // ============================================================================
+  // MARKET DATA PAGES - High Priority, Frequent Updates
+  // ============================================================================
+  routes.push({
+    url: `${baseUrl}/markets`,
+    lastModified: currentDate,
+    changeFrequency: 'daily',
+    priority: 0.9,
+  })
+
+  MARKET_PAGES.forEach((page) => {
     routes.push({
-      url: `${baseUrl}/screener?${query}`,
+      url: `${baseUrl}/markets/${page}`,
       lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority,
+      changeFrequency: 'hourly',
+      priority: 0.9,
     })
   })
 
-  // Insights hub and trending content pages
+  // ============================================================================
+  // CALENDAR & EVENT PAGES - High Priority
+  // ============================================================================
+  routes.push({
+    url: `${baseUrl}/earnings`,
+    lastModified: currentDate,
+    changeFrequency: 'daily',
+    priority: 0.9,
+  })
+
+  routes.push({
+    url: `${baseUrl}/earnings/surprises`,
+    lastModified: currentDate,
+    changeFrequency: 'daily',
+    priority: 0.9,
+  })
+
+  routes.push({
+    url: `${baseUrl}/earnings/transcripts`,
+    lastModified: currentDate,
+    changeFrequency: 'daily',
+    priority: 0.9,
+  })
+
+  routes.push({
+    url: `${baseUrl}/dividends`,
+    lastModified: currentDate,
+    changeFrequency: 'daily',
+    priority: 0.9,
+  })
+
+  routes.push({
+    url: `${baseUrl}/ipo`,
+    lastModified: currentDate,
+    changeFrequency: 'daily',
+    priority: 0.9,
+  })
+
+  routes.push({
+    url: `${baseUrl}/stock-splits`,
+    lastModified: currentDate,
+    changeFrequency: 'weekly',
+    priority: 0.9,
+  })
+
+  routes.push({
+    url: `${baseUrl}/economic-calendar`,
+    lastModified: currentDate,
+    changeFrequency: 'daily',
+    priority: 0.9,
+  })
+
+  // ============================================================================
+  // TRADING & ANALYSIS PAGES - High Priority
+  // ============================================================================
+  routes.push({
+    url: `${baseUrl}/analyst-ratings`,
+    lastModified: currentDate,
+    changeFrequency: 'daily',
+    priority: 0.9,
+  })
+
+  routes.push({
+    url: `${baseUrl}/insider-trading`,
+    lastModified: currentDate,
+    changeFrequency: 'daily',
+    priority: 0.9,
+  })
+
+  routes.push({
+    url: `${baseUrl}/institutional`,
+    lastModified: currentDate,
+    changeFrequency: 'daily',
+    priority: 0.9,
+  })
+
+  routes.push({
+    url: `${baseUrl}/short-interest`,
+    lastModified: currentDate,
+    changeFrequency: 'daily',
+    priority: 0.9,
+  })
+
+  routes.push({
+    url: `${baseUrl}/options`,
+    lastModified: currentDate,
+    changeFrequency: 'weekly',
+    priority: 0.9,
+  })
+
+  // ============================================================================
+  // ASSET CLASS PAGES - High Priority
+  // ============================================================================
+  const assetClasses = [
+    'bonds',
+    'forex',
+    'commodities',
+    'crypto',
+    'etfs',
+  ]
+
+  assetClasses.forEach((asset) => {
+    routes.push({
+      url: `${baseUrl}/${asset}`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly',
+      priority: 0.95,
+    })
+  })
+
+  // ============================================================================
+  // SPECIALTY STOCK PAGES - High Priority
+  // ============================================================================
+  routes.push({
+    url: `${baseUrl}/penny-stocks`,
+    lastModified: currentDate,
+    changeFrequency: 'weekly',
+    priority: 0.9,
+  })
+
+  routes.push({
+    url: `${baseUrl}/blue-chip-stocks`,
+    lastModified: currentDate,
+    changeFrequency: 'weekly',
+    priority: 0.9,
+  })
+
+  routes.push({
+    url: `${baseUrl}/biotech`,
+    lastModified: currentDate,
+    changeFrequency: 'daily',
+    priority: 0.9,
+  })
+
+  // ============================================================================
+  // SECTOR PAGES - High Priority
+  // ============================================================================
+  routes.push({
+    url: `${baseUrl}/sectors`,
+    lastModified: currentDate,
+    changeFrequency: 'daily',
+    priority: 0.9,
+  })
+
+  SECTORS.forEach((sector) => {
+    routes.push({
+      url: `${baseUrl}/sectors/${sector}`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 0.8,
+    })
+  })
+
+  // ============================================================================
+  // INSIGHTS & TRENDING CONTENT - High Priority
+  // ============================================================================
   routes.push({
     url: `${baseUrl}/insights`,
     lastModified: currentDate,
@@ -453,7 +430,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   })
 
-  // Learning hub - Educational content for SEO
+  // ============================================================================
+  // LEARNING/EDUCATIONAL CONTENT - Good Priority
+  // ============================================================================
   routes.push({
     url: `${baseUrl}/learn`,
     lastModified: currentDate,
@@ -461,64 +440,62 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.9,
   })
 
-  // Individual learning pages
   LEARNING_PAGES.forEach((page) => {
     routes.push({
       url: `${baseUrl}/learn/${page}`,
       lastModified: currentDate,
-      changeFrequency: 'weekly',
+      changeFrequency: 'monthly',
       priority: 0.8,
     })
   })
 
-  // Sectors hub page
-  routes.push({
-    url: `${baseUrl}/sectors`,
-    lastModified: currentDate,
-    changeFrequency: 'daily',
-    priority: 0.9,
-  })
-
-  // Individual sector pages
-  SECTORS.forEach((sector) => {
+  // ============================================================================
+  // CATEGORY/FILTER PAGES - Good Priority
+  // ============================================================================
+  FILTER_CATEGORIES.forEach((category) => {
     routes.push({
-      url: `${baseUrl}/sectors/${sector}`,
+      url: `${baseUrl}/best-stocks/${category}`,
       lastModified: currentDate,
       changeFrequency: 'daily',
       priority: 0.8,
     })
   })
 
-  // Stock pages - highest priority for top stocks
-  TOP_STOCKS.forEach((ticker, index) => {
-    const priority = index < 20 ? 0.9 : index < 50 ? 0.8 : index < 100 ? 0.7 : 0.6
+  // ============================================================================
+  // STOCK PAGES - Very High Priority for Top Stocks
+  // ============================================================================
+  ALL_STOCKS.forEach((ticker, index) => {
+    // Highest priority for top 50 stocks, decreasing for others
+    const basePriority = index < 20 ? 0.9 : index < 50 ? 0.85 : index < 100 ? 0.8 : index < 200 ? 0.75 : 0.7
 
     // Main stock page
     routes.push({
       url: `${baseUrl}/stock/${ticker}`,
       lastModified: currentDate,
       changeFrequency: 'hourly',
-      priority,
+      priority: basePriority,
     })
 
-    // Should I buy page
+    // Should I buy page (slightly lower priority)
     routes.push({
       url: `${baseUrl}/should-i-buy/${ticker.toLowerCase()}`,
       lastModified: currentDate,
       changeFrequency: 'daily',
-      priority: priority - 0.1,
+      priority: basePriority - 0.1,
     })
 
-    // Stock prediction page
+    // Stock prediction page (slightly lower priority)
     routes.push({
       url: `${baseUrl}/prediction/${ticker.toLowerCase()}`,
       lastModified: currentDate,
       changeFrequency: 'weekly',
-      priority: priority - 0.1,
+      priority: basePriority - 0.1,
     })
   })
 
-  // Comparison pages
+  // ============================================================================
+  // COMPARISON PAGES - Good Priority
+  // ============================================================================
   COMPARISON_PAIRS.forEach(([ticker1, ticker2]) => {
     routes.push({
       url: `${baseUrl}/compare/${ticker1.toLowerCase()}-vs-${ticker2.toLowerCase()}`,
@@ -528,14 +505,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   })
 
-  // Filter/category pages
-  FILTER_CATEGORIES.forEach((category) => {
-    routes.push({
-      url: `${baseUrl}/best-stocks/${category}`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 0.8,
-    })
+  // ============================================================================
+  // AUTHENTICATION & ACCOUNT PAGES - Lower Priority
+  // ============================================================================
+  routes.push({
+    url: `${baseUrl}/login`,
+    lastModified: currentDate,
+    changeFrequency: 'monthly',
+    priority: 0.5,
+  })
+
+  routes.push({
+    url: `${baseUrl}/premium`,
+    lastModified: currentDate,
+    changeFrequency: 'weekly',
+    priority: 0.8,
   })
 
   return routes
