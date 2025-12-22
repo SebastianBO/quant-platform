@@ -3,7 +3,7 @@ import { getRelatedStocks, getComparisonPairs, SITE_URL } from '@/lib/seo'
 
 interface RelatedLinksProps {
   ticker: string
-  currentPage: 'stock' | 'should-i-buy' | 'prediction' | 'compare'
+  currentPage: 'stock' | 'should-i-buy' | 'prediction' | 'compare' | 'health'
   companyName?: string
 }
 
@@ -43,6 +43,14 @@ export function RelatedLinks({ ticker, currentPage, companyName }: RelatedLinksP
               className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors"
             >
               {symbol} Price Prediction {currentYear}
+            </Link>
+          )}
+          {currentPage !== 'health' && (
+            <Link
+              href={`/analysis/${symbol.toLowerCase()}/health`}
+              className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors"
+            >
+              {symbol} Financial Health
             </Link>
           )}
           <Link

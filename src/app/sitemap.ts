@@ -491,6 +491,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: basePriority - 0.1,
     })
+
+    // Financial health analysis page (SEO-optimized)
+    routes.push({
+      url: `${baseUrl}/analysis/${ticker.toLowerCase()}/health`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
   })
 
   // ============================================================================
