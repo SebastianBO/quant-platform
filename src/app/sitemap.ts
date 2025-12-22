@@ -161,6 +161,36 @@ const SECTORS = [
   'communication-services'
 ]
 
+// Industry pages for programmatic SEO
+const INDUSTRIES = [
+  'software',
+  'semiconductors',
+  'banks',
+  'retail',
+  'pharmaceuticals',
+  'biotechnology',
+  'insurance',
+  'aerospace',
+  'automotive',
+  'oil-gas',
+  'telecommunications',
+  'media',
+  'real-estate',
+  'construction',
+  'chemicals',
+  'consumer-electronics',
+  'restaurants',
+  'apparel',
+  'hotels',
+  'utilities',
+  'mining',
+  'fintech',
+  'cloud-computing',
+  'cybersecurity',
+  'artificial-intelligence',
+  'e-commerce',
+]
+
 // High-traffic seasonal/trending content pages
 const INSIGHTS_PAGES = [
   '2026-stock-predictions',
@@ -412,6 +442,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
   })
 
   // ============================================================================
+  // INDUSTRY PAGES - NEW! High Priority for SEO
+  // ============================================================================
+  INDUSTRIES.forEach((industry) => {
+    routes.push({
+      url: `${baseUrl}/stocks/${industry}`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 0.85,
+    })
+  })
+
+  // ============================================================================
   // INSIGHTS & TRENDING CONTENT - High Priority
   // ============================================================================
   routes.push({
@@ -476,9 +518,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: basePriority,
     })
 
+    // Alternative ticker-stock URL format (NEW! for SEO)
+    routes.push({
+      url: `${baseUrl}/${ticker.toLowerCase()}-stock`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly',
+      priority: basePriority - 0.05, // Slightly lower than main page
+    })
+
     // Should I buy page (slightly lower priority)
     routes.push({
       url: `${baseUrl}/should-i-buy/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: basePriority - 0.1,
+    })
+
+    // Buy ticker page (NEW! for purchase intent SEO)
+    routes.push({
+      url: `${baseUrl}/buy-${ticker.toLowerCase()}`,
       lastModified: currentDate,
       changeFrequency: 'daily',
       priority: basePriority - 0.1,

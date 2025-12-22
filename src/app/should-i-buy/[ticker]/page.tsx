@@ -13,9 +13,15 @@ import {
   combineSchemas,
 } from '@/lib/seo'
 
+
 interface Props {
   params: Promise<{ ticker: string }>
 }
+
+// Pre-render top stocks at build time for better SEO and performance
+
+// Allow dynamic rendering for stocks not in the pre-rendered list
+export const dynamic = 'force-dynamic'
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -44,9 +50,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
   }
 }
-
-// Dynamic rendering - no static params to avoid slow build
-export const dynamic = 'force-dynamic'
 
 async function getStockData(ticker: string) {
   try {

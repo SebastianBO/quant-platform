@@ -14,7 +14,7 @@ import {
 
 interface RelatedLinksProps {
   ticker: string
-  currentPage: 'stock' | 'should-i-buy' | 'prediction' | 'compare' | 'health'
+  currentPage: 'stock' | 'should-i-buy' | 'prediction' | 'compare' | 'health' | 'buy'
   companyName?: string
 }
 
@@ -30,7 +30,7 @@ export function RelatedLinks({ ticker, currentPage, companyName }: RelatedLinksP
     stock => stock !== symbol
   )
 
-  // Deep dive analysis links for should-i-buy page
+  // Deep dive analysis links for should-i-buy and buy pages
   const deepDiveLinks = [
     {
       href: `/stock/${symbol}`,
@@ -92,8 +92,8 @@ export function RelatedLinks({ ticker, currentPage, companyName }: RelatedLinksP
 
   return (
     <section className="mt-12 border-t border-border pt-8">
-      {/* Deep Dive Analysis Section - Only for should-i-buy page */}
-      {currentPage === 'should-i-buy' && (
+      {/* Deep Dive Analysis Section - For should-i-buy and buy pages */}
+      {(currentPage === 'should-i-buy' || currentPage === 'buy') && (
         <div className="mb-12">
           <h3 className="text-2xl font-bold mb-2">Deep Dive Analysis</h3>
           <p className="text-muted-foreground mb-6">
@@ -132,8 +132,8 @@ export function RelatedLinks({ ticker, currentPage, companyName }: RelatedLinksP
         </div>
       )}
 
-      {/* Compare Before You Buy Section - Only for should-i-buy page */}
-      {currentPage === 'should-i-buy' && comparisonLinks.length > 0 && (
+      {/* Compare Before You Buy Section - For should-i-buy and buy pages */}
+      {(currentPage === 'should-i-buy' || currentPage === 'buy') && comparisonLinks.length > 0 && (
         <div className="mb-12">
           <h3 className="text-2xl font-bold mb-2">Compare Before You Buy</h3>
           <p className="text-muted-foreground mb-6">
@@ -169,8 +169,8 @@ export function RelatedLinks({ ticker, currentPage, companyName }: RelatedLinksP
         </div>
       )}
 
-      {/* Similar Investment Decisions Section - Only for should-i-buy page */}
-      {currentPage === 'should-i-buy' && similarDecisionLinks.length > 0 && (
+      {/* Similar Investment Decisions Section - For should-i-buy and buy pages */}
+      {(currentPage === 'should-i-buy' || currentPage === 'buy') && similarDecisionLinks.length > 0 && (
         <div className="mb-12">
           <h3 className="text-2xl font-bold mb-2">Similar Investment Decisions</h3>
           <p className="text-muted-foreground mb-6">
@@ -357,6 +357,15 @@ export function RelatedLinks({ ticker, currentPage, companyName }: RelatedLinksP
           <Link href="/best-stocks/value" className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors">
             Best Value Stocks
           </Link>
+          <Link href="/best-stocks/etf" className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors">
+            Best ETFs
+          </Link>
+          <Link href="/best-stocks/blue-chip" className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors">
+            Best Blue Chip Stocks
+          </Link>
+          <Link href="/best-stocks/reit" className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors">
+            Best REITs
+          </Link>
           <Link href="/sectors" className="px-3 py-1.5 bg-green-600/20 text-green-500 rounded-lg text-sm hover:bg-green-600/30 transition-colors">
             Browse All Sectors
           </Link>
@@ -407,6 +416,20 @@ export function CategoryLinks({ currentCategory }: { currentCategory: string }) 
     { key: 'healthcare', label: 'Healthcare Stocks' },
     { key: 'energy', label: 'Energy Stocks' },
     { key: 'ai', label: 'AI Stocks' },
+    { key: 'small-cap', label: 'Small Cap Stocks' },
+    { key: 'large-cap', label: 'Large Cap Stocks' },
+    { key: 'etf', label: 'ETFs' },
+    { key: 'penny', label: 'Penny Stocks' },
+    { key: 'safe', label: 'Safe Stocks' },
+    { key: 'recession-proof', label: 'Recession-Proof Stocks' },
+    { key: 'beginner', label: 'Stocks for Beginners' },
+    { key: 'monthly-dividend', label: 'Monthly Dividend Stocks' },
+    { key: 'high-growth', label: 'High Growth Stocks' },
+    { key: 'undervalued', label: 'Undervalued Stocks' },
+    { key: 'momentum', label: 'Momentum Stocks' },
+    { key: 'blue-chip', label: 'Blue Chip Stocks' },
+    { key: 'index-fund', label: 'Index Funds' },
+    { key: 'reit', label: 'REIT Stocks' },
   ]
 
   const sectors = [

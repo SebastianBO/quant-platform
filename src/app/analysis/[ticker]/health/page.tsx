@@ -33,9 +33,15 @@ import {
   Info,
 } from 'lucide-react'
 
+
 interface Props {
   params: Promise<{ ticker: string }>
 }
+
+// Pre-render top 500+ stocks at build time
+
+// Allow dynamic rendering for stocks not in the pre-rendered list
+export const dynamic = 'force-dynamic'
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -68,8 +74,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
   }
 }
-
-export const dynamic = 'force-dynamic'
 
 // Health score calculator
 function calculateHealthScore(metrics: any): {

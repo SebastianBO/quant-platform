@@ -9,9 +9,15 @@ import {
   SITE_URL,
 } from '@/lib/seo'
 
+
 interface Props {
   params: Promise<{ ticker: string }>
 }
+
+// Pre-render top 500+ stocks at build time
+
+// Allow dynamic rendering for stocks not in the pre-rendered list
+export const dynamic = 'force-dynamic'
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -88,9 +94,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
   }
 }
-
-// Dynamic rendering for fresh data
-export const dynamic = 'force-dynamic'
 
 // Fetch stock data for structured data and dividend info
 async function getStockData(ticker: string) {

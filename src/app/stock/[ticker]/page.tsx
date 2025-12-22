@@ -17,6 +17,9 @@ interface Props {
   params: Promise<{ ticker: string }>
 }
 
+// Dynamic rendering - stock pages need fresh data
+export const dynamic = 'force-dynamic'
+
 // Generate metadata for SEO - This is the critical fix!
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { ticker } = await params
@@ -87,9 +90,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
   }
 }
-
-// Dynamic rendering for fresh data
-export const dynamic = 'force-dynamic'
 
 // Fetch stock data for structured data
 async function getStockData(ticker: string) {

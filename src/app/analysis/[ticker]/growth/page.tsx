@@ -7,9 +7,15 @@ import {
 } from '@/lib/seo'
 import GrowthAnalysisContent from './GrowthAnalysisContent'
 
+
 interface Props {
   params: Promise<{ ticker: string }>
 }
+
+// Pre-render top 500+ stocks at build time
+
+// Allow dynamic rendering for stocks not in the pre-rendered list
+export const dynamic = 'force-dynamic'
 
 // Fetch all necessary data
 async function getGrowthData(ticker: string) {

@@ -12,6 +12,9 @@ interface Props {
   params: Promise<{ ticker: string }>
 }
 
+// Dynamic rendering - analysis pages need fresh financial data
+export const dynamic = 'force-dynamic'
+
 // Fetch stock data
 async function getStockData(ticker: string) {
   try {
