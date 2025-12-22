@@ -1,7 +1,8 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { RelatedLinks } from '@/components/seo/RelatedLinks'
+import { AnalysisNavigation } from '@/components/analysis/AnalysisNavigation'
+import { AnalysisRelatedLinks } from '@/components/analysis/AnalysisRelatedLinks'
 import {
   getBreadcrumbSchema,
   getArticleSchema,
@@ -471,6 +472,7 @@ export default async function FinancialHealthPage({ params }: Props) {
       />
       <main className="min-h-screen bg-background text-foreground">
         <div className="max-w-5xl mx-auto px-6 py-12">
+        <AnalysisNavigation ticker={ticker} />
           {/* Breadcrumb */}
           <nav className="text-sm text-muted-foreground mb-6">
             <Link href="/" className="hover:text-foreground">
@@ -1197,9 +1199,9 @@ export default async function FinancialHealthPage({ params }: Props) {
           </section>
 
           {/* Related Links */}
-          <RelatedLinks
+          <AnalysisRelatedLinks
             ticker={symbol}
-            currentPage="should-i-buy"
+            currentAnalysisType="health"
             companyName={healthData.companyName}
           />
         </div>

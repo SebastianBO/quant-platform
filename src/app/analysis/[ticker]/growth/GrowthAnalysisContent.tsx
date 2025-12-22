@@ -21,6 +21,8 @@ import {
   Area,
 } from 'recharts'
 import { TrendingUp, TrendingDown, AlertCircle, CheckCircle } from 'lucide-react'
+import { AnalysisNavigation } from '@/components/analysis/AnalysisNavigation'
+import { AnalysisRelatedLinks } from '@/components/analysis/AnalysisRelatedLinks'
 import Link from 'next/link'
 
 interface IncomeStatement {
@@ -151,6 +153,7 @@ export default function GrowthAnalysisContent({
 
   return (
     <div className="min-h-screen bg-background">
+      <AnalysisNavigation ticker={ticker} />
       {/* Header */}
       <div className="border-b border-border bg-card">
         <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
@@ -784,6 +787,13 @@ export default function GrowthAnalysisContent({
             </div>
           </CardContent>
         </Card>
+      </div>
+      <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+        <AnalysisRelatedLinks
+          ticker={ticker}
+          currentAnalysisType="growth"
+          companyName={companyName}
+        />
       </div>
     </div>
   )

@@ -5,6 +5,8 @@ import {
   getArticleSchema,
   SITE_URL,
 } from '@/lib/seo'
+import { AnalysisNavigation } from '@/components/analysis/AnalysisNavigation'
+import { AnalysisRelatedLinks } from '@/components/analysis/AnalysisRelatedLinks'
 
 interface Props {
   params: Promise<{ ticker: string }>
@@ -286,6 +288,9 @@ export default async function ValuationAnalysisPage({ params }: Props) {
 
       {/* Article Content */}
       <article className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        {/* Analysis Navigation */}
+        <AnalysisNavigation ticker={ticker} />
+
         {/* Hero Section */}
         <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
           <div className="max-w-4xl mx-auto px-4 py-8">
@@ -555,35 +560,11 @@ export default async function ValuationAnalysisPage({ params }: Props) {
           </section>
 
           {/* Related Links */}
-          <section className="border-t border-gray-200 dark:border-gray-700 pt-8">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              Continue Your Research
-            </h3>
-            <div className="grid md:grid-cols-2 gap-4">
-              <Link
-                href={`/stock/${ticker.toLowerCase()}`}
-                className="block p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 transition-colors"
-              >
-                <div className="font-semibold text-gray-900 dark:text-white mb-1">
-                  {symbol} Full Analysis
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  View complete financial data, charts, and AI insights
-                </div>
-              </Link>
-              <Link
-                href={`/should-i-buy/${ticker.toLowerCase()}`}
-                className="block p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 transition-colors"
-              >
-                <div className="font-semibold text-gray-900 dark:text-white mb-1">
-                  Should I Buy {symbol}?
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  Get AI-powered buy/sell/hold recommendation
-                </div>
-              </Link>
-            </div>
-          </section>
+          <AnalysisRelatedLinks
+            ticker={ticker}
+            currentAnalysisType="valuation"
+            companyName={companyName}
+          />
         </div>
       </article>
     </>

@@ -29,6 +29,8 @@ import {
   ArrowUpRight,
   ArrowDownRight,
 } from 'lucide-react'
+import { AnalysisNavigation } from './AnalysisNavigation'
+import { AnalysisRelatedLinks } from './AnalysisRelatedLinks'
 
 interface DividendAnalysisProps {
   ticker: string
@@ -70,6 +72,7 @@ export default function DividendAnalysisContent({
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+      <AnalysisNavigation ticker={ticker} />
       {/* Header */}
       <div className="border-b bg-card">
         <div className="container mx-auto px-4 py-8">
@@ -394,6 +397,13 @@ export default function DividendAnalysisContent({
             </CardContent>
           </Card>
         </section>
+      </div>
+      <div className="container mx-auto px-4 py-8">
+        <AnalysisRelatedLinks
+          ticker={ticker}
+          currentAnalysisType="dividend"
+          companyName={stockData?.companyFacts?.name || ticker}
+        />
       </div>
     </div>
   )

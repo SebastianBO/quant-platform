@@ -1,5 +1,16 @@
 import Link from 'next/link'
 import { getRelatedStocks, getComparisonPairs, SITE_URL } from '@/lib/seo'
+import {
+  TrendingUp,
+  DollarSign,
+  PieChart,
+  Activity,
+  Heart,
+  BarChart3,
+  ArrowRight,
+  Scale,
+  Target
+} from 'lucide-react'
 
 interface RelatedLinksProps {
   ticker: string
@@ -12,9 +23,184 @@ export function RelatedLinks({ ticker, currentPage, companyName }: RelatedLinksP
   const currentYear = new Date().getFullYear()
   const relatedStocks = getRelatedStocks(symbol)
   const comparisons = getComparisonPairs(symbol)
+  const name = companyName || symbol
+
+  // Top stock predictions
+  const topPredictionStocks = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA', 'TSLA', 'META', 'NFLX'].filter(
+    stock => stock !== symbol
+  )
+
+  // Deep dive analysis links for should-i-buy page
+  const deepDiveLinks = [
+    {
+      href: `/stock/${symbol}`,
+      icon: TrendingUp,
+      title: 'Full Stock Analysis',
+      description: `Complete ${symbol} overview with charts and data`,
+      color: 'text-blue-500'
+    },
+    {
+      href: `/analysis/${symbol.toLowerCase()}/valuation`,
+      icon: DollarSign,
+      title: `Is ${symbol} Undervalued?`,
+      description: 'DCF valuation and intrinsic value analysis',
+      color: 'text-green-500'
+    },
+    {
+      href: `/analysis/${symbol.toLowerCase()}/dividend`,
+      icon: PieChart,
+      title: 'Dividend Analysis',
+      description: 'Yield, payout ratio, and dividend history',
+      color: 'text-purple-500'
+    },
+    {
+      href: `/analysis/${symbol.toLowerCase()}/growth`,
+      icon: Activity,
+      title: 'Growth Analysis',
+      description: 'Revenue, earnings, and expansion metrics',
+      color: 'text-emerald-500'
+    },
+    {
+      href: `/analysis/${symbol.toLowerCase()}/health`,
+      icon: Heart,
+      title: 'Financial Health',
+      description: 'Debt, liquidity, and balance sheet strength',
+      color: 'text-red-500'
+    },
+    {
+      href: `/prediction/${symbol.toLowerCase()}`,
+      icon: Target,
+      title: 'Price Prediction',
+      description: `${currentYear} forecast and price targets`,
+      color: 'text-orange-500'
+    }
+  ]
+
+  // Comparison pairs for "Compare Before You Buy"
+  const comparisonLinks = relatedStocks.slice(0, 4).map(stock => ({
+    href: `/compare/${symbol.toLowerCase()}-vs-${stock.toLowerCase()}`,
+    ticker: stock,
+    label: `${symbol} vs ${stock}`
+  }))
+
+  // Similar investment decision links
+  const similarDecisionLinks = relatedStocks.map(stock => ({
+    href: `/should-i-buy/${stock.toLowerCase()}`,
+    ticker: stock,
+    label: `Should I Buy ${stock}?`
+  }))
 
   return (
     <section className="mt-12 border-t border-border pt-8">
+      {/* Deep Dive Analysis Section - Only for should-i-buy page */}
+      {currentPage === 'should-i-buy' && (
+        <div className="mb-12">
+          <h3 className="text-2xl font-bold mb-2">Deep Dive Analysis</h3>
+          <p className="text-muted-foreground mb-6">
+            Explore comprehensive analysis tools to make an informed decision about {name}
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {deepDiveLinks.map((link) => {
+              const Icon = link.icon
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="group bg-card p-5 rounded-lg border border-border hover:border-green-500/50 transition-all hover:shadow-lg"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className={`${link.color} mt-1`}>
+                      <Icon size={24} />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-bold mb-1 group-hover:text-green-500 transition-colors">
+                        {link.title}
+                      </h4>
+                      <p className="text-sm text-muted-foreground">
+                        {link.description}
+                      </p>
+                    </div>
+                    <ArrowRight
+                      size={20}
+                      className="text-muted-foreground group-hover:text-green-500 group-hover:translate-x-1 transition-all"
+                    />
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Compare Before You Buy Section - Only for should-i-buy page */}
+      {currentPage === 'should-i-buy' && comparisonLinks.length > 0 && (
+        <div className="mb-12">
+          <h3 className="text-2xl font-bold mb-2">Compare Before You Buy</h3>
+          <p className="text-muted-foreground mb-6">
+            See how {symbol} stacks up against its competitors
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {comparisonLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="group bg-card p-5 rounded-lg border border-border hover:border-green-500/50 transition-all hover:shadow-lg"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Scale className="text-blue-500" size={24} />
+                    <div>
+                      <h4 className="font-bold group-hover:text-green-500 transition-colors">
+                        {link.label}
+                      </h4>
+                      <p className="text-sm text-muted-foreground">
+                        Side-by-side comparison
+                      </p>
+                    </div>
+                  </div>
+                  <ArrowRight
+                    size={20}
+                    className="text-muted-foreground group-hover:text-green-500 group-hover:translate-x-1 transition-all"
+                  />
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Similar Investment Decisions Section - Only for should-i-buy page */}
+      {currentPage === 'should-i-buy' && similarDecisionLinks.length > 0 && (
+        <div className="mb-12">
+          <h3 className="text-2xl font-bold mb-2">Similar Investment Decisions</h3>
+          <p className="text-muted-foreground mb-6">
+            Explore investment analyses for stocks similar to {name}
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {similarDecisionLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="group bg-card p-4 rounded-lg border border-border hover:border-green-500/50 transition-all hover:shadow-lg text-center"
+              >
+                <div className="flex flex-col items-center gap-2">
+                  <BarChart3 className="text-green-500" size={28} />
+                  <div>
+                    <p className="font-bold text-lg group-hover:text-green-500 transition-colors">
+                      {link.ticker}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Buy or Sell?
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Original Related Links */}
       <h3 className="text-lg font-bold mb-6">Related Analysis</h3>
 
       {/* Direct Links for Current Stock */}
@@ -26,9 +212,21 @@ export function RelatedLinks({ ticker, currentPage, companyName }: RelatedLinksP
               href={`/stock/${symbol}`}
               className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors"
             >
-              {symbol} Stock Price
+              {symbol} Overview
             </Link>
           )}
+          <Link
+            href={`/analysis/${symbol.toLowerCase()}/valuation`}
+            className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors"
+          >
+            Valuation Analysis
+          </Link>
+          <Link
+            href={`/analysis/${symbol.toLowerCase()}/growth`}
+            className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors"
+          >
+            Growth Analysis
+          </Link>
           {currentPage !== 'should-i-buy' && (
             <Link
               href={`/should-i-buy/${symbol.toLowerCase()}`}
@@ -68,6 +266,25 @@ export function RelatedLinks({ ticker, currentPage, companyName }: RelatedLinksP
         </div>
       </div>
 
+      {/* Compare Predictions - Only show on prediction page */}
+      {currentPage === 'prediction' && (
+        <div className="mb-8">
+          <h4 className="text-sm font-medium text-muted-foreground mb-3">Compare Predictions</h4>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {relatedStocks.map((stock) => (
+              <Link
+                key={stock}
+                href={`/prediction/${stock.toLowerCase()}`}
+                className="bg-card p-3 rounded-lg border border-border hover:border-green-500/50 transition-colors"
+              >
+                <p className="font-bold text-green-500">{stock}</p>
+                <p className="text-xs text-muted-foreground">Price Prediction</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Stock Comparisons */}
       <div className="mb-8">
         <h4 className="text-sm font-medium text-muted-foreground mb-3">Compare {symbol} With</h4>
@@ -85,21 +302,41 @@ export function RelatedLinks({ ticker, currentPage, companyName }: RelatedLinksP
       </div>
 
       {/* Related Stock Analysis */}
-      <div className="mb-8">
-        <h4 className="text-sm font-medium text-muted-foreground mb-3">Similar Stocks</h4>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {relatedStocks.map((stock) => (
-            <Link
-              key={stock}
-              href={`/stock/${stock}`}
-              className="bg-card p-3 rounded-lg border border-border hover:border-green-500/50 transition-colors"
-            >
-              <p className="font-bold text-green-500">{stock}</p>
-              <p className="text-xs text-muted-foreground">View Analysis</p>
-            </Link>
-          ))}
+      {currentPage !== 'prediction' && (
+        <div className="mb-8">
+          <h4 className="text-sm font-medium text-muted-foreground mb-3">Similar Stocks</h4>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {relatedStocks.map((stock) => (
+              <Link
+                key={stock}
+                href={`/stock/${stock}`}
+                className="bg-card p-3 rounded-lg border border-border hover:border-green-500/50 transition-colors"
+              >
+                <p className="font-bold text-green-500">{stock}</p>
+                <p className="text-xs text-muted-foreground">View Analysis</p>
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* More Predictions - Only show on prediction page */}
+      {currentPage === 'prediction' && (
+        <div className="mb-8">
+          <h4 className="text-sm font-medium text-muted-foreground mb-3">More Predictions</h4>
+          <div className="flex flex-wrap gap-2">
+            {topPredictionStocks.map((stock) => (
+              <Link
+                key={stock}
+                href={`/prediction/${stock.toLowerCase()}`}
+                className="px-4 py-2 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors font-medium"
+              >
+                {stock} Prediction
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Category Links */}
       <div>

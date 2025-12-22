@@ -43,6 +43,7 @@ import MarketDataTable from "@/components/MarketDataTable"
 import MarketSidebar from "@/components/MarketSidebar"
 import UserAvatar from "@/components/UserAvatar"
 import StockDiscussions from "@/components/StockDiscussions"
+import StockInternalLinks from "@/components/StockInternalLinks"
 import { formatCurrency, formatPercent } from "@/lib/utils"
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts"
 import { TrendingUp, TrendingDown, Star, Share2, Menu, X } from "lucide-react"
@@ -477,6 +478,13 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
 
                     {/* Community Discussion */}
                     <StockDiscussions ticker={ticker} />
+
+                    {/* Internal Links Section */}
+                    <StockInternalLinks
+                      ticker={ticker}
+                      companyName={stockData.companyFacts?.name}
+                      sector={stockData.companyFacts?.sector}
+                    />
 
                   </div>
                 ) : (
