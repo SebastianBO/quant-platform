@@ -121,21 +121,6 @@ export async function GET(request: NextRequest) {
     const quarterlyBalance = { balance_sheets: quarterlyBalanceResult.balance_sheets || [] }
     const quarterlyCashFlow = { cash_flow_statements: quarterlyCashFlowResult.cash_flow_statements || [] }
 
-    // Collect data sources for each data type
-    const hasFinancialDatasetsMetrics = Object.keys(metrics.financial_metrics?.[0] || {}).length > 0
-    const dataSources = {
-      incomeStatements: incomeResult._meta?.source || 'financialdatasets.ai',
-      balanceSheets: balanceResult._meta?.source || 'financialdatasets.ai',
-      cashFlows: cashFlowResult._meta?.source || 'financialdatasets.ai',
-      segmentedRevenues: segmentedResult._meta?.source || 'financialdatasets.ai',
-      quarterlyIncome: quarterlyIncomeResult._meta?.source || 'financialdatasets.ai',
-      quarterlyBalance: quarterlyBalanceResult._meta?.source || 'financialdatasets.ai',
-      quarterlyCashFlow: quarterlyCashFlowResult._meta?.source || 'financialdatasets.ai',
-      metrics: hasFinancialDatasetsMetrics ? (metrics._meta?.source || 'financialdatasets.ai') : 'eodhd.com',
-      insiderTrades: insiderTrades._meta?.source || 'financialdatasets.ai',
-      analystEstimates: analystEstimates._meta?.source || 'financialdatasets.ai',
-    }
-
     // Parse segmented revenues - extract product segments and geographic segments
     const latestSegmented = segmentedRevenues?.segmented_revenues?.[0]
     const segments: { name: string; revenue: number; type: string }[] = []
@@ -250,6 +235,28 @@ export async function GET(request: NextRequest) {
       }
     })
 
+    // Collect data sources for each data type
+    // Check if primary metrics source has real data (not just null values)
+    const primaryMetrics = metrics.financial_metrics?.[0] || {}
+    const primaryHasRealData = Object.values(primaryMetrics).some(v => v !== null && v !== undefined)
+    const hasEohdData = Object.keys(eohdMetricsFallback).length > 0
+
+    const dataSources = {
+      incomeStatements: incomeResult._meta?.source || 'financialdatasets.ai',
+      balanceSheets: balanceResult._meta?.source || 'financialdatasets.ai',
+      cashFlows: cashFlowResult._meta?.source || 'financialdatasets.ai',
+      segmentedRevenues: segmentedResult._meta?.source || 'financialdatasets.ai',
+      quarterlyIncome: quarterlyIncomeResult._meta?.source || 'financialdatasets.ai',
+      quarterlyBalance: quarterlyBalanceResult._meta?.source || 'financialdatasets.ai',
+      quarterlyCashFlow: quarterlyCashFlowResult._meta?.source || 'financialdatasets.ai',
+      // Metrics source cascade: show primary source if it has data, otherwise EODHD
+      metrics: primaryHasRealData
+        ? (metrics._meta?.source || 'financialdatasets.ai')
+        : (hasEohdData ? 'eodhd.com' : 'none'),
+      insiderTrades: insiderTrades._meta?.source || 'financialdatasets.ai',
+      analystEstimates: analystEstimates._meta?.source || 'financialdatasets.ai',
+    }
+
     // Create fallback snapshot from EODHD if Financial Datasets doesn't have the ticker
     const baseSnapshot = snapshot.snapshot || {
       ticker: ticker.toUpperCase(),
@@ -310,11 +317,17 @@ export async function GET(request: NextRequest) {
       quarterlyIncome: quarterlyIncome.income_statements || [],
       quarterlyBalance: quarterlyBalance.balance_sheets || [],
       quarterlyCashFlow: quarterlyCashFlow.cash_flow_statements || [],
-      // Metrics - merge Financial Datasets with EODHD fallback for missing values
-      metrics: {
-        ...eohdMetricsFallback,  // EODHD as base (fallback)
-        ...(metrics.financial_metrics?.[0] || {}),  // Financial Datasets as primary (overwrites)
-      },
+      // Metrics - merge with cascade: Supabase/FD (primary) → EODHD (fallback)
+      // Filter out null/undefined values so fallback data fills gaps
+      metrics: (() => {
+        const primary = metrics.financial_metrics?.[0] || {}
+        // Only include non-null values from primary source
+        const filteredPrimary = Object.fromEntries(
+          Object.entries(primary).filter(([_, v]) => v !== null && v !== undefined)
+        )
+        // Merge: EODHD base, then filtered primary overwrites
+        return { ...eohdMetricsFallback, ...filteredPrimary }
+      })(),
       metricsHistory: allMetrics.financial_metrics || [],
       // Other data
       insiderTrades: insiderTrades.insider_trades || [],

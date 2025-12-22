@@ -77,7 +77,20 @@ export async function GET(request: NextRequest) {
     let metrics: unknown[] = []
     let dataSource = 'supabase'
 
-    if (data && data.length > 0) {
+    // Helper to check if a metrics record has meaningful data (not all nulls)
+    const hasRealData = (row: any) => {
+      const keyMetrics = [
+        row.gross_margin, row.operating_margin, row.net_margin,
+        row.return_on_equity, row.return_on_assets, row.price_to_earnings_ratio,
+        row.revenue_growth, row.debt_to_equity
+      ]
+      return keyMetrics.some(v => v !== null && v !== undefined)
+    }
+
+    // Check if Supabase data has meaningful values
+    const supabaseHasRealData = data && data.length > 0 && data.some(hasRealData)
+
+    if (supabaseHasRealData) {
       // Use Supabase data
       metrics = data.map(row => ({
       // Identity (5 fields)
@@ -134,11 +147,24 @@ export async function GET(request: NextRequest) {
       free_cash_flow_per_share: row.free_cash_flow_per_share,
     }))
     } else if (ticker) {
-      // Fallback to Financial Datasets API
+      // Fallback to Financial Datasets API (Supabase was empty or had no real data)
       const fallbackData = await fetchFromFinancialDatasets(ticker.toUpperCase(), period, limit)
       if (fallbackData && fallbackData.length > 0) {
-        metrics = fallbackData
-        dataSource = 'financialdatasets.ai'
+        // Check if Financial Datasets data has real values
+        const fdHasRealData = fallbackData.some((row: any) => {
+          const keyMetrics = [
+            row.gross_margin, row.operating_margin, row.net_margin,
+            row.return_on_equity, row.return_on_assets, row.price_to_earnings_ratio,
+            row.revenue_growth, row.debt_to_equity
+          ]
+          return keyMetrics.some((v: any) => v !== null && v !== undefined)
+        })
+
+        if (fdHasRealData) {
+          metrics = fallbackData
+          dataSource = 'financialdatasets.ai'
+        }
+        // If FD also has no real data, metrics stays empty and EODHD fallback will be used in stock API
       }
     }
 
