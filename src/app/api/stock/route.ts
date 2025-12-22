@@ -298,6 +298,152 @@ export async function GET(request: NextRequest) {
       priceTarget: eohdHighlights.WallStreetTargetPrice || avgPriceTarget,
     }
 
+    // EODHD Financial Statements Fallback
+    // Parse EODHD financials if primary sources are empty
+    const eohdFinancials = eohdFundamentals?.Financials || {}
+    const eohdIncomeYearly = eohdFinancials.Income_Statement?.yearly || {}
+    const eohdBalanceYearly = eohdFinancials.Balance_Sheet?.yearly || {}
+    const eohdCashFlowYearly = eohdFinancials.Cash_Flow?.yearly || {}
+    const eohdIncomeQuarterly = eohdFinancials.Income_Statement?.quarterly || {}
+    const eohdBalanceQuarterly = eohdFinancials.Balance_Sheet?.quarterly || {}
+    const eohdCashFlowQuarterly = eohdFinancials.Cash_Flow?.quarterly || {}
+
+    // Helper to convert EODHD income statement to our format
+    const convertEohdIncome = (data: any, period: string, reportDate: string) => ({
+      ticker: ticker.toUpperCase(),
+      report_period: reportDate,
+      period,
+      currency: 'USD',
+      revenue: data.totalRevenue,
+      cost_of_revenue: data.costOfRevenue,
+      gross_profit: data.grossProfit,
+      operating_expense: data.operatingExpenses || data.totalOperatingExpenses,
+      selling_general_and_administrative_expenses: data.sellingGeneralAdministrative,
+      research_and_development: data.researchDevelopment,
+      operating_income: data.operatingIncome,
+      interest_expense: data.interestExpense,
+      ebit: data.ebit,
+      income_tax_expense: data.incomeTaxExpense,
+      net_income: data.netIncome,
+      earnings_per_share: data.basicEPS,
+      earnings_per_share_diluted: data.dilutedEPS,
+    })
+
+    // Helper to convert EODHD balance sheet to our format
+    const convertEohdBalance = (data: any, period: string, reportDate: string) => ({
+      ticker: ticker.toUpperCase(),
+      report_period: reportDate,
+      period,
+      currency: 'USD',
+      total_assets: data.totalAssets,
+      current_assets: data.totalCurrentAssets,
+      cash_and_equivalents: data.cash || data.cashAndShortTermInvestments,
+      inventory: data.inventory,
+      trade_and_non_trade_receivables: data.netReceivables,
+      non_current_assets: data.totalAssets - (data.totalCurrentAssets || 0),
+      property_plant_and_equipment: data.propertyPlantEquipment || data.propertyPlantAndEquipmentNet,
+      total_liabilities: data.totalLiab || data.totalLiabilities,
+      current_liabilities: data.totalCurrentLiabilities,
+      current_debt: data.shortTermDebt || data.shortLongTermDebt,
+      trade_and_non_trade_payables: data.accountsPayable,
+      non_current_liabilities: (data.totalLiab || data.totalLiabilities || 0) - (data.totalCurrentLiabilities || 0),
+      non_current_debt: data.longTermDebt,
+      shareholders_equity: data.totalStockholderEquity || data.totalShareholderEquity,
+      retained_earnings: data.retainedEarnings,
+    })
+
+    // Helper to convert EODHD cash flow to our format
+    const convertEohdCashFlow = (data: any, period: string, reportDate: string) => ({
+      ticker: ticker.toUpperCase(),
+      report_period: reportDate,
+      period,
+      currency: 'USD',
+      net_income: data.netIncome,
+      depreciation_and_amortization: data.depreciation,
+      net_cash_flow_from_operations: data.totalCashFromOperatingActivities || data.operatingCashFlow,
+      capital_expenditure: data.capitalExpenditures,
+      net_cash_flow_from_investing: data.totalCashflowsFromInvestingActivities,
+      net_cash_flow_from_financing: data.totalCashFromFinancingActivities,
+      dividends_and_other_cash_distributions: data.dividendsPaid,
+      free_cash_flow: (data.totalCashFromOperatingActivities || 0) - Math.abs(data.capitalExpenditures || 0),
+    })
+
+    // Build EODHD fallback arrays
+    const eohdIncomeStatements = Object.entries(eohdIncomeYearly)
+      .slice(0, 5)
+      .map(([date, data]) => convertEohdIncome(data, 'annual', date))
+      .filter(s => s.revenue || s.net_income)
+
+    const eohdBalanceSheets = Object.entries(eohdBalanceYearly)
+      .slice(0, 5)
+      .map(([date, data]) => convertEohdBalance(data, 'annual', date))
+      .filter(s => s.total_assets)
+
+    const eohdCashFlows = Object.entries(eohdCashFlowYearly)
+      .slice(0, 5)
+      .map(([date, data]) => convertEohdCashFlow(data, 'annual', date))
+      .filter(s => s.net_cash_flow_from_operations)
+
+    const eohdQuarterlyIncome = Object.entries(eohdIncomeQuarterly)
+      .slice(0, 8)
+      .map(([date, data]) => convertEohdIncome(data, 'quarterly', date))
+      .filter(s => s.revenue || s.net_income)
+
+    const eohdQuarterlyBalance = Object.entries(eohdBalanceQuarterly)
+      .slice(0, 8)
+      .map(([date, data]) => convertEohdBalance(data, 'quarterly', date))
+      .filter(s => s.total_assets)
+
+    const eohdQuarterlyCashFlow = Object.entries(eohdCashFlowQuarterly)
+      .slice(0, 8)
+      .map(([date, data]) => convertEohdCashFlow(data, 'quarterly', date))
+      .filter(s => s.net_cash_flow_from_operations)
+
+    // Use primary data if available, otherwise EODHD fallback
+    const finalIncomeStatements = (incomeStatements.income_statements?.length > 0)
+      ? incomeStatements.income_statements
+      : eohdIncomeStatements
+
+    const finalBalanceSheets = (balanceSheets.balance_sheets?.length > 0)
+      ? balanceSheets.balance_sheets
+      : eohdBalanceSheets
+
+    const finalCashFlows = (cashFlows.cash_flow_statements?.length > 0)
+      ? cashFlows.cash_flow_statements
+      : eohdCashFlows
+
+    const finalQuarterlyIncome = (quarterlyIncome.income_statements?.length > 0)
+      ? quarterlyIncome.income_statements
+      : eohdQuarterlyIncome
+
+    const finalQuarterlyBalance = (quarterlyBalance.balance_sheets?.length > 0)
+      ? quarterlyBalance.balance_sheets
+      : eohdQuarterlyBalance
+
+    const finalQuarterlyCashFlow = (quarterlyCashFlow.cash_flow_statements?.length > 0)
+      ? quarterlyCashFlow.cash_flow_statements
+      : eohdQuarterlyCashFlow
+
+    // Update dataSources to reflect EODHD fallback
+    if (finalIncomeStatements === eohdIncomeStatements && eohdIncomeStatements.length > 0) {
+      dataSources.incomeStatements = 'eodhd.com'
+    }
+    if (finalBalanceSheets === eohdBalanceSheets && eohdBalanceSheets.length > 0) {
+      dataSources.balanceSheets = 'eodhd.com'
+    }
+    if (finalCashFlows === eohdCashFlows && eohdCashFlows.length > 0) {
+      dataSources.cashFlows = 'eodhd.com'
+    }
+    if (finalQuarterlyIncome === eohdQuarterlyIncome && eohdQuarterlyIncome.length > 0) {
+      dataSources.quarterlyIncome = 'eodhd.com'
+    }
+    if (finalQuarterlyBalance === eohdQuarterlyBalance && eohdQuarterlyBalance.length > 0) {
+      dataSources.quarterlyBalance = 'eodhd.com'
+    }
+    if (finalQuarterlyCashFlow === eohdQuarterlyCashFlow && eohdQuarterlyCashFlow.length > 0) {
+      dataSources.quarterlyCashFlow = 'eodhd.com'
+    }
+
     return NextResponse.json({
       snapshot: enhancedSnapshot,
       companyFacts: companyFacts?.company_facts || {
@@ -309,14 +455,14 @@ export async function GET(request: NextRequest) {
         cik: eohdGeneral?.CIK || null,
         website: eohdGeneral?.WebURL || null,
       },
-      // Annual statements
-      incomeStatements: incomeStatements.income_statements || [],
-      balanceSheets: balanceSheets.balance_sheets || [],
-      cashFlows: cashFlows.cash_flow_statements || [],
-      // Quarterly statements
-      quarterlyIncome: quarterlyIncome.income_statements || [],
-      quarterlyBalance: quarterlyBalance.balance_sheets || [],
-      quarterlyCashFlow: quarterlyCashFlow.cash_flow_statements || [],
+      // Annual statements - with EODHD fallback
+      incomeStatements: finalIncomeStatements,
+      balanceSheets: finalBalanceSheets,
+      cashFlows: finalCashFlows,
+      // Quarterly statements - with EODHD fallback
+      quarterlyIncome: finalQuarterlyIncome,
+      quarterlyBalance: finalQuarterlyBalance,
+      quarterlyCashFlow: finalQuarterlyCashFlow,
       // Metrics - merge with cascade: Supabase/FD (primary) → EODHD (fallback)
       // Filter out null/undefined values so fallback data fills gaps
       metrics: (() => {
