@@ -99,14 +99,24 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* Preconnect to critical external domains for performance */}
-        <link rel="preconnect" href="https://supabase.co" />
-        <link rel="preconnect" href="https://eodhd.com" />
-        <link rel="preconnect" href="https://financialdatasets.ai" />
+        <link rel="preconnect" href="https://supabase.co" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://eodhd.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://financialdatasets.ai" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://logo.clearbit.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://supabase.co" />
         <link rel="dns-prefetch" href="https://eodhd.com" />
         <link rel="dns-prefetch" href="https://financialdatasets.ai" />
         <link rel="dns-prefetch" href="https://api.openai.com" />
         <link rel="dns-prefetch" href="https://api.anthropic.com" />
+
+        {/* Preload critical fonts for LCP */}
+        <link
+          rel="preload"
+          href="/_next/static/media/a34f9d1faa5f3315-s.p.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
 
         {/* Theme color for browser chrome */}
         <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />

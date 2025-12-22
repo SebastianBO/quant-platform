@@ -1,7 +1,9 @@
 "use client"
 
 import { Suspense } from "react"
+import dynamic from "next/dynamic"
 import DashboardContent from "@/components/DashboardContent"
+import FeaturedArticles from "@/components/FeaturedArticles"
 import { Footer } from "@/components/footer"
 
 function LoadingState() {
@@ -21,6 +23,7 @@ export default function Home() {
       <Suspense fallback={<LoadingState />}>
         <DashboardContent />
       </Suspense>
+      <FeaturedArticles />
       <Footer />
     </>
   )
