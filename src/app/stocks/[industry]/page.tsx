@@ -265,29 +265,34 @@ function formatMarketCap(marketCap: number): string {
   return `$${marketCap.toLocaleString()}`
 }
 
-// Fetch stocks by industry from Supabase
+// Fetch stocks by industry from Supabase with timeout and error handling
 async function fetchIndustryStocks(industrySlug: string): Promise<CompanyFundamentals[]> {
   const industryNames = INDUSTRY_MAPPINGS[industrySlug]
-  if (!industryNames) {
+  if (!industryNames || industryNames.length === 0) {
     return []
   }
 
-  // Build OR condition for multiple industry names (case-insensitive)
-  const industryConditions = industryNames.map(name => `industry.ilike.%${name}%`).join(',')
+  try {
+    // Build OR condition for multiple industry names (case-insensitive)
+    const industryConditions = industryNames.map(name => `industry.ilike.%${name}%`).join(',')
 
-  const { data, error } = await supabase
-    .from('company_fundamentals')
-    .select('*')
-    .or(industryConditions)
-    .order('market_cap', { ascending: false, nullsFirst: false })
-    .limit(100)
+    const { data, error } = await supabase
+      .from('company_fundamentals')
+      .select('ticker, company_name, sector, industry, market_cap, pe_ratio')
+      .or(industryConditions)
+      .order('market_cap', { ascending: false, nullsFirst: false })
+      .limit(50)
 
-  if (error) {
-    console.error('Error fetching industry stocks:', error)
+    if (error) {
+      console.error('Error fetching industry stocks:', error)
+      return []
+    }
+
+    return (data || []) as CompanyFundamentals[]
+  } catch (err) {
+    console.error('Unexpected error fetching industry stocks:', err)
     return []
   }
-
-  return (data || []) as CompanyFundamentals[]
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -354,12 +359,13 @@ export default async function IndustryPage({ params }: Props) {
     keywords: industryData.keywords,
   })
 
-  // ItemList Schema for the stock list
+  // ItemList Schema for the stock list - filter out stocks with missing data
+  const validStocks = topStocks.filter(stock => stock.ticker && stock.company_name)
   const itemListSchema = getItemListSchema({
-    name: `Top ${topStocks.length} ${industryData.title} ${currentYear}`,
+    name: `Top ${validStocks.length} ${industryData.title} ${currentYear}`,
     description: industryData.description,
     url: pageUrl,
-    items: topStocks.map((stock, index) => ({
+    items: validStocks.map((stock, index) => ({
       name: `${stock.ticker} - ${stock.company_name}`,
       url: `${SITE_URL}/stock/${stock.ticker.toLowerCase()}`,
       position: index + 1,

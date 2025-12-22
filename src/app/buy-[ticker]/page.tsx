@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
 import { RelatedLinks } from '@/components/seo/RelatedLinks'
 import {
   getBreadcrumbSchema,
@@ -55,13 +54,15 @@ export const dynamic = 'force-dynamic'
 
 async function getStockData(ticker: string) {
   try {
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/stock?ticker=${ticker}`,
+      `${baseUrl}/api/stock?ticker=${ticker}`,
       { next: { revalidate: 3600 } }
     )
     if (!response.ok) return null
     return response.json()
-  } catch {
+  } catch (err) {
+    console.error('Error fetching stock data:', err)
     return null
   }
 }
@@ -73,15 +74,13 @@ export default async function BuyTickerPage({ params }: Props) {
 
   const stockData = await getStockData(symbol)
 
-  if (!stockData?.snapshot) {
-    notFound()
-  }
-
-  const { snapshot, metrics, companyFacts } = stockData
+  // Use fallback values if API fails - don't show 404 for valid tickers
+  const snapshot = stockData?.snapshot || {}
+  const companyFacts = stockData?.companyFacts || {}
   const price = snapshot.price || 0
   const companyName = companyFacts?.name || symbol
-  const sector = companyFacts?.sector
-  const industry = companyFacts?.industry
+  const sector = companyFacts?.sector || undefined
+  const industry = companyFacts?.industry || undefined
   const description = companyFacts?.description || `${companyName} (${symbol}) common stock`
   const pageUrl = `${SITE_URL}/buy-${ticker.toLowerCase()}`
 
