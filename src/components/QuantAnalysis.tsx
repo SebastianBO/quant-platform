@@ -532,12 +532,14 @@ export default function QuantAnalysis({ ticker, metrics, currentPrice, dataSourc
   return (
     <Card className="w-full">
       <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
-            <span className="text-2xl">🎯</span>
-            7-Stage Quant Analysis - {ticker}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <CardTitle className="flex flex-col sm:flex-row sm:items-center gap-2">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">🎯</span>
+              <span className="text-lg sm:text-xl">7-Stage Quant Analysis - {ticker}</span>
+            </div>
             {hasMetrics && dataSource && (
-              <span className={`text-xs px-2 py-0.5 rounded-full ml-2 ${
+              <span className={`text-xs px-2 py-0.5 rounded-full ${
                 dataSource === 'supabase'
                   ? 'bg-green-500/20 text-green-400'
                   : 'bg-blue-500/20 text-blue-400'
@@ -550,7 +552,7 @@ export default function QuantAnalysis({ ticker, metrics, currentPrice, dataSourc
             <button
               onClick={runAnalysis}
               disabled={isAnalyzing}
-              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 disabled:bg-secondary rounded-lg font-medium transition-colors"
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 disabled:bg-secondary rounded-lg font-medium transition-colors text-sm sm:text-base w-full sm:w-auto"
             >
               {isAnalyzing ? 'Analyzing...' : 'Run Analysis'}
             </button>
@@ -583,7 +585,7 @@ export default function QuantAnalysis({ ticker, metrics, currentPrice, dataSourc
           {stages.map((stage, i) => (
             <div
               key={i}
-              className={`p-4 rounded-lg border ${
+              className={`p-3 sm:p-4 rounded-lg border ${
                 stage.stage === 7
                   ? stage.grade === 'STRONG BUY' || stage.grade === 'BUY'
                     ? 'bg-emerald-500/10 border-emerald-500/30'
@@ -593,19 +595,19 @@ export default function QuantAnalysis({ ticker, metrics, currentPrice, dataSourc
                   : 'bg-secondary/30 border-border/50'
               }`}
             >
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 gap-2">
                 <div className="flex items-center gap-3">
-                  <span className="text-muted-foreground">Stage {stage.stage}</span>
-                  <span className="font-bold">{stage.name}</span>
+                  <span className="text-muted-foreground text-sm">Stage {stage.stage}</span>
+                  <span className="font-bold text-sm sm:text-base">{stage.name}</span>
                 </div>
-                <span className={`text-xl font-bold ${getGradeColor(stage.grade)}`}>
+                <span className={`text-lg sm:text-xl font-bold ${getGradeColor(stage.grade)}`}>
                   {stage.grade}
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                 {stage.ratings.map((r, j) => (
-                  <div key={j} className="flex items-center justify-between p-2 bg-secondary/50 rounded text-sm">
+                  <div key={j} className="flex items-center justify-between p-2 bg-secondary/50 rounded text-xs sm:text-sm">
                     <span className="text-muted-foreground">{r.metric}</span>
                     <span className="flex items-center gap-1">
                       <span className="font-medium">{r.value}</span>
@@ -617,8 +619,8 @@ export default function QuantAnalysis({ ticker, metrics, currentPrice, dataSourc
 
               {stage.flags.length > 0 && (
                 <div className="mt-3 pt-3 border-t border-border/50">
-                  <p className="text-red-500 text-sm font-medium">Red Flags:</p>
-                  <ul className="text-sm text-muted-foreground mt-1">
+                  <p className="text-red-500 text-xs sm:text-sm font-medium">Red Flags:</p>
+                  <ul className="text-xs sm:text-sm text-muted-foreground mt-1">
                     {stage.flags.map((flag, j) => (
                       <li key={j}>🚨 {flag}</li>
                     ))}
@@ -632,7 +634,7 @@ export default function QuantAnalysis({ ticker, metrics, currentPrice, dataSourc
         {isAnalyzing && (
           <div className="flex items-center justify-center py-4">
             <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-emerald-500 mr-3"></div>
-            <span>Analyzing Stage {stages.length + 1} of 7...</span>
+            <span className="text-sm sm:text-base">Analyzing Stage {stages.length + 1} of 7...</span>
           </div>
         )}
       </CardContent>

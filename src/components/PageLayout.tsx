@@ -28,10 +28,10 @@ export function PageLayout({
     <div className="min-h-screen bg-background text-foreground">
       <Header />
       <div className="pt-20">
-        <div className={`${maxWidthClass} mx-auto px-4 sm:px-6 lg:px-8 py-8`}>
-          <div className="flex gap-8">
+        <div className={`${maxWidthClass} mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8`}>
+          <div className="flex flex-col lg:flex-row gap-0 lg:gap-8">
             {showSidebar && <SEOSidebar />}
-            <main className="flex-1 min-w-0">
+            <main className="flex-1 min-w-0 w-full">
               {children}
             </main>
           </div>

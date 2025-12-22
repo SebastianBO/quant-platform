@@ -202,72 +202,74 @@ function LoadingState() {
 }
 
 // Main screener content component
-// Main screener content component
 async function ScreenerContent({ params }: { params: SearchParams }) {
   const stocks = await fetchStocks(params)
 
   const activeFilters: string[] = []
-  if (params.sector) activeFilters.push(`Sector: ${params.sector.replace(/-/g, ' ')}`) 
+  if (params.sector) activeFilters.push(`Sector: ${params.sector.replace(/-/g, ' ')}`)
   if (params.market_cap) activeFilters.push(`Market Cap: ${params.market_cap}`)
   if (params.pe_max) activeFilters.push(`P/E ≤ ${params.pe_max}`)
   if (params.revenue_min) activeFilters.push(`Revenue ≥ $${(parseFloat(params.revenue_min) / 1e9).toFixed(1)}B`)
 
   return (
     <main className="min-h-screen bg-background pt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex gap-8">
-          <SEOSidebar />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+          {/* Sidebar - hidden on mobile, shown on lg+ */}
+          <div className="hidden lg:block">
+            <SEOSidebar />
+          </div>
           <div className="flex-1 min-w-0">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-4">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
             Stock Screener
           </h1>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-base sm:text-lg text-muted-foreground">
             Filter {stocks.length.toLocaleString()}+ stocks by fundamentals to find your next investment
           </p>
         </div>
 
         {/* Quick Filter Buttons */}
-        <div className="mb-8 space-y-4">
+        <div className="mb-6 sm:mb-8 space-y-4">
           <div>
-            <h2 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wide">
+            <h2 className="text-xs sm:text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wide">
               Popular Searches
             </h2>
             <div className="flex flex-wrap gap-2">
               <Link
                 href="/screener?sector=technology"
-                className="px-4 py-2 bg-blue-600/10 hover:bg-blue-600/20 border border-blue-600/20 rounded-lg text-sm font-medium transition-colors"
+                className="px-3 sm:px-4 py-2 bg-blue-600/10 hover:bg-blue-600/20 border border-blue-600/20 rounded-lg text-xs sm:text-sm font-medium transition-colors"
               >
                 Technology Stocks
               </Link>
               <Link
                 href="/screener?pe_max=15"
-                className="px-4 py-2 bg-green-600/10 hover:bg-green-600/20 border border-green-600/20 rounded-lg text-sm font-medium transition-colors"
+                className="px-3 sm:px-4 py-2 bg-green-600/10 hover:bg-green-600/20 border border-green-600/20 rounded-lg text-xs sm:text-sm font-medium transition-colors"
               >
                 Undervalued (P/E &lt; 15)
               </Link>
               <Link
                 href="/screener?market_cap=large"
-                className="px-4 py-2 bg-purple-600/10 hover:bg-purple-600/20 border border-purple-600/20 rounded-lg text-sm font-medium transition-colors"
+                className="px-3 sm:px-4 py-2 bg-purple-600/10 hover:bg-purple-600/20 border border-purple-600/20 rounded-lg text-xs sm:text-sm font-medium transition-colors"
               >
                 Large Cap
               </Link>
               <Link
                 href="/screener?sector=healthcare"
-                className="px-4 py-2 bg-red-600/10 hover:bg-red-600/20 border border-red-600/20 rounded-lg text-sm font-medium transition-colors"
+                className="px-3 sm:px-4 py-2 bg-red-600/10 hover:bg-red-600/20 border border-red-600/20 rounded-lg text-xs sm:text-sm font-medium transition-colors"
               >
                 Healthcare
               </Link>
               <Link
                 href="/screener?sector=energy"
-                className="px-4 py-2 bg-yellow-600/10 hover:bg-yellow-600/20 border border-yellow-600/20 rounded-lg text-sm font-medium transition-colors"
+                className="px-3 sm:px-4 py-2 bg-yellow-600/10 hover:bg-yellow-600/20 border border-yellow-600/20 rounded-lg text-xs sm:text-sm font-medium transition-colors"
               >
                 Energy
               </Link>
               <Link
                 href="/screener?sector=financial"
-                className="px-4 py-2 bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-600/20 rounded-lg text-sm font-medium transition-colors"
+                className="px-3 sm:px-4 py-2 bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-600/20 rounded-lg text-xs sm:text-sm font-medium transition-colors"
               >
                 Financial
               </Link>
@@ -275,25 +277,25 @@ async function ScreenerContent({ params }: { params: SearchParams }) {
           </div>
 
           <div>
-            <h2 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wide">
+            <h2 className="text-xs sm:text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wide">
               By Market Cap
             </h2>
             <div className="flex flex-wrap gap-2">
               <Link
                 href="/screener?market_cap=large"
-                className="px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-sm font-medium transition-colors"
+                className="px-3 sm:px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-xs sm:text-sm font-medium transition-colors"
               >
                 Large Cap (&gt;$200B)
               </Link>
               <Link
                 href="/screener?market_cap=mid"
-                className="px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-sm font-medium transition-colors"
+                className="px-3 sm:px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-xs sm:text-sm font-medium transition-colors"
               >
                 Mid Cap ($10B-$200B)
               </Link>
               <Link
                 href="/screener?market_cap=small"
-                className="px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-sm font-medium transition-colors"
+                className="px-3 sm:px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-xs sm:text-sm font-medium transition-colors"
               >
                 Small Cap (&lt;$10B)
               </Link>
@@ -301,25 +303,25 @@ async function ScreenerContent({ params }: { params: SearchParams }) {
           </div>
 
           <div>
-            <h2 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wide">
+            <h2 className="text-xs sm:text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wide">
               By Valuation
             </h2>
             <div className="flex flex-wrap gap-2">
               <Link
                 href="/screener?pe_max=10"
-                className="px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-sm font-medium transition-colors"
+                className="px-3 sm:px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-xs sm:text-sm font-medium transition-colors"
               >
                 Deep Value (P/E &lt; 10)
               </Link>
               <Link
                 href="/screener?pe_max=15"
-                className="px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-sm font-medium transition-colors"
+                className="px-3 sm:px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-xs sm:text-sm font-medium transition-colors"
               >
                 Value (P/E &lt; 15)
               </Link>
               <Link
                 href="/screener?pe_max=25"
-                className="px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-sm font-medium transition-colors"
+                className="px-3 sm:px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-xs sm:text-sm font-medium transition-colors"
               >
                 Reasonable (P/E &lt; 25)
               </Link>
@@ -329,17 +331,17 @@ async function ScreenerContent({ params }: { params: SearchParams }) {
 
         {/* Active Filters */}
         {activeFilters.length > 0 && (
-          <div className="mb-6 p-4 bg-blue-600/10 border border-blue-600/20 rounded-lg">
+          <div className="mb-6 p-3 sm:p-4 bg-blue-600/10 border border-blue-600/20 rounded-lg">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-sm font-semibold">Active Filters:</span>
+              <span className="text-xs sm:text-sm font-semibold">Active Filters:</span>
               {activeFilters.map((filter, i) => (
-                <span key={i} className="px-3 py-1 bg-blue-600/20 rounded-full text-sm">
+                <span key={i} className="px-2 sm:px-3 py-1 bg-blue-600/20 rounded-full text-xs sm:text-sm">
                   {filter}
                 </span>
               ))}
               <Link
                 href="/screener"
-                className="ml-auto text-sm text-blue-400 hover:text-blue-300"
+                className="ml-auto text-xs sm:text-sm text-blue-400 hover:text-blue-300"
               >
                 Clear All
               </Link>
@@ -349,8 +351,8 @@ async function ScreenerContent({ params }: { params: SearchParams }) {
 
         {/* Results Table */}
         <div className="bg-card border border-border rounded-lg overflow-hidden">
-          <div className="p-4 border-b border-border bg-secondary/30">
-            <h2 className="font-semibold">
+          <div className="p-3 sm:p-4 border-b border-border bg-secondary/30">
+            <h2 className="font-semibold text-sm sm:text-base">
               {stocks.length.toLocaleString()} {activeFilters.length > 0 ? 'Matching' : 'Total'} Stocks
             </h2>
           </div>
@@ -360,12 +362,12 @@ async function ScreenerContent({ params }: { params: SearchParams }) {
               <table className="w-full">
                 <thead className="bg-secondary/50">
                   <tr className="border-b border-border">
-                    <th className="px-4 py-3 text-left text-sm font-semibold">Ticker</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold">Company</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold">Sector</th>
-                    <th className="px-4 py-3 text-right text-sm font-semibold">Market Cap</th>
-                    <th className="px-4 py-3 text-right text-sm font-semibold">P/E Ratio</th>
-                    <th className="px-4 py-3 text-right text-sm font-semibold">Revenue</th>
+                    <th className="px-3 sm:px-4 py-3 text-left text-xs sm:text-sm font-semibold">Ticker</th>
+                    <th className="px-3 sm:px-4 py-3 text-left text-xs sm:text-sm font-semibold">Company</th>
+                    <th className="px-3 sm:px-4 py-3 text-left text-xs sm:text-sm font-semibold">Sector</th>
+                    <th className="px-3 sm:px-4 py-3 text-right text-xs sm:text-sm font-semibold">Market Cap</th>
+                    <th className="px-3 sm:px-4 py-3 text-right text-xs sm:text-sm font-semibold">P/E Ratio</th>
+                    <th className="px-3 sm:px-4 py-3 text-right text-xs sm:text-sm font-semibold">Revenue</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -374,15 +376,15 @@ async function ScreenerContent({ params }: { params: SearchParams }) {
                       key={stock.ticker}
                       className="hover:bg-secondary/30 transition-colors"
                     >
-                      <td className="px-4 py-3">
+                      <td className="px-3 sm:px-4 py-3">
                         <Link
                           href={`/stock/${stock.ticker.toLowerCase()}`}
-                          className="font-bold text-green-500 hover:text-green-400 hover:underline"
+                          className="font-bold text-green-500 hover:text-green-400 hover:underline text-xs sm:text-sm"
                         >
                           {stock.ticker}
                         </Link>
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="px-3 sm:px-4 py-3 text-xs sm:text-sm">
                         <Link
                           href={`/stock/${stock.ticker.toLowerCase()}`}
                           className="hover:underline"
@@ -390,10 +392,10 @@ async function ScreenerContent({ params }: { params: SearchParams }) {
                           {stock.company_name || stock.ticker}
                         </Link>
                       </td>
-                      <td className="px-4 py-3 text-sm text-muted-foreground">
+                      <td className="px-3 sm:px-4 py-3 text-xs sm:text-sm text-muted-foreground">
                         {stock.sector || '—'}
                       </td>
-                      <td className="px-4 py-3 text-right font-medium">
+                      <td className="px-3 sm:px-4 py-3 text-right font-medium text-xs sm:text-sm">
                         <div>
                           {stock.market_cap ? formatMarketCap(stock.market_cap) : '—'}
                         </div>
@@ -401,7 +403,7 @@ async function ScreenerContent({ params }: { params: SearchParams }) {
                           {stock.market_cap ? getMarketCapCategory(stock.market_cap) : ''}
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-right">
+                      <td className="px-3 sm:px-4 py-3 text-right text-xs sm:text-sm">
                         {stock.pe_ratio ? (
                           <span
                             className={
@@ -418,7 +420,7 @@ async function ScreenerContent({ params }: { params: SearchParams }) {
                           '—'
                         )}
                       </td>
-                      <td className="px-4 py-3 text-right font-medium">
+                      <td className="px-3 sm:px-4 py-3 text-right font-medium text-xs sm:text-sm">
                         {stock.revenue ? formatRevenue(stock.revenue) : '—'}
                       </td>
                     </tr>
@@ -427,24 +429,24 @@ async function ScreenerContent({ params }: { params: SearchParams }) {
               </table>
             </div>
           ) : (
-            <div className="p-12 text-center text-muted-foreground">
-              <div className="text-4xl mb-4">🔍</div>
-              <p className="text-lg font-medium mb-2">No stocks found</p>
+            <div className="p-8 sm:p-12 text-center text-muted-foreground">
+              <div className="text-3xl sm:text-4xl mb-4">🔍</div>
+              <p className="text-base sm:text-lg font-medium mb-2">No stocks found</p>
               <p className="text-sm">Try adjusting your filters</p>
             </div>
           )}
         </div>
 
         {/* Educational Content for SEO */}
-        <div className="mt-12 grid md:grid-cols-2 gap-8">
+        <div className="mt-8 sm:mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
           <div className="prose prose-invert max-w-none">
-            <h2 className="text-2xl font-bold mb-4">How to Use Our Stock Screener</h2>
-            <p className="text-muted-foreground">
+            <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">How to Use Our Stock Screener</h2>
+            <p className="text-sm sm:text-base text-muted-foreground">
               Our free stock screener helps you discover investment opportunities by filtering stocks
               based on fundamental metrics. Use the quick filters above or build custom screens with
               multiple criteria.
             </p>
-            <ul className="text-muted-foreground space-y-2">
+            <ul className="text-sm sm:text-base text-muted-foreground space-y-2">
               <li>
                 <strong>Sector Screening:</strong> Filter by industry sectors like technology,
                 healthcare, energy, and financials
@@ -465,8 +467,8 @@ async function ScreenerContent({ params }: { params: SearchParams }) {
           </div>
 
           <div className="prose prose-invert max-w-none">
-            <h2 className="text-2xl font-bold mb-4">Popular Screening Strategies</h2>
-            <ul className="text-muted-foreground space-y-2">
+            <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Popular Screening Strategies</h2>
+            <ul className="text-sm sm:text-base text-muted-foreground space-y-2">
               <li>
                 <strong>Value Investing:</strong> Look for stocks with P/E ratios below 15 and strong
                 fundamentals
@@ -491,30 +493,30 @@ async function ScreenerContent({ params }: { params: SearchParams }) {
         </div>
 
         {/* Related Links for Internal Linking */}
-        <div className="mt-12 p-6 bg-secondary/30 rounded-lg">
-          <h3 className="text-lg font-bold mb-4">Explore More Tools</h3>
-          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="mt-8 sm:mt-12 p-4 sm:p-6 bg-secondary/30 rounded-lg">
+          <h3 className="text-base sm:text-lg font-bold mb-3 sm:mb-4">Explore More Tools</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             <Link
               href="/dashboard"
-              className="text-blue-400 hover:text-blue-300 hover:underline"
+              className="text-xs sm:text-sm text-blue-400 hover:text-blue-300 hover:underline"
             >
               Market Dashboard
             </Link>
             <Link
               href="/sectors"
-              className="text-blue-400 hover:text-blue-300 hover:underline"
+              className="text-xs sm:text-sm text-blue-400 hover:text-blue-300 hover:underline"
             >
               Sector Analysis
             </Link>
             <Link
               href="/earnings"
-              className="text-blue-400 hover:text-blue-300 hover:underline"
+              className="text-xs sm:text-sm text-blue-400 hover:text-blue-300 hover:underline"
             >
               Earnings Calendar
             </Link>
             <Link
               href="/insights"
-              className="text-blue-400 hover:text-blue-300 hover:underline"
+              className="text-xs sm:text-sm text-blue-400 hover:text-blue-300 hover:underline"
             >
               Market Insights
             </Link>

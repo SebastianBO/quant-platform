@@ -132,12 +132,15 @@ export default function EarningsPage() {
       />
       <Header />
       <main className="min-h-screen bg-background text-foreground pt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-          <div className="flex gap-8">
-            <SEOSidebar />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+            {/* Sidebar - hidden on mobile, shown on lg+ */}
+            <div className="hidden lg:block">
+              <SEOSidebar />
+            </div>
             <div className="flex-1 min-w-0">
           {/* Breadcrumbs */}
-          <nav className="text-sm text-muted-foreground mb-6" aria-label="Breadcrumb">
+          <nav className="text-sm text-muted-foreground mb-4 sm:mb-6" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-foreground transition-colors">
               Home
             </Link>
@@ -147,10 +150,10 @@ export default function EarningsPage() {
 
           {/* Hero Section */}
           <div className="mb-8 sm:mb-12">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">
               Earnings Calendar 2025
             </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl">
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl">
               Track upcoming earnings reports for the next 2 weeks. View earnings dates,
               EPS estimates, actual results, and earnings surprises for all publicly traded companies.
             </p>
@@ -160,21 +163,21 @@ export default function EarningsPage() {
           <EarningsCalendarClient />
 
           {/* What is Earnings Season Section */}
-          <section className="mt-16 mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-6">
+          <section className="mt-12 sm:mt-16 mb-8 sm:mb-12">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
               Understanding Earnings Season
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-xl font-bold mb-3 text-green-500">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+                <h3 className="text-lg sm:text-xl font-bold mb-3 text-green-500">
                   What Happens During Earnings
                 </h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="text-sm sm:text-base text-muted-foreground mb-4">
                   Companies report their financial results quarterly, revealing revenue, net income,
                   earnings per share (EPS), and future guidance. These reports drive major stock
                   price movements as investors react to whether results beat, meet, or miss expectations.
                 </p>
-                <ul className="list-disc list-inside text-muted-foreground space-y-2">
+                <ul className="list-disc list-inside text-sm sm:text-base text-muted-foreground space-y-2">
                   <li>Revenue and earnings performance</li>
                   <li>Comparison to analyst estimates</li>
                   <li>Forward guidance and outlook</li>
@@ -182,15 +185,15 @@ export default function EarningsPage() {
                 </ul>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-xl font-bold mb-3 text-green-500">
+              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+                <h3 className="text-lg sm:text-xl font-bold mb-3 text-green-500">
                   Earnings Calendar Features
                 </h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="text-sm sm:text-base text-muted-foreground mb-4">
                   Our earnings calendar provides comprehensive data to help you track and analyze
                   earnings reports effectively:
                 </p>
-                <ul className="list-disc list-inside text-muted-foreground space-y-2">
+                <ul className="list-disc list-inside text-sm sm:text-base text-muted-foreground space-y-2">
                   <li>Next 2 weeks of earnings dates</li>
                   <li>Before market (BMO) and after market (AMC) timing</li>
                   <li>EPS estimates and actual results</li>
@@ -203,57 +206,57 @@ export default function EarningsPage() {
           </section>
 
           {/* How to Use the Earnings Calendar */}
-          <section className="mb-12 bg-card p-6 sm:p-8 rounded-xl border border-border">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-6">
+          <section className="mb-8 sm:mb-12 bg-card p-4 sm:p-6 lg:p-8 rounded-xl border border-border">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
               How to Use This Earnings Calendar
             </h2>
-            <div className="space-y-4">
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center font-bold">
+            <div className="space-y-4 sm:space-y-6">
+              <div className="flex gap-3 sm:gap-4">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center font-bold text-sm sm:text-base">
                   1
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg mb-2">Browse by Date</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="font-bold text-base sm:text-lg mb-2">Browse by Date</h3>
+                  <p className="text-sm sm:text-base text-muted-foreground">
                     Earnings are organized by date for the next 2 weeks. Each day shows companies
                     reporting before market open (BMO) and after market close (AMC).
                   </p>
                 </div>
               </div>
 
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center font-bold">
+              <div className="flex gap-3 sm:gap-4">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center font-bold text-sm sm:text-base">
                   2
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg mb-2">Filter by Your Interests</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="font-bold text-base sm:text-lg mb-2">Filter by Your Interests</h3>
+                  <p className="text-sm sm:text-base text-muted-foreground">
                     Use filters to focus on specific market caps (large, mid, small cap) or sectors
                     (technology, healthcare, finance, etc.) to find relevant earnings reports.
                   </p>
                 </div>
               </div>
 
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center font-bold">
+              <div className="flex gap-3 sm:gap-4">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center font-bold text-sm sm:text-base">
                   3
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg mb-2">Review Estimates and Results</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="font-bold text-base sm:text-lg mb-2">Review Estimates and Results</h3>
+                  <p className="text-sm sm:text-base text-muted-foreground">
                     Check analyst EPS estimates before earnings are released. After the report,
                     see actual results and the earnings surprise percentage (beat or miss).
                   </p>
                 </div>
               </div>
 
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center font-bold">
+              <div className="flex gap-3 sm:gap-4">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center font-bold text-sm sm:text-base">
                   4
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg mb-2">Click for Detailed Analysis</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="font-bold text-base sm:text-lg mb-2">Click for Detailed Analysis</h3>
+                  <p className="text-sm sm:text-base text-muted-foreground">
                     Each company ticker is clickable and leads to our comprehensive stock analysis page
                     with AI-powered insights, fundamentals, valuation metrics, and more.
                   </p>
@@ -263,33 +266,33 @@ export default function EarningsPage() {
           </section>
 
           {/* Trading Around Earnings */}
-          <section className="mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-6">
+          <section className="mb-8 sm:mb-12">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
               Trading Strategies Around Earnings
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <div className="text-3xl mb-3">📊</div>
-                <h3 className="text-lg font-bold mb-2">Hold Through Earnings</h3>
-                <p className="text-muted-foreground text-sm">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+                <div className="text-2xl sm:text-3xl mb-3">📊</div>
+                <h3 className="text-base sm:text-lg font-bold mb-2">Hold Through Earnings</h3>
+                <p className="text-sm sm:text-base text-muted-foreground">
                   Long-term investors often hold positions through earnings if they believe in the
                   company&apos;s fundamentals, accepting short-term volatility for long-term gains.
                 </p>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <div className="text-3xl mb-3">⚡</div>
-                <h3 className="text-lg font-bold mb-2">Play the Momentum</h3>
-                <p className="text-muted-foreground text-sm">
+              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+                <div className="text-2xl sm:text-3xl mb-3">⚡</div>
+                <h3 className="text-base sm:text-lg font-bold mb-2">Play the Momentum</h3>
+                <p className="text-sm sm:text-base text-muted-foreground">
                   Active traders may buy stocks with positive momentum leading into earnings,
                   expecting continued strength if the company beats estimates.
                 </p>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <div className="text-3xl mb-3">🎯</div>
-                <h3 className="text-lg font-bold mb-2">Wait and React</h3>
-                <p className="text-muted-foreground text-sm">
+              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+                <div className="text-2xl sm:text-3xl mb-3">🎯</div>
+                <h3 className="text-base sm:text-lg font-bold mb-2">Wait and React</h3>
+                <p className="text-sm sm:text-base text-muted-foreground">
                   Conservative investors wait for earnings results before making decisions,
                   using actual data to enter positions with more certainty.
                 </p>
@@ -298,54 +301,54 @@ export default function EarningsPage() {
           </section>
 
           {/* Key Metrics Explained */}
-          <section className="mb-12 bg-card p-6 sm:p-8 rounded-xl border border-border">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-6">
+          <section className="mb-8 sm:mb-12 bg-card p-4 sm:p-6 lg:p-8 rounded-xl border border-border">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
               Key Earnings Metrics Explained
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <div>
-                <h3 className="font-bold text-green-500 mb-2">Earnings Per Share (EPS)</h3>
-                <p className="text-muted-foreground text-sm mb-4">
+                <h3 className="font-bold text-green-500 mb-2 text-sm sm:text-base">Earnings Per Share (EPS)</h3>
+                <p className="text-sm sm:text-base text-muted-foreground mb-4">
                   EPS is a company&apos;s net profit divided by outstanding shares. It&apos;s the most
                   watched earnings metric. Higher EPS generally indicates better profitability.
                 </p>
               </div>
 
               <div>
-                <h3 className="font-bold text-green-500 mb-2">EPS Estimate</h3>
-                <p className="text-muted-foreground text-sm mb-4">
+                <h3 className="font-bold text-green-500 mb-2 text-sm sm:text-base">EPS Estimate</h3>
+                <p className="text-sm sm:text-base text-muted-foreground mb-4">
                   The consensus analyst prediction for what a company will report. It&apos;s averaged
                   from multiple Wall Street analysts who cover the stock.
                 </p>
               </div>
 
               <div>
-                <h3 className="font-bold text-green-500 mb-2">Earnings Surprise</h3>
-                <p className="text-muted-foreground text-sm mb-4">
+                <h3 className="font-bold text-green-500 mb-2 text-sm sm:text-base">Earnings Surprise</h3>
+                <p className="text-sm sm:text-base text-muted-foreground mb-4">
                   The percentage difference between actual EPS and estimated EPS. A +10% surprise
                   means the company beat estimates by 10%.
                 </p>
               </div>
 
               <div>
-                <h3 className="font-bold text-green-500 mb-2">Revenue</h3>
-                <p className="text-muted-foreground text-sm mb-4">
+                <h3 className="font-bold text-green-500 mb-2 text-sm sm:text-base">Revenue</h3>
+                <p className="text-sm sm:text-base text-muted-foreground mb-4">
                   Total sales the company generated. Revenue growth is crucial even if a company
                   isn&apos;t profitable yet, especially for growth stocks.
                 </p>
               </div>
 
               <div>
-                <h3 className="font-bold text-green-500 mb-2">Guidance</h3>
-                <p className="text-muted-foreground text-sm mb-4">
+                <h3 className="font-bold text-green-500 mb-2 text-sm sm:text-base">Guidance</h3>
+                <p className="text-sm sm:text-base text-muted-foreground mb-4">
                   The company&apos;s forecast for future quarters or the full year. Raised guidance
                   is bullish; lowered guidance is bearish.
                 </p>
               </div>
 
               <div>
-                <h3 className="font-bold text-green-500 mb-2">Beat Rate</h3>
-                <p className="text-muted-foreground text-sm mb-4">
+                <h3 className="font-bold text-green-500 mb-2 text-sm sm:text-base">Beat Rate</h3>
+                <p className="text-sm sm:text-base text-muted-foreground mb-4">
                   The percentage of companies that beat analyst estimates. During strong earnings
                   seasons, beat rates exceed 70%.
                 </p>
@@ -354,23 +357,23 @@ export default function EarningsPage() {
           </section>
 
           {/* FAQ Section */}
-          <section className="mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-6">
+          <section className="mb-8 sm:mb-12">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
               Frequently Asked Questions
             </h2>
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {earningsFAQs.map((faq, index) => (
                 <details
                   key={index}
-                  className="bg-card p-6 rounded-xl border border-border group"
+                  className="bg-card p-4 sm:p-6 rounded-xl border border-border group"
                 >
-                  <summary className="text-lg font-bold cursor-pointer list-none flex items-center justify-between">
-                    <span>{faq.question}</span>
-                    <span className="text-green-500 group-open:rotate-180 transition-transform">
+                  <summary className="text-base sm:text-lg font-bold cursor-pointer list-none flex items-center justify-between gap-4">
+                    <span className="flex-1">{faq.question}</span>
+                    <span className="text-green-500 group-open:rotate-180 transition-transform flex-shrink-0">
                       ▼
                     </span>
                   </summary>
-                  <p className="text-muted-foreground mt-4 leading-relaxed">
+                  <p className="text-sm sm:text-base text-muted-foreground mt-3 sm:mt-4 leading-relaxed">
                     {faq.answer}
                   </p>
                 </details>
@@ -379,20 +382,20 @@ export default function EarningsPage() {
           </section>
 
           {/* Related Links */}
-          <section className="mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-6">
+          <section className="mb-8 sm:mb-12">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
               Related Stock Research Tools
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               <Link
                 href="/markets/top-gainers"
                 className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
               >
-                <div className="text-2xl mb-2">📈</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors">
+                <div className="text-xl sm:text-2xl mb-2">📈</div>
+                <h3 className="font-bold group-hover:text-green-500 transition-colors text-sm sm:text-base">
                   Top Gainers
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-muted-foreground">
                   Biggest price movers up
                 </p>
               </Link>
@@ -401,11 +404,11 @@ export default function EarningsPage() {
                 href="/markets/most-active"
                 className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
               >
-                <div className="text-2xl mb-2">📊</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors">
+                <div className="text-xl sm:text-2xl mb-2">📊</div>
+                <h3 className="font-bold group-hover:text-green-500 transition-colors text-sm sm:text-base">
                   Most Active
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-muted-foreground">
                   Highest volume stocks
                 </p>
               </Link>
@@ -414,11 +417,11 @@ export default function EarningsPage() {
                 href="/sectors"
                 className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
               >
-                <div className="text-2xl mb-2">🏢</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors">
+                <div className="text-xl sm:text-2xl mb-2">🏢</div>
+                <h3 className="font-bold group-hover:text-green-500 transition-colors text-sm sm:text-base">
                   Sectors
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-muted-foreground">
                   Browse by industry
                 </p>
               </Link>
@@ -427,11 +430,11 @@ export default function EarningsPage() {
                 href="/dashboard"
                 className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
               >
-                <div className="text-2xl mb-2">🔍</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors">
+                <div className="text-xl sm:text-2xl mb-2">🔍</div>
+                <h3 className="font-bold group-hover:text-green-500 transition-colors text-sm sm:text-base">
                   Stock Analysis
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-muted-foreground">
                   AI-powered research
                 </p>
               </Link>
@@ -439,17 +442,17 @@ export default function EarningsPage() {
           </section>
 
           {/* CTA Section */}
-          <section className="bg-gradient-to-r from-green-600 to-emerald-600 p-8 sm:p-12 rounded-xl text-white text-center">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+          <section className="bg-gradient-to-r from-green-600 to-emerald-600 p-6 sm:p-8 lg:p-12 rounded-xl text-white text-center">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4">
               Get AI-Powered Stock Analysis
             </h2>
-            <p className="text-lg mb-6 opacity-90 max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base lg:text-lg mb-4 sm:mb-6 opacity-90 max-w-2xl mx-auto">
               Access detailed fundamental analysis, DCF valuations, earnings analysis,
               and AI insights for any stock in the market.
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-white text-green-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-bold transition-colors"
+              className="inline-block w-full sm:w-auto bg-white text-green-600 hover:bg-gray-100 px-6 sm:px-8 py-3 rounded-lg font-bold transition-colors"
             >
               Start Analyzing Stocks Free
             </Link>

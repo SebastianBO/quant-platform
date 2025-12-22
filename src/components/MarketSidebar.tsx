@@ -419,6 +419,8 @@ export default function MarketSidebar({ onSelectTicker, currentTicker }: MarketS
   const visibleIndices = marketIndices.slice(marketPage * 6, (marketPage + 1) * 6)
   const totalPages = Math.ceil(marketIndices.length / 6)
 
+  // Hidden on mobile/tablet (< 1280px), visible on extra-large screens (>= 1280px)
+  // This is intentionally more restrictive than SEOSidebar to ensure optimal reading width
   return (
     <aside className="hidden xl:block w-72 flex-shrink-0 sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-secondary scrollbar-track-transparent">
       <div className="space-y-6 pb-6">

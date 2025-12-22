@@ -51,10 +51,10 @@ export function Footer() {
   }
 
   return (
-    <footer className="bg-secondary/30 border-t border-border py-16 px-6">
+    <footer className="bg-secondary/30 border-t border-border py-12 sm:py-16 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8 mb-12">
-          <div className="col-span-2 md:col-span-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 mb-8 sm:mb-12">
+          <div className="sm:col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
               <div className="w-8 h-8 bg-foreground rounded-lg flex items-center justify-center">
                 <span className="text-background font-bold text-lg">L</span>
@@ -65,30 +65,46 @@ export function Footer() {
               AI-powered stock analysis for smarter investment decisions.
             </p>
             <div className="flex gap-4">
-              <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+              <Link
+                href="#"
+                className="text-muted-foreground hover:text-foreground transition-colors p-2 hover:bg-secondary rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center"
+                aria-label="Twitter"
+              >
                 <Twitter className="w-5 h-5" />
               </Link>
-              <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+              <Link
+                href="#"
+                className="text-muted-foreground hover:text-foreground transition-colors p-2 hover:bg-secondary rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center"
+                aria-label="LinkedIn"
+              >
                 <Linkedin className="w-5 h-5" />
               </Link>
-              <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+              <Link
+                href="#"
+                className="text-muted-foreground hover:text-foreground transition-colors p-2 hover:bg-secondary rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center"
+                aria-label="GitHub"
+              >
                 <Github className="w-5 h-5" />
               </Link>
-              <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+              <Link
+                href="#"
+                className="text-muted-foreground hover:text-foreground transition-colors p-2 hover:bg-secondary rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center"
+                aria-label="YouTube"
+              >
                 <Youtube className="w-5 h-5" />
               </Link>
             </div>
           </div>
 
           {Object.entries(footerLinks).map(([category, links]) => (
-            <div key={category}>
-              <h3 className="text-sm font-semibold text-foreground mb-4">{category}</h3>
-              <ul className="space-y-3">
+            <div key={category} className="min-w-0">
+              <h3 className="text-sm font-semibold text-foreground mb-3 sm:mb-4">{category}</h3>
+              <ul className="space-y-2 sm:space-y-3">
                 {links.map((link) => (
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors block py-1 min-h-[32px] flex items-center"
                     >
                       {link.label}
                     </Link>
@@ -99,19 +115,31 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-muted-foreground">© 2025 Lician. All rights reserved.</p>
-          <div className="flex flex-wrap gap-6 justify-center">
-            <Link href="/premium" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <div className="border-t border-border pt-6 sm:pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-sm text-muted-foreground text-center sm:text-left">© 2025 Lician. All rights reserved.</p>
+          <div className="flex flex-wrap gap-4 sm:gap-6 justify-center">
+            <Link
+              href="/premium"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors py-2 min-h-[44px] flex items-center"
+            >
               Premium
             </Link>
-            <Link href="/dashboard" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Link
+              href="/dashboard"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors py-2 min-h-[44px] flex items-center"
+            >
               Dashboard
             </Link>
-            <Link href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Link
+              href="#"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors py-2 min-h-[44px] flex items-center"
+            >
               Privacy Policy
             </Link>
-            <Link href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Link
+              href="#"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors py-2 min-h-[44px] flex items-center"
+            >
               Terms of Service
             </Link>
           </div>

@@ -45,7 +45,7 @@ import UserAvatar from "@/components/UserAvatar"
 import StockDiscussions from "@/components/StockDiscussions"
 import { formatCurrency, formatPercent } from "@/lib/utils"
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts"
-import { TrendingUp, TrendingDown, Star, Share2 } from "lucide-react"
+import { TrendingUp, TrendingDown, Star, Share2, Menu, X } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 interface DataSources {
@@ -126,6 +126,7 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
   const [stockData, setStockData] = useState<StockData | null>(null)
   const [loading, setLoading] = useState(false)
   const [activeTab, setActiveTab] = useState(initialTab || "market")
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   // Handle URL parameters for deep linking (only when no initialTicker provided)
   useEffect(() => {
@@ -182,22 +183,30 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
     <main className="min-h-screen bg-background text-foreground">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
-        <div className="max-w-[1800px] mx-auto px-6 py-3">
-          <div className="flex items-center gap-6">
+        <div className="max-w-[1800px] mx-auto px-4 sm:px-6 py-3">
+          <div className="flex items-center gap-3 md:gap-6">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-              <div className="w-9 h-9 bg-foreground rounded-xl flex items-center justify-center">
-                <span className="text-background font-bold text-lg">L</span>
+              <div className="w-8 h-8 sm:w-9 sm:h-9 bg-foreground rounded-xl flex items-center justify-center">
+                <span className="text-background font-bold text-base sm:text-lg">L</span>
               </div>
-              <span className="font-semibold text-lg hidden sm:inline">Lician</span>
-              <span className="text-xs text-muted-foreground bg-secondary px-2 py-1 rounded hidden sm:inline">Dashboard</span>
+              <span className="font-semibold text-base sm:text-lg hidden xs:inline">Lician</span>
+              <span className="text-xs text-muted-foreground bg-secondary px-2 py-1 rounded hidden lg:inline">Dashboard</span>
             </Link>
 
-            {/* Main Navigation - Matches App Structure */}
-            <nav className="flex items-center gap-1">
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden p-2 hover:bg-secondary rounded-lg transition-colors"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+
+            {/* Main Navigation - Desktop */}
+            <nav className="hidden lg:flex items-center gap-1">
               <button
                 onClick={() => setActiveTab('market')}
-                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                   activeTab === 'market' || activeTab === 'overview'
                     ? 'bg-green-500 text-white'
                     : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
@@ -207,7 +216,7 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
               </button>
               <button
                 onClick={() => setActiveTab('watchlist')}
-                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                   activeTab === 'watchlist'
                     ? 'bg-green-500 text-white'
                     : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
@@ -217,7 +226,7 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
               </button>
               <button
                 onClick={() => setActiveTab('myportfolios')}
-                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                   activeTab === 'myportfolios'
                     ? 'bg-green-500 text-white'
                     : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
@@ -227,7 +236,7 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
               </button>
               <button
                 onClick={() => setActiveTab('advisor')}
-                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                   activeTab === 'advisor' || activeTab === 'screener' || activeTab === 'dcf'
                     ? 'bg-green-500 text-white'
                     : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
@@ -237,7 +246,7 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
               </button>
               <button
                 onClick={() => setActiveTab('earnings')}
-                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                   activeTab === 'earnings'
                     ? 'bg-green-500 text-white'
                     : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
@@ -248,120 +257,202 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
             </nav>
 
             {/* Search */}
-            <div className="flex-1 max-w-2xl">
+            <div className="flex-1 max-w-2xl hidden sm:block">
               <StockSearch onSelect={handleSearch} />
             </div>
 
             {/* Right side */}
-            <div className="flex items-center gap-3 flex-shrink-0">
+            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 ml-auto lg:ml-0">
               <ThemeToggle />
               <UserAvatar />
             </div>
           </div>
+
+          {/* Mobile Search - Full width below header */}
+          <div className="sm:hidden mt-3">
+            <StockSearch onSelect={handleSearch} />
+          </div>
+
+          {/* Mobile Navigation Menu */}
+          {mobileMenuOpen && (
+            <div className="lg:hidden mt-4 pb-4 border-t border-border pt-4 space-y-2">
+              <button
+                onClick={() => {
+                  setActiveTab('market')
+                  setMobileMenuOpen(false)
+                }}
+                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                  activeTab === 'market' || activeTab === 'overview'
+                    ? 'bg-green-500 text-white'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                }`}
+              >
+                Market
+              </button>
+              <button
+                onClick={() => {
+                  setActiveTab('watchlist')
+                  setMobileMenuOpen(false)
+                }}
+                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                  activeTab === 'watchlist'
+                    ? 'bg-green-500 text-white'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                }`}
+              >
+                Watchlist
+              </button>
+              <button
+                onClick={() => {
+                  setActiveTab('myportfolios')
+                  setMobileMenuOpen(false)
+                }}
+                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                  activeTab === 'myportfolios'
+                    ? 'bg-green-500 text-white'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                }`}
+              >
+                Portfolio
+              </button>
+              <button
+                onClick={() => {
+                  setActiveTab('advisor')
+                  setMobileMenuOpen(false)
+                }}
+                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                  activeTab === 'advisor' || activeTab === 'screener' || activeTab === 'dcf'
+                    ? 'bg-green-500 text-white'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                }`}
+              >
+                Advisor
+              </button>
+              <button
+                onClick={() => {
+                  setActiveTab('earnings')
+                  setMobileMenuOpen(false)
+                }}
+                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                  activeTab === 'earnings'
+                    ? 'bg-green-500 text-white'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                }`}
+              >
+                Earnings
+              </button>
+            </div>
+          )}
         </div>
       </header>
 
       {/* Trending Tickers Bar */}
       <TrendingTickers onSelectTicker={handleSearch} />
 
-      <div className="max-w-[1800px] mx-auto px-6 py-6">
+      <div className="max-w-[1800px] mx-auto px-4 sm:px-6 py-4 sm:py-6">
         {/* Stock Header - Yahoo Finance Style */}
         {stockData?.snapshot && isViewingStock && (
-          <div className="mb-6">
+          <div className="mb-4 sm:mb-6">
             {/* Breadcrumb */}
-            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4 flex-wrap">
               <span>NasdaqGS</span>
               <span>-</span>
-              <span>Nasdaq Real Time Price</span>
+              <span className="hidden sm:inline">Nasdaq Real Time Price</span>
+              <span className="sm:hidden">Real Time Price</span>
               <span>•</span>
               <span>USD</span>
             </div>
 
-            <div className="flex items-start gap-6">
+            <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
               {/* Logo & Name */}
-              <StockLogo symbol={ticker} size="xl" />
+              <div className="flex items-center gap-4 w-full sm:w-auto">
+                <StockLogo symbol={ticker} size="xl" className="hidden sm:block" />
+                <StockLogo symbol={ticker} size="lg" className="sm:hidden" />
 
-              <div className="flex-1">
-                <div className="flex items-center gap-4 mb-2">
-                  <h1 className="text-2xl font-bold">
-                    {stockData.companyFacts?.name || ticker}
-                  </h1>
-                  <span className="text-xl text-muted-foreground">({ticker})</span>
-                  <Button variant="outline" size="sm" className="gap-2">
-                    <Star className="w-4 h-4" />
-                    Follow
-                  </Button>
-                </div>
-
-                {/* Price Row */}
-                <div className="flex items-baseline gap-4">
-                  <span className="text-4xl font-bold tabular-nums">
-                    {typeof stockData.snapshot.price === 'number' ? stockData.snapshot.price.toFixed(2) : Number(stockData.snapshot.price || 0).toFixed(2)}
-                  </span>
-                  <div className={`flex items-center gap-2 text-lg ${
-                    (stockData.snapshot.day_change_percent || 0) >= 0 ? 'text-green-500' : 'text-red-500'
-                  }`}>
-                    {(stockData.snapshot.day_change_percent || 0) >= 0 ? (
-                      <TrendingUp className="w-5 h-5" />
-                    ) : (
-                      <TrendingDown className="w-5 h-5" />
-                    )}
-                    <span>
-                      {(stockData.snapshot.day_change || 0) >= 0 ? '+' : ''}
-                      {(stockData.snapshot.day_change || 0).toFixed(2)}
-                    </span>
-                    <span>
-                      ({(stockData.snapshot.day_change_percent || 0) >= 0 ? '+' : ''}
-                      {(stockData.snapshot.day_change_percent || 0).toFixed(2)}%)
-                    </span>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 sm:gap-4 mb-2 flex-wrap">
+                    <h1 className="text-xl sm:text-2xl font-bold truncate">
+                      {stockData.companyFacts?.name || ticker}
+                    </h1>
+                    <span className="text-lg sm:text-xl text-muted-foreground">({ticker})</span>
+                    <Button variant="outline" size="sm" className="gap-2 h-8 sm:h-9">
+                      <Star className="w-3 h-3 sm:w-4 sm:h-4" />
+                      <span className="hidden sm:inline">Follow</span>
+                    </Button>
                   </div>
-                </div>
 
-                {/* Market Status */}
-                <p className="text-sm text-muted-foreground mt-1">
-                  At close: {new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })} EST
-                </p>
+                  {/* Price Row */}
+                  <div className="flex items-baseline gap-2 sm:gap-4 flex-wrap">
+                    <span className="text-2xl sm:text-4xl font-bold tabular-nums">
+                      {typeof stockData.snapshot.price === 'number' ? stockData.snapshot.price.toFixed(2) : Number(stockData.snapshot.price || 0).toFixed(2)}
+                    </span>
+                    <div className={`flex items-center gap-1 sm:gap-2 text-base sm:text-lg ${
+                      (stockData.snapshot.day_change_percent || 0) >= 0 ? 'text-green-500' : 'text-red-500'
+                    }`}>
+                      {(stockData.snapshot.day_change_percent || 0) >= 0 ? (
+                        <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
+                      ) : (
+                        <TrendingDown className="w-4 h-4 sm:w-5 sm:h-5" />
+                      )}
+                      <span className="text-sm sm:text-lg">
+                        {(stockData.snapshot.day_change || 0) >= 0 ? '+' : ''}
+                        {(stockData.snapshot.day_change || 0).toFixed(2)}
+                      </span>
+                      <span className="text-sm sm:text-lg">
+                        ({(stockData.snapshot.day_change_percent || 0) >= 0 ? '+' : ''}
+                        {(stockData.snapshot.day_change_percent || 0).toFixed(2)}%)
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Market Status */}
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+                    At close: {new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })} EST
+                  </p>
+                </div>
               </div>
 
               {/* Quick Actions */}
-              <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" className="gap-2">
+              <div className="flex items-center gap-2 w-full sm:w-auto sm:ml-auto">
+                <Button variant="outline" size="sm" className="gap-2 flex-1 sm:flex-initial min-h-[44px]">
                   <Share2 className="w-4 h-4" />
                   Share
                 </Button>
               </div>
             </div>
 
-            {/* Key Statistics Grid - Yahoo Finance Style */}
-            <div className="grid grid-cols-4 md:grid-cols-8 gap-4 mt-6 p-4 bg-secondary/30 rounded-xl">
+            {/* Key Statistics Grid - Responsive */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4 mt-4 sm:mt-6 p-3 sm:p-4 bg-secondary/30 rounded-xl overflow-x-auto">
               <KeyStat label="Previous Close" value={Number(stockData.snapshot.previousClose || stockData.snapshot.price || 0).toFixed(2)} />
               <KeyStat label="Day's Range" value={stockData.snapshot.dayLow && stockData.snapshot.dayHigh ? `${stockData.snapshot.dayLow.toFixed(2)} - ${stockData.snapshot.dayHigh.toFixed(2)}` : '-'} />
               <KeyStat label="Market Cap" value={formatMarketCap(stockData.snapshot.market_cap)} />
               <KeyStat label="Earnings Date" value={stockData.snapshot.earningsDate || '-'} />
               <KeyStat label="Open" value={stockData.snapshot.open?.toFixed(2) || '-'} />
               <KeyStat label="52 Week Range" value={stockData.snapshot.yearLow && stockData.snapshot.yearHigh ? `${stockData.snapshot.yearLow.toFixed(2)} - ${stockData.snapshot.yearHigh.toFixed(2)}` : '-'} />
-              <KeyStat label="Beta (5Y Monthly)" value={stockData.snapshot.beta?.toFixed(2) || '-'} />
-              <KeyStat label="Forward Dividend & Yield" value={stockData.snapshot.forwardDividendYield ? `${(stockData.snapshot.forwardDividendYield * 100).toFixed(2)}%` : '-'} />
+              <KeyStat label="Beta (5Y)" value={stockData.snapshot.beta?.toFixed(2) || '-'} />
+              <KeyStat label="Dividend Yield" value={stockData.snapshot.forwardDividendYield ? `${(stockData.snapshot.forwardDividendYield * 100).toFixed(2)}%` : '-'} />
               <KeyStat label="Bid" value={stockData.snapshot.bid?.toFixed(2) || '-'} />
               <KeyStat label="Volume" value={stockData.snapshot.volume?.toLocaleString() || '-'} />
-              <KeyStat label="PE Ratio (TTM)" value={stockData.metrics?.price_to_earnings_ratio?.toFixed(2) || '-'} />
-              <KeyStat label="Ex-Dividend Date" value={stockData.snapshot.exDividendDate || '-'} />
+              <KeyStat label="PE Ratio" value={stockData.metrics?.price_to_earnings_ratio?.toFixed(2) || '-'} />
+              <KeyStat label="Ex-Div Date" value={stockData.snapshot.exDividendDate || '-'} />
               <KeyStat label="Ask" value={stockData.snapshot.ask?.toFixed(2) || '-'} />
               <KeyStat label="Avg. Volume" value={stockData.snapshot.avgVolume?.toLocaleString() || '-'} />
               <KeyStat label="EPS (TTM)" value={stockData.metrics?.earnings_per_share?.toFixed(2) || '-'} />
-              <KeyStat label="1y Target Est" value={stockData.snapshot.priceTarget ? `$${stockData.snapshot.priceTarget.toFixed(2)}` : '-'} />
+              <KeyStat label="1y Target" value={stockData.snapshot.priceTarget ? `$${stockData.snapshot.priceTarget.toFixed(2)}` : '-'} />
             </div>
           </div>
         )}
 
         {/* Main Layout with Sidebar */}
-        <div className="flex gap-6">
-          {/* Sidebar - Only show when viewing a stock */}
+        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
+          {/* Sidebar - Only show when viewing a stock, hidden on mobile */}
           {isViewingStock && (
-            <StockSidebar
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
-            />
+            <div className="hidden lg:block">
+              <StockSidebar
+                activeTab={activeTab}
+                onTabChange={setActiveTab}
+              />
+            </div>
           )}
 
           {/* Main Content */}
@@ -372,7 +463,7 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
                 {loading ? (
                   <LoadingState />
                 ) : stockData ? (
-                  <div className="space-y-6">
+                  <div className="space-y-4 sm:space-y-6">
                     {/* Chart Switcher - Simple or TradingView */}
                     <StockChartSwitcher ticker={ticker} />
 
@@ -479,7 +570,7 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
                 <BorrowData ticker={ticker} />
               </TabsContent>
 
-              <TabsContent value="options" className="space-y-6">
+              <TabsContent value="options" className="space-y-4 sm:space-y-6">
                 <OptionsChain ticker={ticker} />
                 <OptionsFlow ticker={ticker} />
               </TabsContent>
@@ -557,7 +648,7 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
 
               {/* Market Tab - Market Overview */}
               <TabsContent value="market">
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   {/* Market Overview with Futures, VIX, Gold */}
                   <MarketOverview />
 
@@ -567,7 +658,7 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
                   {/* Full Market Data Table */}
                   <MarketDataTable />
 
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                     {/* Treasury Yields */}
                     <TreasuryYields />
                   </div>
@@ -578,9 +669,9 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
               <TabsContent value="watchlist">
                 <Card className="bg-card border-border">
                   <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
+                    <CardTitle className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                       <span>Your Watchlist</span>
-                      <Button size="sm" className="bg-green-600 hover:bg-green-500 text-white">
+                      <Button size="sm" className="bg-green-600 hover:bg-green-500 text-white w-full sm:w-auto min-h-[44px]">
                         + Add Stock
                       </Button>
                     </CardTitle>
@@ -595,31 +686,31 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
 
               {/* Advisor Tab - Research Tools */}
               <TabsContent value="advisor">
-                <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div className="space-y-4 sm:space-y-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
                     <Button
                       onClick={() => setActiveTab('screener')}
                       variant="outline"
-                      className="h-24 flex flex-col items-center justify-center gap-2"
+                      className="h-20 sm:h-24 flex flex-col items-center justify-center gap-2 min-h-[80px] text-base"
                     >
-                      <span className="text-2xl">🔍</span>
-                      <span>Stock Screener</span>
+                      <span className="text-xl sm:text-2xl">🔍</span>
+                      <span className="text-sm sm:text-base">Stock Screener</span>
                     </Button>
                     <Button
                       onClick={() => setActiveTab('dcf')}
                       variant="outline"
-                      className="h-24 flex flex-col items-center justify-center gap-2"
+                      className="h-20 sm:h-24 flex flex-col items-center justify-center gap-2 min-h-[80px] text-base"
                     >
-                      <span className="text-2xl">📊</span>
-                      <span>DCF Calculator</span>
+                      <span className="text-xl sm:text-2xl">📊</span>
+                      <span className="text-sm sm:text-base">DCF Calculator</span>
                     </Button>
                     <Button
                       onClick={() => setActiveTab('portfolio')}
                       variant="outline"
-                      className="h-24 flex flex-col items-center justify-center gap-2"
+                      className="h-20 sm:h-24 flex flex-col items-center justify-center gap-2 min-h-[80px] text-base sm:col-span-2 lg:col-span-1"
                     >
-                      <span className="text-2xl">📈</span>
-                      <span>Portfolio Analyzer</span>
+                      <span className="text-xl sm:text-2xl">📈</span>
+                      <span className="text-sm sm:text-base">Portfolio Analyzer</span>
                     </Button>
                   </div>
 
@@ -629,28 +720,28 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
                       <CardTitle>Research Tips</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="p-4 bg-secondary/30 rounded-lg">
-                          <p className="font-medium mb-2">Stock Screener</p>
-                          <p className="text-sm text-muted-foreground">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                        <div className="p-3 sm:p-4 bg-secondary/30 rounded-lg">
+                          <p className="font-medium mb-2 text-sm sm:text-base">Stock Screener</p>
+                          <p className="text-xs sm:text-sm text-muted-foreground">
                             Filter stocks by market cap, P/E ratio, revenue growth, and more.
                           </p>
                         </div>
-                        <div className="p-4 bg-secondary/30 rounded-lg">
-                          <p className="font-medium mb-2">DCF Calculator</p>
-                          <p className="text-sm text-muted-foreground">
+                        <div className="p-3 sm:p-4 bg-secondary/30 rounded-lg">
+                          <p className="font-medium mb-2 text-sm sm:text-base">DCF Calculator</p>
+                          <p className="text-xs sm:text-sm text-muted-foreground">
                             Calculate intrinsic value using discounted cash flow analysis.
                           </p>
                         </div>
-                        <div className="p-4 bg-secondary/30 rounded-lg">
-                          <p className="font-medium mb-2">Portfolio Analyzer</p>
-                          <p className="text-sm text-muted-foreground">
+                        <div className="p-3 sm:p-4 bg-secondary/30 rounded-lg">
+                          <p className="font-medium mb-2 text-sm sm:text-base">Portfolio Analyzer</p>
+                          <p className="text-xs sm:text-sm text-muted-foreground">
                             Upload a screenshot of your portfolio for AI analysis.
                           </p>
                         </div>
-                        <div className="p-4 bg-secondary/30 rounded-lg">
-                          <p className="font-medium mb-2">AI Summary</p>
-                          <p className="text-sm text-muted-foreground">
+                        <div className="p-3 sm:p-4 bg-secondary/30 rounded-lg">
+                          <p className="font-medium mb-2 text-sm sm:text-base">AI Summary</p>
+                          <p className="text-xs sm:text-sm text-muted-foreground">
                             Search for any stock and click "AI" tab for instant analysis.
                           </p>
                         </div>
@@ -662,11 +753,13 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
             </Tabs>
           </div>
 
-          {/* Right Sidebar - Market Data */}
-          <MarketSidebar
-            onSelectTicker={handleSearch}
-            currentTicker={ticker}
-          />
+          {/* Right Sidebar - Market Data - Hidden on mobile and tablet */}
+          <div className="hidden xl:block">
+            <MarketSidebar
+              onSelectTicker={handleSearch}
+              currentTicker={ticker}
+            />
+          </div>
         </div>
       </div>
     </main>
@@ -675,9 +768,9 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
 
 function KeyStat({ label, value }: { label: string; value: string | undefined }) {
   return (
-    <div className="text-sm">
-      <p className="text-muted-foreground text-xs mb-0.5">{label}</p>
-      <p className="font-medium tabular-nums">{value || '-'}</p>
+    <div className="text-xs sm:text-sm">
+      <p className="text-muted-foreground text-[10px] sm:text-xs mb-0.5 truncate">{label}</p>
+      <p className="font-medium tabular-nums text-xs sm:text-sm">{value || '-'}</p>
     </div>
   )
 }

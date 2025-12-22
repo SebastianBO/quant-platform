@@ -100,6 +100,8 @@ interface SEOSidebarProps {
 export default function SEOSidebar({ className }: SEOSidebarProps) {
   const pathname = usePathname()
 
+  // Hidden on mobile/tablet (< 1024px), visible on desktop (>= 1024px)
+  // TODO: Consider adding mobile bottom nav or hamburger menu for mobile users
   return (
     <aside className={cn("hidden lg:block w-56 flex-shrink-0", className)}>
       <nav className="sticky top-24 space-y-6 pb-8">

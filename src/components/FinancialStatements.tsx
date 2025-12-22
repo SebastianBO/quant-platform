@@ -257,12 +257,14 @@ export default function FinancialStatements({
   return (
     <Card className="w-full">
       <CardHeader>
-        <div className="flex items-center justify-between flex-wrap gap-4">
-          <CardTitle className="flex items-center gap-2">
-            <span className="text-2xl">📊</span>
-            Complete Financials - {ticker}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <CardTitle className="flex flex-col sm:flex-row sm:items-center gap-2">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">📊</span>
+              <span className="text-lg sm:text-xl">Complete Financials - {ticker}</span>
+            </div>
             {companyFacts && (
-              <span className="text-sm font-normal text-muted-foreground ml-2">
+              <span className="text-xs sm:text-sm font-normal text-muted-foreground">
                 {companyFacts.sector} | {companyFacts.industry}
               </span>
             )}
@@ -270,7 +272,7 @@ export default function FinancialStatements({
           </CardTitle>
           <button
             onClick={exportToCSV}
-            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg font-medium text-sm transition-colors flex items-center gap-2"
+            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg font-medium text-sm transition-colors flex items-center justify-center gap-2 w-full sm:w-auto"
           >
             <span>📥</span> Export CSV
           </button>
@@ -279,18 +281,18 @@ export default function FinancialStatements({
       <CardContent>
         {/* Company Info Bar */}
         {companyFacts && (
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-3 mb-6 p-4 bg-secondary/30 rounded-lg">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 mb-6 p-3 sm:p-4 bg-secondary/30 rounded-lg">
             <div className="text-center">
               <p className="text-muted-foreground text-xs">Exchange</p>
-              <p className="font-bold">{companyFacts.exchange}</p>
+              <p className="font-bold text-sm">{companyFacts.exchange}</p>
             </div>
             <div className="text-center">
               <p className="text-muted-foreground text-xs">Employees</p>
-              <p className="font-bold">{companyFacts.number_of_employees?.toLocaleString()}</p>
+              <p className="font-bold text-sm">{companyFacts.number_of_employees?.toLocaleString()}</p>
             </div>
             <div className="text-center">
               <p className="text-muted-foreground text-xs">Listed</p>
-              <p className="font-bold">{companyFacts.listing_date}</p>
+              <p className="font-bold text-sm">{companyFacts.listing_date}</p>
             </div>
             <div className="text-center">
               <p className="text-muted-foreground text-xs">Location</p>
@@ -321,7 +323,7 @@ export default function FinancialStatements({
             <button
               key={tab.key}
               onClick={() => setActiveStatement(tab.key as StatementType)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                 activeStatement === tab.key
                   ? 'bg-emerald-600 text-white'
                   : 'bg-secondary hover:bg-secondary/80'
@@ -337,13 +339,13 @@ export default function FinancialStatements({
           <div className="flex gap-2 mb-6">
             <button
               onClick={() => setPeriod('annual')}
-              className={`px-3 py-1 rounded text-sm ${period === 'annual' ? 'bg-secondary' : 'bg-secondary/50'}`}
+              className={`px-3 py-1 rounded text-xs sm:text-sm ${period === 'annual' ? 'bg-secondary' : 'bg-secondary/50'}`}
             >
               Annual
             </button>
             <button
               onClick={() => setPeriod('quarterly')}
-              className={`px-3 py-1 rounded text-sm ${period === 'quarterly' ? 'bg-secondary' : 'bg-secondary/50'}`}
+              className={`px-3 py-1 rounded text-xs sm:text-sm ${period === 'quarterly' ? 'bg-secondary' : 'bg-secondary/50'}`}
             >
               Quarterly
             </button>
@@ -357,7 +359,7 @@ export default function FinancialStatements({
             {productSegments.length > 0 && (
               <div>
                 <p className="text-sm text-muted-foreground mb-3">Revenue by Product/Service</p>
-                <div className="h-64">
+                <div className="h-64 sm:h-80">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie
@@ -387,9 +389,9 @@ export default function FinancialStatements({
                     <div key={i} className="flex items-center justify-between p-2 bg-secondary/30 rounded">
                       <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
-                        <span className="text-sm">{seg.name}</span>
+                        <span className="text-xs sm:text-sm">{seg.name}</span>
                       </div>
-                      <span className="font-bold">{formatCurrency(seg.revenue)}</span>
+                      <span className="font-bold text-xs sm:text-sm">{formatCurrency(seg.revenue)}</span>
                     </div>
                   ))}
                 </div>
@@ -400,11 +402,11 @@ export default function FinancialStatements({
             {geoSegments.length > 0 && (
               <div>
                 <p className="text-sm text-muted-foreground mb-3">Revenue by Geography</p>
-                <div className="h-64">
+                <div className="h-64 sm:h-80">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={geoSegments} layout="vertical">
-                      <XAxis type="number" tickFormatter={(v) => formatCurrency(v)} stroke="hsl(var(--muted-foreground))" />
-                      <YAxis type="category" dataKey="name" stroke="hsl(var(--muted-foreground))" width={100} tick={{ fontSize: 11 }} />
+                      <XAxis type="number" tickFormatter={(v) => formatCurrency(v)} stroke="hsl(var(--muted-foreground))" tick={{ fontSize: 10 }} />
+                      <YAxis type="category" dataKey="name" stroke="hsl(var(--muted-foreground))" width={80} tick={{ fontSize: 10 }} />
                       <Tooltip
                         contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }}
                         formatter={(value: number) => [formatCurrency(value), 'Revenue']}
@@ -416,8 +418,8 @@ export default function FinancialStatements({
                 <div className="space-y-2 mt-4">
                   {geoSegments.map((seg, i) => (
                     <div key={i} className="flex items-center justify-between p-2 bg-secondary/30 rounded">
-                      <span className="text-sm">{seg.name}</span>
-                      <span className="font-bold">{formatCurrency(seg.revenue)}</span>
+                      <span className="text-xs sm:text-sm">{seg.name}</span>
+                      <span className="font-bold text-xs sm:text-sm">{formatCurrency(seg.revenue)}</span>
                     </div>
                   ))}
                 </div>
@@ -432,46 +434,48 @@ export default function FinancialStatements({
           </div>
         ) : (
           /* Statement Table */
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="p-3 text-left sticky left-0 bg-card min-w-56">{title}</th>
-                  {data?.map((period: any, i: number) => (
-                    <th key={i} className="p-3 text-right min-w-28">
-                      {period.fiscal_period || period.report_period || `Period ${i + 1}`}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((row: any, i: number) => {
-                  return (
-                    <tr key={i} className={`border-b border-border/50 ${row.highlight ? 'bg-secondary/30' : ''}`}>
-                      <td className={`p-3 sticky left-0 bg-card ${row.highlight ? 'font-bold text-emerald-500' : ''}`}>
-                        {row.label}
-                      </td>
-                      {data?.map((period: any, j: number) => {
-                        const value = period[row.key]
-                        const prevValue = data[j + 1]?.[row.key]
-                        const yoy = j < data.length - 1 && !row.isRatio && !row.isPercent ? getYoYChange(value, prevValue) : null
+          <div className="overflow-x-auto -mx-4 sm:mx-0">
+            <div className="min-w-full inline-block align-middle">
+              <table className="w-full text-xs sm:text-sm">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="p-2 sm:p-3 text-left sticky left-0 bg-card min-w-36 sm:min-w-56 z-10">{title}</th>
+                    {data?.map((period: any, i: number) => (
+                      <th key={i} className="p-2 sm:p-3 text-right min-w-24 sm:min-w-28 whitespace-nowrap">
+                        {period.fiscal_period || period.report_period || `Period ${i + 1}`}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((row: any, i: number) => {
+                    return (
+                      <tr key={i} className={`border-b border-border/50 ${row.highlight ? 'bg-secondary/30' : ''}`}>
+                        <td className={`p-2 sm:p-3 sticky left-0 bg-card z-10 ${row.highlight ? 'font-bold text-emerald-500' : ''}`}>
+                          {row.label}
+                        </td>
+                        {data?.map((period: any, j: number) => {
+                          const value = period[row.key]
+                          const prevValue = data[j + 1]?.[row.key]
+                          const yoy = j < data.length - 1 && !row.isRatio && !row.isPercent ? getYoYChange(value, prevValue) : null
 
-                        return (
-                          <td key={j} className={`p-3 text-right ${row.highlight ? 'font-bold' : ''}`}>
-                            <div>{formatValue(value, row)}</div>
-                            {yoy && (
-                              <div className={`text-xs ${yoy.startsWith('+') ? 'text-emerald-500' : 'text-red-500'}`}>
-                                {yoy}
-                              </div>
-                            )}
-                          </td>
-                        )
-                      })}
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
+                          return (
+                            <td key={j} className={`p-2 sm:p-3 text-right ${row.highlight ? 'font-bold' : ''}`}>
+                              <div>{formatValue(value, row)}</div>
+                              {yoy && (
+                                <div className={`text-xs ${yoy.startsWith('+') ? 'text-emerald-500' : 'text-red-500'}`}>
+                                  {yoy}
+                                </div>
+                              )}
+                            </td>
+                          )
+                        })}
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 
@@ -482,7 +486,7 @@ export default function FinancialStatements({
         )}
 
         {/* Data Source Note */}
-        <div className="mt-6 p-3 bg-secondary/20 rounded text-xs text-muted-foreground flex items-center gap-2">
+        <div className="mt-6 p-3 bg-secondary/20 rounded text-xs flex flex-col sm:flex-row items-start sm:items-center gap-2 text-muted-foreground">
           <span>Data source:</span>
           <DynamicSourceBadge source={source} />
           <span>

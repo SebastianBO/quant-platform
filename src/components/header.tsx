@@ -156,20 +156,20 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8" ref={menuRef}>
-        <div className="flex items-center gap-8">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3 sm:py-4 lg:px-8" ref={menuRef}>
+        <div className="flex items-center gap-4 sm:gap-8">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-foreground rounded-lg flex items-center justify-center">
               <span className="text-background font-bold text-lg">L</span>
             </div>
-            <span className="font-semibold text-lg text-foreground">Lician</span>
+            <span className="font-semibold text-base sm:text-lg text-foreground">Lician</span>
           </Link>
 
           <div className="hidden lg:flex items-center gap-1">
             {Object.entries(navMenus).map(([name, menu]) => (
               <div key={name} className="relative">
                 <button
-                  className={`flex items-center gap-1 px-3 py-2 text-sm rounded-lg transition-colors ${
+                  className={`flex items-center gap-1 px-3 py-2 text-sm rounded-lg transition-colors min-h-[44px] ${
                     activeMenu === name
                       ? "bg-secondary text-foreground"
                       : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
@@ -193,13 +193,15 @@ export function Header() {
                             <li key={link.href}>
                               <Link
                                 href={link.href}
-                                className="block p-2 rounded-lg hover:bg-secondary transition-colors group"
+                                className="block p-2 rounded-lg hover:bg-secondary transition-colors group min-h-[44px] flex items-start"
                                 onClick={() => setActiveMenu(null)}
                               >
-                                <span className="font-medium text-foreground group-hover:text-green-500 transition-colors">
-                                  {link.label}
-                                </span>
-                                <p className="text-xs text-muted-foreground">{link.desc}</p>
+                                <div>
+                                  <span className="font-medium text-foreground group-hover:text-green-500 transition-colors">
+                                    {link.label}
+                                  </span>
+                                  <p className="text-xs text-muted-foreground">{link.desc}</p>
+                                </div>
                               </Link>
                             </li>
                           ))}
@@ -212,7 +214,7 @@ export function Header() {
             ))}
             <Link
               href="/premium"
-              className="px-3 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="px-3 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors min-h-[44px] flex items-center"
             >
               Pricing
             </Link>
@@ -228,7 +230,7 @@ export function Header() {
               <Link href="/dashboard">
                 <Button
                   variant="outline"
-                  className={`border-border hover:bg-secondary bg-transparent gap-2 ${
+                  className={`border-border hover:bg-secondary bg-transparent gap-2 min-h-[44px] ${
                     isDashboard ? "text-green-500 border-green-500/50" : "text-foreground"
                   }`}
                 >
@@ -240,7 +242,7 @@ export function Header() {
                 variant="ghost"
                 size="icon"
                 onClick={handleLogout}
-                className="text-muted-foreground hover:text-foreground"
+                className="text-muted-foreground hover:text-foreground min-h-[44px] min-w-[44px]"
               >
                 <LogOut className="w-4 h-4" />
               </Button>
@@ -248,29 +250,32 @@ export function Header() {
           ) : (
             <>
               <Link href="/login">
-                <Button variant="outline" className="border-border text-foreground hover:bg-secondary bg-transparent">
+                <Button variant="outline" className="border-border text-foreground hover:bg-secondary bg-transparent min-h-[44px]">
                   Sign in
                 </Button>
               </Link>
               <Link href="/login">
-                <Button className="bg-green-600 text-white hover:bg-green-500">Get started free</Button>
+                <Button className="bg-green-600 text-white hover:bg-green-500 min-h-[44px]">Get started free</Button>
               </Link>
             </>
           )}
         </div>
 
-        <button className="lg:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+        <button
+          className="lg:hidden p-2 hover:bg-secondary rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
           {mobileMenuOpen ? <X className="w-6 h-6 text-foreground" /> : <Menu className="w-6 h-6 text-foreground" />}
         </button>
       </nav>
 
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-background border-t border-border max-h-[80vh] overflow-y-auto">
-          <div className="px-6 py-4 space-y-4">
+        <div className="lg:hidden bg-background border-t border-border max-h-[calc(100vh-64px)] overflow-y-auto">
+          <div className="px-4 sm:px-6 py-4 space-y-4">
             {Object.entries(navMenus).map(([name, menu]) => (
               <div key={name}>
                 <button
-                  className="flex items-center justify-between w-full py-2 text-sm font-medium text-foreground"
+                  className="flex items-center justify-between w-full py-3 text-sm font-medium text-foreground min-h-[44px]"
                   onClick={() => setActiveMenu(activeMenu === name ? null : name)}
                 >
                   <span className="flex items-center gap-2">
@@ -289,13 +294,16 @@ export function Header() {
                             <li key={link.href}>
                               <Link
                                 href={link.href}
-                                className="block text-sm text-muted-foreground hover:text-foreground"
+                                className="block py-2 text-sm text-muted-foreground hover:text-foreground min-h-[44px] flex items-center"
                                 onClick={() => {
                                   setMobileMenuOpen(false)
                                   setActiveMenu(null)
                                 }}
                               >
-                                {link.label}
+                                <div>
+                                  <div className="font-medium">{link.label}</div>
+                                  <div className="text-xs opacity-75">{link.desc}</div>
+                                </div>
                               </Link>
                             </li>
                           ))}
@@ -308,22 +316,22 @@ export function Header() {
             ))}
             <Link
               href="/premium"
-              className="block py-2 text-sm text-muted-foreground hover:text-foreground"
+              className="block py-3 text-sm text-muted-foreground hover:text-foreground min-h-[44px] flex items-center"
               onClick={() => setMobileMenuOpen(false)}
             >
               Pricing
             </Link>
-            <div className="flex flex-col gap-2 pt-4 border-t border-border">
+            <div className="flex flex-col gap-3 pt-4 border-t border-border">
               {user ? (
                 <>
                   <Link href="/dashboard" className="w-full" onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="outline" className="w-full border-border text-foreground bg-transparent">
+                    <Button variant="outline" className="w-full border-border text-foreground bg-transparent min-h-[44px]">
                       Dashboard
                     </Button>
                   </Link>
                   <Button
                     variant="outline"
-                    className="w-full border-border text-foreground bg-transparent"
+                    className="w-full border-border text-foreground bg-transparent min-h-[44px]"
                     onClick={() => {
                       handleLogout()
                       setMobileMenuOpen(false)
@@ -335,12 +343,12 @@ export function Header() {
               ) : (
                 <>
                   <Link href="/login" className="w-full" onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="outline" className="w-full border-border text-foreground bg-transparent">
+                    <Button variant="outline" className="w-full border-border text-foreground bg-transparent min-h-[44px]">
                       Sign in
                     </Button>
                   </Link>
                   <Link href="/login" className="w-full" onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full bg-green-600 text-white">Get started free</Button>
+                    <Button className="w-full bg-green-600 text-white min-h-[44px]">Get started free</Button>
                   </Link>
                 </>
               )}
