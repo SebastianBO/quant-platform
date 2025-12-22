@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import { Suspense } from 'react'
 import DashboardContent from '@/components/DashboardContent'
+import StockSSRContent from '@/components/StockSSRContent'
 import {
   getBreadcrumbSchema,
   getArticleSchema,
@@ -225,6 +226,18 @@ export default async function StockPage({ params }: Props) {
     schemas.push(aggregateRatingSchema)
   }
 
+  // Prepare SSR content props
+  const ssrMetrics = {
+    price_to_earnings_ratio: stockData?.metrics?.price_to_earnings_ratio,
+    price_to_book_ratio: stockData?.metrics?.price_to_book_ratio,
+    dividend_yield: stockData?.metrics?.dividend_yield,
+    revenue_growth: stockData?.metrics?.revenue_growth,
+    profit_margin: stockData?.metrics?.profit_margin,
+    debt_to_equity: stockData?.metrics?.debt_to_equity,
+    return_on_equity: stockData?.metrics?.return_on_equity,
+    earnings_per_share: stockData?.metrics?.earnings_per_share,
+  }
+
   return (
     <>
       {/* Structured Data for SEO */}
@@ -234,6 +247,30 @@ export default async function StockPage({ params }: Props) {
           __html: JSON.stringify(schemas),
         }}
       />
+
+      {/* SSR Content - Visible immediately for crawlers and initial paint */}
+      {/* This content is server-rendered and provides unique, indexable content */}
+      <div className="ssr-content">
+        <StockSSRContent
+          ticker={symbol}
+          companyName={companyName}
+          price={price}
+          dayChange={stockData?.snapshot?.day_change}
+          dayChangePercent={stockData?.snapshot?.day_change_percent}
+          marketCap={stockData?.snapshot?.market_cap}
+          peRatio={stockData?.metrics?.price_to_earnings_ratio}
+          sector={sector}
+          industry={industry}
+          description={description}
+          exchange={exchange}
+          employees={stockData?.companyFacts?.employees}
+          website={stockData?.companyFacts?.website}
+          headquarters={stockData?.companyFacts?.headquarters}
+          metrics={ssrMetrics}
+        />
+      </div>
+
+      {/* Interactive Dashboard - Loads after JS hydration */}
       <Suspense fallback={<LoadingState />}>
         <DashboardContent initialTicker={symbol} initialTab="overview" />
       </Suspense>
