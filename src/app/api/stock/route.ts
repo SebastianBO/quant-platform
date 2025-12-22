@@ -54,6 +54,8 @@ async function fetchInternal(endpoint: string, params: Record<string, string>) {
 
 export async function GET(request: NextRequest) {
   const ticker = request.nextUrl.searchParams.get('ticker')
+  // Source override: 'cache' (Supabase only), 'fd' (Financial Datasets), 'eodhd' (EODHD only)
+  const sourceOverride = request.nextUrl.searchParams.get('source')
 
   if (!ticker) {
     return NextResponse.json({ error: 'Ticker is required' }, { status: 400 })
@@ -400,48 +402,66 @@ export async function GET(request: NextRequest) {
       .filter(s => s.net_cash_flow_from_operations)
 
     // Use primary data if available, otherwise EODHD fallback
-    const finalIncomeStatements = (incomeStatements.income_statements?.length > 0)
-      ? incomeStatements.income_statements
-      : eohdIncomeStatements
+    // sourceOverride: 'eodhd' forces EODHD, 'fd' or 'cache' uses primary (v1 APIs handle FD/cache)
+    const forceEodhd = sourceOverride === 'eodhd'
 
-    const finalBalanceSheets = (balanceSheets.balance_sheets?.length > 0)
-      ? balanceSheets.balance_sheets
-      : eohdBalanceSheets
+    const finalIncomeStatements = forceEodhd
+      ? eohdIncomeStatements
+      : (incomeStatements.income_statements?.length > 0)
+        ? incomeStatements.income_statements
+        : eohdIncomeStatements
 
-    const finalCashFlows = (cashFlows.cash_flow_statements?.length > 0)
-      ? cashFlows.cash_flow_statements
-      : eohdCashFlows
+    const finalBalanceSheets = forceEodhd
+      ? eohdBalanceSheets
+      : (balanceSheets.balance_sheets?.length > 0)
+        ? balanceSheets.balance_sheets
+        : eohdBalanceSheets
 
-    const finalQuarterlyIncome = (quarterlyIncome.income_statements?.length > 0)
-      ? quarterlyIncome.income_statements
-      : eohdQuarterlyIncome
+    const finalCashFlows = forceEodhd
+      ? eohdCashFlows
+      : (cashFlows.cash_flow_statements?.length > 0)
+        ? cashFlows.cash_flow_statements
+        : eohdCashFlows
 
-    const finalQuarterlyBalance = (quarterlyBalance.balance_sheets?.length > 0)
-      ? quarterlyBalance.balance_sheets
-      : eohdQuarterlyBalance
+    const finalQuarterlyIncome = forceEodhd
+      ? eohdQuarterlyIncome
+      : (quarterlyIncome.income_statements?.length > 0)
+        ? quarterlyIncome.income_statements
+        : eohdQuarterlyIncome
 
-    const finalQuarterlyCashFlow = (quarterlyCashFlow.cash_flow_statements?.length > 0)
-      ? quarterlyCashFlow.cash_flow_statements
-      : eohdQuarterlyCashFlow
+    const finalQuarterlyBalance = forceEodhd
+      ? eohdQuarterlyBalance
+      : (quarterlyBalance.balance_sheets?.length > 0)
+        ? quarterlyBalance.balance_sheets
+        : eohdQuarterlyBalance
 
-    // Update dataSources to reflect EODHD fallback
-    if (finalIncomeStatements === eohdIncomeStatements && eohdIncomeStatements.length > 0) {
+    const finalQuarterlyCashFlow = forceEodhd
+      ? eohdQuarterlyCashFlow
+      : (quarterlyCashFlow.cash_flow_statements?.length > 0)
+        ? quarterlyCashFlow.cash_flow_statements
+        : eohdQuarterlyCashFlow
+
+    // Update dataSources to reflect EODHD fallback or forced override
+    if (forceEodhd || (finalIncomeStatements === eohdIncomeStatements && eohdIncomeStatements.length > 0)) {
       dataSources.incomeStatements = 'eodhd.com'
     }
-    if (finalBalanceSheets === eohdBalanceSheets && eohdBalanceSheets.length > 0) {
+    if (forceEodhd || (finalBalanceSheets === eohdBalanceSheets && eohdBalanceSheets.length > 0)) {
       dataSources.balanceSheets = 'eodhd.com'
     }
-    if (finalCashFlows === eohdCashFlows && eohdCashFlows.length > 0) {
+    if (forceEodhd || (finalCashFlows === eohdCashFlows && eohdCashFlows.length > 0)) {
       dataSources.cashFlows = 'eodhd.com'
     }
-    if (finalQuarterlyIncome === eohdQuarterlyIncome && eohdQuarterlyIncome.length > 0) {
+    if (forceEodhd || (finalQuarterlyIncome === eohdQuarterlyIncome && eohdQuarterlyIncome.length > 0)) {
       dataSources.quarterlyIncome = 'eodhd.com'
     }
-    if (finalQuarterlyBalance === eohdQuarterlyBalance && eohdQuarterlyBalance.length > 0) {
+    if (forceEodhd || (finalQuarterlyBalance === eohdQuarterlyBalance && eohdQuarterlyBalance.length > 0)) {
       dataSources.quarterlyBalance = 'eodhd.com'
     }
-    if (finalQuarterlyCashFlow === eohdQuarterlyCashFlow && eohdQuarterlyCashFlow.length > 0) {
+    if (forceEodhd || (finalQuarterlyCashFlow === eohdQuarterlyCashFlow && eohdQuarterlyCashFlow.length > 0)) {
       dataSources.quarterlyCashFlow = 'eodhd.com'
+    }
+    if (forceEodhd) {
+      dataSources.metrics = 'eodhd.com'
     }
 
     return NextResponse.json({
@@ -464,8 +484,11 @@ export async function GET(request: NextRequest) {
       quarterlyBalance: finalQuarterlyBalance,
       quarterlyCashFlow: finalQuarterlyCashFlow,
       // Metrics - merge with cascade: Supabase/FD (primary) → EODHD (fallback)
-      // Filter out null/undefined values so fallback data fills gaps
+      // sourceOverride: 'eodhd' forces EODHD only, otherwise merge
       metrics: (() => {
+        if (forceEodhd) {
+          return eohdMetricsFallback
+        }
         const primary = metrics.financial_metrics?.[0] || {}
         // Only include non-null values from primary source
         const filteredPrimary = Object.fromEntries(
