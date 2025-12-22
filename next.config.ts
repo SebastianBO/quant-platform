@@ -23,6 +23,24 @@ const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
 
+  // Redirects for www to non-www (SEO canonical)
+  async redirects() {
+    return [
+      // Redirect www to non-www for SEO
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'www.lician.com',
+          },
+        ],
+        destination: 'https://lician.com/:path*',
+        permanent: true,
+      },
+    ];
+  },
+
   // Rewrites for AI search optimization
   async rewrites() {
     return [
