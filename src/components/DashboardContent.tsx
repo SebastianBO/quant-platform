@@ -128,6 +128,7 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
   const [loading, setLoading] = useState(false)
   const [activeTab, setActiveTab] = useState(initialTab || "market")
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [financialSourceOverride, setFinancialSourceOverride] = useState<'auto' | 'eodhd' | 'financialdatasets'>('auto')
 
   // Handle URL parameters for deep linking (only when no initialTicker provided)
   useEffect(() => {
@@ -151,10 +152,12 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
     }
   }, [initialTicker, initialTab])
 
-  const fetchStockData = async () => {
+  const fetchStockData = async (sourceOverride?: string) => {
     setLoading(true)
     try {
-      const response = await fetch(`/api/stock?ticker=${ticker}`)
+      const source = sourceOverride || financialSourceOverride
+      const sourceParam = source !== 'auto' ? `&source=${source}` : ''
+      const response = await fetch(`/api/stock?ticker=${ticker}${sourceParam}`)
       const data = await response.json()
       setStockData(data)
     } catch (error) {
@@ -166,6 +169,12 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
   useEffect(() => {
     fetchStockData()
   }, [ticker])
+
+  // Handle source override change
+  const handleFinancialSourceChange = (source: 'auto' | 'eodhd' | 'financialdatasets') => {
+    setFinancialSourceOverride(source)
+    fetchStockData(source)
+  }
 
   const handleSearch = (symbol: string) => {
     const newTicker = symbol.toUpperCase()
@@ -614,6 +623,8 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
                     productSegments={stockData.productSegments || []}
                     geoSegments={stockData.geoSegments || []}
                     dataSources={stockData.dataSources}
+                    sourceOverride={financialSourceOverride}
+                    onSourceChange={handleFinancialSourceChange}
                   />
                 )}
               </TabsContent>

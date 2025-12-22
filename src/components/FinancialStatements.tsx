@@ -16,6 +16,8 @@ interface DataSources {
   quarterlyCashFlow?: string
 }
 
+type SourceOverride = 'auto' | 'eodhd' | 'financialdatasets'
+
 interface FinancialStatementsProps {
   ticker: string
   companyFacts: any
@@ -29,6 +31,8 @@ interface FinancialStatementsProps {
   productSegments: { name: string; revenue: number }[]
   geoSegments: { name: string; revenue: number }[]
   dataSources?: DataSources
+  sourceOverride?: SourceOverride
+  onSourceChange?: (source: SourceOverride) => void
 }
 
 type StatementType = 'income' | 'balance' | 'cashflow' | 'metrics' | 'segments'
@@ -48,7 +52,9 @@ export default function FinancialStatements({
   metricsHistory,
   productSegments,
   geoSegments,
-  dataSources
+  dataSources,
+  sourceOverride = 'auto',
+  onSourceChange
 }: FinancialStatementsProps) {
   const [activeStatement, setActiveStatement] = useState<StatementType>('income')
   const [period, setPeriod] = useState<PeriodType>('annual')
@@ -334,21 +340,39 @@ export default function FinancialStatements({
           ))}
         </div>
 
-        {/* Period Toggle */}
+        {/* Period Toggle & Source Selector */}
         {activeStatement !== 'segments' && activeStatement !== 'metrics' && (
-          <div className="flex gap-2 mb-6">
-            <button
-              onClick={() => setPeriod('annual')}
-              className={`px-3 py-1 rounded text-xs sm:text-sm ${period === 'annual' ? 'bg-secondary' : 'bg-secondary/50'}`}
-            >
-              Annual
-            </button>
-            <button
-              onClick={() => setPeriod('quarterly')}
-              className={`px-3 py-1 rounded text-xs sm:text-sm ${period === 'quarterly' ? 'bg-secondary' : 'bg-secondary/50'}`}
-            >
-              Quarterly
-            </button>
+          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+            <div className="flex gap-2">
+              <button
+                onClick={() => setPeriod('annual')}
+                className={`px-3 py-1 rounded text-xs sm:text-sm ${period === 'annual' ? 'bg-secondary' : 'bg-secondary/50'}`}
+              >
+                Annual
+              </button>
+              <button
+                onClick={() => setPeriod('quarterly')}
+                className={`px-3 py-1 rounded text-xs sm:text-sm ${period === 'quarterly' ? 'bg-secondary' : 'bg-secondary/50'}`}
+              >
+                Quarterly
+              </button>
+            </div>
+
+            {/* Data Source Selector */}
+            {onSourceChange && (
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-muted-foreground">Source:</span>
+                <select
+                  value={sourceOverride}
+                  onChange={(e) => onSourceChange(e.target.value as SourceOverride)}
+                  className="px-2 py-1 rounded text-xs sm:text-sm bg-secondary border border-border focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                >
+                  <option value="auto">Auto (Cascade)</option>
+                  <option value="financialdatasets">Financial Datasets</option>
+                  <option value="eodhd">EODHD</option>
+                </select>
+              </div>
+            )}
           </div>
         )}
 

@@ -402,44 +402,46 @@ export async function GET(request: NextRequest) {
       .filter(s => s.net_cash_flow_from_operations)
 
     // Use primary data if available, otherwise EODHD fallback
-    // sourceOverride: 'eodhd' forces EODHD, 'fd' or 'cache' uses primary (v1 APIs handle FD/cache)
+    // sourceOverride: 'eodhd' forces EODHD only
+    // sourceOverride: 'financialdatasets' forces Financial Datasets/cache only (no EODHD fallback)
     const forceEodhd = sourceOverride === 'eodhd'
+    const skipEohdFallback = sourceOverride === 'financialdatasets'
 
     const finalIncomeStatements = forceEodhd
       ? eohdIncomeStatements
       : (incomeStatements.income_statements?.length > 0)
         ? incomeStatements.income_statements
-        : eohdIncomeStatements
+        : skipEohdFallback ? [] : eohdIncomeStatements
 
     const finalBalanceSheets = forceEodhd
       ? eohdBalanceSheets
       : (balanceSheets.balance_sheets?.length > 0)
         ? balanceSheets.balance_sheets
-        : eohdBalanceSheets
+        : skipEohdFallback ? [] : eohdBalanceSheets
 
     const finalCashFlows = forceEodhd
       ? eohdCashFlows
       : (cashFlows.cash_flow_statements?.length > 0)
         ? cashFlows.cash_flow_statements
-        : eohdCashFlows
+        : skipEohdFallback ? [] : eohdCashFlows
 
     const finalQuarterlyIncome = forceEodhd
       ? eohdQuarterlyIncome
       : (quarterlyIncome.income_statements?.length > 0)
         ? quarterlyIncome.income_statements
-        : eohdQuarterlyIncome
+        : skipEohdFallback ? [] : eohdQuarterlyIncome
 
     const finalQuarterlyBalance = forceEodhd
       ? eohdQuarterlyBalance
       : (quarterlyBalance.balance_sheets?.length > 0)
         ? quarterlyBalance.balance_sheets
-        : eohdQuarterlyBalance
+        : skipEohdFallback ? [] : eohdQuarterlyBalance
 
     const finalQuarterlyCashFlow = forceEodhd
       ? eohdQuarterlyCashFlow
       : (quarterlyCashFlow.cash_flow_statements?.length > 0)
         ? quarterlyCashFlow.cash_flow_statements
-        : eohdQuarterlyCashFlow
+        : skipEohdFallback ? [] : eohdQuarterlyCashFlow
 
     // Update dataSources to reflect EODHD fallback or forced override
     if (forceEodhd || (finalIncomeStatements === eohdIncomeStatements && eohdIncomeStatements.length > 0)) {
