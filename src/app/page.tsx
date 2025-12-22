@@ -2,6 +2,7 @@
 
 import { Suspense } from "react"
 import DashboardContent from "@/components/DashboardContent"
+import { Footer } from "@/components/footer"
 
 function LoadingState() {
   return (
@@ -16,8 +17,11 @@ function LoadingState() {
 
 export default function Home() {
   return (
-    <Suspense fallback={<LoadingState />}>
-      <DashboardContent />
-    </Suspense>
+    <>
+      <Suspense fallback={<LoadingState />}>
+        <DashboardContent />
+      </Suspense>
+      <Footer />
+    </>
   )
 }
