@@ -122,6 +122,7 @@ export async function GET(request: NextRequest) {
     const quarterlyCashFlow = { cash_flow_statements: quarterlyCashFlowResult.cash_flow_statements || [] }
 
     // Collect data sources for each data type
+    const hasFinancialDatasetsMetrics = Object.keys(metrics.financial_metrics?.[0] || {}).length > 0
     const dataSources = {
       incomeStatements: incomeResult._meta?.source || 'financialdatasets.ai',
       balanceSheets: balanceResult._meta?.source || 'financialdatasets.ai',
@@ -130,7 +131,7 @@ export async function GET(request: NextRequest) {
       quarterlyIncome: quarterlyIncomeResult._meta?.source || 'financialdatasets.ai',
       quarterlyBalance: quarterlyBalanceResult._meta?.source || 'financialdatasets.ai',
       quarterlyCashFlow: quarterlyCashFlowResult._meta?.source || 'financialdatasets.ai',
-      metrics: metrics._meta?.source || 'financialdatasets.ai',
+      metrics: hasFinancialDatasetsMetrics ? (metrics._meta?.source || 'financialdatasets.ai') : 'eodhd.com',
       insiderTrades: insiderTrades._meta?.source || 'financialdatasets.ai',
       analystEstimates: analystEstimates._meta?.source || 'financialdatasets.ai',
     }
@@ -202,6 +203,52 @@ export async function GET(request: NextRequest) {
     const eohdTechnicals = eohdFundamentals?.Technicals || {}
     const eohdHighlights = eohdFundamentals?.Highlights || {}
     const eohdGeneral = eohdFundamentals?.General || {}
+    const eohdValuation = eohdFundamentals?.Valuation || {}
+
+    // Build EODHD fallback metrics for when Financial Datasets doesn't have data
+    const eohdMetricsFallback = {
+      // Profitability
+      return_on_invested_capital: eohdHighlights.ReturnOnEquityTTM ? eohdHighlights.ReturnOnEquityTTM / 100 : undefined,
+      return_on_equity: eohdHighlights.ReturnOnEquityTTM ? eohdHighlights.ReturnOnEquityTTM / 100 : undefined,
+      return_on_assets: eohdHighlights.ReturnOnAssetsTTM ? eohdHighlights.ReturnOnAssetsTTM / 100 : undefined,
+      // Margins
+      gross_margin: eohdHighlights.GrossProfitTTM && eohdHighlights.RevenueTTM
+        ? eohdHighlights.GrossProfitTTM / eohdHighlights.RevenueTTM : undefined,
+      operating_margin: eohdHighlights.OperatingMarginTTM ? eohdHighlights.OperatingMarginTTM / 100 : undefined,
+      net_margin: eohdHighlights.ProfitMargin ? eohdHighlights.ProfitMargin / 100 : undefined,
+      profit_margin: eohdHighlights.ProfitMargin ? eohdHighlights.ProfitMargin / 100 : undefined,
+      // Growth
+      revenue_growth: eohdHighlights.QuarterlyRevenueGrowthYOY ? eohdHighlights.QuarterlyRevenueGrowthYOY / 100 : undefined,
+      earnings_growth: eohdHighlights.QuarterlyEarningsGrowthYOY ? eohdHighlights.QuarterlyEarningsGrowthYOY / 100 : undefined,
+      // Valuation
+      price_to_earnings_ratio: eohdHighlights.PERatio || eohdValuation.TrailingPE,
+      price_to_book_ratio: eohdValuation.PriceBookMRQ,
+      price_to_sales_ratio: eohdValuation.PriceSalesTTM,
+      enterprise_value_to_ebitda: eohdValuation.EnterpriseValueEbitda,
+      peg_ratio: eohdHighlights.PEGRatio,
+      // Financial Health
+      debt_to_equity: eohdHighlights.DebtToEquity ? eohdHighlights.DebtToEquity / 100 : undefined,
+      current_ratio: eohdHighlights.CurrentRatio,
+      // Earnings
+      earnings_per_share: eohdHighlights.EarningsShare,
+      book_value_per_share: eohdHighlights.BookValue,
+      revenue_per_share: eohdHighlights.RevenuePerShareTTM,
+      // Cash Flow - estimate FCF yield from market cap and EBITDA
+      free_cash_flow_yield: eohdHighlights.EBITDA && eohdHighlights.MarketCapitalization
+        ? (eohdHighlights.EBITDA * 0.7) / eohdHighlights.MarketCapitalization : undefined,
+      // Market Data
+      market_cap: eohdHighlights.MarketCapitalization,
+      enterprise_value: eohdValuation.EnterpriseValue,
+      // Dividend
+      dividend_yield: eohdHighlights.DividendYield ? eohdHighlights.DividendYield / 100 : undefined,
+    }
+
+    // Remove undefined values from EODHD fallback
+    Object.keys(eohdMetricsFallback).forEach(key => {
+      if (eohdMetricsFallback[key as keyof typeof eohdMetricsFallback] === undefined) {
+        delete eohdMetricsFallback[key as keyof typeof eohdMetricsFallback]
+      }
+    })
 
     // Create fallback snapshot from EODHD if Financial Datasets doesn't have the ticker
     const baseSnapshot = snapshot.snapshot || {
@@ -263,8 +310,11 @@ export async function GET(request: NextRequest) {
       quarterlyIncome: quarterlyIncome.income_statements || [],
       quarterlyBalance: quarterlyBalance.balance_sheets || [],
       quarterlyCashFlow: quarterlyCashFlow.cash_flow_statements || [],
-      // Metrics
-      metrics: metrics.financial_metrics?.[0] || {},
+      // Metrics - merge Financial Datasets with EODHD fallback for missing values
+      metrics: {
+        ...eohdMetricsFallback,  // EODHD as base (fallback)
+        ...(metrics.financial_metrics?.[0] || {}),  // Financial Datasets as primary (overwrites)
+      },
       metricsHistory: allMetrics.financial_metrics || [],
       // Other data
       insiderTrades: insiderTrades.insider_trades || [],
