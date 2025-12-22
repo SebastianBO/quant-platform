@@ -776,7 +776,7 @@ export default function GrowthAnalysisContent({
                 </div>
               </Link>
               <Link
-                href={`/analysis/${ticker.toLowerCase()}/dividends`}
+                href={`/analysis/${ticker.toLowerCase()}/dividend`}
                 className="p-4 bg-secondary/30 rounded-lg hover:bg-secondary/50 transition-colors"
               >
                 <div className="font-semibold mb-1">Dividend Analysis</div>

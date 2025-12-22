@@ -7,8 +7,8 @@ const ALL_STOCKS = [
   'AFL', 'AIG', 'AIZ', 'AJG', 'AKAM', 'ALB', 'ALGN', 'ALL', 'ALLE', 'AMAT',
   'AMCR', 'AMD', 'AME', 'AMGN', 'AMP', 'AMT', 'AMZN', 'ANET', 'ANSS', 'AON',
   'AOS', 'APA', 'APD', 'APH', 'APTV', 'ARE', 'ATO', 'AVB', 'AVGO', 'AVY',
-  'AWK', 'AXP', 'AZO', 'BA', 'BAC', 'BAX', 'BBY', 'BDX', 'BEN', 'BF.B',
-  'BIIB', 'BIO', 'BK', 'BKNG', 'BLK', 'BMY', 'BR', 'BRK.B', 'BRO', 'BSX',
+  'AWK', 'AXP', 'AZO', 'BA', 'BAC', 'BAX', 'BBY', 'BDX', 'BEN',
+  'BIIB', 'BIO', 'BK', 'BKNG', 'BLK', 'BMY', 'BR', 'BRO', 'BSX',
   'BWA', 'BXP', 'C', 'CAG', 'CAH', 'CARR', 'CAT', 'CB', 'CBOE', 'CBRE',
   'CCI', 'CCL', 'CDNS', 'CDW', 'CE', 'CEG', 'CF', 'CFG', 'CHD', 'CHRW',
   'CHTR', 'CI', 'CINF', 'CL', 'CLX', 'CMA', 'CMCSA', 'CME', 'CMG', 'CMI',
@@ -305,12 +305,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.9,
   })
 
-  routes.push({
-    url: `${baseUrl}/earnings/transcripts`,
-    lastModified: currentDate,
-    changeFrequency: 'daily',
-    priority: 0.9,
-  })
+  // REMOVED: /earnings/transcripts - page does not exist
 
   routes.push({
     url: `${baseUrl}/dividends`,
@@ -512,7 +507,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     // Main stock page
     routes.push({
-      url: `${baseUrl}/stock/${ticker}`,
+      url: `${baseUrl}/stock/${ticker.toLowerCase()}`,
       lastModified: currentDate,
       changeFrequency: 'hourly',
       priority: basePriority,

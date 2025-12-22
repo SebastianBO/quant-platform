@@ -1,5 +1,4 @@
 import Link from "next/link"
-import { Twitter, Linkedin, Github, Youtube } from "lucide-react"
 
 export function Footer() {
   const footerLinks = {
@@ -64,36 +63,7 @@ export function Footer() {
             <p className="text-sm text-muted-foreground mb-4">
               AI-powered stock analysis for smarter investment decisions.
             </p>
-            <div className="flex gap-4">
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground transition-colors p-2 hover:bg-secondary rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center"
-                aria-label="Twitter"
-              >
-                <Twitter className="w-5 h-5" />
-              </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground transition-colors p-2 hover:bg-secondary rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center"
-                aria-label="LinkedIn"
-              >
-                <Linkedin className="w-5 h-5" />
-              </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground transition-colors p-2 hover:bg-secondary rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center"
-                aria-label="GitHub"
-              >
-                <Github className="w-5 h-5" />
-              </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground hover:text-foreground transition-colors p-2 hover:bg-secondary rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center"
-                aria-label="YouTube"
-              >
-                <Youtube className="w-5 h-5" />
-              </Link>
-            </div>
+            {/* Social media links removed - will be added when accounts are set up */}
           </div>
 
           {Object.entries(footerLinks).map(([category, links]) => (
@@ -131,13 +101,13 @@ export function Footer() {
               Dashboard
             </Link>
             <Link
-              href="#"
+              href="/learn"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors py-2 min-h-[44px] flex items-center"
             >
               Privacy Policy
             </Link>
             <Link
-              href="#"
+              href="/learn"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors py-2 min-h-[44px] flex items-center"
             >
               Terms of Service

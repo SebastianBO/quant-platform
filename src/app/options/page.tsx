@@ -766,14 +766,14 @@ export default function OptionsPage() {
                 </CardHeader>
                 <CardContent>
                   <nav className="space-y-2 text-sm">
-                    <a href="#" className="block text-muted-foreground hover:text-foreground transition-colors">What Are Options?</a>
-                    <a href="#" className="block text-muted-foreground hover:text-foreground transition-colors">Call vs Put Options</a>
-                    <a href="#" className="block text-muted-foreground hover:text-foreground transition-colors">Options Flow</a>
-                    <a href="#" className="block text-muted-foreground hover:text-foreground transition-colors">Unusual Activity</a>
-                    <a href="#" className="block text-muted-foreground hover:text-foreground transition-colors">Options Greeks</a>
-                    <a href="#" className="block text-muted-foreground hover:text-foreground transition-colors">Trading Strategies</a>
-                    <a href="#" className="block text-muted-foreground hover:text-foreground transition-colors">Risks & Warnings</a>
-                    <a href="#" className="block text-muted-foreground hover:text-foreground transition-colors">FAQs</a>
+                    <a href="/learn" className="block text-muted-foreground hover:text-foreground transition-colors">What Are Options?</a>
+                    <a href="/learn" className="block text-muted-foreground hover:text-foreground transition-colors">Call vs Put Options</a>
+                    <a href="/learn" className="block text-muted-foreground hover:text-foreground transition-colors">Options Flow</a>
+                    <a href="/learn" className="block text-muted-foreground hover:text-foreground transition-colors">Unusual Activity</a>
+                    <a href="/learn" className="block text-muted-foreground hover:text-foreground transition-colors">Options Greeks</a>
+                    <a href="/learn" className="block text-muted-foreground hover:text-foreground transition-colors">Trading Strategies</a>
+                    <a href="/learn" className="block text-muted-foreground hover:text-foreground transition-colors">Risks & Warnings</a>
+                    <a href="/learn" className="block text-muted-foreground hover:text-foreground transition-colors">FAQs</a>
                   </nav>
                 </CardContent>
               </Card>
