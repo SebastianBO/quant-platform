@@ -618,6 +618,99 @@ export default async function ScreenerPage({ searchParams }: Props) {
         }}
       />
       <Header />
+
+      {/* SSR Content - Visible immediately for crawlers */}
+      <div className="ssr-content">
+        <div className="min-h-screen bg-background pt-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+            <article>
+              <header className="mb-8">
+                <h1 className="text-3xl sm:text-4xl font-bold mb-4">
+                  Free Stock Screener - Find Undervalued Stocks
+                </h1>
+                <p className="text-lg text-muted-foreground">
+                  Filter {stocks.length.toLocaleString()}+ stocks by sector, market cap, P/E ratio, revenue, and more.
+                  Our powerful stock scanner helps you discover investment opportunities with real-time data and fundamental analysis.
+                </p>
+              </header>
+
+              <section className="mb-8">
+                <h2 className="text-xl font-semibold mb-4">Popular Stock Screens</h2>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                  <Link href="/screener?sector=technology" className="bg-card border border-border rounded-lg p-4 hover:border-green-500/50 transition-colors">
+                    <h3 className="font-medium">Technology Stocks</h3>
+                    <p className="text-sm text-muted-foreground">Tech sector stocks</p>
+                  </Link>
+                  <Link href="/screener?pe_max=15" className="bg-card border border-border rounded-lg p-4 hover:border-green-500/50 transition-colors">
+                    <h3 className="font-medium">Value Stocks</h3>
+                    <p className="text-sm text-muted-foreground">P/E ratio under 15</p>
+                  </Link>
+                  <Link href="/screener?market_cap=large" className="bg-card border border-border rounded-lg p-4 hover:border-green-500/50 transition-colors">
+                    <h3 className="font-medium">Large Cap Stocks</h3>
+                    <p className="text-sm text-muted-foreground">Market cap &gt;$200B</p>
+                  </Link>
+                  <Link href="/screener?sector=healthcare" className="bg-card border border-border rounded-lg p-4 hover:border-green-500/50 transition-colors">
+                    <h3 className="font-medium">Healthcare Stocks</h3>
+                    <p className="text-sm text-muted-foreground">Healthcare sector</p>
+                  </Link>
+                  <Link href="/screener?sector=energy" className="bg-card border border-border rounded-lg p-4 hover:border-green-500/50 transition-colors">
+                    <h3 className="font-medium">Energy Stocks</h3>
+                    <p className="text-sm text-muted-foreground">Energy sector stocks</p>
+                  </Link>
+                  <Link href="/screener?pe_max=10" className="bg-card border border-border rounded-lg p-4 hover:border-green-500/50 transition-colors">
+                    <h3 className="font-medium">Deep Value</h3>
+                    <p className="text-sm text-muted-foreground">P/E ratio under 10</p>
+                  </Link>
+                  <Link href="/screener?market_cap=mid" className="bg-card border border-border rounded-lg p-4 hover:border-green-500/50 transition-colors">
+                    <h3 className="font-medium">Mid Cap Stocks</h3>
+                    <p className="text-sm text-muted-foreground">$10B - $200B market cap</p>
+                  </Link>
+                  <Link href="/screener?sector=financial" className="bg-card border border-border rounded-lg p-4 hover:border-green-500/50 transition-colors">
+                    <h3 className="font-medium">Financial Stocks</h3>
+                    <p className="text-sm text-muted-foreground">Financial sector</p>
+                  </Link>
+                </div>
+              </section>
+
+              <section className="mb-8">
+                <h2 className="text-xl font-semibold mb-4">How to Use Our Stock Screener</h2>
+                <div className="prose prose-invert max-w-none">
+                  <p className="text-muted-foreground">
+                    Our free stock screener helps you discover investment opportunities by filtering stocks
+                    based on fundamental metrics. Screen for undervalued stocks using P/E ratios, find
+                    large-cap blue chips for stability, or explore sector-specific opportunities.
+                  </p>
+                  <ul className="text-muted-foreground space-y-2 mt-4">
+                    <li><strong>Sector Screening:</strong> Filter by technology, healthcare, energy, financials, and more</li>
+                    <li><strong>Market Cap:</strong> Large cap (&gt;$200B), mid cap ($10B-$200B), or small cap (&lt;$10B)</li>
+                    <li><strong>Valuation:</strong> Screen by P/E ratio to find undervalued stocks</li>
+                    <li><strong>Revenue:</strong> Filter by company size based on annual revenue</li>
+                  </ul>
+                </div>
+              </section>
+
+              <nav className="mb-8">
+                <h2 className="text-xl font-semibold mb-4">Related Tools</h2>
+                <div className="flex flex-wrap gap-2">
+                  <Link href="/earnings" className="px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-sm font-medium transition-colors">
+                    Earnings Calendar
+                  </Link>
+                  <Link href="/sectors" className="px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-sm font-medium transition-colors">
+                    Sector Analysis
+                  </Link>
+                  <Link href="/analyst-ratings" className="px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-sm font-medium transition-colors">
+                    Analyst Ratings
+                  </Link>
+                  <Link href="/insider-trading" className="px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-sm font-medium transition-colors">
+                    Insider Trading
+                  </Link>
+                </div>
+              </nav>
+            </article>
+          </div>
+        </div>
+      </div>
+
       <Suspense fallback={<LoadingState />}>
         <ScreenerContent params={params} />
       </Suspense>
