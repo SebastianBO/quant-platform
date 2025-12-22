@@ -1,6 +1,9 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { Header } from '@/components/header'
+import { Footer } from '@/components/footer'
+import SEOSidebar from '@/components/SEOSidebar'
 import { PopularComparisons } from '@/components/seo/RelatedLinks'
 import {
   getBreadcrumbSchema,
@@ -8,6 +11,34 @@ import {
   getFAQSchema,
   SITE_URL,
 } from '@/lib/seo'
+
+// Popular stock comparisons for static generation
+const POPULAR_COMPARISONS = [
+  'aapl-vs-msft',
+  'aapl-vs-googl',
+  'msft-vs-googl',
+  'nvda-vs-amd',
+  'spy-vs-voo',
+  'spy-vs-qqq',
+  'voo-vs-vti',
+  'meta-vs-googl',
+  'tsla-vs-rivn',
+  'amzn-vs-wmt',
+  'ko-vs-pep',
+  'v-vs-ma',
+  'jpm-vs-bac',
+  'xom-vs-cvx',
+  'jnj-vs-pfe',
+  'dis-vs-nflx',
+  'crm-vs-now',
+  'cost-vs-wmt',
+  'hd-vs-low',
+  'unh-vs-cvs',
+]
+
+export async function generateStaticParams() {
+  return POPULAR_COMPARISONS.map((slugs) => ({ slugs }))
+}
 
 interface Props {
   params: Promise<{ slugs: string }>
@@ -52,8 +83,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-// Dynamic rendering - no static params to avoid slow build
-export const dynamic = 'force-dynamic'
+// Allow dynamic paths beyond the static ones
+export const dynamicParams = true
 
 async function getStockData(ticker: string) {
   try {
@@ -163,12 +194,16 @@ export default async function ComparePage({ params }: Props) {
 
   return (
     <>
+      <Header />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema]) }}
       />
-      <main className="min-h-screen bg-background text-foreground">
-        <div className="max-w-5xl mx-auto px-6 py-12">
+      <main className="min-h-screen bg-background text-foreground pt-20">
+        <div className="max-w-7xl mx-auto px-6 py-12">
+          <div className="flex gap-8">
+            <SEOSidebar />
+            <div className="flex-1 min-w-0">
           <nav className="text-sm text-muted-foreground mb-6">
             <Link href="/" className="hover:text-foreground">Home</Link>
             {' / '}
@@ -329,8 +364,11 @@ export default async function ComparePage({ params }: Props) {
 
           {/* Popular Comparisons */}
           <PopularComparisons currentSlug={slugs} />
+            </div>
+          </div>
         </div>
       </main>
+      <Footer />
     </>
   )
 }
