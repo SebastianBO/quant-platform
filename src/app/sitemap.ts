@@ -529,9 +529,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: basePriority - 0.1,
     })
 
-    // Buy ticker page (NEW! for purchase intent SEO)
+    // Buy ticker page (for purchase intent SEO)
     routes.push({
-      url: `${baseUrl}/buy-${ticker.toLowerCase()}`,
+      url: `${baseUrl}/buy/${ticker.toLowerCase()}`,
       lastModified: currentDate,
       changeFrequency: 'daily',
       priority: basePriority - 0.1,

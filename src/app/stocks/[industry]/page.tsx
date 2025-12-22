@@ -482,7 +482,7 @@ export default async function IndustryPage({ params }: Props) {
                         Should I Buy {stock.ticker}?
                       </Link>
                       <Link
-                        href={`/buy-${stock.ticker.toLowerCase()}`}
+                        href={`/buy/${stock.ticker.toLowerCase()}`}
                         className="text-green-500 hover:underline"
                       >
                         How to Buy {stock.ticker}

@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `How to Buy ${symbol} Stock - Investment Guide ${currentYear}`,
       description: `Complete guide to buying ${symbol} stock. Learn where to buy, investment thesis, and step-by-step purchase instructions.`,
       type: 'article',
-      url: `${SITE_URL}/buy-${ticker.toLowerCase()}`,
+      url: `${SITE_URL}/buy/${ticker.toLowerCase()}`,
     },
     twitter: {
       card: 'summary_large_image',
@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: `Complete guide to buying ${symbol} stock including broker recommendations and investment analysis.`,
     },
     alternates: {
-      canonical: `${SITE_URL}/buy-${ticker.toLowerCase()}`,
+      canonical: `${SITE_URL}/buy/${ticker.toLowerCase()}`,
     },
   }
 }
@@ -82,7 +82,7 @@ export default async function BuyTickerPage({ params }: Props) {
   const sector = companyFacts?.sector || undefined
   const industry = companyFacts?.industry || undefined
   const description = companyFacts?.description || `${companyName} (${symbol}) common stock`
-  const pageUrl = `${SITE_URL}/buy-${ticker.toLowerCase()}`
+  const pageUrl = `${SITE_URL}/buy/${ticker.toLowerCase()}`
 
   // Top brokers for buying stocks
   const brokers = [
