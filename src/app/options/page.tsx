@@ -7,6 +7,7 @@ import { getBreadcrumbSchema, getFAQSchema } from "@/lib/seo"
 import { TrendingUp, TrendingDown, AlertCircle, Calculator, BookOpen, Shield } from "lucide-react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import SEOSidebar from '@/components/SEOSidebar'
 
 export const metadata: Metadata = {
   title: "Options Trading Guide - Unusual Options Activity & Options Flow Analysis",
@@ -210,6 +211,9 @@ export default function OptionsPage() {
         </section>
 
         <div className="max-w-[1400px] mx-auto px-6 py-12">
+          <div className="flex gap-8">
+            <SEOSidebar />
+            <div className="flex-1 min-w-0">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-8">
@@ -845,6 +849,8 @@ export default function OptionsPage() {
                   </p>
                 </CardContent>
               </Card>
+            </div>
+          </div>
             </div>
           </div>
         </div>

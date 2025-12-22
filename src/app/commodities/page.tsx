@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { getBreadcrumbSchema, getFAQSchema, getArticleSchema, SITE_URL } from '@/lib/seo'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
+import SEOSidebar from '@/components/SEOSidebar'
 
 export const dynamic = 'force-dynamic'
 
@@ -212,6 +213,9 @@ export default async function CommoditiesPage() {
 
       <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-[1800px] mx-auto px-6 py-8">
+          <div className="flex gap-8">
+            <SEOSidebar />
+            <div className="flex-1 min-w-0">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-foreground transition-colors">
@@ -417,6 +421,8 @@ export default async function CommoditiesPage() {
             <p>
               Always conduct thorough research and consider consulting with a qualified financial advisor before making investment decisions. Prices may be delayed and are subject to market conditions.
             </p>
+          </div>
+            </div>
           </div>
         </div>
       </main>

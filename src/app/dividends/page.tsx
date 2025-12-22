@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
+import SEOSidebar from '@/components/SEOSidebar'
 import {
   getBreadcrumbSchema,
   getFAQSchema,
@@ -419,6 +420,9 @@ export default function DividendsPage() {
       />
       <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+          <div className="flex gap-8">
+            <SEOSidebar />
+            <div className="flex-1 min-w-0">
           {/* Breadcrumbs */}
           <nav className="text-sm text-muted-foreground mb-6" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-foreground transition-colors">
@@ -919,6 +923,8 @@ export default function DividendsPage() {
               Start Analyzing Dividend Stocks Free
             </Link>
           </section>
+            </div>
+          </div>
         </div>
       </main>
       <Footer />

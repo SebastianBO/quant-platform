@@ -3,6 +3,7 @@ import Link from "next/link"
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card"
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
+import SEOSidebar from '@/components/SEOSidebar'
 import { getBreadcrumbSchema, getFAQSchema, SITE_URL } from "@/lib/seo"
 import { Calendar, TrendingUp, DollarSign, Users, Building2, AlertCircle, ChevronRight } from "lucide-react"
 
@@ -311,6 +312,9 @@ export default function EconomicCalendarPage() {
 
       <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-[1400px] mx-auto px-6 py-8">
+          <div className="flex gap-8">
+            <SEOSidebar />
+            <div className="flex-1 min-w-0">
           {/* Breadcrumb Navigation */}
           <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
             <Link href="/" className="hover:text-foreground transition-colors">
@@ -819,6 +823,8 @@ export default function EconomicCalendarPage() {
                 </div>
               </CardContent>
             </Card>
+          </div>
+            </div>
           </div>
         </div>
       </main>

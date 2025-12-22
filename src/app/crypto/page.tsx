@@ -4,6 +4,7 @@ import { TrendingUp, TrendingDown, ChevronRight, Bitcoin, Coins, TrendingUpIcon,
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
+import SEOSidebar from '@/components/SEOSidebar'
 
 export const dynamic = 'force-dynamic'
 
@@ -340,6 +341,9 @@ export default async function CryptoPage() {
         </header>
 
         <div className="max-w-[1800px] mx-auto px-6 py-6">
+          <div className="flex gap-8">
+            <SEOSidebar />
+            <div className="flex-1 min-w-0">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
             <Link href="/" className="hover:text-foreground transition-colors">
@@ -913,6 +917,8 @@ export default async function CryptoPage() {
             <p className="text-sm text-muted-foreground">
               <strong className="text-foreground">Disclaimer:</strong> Cryptocurrency prices are highly volatile and subject to market risks. The information provided is for educational purposes only and should not be considered financial advice. Always conduct your own research and consider consulting with a qualified financial advisor before making investment decisions. Past performance is not indicative of future results. You may lose all or part of your investment.
             </p>
+          </div>
+            </div>
           </div>
         </div>
       </main>

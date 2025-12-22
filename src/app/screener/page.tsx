@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { supabase, CompanyFundamentals } from '@/lib/supabase'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
+import SEOSidebar from '@/components/SEOSidebar'
 import {
   getBreadcrumbSchema,
   getArticleSchema,
@@ -214,6 +215,9 @@ async function ScreenerContent({ params }: { params: SearchParams }) {
   return (
     <main className="min-h-screen bg-background pt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex gap-8">
+          <SEOSidebar />
+          <div className="flex-1 min-w-0">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-4">
@@ -514,6 +518,8 @@ async function ScreenerContent({ params }: { params: SearchParams }) {
             >
               Market Insights
             </Link>
+          </div>
+        </div>
           </div>
         </div>
       </div>

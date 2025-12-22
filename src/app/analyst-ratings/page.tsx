@@ -10,6 +10,7 @@ import {
 } from '@/lib/seo'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
+import SEOSidebar from '@/components/SEOSidebar'
 
 // Dynamic rendering - Supabase needs env vars at runtime
 export const dynamic = 'force-dynamic'
@@ -361,6 +362,9 @@ export default async function AnalystRatingsPage() {
       />
       <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+          <div className="flex gap-8">
+            <SEOSidebar />
+            <div className="flex-1 min-w-0">
           {/* Breadcrumbs */}
           <nav className="text-sm text-muted-foreground mb-6" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-foreground transition-colors">
@@ -861,6 +865,8 @@ export default async function AnalystRatingsPage() {
               Start Analyzing Stocks Free
             </Link>
           </section>
+            </div>
+          </div>
         </div>
       </main>
       <Footer />

@@ -8,6 +8,7 @@ import {
 } from '@/lib/seo'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
+import SEOSidebar from '@/components/SEOSidebar'
 
 export const metadata: Metadata = {
   title: '13F Filings & Institutional Ownership - What Stocks Are Hedge Funds Buying?',
@@ -267,6 +268,9 @@ export default async function InstitutionalPage() {
       />
       <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+          <div className="flex gap-8">
+            <SEOSidebar />
+            <div className="flex-1 min-w-0">
           {/* Breadcrumbs */}
           <nav className="text-sm text-muted-foreground mb-6" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-foreground transition-colors">
@@ -730,6 +734,8 @@ export default async function InstitutionalPage() {
               Analyze Stocks Now
             </Link>
           </section>
+            </div>
+          </div>
         </div>
       </main>
       <Footer />

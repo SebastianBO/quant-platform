@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getItemListSchema, SITE_URL } from '@/lib/seo'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
+import SEOSidebar from '@/components/SEOSidebar'
 
 export const metadata: Metadata = {
   title: 'Biotech Catalysts 2025 - FDA Approvals, Clinical Trials & Pharma Stocks | Lician',
@@ -349,6 +350,9 @@ export default function BiotechCatalystsPage() {
       />
       <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-5xl mx-auto px-6 py-12">
+          <div className="flex gap-8">
+            <SEOSidebar />
+            <div className="flex-1 min-w-0">
           <nav className="text-sm text-muted-foreground mb-6">
             <Link href="/" className="hover:text-foreground">Home</Link>
             {' / '}
@@ -675,6 +679,8 @@ export default function BiotechCatalystsPage() {
               </Link>
             </div>
           </section>
+            </div>
+          </div>
         </div>
       </main>
       <Footer />

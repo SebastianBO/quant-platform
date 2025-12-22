@@ -8,6 +8,7 @@ import {
 } from '@/lib/seo'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
+import SEOSidebar from '@/components/SEOSidebar'
 
 export const dynamic = 'force-dynamic'
 
@@ -230,6 +231,9 @@ export default async function ForexPage() {
       />
       <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-7xl mx-auto px-6 py-12">
+          <div className="flex gap-8">
+            <SEOSidebar />
+            <div className="flex-1 min-w-0">
           {/* Breadcrumbs */}
           <nav className="text-sm text-muted-foreground mb-6">
             <Link href="/" className="hover:text-foreground transition-colors">
@@ -569,6 +573,8 @@ export default async function ForexPage() {
               </Link>
             </div>
           </section>
+            </div>
+          </div>
         </div>
       </main>
       <Footer />
