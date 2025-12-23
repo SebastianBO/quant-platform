@@ -763,7 +763,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: basePriority - 0.1,
     })
 
-    })
     // Balance sheet page
     routes.push({
       url: `${baseUrl}/balance-sheet/${ticker.toLowerCase()}`,

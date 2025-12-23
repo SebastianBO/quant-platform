@@ -15,7 +15,7 @@ import {
 
 interface RelatedLinksProps {
   ticker: string
-  currentPage: 'stock' | 'should-i-buy' | 'prediction' | 'compare' | 'health' | 'buy' | 'forecast' | 'earnings'
+  currentPage: 'stock' | 'should-i-buy' | 'prediction' | 'compare' | 'health' | 'buy' | 'forecast' | 'earnings' | 'price' | 'balance-sheet' | 'cash-flow' | 'ownership' | 'profile' | 'revenue' | 'roe' | 'splits' | 'target-price' | 'valuation'
   companyName?: string
 }
 
@@ -274,6 +274,15 @@ export function RelatedLinks({ ticker, currentPage, companyName }: RelatedLinksP
               {symbol} Earnings Date
             </Link>
           )}
+          {currentPage !== 'price' && (
+            <Link
+              href={`/price/${symbol.toLowerCase()}`}
+              className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors"
+            >
+              {symbol} Stock Price
+            </Link>
+          )}
+
           {currentPage !== 'health' && (
             <Link
               href={`/analysis/${symbol.toLowerCase()}/health`}
