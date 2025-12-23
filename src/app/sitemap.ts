@@ -519,6 +519,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: currentDate,
       changeFrequency: 'hourly',
       priority: basePriority - 0.05, // Slightly lower than main page
+
+    // Quote page
+    routes.push({
+      url: `${baseUrl}/quote/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly',
+      priority: basePriority - 0.1,
+    })
     })
 
     // Should I buy page (slightly lower priority)
