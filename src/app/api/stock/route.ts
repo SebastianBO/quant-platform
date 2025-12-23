@@ -466,17 +466,29 @@ export async function GET(request: NextRequest) {
       dataSources.metrics = 'eodhd.com'
     }
 
+    // Merge company facts: Financial Datasets base with EODHD description fallback
+    const baseCompanyFacts = companyFacts?.company_facts || {}
+    const mergedCompanyFacts = {
+      ...baseCompanyFacts,
+      // Always use EODHD description if Financial Datasets doesn't have one
+      description: baseCompanyFacts.description || eohdGeneral?.Description || null,
+      // Fallbacks for other fields
+      name: baseCompanyFacts.name || eohdGeneral?.Name || ticker.toUpperCase(),
+      sector: baseCompanyFacts.sector || eohdGeneral?.Sector || null,
+      industry: baseCompanyFacts.industry || eohdGeneral?.Industry || null,
+      exchange: baseCompanyFacts.exchange || eohdGeneral?.Exchange || null,
+      website: baseCompanyFacts.website_url || baseCompanyFacts.website || eohdGeneral?.WebURL || null,
+      employees: baseCompanyFacts.number_of_employees || eohdGeneral?.FullTimeEmployees || null,
+      headquarters: baseCompanyFacts.location || (eohdGeneral?.Address ? `${eohdGeneral.Address}, ${eohdGeneral.City}` : null),
+      founded: eohdGeneral?.IPODate || baseCompanyFacts.listing_date || null,
+      ceo: eohdGeneral?.CEO || null,
+      country: eohdGeneral?.Country || null,
+      phone: eohdGeneral?.Phone || null,
+    }
+
     return NextResponse.json({
       snapshot: enhancedSnapshot,
-      companyFacts: companyFacts?.company_facts || {
-        name: eohdGeneral?.Name || ticker.toUpperCase(),
-        description: eohdGeneral?.Description || null,
-        sector: eohdGeneral?.Sector || null,
-        industry: eohdGeneral?.Industry || null,
-        exchange: eohdGeneral?.Exchange || null,
-        cik: eohdGeneral?.CIK || null,
-        website: eohdGeneral?.WebURL || null,
-      },
+      companyFacts: mergedCompanyFacts,
       // Annual statements - with EODHD fallback
       incomeStatements: finalIncomeStatements,
       balanceSheets: finalBalanceSheets,
