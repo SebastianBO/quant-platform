@@ -585,7 +585,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: basePriority - 0.1,
     })
-      lastModified: currentDate,
 
     // Growth page (NEW! for "AAPL growth" queries)
     routes.push({
@@ -765,7 +764,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
 
     })
-    // Balance sheet page
     routes.push({
       url: `${baseUrl}/balance-sheet/${ticker.toLowerCase()}`,
       lastModified: currentDate,
@@ -927,6 +925,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'daily',
       priority: basePriority - 0.1,
     })
+    // ROE (Return on Equity) page - profitability analysis
+    routes.push({
+      url: `${baseUrl}/roe/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
 
   })
 
