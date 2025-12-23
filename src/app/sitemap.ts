@@ -593,6 +593,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: basePriority - 0.05,
     })
 
+    // Institutional ownership page
+    routes.push({
+      url: `${baseUrl}/institutional/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Financials summary page
+    routes.push({
+      url: `${baseUrl}/financials/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Options page
+    routes.push({
+      url: `${baseUrl}/options/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: basePriority - 0.1,
+    })
+
     // Financial health analysis page (SEO-optimized)
     routes.push({
       url: `${baseUrl}/analysis/${ticker.toLowerCase()}/health`,
