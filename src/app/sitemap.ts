@@ -585,6 +585,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: basePriority - 0.1,
     })
+      lastModified: currentDate,
 
     // Growth page (NEW! for "AAPL growth" queries)
     routes.push({
