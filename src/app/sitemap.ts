@@ -577,6 +577,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: basePriority - 0.1,
     })
 
+    // Revenue page
+    routes.push({
+      url: `${baseUrl}/revenue/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+    
+    // Target price page
+    routes.push({
+      url: `${baseUrl}/target-price/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: basePriority - 0.1,
+    })
+
     // Insider trading page
     routes.push({
       url: `${baseUrl}/insider/${ticker.toLowerCase()}`,
@@ -600,6 +616,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: basePriority - 0.1,
     })
+
+    // Ownership page (combined institutional + insider)
+    routes.push({
+      url: `${baseUrl}/ownership/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
 
     // Financials summary page
     routes.push({
@@ -678,6 +703,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/debt/${ticker.toLowerCase()}`,
       lastModified: currentDate,
       changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Profit margins page
+    routes.push({
+      url: `${baseUrl}/margins/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Volume page
+    routes.push({
+      url: `${baseUrl}/volume/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly',
       priority: basePriority - 0.1,
     })
   })
