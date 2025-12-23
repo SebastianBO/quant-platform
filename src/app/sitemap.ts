@@ -581,14 +581,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Dividend page (dividend investors)
     routes.push({
       url: `${baseUrl}/dividend/${ticker.toLowerCase()}`,
-
-    // Growth page (NEW! for "AAPL growth" queries)
-    routes.push({
-      url: `${baseUrl}/growth/${ticker.toLowerCase()}`,
       lastModified: currentDate,
       changeFrequency: 'weekly',
       priority: basePriority - 0.1,
     })
+
+    // Growth page (NEW! for "AAPL growth" queries)
+    routes.push({
+      url: `${baseUrl}/growth/${ticker.toLowerCase()}`,
       lastModified: currentDate,
       changeFrequency: 'weekly',
       priority: basePriority - 0.1,
@@ -821,6 +821,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: basePriority - 0.1,
     })
 
+    // PE ratio page
+    routes.push({
+      url: `${baseUrl}/pe-ratio/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: basePriority - 0.1,
+    })
+
     // Cash flow page (NEW! for pSEO)
     routes.push({
       url: `${baseUrl}/cash-flow/${ticker.toLowerCase()}`,
@@ -891,6 +899,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/market-cap/${ticker.toLowerCase()}`,
       lastModified: currentDate,
       changeFrequency: 'daily',
+      priority: basePriority - 0.1,
+    })
+
+    // ROE (Return on Equity) page - profitability analysis
+    routes.push({
+      url: `${baseUrl}/roe/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
       priority: basePriority - 0.1,
     })
 
