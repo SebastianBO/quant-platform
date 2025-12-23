@@ -14,7 +14,7 @@ import {
 
 interface RelatedLinksProps {
   ticker: string
-  currentPage: 'stock' | 'should-i-buy' | 'prediction' | 'compare' | 'health' | 'buy'
+  currentPage: 'stock' | 'should-i-buy' | 'prediction' | 'compare' | 'health' | 'buy' | 'forecast'
   companyName?: string
 }
 
@@ -73,6 +73,13 @@ export function RelatedLinks({ ticker, currentPage, companyName }: RelatedLinksP
       title: 'Price Prediction',
       description: `${currentYear} forecast and price targets`,
       color: 'text-orange-500'
+    },
+    {
+      href: `/forecast/${symbol.toLowerCase()}`,
+      icon: TrendingUp,
+      title: 'Stock Forecast',
+      description: `12-month price forecast and analyst targets`,
+      color: 'text-cyan-500'
     }
   ]
 
@@ -241,6 +248,14 @@ export function RelatedLinks({ ticker, currentPage, companyName }: RelatedLinksP
               className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors"
             >
               {symbol} Price Prediction {currentYear}
+            </Link>
+          )}
+          {currentPage !== 'forecast' && (
+            <Link
+              href={`/forecast/${symbol.toLowerCase()}`}
+              className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors"
+            >
+              {symbol} Stock Forecast {currentYear}
             </Link>
           )}
           {currentPage !== 'health' && (

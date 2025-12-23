@@ -545,9 +545,49 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: basePriority - 0.1,
     })
 
+    // Stock forecast page (high-value SEO target)
+    routes.push({
+      url: `${baseUrl}/forecast/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.05, // Higher priority than prediction
+    })
+
     // Financial health analysis page (SEO-optimized)
     routes.push({
       url: `${baseUrl}/analysis/${ticker.toLowerCase()}/health`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Valuation analysis page
+    routes.push({
+      url: `${baseUrl}/analysis/${ticker.toLowerCase()}/valuation`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Growth analysis page
+    routes.push({
+      url: `${baseUrl}/analysis/${ticker.toLowerCase()}/growth`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Dividend analysis page
+    routes.push({
+      url: `${baseUrl}/analysis/${ticker.toLowerCase()}/dividend`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Debt analysis page
+    routes.push({
+      url: `${baseUrl}/debt/${ticker.toLowerCase()}`,
       lastModified: currentDate,
       changeFrequency: 'weekly',
       priority: basePriority - 0.1,
