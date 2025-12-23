@@ -519,7 +519,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: currentDate,
       changeFrequency: 'hourly',
       priority: basePriority - 0.05, // Slightly lower than main page
-
+})
     // Quote page
     routes.push({
       url: `${baseUrl}/quote/${ticker.toLowerCase()}`,
@@ -572,6 +572,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Dividend page (dividend investors)
     routes.push({
       url: `${baseUrl}/dividend/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // EPS page
+    routes.push({
+      url: `${baseUrl}/eps/${ticker.toLowerCase()}`,
       lastModified: currentDate,
       changeFrequency: 'weekly',
       priority: basePriority - 0.1,
@@ -783,6 +791,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Debt analysis page
     routes.push({
       url: `${baseUrl}/debt/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Cash flow page (NEW! for pSEO)
+    routes.push({
+      url: `${baseUrl}/cash-flow/${ticker.toLowerCase()}`,
       lastModified: currentDate,
       changeFrequency: 'weekly',
       priority: basePriority - 0.1,
