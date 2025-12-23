@@ -527,7 +527,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: currentDate,
       changeFrequency: 'hourly',
       priority: basePriority - 0.05,
-    })
     // Quote page
     routes.push({
       url: `${baseUrl}/quote/${ticker.toLowerCase()}`,
