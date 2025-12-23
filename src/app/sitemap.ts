@@ -557,7 +557,39 @@ export default function sitemap(): MetadataRoute.Sitemap {
     routes.push({
       url: `${baseUrl}/earnings/${ticker.toLowerCase()}`,
       lastModified: currentDate,
-      changeFrequency: 'daily', // Earnings dates change
+      changeFrequency: 'daily',
+      priority: basePriority - 0.05,
+    })
+
+    // Dividend page (dividend investors)
+    routes.push({
+      url: `${baseUrl}/dividend/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Analyst ratings page
+    routes.push({
+      url: `${baseUrl}/analyst/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: basePriority - 0.1,
+    })
+
+    // Insider trading page
+    routes.push({
+      url: `${baseUrl}/insider/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: basePriority - 0.1,
+    })
+
+    // News page (high daily volume)
+    routes.push({
+      url: `${baseUrl}/news/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly',
       priority: basePriority - 0.05,
     })
 
