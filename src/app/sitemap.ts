@@ -894,6 +894,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: basePriority - 0.1,
     })
 
+
+    // ROE (Return on Equity) page - profitability analysis
+    routes.push({
+      url: `${baseUrl}/roe/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Market cap page
+    routes.push({
+      url: `${baseUrl}/market-cap/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: basePriority - 0.1,
+    })
+
   })
 
   // ============================================================================
