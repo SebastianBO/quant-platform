@@ -617,6 +617,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: basePriority - 0.1,
     })
 
+    // Chart page
+    routes.push({
+      url: `${baseUrl}/chart/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly',
+      priority: basePriority - 0.1,
+    })
+
+    // History page
+    routes.push({
+      url: `${baseUrl}/history/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: basePriority - 0.1,
+    })
+
+    // SEC filings page
+    routes.push({
+      url: `${baseUrl}/sec/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: basePriority - 0.1,
+    })
+
     // Financial health analysis page (SEO-optimized)
     routes.push({
       url: `${baseUrl}/analysis/${ticker.toLowerCase()}/health`,
