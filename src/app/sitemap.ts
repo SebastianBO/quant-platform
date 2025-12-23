@@ -837,13 +837,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     // Debt analysis page (alternative SEO URL)
     routes.push({
-      url: `${baseUrl}/debt-analysis/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-
 
     // Profile page
     routes.push({
