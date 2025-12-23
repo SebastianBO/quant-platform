@@ -28,8 +28,10 @@ export async function GET() {
       let sitemap = await response.text()
 
       // Transform URLs from portfoliocare format to quant-platform format
-      // www.lician.com/stocks/AAPL -> lician.com/stock/AAPL
-      sitemap = sitemap.replace(/https:\/\/www\.lician\.com\/stocks\//g, `${baseUrl}/stock/`)
+      // www.lician.com/stocks/AAPL -> lician.com/stock/aapl (lowercase for canonical consistency)
+      sitemap = sitemap.replace(/https:\/\/www\.lician\.com\/stocks\/([A-Z0-9.-]+)/gi, (_, ticker) =>
+        `${baseUrl}/stock/${ticker.toLowerCase()}`
+      )
       sitemap = sitemap.replace(/\/analysis<\/loc>/g, '</loc>') // Remove /analysis suffix
       sitemap = sitemap.replace(/\/chart<\/loc>/g, '</loc>') // Remove /chart suffix
 
@@ -70,7 +72,7 @@ ${uniqueUrls.join('\n')}
     const priority = index < 20 ? 1.0 : index < 50 ? 0.9 : 0.8
     return `
   <url>
-    <loc>${baseUrl}/stock/${ticker}</loc>
+    <loc>${baseUrl}/stock/${ticker.toLowerCase()}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>hourly</changefreq>
     <priority>${priority}</priority>

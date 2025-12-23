@@ -30,12 +30,14 @@ export async function GET(request: Request) {
     if (response.ok) {
       let sitemap = await response.text()
 
-      // Transform URLs from portfoliocare format to quant-platform format
-      sitemap = sitemap.replace(/https:\/\/www\.lician\.com\/stocks\//g, `${baseUrl}/stock/`)
+      // Transform URLs from portfoliocare format to quant-platform format (lowercase for canonical consistency)
+      sitemap = sitemap.replace(/https:\/\/www\.lician\.com\/stocks\/([A-Z0-9.-]+)/gi, (_, ticker) =>
+        `${baseUrl}/stock/${ticker.toLowerCase()}`
+      )
 
-      // Extract unique stock symbols (letters, numbers, dots, hyphens)
+      // Extract unique stock symbols (letters, numbers, dots, hyphens) and normalize to lowercase
       const stockMatches = sitemap.match(/\/stock\/([A-Za-z0-9._-]+)/g) || []
-      const uniqueStocks = [...new Set(stockMatches.map(m => m.replace('/stock/', '')))]
+      const uniqueStocks = [...new Set(stockMatches.map(m => m.replace('/stock/', '').toLowerCase()))]
 
       const urls = uniqueStocks.map(ticker => `
   <url>
