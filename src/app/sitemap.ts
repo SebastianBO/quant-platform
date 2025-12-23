@@ -553,6 +553,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: basePriority - 0.05, // Higher priority than prediction
     })
 
+    // Stock earnings page (very high intent queries)
+    routes.push({
+      url: `${baseUrl}/earnings/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'daily', // Earnings dates change
+      priority: basePriority - 0.05,
+    })
+
     // Financial health analysis page (SEO-optimized)
     routes.push({
       url: `${baseUrl}/analysis/${ticker.toLowerCase()}/health`,

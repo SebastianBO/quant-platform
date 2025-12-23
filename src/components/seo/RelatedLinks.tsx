@@ -9,12 +9,13 @@ import {
   BarChart3,
   ArrowRight,
   Scale,
-  Target
+  Target,
+  Calendar
 } from 'lucide-react'
 
 interface RelatedLinksProps {
   ticker: string
-  currentPage: 'stock' | 'should-i-buy' | 'prediction' | 'compare' | 'health' | 'buy' | 'forecast'
+  currentPage: 'stock' | 'should-i-buy' | 'prediction' | 'compare' | 'health' | 'buy' | 'forecast' | 'earnings'
   companyName?: string
 }
 
@@ -80,6 +81,13 @@ export function RelatedLinks({ ticker, currentPage, companyName }: RelatedLinksP
       title: 'Stock Forecast',
       description: `12-month price forecast and analyst targets`,
       color: 'text-cyan-500'
+    },
+    {
+      href: `/earnings/${symbol.toLowerCase()}`,
+      icon: Calendar,
+      title: 'Earnings Date',
+      description: `Next earnings date and historical results`,
+      color: 'text-yellow-500'
     }
   ]
 
@@ -256,6 +264,14 @@ export function RelatedLinks({ ticker, currentPage, companyName }: RelatedLinksP
               className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors"
             >
               {symbol} Stock Forecast {currentYear}
+            </Link>
+          )}
+          {currentPage !== 'earnings' && (
+            <Link
+              href={`/earnings/${symbol.toLowerCase()}`}
+              className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors"
+            >
+              {symbol} Earnings Date
             </Link>
           )}
           {currentPage !== 'health' && (
