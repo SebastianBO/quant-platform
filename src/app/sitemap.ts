@@ -601,6 +601,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: basePriority - 0.1,
     })
 
+    // Stock rating page (NEW! for "AAPL stock rating" queries)
+    routes.push({
+      url: `${baseUrl}/rating/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: basePriority - 0.1,
+    })
+
     // Competitors page
     routes.push({
       url: `${baseUrl}/competitors/${ticker.toLowerCase()}`,
@@ -645,6 +653,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Financials summary page
     routes.push({
       url: `${baseUrl}/financials/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Income statement page
+    routes.push({
+      url: `${baseUrl}/income-statement/${ticker.toLowerCase()}`,
       lastModified: currentDate,
       changeFrequency: 'weekly',
       priority: basePriority - 0.1,
@@ -747,6 +763,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: basePriority - 0.1,
     })
+    // Profit margins page (NEW! for pSEO)
+    routes.push({
+      url: `${baseUrl}/margins/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
 
     // Debt analysis page
     routes.push({
@@ -756,6 +780,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: basePriority - 0.1,
     })
 
+    // Debt analysis page (alternative SEO URL)
+    routes.push({
+      url: `${baseUrl}/debt-analysis/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+
+
+    // Profile page
+    routes.push({
+      url: `${baseUrl}/profile/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
     // Cash flow page (NEW! for pSEO)
     routes.push({
       url: `${baseUrl}/cash-flow/${ticker.toLowerCase()}`,
@@ -771,6 +812,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: basePriority - 0.1,
     })
+
+    // Short interest page
+    routes.push({
+      url: `${baseUrl}/short-interest/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: basePriority - 0.1,
+    })
+
 
     // Volume page
     routes.push({
