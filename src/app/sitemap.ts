@@ -845,6 +845,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'daily',
       priority: basePriority - 0.1,
     })
+    // Market cap page
+    routes.push({
+      url: `${baseUrl}/market-cap/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: basePriority - 0.1,
+    })
+
   })
 
   // ============================================================================
