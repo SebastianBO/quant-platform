@@ -520,6 +520,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'hourly',
       priority: basePriority - 0.05, // Slightly lower than main page
 })
+
+    // Price page
+    routes.push({
+      url: `${baseUrl}/price/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly',
+      priority: basePriority - 0.05,
+    })
     // Quote page
     routes.push({
       url: `${baseUrl}/quote/${ticker.toLowerCase()}`,
@@ -572,6 +580,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Dividend page (dividend investors)
     routes.push({
       url: `${baseUrl}/dividend/${ticker.toLowerCase()}`,
+
+    // Growth page (NEW! for "AAPL growth" queries)
+    routes.push({
+      url: `${baseUrl}/growth/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
       lastModified: currentDate,
       changeFrequency: 'weekly',
       priority: basePriority - 0.1,
@@ -775,6 +791,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Balance sheet page
     routes.push({
       url: `${baseUrl}/balance-sheet/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Profile page
+    routes.push({
+      url: `${baseUrl}/profile/${ticker.toLowerCase()}`,
       lastModified: currentDate,
       changeFrequency: 'weekly',
       priority: basePriority - 0.1,
