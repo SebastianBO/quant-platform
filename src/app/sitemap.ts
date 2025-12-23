@@ -569,6 +569,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: basePriority - 0.1,
     })
 
+    // Valuation page (NEW! for "AAPL valuation" queries)
+    routes.push({
+      url: `${baseUrl}/valuation/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: basePriority - 0.05, // High priority for valuation queries
+    })
+
     // Analyst ratings page
     routes.push({
       url: `${baseUrl}/analyst/${ticker.toLowerCase()}`,
@@ -590,6 +598,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/target-price/${ticker.toLowerCase()}`,
       lastModified: currentDate,
       changeFrequency: 'daily',
+      priority: basePriority - 0.1,
+    })
+
+    // Competitors page
+    routes.push({
+      url: `${baseUrl}/competitors/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
       priority: basePriority - 0.1,
     })
 
@@ -698,9 +714,51 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: basePriority - 0.1,
     })
 
+    })
+    // Balance sheet page
+    routes.push({
+      url: `${baseUrl}/balance-sheet/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // ROE (Return on Equity) page - profitability analysis
+    routes.push({
+      url: `${baseUrl}/roe/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Debt analysis page (alternative SEO URL)
+    routes.push({
+      url: `${baseUrl}/debt-analysis/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+
+    // Balance sheet page
+    routes.push({
+      url: `${baseUrl}/balance-sheet/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
     // Debt analysis page
     routes.push({
       url: `${baseUrl}/debt/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Cash flow page (NEW! for pSEO)
+    routes.push({
+      url: `${baseUrl}/cash-flow/${ticker.toLowerCase()}`,
       lastModified: currentDate,
       changeFrequency: 'weekly',
       priority: basePriority - 0.1,
@@ -719,6 +777,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/volume/${ticker.toLowerCase()}`,
       lastModified: currentDate,
       changeFrequency: 'hourly',
+      priority: basePriority - 0.1,
+    })
+
+    // 52-week high page (pSEO for "AAPL 52 week high" queries)
+    routes.push({
+      url: `${baseUrl}/52-week-high/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
       priority: basePriority - 0.1,
     })
   })
