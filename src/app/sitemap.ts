@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next'
 
-// S&P 500 + Popular stocks + ETFs (comprehensive list from index-all-stocks.ts)
+// S&P 500 + Popular stocks + ETFs
 const ALL_STOCKS = [
   // S&P 500
   'AAPL', 'ABBV', 'ABT', 'ACN', 'ADBE', 'ADI', 'ADP', 'ADSK', 'AEP', 'AES',
@@ -60,184 +60,144 @@ const ALL_STOCKS = [
   'SPY', 'QQQ', 'VOO', 'VTI', 'IWM', 'DIA', 'ARKK', 'XLF', 'XLE', 'XLK',
 ]
 
-// Comparison pairs organized by category (comprehensive coverage)
+// Comparison pairs
 const COMPARISON_PAIRS = [
-  // Tech Giants (20 pairs)
   ['AAPL', 'MSFT'], ['AAPL', 'GOOGL'], ['MSFT', 'GOOGL'], ['META', 'GOOGL'],
   ['AMZN', 'MSFT'], ['AMZN', 'GOOGL'], ['AAPL', 'AMZN'], ['META', 'AAPL'],
-  ['META', 'MSFT'], ['META', 'AMZN'], ['AAPL', 'NVDA'], ['MSFT', 'NVDA'],
-  ['GOOGL', 'NVDA'], ['AMZN', 'META'], ['AAPL', 'TSLA'], ['MSFT', 'TSLA'],
-  ['GOOGL', 'TSLA'], ['META', 'TSLA'], ['AMZN', 'TSLA'], ['NVDA', 'TSLA'],
-
-  // Semiconductors (20 pairs)
   ['NVDA', 'AMD'], ['NVDA', 'INTC'], ['AMD', 'INTC'], ['AVGO', 'QCOM'],
-  ['NVDA', 'AVGO'], ['AMD', 'AVGO'], ['INTC', 'AVGO'], ['NVDA', 'QCOM'],
-  ['AMD', 'QCOM'], ['INTC', 'QCOM'], ['NVDA', 'TXN'], ['AMD', 'TXN'],
-  ['INTC', 'TXN'], ['AVGO', 'TXN'], ['QCOM', 'TXN'], ['NVDA', 'LRCX'],
-  ['AMD', 'LRCX'], ['INTC', 'LRCX'], ['AVGO', 'LRCX'], ['QCOM', 'ADI'],
-
-  // Auto/EV (15 pairs)
   ['TSLA', 'F'], ['TSLA', 'GM'], ['TSLA', 'RIVN'], ['F', 'GM'],
-  ['RIVN', 'LCID'], ['TSLA', 'LCID'], ['F', 'RIVN'], ['GM', 'RIVN'],
-  ['F', 'LCID'], ['GM', 'LCID'], ['TSLA', 'NIO'], ['RIVN', 'NIO'],
-  ['LCID', 'NIO'], ['F', 'NIO'], ['GM', 'NIO'],
-
-  // Finance/Banks (20 pairs)
-  ['JPM', 'BAC'], ['JPM', 'WFC'], ['BAC', 'C'], ['BAC', 'WFC'],
-  ['GS', 'MS'], ['V', 'MA'], ['JPM', 'C'], ['JPM', 'GS'],
-  ['BAC', 'GS'], ['WFC', 'C'], ['WFC', 'GS'], ['C', 'GS'],
-  ['JPM', 'MS'], ['BAC', 'MS'], ['WFC', 'MS'], ['C', 'MS'],
-  ['JPM', 'SCHW'], ['BAC', 'SCHW'], ['C', 'SCHW'], ['WFC', 'SCHW'],
-
-  // Payment/Fintech (15 pairs)
-  ['PYPL', 'V'], ['PYPL', 'MA'], ['HOOD', 'COIN'], ['SOFI', 'HOOD'],
-  ['V', 'PYPL'], ['MA', 'PYPL'], ['PYPL', 'COIN'], ['SOFI', 'COIN'],
-  ['SOFI', 'PYPL'], ['HOOD', 'PYPL'], ['V', 'COIN'], ['MA', 'COIN'],
-  ['PYPL', 'SQ'], ['SOFI', 'SQ'], ['HOOD', 'SQ'],
-
-  // Streaming/Media (15 pairs)
-  ['NFLX', 'DIS'], ['NFLX', 'PARA'], ['DIS', 'WBD'], ['NFLX', 'WBD'],
-  ['DIS', 'PARA'], ['PARA', 'WBD'], ['NFLX', 'GOOGL'], ['DIS', 'GOOGL'],
-  ['NFLX', 'AMZN'], ['DIS', 'AMZN'], ['RBLX', 'EA'], ['SNAP', 'PINS'],
-  ['ROKU', 'NFLX'], ['ZM', 'DOCU'], ['SNAP', 'META'],
-
-  // Retail (20 pairs)
+  ['JPM', 'BAC'], ['JPM', 'WFC'], ['BAC', 'C'], ['GS', 'MS'], ['V', 'MA'],
+  ['NFLX', 'DIS'], ['NFLX', 'PARA'], ['DIS', 'WBD'], ['ROKU', 'NFLX'],
   ['WMT', 'TGT'], ['HD', 'LOW'], ['COST', 'WMT'], ['AMZN', 'WMT'],
-  ['AMZN', 'TGT'], ['WMT', 'LOW'], ['TGT', 'LOW'], ['COST', 'TGT'],
-  ['COST', 'HD'], ['COST', 'LOW'], ['HD', 'TGT'], ['AMZN', 'COST'],
-  ['AMZN', 'HD'], ['AMZN', 'LOW'], ['WMT', 'HD'], ['TGT', 'HD'],
-  ['WMT', 'COST'], ['TGT', 'COST'], ['HD', 'WMT'], ['LOW', 'WMT'],
-
-  // Cloud/SaaS (20 pairs)
   ['CRM', 'MSFT'], ['SNOW', 'PLTR'], ['DDOG', 'CRWD'], ['NET', 'CRWD'],
-  ['CRM', 'SNOW'], ['CRM', 'PLTR'], ['MSFT', 'SNOW'], ['MSFT', 'PLTR'],
-  ['SNOW', 'CRWD'], ['PLTR', 'CRWD'], ['CRM', 'DDOG'], ['CRM', 'NET'],
-  ['SNOW', 'DDOG'], ['SNOW', 'NET'], ['PLTR', 'DDOG'], ['PLTR', 'NET'],
-  ['NOW', 'CRM'], ['NOW', 'SNOW'], ['NOW', 'PLTR'], ['DDOG', 'NET'],
-
-  // Consumer (15 pairs)
   ['KO', 'PEP'], ['NKE', 'LULU'], ['SBUX', 'CMG'], ['MCD', 'YUM'],
-  ['KO', 'MDLZ'], ['PEP', 'MDLZ'], ['SBUX', 'MCD'], ['CMG', 'YUM'],
-  ['MCD', 'CMG'], ['SBUX', 'YUM'], ['KO', 'SBUX'], ['PEP', 'SBUX'],
-  ['NKE', 'ADDYY'], ['LULU', 'UAA'], ['MCD', 'SBUX'],
-
-  // Healthcare/Pharma (20 pairs)
   ['PFE', 'MRK'], ['JNJ', 'ABBV'], ['LLY', 'NVO'], ['UNH', 'CVS'],
-  ['PFE', 'ABBV'], ['MRK', 'ABBV'], ['JNJ', 'MRK'], ['JNJ', 'PFE'],
-  ['LLY', 'ABBV'], ['LLY', 'JNJ'], ['UNH', 'CI'], ['CVS', 'CI'],
-  ['UNH', 'ABBV'], ['UNH', 'JNJ'], ['CVS', 'ABBV'], ['TMO', 'DHR'],
-  ['ISRG', 'ABBV'], ['VRTX', 'REGN'], ['GILD', 'ABBV'], ['AMGN', 'GILD'],
-
-  // Energy (15 pairs)
   ['XOM', 'CVX'], ['COP', 'XOM'], ['SLB', 'HAL'], ['NEE', 'DUK'],
-  ['XOM', 'HAL'], ['CVX', 'HAL'], ['COP', 'CVX'], ['COP', 'HAL'],
-  ['SLB', 'XOM'], ['SLB', 'CVX'], ['SLB', 'COP'], ['NEE', 'SO'],
-  ['DUK', 'SO'], ['XOM', 'COP'], ['CVX', 'COP'],
-
-  // AI Stocks (20 pairs)
-  ['NVDA', 'MSFT'], ['GOOGL', 'META'], ['PLTR', 'SNOW'], ['CRM', 'MSFT'],
-  ['NVDA', 'GOOGL'], ['NVDA', 'META'], ['MSFT', 'META'], ['MSFT', 'GOOGL'],
-  ['PLTR', 'MSFT'], ['PLTR', 'GOOGL'], ['SNOW', 'MSFT'], ['SNOW', 'GOOGL'],
-  ['CRM', 'GOOGL'], ['NVDA', 'PLTR'], ['NVDA', 'SNOW'], ['META', 'PLTR'],
-  ['META', 'SNOW'], ['GOOGL', 'PLTR'], ['GOOGL', 'SNOW'], ['CRM', 'PLTR'],
-
-  // ETFs
   ['SPY', 'VOO'], ['SPY', 'QQQ'], ['VOO', 'VTI'], ['QQQ', 'ARKK'],
-  ['SPY', 'VTI'], ['QQQ', 'SPY'], ['ARKK', 'SPY'], ['IWM', 'SPY'],
 ]
 
-// All 11 stock market sectors
+// Sectors
 const SECTORS = [
-  'technology',
-  'healthcare',
-  'financials',
-  'energy',
-  'consumer-discretionary',
-  'consumer-staples',
-  'industrials',
-  'materials',
-  'utilities',
-  'real-estate',
+  'technology', 'healthcare', 'financials', 'energy', 'consumer-discretionary',
+  'consumer-staples', 'industrials', 'materials', 'utilities', 'real-estate',
   'communication-services'
 ]
 
-// Industry pages for programmatic SEO
+// Industries
 const INDUSTRIES = [
-  'software',
-  'semiconductors',
-  'banks',
-  'retail',
-  'pharmaceuticals',
-  'biotechnology',
-  'insurance',
-  'aerospace',
-  'automotive',
-  'oil-gas',
-  'telecommunications',
-  'media',
-  'real-estate',
-  'construction',
-  'chemicals',
-  'consumer-electronics',
-  'restaurants',
-  'apparel',
-  'hotels',
-  'utilities',
-  'mining',
-  'fintech',
-  'cloud-computing',
-  'cybersecurity',
-  'artificial-intelligence',
+  'software', 'semiconductors', 'banks', 'retail', 'pharmaceuticals',
+  'biotechnology', 'insurance', 'aerospace', 'automotive', 'oil-gas',
+  'telecommunications', 'media', 'real-estate', 'construction', 'chemicals',
+  'consumer-electronics', 'restaurants', 'apparel', 'hotels', 'utilities',
+  'mining', 'fintech', 'cloud-computing', 'cybersecurity', 'artificial-intelligence',
   'e-commerce',
 ]
 
-// High-traffic seasonal/trending content pages
-const INSIGHTS_PAGES = [
-  '2026-stock-predictions',
-  'best-stocks-2026',
-  'ai-stocks-2026',
-  'dividend-stocks-2026',
+// All pSEO metric pages (400+ routes)
+const METRIC_PAGES = [
+  '3p-seller-services', '5g-upgrade-revenue', 'active-accounts', 'active-buyers',
+  'active-players', 'active-sellers', 'ad-impressions', 'ad-load', 'ad-spend',
+  'ad-tier-subs', 'adhesives', 'admissions', 'adr', 'advertising-revenue',
+  'aftermarket-revenue', 'agricultural-chemicals', 'aircraft-deliveries', 'aisc',
+  'api-calls', 'approval-rate', 'aroon', 'arpu', 'arpu-streaming', 'arr-growth',
+  'asia-revenue', 'asp-trend', 'assets-under-management', 'automation-revenue',
+  'autoship', 'availability-zones', 'average-check', 'average-length-of-stay',
+  'average-loan-size', 'average-project-value', 'average-ticket', 'backlog-growth',
+  'battery-capacity', 'battery-cost', 'battery-storage', 'bear-case', 'bed-count',
+  'benefits-revenue', 'beta', 'beverage-cans', 'billings', 'bnpl-volume',
+  'bollinger-bands', 'book-to-bill-ratio', 'book-value', 'borrow-rate',
+  'brand-awareness', 'brand-portfolio', 'brand-sales', 'breakout', 'bull-case',
+  'buy-or-sell', 'buybacks', 'capacity-utilization', 'capex', 'carbon-credits',
+  'case-volume', 'cash-position', 'category-mix', 'cci', 'charging-network',
+  'china-revenue', 'churn', 'classified-revenue', 'clean-energy-tax', 'cloud-margin',
+  'cloud-revenue', 'coatings', 'collection-rate', 'colocation-revenue', 'commerce-cloud',
+  'commodity-costs', 'company-owned', 'comparable-sales', 'connected-fitness',
+  'connection-revenue', 'consensus', 'console-sales', 'content-library', 'contract-wins',
+  'contraction-rate', 'conversion-rate', 'copper-production', 'corrugated',
+  'creator-payouts', 'credit-losses', 'crm-revenue', 'crop-prices', 'cross-border',
+  'ctv-revenue', 'currency-exposure', 'customer-acquisition-cost', 'customers',
+  'data-center-capacity', 'data-cloud', 'dau', 'days-to-cover', 'dealership-count',
+  'debt-to-equity', 'debt-underwriting', 'defense-backlog', 'demand-side', 'design-wins',
+  'developer-ecosystem', 'development-pipeline', 'digital-revenue', 'digital-sales',
+  'dilution', 'direct-to-consumer', 'distribution-points', 'dollar-based-retention',
+  'donchian-channels', 'dpo', 'drive-thru-mix', 'earnings-surprise', 'ebit-margin',
+  'elder-ray', 'emerging-markets', 'employee-experience', 'employees-on-platform',
+  'engagement-time', 'enterprise-customers', 'enterprise-deals', 'enterprise-value',
+  'equipment-sales', 'equities-trading', 'equity-underwriting', 'etf-flows',
+  'europe-revenue', 'ev-credits', 'ev-deliveries', 'ev-ebitda', 'ev-market-share',
+  'ev-range', 'expansion-revenue', 'expense-ratio', 'exploration-spend', 'f35-deliveries',
+  'fab-utilization', 'farm-income', 'feedstock-costs', 'fertilizer-volume', 'fiber-miles',
+  'fibonacci', 'ficc-revenue', 'finance-insurance', 'financing-cash-flow', 'fitness-equipment',
+  'flexible-packaging', 'float', 'foundry-revenue', 'fragrance-revenue', 'franchise-fees',
+  'franchise-revenue', 'franchised', 'free-cash-flow', 'free-cash-flow-margin', 'free-to-paid',
+  'fulfillment-revenue', 'full-price-sales', 'fund-performance', 'funded-backlog',
+  'funding-costs', 'game-pipeline', 'game-sales', 'geographic-diversification',
+  'geographic-mix', 'gigafactory', 'glass-containers', 'gmv', 'gold-production',
+  'gpu-new', 'gpu-used', 'grade-trend', 'grain-storage', 'green-hydrogen',
+  'grooming-revenue', 'gross-margin', 'gross-margin-retail', 'gross-retention',
+  'ground-lease-risk', 'guidance', 'gym-locations', 'gym-memberships', 'haircare-revenue',
+  'handle', 'hcm-revenue', 'hold-rate', 'home-improvement', 'homeowner-leads',
+  'hyperscale-customers', 'iaas-revenue', 'ib-revenue', 'ichimoku', 'igaming-revenue',
+  'in-game-purchases', 'industry-clouds', 'industry-rank', 'influencer-marketing',
+  'innovation-pipeline', 'installed-base', 'institutional-aum', 'integration-partners',
+  'interconnection-revenue', 'international-defense', 'international-revenue',
+  'international-streaming', 'inventory-per-store', 'inventory-turns', 'investing-cash-flow',
+  'investment-thesis', 'iron-ore', 'is-overvalued', 'is-undervalued', 'keltner-channels',
+  'know-sure-thing', 'labor-hours', 'lead-times', 'learning-revenue', 'lease-escalators',
+  'leased-capacity', 'live-services', 'livestock-exposure', 'loyalty-members', 'ma-advisory',
+  'macd', 'makeup-revenue', 'managed-rooms', 'market-access', 'market-share-trend',
+  'marketing-cloud', 'marketing-spend', 'marketplace-revenue', 'mass-index', 'mau',
+  'measurement', 'medicare-revenue', 'megawatts', 'membership-attrition', 'membership-dues',
+  'memory-pricing', 'merchant-count', 'mining-reserves', 'module-adoption', 'momentum',
+  'momentum-indicator', 'monetization', 'monthly-vs-annual', 'moving-average',
+  'net-interest-spread', 'net-margin', 'new-vehicle-sales', 'occupancy', 'operating-cash-flow',
+  'operating-margin', 'orders', 'organic-growth', 'organic-products', 'original-content',
+  'originations', 'paas-revenue', 'packaging-price-cost', 'packaging-volume', 'paid-seats',
+  'parabolic-sar', 'parlay-mix', 'parts-service', 'passive-vs-active', 'patient-volume',
+  'payment-volume-growth', 'payor-mix', 'payroll-revenue', 'peer-comparison', 'peg-ratio',
+  'personal-training', 'pet-adoption', 'pet-food-revenue', 'pet-insurance', 'pet-pharmacy',
+  'pet-supplies', 'petrochemical', 'pipeline-rooms', 'pivot-points', 'plastic-containers',
+  'plastics', 'platform-customers', 'platform-revenue', 'platform-usage', 'portfolio-size',
+  'power-cost', 'precision-ag', 'prestige-vs-mass', 'price-mix', 'price-per-case',
+  'price-to-book', 'price-to-fcf', 'price-to-sales', 'private-label', 'process-node',
+  'profit-margin', 'programmatic-revenue', 'promotional-activity', 'promotional-intensity',
+  'pue', 'realized-prices', 'relative-strength', 'renewable-percentage', 'renewable-ppa',
+  'repeat-rate', 'research-development', 'restaurant-count', 'retail-aum', 'retail-media',
+  'revenue-per-admission', 'revenue-per-tower', 'revisions', 'revpar', 'roa', 'roc', 'roce',
+  'roic', 'room-count', 'rpo', 'rsi', 'saas-revenue', 'sales-cloud', 'same-restaurant-sales',
+  'same-store-sales-auto', 'seasonality', 'seed-sales', 'sentiment', 'service-cloud',
+  'service-professionals', 'service-revenue', 'services-revenue', 'shares-outstanding',
+  'shares-short', 'short-squeeze', 'shrinkage', 'skincare-revenue', 'small-cells',
+  'solar-capacity', 'space-revenue', 'specialty-chemicals', 'states-live', 'stochastic',
+  'stock-outlook', 'streaming-revenue', 'streaming-subs', 'subscriber-ltv', 'subscribers',
+  'subscription-gaming', 'subscription-growth', 'subscription-revenue', 'supertrend',
+  'supply-side', 'support-resistance', 'surgery-volume', 'sustainability-beauty',
+  'sustainable-packaging', 'take-rate', 'talent-revenue', 'tenancy-ratio', 'tower-count',
+  'tpv', 'trading-revenue', 'traffic', 'transaction-count', 'travel-retail', 'trend',
+  'trial-conversion', 'trix', 'ultimate-oscillator', 'underwriting', 'upgrade-downgrade',
+  'us-revenue', 'used-vehicle-sales', 'user-growth', 'veterinary-services', 'volatility',
+  'volume-growth', 'volume-shipped', 'vwap', 'wafer-starts', 'wholesale-revenue',
+  'williams-r', 'wind-capacity', 'workforce-analytics', 'working-capital', 'workout-content',
+  'workspace-revenue', 'worth-buying',
 ]
 
-// Educational content pages for SEO and topical authority
-const LEARNING_PAGES = [
-  'stock-analysis',
-  'dcf-valuation',
-  'pe-ratio',
-  'dividend-investing',
-  'ai-stock-analysis',
-  'how-to-invest',
-  'technical-analysis',
-  'day-trading',
-  'value-investing',
-  'growth-investing',
-]
-
-// Filter categories for programmatic pages
-const FILTER_CATEGORIES = [
-  'dividend', 'growth', 'value', 'tech', 'healthcare', 'energy', 'ai'
-]
-
-// Market movers pages
-const MARKET_PAGES = [
-  'most-active',
-  'top-gainers',
-  'top-losers',
-  '52-week-high',
-  '52-week-low',
-  'premarket',
-  'after-hours',
+// Core stock page types (applied to each ticker)
+const STOCK_PAGE_TYPES = [
+  'stock', 'price', 'quote', 'should-i-buy', 'buy', 'prediction', 'forecast',
+  'earnings', 'dividend', 'growth', 'eps', 'valuation', 'analyst', 'revenue',
+  'target-price', 'rating', 'competitors', 'insider', 'news', 'institutional',
+  'ownership', 'financials', 'income-statement', 'options', 'chart', 'history',
+  'sec', 'balance-sheet', 'profile', 'margins', 'debt', 'debt-analysis',
+  'pe-ratio', 'cash-flow', 'short-interest', 'volume', '52-week-high',
+  'market-cap', 'roe',
 ]
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://lician.com'
   const currentDate = new Date().toISOString()
-
   const routes: MetadataRoute.Sitemap = []
 
-  // ============================================================================
-  // HOMEPAGE - Maximum Priority
-  // ============================================================================
+  // Homepage
   routes.push({
     url: baseUrl,
     lastModified: currentDate,
@@ -245,188 +205,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 1.0,
   })
 
-  // ============================================================================
-  // MAIN PLATFORM PAGES - Very High Priority
-  // ============================================================================
-  routes.push({
-    url: `${baseUrl}/dashboard`,
-    lastModified: currentDate,
-    changeFrequency: 'hourly',
-    priority: 0.9,
-  })
+  // Main platform pages
+  const mainPages = ['dashboard', 'screener', 'news', 'markets', 'earnings', 'dividends',
+    'ipo', 'stock-splits', 'economic-calendar', 'analyst-ratings', 'insider-trading',
+    'institutional', 'short-interest', 'options', 'bonds', 'forex', 'commodities',
+    'crypto', 'etfs', 'penny-stocks', 'blue-chip-stocks', 'biotech', 'sectors',
+    'insights', 'learn', 'premium', 'login']
 
-  routes.push({
-    url: `${baseUrl}/screener`,
-    lastModified: currentDate,
-    changeFrequency: 'hourly',
-    priority: 0.95,
-  })
-
-  routes.push({
-    url: `${baseUrl}/news`,
-    lastModified: currentDate,
-    changeFrequency: 'hourly',
-    priority: 0.95,
-  })
-
-  // ============================================================================
-  // MARKET DATA PAGES - High Priority, Frequent Updates
-  // ============================================================================
-  routes.push({
-    url: `${baseUrl}/markets`,
-    lastModified: currentDate,
-    changeFrequency: 'daily',
-    priority: 0.9,
-  })
-
-  MARKET_PAGES.forEach((page) => {
+  mainPages.forEach((page) => {
     routes.push({
-      url: `${baseUrl}/markets/${page}`,
+      url: `${baseUrl}/${page}`,
       lastModified: currentDate,
-      changeFrequency: 'hourly',
+      changeFrequency: 'daily',
       priority: 0.9,
     })
   })
 
-  // ============================================================================
-  // CALENDAR & EVENT PAGES - High Priority
-  // ============================================================================
-  routes.push({
-    url: `${baseUrl}/earnings`,
-    lastModified: currentDate,
-    changeFrequency: 'daily',
-    priority: 0.9,
-  })
-
-  routes.push({
-    url: `${baseUrl}/earnings/surprises`,
-    lastModified: currentDate,
-    changeFrequency: 'daily',
-    priority: 0.9,
-  })
-
-  // REMOVED: /earnings/transcripts - page does not exist
-
-  routes.push({
-    url: `${baseUrl}/dividends`,
-    lastModified: currentDate,
-    changeFrequency: 'daily',
-    priority: 0.9,
-  })
-
-  routes.push({
-    url: `${baseUrl}/ipo`,
-    lastModified: currentDate,
-    changeFrequency: 'daily',
-    priority: 0.9,
-  })
-
-  routes.push({
-    url: `${baseUrl}/stock-splits`,
-    lastModified: currentDate,
-    changeFrequency: 'weekly',
-    priority: 0.9,
-  })
-
-  routes.push({
-    url: `${baseUrl}/economic-calendar`,
-    lastModified: currentDate,
-    changeFrequency: 'daily',
-    priority: 0.9,
-  })
-
-  // ============================================================================
-  // TRADING & ANALYSIS PAGES - High Priority
-  // ============================================================================
-  routes.push({
-    url: `${baseUrl}/analyst-ratings`,
-    lastModified: currentDate,
-    changeFrequency: 'daily',
-    priority: 0.9,
-  })
-
-  routes.push({
-    url: `${baseUrl}/insider-trading`,
-    lastModified: currentDate,
-    changeFrequency: 'daily',
-    priority: 0.9,
-  })
-
-  routes.push({
-    url: `${baseUrl}/institutional`,
-    lastModified: currentDate,
-    changeFrequency: 'daily',
-    priority: 0.9,
-  })
-
-  routes.push({
-    url: `${baseUrl}/short-interest`,
-    lastModified: currentDate,
-    changeFrequency: 'daily',
-    priority: 0.9,
-  })
-
-  routes.push({
-    url: `${baseUrl}/options`,
-    lastModified: currentDate,
-    changeFrequency: 'weekly',
-    priority: 0.9,
-  })
-
-  // ============================================================================
-  // ASSET CLASS PAGES - High Priority
-  // ============================================================================
-  const assetClasses = [
-    'bonds',
-    'forex',
-    'commodities',
-    'crypto',
-    'etfs',
-  ]
-
-  assetClasses.forEach((asset) => {
-    routes.push({
-      url: `${baseUrl}/${asset}`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly',
-      priority: 0.95,
-    })
-  })
-
-  // ============================================================================
-  // SPECIALTY STOCK PAGES - High Priority
-  // ============================================================================
-  routes.push({
-    url: `${baseUrl}/penny-stocks`,
-    lastModified: currentDate,
-    changeFrequency: 'weekly',
-    priority: 0.9,
-  })
-
-  routes.push({
-    url: `${baseUrl}/blue-chip-stocks`,
-    lastModified: currentDate,
-    changeFrequency: 'weekly',
-    priority: 0.9,
-  })
-
-  routes.push({
-    url: `${baseUrl}/biotech`,
-    lastModified: currentDate,
-    changeFrequency: 'daily',
-    priority: 0.9,
-  })
-
-  // ============================================================================
-  // SECTOR PAGES - High Priority
-  // ============================================================================
-  routes.push({
-    url: `${baseUrl}/sectors`,
-    lastModified: currentDate,
-    changeFrequency: 'daily',
-    priority: 0.9,
-  })
-
+  // Sector pages
   SECTORS.forEach((sector) => {
     routes.push({
       url: `${baseUrl}/sectors/${sector}`,
@@ -436,9 +231,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   })
 
-  // ============================================================================
-  // INDUSTRY PAGES - NEW! High Priority for SEO
-  // ============================================================================
+  // Industry pages
   INDUSTRIES.forEach((industry) => {
     routes.push({
       url: `${baseUrl}/stocks/${industry}`,
@@ -448,881 +241,54 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   })
 
-  // ============================================================================
-  // INSIGHTS & TRENDING CONTENT - High Priority
-  // ============================================================================
-  routes.push({
-    url: `${baseUrl}/insights`,
-    lastModified: currentDate,
-    changeFrequency: 'daily',
-    priority: 0.9,
-  })
-
-  INSIGHTS_PAGES.forEach((page) => {
-    routes.push({
-      url: `${baseUrl}/insights/${page}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    })
-  })
-
-  // ============================================================================
-  // LEARNING/EDUCATIONAL CONTENT - Good Priority
-  // ============================================================================
-  routes.push({
-    url: `${baseUrl}/learn`,
-    lastModified: currentDate,
-    changeFrequency: 'weekly',
-    priority: 0.9,
-  })
-
-  LEARNING_PAGES.forEach((page) => {
-    routes.push({
-      url: `${baseUrl}/learn/${page}`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    })
-  })
-
-  // ============================================================================
-  // CATEGORY/FILTER PAGES - Good Priority
-  // ============================================================================
-  FILTER_CATEGORIES.forEach((category) => {
-    routes.push({
-      url: `${baseUrl}/best-stocks/${category}`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 0.8,
-    })
-  })
-
-  // ============================================================================
-  // STOCK PAGES - Very High Priority for Top Stocks
-  // ============================================================================
+  // Stock pages - core pages for each ticker
   ALL_STOCKS.forEach((ticker, index) => {
-    // Highest priority for top 50 stocks, decreasing for others
-    const basePriority = index < 20 ? 0.9 : index < 50 ? 0.85 : index < 100 ? 0.8 : index < 200 ? 0.75 : 0.7
+    const basePriority = index < 20 ? 0.9 : index < 50 ? 0.85 : index < 100 ? 0.8 : 0.75
+    const t = ticker.toLowerCase()
 
     // Main stock page
     routes.push({
-      url: `${baseUrl}/stock/${ticker.toLowerCase()}`,
+      url: `${baseUrl}/stock/${t}`,
       lastModified: currentDate,
       changeFrequency: 'hourly',
       priority: basePriority,
     })
 
-    // Alternative ticker-stock URL format (NEW! for SEO)
+    // Alternative ticker-stock URL format
     routes.push({
-      url: `${baseUrl}/${ticker.toLowerCase()}-stock`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly',
-      priority: basePriority - 0.05, // Slightly lower than main page
-})
-
-    // Price page
-    routes.push({
-      url: `${baseUrl}/price/${ticker.toLowerCase()}`,
+      url: `${baseUrl}/${t}-stock`,
       lastModified: currentDate,
       changeFrequency: 'hourly',
       priority: basePriority - 0.05,
     })
 
-    // Quote page
-    routes.push({
-      url: `${baseUrl}/quote/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly',
-      priority: basePriority - 0.1,
+    // Core stock page types
+    STOCK_PAGE_TYPES.forEach((pageType) => {
+      if (pageType !== 'stock') {
+        routes.push({
+          url: `${baseUrl}/${pageType}/${t}`,
+          lastModified: currentDate,
+          changeFrequency: pageType === 'news' ? 'hourly' : 'daily',
+          priority: basePriority - 0.1,
+        })
+      }
     })
-    })
-
-    // Should I buy page (slightly lower priority)
-    routes.push({
-      url: `${baseUrl}/should-i-buy/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: basePriority - 0.1,
-    })
-
-    // Buy ticker page (for purchase intent SEO)
-    routes.push({
-      url: `${baseUrl}/buy/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: basePriority - 0.1,
-    })
-
-    // Stock prediction page (slightly lower priority)
-    routes.push({
-      url: `${baseUrl}/prediction/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Stock forecast page (high-value SEO target)
-    routes.push({
-      url: `${baseUrl}/forecast/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.05, // Higher priority than prediction
-    })
-
-    // Stock earnings page (very high intent queries)
-    routes.push({
-      url: `${baseUrl}/earnings/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: basePriority - 0.05,
-    })
-
-    // Dividend page (dividend investors)
-    routes.push({
-      url: `${baseUrl}/dividend/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Growth page (NEW! for "AAPL growth" queries)
-    routes.push({
-      url: `${baseUrl}/growth/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // EPS page
-    routes.push({
-      url: `${baseUrl}/eps/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Valuation page (NEW! for "AAPL valuation" queries)
-    routes.push({
-      url: `${baseUrl}/valuation/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: basePriority - 0.05, // High priority for valuation queries
-    })
-
-    // Analyst ratings page
-    routes.push({
-      url: `${baseUrl}/analyst/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: basePriority - 0.1,
-    })
-
-    // Revenue page
-    routes.push({
-      url: `${baseUrl}/revenue/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-    
-    // Target price page
-    routes.push({
-      url: `${baseUrl}/target-price/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: basePriority - 0.1,
-    })
-
-    // Stock rating page (NEW! for "AAPL stock rating" queries)
-    routes.push({
-      url: `${baseUrl}/rating/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: basePriority - 0.1,
-    })
-
-    // Competitors page
-    routes.push({
-      url: `${baseUrl}/competitors/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Insider trading page
-    routes.push({
-      url: `${baseUrl}/insider/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: basePriority - 0.1,
-    })
-
-    // News page (high daily volume)
-    routes.push({
-      url: `${baseUrl}/news/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly',
-      priority: basePriority - 0.05,
-    })
-
-    // Institutional ownership page
-    routes.push({
-      url: `${baseUrl}/institutional/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Ownership page (combined institutional + insider)
-    routes.push({
-      url: `${baseUrl}/ownership/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-
-    // Financials summary page
-    routes.push({
-      url: `${baseUrl}/financials/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Income statement page
-    routes.push({
-      url: `${baseUrl}/income-statement/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Options page
-    routes.push({
-      url: `${baseUrl}/options/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: basePriority - 0.1,
-    })
-
-    // Chart page
-    routes.push({
-      url: `${baseUrl}/chart/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly',
-      priority: basePriority - 0.1,
-    })
-
-    // History page
-    routes.push({
-      url: `${baseUrl}/history/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: basePriority - 0.1,
-    })
-
-    // SEC filings page
-    routes.push({
-      url: `${baseUrl}/sec/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: basePriority - 0.1,
-    })
-
-    // Financial health analysis page (SEO-optimized)
-    routes.push({
-      url: `${baseUrl}/analysis/${ticker.toLowerCase()}/health`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Valuation analysis page
-    routes.push({
-      url: `${baseUrl}/analysis/${ticker.toLowerCase()}/valuation`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Growth analysis page
-    routes.push({
-      url: `${baseUrl}/analysis/${ticker.toLowerCase()}/growth`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Dividend analysis page
-    routes.push({
-      url: `${baseUrl}/analysis/${ticker.toLowerCase()}/dividend`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    routes.push({
-      url: `${baseUrl}/balance-sheet/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // ROE (Return on Equity) page - profitability analysis
-    routes.push({
-      url: `${baseUrl}/roe/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // ROA (Return on Assets) page - profitability analysis
-    routes.push({
-      url: `${baseUrl}/roa/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // ROIC (Return on Invested Capital) page - profitability analysis
-    routes.push({
-      url: `${baseUrl}/roic/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // ROCE (Return on Capital Employed) page - profitability analysis
-    routes.push({
-      url: `${baseUrl}/roce/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Profit margin page (NEW! for pSEO)
-    routes.push({
-      url: `${baseUrl}/profit-margin/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Gross margin page (NEW! for pSEO)
-    routes.push({
-      url: `${baseUrl}/gross-margin/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Operating margin page (NEW! for pSEO)
-    routes.push({
-      url: `${baseUrl}/operating-margin/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Net margin page (NEW! for pSEO)
-    routes.push({
-      url: `${baseUrl}/net-margin/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // EBIT margin page (NEW! for pSEO)
-    routes.push({
-      url: `${baseUrl}/ebit-margin/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Debt analysis page (alternative SEO URL)
-    routes.push({
-      url: `${baseUrl}/debt-analysis/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-
-    // Balance sheet page
-    routes.push({
-      url: `${baseUrl}/balance-sheet/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Profile page
-    routes.push({
-      url: `${baseUrl}/profile/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-    // Profit margins page (NEW! for pSEO)
-    routes.push({
-      url: `${baseUrl}/margins/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-
-    // Debt analysis page
-    routes.push({
-      url: `${baseUrl}/debt/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // PE ratio page
-    routes.push({
-      url: `${baseUrl}/pe-ratio/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: basePriority - 0.1,
-    })
-
-    // Cash flow page (NEW! for pSEO)
-    routes.push({
-      url: `${baseUrl}/cash-flow/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Debt analysis page (alternative SEO URL)
-    routes.push({
-
-    // Profile page
-    routes.push({
-      url: `${baseUrl}/profile/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-    // Cash flow page (NEW! for pSEO)
-    routes.push({
-      url: `${baseUrl}/cash-flow/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Profit margins page
-    routes.push({
-      url: `${baseUrl}/margins/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Short interest page
-    routes.push({
-      url: `${baseUrl}/short-interest/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: basePriority - 0.1,
-    })
-
-
-    // Volume page
-    routes.push({
-      url: `${baseUrl}/volume/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly',
-      priority: basePriority - 0.1,
-    })
-
-    // 52-week high page (pSEO for "AAPL 52 week high" queries)
-    routes.push({
-      url: `${baseUrl}/52-week-high/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: basePriority - 0.1,
-    })
-    // Market cap page
-    routes.push({
-      url: `${baseUrl}/market-cap/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: basePriority - 0.1,
-    })
-
-    // ROE (Return on Equity) page - profitability analysis
-    routes.push({
-      url: `${baseUrl}/roe/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-
-    // ROE (Return on Equity) page - profitability analysis
-    routes.push({
-      url: `${baseUrl}/roe/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Market cap page
-    routes.push({
-      url: `${baseUrl}/market-cap/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: basePriority - 0.1,
-    })
-    // ROE (Return on Equity) page - profitability analysis
-    routes.push({
-      url: `${baseUrl}/roe/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    // ============================================================================
-    // HCM/HR ANALYTICS PAGES (pSEO) - NEW!
-    // ============================================================================
-
-    // Employees on platform page
-    routes.push({
-      url: `${baseUrl}/employees-on-platform/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-
-    // ============================================================================
-    // SPORTS BETTING METRICS (pSEO) - NEW!
-    // ============================================================================
-
-    // Handle - sports betting volume
-    routes.push({
-      url: `${baseUrl}/handle/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Hold rate - sportsbook profitability
-    routes.push({
-      url: `${baseUrl}/hold-rate/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Parlay mix - product composition
-    routes.push({
-      url: `${baseUrl}/parlay-mix/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Customer acquisition cost - unit economics
-    routes.push({
-      url: `${baseUrl}/customer-acquisition-cost/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // States live - geographic footprint
-    routes.push({
-      url: `${baseUrl}/states-live/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Market access - license deals
-    routes.push({
-      url: `${baseUrl}/market-access/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Promotional intensity - marketing spend
-    routes.push({
-      url: `${baseUrl}/promotional-intensity/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // iGaming revenue - online casino revenue
-    routes.push({
-      url: `${baseUrl}/igaming-revenue/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // HCM revenue page
-    routes.push({
-      url: `${baseUrl}/hcm-revenue/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Payroll revenue page
-    routes.push({
-      url: `${baseUrl}/payroll-revenue/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Benefits revenue page
-    routes.push({
-      url: `${baseUrl}/benefits-revenue/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Talent revenue page
-    routes.push({
-      url: `${baseUrl}/talent-revenue/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Learning revenue page
-    routes.push({
-      url: `${baseUrl}/learning-revenue/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Workforce analytics page
-    routes.push({
-      url: `${baseUrl}/workforce-analytics/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Employee experience page
-    routes.push({
-      url: `${baseUrl}/employee-experience/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-
-    })
-
-    // Data Center Metrics Pages (NEW! for data center operators)
-    routes.push({
-      url: `${baseUrl}/megawatts/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    routes.push({
-      url: `${baseUrl}/colocation-revenue/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    routes.push({
-      url: `${baseUrl}/interconnection-revenue/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    routes.push({
-      url: `${baseUrl}/development-pipeline/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    routes.push({
-      url: `${baseUrl}/leased-capacity/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    routes.push({
-      url: `${baseUrl}/hyperscale-customers/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    routes.push({
-      url: `${baseUrl}/power-cost/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    routes.push({
-      url: `${baseUrl}/pue/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
   })
 
-  // ============================================================================
-
-    // Case volume page (CPG metric)
-    routes.push({
-      url: `${baseUrl}/case-volume/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
+  // pSEO Metric pages - 400+ metrics for each ticker
+  METRIC_PAGES.forEach((metric) => {
+    ALL_STOCKS.forEach((ticker, index) => {
+      const basePriority = index < 50 ? 0.7 : index < 100 ? 0.65 : 0.6
+      routes.push({
+        url: `${baseUrl}/${metric}/${ticker.toLowerCase()}`,
+        lastModified: currentDate,
+        changeFrequency: 'weekly',
+        priority: basePriority,
+      })
     })
+  })
 
-    // Price per case page (CPG metric)
-    routes.push({
-      url: `${baseUrl}/price-per-case/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Brand sales mix page (CPG metric)
-    routes.push({
-      url: `${baseUrl}/brand-sales/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Organic products page (CPG metric)
-    routes.push({
-      url: `${baseUrl}/organic-products/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Private label page (CPG metric)
-    routes.push({
-      url: `${baseUrl}/private-label/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Distribution points page (CPG metric)
-    routes.push({
-      url: `${baseUrl}/distribution-points/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Commodity costs page (CPG metric)
-    routes.push({
-      url: `${baseUrl}/commodity-costs/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Promotional activity page (CPG metric)
-    routes.push({
-      url: `${baseUrl}/promotional-activity/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-
-    // ============================================================================
-    // STREAMING METRICS PAGES (pSEO)
-    // ============================================================================
-
-    // Streaming subscribers page
-    routes.push({
-      url: `${baseUrl}/streaming-subs/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Streaming ARPU page
-    routes.push({
-      url: `${baseUrl}/arpu-streaming/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Subscriber churn page
-    routes.push({
-      url: `${baseUrl}/churn/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Content library page
-    routes.push({
-      url: `${baseUrl}/content-library/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Original content page
-    routes.push({
-      url: `${baseUrl}/original-content/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Streaming revenue page
-    routes.push({
-      url: `${baseUrl}/streaming-revenue/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // Ad-tier subscribers page
-    routes.push({
-      url: `${baseUrl}/ad-tier-subs/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    // International streaming page
-    routes.push({
-      url: `${baseUrl}/international-streaming/${ticker.toLowerCase()}`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: basePriority - 0.1,
-    })
-
-    })
-
-  // COMPARISON PAGES - Good Priority
-  // ============================================================================
+  // Comparison pages
   COMPARISON_PAIRS.forEach(([ticker1, ticker2]) => {
     routes.push({
       url: `${baseUrl}/compare/${ticker1.toLowerCase()}-vs-${ticker2.toLowerCase()}`,
@@ -1330,23 +296,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'daily',
       priority: 0.7,
     })
-  })
-
-  // ============================================================================
-  // AUTHENTICATION & ACCOUNT PAGES - Lower Priority
-  // ============================================================================
-  routes.push({
-    url: `${baseUrl}/login`,
-    lastModified: currentDate,
-    changeFrequency: 'monthly',
-    priority: 0.5,
-  })
-
-  routes.push({
-    url: `${baseUrl}/premium`,
-    lastModified: currentDate,
-    changeFrequency: 'weekly',
-    priority: 0.8,
   })
 
   return routes
