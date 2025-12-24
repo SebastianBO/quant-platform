@@ -778,6 +778,70 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: basePriority - 0.1,
     })
 
+    // ROA (Return on Assets) page - profitability analysis
+    routes.push({
+      url: `${baseUrl}/roa/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // ROIC (Return on Invested Capital) page - profitability analysis
+    routes.push({
+      url: `${baseUrl}/roic/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // ROCE (Return on Capital Employed) page - profitability analysis
+    routes.push({
+      url: `${baseUrl}/roce/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Profit margin page (NEW! for pSEO)
+    routes.push({
+      url: `${baseUrl}/profit-margin/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Gross margin page (NEW! for pSEO)
+    routes.push({
+      url: `${baseUrl}/gross-margin/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Operating margin page (NEW! for pSEO)
+    routes.push({
+      url: `${baseUrl}/operating-margin/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Net margin page (NEW! for pSEO)
+    routes.push({
+      url: `${baseUrl}/net-margin/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // EBIT margin page (NEW! for pSEO)
+    routes.push({
+      url: `${baseUrl}/ebit-margin/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
     // Debt analysis page (alternative SEO URL)
     routes.push({
       url: `${baseUrl}/debt-analysis/${ticker.toLowerCase()}`,
@@ -923,12 +987,340 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: currentDate,
       changeFrequency: 'weekly',
       priority: basePriority - 0.1,
+    // ============================================================================
+    // HCM/HR ANALYTICS PAGES (pSEO) - NEW!
+    // ============================================================================
+
+    // Employees on platform page
+    routes.push({
+      url: `${baseUrl}/employees-on-platform/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
     })
 
+
+    // ============================================================================
+    // SPORTS BETTING METRICS (pSEO) - NEW!
+    // ============================================================================
+
+    // Handle - sports betting volume
+    routes.push({
+      url: `${baseUrl}/handle/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Hold rate - sportsbook profitability
+    routes.push({
+      url: `${baseUrl}/hold-rate/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Parlay mix - product composition
+    routes.push({
+      url: `${baseUrl}/parlay-mix/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Customer acquisition cost - unit economics
+    routes.push({
+      url: `${baseUrl}/customer-acquisition-cost/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // States live - geographic footprint
+    routes.push({
+      url: `${baseUrl}/states-live/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Market access - license deals
+    routes.push({
+      url: `${baseUrl}/market-access/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Promotional intensity - marketing spend
+    routes.push({
+      url: `${baseUrl}/promotional-intensity/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // iGaming revenue - online casino revenue
+    routes.push({
+      url: `${baseUrl}/igaming-revenue/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // HCM revenue page
+    routes.push({
+      url: `${baseUrl}/hcm-revenue/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Payroll revenue page
+    routes.push({
+      url: `${baseUrl}/payroll-revenue/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Benefits revenue page
+    routes.push({
+      url: `${baseUrl}/benefits-revenue/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Talent revenue page
+    routes.push({
+      url: `${baseUrl}/talent-revenue/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Learning revenue page
+    routes.push({
+      url: `${baseUrl}/learning-revenue/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Workforce analytics page
+    routes.push({
+      url: `${baseUrl}/workforce-analytics/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Employee experience page
+    routes.push({
+      url: `${baseUrl}/employee-experience/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+
+    })
+
+    // Data Center Metrics Pages (NEW! for data center operators)
+    routes.push({
+      url: `${baseUrl}/megawatts/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    routes.push({
+      url: `${baseUrl}/colocation-revenue/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    routes.push({
+      url: `${baseUrl}/interconnection-revenue/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    routes.push({
+      url: `${baseUrl}/development-pipeline/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    routes.push({
+      url: `${baseUrl}/leased-capacity/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    routes.push({
+      url: `${baseUrl}/hyperscale-customers/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    routes.push({
+      url: `${baseUrl}/power-cost/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    routes.push({
+      url: `${baseUrl}/pue/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
 
   })
 
   // ============================================================================
+
+    // Case volume page (CPG metric)
+    routes.push({
+      url: `${baseUrl}/case-volume/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Price per case page (CPG metric)
+    routes.push({
+      url: `${baseUrl}/price-per-case/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Brand sales mix page (CPG metric)
+    routes.push({
+      url: `${baseUrl}/brand-sales/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Organic products page (CPG metric)
+    routes.push({
+      url: `${baseUrl}/organic-products/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Private label page (CPG metric)
+    routes.push({
+      url: `${baseUrl}/private-label/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Distribution points page (CPG metric)
+    routes.push({
+      url: `${baseUrl}/distribution-points/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Commodity costs page (CPG metric)
+    routes.push({
+      url: `${baseUrl}/commodity-costs/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Promotional activity page (CPG metric)
+    routes.push({
+      url: `${baseUrl}/promotional-activity/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+
+    // ============================================================================
+    // STREAMING METRICS PAGES (pSEO)
+    // ============================================================================
+
+    // Streaming subscribers page
+    routes.push({
+      url: `${baseUrl}/streaming-subs/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Streaming ARPU page
+    routes.push({
+      url: `${baseUrl}/arpu-streaming/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Subscriber churn page
+    routes.push({
+      url: `${baseUrl}/churn/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Content library page
+    routes.push({
+      url: `${baseUrl}/content-library/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Original content page
+    routes.push({
+      url: `${baseUrl}/original-content/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Streaming revenue page
+    routes.push({
+      url: `${baseUrl}/streaming-revenue/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // Ad-tier subscribers page
+    routes.push({
+      url: `${baseUrl}/ad-tier-subs/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    // International streaming page
+    routes.push({
+      url: `${baseUrl}/international-streaming/${ticker.toLowerCase()}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: basePriority - 0.1,
+    })
+
+    })
+
   // COMPARISON PAGES - Good Priority
   // ============================================================================
   COMPARISON_PAIRS.forEach(([ticker1, ticker2]) => {
