@@ -1,178 +1,148 @@
-import { Metadata } from 'next'
-import { notFound } from 'next/navigation'
-import { SITE_URL, getBreadcrumbSchema, getArticleSchema } from '@/lib/seo'
-import MemoryPricingContent from './MemoryPricingContent'
+import { Metadata } from "next"
+import { notFound } from "next/navigation"
+import {
+  getBreadcrumbSchema,
+  getArticleSchema,
+  getFAQSchema,
+  getCorporationSchema,
+  SITE_URL,
+} from "@/lib/seo"
+import MemoryPricingContent from "./MemoryPricingContent"
 
 interface Props {
   params: Promise<{ ticker: string }>
 }
 
-// Allow dynamic rendering
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic"
 
-// Fetch stock data
-async function getStockData(ticker: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-
-  try {
-    const [fundamentalsRes, metricsRes] = await Promise.all([
-      fetch(`${baseUrl}/api/fundamentals?ticker=${ticker}`, {
-        next: { revalidate: 3600 }
-      }),
-      fetch(`${baseUrl}/api/v1/financial-metrics?ticker=${ticker}&period=annual&limit=5`, {
-        next: { revalidate: 3600 }
-      }),
-    ])
-
-    const fundamentals = fundamentalsRes.ok ? await fundamentalsRes.json() : null
-    const metrics = metricsRes.ok ? await metricsRes.json() : { financial_metrics: [] }
-
-    return {
-      fundamentals,
-      metrics: metrics.financial_metrics || [],
-    }
-  } catch (error) {
-    console.error('Error fetching stock data:', error)
-    return null
-  }
-}
-
-// Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { ticker } = await params
   const symbol = ticker.toUpperCase()
-  const currentYear = new Date().getFullYear()
-
-  const data = await getStockData(symbol)
-  const companyName = data?.fundamentals?.company?.name || symbol
-
-  const title = `${symbol} Memory Pricing - DRAM & NAND Pricing Trends ${currentYear}`
-  const description = `Track ${symbol} memory chip pricing and DRAM/NAND trends for ${companyName}. Analyze ${currentYear} memory market pricing and semiconductor margins.`
 
   return {
-    title,
-    description,
+    title: `${symbol} Memory Pricing - DRAM & NAND Price Trends`,
+    description: `${symbol} memory pricing analysis. Track DRAM and NAND pricing trends, memory market cycles, and semiconductor memory pricing dynamics.`,
     keywords: [
       `${symbol} memory pricing`,
       `${symbol} DRAM pricing`,
       `${symbol} NAND pricing`,
-      `${companyName} memory pricing`,
       `${symbol} memory market`,
-      `${symbol} chip pricing`,
-      `${symbol} memory trends`,
-      `${symbol} semiconductor pricing`,
-      `${symbol} memory ASP`,
-      `${symbol} storage pricing`,
+      `${symbol} semiconductor memory`,
+      `${symbol} memory chips`,
+      `${symbol} memory cycle`,
     ],
     openGraph: {
-      title: `${symbol} Memory Pricing - DRAM & NAND Pricing Trends`,
-      description,
-      type: 'article',
-      url: `${SITE_URL}/memory-pricing/${ticker.toLowerCase()}`,
-      images: [
-        {
-          url: `${SITE_URL}/api/og/memory-pricing/${ticker.toLowerCase()}`,
-          width: 1200,
-          height: 630,
-          alt: `${symbol} Memory Pricing`,
-        },
-      ],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${symbol} Memory Pricing`,
-      description,
+      title: `${symbol} Memory Pricing - DRAM & NAND Analysis`,
+      description: `Complete memory pricing analysis for ${symbol} including DRAM and NAND market trends.`,
+      type: "article",
     },
     alternates: {
-      canonical: `${SITE_URL}/memory-pricing/${ticker.toLowerCase()}`,
+      canonical: `https://lician.com/memory-pricing/${ticker.toLowerCase()}`,
     },
+  }
+}
+
+async function getStockData(ticker: string) {
+  try {
+    const [stockRes, metricsRes] = await Promise.all([
+      fetch(
+        `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/stock?ticker=${ticker}`,
+        { next: { revalidate: 3600 } }
+      ),
+      fetch(
+        `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/v1/financial-metrics?ticker=${ticker}&limit=8`,
+        { next: { revalidate: 3600 } }
+      ),
+    ])
+
+    if (!stockRes.ok) return null
+
+    const stockData = await stockRes.json()
+    const metricsData = metricsRes.ok ? await metricsRes.json() : []
+
+    return { ...stockData, historicalMetrics: metricsData }
+  } catch {
+    return null
   }
 }
 
 export default async function MemoryPricingPage({ params }: Props) {
   const { ticker } = await params
   const symbol = ticker.toUpperCase()
-  const currentYear = new Date().getFullYear()
 
-  const data = await getStockData(symbol)
+  const stockData = await getStockData(symbol)
 
-  if (!data || !data.fundamentals) {
+  if (!stockData?.snapshot) {
     notFound()
   }
 
-  const companyName = data.fundamentals?.company?.name || symbol
-  const sector = data.fundamentals?.company?.sector || 'Technology'
+  const { companyFacts, historicalMetrics } = stockData
+  const companyName = companyFacts?.name || symbol
   const pageUrl = `${SITE_URL}/memory-pricing/${ticker.toLowerCase()}`
+  const sector = companyFacts?.sector || "Technology"
+  const industry = companyFacts?.industry
 
-  // Breadcrumb Schema
+  const faqs = [
+    {
+      question: `How does memory pricing affect ${symbol}?`,
+      answer: `Memory pricing for ${companyName} follows cyclical patterns based on supply-demand dynamics in DRAM and NAND markets. Pricing directly impacts revenue and profitability for memory semiconductor companies.`
+    },
+    {
+      question: `Why is memory pricing so volatile for ${symbol}?`,
+      answer: `Memory pricing is cyclical due to the commodity-like nature of DRAM and NAND. Industry capacity additions, inventory levels, and end-market demand create boom-bust cycles that significantly impact ${symbol}\`s financial performance.`
+    },
+    {
+      question: `What drives memory price cycles for ${symbol}?`,
+      answer: `Key drivers include supply discipline (capacity additions and production cuts), end-market demand (PC, smartphone, data center), channel inventory levels, and technology transitions affecting cost structures.`
+    },
+    {
+      question: `How should investors track ${symbol} memory pricing?`,
+      answer: `Investors should monitor spot and contract prices for DRAM and NAND, industry supply discipline announcements, inventory levels at customers, and end-market demand trends to anticipate ${symbol}\`s financial performance.`
+    },
+  ]
+
   const breadcrumbSchema = getBreadcrumbSchema([
-    { name: 'Home', url: SITE_URL },
-    { name: `${symbol} Stock`, url: `${SITE_URL}/stock/${ticker.toLowerCase()}` },
-    { name: 'Memory Pricing', url: pageUrl },
+    { name: "Home", url: SITE_URL },
+    { name: "Stocks", url: `${SITE_URL}/dashboard` },
+    { name: `${symbol} Memory Pricing`, url: pageUrl },
   ])
 
-  // Article Schema
   const articleSchema = getArticleSchema({
-    headline: `${symbol} Memory Pricing - DRAM & NAND Pricing Trends ${currentYear}`,
-    description: `Comprehensive analysis of ${companyName} (${symbol}) memory chip pricing trends and DRAM/NAND market dynamics.`,
+    headline: `${symbol} Memory Pricing - DRAM & NAND Price Analysis`,
+    description: `Complete memory pricing analysis for ${symbol} (${companyName}) including DRAM and NAND market dynamics.`,
     url: pageUrl,
     keywords: [
       `${symbol} memory pricing`,
       `${symbol} DRAM pricing`,
       `${symbol} NAND pricing`,
-      `${companyName} memory pricing`,
+      `${symbol} memory market`,
     ],
   })
 
-  // FAQ Schema
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: `What are ${symbol}'s memory pricing trends?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `Memory pricing for ${companyName} follows cyclical patterns based on supply-demand dynamics in DRAM and NAND markets. Pricing directly impacts revenue and profitability for memory semiconductor companies.`
-        }
-      },
-      {
-        '@type': 'Question',
-        name: `Is ${symbol} memory pricing improving?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `Memory pricing trends affect ${companyName}'s financial performance. Rising prices typically indicate industry supply discipline and strong demand, while declining prices suggest oversupply or weak end-market demand.`
-        }
-      },
-      {
-        '@type': 'Question',
-        name: `How does memory pricing impact ${symbol} stock?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `Memory pricing is a critical driver of ${companyName}'s stock performance. The cyclical nature of DRAM and NAND pricing creates volatility in revenue, margins, and earnings for memory semiconductor companies.`
-        }
-      },
-    ],
-  }
+  const corporationSchema = getCorporationSchema({
+    ticker: symbol,
+    name: companyName,
+    description: companyFacts?.description?.slice(0, 200) || `${companyName} common stock`,
+    sector,
+    industry,
+    url: pageUrl,
+  })
 
-  const schemas = [breadcrumbSchema, articleSchema, faqSchema]
+  const faqSchema = getFAQSchema(faqs)
+  const schemas = [breadcrumbSchema, articleSchema, corporationSchema, faqSchema]
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(schemas),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
       />
-
       <MemoryPricingContent
         ticker={symbol}
         companyName={companyName}
         sector={sector}
-        fundamentals={data.fundamentals}
-        metrics={data.metrics}
+        fundamentals={companyFacts}
+        metrics={historicalMetrics || []}
       />
     </>
   )

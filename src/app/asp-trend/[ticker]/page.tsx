@@ -1,178 +1,148 @@
-import { Metadata } from 'next'
-import { notFound } from 'next/navigation'
-import { SITE_URL, getBreadcrumbSchema, getArticleSchema } from '@/lib/seo'
-import AspTrendContent from './AspTrendContent'
+import { Metadata } from "next"
+import { notFound } from "next/navigation"
+import {
+  getBreadcrumbSchema,
+  getArticleSchema,
+  getFAQSchema,
+  getCorporationSchema,
+  SITE_URL,
+} from "@/lib/seo"
+import AspTrendContent from "./AspTrendContent"
 
 interface Props {
   params: Promise<{ ticker: string }>
 }
 
-// Allow dynamic rendering
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic"
 
-// Fetch stock data
-async function getStockData(ticker: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-
-  try {
-    const [fundamentalsRes, metricsRes] = await Promise.all([
-      fetch(`${baseUrl}/api/fundamentals?ticker=${ticker}`, {
-        next: { revalidate: 3600 }
-      }),
-      fetch(`${baseUrl}/api/v1/financial-metrics?ticker=${ticker}&period=annual&limit=5`, {
-        next: { revalidate: 3600 }
-      }),
-    ])
-
-    const fundamentals = fundamentalsRes.ok ? await fundamentalsRes.json() : null
-    const metrics = metricsRes.ok ? await metricsRes.json() : { financial_metrics: [] }
-
-    return {
-      fundamentals,
-      metrics: metrics.financial_metrics || [],
-    }
-  } catch (error) {
-    console.error('Error fetching stock data:', error)
-    return null
-  }
-}
-
-// Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { ticker } = await params
   const symbol = ticker.toUpperCase()
-  const currentYear = new Date().getFullYear()
-
-  const data = await getStockData(symbol)
-  const companyName = data?.fundamentals?.company?.name || symbol
-
-  const title = `${symbol} ASP Trends - Average Selling Price Trends ${currentYear}`
-  const description = `Analyze ${symbol} ASP trends and semiconductor pricing for ${companyName}. Track ${currentYear} average selling price changes and chip pricing power.`
 
   return {
-    title,
-    description,
+    title: `${symbol} ASP Trends - Average Selling Price Analysis`,
+    description: `${symbol} Average Selling Price (ASP) trends analysis. Track ASP changes, pricing power, product mix shifts, and semiconductor pricing dynamics.`,
     keywords: [
       `${symbol} ASP`,
       `${symbol} average selling price`,
-      `${symbol} pricing trends`,
-      `${companyName} ASP`,
-      `${symbol} chip pricing`,
       `${symbol} pricing power`,
-      `${symbol} price trends`,
       `${symbol} semiconductor pricing`,
-      `${symbol} ASP trends`,
-      `${symbol} unit pricing`,
+      `${symbol} product mix`,
+      `${symbol} chip pricing`,
+      `${symbol} pricing trends`,
     ],
     openGraph: {
-      title: `${symbol} ASP Trends - Average Selling Price Trends`,
-      description,
-      type: 'article',
-      url: `${SITE_URL}/asp-trend/${ticker.toLowerCase()}`,
-      images: [
-        {
-          url: `${SITE_URL}/api/og/asp-trend/${ticker.toLowerCase()}`,
-          width: 1200,
-          height: 630,
-          alt: `${symbol} ASP Trends`,
-        },
-      ],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${symbol} ASP Trends`,
-      description,
+      title: `${symbol} ASP Trends - Average Selling Price Analysis`,
+      description: `Complete ASP analysis for ${symbol} including pricing power and product mix trends.`,
+      type: "article",
     },
     alternates: {
-      canonical: `${SITE_URL}/asp-trend/${ticker.toLowerCase()}`,
+      canonical: `https://lician.com/asp-trend/${ticker.toLowerCase()}`,
     },
+  }
+}
+
+async function getStockData(ticker: string) {
+  try {
+    const [stockRes, metricsRes] = await Promise.all([
+      fetch(
+        `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/stock?ticker=${ticker}`,
+        { next: { revalidate: 3600 } }
+      ),
+      fetch(
+        `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/v1/financial-metrics?ticker=${ticker}&limit=8`,
+        { next: { revalidate: 3600 } }
+      ),
+    ])
+
+    if (!stockRes.ok) return null
+
+    const stockData = await stockRes.json()
+    const metricsData = metricsRes.ok ? await metricsRes.json() : []
+
+    return { ...stockData, historicalMetrics: metricsData }
+  } catch {
+    return null
   }
 }
 
 export default async function AspTrendPage({ params }: Props) {
   const { ticker } = await params
   const symbol = ticker.toUpperCase()
-  const currentYear = new Date().getFullYear()
 
-  const data = await getStockData(symbol)
+  const stockData = await getStockData(symbol)
 
-  if (!data || !data.fundamentals) {
+  if (!stockData?.snapshot) {
     notFound()
   }
 
-  const companyName = data.fundamentals?.company?.name || symbol
-  const sector = data.fundamentals?.company?.sector || 'Technology'
+  const { companyFacts, historicalMetrics } = stockData
+  const companyName = companyFacts?.name || symbol
   const pageUrl = `${SITE_URL}/asp-trend/${ticker.toLowerCase()}`
+  const sector = companyFacts?.sector || "Technology"
+  const industry = companyFacts?.industry
 
-  // Breadcrumb Schema
+  const faqs = [
+    {
+      question: `What is ${symbol} ASP (Average Selling Price)?`,
+      answer: `ASP represents the average price ${companyName} receives per semiconductor unit sold. ASP trends indicate pricing power, product mix shifts, and competitive dynamics in the chip market.`
+    },
+    {
+      question: `Why does ASP matter for ${symbol} investors?`,
+      answer: `ASP directly impacts ${symbol}\`s revenue as total sales equal unit volume multiplied by ASP. Rising ASP can drive revenue growth even with flat unit shipments, while also improving margins and profitability.`
+    },
+    {
+      question: `What factors affect ${symbol} ASP trends?`,
+      answer: `${symbol}\`s ASP is influenced by product mix (premium vs mainstream), technology node (advanced nodes command higher prices), supply-demand balance, and competitive intensity in the semiconductor market.`
+    },
+    {
+      question: `How does product mix affect ${symbol} average selling price?`,
+      answer: `A shift toward premium, high-performance products increases ${symbol}\`s ASP, while a mainstream-focused mix typically reduces it. Technology transitions and new product launches can significantly impact the overall ASP.`
+    },
+  ]
+
   const breadcrumbSchema = getBreadcrumbSchema([
-    { name: 'Home', url: SITE_URL },
-    { name: `${symbol} Stock`, url: `${SITE_URL}/stock/${ticker.toLowerCase()}` },
-    { name: 'ASP Trends', url: pageUrl },
+    { name: "Home", url: SITE_URL },
+    { name: "Stocks", url: `${SITE_URL}/dashboard` },
+    { name: `${symbol} ASP Trends`, url: pageUrl },
   ])
 
-  // Article Schema
   const articleSchema = getArticleSchema({
-    headline: `${symbol} ASP Trends - Average Selling Price Trends ${currentYear}`,
-    description: `Comprehensive analysis of ${companyName} (${symbol}) average selling price trends and semiconductor pricing power.`,
+    headline: `${symbol} ASP Trends - Average Selling Price Analysis`,
+    description: `Complete ASP analysis for ${symbol} (${companyName}) including pricing trends and product mix dynamics.`,
     url: pageUrl,
     keywords: [
       `${symbol} ASP`,
       `${symbol} average selling price`,
-      `${symbol} pricing trends`,
-      `${companyName} ASP`,
+      `${symbol} pricing power`,
+      `${symbol} semiconductor pricing`,
     ],
   })
 
-  // FAQ Schema
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: `What is ${symbol}'s ASP trend?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `ASP (Average Selling Price) represents the average price ${companyName} receives per semiconductor unit sold. ASP trends indicate pricing power, product mix shifts, and competitive dynamics in the chip market.`
-        }
-      },
-      {
-        '@type': 'Question',
-        name: `Is ${symbol} ASP increasing or decreasing?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `ASP trends for ${companyName} reflect market conditions and product strategy. Rising ASPs typically indicate strong demand, product upgrades, or favorable mix, while declining ASPs may suggest commoditization or competition.`
-        }
-      },
-      {
-        '@type': 'Question',
-        name: `How does ASP affect ${symbol} revenue?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `ASP directly impacts ${companyName}'s revenue as total sales equal unit volume multiplied by ASP. ASP expansion can drive revenue growth even with flat unit shipments, improving margins and profitability.`
-        }
-      },
-    ],
-  }
+  const corporationSchema = getCorporationSchema({
+    ticker: symbol,
+    name: companyName,
+    description: companyFacts?.description?.slice(0, 200) || `${companyName} common stock`,
+    sector,
+    industry,
+    url: pageUrl,
+  })
 
-  const schemas = [breadcrumbSchema, articleSchema, faqSchema]
+  const faqSchema = getFAQSchema(faqs)
+  const schemas = [breadcrumbSchema, articleSchema, corporationSchema, faqSchema]
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(schemas),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
       />
-
       <AspTrendContent
         ticker={symbol}
         companyName={companyName}
         sector={sector}
-        fundamentals={data.fundamentals}
-        metrics={data.metrics}
+        fundamentals={companyFacts}
+        metrics={historicalMetrics || []}
       />
     </>
   )

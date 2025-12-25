@@ -1,178 +1,148 @@
-import { Metadata } from 'next'
-import { notFound } from 'next/navigation'
-import { SITE_URL, getBreadcrumbSchema, getArticleSchema } from '@/lib/seo'
-import ProcessNodeContent from './ProcessNodeContent'
+import { Metadata } from "next"
+import { notFound } from "next/navigation"
+import {
+  getBreadcrumbSchema,
+  getArticleSchema,
+  getFAQSchema,
+  getCorporationSchema,
+  SITE_URL,
+} from "@/lib/seo"
+import ProcessNodeContent from "./ProcessNodeContent"
 
 interface Props {
   params: Promise<{ ticker: string }>
 }
 
-// Allow dynamic rendering
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic"
 
-// Fetch stock data
-async function getStockData(ticker: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-
-  try {
-    const [fundamentalsRes, metricsRes] = await Promise.all([
-      fetch(`${baseUrl}/api/fundamentals?ticker=${ticker}`, {
-        next: { revalidate: 3600 }
-      }),
-      fetch(`${baseUrl}/api/v1/financial-metrics?ticker=${ticker}&period=annual&limit=5`, {
-        next: { revalidate: 3600 }
-      }),
-    ])
-
-    const fundamentals = fundamentalsRes.ok ? await fundamentalsRes.json() : null
-    const metrics = metricsRes.ok ? await metricsRes.json() : { financial_metrics: [] }
-
-    return {
-      fundamentals,
-      metrics: metrics.financial_metrics || [],
-    }
-  } catch (error) {
-    console.error('Error fetching stock data:', error)
-    return null
-  }
-}
-
-// Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { ticker } = await params
   const symbol = ticker.toUpperCase()
-  const currentYear = new Date().getFullYear()
-
-  const data = await getStockData(symbol)
-  const companyName = data?.fundamentals?.company?.name || symbol
-
-  const title = `${symbol} Process Node - Semiconductor Technology Node ${currentYear}`
-  const description = `Analyze ${symbol} process node technology and chip manufacturing capabilities for ${companyName}. Track ${currentYear} semiconductor node transitions and advanced lithography.`
 
   return {
-    title,
-    description,
+    title: `${symbol} Process Node - Semiconductor Technology Analysis`,
+    description: `${symbol} process node analysis. Track semiconductor technology nodes, chip manufacturing capabilities, and technology leadership in the semiconductor industry.`,
     keywords: [
       `${symbol} process node`,
       `${symbol} technology node`,
       `${symbol} semiconductor technology`,
-      `${companyName} process node`,
-      `${symbol} chip technology`,
-      `${symbol} nm process`,
-      `${symbol} node transition`,
-      `${symbol} manufacturing process`,
+      `${symbol} chip manufacturing`,
+      `${symbol} 3nm`,
+      `${symbol} 5nm`,
       `${symbol} advanced node`,
-      `${symbol} lithography technology`,
     ],
     openGraph: {
-      title: `${symbol} Process Node - Semiconductor Technology Node`,
-      description,
-      type: 'article',
-      url: `${SITE_URL}/process-node/${ticker.toLowerCase()}`,
-      images: [
-        {
-          url: `${SITE_URL}/api/og/process-node/${ticker.toLowerCase()}`,
-          width: 1200,
-          height: 630,
-          alt: `${symbol} Process Node`,
-        },
-      ],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${symbol} Process Node`,
-      description,
+      title: `${symbol} Process Node - Technology Analysis`,
+      description: `Complete process node analysis for ${symbol} including technology leadership and capabilities.`,
+      type: "article",
     },
     alternates: {
-      canonical: `${SITE_URL}/process-node/${ticker.toLowerCase()}`,
+      canonical: `https://lician.com/process-node/${ticker.toLowerCase()}`,
     },
+  }
+}
+
+async function getStockData(ticker: string) {
+  try {
+    const [stockRes, metricsRes] = await Promise.all([
+      fetch(
+        `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/stock?ticker=${ticker}`,
+        { next: { revalidate: 3600 } }
+      ),
+      fetch(
+        `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/v1/financial-metrics?ticker=${ticker}&limit=8`,
+        { next: { revalidate: 3600 } }
+      ),
+    ])
+
+    if (!stockRes.ok) return null
+
+    const stockData = await stockRes.json()
+    const metricsData = metricsRes.ok ? await metricsRes.json() : []
+
+    return { ...stockData, historicalMetrics: metricsData }
+  } catch {
+    return null
   }
 }
 
 export default async function ProcessNodePage({ params }: Props) {
   const { ticker } = await params
   const symbol = ticker.toUpperCase()
-  const currentYear = new Date().getFullYear()
 
-  const data = await getStockData(symbol)
+  const stockData = await getStockData(symbol)
 
-  if (!data || !data.fundamentals) {
+  if (!stockData?.snapshot) {
     notFound()
   }
 
-  const companyName = data.fundamentals?.company?.name || symbol
-  const sector = data.fundamentals?.company?.sector || 'Technology'
+  const { companyFacts, historicalMetrics } = stockData
+  const companyName = companyFacts?.name || symbol
   const pageUrl = `${SITE_URL}/process-node/${ticker.toLowerCase()}`
+  const sector = companyFacts?.sector || "Technology"
+  const industry = companyFacts?.industry
 
-  // Breadcrumb Schema
+  const faqs = [
+    {
+      question: `What process nodes does ${symbol} use?`,
+      answer: `${companyName} utilizes various semiconductor process nodes depending on product requirements. Advanced nodes (7nm, 5nm, 3nm, and beyond) are used for cutting-edge chips requiring maximum performance and power efficiency.`
+    },
+    {
+      question: `Why do process nodes matter for ${symbol}?`,
+      answer: `Process node technology is critical for competitiveness. Advanced nodes enable better performance, power efficiency, and transistor density, while timely node transitions can capture market share in premium segments.`
+    },
+    {
+      question: `What are leading-edge process nodes for ${symbol}?`,
+      answer: `Leading-edge nodes (3nm, 5nm) offer maximum performance and power efficiency for premium products. These nodes command higher prices and margins but require significant R&D and manufacturing investment.`
+    },
+    {
+      question: `How does process node transition affect ${symbol} stock?`,
+      answer: `Successful node transitions can drive revenue growth and margin expansion as ${companyName} captures premium market segments. Delays or yield issues in node transitions can negatively impact competitiveness and financial performance.`
+    },
+  ]
+
   const breadcrumbSchema = getBreadcrumbSchema([
-    { name: 'Home', url: SITE_URL },
-    { name: `${symbol} Stock`, url: `${SITE_URL}/stock/${ticker.toLowerCase()}` },
-    { name: 'Process Node', url: pageUrl },
+    { name: "Home", url: SITE_URL },
+    { name: "Stocks", url: `${SITE_URL}/dashboard` },
+    { name: `${symbol} Process Node`, url: pageUrl },
   ])
 
-  // Article Schema
   const articleSchema = getArticleSchema({
-    headline: `${symbol} Process Node - Semiconductor Technology Node ${currentYear}`,
-    description: `Comprehensive analysis of ${companyName} (${symbol}) process node technology and chip manufacturing capabilities.`,
+    headline: `${symbol} Process Node - Semiconductor Technology Analysis`,
+    description: `Complete process node analysis for ${symbol} (${companyName}) including technology capabilities and roadmap.`,
     url: pageUrl,
     keywords: [
       `${symbol} process node`,
       `${symbol} technology node`,
       `${symbol} semiconductor technology`,
-      `${companyName} process node`,
+      `${symbol} advanced node`,
     ],
   })
 
-  // FAQ Schema
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: `What process node does ${symbol} use?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `${companyName} utilizes various semiconductor process nodes depending on product requirements. Advanced nodes (7nm, 5nm, 3nm) are used for cutting-edge chips, while mature nodes serve cost-sensitive applications.`
-        }
-      },
-      {
-        '@type': 'Question',
-        name: `Is ${symbol} transitioning to advanced process nodes?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `${companyName}'s process node roadmap includes transitions to more advanced manufacturing technologies. These transitions can improve chip performance, power efficiency, and enable competitive advantages in the semiconductor market.`
-        }
-      },
-      {
-        '@type': 'Question',
-        name: `How does process node affect ${symbol}'s competitiveness?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `Process node technology is critical for ${companyName}'s competitiveness. Advanced nodes enable better performance and power efficiency, while timely node transitions can capture market share in premium segments.`
-        }
-      },
-    ],
-  }
+  const corporationSchema = getCorporationSchema({
+    ticker: symbol,
+    name: companyName,
+    description: companyFacts?.description?.slice(0, 200) || `${companyName} common stock`,
+    sector,
+    industry,
+    url: pageUrl,
+  })
 
-  const schemas = [breadcrumbSchema, articleSchema, faqSchema]
+  const faqSchema = getFAQSchema(faqs)
+  const schemas = [breadcrumbSchema, articleSchema, corporationSchema, faqSchema]
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(schemas),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
       />
-
       <ProcessNodeContent
         ticker={symbol}
         companyName={companyName}
         sector={sector}
-        fundamentals={data.fundamentals}
-        metrics={data.metrics}
+        fundamentals={companyFacts}
+        metrics={historicalMetrics || []}
       />
     </>
   )

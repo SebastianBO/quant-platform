@@ -1,178 +1,148 @@
-import { Metadata } from 'next'
-import { notFound } from 'next/navigation'
-import { SITE_URL, getBreadcrumbSchema, getArticleSchema } from '@/lib/seo'
-import WaferStartsContent from './WaferStartsContent'
+import { Metadata } from "next"
+import { notFound } from "next/navigation"
+import {
+  getBreadcrumbSchema,
+  getArticleSchema,
+  getFAQSchema,
+  getCorporationSchema,
+  SITE_URL,
+} from "@/lib/seo"
+import WaferStartsContent from "./WaferStartsContent"
 
 interface Props {
   params: Promise<{ ticker: string }>
 }
 
-// Allow dynamic rendering
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic"
 
-// Fetch stock data
-async function getStockData(ticker: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-
-  try {
-    const [fundamentalsRes, metricsRes] = await Promise.all([
-      fetch(`${baseUrl}/api/fundamentals?ticker=${ticker}`, {
-        next: { revalidate: 3600 }
-      }),
-      fetch(`${baseUrl}/api/v1/financial-metrics?ticker=${ticker}&period=annual&limit=5`, {
-        next: { revalidate: 3600 }
-      }),
-    ])
-
-    const fundamentals = fundamentalsRes.ok ? await fundamentalsRes.json() : null
-    const metrics = metricsRes.ok ? await metricsRes.json() : { financial_metrics: [] }
-
-    return {
-      fundamentals,
-      metrics: metrics.financial_metrics || [],
-    }
-  } catch (error) {
-    console.error('Error fetching stock data:', error)
-    return null
-  }
-}
-
-// Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { ticker } = await params
   const symbol = ticker.toUpperCase()
-  const currentYear = new Date().getFullYear()
-
-  const data = await getStockData(symbol)
-  const companyName = data?.fundamentals?.company?.name || symbol
-
-  const title = `${symbol} Wafer Starts - Semiconductor Production Capacity ${currentYear}`
-  const description = `Analyze ${symbol} wafer starts and semiconductor manufacturing capacity for ${companyName}. Track ${currentYear} production trends and fab utilization.`
 
   return {
-    title,
-    description,
+    title: `${symbol} Wafer Starts - Semiconductor Production Capacity`,
+    description: `${symbol} wafer starts analysis. Track semiconductor wafer production, manufacturing capacity, and chip production trends.`,
     keywords: [
       `${symbol} wafer starts`,
-      `${symbol} production capacity`,
-      `${symbol} semiconductor manufacturing`,
-      `${companyName} wafer production`,
+      `${symbol} wafer production`,
+      `${symbol} semiconductor production`,
       `${symbol} fab capacity`,
-      `${symbol} chip production`,
-      `${symbol} manufacturing output`,
-      `${symbol} wafer production trend`,
-      `${symbol} foundry capacity`,
-      `${symbol} semiconductor output`,
+      `${symbol} chip manufacturing`,
+      `${symbol} production volume`,
+      `${symbol} manufacturing capacity`,
     ],
     openGraph: {
-      title: `${symbol} Wafer Starts - Semiconductor Production Capacity`,
-      description,
-      type: 'article',
-      url: `${SITE_URL}/wafer-starts/${ticker.toLowerCase()}`,
-      images: [
-        {
-          url: `${SITE_URL}/api/og/wafer-starts/${ticker.toLowerCase()}`,
-          width: 1200,
-          height: 630,
-          alt: `${symbol} Wafer Starts`,
-        },
-      ],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${symbol} Wafer Starts`,
-      description,
+      title: `${symbol} Wafer Starts - Production Capacity Analysis`,
+      description: `Complete wafer starts analysis for ${symbol} including production capacity and trends.`,
+      type: "article",
     },
     alternates: {
-      canonical: `${SITE_URL}/wafer-starts/${ticker.toLowerCase()}`,
+      canonical: `https://lician.com/wafer-starts/${ticker.toLowerCase()}`,
     },
+  }
+}
+
+async function getStockData(ticker: string) {
+  try {
+    const [stockRes, metricsRes] = await Promise.all([
+      fetch(
+        `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/stock?ticker=${ticker}`,
+        { next: { revalidate: 3600 } }
+      ),
+      fetch(
+        `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/v1/financial-metrics?ticker=${ticker}&limit=8`,
+        { next: { revalidate: 3600 } }
+      ),
+    ])
+
+    if (!stockRes.ok) return null
+
+    const stockData = await stockRes.json()
+    const metricsData = metricsRes.ok ? await metricsRes.json() : []
+
+    return { ...stockData, historicalMetrics: metricsData }
+  } catch {
+    return null
   }
 }
 
 export default async function WaferStartsPage({ params }: Props) {
   const { ticker } = await params
   const symbol = ticker.toUpperCase()
-  const currentYear = new Date().getFullYear()
 
-  const data = await getStockData(symbol)
+  const stockData = await getStockData(symbol)
 
-  if (!data || !data.fundamentals) {
+  if (!stockData?.snapshot) {
     notFound()
   }
 
-  const companyName = data.fundamentals?.company?.name || symbol
-  const sector = data.fundamentals?.company?.sector || 'Technology'
+  const { companyFacts, historicalMetrics } = stockData
+  const companyName = companyFacts?.name || symbol
   const pageUrl = `${SITE_URL}/wafer-starts/${ticker.toLowerCase()}`
+  const sector = companyFacts?.sector || "Technology"
+  const industry = companyFacts?.industry
 
-  // Breadcrumb Schema
+  const faqs = [
+    {
+      question: `What are ${symbol} wafer starts?`,
+      answer: `Wafer starts represent the number of silicon wafers ${companyName} begins processing in its fabrication facilities. This metric is a critical indicator of semiconductor production capacity and manufacturing activity.`
+    },
+    {
+      question: `Why do wafer starts matter for ${symbol} investors?`,
+      answer: `Higher wafer starts typically indicate increased production capacity, stronger demand, and potential revenue growth. Companies with expanding wafer starts are often investing in capacity expansion to meet market demand.`
+    },
+    {
+      question: `What factors affect ${symbol} wafer starts?`,
+      answer: `Key factors include fab capacity, customer demand trends, technology migrations to new process nodes, and capacity utilization. Wafer starts reflect both supply capability and demand signals.`
+    },
+    {
+      question: `How do wafer starts relate to ${symbol} revenue?`,
+      answer: `Wafer starts are a leading indicator of future revenue. Increased wafer starts today translate to finished chips and revenue in subsequent quarters, making this a valuable forward-looking metric.`
+    },
+  ]
+
   const breadcrumbSchema = getBreadcrumbSchema([
-    { name: 'Home', url: SITE_URL },
-    { name: `${symbol} Stock`, url: `${SITE_URL}/stock/${ticker.toLowerCase()}` },
-    { name: 'Wafer Starts', url: pageUrl },
+    { name: "Home", url: SITE_URL },
+    { name: "Stocks", url: `${SITE_URL}/dashboard` },
+    { name: `${symbol} Wafer Starts`, url: pageUrl },
   ])
 
-  // Article Schema
   const articleSchema = getArticleSchema({
-    headline: `${symbol} Wafer Starts - Semiconductor Production Capacity ${currentYear}`,
-    description: `Comprehensive analysis of ${companyName} (${symbol}) wafer starts and semiconductor manufacturing capacity.`,
+    headline: `${symbol} Wafer Starts - Semiconductor Production Analysis`,
+    description: `Complete wafer starts analysis for ${symbol} (${companyName}) including production capacity and manufacturing trends.`,
     url: pageUrl,
     keywords: [
       `${symbol} wafer starts`,
-      `${symbol} production capacity`,
-      `${symbol} semiconductor manufacturing`,
-      `${companyName} wafer production`,
+      `${symbol} wafer production`,
+      `${symbol} semiconductor production`,
+      `${symbol} fab capacity`,
     ],
   })
 
-  // FAQ Schema
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: `What are ${symbol}'s wafer starts?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `Wafer starts represent the number of silicon wafers ${companyName} begins processing in its fabrication facilities. This metric is a key indicator of semiconductor production capacity and manufacturing activity.`
-        }
-      },
-      {
-        '@type': 'Question',
-        name: `How does ${symbol} wafer production impact revenue?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `Higher wafer starts typically indicate increased production capacity and potential revenue growth for ${companyName}. Wafer starts are a leading indicator of future chip shipments and sales.`
-        }
-      },
-      {
-        '@type': 'Question',
-        name: `Is ${symbol} increasing wafer production capacity?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `Track ${companyName}'s wafer start trends and fab expansion announcements to understand production capacity changes. Capital expenditure on new fabs indicates future capacity growth.`
-        }
-      },
-    ],
-  }
+  const corporationSchema = getCorporationSchema({
+    ticker: symbol,
+    name: companyName,
+    description: companyFacts?.description?.slice(0, 200) || `${companyName} common stock`,
+    sector,
+    industry,
+    url: pageUrl,
+  })
 
-  const schemas = [breadcrumbSchema, articleSchema, faqSchema]
+  const faqSchema = getFAQSchema(faqs)
+  const schemas = [breadcrumbSchema, articleSchema, corporationSchema, faqSchema]
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(schemas),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
       />
-
       <WaferStartsContent
         ticker={symbol}
         companyName={companyName}
         sector={sector}
-        fundamentals={data.fundamentals}
-        metrics={data.metrics}
+        fundamentals={companyFacts}
+        metrics={historicalMetrics || []}
       />
     </>
   )

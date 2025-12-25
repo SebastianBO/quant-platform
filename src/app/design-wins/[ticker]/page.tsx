@@ -1,178 +1,148 @@
-import { Metadata } from 'next'
-import { notFound } from 'next/navigation'
-import { SITE_URL, getBreadcrumbSchema, getArticleSchema } from '@/lib/seo'
-import DesignWinsContent from './DesignWinsContent'
+import { Metadata } from "next"
+import { notFound } from "next/navigation"
+import {
+  getBreadcrumbSchema,
+  getArticleSchema,
+  getFAQSchema,
+  getCorporationSchema,
+  SITE_URL,
+} from "@/lib/seo"
+import DesignWinsContent from "./DesignWinsContent"
 
 interface Props {
   params: Promise<{ ticker: string }>
 }
 
-// Allow dynamic rendering
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic"
 
-// Fetch stock data
-async function getStockData(ticker: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-
-  try {
-    const [fundamentalsRes, metricsRes] = await Promise.all([
-      fetch(`${baseUrl}/api/fundamentals?ticker=${ticker}`, {
-        next: { revalidate: 3600 }
-      }),
-      fetch(`${baseUrl}/api/v1/financial-metrics?ticker=${ticker}&period=annual&limit=5`, {
-        next: { revalidate: 3600 }
-      }),
-    ])
-
-    const fundamentals = fundamentalsRes.ok ? await fundamentalsRes.json() : null
-    const metrics = metricsRes.ok ? await metricsRes.json() : { financial_metrics: [] }
-
-    return {
-      fundamentals,
-      metrics: metrics.financial_metrics || [],
-    }
-  } catch (error) {
-    console.error('Error fetching stock data:', error)
-    return null
-  }
-}
-
-// Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { ticker } = await params
   const symbol = ticker.toUpperCase()
-  const currentYear = new Date().getFullYear()
-
-  const data = await getStockData(symbol)
-  const companyName = data?.fundamentals?.company?.name || symbol
-
-  const title = `${symbol} Design Wins - Semiconductor Customer Wins ${currentYear}`
-  const description = `Track ${symbol} design wins and customer acquisitions for ${companyName}. Analyze ${currentYear} chip design wins and future revenue pipeline.`
 
   return {
-    title,
-    description,
+    title: `${symbol} Design Wins - Semiconductor Customer Acquisitions`,
+    description: `${symbol} design wins analysis. Track customer acquisitions, design win pipeline, and future revenue visibility in the semiconductor industry.`,
     keywords: [
       `${symbol} design wins`,
       `${symbol} customer wins`,
-      `${symbol} chip design wins`,
-      `${companyName} design wins`,
+      `${symbol} semiconductor customers`,
+      `${symbol} chip design`,
       `${symbol} customer acquisitions`,
       `${symbol} revenue pipeline`,
-      `${symbol} chip wins`,
-      `${symbol} design-in`,
-      `${symbol} customer pipeline`,
-      `${symbol} semiconductor wins`,
+      `${symbol} market share`,
     ],
     openGraph: {
-      title: `${symbol} Design Wins - Semiconductor Customer Wins`,
-      description,
-      type: 'article',
-      url: `${SITE_URL}/design-wins/${ticker.toLowerCase()}`,
-      images: [
-        {
-          url: `${SITE_URL}/api/og/design-wins/${ticker.toLowerCase()}`,
-          width: 1200,
-          height: 630,
-          alt: `${symbol} Design Wins`,
-        },
-      ],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${symbol} Design Wins`,
-      description,
+      title: `${symbol} Design Wins - Customer Acquisition Analysis`,
+      description: `Complete design wins analysis for ${symbol} including customer pipeline and revenue visibility.`,
+      type: "article",
     },
     alternates: {
-      canonical: `${SITE_URL}/design-wins/${ticker.toLowerCase()}`,
+      canonical: `https://lician.com/design-wins/${ticker.toLowerCase()}`,
     },
+  }
+}
+
+async function getStockData(ticker: string) {
+  try {
+    const [stockRes, metricsRes] = await Promise.all([
+      fetch(
+        `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/stock?ticker=${ticker}`,
+        { next: { revalidate: 3600 } }
+      ),
+      fetch(
+        `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/v1/financial-metrics?ticker=${ticker}&limit=8`,
+        { next: { revalidate: 3600 } }
+      ),
+    ])
+
+    if (!stockRes.ok) return null
+
+    const stockData = await stockRes.json()
+    const metricsData = metricsRes.ok ? await metricsRes.json() : []
+
+    return { ...stockData, historicalMetrics: metricsData }
+  } catch {
+    return null
   }
 }
 
 export default async function DesignWinsPage({ params }: Props) {
   const { ticker } = await params
   const symbol = ticker.toUpperCase()
-  const currentYear = new Date().getFullYear()
 
-  const data = await getStockData(symbol)
+  const stockData = await getStockData(symbol)
 
-  if (!data || !data.fundamentals) {
+  if (!stockData?.snapshot) {
     notFound()
   }
 
-  const companyName = data.fundamentals?.company?.name || symbol
-  const sector = data.fundamentals?.company?.sector || 'Technology'
+  const { companyFacts, historicalMetrics } = stockData
+  const companyName = companyFacts?.name || symbol
   const pageUrl = `${SITE_URL}/design-wins/${ticker.toLowerCase()}`
+  const sector = companyFacts?.sector || "Technology"
+  const industry = companyFacts?.industry
 
-  // Breadcrumb Schema
+  const faqs = [
+    {
+      question: `What are ${symbol} design wins?`,
+      answer: `Design wins are customer commitments to use ${companyName}\`s semiconductor products in their devices. These wins represent future revenue opportunities and validate the company\`s technology competitiveness.`
+    },
+    {
+      question: `Why do design wins matter for ${symbol} investors?`,
+      answer: `Design wins are leading indicators of future revenue. They typically convert to actual sales over 12-24 months as customer products move from development into production, creating a predictable revenue pipeline.`
+    },
+    {
+      question: `How do design wins create competitive advantage for ${symbol}?`,
+      answer: `Once ${companyName}\`s chips are designed into a customer\`s product, switching costs become significant. This creates customer stickiness and makes design wins a durable competitive moat.`
+    },
+    {
+      question: `What indicates strong design win momentum for ${symbol}?`,
+      answer: `Strong design win momentum is indicated by increasing customer count, expanding into new market segments, winning major OEM contracts, and growing the pipeline of future revenue opportunities.`
+    },
+  ]
+
   const breadcrumbSchema = getBreadcrumbSchema([
-    { name: 'Home', url: SITE_URL },
-    { name: `${symbol} Stock`, url: `${SITE_URL}/stock/${ticker.toLowerCase()}` },
-    { name: 'Design Wins', url: pageUrl },
+    { name: "Home", url: SITE_URL },
+    { name: "Stocks", url: `${SITE_URL}/dashboard` },
+    { name: `${symbol} Design Wins`, url: pageUrl },
   ])
 
-  // Article Schema
   const articleSchema = getArticleSchema({
-    headline: `${symbol} Design Wins - Semiconductor Customer Wins ${currentYear}`,
-    description: `Comprehensive analysis of ${companyName} (${symbol}) design wins and customer acquisitions in the semiconductor industry.`,
+    headline: `${symbol} Design Wins - Semiconductor Customer Acquisitions`,
+    description: `Complete design wins analysis for ${symbol} (${companyName}) including customer pipeline and revenue visibility.`,
     url: pageUrl,
     keywords: [
       `${symbol} design wins`,
       `${symbol} customer wins`,
-      `${symbol} chip design wins`,
-      `${companyName} design wins`,
+      `${symbol} semiconductor customers`,
+      `${symbol} revenue pipeline`,
     ],
   })
 
-  // FAQ Schema
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: `What are ${symbol}'s design wins?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `Design wins are customer commitments to use ${companyName}'s semiconductor products in their devices. These wins represent future revenue opportunities and validate the company's technology competitiveness.`
-        }
-      },
-      {
-        '@type': 'Question',
-        name: `How do design wins impact ${symbol} revenue?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `Design wins are leading indicators of future revenue for ${companyName}. They typically convert to actual sales over 12-24 months as customer products move into production, creating a predictable revenue pipeline.`
-        }
-      },
-      {
-        '@type': 'Question',
-        name: `Is ${symbol} winning new customers?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `Track ${companyName}'s design win announcements and customer diversification to understand market share gains and competitive positioning in the semiconductor industry.`
-        }
-      },
-    ],
-  }
+  const corporationSchema = getCorporationSchema({
+    ticker: symbol,
+    name: companyName,
+    description: companyFacts?.description?.slice(0, 200) || `${companyName} common stock`,
+    sector,
+    industry,
+    url: pageUrl,
+  })
 
-  const schemas = [breadcrumbSchema, articleSchema, faqSchema]
+  const faqSchema = getFAQSchema(faqs)
+  const schemas = [breadcrumbSchema, articleSchema, corporationSchema, faqSchema]
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(schemas),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
       />
-
       <DesignWinsContent
         ticker={symbol}
         companyName={companyName}
         sector={sector}
-        fundamentals={data.fundamentals}
-        metrics={data.metrics}
+        fundamentals={companyFacts}
+        metrics={historicalMetrics || []}
       />
     </>
   )

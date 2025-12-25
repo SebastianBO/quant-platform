@@ -1,184 +1,149 @@
-import { Metadata } from 'next'
-import { notFound } from 'next/navigation'
-import { SITE_URL, getBreadcrumbSchema, getArticleSchema } from '@/lib/seo'
-import FoundryRevenueContent from './FoundryRevenueContent'
+import { Metadata } from "next"
+import { notFound } from "next/navigation"
+import {
+  getBreadcrumbSchema,
+  getArticleSchema,
+  getFAQSchema,
+  getCorporationSchema,
+  SITE_URL,
+} from "@/lib/seo"
+import FoundryRevenueContent from "./FoundryRevenueContent"
 
 interface Props {
   params: Promise<{ ticker: string }>
 }
 
-// Allow dynamic rendering
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic"
 
-// Fetch stock data
-async function getStockData(ticker: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-
-  try {
-    const [fundamentalsRes, metricsRes, incomeStatementsRes] = await Promise.all([
-      fetch(`${baseUrl}/api/fundamentals?ticker=${ticker}`, {
-        next: { revalidate: 3600 }
-      }),
-      fetch(`${baseUrl}/api/v1/financial-metrics?ticker=${ticker}&period=annual&limit=5`, {
-        next: { revalidate: 3600 }
-      }),
-      fetch(`${baseUrl}/api/v1/financials/income-statements?ticker=${ticker}&period=annual&limit=5`, {
-        next: { revalidate: 3600 }
-      }),
-    ])
-
-    const fundamentals = fundamentalsRes.ok ? await fundamentalsRes.json() : null
-    const metrics = metricsRes.ok ? await metricsRes.json() : { financial_metrics: [] }
-    const incomeStatements = incomeStatementsRes.ok ? await incomeStatementsRes.json() : { income_statements: [] }
-
-    return {
-      fundamentals,
-      metrics: metrics.financial_metrics || [],
-      incomeStatements: incomeStatements.income_statements || [],
-    }
-  } catch (error) {
-    console.error('Error fetching stock data:', error)
-    return null
-  }
-}
-
-// Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { ticker } = await params
   const symbol = ticker.toUpperCase()
-  const currentYear = new Date().getFullYear()
-
-  const data = await getStockData(symbol)
-  const companyName = data?.fundamentals?.company?.name || symbol
-
-  const title = `${symbol} Foundry Revenue - Semiconductor Foundry Sales ${currentYear}`
-  const description = `Analyze ${symbol} foundry revenue and chip manufacturing sales for ${companyName}. Track ${currentYear} foundry market share and semiconductor revenue growth.`
 
   return {
-    title,
-    description,
+    title: `${symbol} Foundry Revenue - Semiconductor Foundry Business Analysis`,
+    description: `${symbol} foundry revenue analysis. Track semiconductor manufacturing services revenue, foundry market share, and chip fabrication business performance.`,
     keywords: [
       `${symbol} foundry revenue`,
-      `${symbol} foundry sales`,
-      `${symbol} chip manufacturing revenue`,
-      `${companyName} foundry revenue`,
-      `${symbol} foundry market share`,
-      `${symbol} semiconductor revenue`,
-      `${symbol} fab revenue`,
-      `${symbol} manufacturing revenue`,
       `${symbol} foundry business`,
-      `${symbol} chip production revenue`,
+      `${symbol} semiconductor foundry`,
+      `${symbol} chip manufacturing`,
+      `${symbol} wafer fabrication`,
+      `${symbol} foundry market share`,
+      `${symbol} contract manufacturing`,
     ],
     openGraph: {
-      title: `${symbol} Foundry Revenue - Semiconductor Foundry Sales`,
-      description,
-      type: 'article',
-      url: `${SITE_URL}/foundry-revenue/${ticker.toLowerCase()}`,
-      images: [
-        {
-          url: `${SITE_URL}/api/og/foundry-revenue/${ticker.toLowerCase()}`,
-          width: 1200,
-          height: 630,
-          alt: `${symbol} Foundry Revenue`,
-        },
-      ],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${symbol} Foundry Revenue`,
-      description,
+      title: `${symbol} Foundry Revenue - Foundry Business Analysis`,
+      description: `Complete foundry revenue analysis for ${symbol} including market share and growth trends.`,
+      type: "article",
     },
     alternates: {
-      canonical: `${SITE_URL}/foundry-revenue/${ticker.toLowerCase()}`,
+      canonical: `https://lician.com/foundry-revenue/${ticker.toLowerCase()}`,
     },
+  }
+}
+
+async function getStockData(ticker: string) {
+  try {
+    const [stockRes, metricsRes] = await Promise.all([
+      fetch(
+        `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/stock?ticker=${ticker}`,
+        { next: { revalidate: 3600 } }
+      ),
+      fetch(
+        `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/v1/financial-metrics?ticker=${ticker}&limit=8`,
+        { next: { revalidate: 3600 } }
+      ),
+    ])
+
+    if (!stockRes.ok) return null
+
+    const stockData = await stockRes.json()
+    const metricsData = metricsRes.ok ? await metricsRes.json() : []
+
+    return { ...stockData, historicalMetrics: metricsData }
+  } catch {
+    return null
   }
 }
 
 export default async function FoundryRevenuePage({ params }: Props) {
   const { ticker } = await params
   const symbol = ticker.toUpperCase()
-  const currentYear = new Date().getFullYear()
 
-  const data = await getStockData(symbol)
+  const stockData = await getStockData(symbol)
 
-  if (!data || !data.fundamentals) {
+  if (!stockData?.snapshot) {
     notFound()
   }
 
-  const companyName = data.fundamentals?.company?.name || symbol
-  const sector = data.fundamentals?.company?.sector || 'Technology'
+  const { companyFacts, historicalMetrics, incomeStatements } = stockData
+  const companyName = companyFacts?.name || symbol
   const pageUrl = `${SITE_URL}/foundry-revenue/${ticker.toLowerCase()}`
+  const sector = companyFacts?.sector || "Technology"
+  const industry = companyFacts?.industry
 
-  // Breadcrumb Schema
+  const faqs = [
+    {
+      question: `What is ${symbol} foundry revenue?`,
+      answer: `Foundry revenue represents income ${companyName} generates from semiconductor manufacturing services for other companies. This business model separates chip design from manufacturing, serving fabless semiconductor companies.`
+    },
+    {
+      question: `Why does foundry revenue matter for ${symbol} investors?`,
+      answer: `Foundry revenue growth indicates market share gains and industry demand. Strong foundry revenue reflects competitive technology, customer diversification, and fab capacity expansion.`
+    },
+    {
+      question: `What drives ${symbol} foundry revenue growth?`,
+      answer: `Key drivers include technology leadership (advanced process nodes), customer diversification, capacity expansion through fab investments, and market share gains versus other foundries.`
+    },
+    {
+      question: `How competitive is ${symbol} in the foundry market?`,
+      answer: `Foundry competitiveness depends on process technology leadership, manufacturing yields, capacity availability, and customer relationships. Leading-edge nodes command premium pricing and higher margins.`
+    },
+  ]
+
   const breadcrumbSchema = getBreadcrumbSchema([
-    { name: 'Home', url: SITE_URL },
-    { name: `${symbol} Stock`, url: `${SITE_URL}/stock/${ticker.toLowerCase()}` },
-    { name: 'Foundry Revenue', url: pageUrl },
+    { name: "Home", url: SITE_URL },
+    { name: "Stocks", url: `${SITE_URL}/dashboard` },
+    { name: `${symbol} Foundry Revenue`, url: pageUrl },
   ])
 
-  // Article Schema
   const articleSchema = getArticleSchema({
-    headline: `${symbol} Foundry Revenue - Semiconductor Foundry Sales ${currentYear}`,
-    description: `Comprehensive analysis of ${companyName} (${symbol}) foundry revenue and chip manufacturing business performance.`,
+    headline: `${symbol} Foundry Revenue - Semiconductor Foundry Business`,
+    description: `Complete foundry revenue analysis for ${symbol} (${companyName}) including market share and business performance.`,
     url: pageUrl,
     keywords: [
       `${symbol} foundry revenue`,
-      `${symbol} foundry sales`,
-      `${symbol} chip manufacturing revenue`,
-      `${companyName} foundry revenue`,
+      `${symbol} foundry business`,
+      `${symbol} semiconductor foundry`,
+      `${symbol} chip manufacturing`,
     ],
   })
 
-  // FAQ Schema
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: `What is ${symbol}'s foundry revenue?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `Foundry revenue represents income ${companyName} generates from semiconductor manufacturing services for other companies. This business model separates chip design from manufacturing, serving fabless semiconductor companies.`
-        }
-      },
-      {
-        '@type': 'Question',
-        name: `Is ${symbol} foundry revenue growing?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `${companyName}'s foundry revenue growth indicates market share gains and industry demand trends. Strong foundry revenue reflects competitive technology, customer diversification, and fab capacity expansion.`
-        }
-      },
-      {
-        '@type': 'Question',
-        name: `What is ${symbol}'s foundry market share?`,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: `Monitor ${companyName}'s foundry market share to understand competitive positioning against other semiconductor manufacturers. Market share trends reflect technology leadership and customer preference in the foundry industry.`
-        }
-      },
-    ],
-  }
+  const corporationSchema = getCorporationSchema({
+    ticker: symbol,
+    name: companyName,
+    description: companyFacts?.description?.slice(0, 200) || `${companyName} common stock`,
+    sector,
+    industry,
+    url: pageUrl,
+  })
 
-  const schemas = [breadcrumbSchema, articleSchema, faqSchema]
+  const faqSchema = getFAQSchema(faqs)
+  const schemas = [breadcrumbSchema, articleSchema, corporationSchema, faqSchema]
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(schemas),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
       />
-
       <FoundryRevenueContent
         ticker={symbol}
         companyName={companyName}
         sector={sector}
-        fundamentals={data.fundamentals}
-        metrics={data.metrics}
-        incomeStatements={data.incomeStatements}
+        fundamentals={companyFacts}
+        metrics={historicalMetrics || []}
+        incomeStatements={incomeStatements || []}
       />
     </>
   )
