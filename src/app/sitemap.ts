@@ -241,12 +241,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   })
 
-  // Stock pages - core pages for each ticker
+  // Stock pages - ONLY main stock page (no duplicates)
+  // Removed /[ticker]-stock to avoid duplicate content issues
   ALL_STOCKS.forEach((ticker, index) => {
     const basePriority = index < 20 ? 0.9 : index < 50 ? 0.85 : index < 100 ? 0.8 : 0.75
     const t = ticker.toLowerCase()
 
-    // Main stock page
+    // Main stock page - CANONICAL URL
     routes.push({
       url: `${baseUrl}/stock/${t}`,
       lastModified: currentDate,
@@ -254,36 +255,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: basePriority,
     })
 
-    // Alternative ticker-stock URL format
-    routes.push({
-      url: `${baseUrl}/${t}-stock`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly',
-      priority: basePriority - 0.05,
-    })
-
-    // Core stock page types
-    STOCK_PAGE_TYPES.forEach((pageType) => {
-      if (pageType !== 'stock') {
-        routes.push({
-          url: `${baseUrl}/${pageType}/${t}`,
-          lastModified: currentDate,
-          changeFrequency: pageType === 'news' ? 'hourly' : 'daily',
-          priority: basePriority - 0.1,
-        })
-      }
-    })
+    // Core stock page types - only for top 100 stocks to preserve crawl budget
+    if (index < 100) {
+      STOCK_PAGE_TYPES.forEach((pageType) => {
+        if (pageType !== 'stock') {
+          routes.push({
+            url: `${baseUrl}/${pageType}/${t}`,
+            lastModified: currentDate,
+            changeFrequency: pageType === 'news' ? 'hourly' : 'daily',
+            priority: basePriority - 0.1,
+          })
+        }
+      })
+    }
   })
 
-  // pSEO Metric pages - 400+ metrics for each ticker
+  // pSEO Metric pages - ONLY for top 50 stocks to preserve crawl budget
+  // This reduces URLs from ~91,000 to ~9,100 (50 stocks × 182 metrics)
+  const TOP_STOCKS_FOR_METRICS = ALL_STOCKS.slice(0, 50)
   METRIC_PAGES.forEach((metric) => {
-    ALL_STOCKS.forEach((ticker, index) => {
-      const basePriority = index < 50 ? 0.7 : index < 100 ? 0.65 : 0.6
+    TOP_STOCKS_FOR_METRICS.forEach((ticker, index) => {
       routes.push({
         url: `${baseUrl}/${metric}/${ticker.toLowerCase()}`,
         lastModified: currentDate,
         changeFrequency: 'weekly',
-        priority: basePriority,
+        priority: index < 20 ? 0.7 : 0.65,
       })
     })
   })
