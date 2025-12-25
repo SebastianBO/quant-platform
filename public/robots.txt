@@ -10,6 +10,15 @@ Disallow: /_next/
 Disallow: /admin/
 Disallow: /auth/
 
+# Disallow query parameter variations (prevents duplicate content)
+Disallow: /*?exchange=
+Disallow: /*?*exchange=
+Disallow: /*?sort=
+Disallow: /*?filter=
+Disallow: /*?page=
+Disallow: /*?ref=
+Disallow: /*?utm_
+
 # Allow specific API endpoints for preview
 Allow: /api/og/
 
