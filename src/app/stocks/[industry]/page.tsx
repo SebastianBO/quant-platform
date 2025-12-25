@@ -16,6 +16,79 @@ interface Props {
   params: Promise<{ industry: string }>
 }
 
+// Filter definitions for stock filtering (from [...filters] route)
+const FILTERS: Record<string, {
+  label: string
+  description: string
+  stocks: string[]
+}> = {
+  'technology': {
+    label: 'Technology',
+    description: 'Tech sector stocks including software, hardware, and semiconductors',
+    stocks: ['AAPL', 'MSFT', 'GOOGL', 'NVDA', 'AMD', 'INTC', 'CRM', 'ADBE', 'ORCL', 'NOW']
+  },
+  'healthcare': {
+    label: 'Healthcare',
+    description: 'Healthcare and biotech companies',
+    stocks: ['UNH', 'JNJ', 'LLY', 'PFE', 'MRK', 'ABBV', 'TMO', 'ABT', 'DHR', 'BMY']
+  },
+  'finance': {
+    label: 'Finance',
+    description: 'Banks, insurance, and financial services',
+    stocks: ['JPM', 'BAC', 'WFC', 'GS', 'MS', 'C', 'AXP', 'BLK', 'SCHW', 'COF']
+  },
+  'energy': {
+    label: 'Energy',
+    description: 'Oil, gas, and renewable energy companies',
+    stocks: ['XOM', 'CVX', 'COP', 'SLB', 'EOG', 'OXY', 'PSX', 'VLO', 'MPC', 'PXD']
+  },
+  'consumer': {
+    label: 'Consumer',
+    description: 'Consumer goods and retail companies',
+    stocks: ['AMZN', 'WMT', 'HD', 'COST', 'TGT', 'LOW', 'NKE', 'SBUX', 'MCD', 'DIS']
+  },
+  'dividend': {
+    label: 'Dividend',
+    description: 'High dividend yield stocks',
+    stocks: ['JNJ', 'PG', 'KO', 'PEP', 'VZ', 'T', 'XOM', 'CVX', 'ABBV', 'MO']
+  },
+  'growth': {
+    label: 'Growth',
+    description: 'High growth potential stocks',
+    stocks: ['NVDA', 'TSLA', 'AMD', 'CRM', 'SNOW', 'PLTR', 'CRWD', 'DDOG', 'NET', 'SHOP']
+  },
+  'value': {
+    label: 'Value',
+    description: 'Undervalued stocks with strong fundamentals',
+    stocks: ['BRK.B', 'JPM', 'BAC', 'WFC', 'GM', 'F', 'INTC', 'VZ', 'CVS', 'WBA']
+  },
+  'ai': {
+    label: 'AI',
+    description: 'Artificial intelligence focused companies',
+    stocks: ['NVDA', 'MSFT', 'GOOGL', 'META', 'AMD', 'PLTR', 'CRM', 'SNOW', 'AI', 'PATH']
+  },
+  'large-cap': {
+    label: 'Large Cap',
+    description: 'Companies with $10B+ market cap',
+    stocks: ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA', 'META', 'TSLA', 'BRK.B', 'UNH', 'JNJ']
+  },
+  'mid-cap': {
+    label: 'Mid Cap',
+    description: 'Companies with $2B-$10B market cap',
+    stocks: ['SNAP', 'ROKU', 'ETSY', 'PINS', 'ZM', 'DOCU', 'OKTA', 'TWLO', 'FSLY', 'NET']
+  },
+  'under-50': {
+    label: 'Under $50',
+    description: 'Stocks priced under $50',
+    stocks: ['F', 'T', 'VZ', 'INTC', 'WBD', 'PARA', 'SNAP', 'HOOD', 'SOFI', 'PLTR']
+  },
+  'under-100': {
+    label: 'Under $100',
+    description: 'Stocks priced under $100',
+    stocks: ['AMD', 'QCOM', 'SBUX', 'NKE', 'DIS', 'BA', 'GM', 'PFE', 'MRK', 'C']
+  },
+}
+
 // Industry mapping: slug -> database industry values (case-insensitive matching)
 const INDUSTRY_MAPPINGS: Record<string, string[]> = {
   'software': ['Software', 'Application Software', 'Enterprise Software', 'Software - Application', 'Software - Infrastructure'],
@@ -297,13 +370,33 @@ async function fetchIndustryStocks(industrySlug: string): Promise<CompanyFundame
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { industry } = await params
-  const industryData = INDUSTRIES[industry.toLowerCase()]
+  const slug = industry.toLowerCase()
+  const currentYear = new Date().getFullYear()
+
+  // Check if it's a filter
+  const filterData = FILTERS[slug]
+  if (filterData) {
+    return {
+      title: `Best ${filterData.label} Stocks ${currentYear} - Top Picks`,
+      description: filterData.description,
+      keywords: [`${filterData.label} stocks`, `best ${filterData.label} stocks`, `${filterData.label} stock picks`],
+      openGraph: {
+        title: `Best ${filterData.label} Stocks ${currentYear}`,
+        description: filterData.description,
+        type: 'article',
+        url: `${SITE_URL}/stocks/${slug}`,
+      },
+      alternates: {
+        canonical: `${SITE_URL}/stocks/${slug}`,
+      },
+    }
+  }
+
+  const industryData = INDUSTRIES[slug]
 
   if (!industryData) {
     return { title: 'Industries | Lician' }
   }
-
-  const currentYear = new Date().getFullYear()
 
   return {
     title: `Best ${industryData.title} ${currentYear} - Top Stocks & Analysis`,
@@ -313,7 +406,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `Best ${industryData.title} ${currentYear}`,
       description: industryData.description,
       type: 'article',
-      url: `${SITE_URL}/stocks/${industry.toLowerCase()}`,
+      url: `${SITE_URL}/stocks/${slug}`,
     },
     twitter: {
       card: 'summary_large_image',
@@ -321,7 +414,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: industryData.description,
     },
     alternates: {
-      canonical: `${SITE_URL}/stocks/${industry.toLowerCase()}`,
+      canonical: `${SITE_URL}/stocks/${slug}`,
     },
   }
 }
@@ -331,14 +424,93 @@ export const dynamic = 'force-dynamic'
 
 export default async function IndustryPage({ params }: Props) {
   const { industry } = await params
-  const industryData = INDUSTRIES[industry.toLowerCase()]
+  const slug = industry.toLowerCase()
+
+  // Check if this is a filter slug (handled separately)
+  const filterData = FILTERS[slug]
+  if (filterData) {
+    // Render filter page inline
+    const currentYear = new Date().getFullYear()
+    const pageUrl = `${SITE_URL}/stocks/${slug}`
+
+    const breadcrumbSchema = getBreadcrumbSchema([
+      { name: 'Home', url: SITE_URL },
+      { name: 'Stocks', url: `${SITE_URL}/dashboard` },
+      { name: filterData.label, url: pageUrl },
+    ])
+
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbSchema]) }}
+        />
+        <Header />
+        <main className="min-h-screen bg-background text-foreground pt-20">
+          <div className="max-w-5xl mx-auto px-6 py-12">
+            <nav className="text-sm text-muted-foreground mb-6">
+              <Link href="/" className="hover:text-foreground">Home</Link>
+              {' / '}
+              <Link href="/dashboard" className="hover:text-foreground">Stocks</Link>
+              {' / '}
+              <span>{filterData.label}</span>
+            </nav>
+
+            <h1 className="text-4xl font-bold mb-4">
+              {filterData.label} Stocks {currentYear}
+            </h1>
+            <p className="text-xl text-muted-foreground mb-8">
+              {filterData.description}
+            </p>
+
+            <section className="mb-12">
+              <h2 className="text-2xl font-bold mb-6">Top {filterData.label} Stocks</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {filterData.stocks.map((ticker, i) => (
+                  <Link
+                    key={ticker}
+                    href={`/stock/${ticker.toLowerCase()}`}
+                    className="bg-card p-5 rounded-lg border border-border hover:border-green-500/50 transition-colors"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <span className="text-xs text-muted-foreground">#{i + 1}</span>
+                        <span className="text-xl font-bold">{ticker}</span>
+                      </div>
+                      <span className="text-xs text-green-500">View →</span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+
+            <section className="bg-card p-8 rounded-xl border border-border text-center">
+              <h2 className="text-2xl font-bold mb-4">Explore More Stocks</h2>
+              <p className="text-muted-foreground mb-6">
+                Get AI-powered analysis and detailed insights
+              </p>
+              <Link
+                href="/dashboard"
+                className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium"
+              >
+                Start Research
+              </Link>
+            </section>
+          </div>
+        </main>
+        <Footer />
+      </>
+    )
+  }
+
+  const industryData = INDUSTRIES[slug]
 
   if (!industryData) {
     notFound()
   }
 
   // Fetch real stocks from Supabase
-  const allStocks = await fetchIndustryStocks(industry.toLowerCase())
+  const allStocks = await fetchIndustryStocks(slug)
   const topStocks = allStocks.slice(0, 25)
 
   const currentYear = new Date().getFullYear()
