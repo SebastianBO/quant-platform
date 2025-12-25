@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { supabase, CompanyFundamentals } from '@/lib/supabase'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
@@ -14,6 +14,25 @@ import {
 
 interface Props {
   params: Promise<{ industry: string }>
+}
+
+// Check if a slug looks like a stock ticker (uppercase, 1-5 chars, alphanumeric)
+function looksLikeTicker(slug: string): boolean {
+  // Common ticker patterns: AAPL, MSFT, BRK.A, BRK.B, or mutual funds like VFIAX
+  const tickerPattern = /^[A-Z]{1,5}(\.[A-Z])?$/
+  const upperSlug = slug.toUpperCase()
+
+  // If it matches ticker pattern and is uppercase
+  if (tickerPattern.test(upperSlug) && slug === upperSlug) {
+    return true
+  }
+
+  // Also catch mutual fund tickers (5 chars ending in X)
+  if (/^[A-Z]{5}$/.test(upperSlug) && upperSlug.endsWith('X')) {
+    return true
+  }
+
+  return false
 }
 
 // Filter definitions for stock filtering (from [...filters] route)
@@ -373,6 +392,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const slug = industry.toLowerCase()
   const currentYear = new Date().getFullYear()
 
+  // If it looks like a ticker, return minimal metadata (will redirect)
+  if (looksLikeTicker(industry)) {
+    return {
+      title: `${industry.toUpperCase()} Stock | Lician`,
+      robots: { index: false, follow: true },
+    }
+  }
+
   // Check if it's a filter
   const filterData = FILTERS[slug]
   if (filterData) {
@@ -425,6 +452,12 @@ export const dynamic = 'force-dynamic'
 export default async function IndustryPage({ params }: Props) {
   const { industry } = await params
   const slug = industry.toLowerCase()
+
+  // Check if this looks like a stock ticker - redirect to /stock/ticker
+  // This catches external links using /stocks/AAPL instead of /stock/aapl
+  if (looksLikeTicker(industry)) {
+    redirect(`/stock/${slug}`)
+  }
 
   // Check if this is a filter slug (handled separately)
   const filterData = FILTERS[slug]
