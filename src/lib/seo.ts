@@ -713,6 +713,266 @@ export function getSoftwareApplicationSchema() {
   }
 }
 
+// ========================================
+// METRIC PAGE SCHEMA GENERATOR
+// Scalable solution for 442+ metric pages
+// ========================================
+
+export interface MetricPageSchemaConfig {
+  ticker: string
+  companyName: string
+  metricName: string
+  metricDisplayName: string
+  pageUrl: string
+  sector?: string
+  industry?: string
+  description?: string
+  metricValue?: number | string
+  metricUnit?: string
+  historicalData?: { period: string; value: number }[]
+  faqs: { question: string; answer: string }[]
+  keywords?: string[]
+}
+
+/**
+ * Generate all standard schemas for a metric page
+ * Use this in all 442+ pSEO metric pages for consistent schema coverage
+ *
+ * Returns: breadcrumb, article, corporation, faq, table schemas
+ */
+export function getMetricPageSchemas(config: MetricPageSchemaConfig) {
+  const {
+    ticker,
+    companyName,
+    metricName,
+    metricDisplayName,
+    pageUrl,
+    sector,
+    industry,
+    description,
+    metricValue,
+    historicalData,
+    faqs,
+    keywords = [],
+  } = config
+
+  const currentYear = new Date().getFullYear()
+
+  // 1. Breadcrumb Schema
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: 'Home', url: SITE_URL },
+    { name: 'Stocks', url: `${SITE_URL}/dashboard` },
+    { name: ticker, url: `${SITE_URL}/stock/${ticker.toLowerCase()}` },
+    { name: metricDisplayName, url: pageUrl },
+  ])
+
+  // 2. Article Schema
+  const articleSchema = getArticleSchema({
+    headline: `${ticker} ${metricDisplayName} ${currentYear} - Analysis & History`,
+    description: description || `Complete ${metricDisplayName} analysis for ${companyName} (${ticker}) with historical trends and industry comparison.`,
+    url: pageUrl,
+    keywords: [
+      `${ticker} ${metricName}`,
+      `${ticker} ${metricDisplayName}`,
+      `${companyName} ${metricName}`,
+      ...keywords,
+    ],
+  })
+
+  // 3. Corporation Schema
+  const corporationSchema = getCorporationSchema({
+    ticker,
+    name: companyName,
+    description: description?.slice(0, 200) || `${companyName} (${ticker}) stock`,
+    sector,
+    industry,
+    url: pageUrl,
+  })
+
+  // 4. FAQ Schema
+  const faqSchema = getFAQSchema(faqs)
+
+  // 5. Table Schema (for historical data)
+  const tableSchema = getTableSchema({
+    name: `${ticker} ${metricDisplayName} History`,
+    description: `Historical ${metricDisplayName} data for ${companyName} (${ticker})`,
+    url: pageUrl,
+    columns: ['Period', metricDisplayName, 'Change'],
+    rowCount: historicalData?.length || 5,
+  })
+
+  // 6. Financial Product Schema (for metrics with numeric values)
+  const financialProductSchema = metricValue !== undefined ? {
+    '@context': 'https://schema.org',
+    '@type': 'FinancialProduct',
+    '@id': `${pageUrl}#metric`,
+    name: `${ticker} ${metricDisplayName}`,
+    description: `Current ${metricDisplayName} for ${companyName}: ${metricValue}`,
+    url: pageUrl,
+    provider: {
+      '@type': 'Corporation',
+      name: companyName,
+      tickerSymbol: ticker,
+    },
+  } : null
+
+  // Return all schemas, filtering out nulls
+  const schemas = [
+    breadcrumbSchema,
+    articleSchema,
+    corporationSchema,
+    faqSchema,
+    tableSchema,
+    financialProductSchema,
+  ].filter(Boolean)
+
+  return schemas
+}
+
+/**
+ * Generate enhanced FAQs for any metric page
+ * Creates 8-10 dynamic FAQs based on metric type and data
+ */
+export function getMetricFAQs({
+  ticker,
+  companyName,
+  metricName,
+  metricDisplayName,
+  metricValue,
+  metricUnit = '',
+  industryAverage,
+  previousValue,
+  sector,
+}: {
+  ticker: string
+  companyName: string
+  metricName: string
+  metricDisplayName: string
+  metricValue?: number | string
+  metricUnit?: string
+  industryAverage?: number
+  previousValue?: number
+  sector?: string
+}): { question: string; answer: string }[] {
+  const currentYear = new Date().getFullYear()
+  const formattedValue = metricValue !== undefined ? `${metricValue}${metricUnit}` : 'N/A'
+
+  const faqs = [
+    {
+      question: `What is ${ticker}'s ${metricDisplayName}?`,
+      answer: metricValue !== undefined
+        ? `${ticker} (${companyName}) has a ${metricDisplayName} of ${formattedValue}. This metric is used by investors to evaluate the company's ${getMetricContext(metricName)}.`
+        : `${ticker}'s ${metricDisplayName} data is being updated. Check our real-time dashboard for the latest values.`
+    },
+    {
+      question: `Is ${ticker}'s ${metricDisplayName} good?`,
+      answer: industryAverage !== undefined && metricValue !== undefined
+        ? `${ticker}'s ${metricDisplayName} of ${formattedValue} ${Number(metricValue) > industryAverage ? 'exceeds' : 'is below'} the industry average of ${industryAverage}${metricUnit}. ${getMetricQualityAssessment(metricName, Number(metricValue), industryAverage)}`
+        : `Whether ${ticker}'s ${metricDisplayName} is good depends on industry context and investment goals. Compare with peers using our stock comparison tool.`
+    },
+    {
+      question: `How is ${ticker}'s ${metricDisplayName} calculated?`,
+      answer: getMetricCalculationExplanation(metricName, ticker)
+    },
+    {
+      question: `How does ${ticker}'s ${metricDisplayName} compare to competitors?`,
+      answer: `${ticker}'s ${metricDisplayName} of ${formattedValue} can be compared to industry peers${sector ? ` in the ${sector} sector` : ''}. Use our stock comparison tool to see how ${ticker} ranks against competitors on this metric.`
+    },
+    {
+      question: `What is a good ${metricDisplayName} for stocks?`,
+      answer: getIdealMetricRange(metricName)
+    },
+    {
+      question: `Is ${ticker}'s ${metricDisplayName} trending up or down?`,
+      answer: previousValue !== undefined && metricValue !== undefined
+        ? `${ticker}'s ${metricDisplayName} has ${Number(metricValue) > previousValue ? 'increased' : 'decreased'} from ${previousValue}${metricUnit} to ${formattedValue}. ${getMetricTrendAnalysis(metricName, Number(metricValue), previousValue)}`
+        : `View ${ticker}'s historical ${metricDisplayName} trends on our analysis dashboard to see the direction over time.`
+    },
+    {
+      question: `Why is ${metricDisplayName} important for ${ticker}?`,
+      answer: `${metricDisplayName} helps investors understand ${ticker}'s ${getMetricImportance(metricName)}. For ${companyName}, this metric provides insights into ${getMetricInsight(metricName, sector)}.`
+    },
+    {
+      question: `Should I buy ${ticker} based on its ${metricDisplayName}?`,
+      answer: `Investment decisions should not be based on a single metric. While ${ticker}'s ${metricDisplayName} of ${formattedValue} is one data point, consider the full picture: valuation, growth, profitability, and competitive position. Use our AI analysis for comprehensive evaluation.`
+    },
+  ]
+
+  return faqs
+}
+
+// Helper functions for metric FAQs
+function getMetricContext(metricName: string): string {
+  const contexts: Record<string, string> = {
+    'pe-ratio': 'valuation relative to earnings',
+    'revenue': 'sales performance and growth',
+    'net-margin': 'profitability efficiency',
+    'rsi': 'momentum and overbought/oversold conditions',
+    'market-cap': 'size and market value',
+    'debt-to-equity': 'financial leverage and risk',
+    'dividend-yield': 'income generation potential',
+    'eps': 'earnings power per share',
+    'roic': 'return on invested capital efficiency',
+    'free-cash-flow': 'cash generation ability',
+  }
+  return contexts[metricName] || 'financial health and performance'
+}
+
+function getMetricCalculationExplanation(metricName: string, ticker: string): string {
+  const explanations: Record<string, string> = {
+    'pe-ratio': `${ticker}'s P/E ratio is calculated by dividing the current stock price by earnings per share (EPS). It shows how much investors pay for each dollar of earnings.`,
+    'revenue': `${ticker}'s revenue represents total sales from all business operations, reported in quarterly and annual financial statements.`,
+    'net-margin': `Net margin is calculated as net income divided by revenue, expressed as a percentage. It shows how much profit ${ticker} keeps from each dollar of sales.`,
+    'rsi': `RSI (Relative Strength Index) is calculated using average gains and losses over 14 periods. Values above 70 suggest overbought conditions, below 30 suggests oversold.`,
+    'market-cap': `Market cap equals share price multiplied by total shares outstanding. It represents ${ticker}'s total market value.`,
+    'debt-to-equity': `Debt-to-equity ratio divides total debt by shareholders' equity, measuring financial leverage and risk.`,
+  }
+  return explanations[metricName] || `This metric is derived from ${ticker}'s financial statements using standard financial analysis formulas.`
+}
+
+function getIdealMetricRange(metricName: string): string {
+  const ranges: Record<string, string> = {
+    'pe-ratio': 'A "good" P/E ratio varies by industry. Generally, 15-25 is considered average. Lower may indicate undervaluation, higher suggests growth expectations.',
+    'net-margin': 'Net margins vary by industry. Technology: 15-25% is good. Retail: 2-5% is typical. Manufacturing: 5-10% is healthy.',
+    'rsi': 'RSI between 30-70 is considered neutral. Below 30 may signal buying opportunity (oversold), above 70 may signal caution (overbought).',
+    'debt-to-equity': 'Generally, debt-to-equity below 1.0 is conservative. 1.0-2.0 is moderate. Above 2.0 indicates high leverage.',
+    'dividend-yield': 'Dividend yields of 2-5% are considered healthy. Very high yields (6%+) may signal risk or unsustainable payouts.',
+    'roic': 'ROIC above 10% is generally good. Above 15% indicates strong capital allocation. Compare to cost of capital.',
+  }
+  return ranges[metricName] || 'Ideal ranges vary by industry and company stage. Compare to sector peers for context.'
+}
+
+function getMetricQualityAssessment(metricName: string, value: number, industryAvg: number): string {
+  const ratio = value / industryAvg
+  if (ratio > 1.2) return 'This indicates strong performance relative to peers.'
+  if (ratio < 0.8) return 'This suggests room for improvement compared to industry standards.'
+  return 'This is in line with industry norms.'
+}
+
+function getMetricTrendAnalysis(metricName: string, current: number, previous: number): string {
+  const changePercent = ((current - previous) / previous * 100).toFixed(1)
+  return `This represents a ${changePercent}% change, which investors should monitor in context of industry trends.`
+}
+
+function getMetricImportance(metricName: string): string {
+  const importance: Record<string, string> = {
+    'pe-ratio': 'valuation and growth expectations',
+    'revenue': 'business scale and market share',
+    'net-margin': 'operational efficiency and pricing power',
+    'rsi': 'short-term price momentum',
+    'market-cap': 'company size and liquidity',
+    'debt-to-equity': 'financial risk and leverage',
+  }
+  return importance[metricName] || 'financial performance and health'
+}
+
+function getMetricInsight(metricName: string, sector?: string): string {
+  if (sector) {
+    return `how efficiently the company operates within the ${sector} sector`
+  }
+  return 'the company\'s competitive position and financial strength'
+}
+
 // Generate stock-specific FAQs (basic - 4 questions)
 export function getStockFAQs(ticker: string, companyName: string, price?: number) {
   const currentYear = new Date().getFullYear()

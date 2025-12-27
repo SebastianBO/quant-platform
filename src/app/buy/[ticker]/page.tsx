@@ -8,7 +8,7 @@ import {
   getCorporationSchema,
   getHowToSchema,
   SITE_URL,
-} from '@/lib/seo'
+, getTableSchema } from '@/lib/seo'
 
 interface Props {
   params: Promise<{ ticker: string }>

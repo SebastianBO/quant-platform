@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { RelatedLinks } from '@/components/seo/RelatedLinks'
-import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL } from '@/lib/seo'
+import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL , getTableSchema } from '@/lib/seo'
 import { ArrowLeft, DollarSign, TrendingDown, TrendingUp, AlertTriangle, CheckCircle2, Building2, PiggyBank, Percent, Activity } from 'lucide-react'
 
 interface Props {
@@ -134,6 +134,13 @@ export default async function DebtAnalysisPage({ params }: Props) {
       url: pageUrl,
     }),
     getFAQSchema(debtFaqs),
+    getTableSchema({
+      name: `${symbol} Debt Analysis History`,
+      description: `Historical Debt Analysis data for ${companyName} (${symbol})`,
+      url: pageUrl,
+      columns: ['Period', 'Debt Analysis', 'Change'],
+      rowCount: 5,
+    }),
   ]
 
   return (

@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { RelatedLinks } from '@/components/seo/RelatedLinks'
-import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL } from '@/lib/seo'
+import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL , getTableSchema } from '@/lib/seo'
 
 interface Props {
   params: Promise<{ ticker: string }>
@@ -107,6 +107,13 @@ export default async function LeaseEscalatorsPage({ params }: Props) {
       url: pageUrl,
     }),
     getFAQSchema(escalatorFaqs),
+    getTableSchema({
+      name: `${symbol} Lease Escalators History`,
+      description: `Historical Lease Escalators data for ${companyName} (${symbol})`,
+      url: pageUrl,
+      columns: ['Period', 'Lease Escalators', 'Change'],
+      rowCount: 5,
+    }),
   ]
 
   return (

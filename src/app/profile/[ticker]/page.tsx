@@ -8,7 +8,7 @@ import {
   getFAQSchema,
   getCorporationSchema,
   SITE_URL,
-} from '@/lib/seo'
+, getTableSchema } from '@/lib/seo'
 import { Building2, Globe, Users, MapPin, Calendar, User } from 'lucide-react'
 
 interface Props {

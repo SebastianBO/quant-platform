@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { RelatedLinks } from '@/components/seo/RelatedLinks'
-import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL } from '@/lib/seo'
+import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL , getTableSchema } from '@/lib/seo'
 import { TrendingUp, TrendingDown, ArrowUpRight, ArrowDownRight, Minus } from 'lucide-react'
 
 interface Props {
@@ -187,6 +187,13 @@ export default async function CashFlowPage({ params }: Props) {
       url: pageUrl,
     }),
     getFAQSchema(cashFlowFaqs),
+    getTableSchema({
+      name: `${symbol} Cash Flow History`,
+      description: `Historical Cash Flow data for ${companyName} (${symbol})`,
+      url: pageUrl,
+      columns: ['Period', 'Cash Flow', 'Change'],
+      rowCount: 5,
+    }),
   ]
 
   return (

@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { RelatedLinks } from '@/components/seo/RelatedLinks'
-import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL } from '@/lib/seo'
+import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL , getTableSchema } from '@/lib/seo'
 
 interface Props {
   params: Promise<{ ticker: string }>
@@ -110,6 +110,13 @@ export default async function FarmIncomePage({ params }: Props) {
       url: pageUrl,
     }),
     getFAQSchema(farmIncomeFaqs),
+    getTableSchema({
+      name: `${symbol} Farm Income History`,
+      description: `Historical Farm Income data for ${companyName} (${symbol})`,
+      url: pageUrl,
+      columns: ['Period', 'Farm Income', 'Change'],
+      rowCount: 5,
+    }),
   ]
 
   return (

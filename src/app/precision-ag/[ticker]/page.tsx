@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { RelatedLinks } from '@/components/seo/RelatedLinks'
-import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL } from '@/lib/seo'
+import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL , getTableSchema } from '@/lib/seo'
 
 interface Props {
   params: Promise<{ ticker: string }>
@@ -110,6 +110,13 @@ export default async function PrecisionAgPage({ params }: Props) {
       url: pageUrl,
     }),
     getFAQSchema(precisionAgFaqs),
+    getTableSchema({
+      name: `${symbol} Precision Ag History`,
+      description: `Historical Precision Ag data for ${companyName} (${symbol})`,
+      url: pageUrl,
+      columns: ['Period', 'Precision Ag', 'Change'],
+      rowCount: 5,
+    }),
   ]
 
   return (

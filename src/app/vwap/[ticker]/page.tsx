@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { RelatedLinks } from '@/components/seo/RelatedLinks'
-import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL } from '@/lib/seo'
+import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL , getTableSchema } from '@/lib/seo'
 
 interface Props {
   params: Promise<{ ticker: string }>
@@ -108,6 +108,13 @@ export default async function VWAPPage({ params }: Props) {
       url: pageUrl,
     }),
     getFAQSchema(vwapFaqs),
+    getTableSchema({
+      name: `${symbol} Vwap History`,
+      description: `Historical Vwap data for ${companyName} (${symbol})`,
+      url: pageUrl,
+      columns: ['Period', 'Vwap', 'Change'],
+      rowCount: 5,
+    }),
   ]
 
   return (

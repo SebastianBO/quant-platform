@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { RelatedLinks } from '@/components/seo/RelatedLinks'
-import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL } from '@/lib/seo'
+import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL , getTableSchema } from '@/lib/seo'
 
 interface Props {
   params: Promise<{ ticker: string }>
@@ -109,6 +109,13 @@ export default async function HistoryPage({ params }: Props) {
       url: pageUrl,
     }),
     getFAQSchema(historyFaqs),
+    getTableSchema({
+      name: `${symbol} History History`,
+      description: `Historical History data for ${companyName} (${symbol})`,
+      url: pageUrl,
+      columns: ['Period', 'History', 'Change'],
+      rowCount: 5,
+    }),
   ]
 
   return (

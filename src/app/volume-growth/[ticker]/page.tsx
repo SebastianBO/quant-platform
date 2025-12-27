@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { RelatedLinks } from '@/components/seo/RelatedLinks'
-import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL } from '@/lib/seo'
+import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL , getTableSchema } from '@/lib/seo'
 
 interface Props {
   params: Promise<{ ticker: string }>
@@ -101,6 +101,13 @@ export default async function VolumeGrowthPage({ params }: Props) {
       url: pageUrl,
     }),
     getFAQSchema(volumeGrowthFaqs),
+    getTableSchema({
+      name: `${symbol} Volume Growth History`,
+      description: `Historical Volume Growth data for ${companyName} (${symbol})`,
+      url: pageUrl,
+      columns: ['Period', 'Volume Growth', 'Change'],
+      rowCount: 5,
+    }),
   ]
 
   return (

@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { RelatedLinks } from '@/components/seo/RelatedLinks'
-import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL } from '@/lib/seo'
+import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, getTableSchema, SITE_URL } from '@/lib/seo'
 
 interface Props {
   params: Promise<{ ticker: string }>
@@ -154,6 +154,13 @@ export default async function PERatioPage({ params }: Props) {
       url: pageUrl,
     }),
     getFAQSchema(peFaqs),
+    getTableSchema({
+      name: `${symbol} PE Ratio History`,
+      description: `Historical P/E ratio data for ${companyName} (${symbol})`,
+      url: pageUrl,
+      columns: ['Period', 'P/E Ratio', 'Change'],
+      rowCount: 5,
+    }),
   ]
 
   return (

@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { RelatedLinks } from '@/components/seo/RelatedLinks'
-import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL } from '@/lib/seo'
+import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL , getTableSchema } from '@/lib/seo'
 
 interface Props {
   params: Promise<{ ticker: string }>
@@ -103,6 +103,13 @@ export default async function MassIndexPage({ params }: Props) {
       url: pageUrl,
     }),
     getFAQSchema(massIndexFaqs),
+    getTableSchema({
+      name: `${symbol} Mass Index History`,
+      description: `Historical Mass Index data for ${companyName} (${symbol})`,
+      url: pageUrl,
+      columns: ['Period', 'Mass Index', 'Change'],
+      rowCount: 5,
+    }),
   ]
 
   return (

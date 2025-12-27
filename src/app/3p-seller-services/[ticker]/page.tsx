@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { RelatedLinks } from '@/components/seo/RelatedLinks'
-import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL } from '@/lib/seo'
+import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL , getTableSchema } from '@/lib/seo'
 
 interface Props {
   params: Promise<{ ticker: string }>
@@ -101,6 +101,13 @@ export default async function ThirdPartySellerServicesPage({ params }: Props) {
       url: pageUrl,
     }),
     getFAQSchema(sellerServicesFaqs),
+    getTableSchema({
+      name: `${symbol} 3p Seller Services History`,
+      description: `Historical 3p Seller Services data for ${companyName} (${symbol})`,
+      url: pageUrl,
+      columns: ['Period', '3p Seller Services', 'Change'],
+      rowCount: 5,
+    }),
   ]
 
   return (

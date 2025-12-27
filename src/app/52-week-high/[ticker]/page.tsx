@@ -8,7 +8,7 @@ import {
   getFAQSchema,
   getCorporationSchema,
   SITE_URL,
-} from '@/lib/seo'
+, getTableSchema } from '@/lib/seo'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { TrendingUp, TrendingDown, Activity, Calendar, DollarSign } from 'lucide-react'

@@ -9,7 +9,7 @@ import {
   getRelatedStocks,
   getCorporationSchema,
   SITE_URL,
-} from '@/lib/seo'
+, getTableSchema } from '@/lib/seo'
 import { ArrowRight, TrendingUp, Users, Scale, Target } from 'lucide-react'
 
 interface Props {

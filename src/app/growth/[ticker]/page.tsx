@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { SITE_URL, getBreadcrumbSchema, getArticleSchema } from '@/lib/seo'
+import { SITE_URL, getBreadcrumbSchema, getArticleSchema , getTableSchema } from '@/lib/seo'
 import GrowthContent from './GrowthContent'
 
 interface Props {

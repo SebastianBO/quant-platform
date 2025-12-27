@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { RelatedLinks } from '@/components/seo/RelatedLinks'
-import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL } from '@/lib/seo'
+import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL , getTableSchema } from '@/lib/seo'
 
 interface Props {
   params: Promise<{ ticker: string }>
@@ -121,6 +121,13 @@ export default async function AISCPage({ params }: Props) {
       url: pageUrl,
     }),
     getFAQSchema(aiscFaqs),
+    getTableSchema({
+      name: `${symbol} Aisc History`,
+      description: `Historical Aisc data for ${companyName} (${symbol})`,
+      url: pageUrl,
+      columns: ['Period', 'Aisc', 'Change'],
+      rowCount: 5,
+    }),
   ]
 
   return (

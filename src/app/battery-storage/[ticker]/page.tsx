@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { RelatedLinks } from '@/components/seo/RelatedLinks'
-import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL } from '@/lib/seo'
+import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL , getTableSchema } from '@/lib/seo'
 
 interface Props {
   params: Promise<{ ticker: string }>
@@ -102,6 +102,13 @@ export default async function BatteryStoragePage({ params }: Props) {
       url: pageUrl,
     }),
     getFAQSchema(storageFaqs),
+    getTableSchema({
+      name: `${symbol} Battery Storage History`,
+      description: `Historical Battery Storage data for ${companyName} (${symbol})`,
+      url: pageUrl,
+      columns: ['Period', 'Battery Storage', 'Change'],
+      rowCount: 5,
+    }),
   ]
 
   return (

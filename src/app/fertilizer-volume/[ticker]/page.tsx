@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { RelatedLinks } from '@/components/seo/RelatedLinks'
-import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL } from '@/lib/seo'
+import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL , getTableSchema } from '@/lib/seo'
 
 interface Props {
   params: Promise<{ ticker: string }>
@@ -110,6 +110,13 @@ export default async function FertilizerVolumePage({ params }: Props) {
       url: pageUrl,
     }),
     getFAQSchema(fertilizerFaqs),
+    getTableSchema({
+      name: `${symbol} Fertilizer Volume History`,
+      description: `Historical Fertilizer Volume data for ${companyName} (${symbol})`,
+      url: pageUrl,
+      columns: ['Period', 'Fertilizer Volume', 'Change'],
+      rowCount: 5,
+    }),
   ]
 
   return (

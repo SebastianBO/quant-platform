@@ -6,7 +6,7 @@ import {
   getFinancialProductSchema,
   getFAQSchema,
   SITE_URL,
-} from '@/lib/seo'
+, getTableSchema } from '@/lib/seo'
 import { RelatedLinks } from '@/components/seo/RelatedLinks'
 import { TrendingUp, TrendingDown, BarChart3, DollarSign, Activity, ArrowRight } from 'lucide-react'
 

@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { RelatedLinks } from '@/components/seo/RelatedLinks'
-import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL } from '@/lib/seo'
+import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL , getTableSchema } from '@/lib/seo'
 
 interface Props {
   params: Promise<{ ticker: string }>
@@ -107,6 +107,13 @@ export default async function FiberMilesPage({ params }: Props) {
       url: pageUrl,
     }),
     getFAQSchema(fiberFaqs),
+    getTableSchema({
+      name: `${symbol} Fiber Miles History`,
+      description: `Historical Fiber Miles data for ${companyName} (${symbol})`,
+      url: pageUrl,
+      columns: ['Period', 'Fiber Miles', 'Change'],
+      rowCount: 5,
+    }),
   ]
 
   return (

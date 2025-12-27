@@ -9,7 +9,7 @@ import {
   getCorporationSchema,
   SITE_URL,
   getRelatedStocks,
-} from '@/lib/seo'
+, getTableSchema } from '@/lib/seo'
 import {
   Building2,
   TrendingUp,

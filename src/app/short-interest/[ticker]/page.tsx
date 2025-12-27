@@ -8,7 +8,7 @@ import {
   getFAQSchema,
   getCorporationSchema,
   SITE_URL,
-} from '@/lib/seo'
+, getTableSchema } from '@/lib/seo'
 import { TrendingUp, TrendingDown, AlertTriangle, Activity } from 'lucide-react'
 
 interface Props {
