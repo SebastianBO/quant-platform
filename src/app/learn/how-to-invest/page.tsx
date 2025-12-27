@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { SITE_URL } from '@/lib/seo'
-import { FAQSchema, BreadcrumbSchema, ArticleSchema } from '@/components/seo/StructuredData'
+import { FAQSchema, BreadcrumbSchema, BlogPostingSchema, HowToSchema } from '@/components/seo/StructuredData'
 
 export const metadata: Metadata = {
   title: 'How to Invest in Stocks - Complete Beginner\'s Guide 2025',
@@ -170,7 +170,7 @@ export default function HowToInvestPage() {
           { name: 'How to Invest in Stocks', url: pageUrl },
         ]}
       />
-      <ArticleSchema
+      <BlogPostingSchema
         headline="How to Invest in Stocks - Complete Beginner's Guide"
         description="Comprehensive guide to stock investing covering basics, strategies, risk management, and portfolio building for beginners."
         url={pageUrl}
@@ -180,6 +180,21 @@ export default function HowToInvestPage() {
           'investment strategies',
           'portfolio building',
           'risk management',
+          'beginner investing',
+          'stock market basics',
+        ]}
+        wordCount={3500}
+        readingTime="PT15M"
+      />
+      <HowToSchema
+        name="How to Start Investing in Stocks"
+        description="Step-by-step guide for beginners to start investing in the stock market"
+        steps={[
+          { name: 'Build Your Emergency Fund', text: 'Save 3-6 months of expenses in a high-yield savings account before investing.' },
+          { name: 'Choose a Brokerage Account', text: 'Open a brokerage account with a reputable broker like Fidelity, Schwab, or Vanguard.' },
+          { name: 'Start with Index Funds', text: 'Begin with low-cost S&P 500 index funds for instant diversification.' },
+          { name: 'Dollar-Cost Average', text: 'Invest fixed amounts regularly rather than timing the market.' },
+          { name: 'Learn and Expand', text: 'Gradually add individual stocks as your research skills improve.' },
         ]}
       />
       <FAQSchema faqs={faqs} />

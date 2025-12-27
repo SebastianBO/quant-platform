@@ -11,6 +11,7 @@ import {
   getCorporationSchema,
   getDatasetSchema,
   getAggregateRatingSchema,
+  getBuyActionSchema,
   SITE_URL,
 } from '@/lib/seo'
 
@@ -212,6 +213,14 @@ export default async function StockPage({ params }: Props) {
   const extendedFaqs = getStockFAQsExtended(symbol, companyName, price, metrics)
   const faqSchema = getFAQSchema(extendedFaqs)
 
+  // BuyAction Schema - Signals investment intent to AI/search
+  const buyActionSchema = getBuyActionSchema({
+    ticker: symbol,
+    companyName,
+    price,
+    url: pageUrl,
+  })
+
   // Combine all schemas
   const schemas: object[] = [
     breadcrumbSchema,
@@ -220,6 +229,7 @@ export default async function StockPage({ params }: Props) {
     corporationSchema,
     datasetSchema,
     faqSchema,
+    buyActionSchema,
   ]
 
   if (aggregateRatingSchema) {

@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { ThemeProvider } from "@/components/theme-provider"
-import { getOrganizationSchema, getWebSiteSchema } from "@/lib/seo"
+import { getOrganizationSchema, getWebSiteSchema, getFinancialServiceSchema, getSoftwareApplicationSchema } from "@/lib/seo"
 import "./globals.css"
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist" })
@@ -108,6 +108,8 @@ export const metadata: Metadata = {
 // Global structured data schemas
 const organizationSchema = getOrganizationSchema()
 const websiteSchema = getWebSiteSchema()
+const financialServiceSchema = getFinancialServiceSchema()
+const softwareApplicationSchema = getSoftwareApplicationSchema()
 
 export default function RootLayout({
   children,
@@ -141,7 +143,7 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify([organizationSchema, websiteSchema]),
+            __html: JSON.stringify([organizationSchema, websiteSchema, financialServiceSchema, softwareApplicationSchema]),
           }}
         />
       </head>

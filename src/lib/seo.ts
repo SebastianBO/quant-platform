@@ -356,6 +356,363 @@ export function combineSchemas(...schemas: object[]) {
   return schemas
 }
 
+// ========================================
+// NEW SCHEMAS FOR ENHANCED SEO RANKINGS
+// ========================================
+
+// ComparisonAction Schema - For stock comparison pages (enables rich comparison results)
+export function getComparisonSchema({
+  ticker1,
+  ticker2,
+  name1,
+  name2,
+  url,
+  metrics,
+}: {
+  ticker1: string
+  ticker2: string
+  name1: string
+  name2: string
+  url: string
+  metrics?: {
+    marketCap1?: number
+    marketCap2?: number
+    pe1?: number
+    pe2?: number
+    price1?: number
+    price2?: number
+  }
+}) {
+  const currentYear = new Date().getFullYear()
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    '@id': `${url}#comparison`,
+    name: `${ticker1} vs ${ticker2} Stock Comparison`,
+    description: `Head-to-head comparison of ${name1} (${ticker1}) and ${name2} (${ticker2}) stocks for ${currentYear}`,
+    url,
+    numberOfItems: 2,
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        item: {
+          '@type': 'FinancialProduct',
+          '@id': `${SITE_URL}/stock/${ticker1.toLowerCase()}#stock`,
+          name: `${ticker1} Stock - ${name1}`,
+          description: `${name1} (${ticker1}) stock analysis and metrics`,
+          url: `${SITE_URL}/stock/${ticker1.toLowerCase()}`,
+          provider: {
+            '@type': 'Corporation',
+            name: name1,
+            tickerSymbol: ticker1,
+          },
+          ...(metrics?.price1 && {
+            offers: {
+              '@type': 'Offer',
+              price: metrics.price1.toString(),
+              priceCurrency: 'USD',
+            },
+          }),
+        },
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        item: {
+          '@type': 'FinancialProduct',
+          '@id': `${SITE_URL}/stock/${ticker2.toLowerCase()}#stock`,
+          name: `${ticker2} Stock - ${name2}`,
+          description: `${name2} (${ticker2}) stock analysis and metrics`,
+          url: `${SITE_URL}/stock/${ticker2.toLowerCase()}`,
+          provider: {
+            '@type': 'Corporation',
+            name: name2,
+            tickerSymbol: ticker2,
+          },
+          ...(metrics?.price2 && {
+            offers: {
+              '@type': 'Offer',
+              price: metrics.price2.toString(),
+              priceCurrency: 'USD',
+            },
+          }),
+        },
+      },
+    ],
+  }
+}
+
+// BuyAction Schema - For stock pages (signals investment intent to AI/search)
+export function getBuyActionSchema({
+  ticker,
+  companyName,
+  price,
+  url,
+}: {
+  ticker: string
+  companyName: string
+  price?: number
+  url: string
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Action',
+    '@id': `${url}#buy-action`,
+    name: `Buy ${ticker} Stock`,
+    description: `Analyze and consider buying ${companyName} (${ticker}) stock`,
+    object: {
+      '@type': 'FinancialProduct',
+      '@id': `${url}#stock`,
+      name: `${ticker} Stock`,
+      provider: {
+        '@type': 'Corporation',
+        name: companyName,
+        tickerSymbol: ticker,
+      },
+      ...(price && {
+        offers: {
+          '@type': 'Offer',
+          price: price.toString(),
+          priceCurrency: 'USD',
+          availability: 'https://schema.org/InStock',
+          priceValidUntil: new Date(Date.now() + 86400000).toISOString().split('T')[0], // Valid for 24 hours
+        },
+      }),
+    },
+    potentialAction: {
+      '@type': 'TradeAction',
+      name: 'Trade Stock',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${SITE_URL}/dashboard?ticker=${ticker}&tab=quant`,
+        actionPlatform: ['https://schema.org/DesktopWebPlatform', 'https://schema.org/MobileWebPlatform'],
+      },
+    },
+  }
+}
+
+// BlogPosting Schema - For educational/learn pages (better than generic Article)
+export function getBlogPostingSchema({
+  headline,
+  description,
+  url,
+  datePublished,
+  dateModified,
+  image,
+  keywords,
+  wordCount,
+}: {
+  headline: string
+  description: string
+  url: string
+  datePublished?: string
+  dateModified?: string
+  image?: string
+  keywords?: string[]
+  wordCount?: number
+}) {
+  const now = new Date().toISOString()
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    '@id': `${url}#article`,
+    headline,
+    description,
+    url,
+    image: image || OG_IMAGE_URL,
+    datePublished: datePublished || now,
+    dateModified: dateModified || now,
+    ...(wordCount && { wordCount }),
+    author: {
+      '@type': 'Organization',
+      '@id': `${SITE_URL}/#organization`,
+      name: SITE_NAME,
+    },
+    publisher: {
+      '@type': 'Organization',
+      '@id': `${SITE_URL}/#organization`,
+      name: SITE_NAME,
+      logo: {
+        '@type': 'ImageObject',
+        url: LOGO_URL,
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': url,
+    },
+    isPartOf: {
+      '@type': 'Blog',
+      '@id': `${SITE_URL}/learn#blog`,
+      name: `${SITE_NAME} Investment Education`,
+    },
+    ...(keywords && { keywords: keywords.join(', ') }),
+  }
+}
+
+// Table Schema - For financial data tables (enables table rich results)
+export function getTableSchema({
+  name,
+  description,
+  url,
+  columns,
+  rowCount,
+}: {
+  name: string
+  description: string
+  url: string
+  columns: string[]
+  rowCount?: number
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Table',
+    '@id': `${url}#table`,
+    name,
+    description,
+    about: {
+      '@type': 'FinancialProduct',
+      name: 'Stock Financial Data',
+    },
+    ...(rowCount && { numberOfRows: rowCount }),
+    creator: {
+      '@type': 'Organization',
+      '@id': `${SITE_URL}/#organization`,
+    },
+  }
+}
+
+// Earnings Event Schema - For individual stock earnings pages
+export function getEarningsEventSchema({
+  ticker,
+  companyName,
+  earningsDate,
+  timeOfDay = 'AMC',
+  epsEstimate,
+  revenueEstimate,
+}: {
+  ticker: string
+  companyName: string
+  earningsDate: string
+  timeOfDay?: 'BMO' | 'AMC'
+  epsEstimate?: number
+  revenueEstimate?: number
+}) {
+  const startTime = timeOfDay === 'BMO' ? 'T08:00:00' : 'T16:30:00'
+  const eventUrl = `${SITE_URL}/earnings/${ticker.toLowerCase()}`
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    '@id': `${eventUrl}#event`,
+    name: `${companyName} (${ticker}) Earnings Report`,
+    description: `Quarterly earnings report for ${companyName} (${ticker}).${epsEstimate ? ` EPS estimate: $${epsEstimate.toFixed(2)}.` : ''}${revenueEstimate ? ` Revenue estimate: $${(revenueEstimate / 1e9).toFixed(2)}B.` : ''}`,
+    startDate: `${earningsDate}${startTime}`,
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OnlineEventAttendanceMode',
+    url: eventUrl,
+    location: {
+      '@type': 'VirtualLocation',
+      url: eventUrl,
+    },
+    organizer: {
+      '@type': 'Corporation',
+      name: companyName,
+      tickerSymbol: ticker,
+      url: `${SITE_URL}/stock/${ticker.toLowerCase()}`,
+    },
+    performer: {
+      '@type': 'Corporation',
+      name: companyName,
+      tickerSymbol: ticker,
+    },
+  }
+}
+
+// FinancialService Schema - Defines the platform itself
+export function getFinancialServiceSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FinancialService',
+    '@id': `${SITE_URL}/#service`,
+    name: `${SITE_NAME} - AI Stock Analysis Platform`,
+    description: 'AI-powered stock research and analysis platform providing real-time quotes, financial statements, DCF valuations, and investment insights.',
+    url: SITE_URL,
+    logo: LOGO_URL,
+    serviceType: 'Investment Research Service',
+    areaServed: {
+      '@type': 'Country',
+      name: 'United States',
+    },
+    availableLanguage: 'English',
+    provider: {
+      '@type': 'Organization',
+      '@id': `${SITE_URL}/#organization`,
+    },
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Stock Analysis Tools',
+      itemListElement: [
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'AI Stock Analysis',
+            description: 'AI-powered fundamental and technical analysis',
+          },
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'DCF Valuation Calculator',
+            description: 'Discounted cash flow valuation tool',
+          },
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Stock Screener',
+            description: 'Filter stocks by multiple criteria',
+          },
+        },
+      ],
+    },
+  }
+}
+
+// SoftwareApplication Schema - For app/tool discovery
+export function getSoftwareApplicationSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    '@id': `${SITE_URL}/#app`,
+    name: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'Web Browser',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    featureList: [
+      'Real-time stock quotes',
+      'AI-powered stock analysis',
+      'DCF valuation calculator',
+      'Financial statement analysis',
+      'Stock comparison tools',
+      'Earnings calendar',
+      'Technical indicators',
+      'Sector analysis',
+    ],
+  }
+}
+
 // Generate stock-specific FAQs (basic - 4 questions)
 export function getStockFAQs(ticker: string, companyName: string, price?: number) {
   const currentYear = new Date().getFullYear()

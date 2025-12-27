@@ -9,6 +9,8 @@ import {
   getBreadcrumbSchema,
   getArticleSchema,
   getFAQSchema,
+  getComparisonSchema,
+  getTableSchema,
   SITE_URL,
 } from '@/lib/seo'
 
@@ -325,15 +327,49 @@ export default async function ComparePage({ params }: Props) {
       question: `Which stock has better value: ${ticker1} or ${ticker2}?`,
       answer: `Based on P/E ratios, ${stock1.pe > 0 && stock2.pe > 0 ? (stock1.pe < stock2.pe ? `${ticker1} trades at a lower multiple (${stock1.pe.toFixed(1)}x vs ${stock2.pe.toFixed(1)}x)` : `${ticker2} trades at a lower multiple (${stock2.pe.toFixed(1)}x vs ${stock1.pe.toFixed(1)}x)`) : 'compare detailed valuation metrics on our dashboard'}.`,
     },
+    {
+      question: `Should I buy ${ticker1} or ${ticker2} in ${currentYear}?`,
+      answer: `The choice between ${ticker1} and ${ticker2} depends on your investment goals. ${stock1.revenueGrowth > stock2.revenueGrowth ? `${ticker1} shows higher revenue growth (${(stock1.revenueGrowth * 100).toFixed(1)}%)` : `${ticker2} shows higher revenue growth (${(stock2.revenueGrowth * 100).toFixed(1)}%)`}. ${stock1.grossMargin > stock2.grossMargin ? `${ticker1} has better margins (${(stock1.grossMargin * 100).toFixed(1)}%)` : `${ticker2} has better margins (${(stock2.grossMargin * 100).toFixed(1)}%)`}. Consider your risk tolerance and time horizon.`,
+    },
+    {
+      question: `What is the market cap comparison between ${ticker1} and ${ticker2}?`,
+      answer: `${ticker1} (${stock1.name}) has a market cap of ${formatMarketCap(stock1.marketCap)}, while ${ticker2} (${stock2.name}) has a market cap of ${formatMarketCap(stock2.marketCap)}. ${stock1.marketCap > stock2.marketCap ? `${ticker1} is the larger company by market value.` : `${ticker2} is the larger company by market value.`}`,
+    },
   ]
   const faqSchema = getFAQSchema(comparisonFaqs)
+
+  // NEW: Comparison Schema for rich results
+  const comparisonSchema = getComparisonSchema({
+    ticker1,
+    ticker2,
+    name1: stock1.name,
+    name2: stock2.name,
+    url: pageUrl,
+    metrics: {
+      price1: stock1.price,
+      price2: stock2.price,
+      marketCap1: stock1.marketCap,
+      marketCap2: stock2.marketCap,
+      pe1: stock1.pe,
+      pe2: stock2.pe,
+    },
+  })
+
+  // NEW: Table Schema for the comparison table
+  const tableSchema = getTableSchema({
+    name: `${ticker1} vs ${ticker2} Comparison Table`,
+    description: `Key financial metrics comparison between ${stock1.name} and ${stock2.name}`,
+    url: pageUrl,
+    columns: ['Metric', ticker1, ticker2, 'Winner'],
+    rowCount: 5,
+  })
 
   return (
     <>
       <Header />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema]) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema, comparisonSchema, tableSchema]) }}
       />
       <main className="min-h-screen bg-background text-foreground pt-20">
         <div className="max-w-7xl mx-auto px-6 py-12">

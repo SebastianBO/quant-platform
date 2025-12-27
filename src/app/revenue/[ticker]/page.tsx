@@ -7,6 +7,7 @@ import {
   getArticleSchema,
   getFAQSchema,
   getCorporationSchema,
+  getTableSchema,
   SITE_URL,
 } from '@/lib/seo'
 
@@ -136,6 +137,24 @@ export default async function RevenuePage({ params }: Props) {
       question: `How does ${symbol} compare to competitors in revenue?`,
       answer: `${symbol} generates ${latestRevenue >= 1e9 ? `$${(latestRevenue / 1e9).toFixed(2)} billion` : `$${(latestRevenue / 1e6).toFixed(0)} million`} in annual revenue${sector ? ` in the ${sector} sector` : ''}. Compare ${symbol} to competitors using our stock comparison tool to see relative market share and growth rates.`
     },
+    {
+      question: `What is ${symbol}'s revenue per share?`,
+      answer: snapshot?.shares_outstanding && latestRevenue
+        ? `${symbol}'s revenue per share is approximately $${(latestRevenue / snapshot.shares_outstanding).toFixed(2)}, calculated by dividing total annual revenue by shares outstanding.`
+        : `Revenue per share for ${symbol} can be calculated by dividing annual revenue by shares outstanding. Visit our stock analysis page for detailed metrics.`
+    },
+    {
+      question: `Why is ${symbol}'s revenue important for investors?`,
+      answer: `Revenue (also called sales or top-line) is the total income ${companyName} generates from its operations. Revenue growth indicates business expansion and market share gains. For ${symbol}, tracking revenue trends helps investors understand the company's growth trajectory, pricing power, and market position${sector ? ` in the ${sector} sector` : ''}.`
+    },
+    {
+      question: `What affects ${symbol}'s revenue growth?`,
+      answer: `Key factors affecting ${symbol}'s revenue include: market demand, pricing strategy, competitive dynamics, product/service mix, geographic expansion, and macroeconomic conditions.${sector === 'Technology' ? ' For technology companies, innovation cycles and subscription renewals are also critical.' : sector === 'Consumer Cyclical' ? ' Consumer spending trends and seasonal patterns significantly impact revenue.' : ''}`
+    },
+    {
+      question: `How to analyze ${symbol}'s revenue quality?`,
+      answer: `To assess ${symbol}'s revenue quality, consider: (1) Revenue consistency - is growth sustainable? (2) Revenue sources - diversified or concentrated? (3) Recurring vs one-time revenue - subscription models are more predictable. (4) Customer concentration - dependency on few customers. (5) Currency exposure for international operations.`
+    },
   ]
 
   // Schemas
@@ -168,7 +187,16 @@ export default async function RevenuePage({ params }: Props) {
 
   const faqSchema = getFAQSchema(revenueFaqs)
 
-  const schemas = [breadcrumbSchema, articleSchema, corporationSchema, faqSchema]
+  // Table Schema for revenue data
+  const tableSchema = getTableSchema({
+    name: `${symbol} Revenue History`,
+    description: `Annual and quarterly revenue data for ${companyName} (${symbol})`,
+    url: pageUrl,
+    columns: ['Period', 'Revenue', 'Growth'],
+    rowCount: incomeStatements?.length || 0,
+  })
+
+  const schemas = [breadcrumbSchema, articleSchema, corporationSchema, faqSchema, tableSchema]
 
   return (
     <>

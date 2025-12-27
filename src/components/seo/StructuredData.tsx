@@ -291,3 +291,184 @@ export function CombinedSchema({ schemas }: CombinedSchemaProps) {
     />
   )
 }
+
+// ========================================
+// NEW: BlogPosting Schema for Educational Content
+// ========================================
+
+interface BlogPostingSchemaProps {
+  headline: string
+  description: string
+  url: string
+  datePublished?: string
+  dateModified?: string
+  image?: string
+  keywords?: string[]
+  wordCount?: number
+  authorName?: string
+  readingTime?: string
+}
+
+/**
+ * BlogPosting Schema Component
+ * Generates BlogPosting structured data for educational and blog content
+ * More specific than Article schema - better for guides, tutorials, and educational pages
+ *
+ * @example
+ * <BlogPostingSchema
+ *   headline="How to Invest in Stocks"
+ *   description="Complete guide to stock investing"
+ *   url="https://lician.com/learn/how-to-invest"
+ *   keywords={["investing", "stocks", "beginner guide"]}
+ *   wordCount={3500}
+ *   readingTime="PT15M"
+ * />
+ */
+export function BlogPostingSchema({
+  headline,
+  description,
+  url,
+  datePublished,
+  dateModified,
+  image,
+  keywords,
+  wordCount,
+  authorName = 'Lician',
+  readingTime,
+}: BlogPostingSchemaProps) {
+  const now = new Date().toISOString()
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    '@id': `${url}#article`,
+    headline,
+    description,
+    url,
+    image: image || 'https://lician.com/og-image.png',
+    datePublished: datePublished || now,
+    dateModified: dateModified || now,
+    ...(wordCount && { wordCount }),
+    ...(readingTime && { timeRequired: readingTime }),
+    author: {
+      '@type': 'Organization',
+      '@id': 'https://lician.com/#organization',
+      name: authorName,
+    },
+    publisher: {
+      '@type': 'Organization',
+      '@id': 'https://lician.com/#organization',
+      name: 'Lician',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://lician.com/logo.png',
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': url,
+    },
+    isPartOf: {
+      '@type': 'Blog',
+      '@id': 'https://lician.com/learn#blog',
+      name: 'Lician Investment Education',
+    },
+    ...(keywords && { keywords: keywords.join(', ') }),
+    // Educational content signals
+    learningResourceType: 'Tutorial',
+    educationalLevel: 'Beginner',
+    audience: {
+      '@type': 'PeopleAudience',
+      suggestedMinAge: 18,
+      audienceType: 'Retail Investors',
+    },
+  }
+
+  return (
+    <Script
+      id="blogposting-schema"
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(schema),
+      }}
+      strategy="beforeInteractive"
+    />
+  )
+}
+
+// ========================================
+// NEW: Course Schema for Learning Hub
+// ========================================
+
+interface LessonItem {
+  name: string
+  url: string
+  description?: string
+}
+
+interface CourseSchemaProps {
+  name: string
+  description: string
+  url: string
+  provider?: string
+  hasParts?: LessonItem[]
+}
+
+/**
+ * Course Schema Component
+ * Generates Course structured data for the learning hub
+ *
+ * @example
+ * <CourseSchema
+ *   name="Stock Investing Fundamentals"
+ *   description="Learn the basics of stock investing"
+ *   url="https://lician.com/learn"
+ *   hasParts={[
+ *     { name: "How to Invest", url: "/learn/how-to-invest" },
+ *     { name: "Stock Analysis", url: "/learn/stock-analysis" }
+ *   ]}
+ * />
+ */
+export function CourseSchema({
+  name,
+  description,
+  url,
+  provider = 'Lician',
+  hasParts,
+}: CourseSchemaProps) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Course',
+    '@id': `${url}#course`,
+    name,
+    description,
+    url,
+    provider: {
+      '@type': 'Organization',
+      '@id': 'https://lician.com/#organization',
+      name: provider,
+    },
+    isAccessibleForFree: true,
+    ...(hasParts && {
+      hasPart: hasParts.map((part, index) => ({
+        '@type': 'LearningResource',
+        '@id': `https://lician.com${part.url}#lesson`,
+        name: part.name,
+        url: `https://lician.com${part.url}`,
+        ...(part.description && { description: part.description }),
+        position: index + 1,
+      })),
+    }),
+  }
+
+  return (
+    <Script
+      id="course-schema"
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(schema),
+      }}
+      strategy="beforeInteractive"
+    />
+  )
+}
