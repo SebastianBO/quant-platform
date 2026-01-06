@@ -248,6 +248,9 @@ export function getDatasetSchema({
       'market capitalization',
       'price/earnings ratio',
     ],
+    // License field required by Google for Dataset rich results
+    license: 'https://creativecommons.org/licenses/by/4.0/',
+    isAccessibleForFree: true,
   }
 }
 
