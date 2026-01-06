@@ -18,10 +18,9 @@ interface Props {
   params: Promise<{ ticker: string }>
 }
 
-// Pre-render top stocks at build time for better SEO and performance
-
-// Allow dynamic rendering for stocks not in the pre-rendered list
-export const dynamic = 'force-dynamic'
+// ISR with 5 minute revalidation - balances freshness with crawl reliability
+// This prevents Google crawl failures from API timeouts
+export const revalidate = 300
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

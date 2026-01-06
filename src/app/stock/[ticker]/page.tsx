@@ -18,8 +18,9 @@ interface Props {
   params: Promise<{ ticker: string }>
 }
 
-// Dynamic rendering - stock pages need fresh data
-export const dynamic = 'force-dynamic'
+// ISR with 60 second revalidation - balances freshness with crawl reliability
+// This prevents Google crawl failures from API timeouts while keeping data fresh
+export const revalidate = 60
 
 // Generate metadata for SEO - This is the critical fix!
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

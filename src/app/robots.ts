@@ -85,7 +85,11 @@ export default function robots(): MetadataRoute.Robots {
         ],
       },
     ],
-    sitemap: [`${baseUrl}/sitemap.xml`],
+    sitemap: [
+      `${baseUrl}/sitemap-index.xml`,  // Main index with all sub-sitemaps
+      `${baseUrl}/sitemap.xml`,         // Core pages
+      `${baseUrl}/sitemap-seo.xml`,     // SEO landing pages
+    ],
     // Note: Next.js will automatically serve this at /robots.txt
   }
 }

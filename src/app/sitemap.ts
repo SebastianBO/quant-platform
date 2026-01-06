@@ -241,28 +241,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   })
 
-  // Stock pages - core pages for each ticker
+  // Stock pages - pSEO page types only (main /stock/ pages are in sitemap-stocks-*.xml)
+  // This avoids duplication and focuses crawl budget on high-value pSEO pages
   ALL_STOCKS.forEach((ticker, index) => {
     const basePriority = index < 20 ? 0.9 : index < 50 ? 0.85 : index < 100 ? 0.8 : 0.75
     const t = ticker.toLowerCase()
 
-    // Main stock page
-    routes.push({
-      url: `${baseUrl}/stock/${t}`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly',
-      priority: basePriority,
-    })
+    // NOTE: /stock/{ticker} URLs are now in sitemap-stocks-hot.xml, sitemap-stocks-warm.xml, etc.
+    // This prevents duplicate URLs which waste crawl budget
 
-    // Alternative ticker-stock URL format
-    routes.push({
-      url: `${baseUrl}/${t}-stock`,
-      lastModified: currentDate,
-      changeFrequency: 'hourly',
-      priority: basePriority - 0.05,
-    })
-
-    // Core stock page types
+    // pSEO page types - high-value programmatic pages
     STOCK_PAGE_TYPES.forEach((pageType) => {
       if (pageType !== 'stock') {
         routes.push({

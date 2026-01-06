@@ -35,6 +35,9 @@ export async function GET() {
       sitemap = sitemap.replace(/\/analysis<\/loc>/g, '</loc>') // Remove /analysis suffix
       sitemap = sitemap.replace(/\/chart<\/loc>/g, '</loc>') // Remove /chart suffix
 
+      // Update stale lastmod dates to today - critical for Google crawl prioritization
+      sitemap = sitemap.replace(/<lastmod>[^<]+<\/lastmod>/g, `<lastmod>${today}</lastmod>`)
+
       // Remove duplicate URLs after transformation
       const urlRegex = /<url>[\s\S]*?<\/url>/g
       const urls = sitemap.match(urlRegex) || []
