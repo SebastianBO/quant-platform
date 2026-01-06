@@ -44,6 +44,7 @@ import MarketSidebar from "@/components/MarketSidebar"
 import UserAvatar from "@/components/UserAvatar"
 import StockDiscussions from "@/components/StockDiscussions"
 import StockInternalLinks from "@/components/StockInternalLinks"
+import { InvestmentCalculator } from "@/components/calculators"
 import { formatCurrency, formatPercent } from "@/lib/utils"
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts"
 import { TrendingUp, TrendingDown, Star, Share2, Menu, X } from "lucide-react"
@@ -477,6 +478,14 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
                     {/* Chart Switcher - Simple or TradingView */}
                     <StockChartSwitcher ticker={ticker} />
 
+                    {/* Investment Calculator - Interactive engagement tool */}
+                    <InvestmentCalculator
+                      ticker={ticker}
+                      companyName={stockData.companyFacts?.name || ticker}
+                      currentPrice={stockData.snapshot?.price || 0}
+                      avgAnnualReturn={stockData.metrics?.revenue_growth || 0.12}
+                    />
+
                     {/* Clinical Trials & Catalysts for Biotech/Pharma stocks */}
                     {(stockData.companyFacts?.sector?.toLowerCase().includes('health') ||
                       stockData.companyFacts?.industry?.toLowerCase().includes('biotech') ||
@@ -630,7 +639,14 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
               </TabsContent>
 
               <TabsContent value="peers">
-                <PeerComparison selectedTicker={ticker} />
+                <PeerComparison
+                  ticker={ticker}
+                  companyName={stockData?.companyFacts?.name || ticker}
+                  sector={stockData?.companyFacts?.sector}
+                  industry={stockData?.companyFacts?.industry}
+                  marketCap={stockData?.snapshot?.market_cap}
+                  pe={stockData?.metrics?.price_to_earnings_ratio}
+                />
               </TabsContent>
 
               <TabsContent value="insiders">
