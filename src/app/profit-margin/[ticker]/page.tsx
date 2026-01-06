@@ -120,7 +120,7 @@ export default async function ProfitMarginPage({ params }: Props) {
 
   const marginRating = getRatingLabel(netMargin)
   const vsIndustry = netMargin - industryAvgNetMargin
-  const vsIndustryPercent = industryAvgNetMargin !== 0 ? ((vsIndustry / industryAvgNetMargin) * 100).toFixed(1) : '0.0'
+  const vsIndustryPercent = ((vsIndustry / industryAvgNetMargin) * 100).toFixed(1)
 
   // Generate profit margin FAQs
   const profitMarginFaqs = [

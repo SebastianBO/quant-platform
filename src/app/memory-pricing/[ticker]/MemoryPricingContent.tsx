@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { formatPercent } from '@/lib/utils'
-import { Chip, TrendingUp, Database } from 'lucide-react'
+import { Cpu, TrendingUp, Database } from 'lucide-react'
 import Link from 'next/link'
 
 interface MemoryPricingContentProps {
@@ -65,7 +65,7 @@ export default function MemoryPricingContent({
             <CardContent className="pt-6">
               <div className="flex items-center justify-between mb-2">
                 <div className="text-sm text-muted-foreground">DRAM Pricing</div>
-                <Chip className="w-5 h-5 text-muted-foreground" />
+                <Cpu className="w-5 h-5 text-muted-foreground" />
               </div>
               <div className="text-3xl font-bold mb-1">
                 Cyclical

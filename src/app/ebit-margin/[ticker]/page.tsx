@@ -124,7 +124,7 @@ export default async function EBITMarginPage({ params }: Props) {
 
   const marginRating = getRatingLabel(ebitMargin)
   const vsIndustry = ebitMargin - industryAvgEBITMargin
-  const vsIndustryPercent = industryAvgEBITMargin !== 0 ? ((vsIndustry / industryAvgEBITMargin) * 100).toFixed(1) : '0.0'
+  const vsIndustryPercent = ((vsIndustry / industryAvgEBITMargin) * 100).toFixed(1)
 
   // Interest and tax burden
   const interestAndTaxBurden = ebit > 0 ? (ebit - netIncome) / ebit : 0

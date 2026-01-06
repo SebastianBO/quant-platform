@@ -15,7 +15,7 @@ import {
 
 interface RelatedLinksProps {
   ticker: string
-  currentPage: 'stock' | 'should-i-buy' | 'prediction' | 'compare' | 'health' | 'buy' | 'forecast' | 'earnings' | 'price' | 'balance-sheet' | 'cash-flow' | 'ownership' | 'profile' | 'revenue' | 'roe' | 'splits' | 'target-price' | 'valuation'
+  currentPage: string
   companyName?: string
 }
 

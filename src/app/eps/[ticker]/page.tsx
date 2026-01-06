@@ -124,7 +124,7 @@ export default async function EPSPage({ params }: Props) {
 
   // Average EPS over history
   const avgEPS = epsHistory.length > 0
-    ? epsHistory.reduce((sum, item) => sum + (item.epsBasic || 0), 0) / epsHistory.filter(h => h.epsBasic).length
+    ? epsHistory.reduce((sum: number, item: { epsBasic: number | null }) => sum + (item.epsBasic || 0), 0) / epsHistory.filter((h: { epsBasic: number | null }) => h.epsBasic).length
     : null
 
   // Generate EPS FAQs

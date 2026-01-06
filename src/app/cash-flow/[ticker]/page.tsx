@@ -468,7 +468,7 @@ export default async function CashFlowPage({ params }: Props) {
                     </tr>
                   </thead>
                   <tbody>
-                    {cashFlows.slice(0, 5).map((cf, idx) => (
+                    {cashFlows.slice(0, 5).map((cf: { fiscal_year?: string; report_period?: string; net_cash_flow_from_operations?: number; net_cash_flow_from_investing?: number; net_cash_flow_from_financing?: number; free_cash_flow?: number }, idx: number) => (
                       <tr key={idx} className="border-b border-border/50">
                         <td className="py-3 font-medium">
                           {cf.fiscal_year || cf.report_period}

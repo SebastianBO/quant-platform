@@ -121,7 +121,7 @@ export default async function OperatingMarginPage({ params }: Props) {
 
   const marginRating = getRatingLabel(operatingMargin)
   const vsIndustry = operatingMargin - industryAvgOperatingMargin
-  const vsIndustryPercent = industryAvgOperatingMargin !== 0 ? ((vsIndustry / industryAvgOperatingMargin) * 100).toFixed(1) : '0.0'
+  const vsIndustryPercent = ((vsIndustry / industryAvgOperatingMargin) * 100).toFixed(1)
 
   // OpEx ratio (Operating Expenses / Revenue)
   const opexRatio = revenue > 0 ? opex / revenue : 0

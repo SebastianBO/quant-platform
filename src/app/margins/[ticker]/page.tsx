@@ -125,13 +125,13 @@ export default async function MarginsPage({ params }: Props) {
   const previousMargins = margins[1] || null
 
   // Calculate trends
-  const grossMarginTrend = previousMargins
+  const grossMarginTrend = previousMargins && latestMargins.grossMargin !== null && previousMargins.grossMargin !== null
     ? latestMargins.grossMargin - previousMargins.grossMargin
     : null
-  const operatingMarginTrend = previousMargins
+  const operatingMarginTrend = previousMargins && latestMargins.operatingMargin !== null && previousMargins.operatingMargin !== null
     ? latestMargins.operatingMargin - previousMargins.operatingMargin
     : null
-  const netMarginTrend = previousMargins
+  const netMarginTrend = previousMargins && latestMargins.netMargin !== null && previousMargins.netMargin !== null
     ? latestMargins.netMargin - previousMargins.netMargin
     : null
 

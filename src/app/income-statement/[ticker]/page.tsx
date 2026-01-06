@@ -364,7 +364,7 @@ export default async function IncomeStatementPage({ params }: Props) {
                     </tr>
                   </thead>
                   <tbody>
-                    {incomeStatements.slice(0, 8).map((income, idx) => (
+                    {incomeStatements.slice(0, 8).map((income: { fiscal_period?: string; report_period?: string; revenue?: number; gross_profit?: number; operating_income?: number; net_income?: number; earnings_per_share_diluted?: number }, idx: number) => (
                       <tr key={idx} className={idx % 2 === 0 ? 'bg-card' : ''}>
                         <td className="p-3 border-b border-border">
                           {income.fiscal_period || income.report_period}

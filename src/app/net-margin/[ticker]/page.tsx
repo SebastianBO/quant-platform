@@ -122,7 +122,7 @@ export default async function NetMarginPage({ params }: Props) {
 
   const marginRating = getRatingLabel(netMargin)
   const vsIndustry = netMargin - industryAvgNetMargin
-  const vsIndustryPercent = industryAvgNetMargin !== 0 ? ((vsIndustry / industryAvgNetMargin) * 100).toFixed(1) : '0.0'
+  const vsIndustryPercent = ((vsIndustry / industryAvgNetMargin) * 100).toFixed(1)
 
   // Generate net margin FAQs
   const netMarginFaqs = [

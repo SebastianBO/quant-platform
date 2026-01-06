@@ -136,7 +136,7 @@ export default async function SharesShortPage({ params }: Props) {
                 <p className="text-3xl font-bold">${price.toFixed(2)}</p>
               </div>
             </div>
-          </section>
+          </div>
 
           {/* Shares Short Overview */}
           <section className="mb-12">

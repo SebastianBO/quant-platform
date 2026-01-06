@@ -120,7 +120,7 @@ export default async function GrossMarginPage({ params }: Props) {
 
   const marginRating = getRatingLabel(grossMargin)
   const vsIndustry = grossMargin - industryAvgGrossMargin
-  const vsIndustryPercent = industryAvgGrossMargin !== 0 ? ((vsIndustry / industryAvgGrossMargin) * 100).toFixed(1) : '0.0'
+  const vsIndustryPercent = ((vsIndustry / industryAvgGrossMargin) * 100).toFixed(1)
 
   // Generate gross margin FAQs
   const grossMarginFaqs = [

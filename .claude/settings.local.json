@@ -94,7 +94,8 @@
       "Bash(GOOGLE_APPLICATION_CREDENTIALS=\"/Users/sebastianbenzianolsson/gsc-key.json\" npx:*)",
       "Bash(npx -y googleapis-cli sites:list --key-file=/Users/sebastianbenzianolsson/gsc-key.json)",
       "Bash(npx:*)",
-      "Bash(GOOGLE_APPLICATION_CREDENTIALS=\"/Users/sebastianbenzianolsson/gsc-key.json\" timeout 10 npx:*)"
+      "Bash(GOOGLE_APPLICATION_CREDENTIALS=\"/Users/sebastianbenzianolsson/gsc-key.json\" timeout 10 npx:*)",
+      "mcp__gsc__list_sites"
     ],
     "deny": [],
     "ask": []

@@ -74,10 +74,10 @@ export default async function ExpenseRatioPage({ params }: Props) {
   const industry = companyFacts?.industry
 
   // Mock expense ratio data - in production, this would come from your API
-  const avgExpenseRatio = 0.45 // 45 basis points
-  const activeExpenseRatio = 0.68
-  const passiveExpenseRatio = 0.12
-  const industryAvg = 0.55
+  const avgExpenseRatio: number = 0.45 // 45 basis points
+  const activeExpenseRatio: number = 0.68
+  const passiveExpenseRatio: number = 0.12
+  const industryAvg: number = 0.55
 
   // Generate Expense Ratio FAQs
   const expenseRatioFaqs = [

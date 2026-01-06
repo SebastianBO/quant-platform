@@ -182,7 +182,7 @@ export default async function IchimokuPage({ params }: Props) {
                   <li>• Price trading above the Kumo cloud</li>
                   <li>• Tenkan-sen crossing above Kijun-sen (TK Cross)</li>
                   <li>• Chikou Span above price from 26 periods ago</li>
-                  <li>• Cloud turning from red to green (Span A > Span B)</li>
+                  <li>• Cloud turning from red to green (Span A &gt; Span B)</li>
                   <li>• Price bouncing off cloud support</li>
                 </ul>
               </div>
