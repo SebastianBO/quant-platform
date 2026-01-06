@@ -275,10 +275,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   })
 
-  // pSEO Metric pages - 400+ metrics for each ticker
-  METRIC_PAGES.forEach((metric) => {
-    ALL_STOCKS.forEach((ticker, index) => {
-      const basePriority = index < 50 ? 0.7 : index < 100 ? 0.65 : 0.6
+  // pSEO Metric pages - limited to top 50 stocks to reduce sitemap size
+  // Full metrics coverage available via /sitemap-metrics.xml
+  const TOP_STOCKS = ALL_STOCKS.slice(0, 50)
+  const TOP_METRICS = METRIC_PAGES.slice(0, 20)
+  TOP_METRICS.forEach((metric) => {
+    TOP_STOCKS.forEach((ticker, index) => {
+      const basePriority = index < 20 ? 0.7 : 0.65
       routes.push({
         url: `${baseUrl}/${metric}/${ticker.toLowerCase()}`,
         lastModified: currentDate,
