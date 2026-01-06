@@ -247,7 +247,7 @@ export function BiotechCatalysts({ ticker, className }: BiotechCatalystsProps) {
     )
   }
 
-  if (error || !data) {
+  if (error || !data || !data.summary) {
     return (
       <Card className={className}>
         <CardHeader>

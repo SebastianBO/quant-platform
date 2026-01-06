@@ -325,7 +325,7 @@ export function BiotechCatalystCalendar() {
     )
   }
 
-  if (error || !data) {
+  if (error || !data || !data.summary) {
     return (
       <Card>
         <CardHeader>
