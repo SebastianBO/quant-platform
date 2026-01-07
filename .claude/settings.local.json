@@ -98,7 +98,8 @@
       "mcp__gsc__list_sites",
       "Bash(rm:*)",
       "WebFetch(domain:ai-sdk.dev)",
-      "Bash(NEXT_TURBO_DISABLED=1 npm run build:*)"
+      "Bash(NEXT_TURBO_DISABLED=1 npm run build:*)",
+      "Bash(next build:*)"
     ],
     "deny": [],
     "ask": []

@@ -8,7 +8,7 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
 
 // All edge functions organized by category
-export const EDGE_FUNCTIONS = {
+const EDGE_FUNCTIONS = {
   'Data Ingestion': [
     'auto-earnings-sync', 'auto-edgar-sync', 'auto-financial-sync', 'auto-short-volume-sync',
     'ingest-daily-data', 'ingest-earnings-calendar', 'ingest-eodhd-earnings', 'ingest-eodhd-fundamentals',
@@ -80,7 +80,7 @@ export const EDGE_FUNCTIONS = {
 }
 
 // All database tables organized by category
-export const DATABASE_TABLES = {
+const DATABASE_TABLES = {
   'Core Financial': [
     'financial_instruments', 'company_prices', 'price_data', 'realtime_prices',
     'fundamentals', 'fundamentals_data', 'symbols_universe'
