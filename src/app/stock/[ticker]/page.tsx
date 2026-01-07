@@ -337,10 +337,10 @@ export default async function StockPage({ params }: Props) {
 
   // Get peer data for comparison section (creates unique content per stock)
   const peerTickers = getPeerTickers(symbol, industry, sector)
-  const [peers, licianScore] = await Promise.all([
-    getPeerData(peerTickers),
-    getLicianScore(symbol)
-  ])
+  const peers = await getPeerData(peerTickers)
+  // TODO: Re-enable after fixing API call issue
+  // const licianScore = await getLicianScore(symbol)
+  const licianScore: LicianScoreData | null = null
 
   // Build initial catalyst events from stock data
   const initialEvents = buildInitialEvents(symbol, companyName, stockData?.snapshot)
@@ -400,19 +400,10 @@ export default async function StockPage({ params }: Props) {
     url: pageUrl,
   })
 
-  // Aggregate Rating Schema - Use Lician Score (1-10 scale) if available, else analyst ratings
+  // Aggregate Rating Schema - Use analyst ratings when available
+  // TODO: Re-enable Lician Score after fixing API call issue
   let aggregateRatingSchema = null
-  if (licianScore) {
-    // Use Lician Score as the primary rating (1-10 scale)
-    aggregateRatingSchema = getAggregateRatingSchema({
-      ticker: symbol,
-      ratingValue: licianScore.licianScore,
-      ratingCount: 5, // Represents the 5 dimensions scored
-      bestRating: 10,
-      worstRating: 1,
-      url: pageUrl,
-    })
-  } else if (stockData?.analystRatings?.length > 0) {
+  if (stockData?.analystRatings?.length > 0) {
     // Fallback to analyst ratings (1-5 scale)
     const ratings = stockData.analystRatings
     const ratingMap = { 'Strong Buy': 5, 'Buy': 4, 'Hold': 3, 'Sell': 2, 'Strong Sell': 1 }
@@ -500,7 +491,8 @@ export default async function StockPage({ params }: Props) {
           />
         </div>
 
-        {/* Lician Score Section - SSR for SEO */}
+        {/* Lician Score Section - Temporarily disabled
+        TODO: Re-enable after fixing API call issue
         {licianScore && (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-4">
             <LicianScoreSSR
@@ -518,6 +510,7 @@ export default async function StockPage({ params }: Props) {
             />
           </div>
         )}
+        */}
 
         {/* Upcoming Catalysts Section - SSR for SEO, timely content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
