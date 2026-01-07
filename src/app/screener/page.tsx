@@ -1,6 +1,9 @@
 import { Metadata } from 'next'
 import { Suspense } from 'react'
 import Link from 'next/link'
+
+// Force dynamic rendering since we use searchParams
+export const dynamic = 'force-dynamic'
 import { supabase, CompanyFundamentals } from '@/lib/supabase'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
