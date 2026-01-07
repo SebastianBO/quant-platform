@@ -16,11 +16,10 @@ const navMenus = {
       {
         title: "Research",
         links: [
-          { label: "Market News", href: "/news", desc: "Latest headlines" },
           { label: "Stock Screener", href: "/screener", desc: "Filter stocks by metrics" },
+          { label: "Stock Battle", href: "/battle", desc: "Vote: which stock to buy?" },
           { label: "Analyst Ratings", href: "/analyst-ratings", desc: "Upgrades & downgrades" },
           { label: "Insider Trading", href: "/insider-trading", desc: "CEO & CFO transactions" },
-          { label: "Institutional Holdings", href: "/institutional", desc: "13F filings & hedge funds" },
           { label: "Short Interest", href: "/short-interest", desc: "Most shorted stocks" },
         ],
       },
@@ -28,7 +27,7 @@ const navMenus = {
         title: "Events",
         links: [
           { label: "Earnings Calendar", href: "/earnings", desc: "Upcoming earnings" },
-          { label: "Earnings Surprises", href: "/earnings/surprises", desc: "Beats & misses" },
+          { label: "FDA Calendar", href: "/biotech/fda-calendar", desc: "PDUFA dates & approvals" },
           { label: "IPO Calendar", href: "/ipo", desc: "Upcoming IPOs" },
           { label: "Dividends Calendar", href: "/dividends", desc: "Ex-dates & payouts" },
         ],
@@ -39,21 +38,19 @@ const navMenus = {
     icon: BarChart3,
     sections: [
       {
-        title: "Market Movers",
+        title: "Live Data",
         links: [
-          { label: "Most Active", href: "/markets/most-active", desc: "Highest volume" },
+          { label: "Market Pulse", href: "/markets", desc: "Real-time stocks & crypto" },
           { label: "Top Gainers", href: "/markets/top-gainers", desc: "Biggest winners" },
           { label: "Top Losers", href: "/markets/top-losers", desc: "Biggest decliners" },
-          { label: "52-Week Highs", href: "/markets/52-week-high", desc: "New highs" },
-          { label: "52-Week Lows", href: "/markets/52-week-low", desc: "New lows" },
+          { label: "Most Active", href: "/markets/most-active", desc: "Highest volume" },
         ],
       },
       {
-        title: "Sectors",
+        title: "Sectors & Biotech",
         links: [
-          { label: "Technology", href: "/sectors/technology", desc: "Tech stocks" },
-          { label: "Healthcare", href: "/sectors/healthcare", desc: "Pharma & biotech" },
-          { label: "Financials", href: "/sectors/financials", desc: "Banks & insurance" },
+          { label: "Biotech Catalysts", href: "/biotech", desc: "Clinical trials & FDA" },
+          { label: "Biotech Screener", href: "/screener/biotech-catalysts", desc: "Screen by catalysts" },
           { label: "All Sectors", href: "/sectors", desc: "Browse all 11 sectors" },
         ],
       },
@@ -81,26 +78,24 @@ const navMenus = {
       },
     ],
   },
-  Learn: {
+  Tools: {
     icon: BookOpen,
     sections: [
       {
-        title: "Guides",
+        title: "Portfolio & Trading",
         links: [
-          { label: "Stock Analysis", href: "/learn/stock-analysis", desc: "Fundamental analysis" },
-          { label: "DCF Valuation", href: "/learn/dcf-valuation", desc: "Intrinsic value" },
-          { label: "P/E Ratio", href: "/learn/pe-ratio", desc: "Valuation metrics" },
-          { label: "Dividend Investing", href: "/learn/dividend-investing", desc: "Income strategies" },
-          { label: "AI Stock Analysis", href: "/learn/ai-stock-analysis", desc: "Machine learning" },
+          { label: "Portfolio Tracker", href: "/portfolio", desc: "Track your investments" },
+          { label: "Stock Comparisons", href: "/compare", desc: "Compare side by side" },
+          { label: "DCF Calculator", href: "/tools/dcf", desc: "Intrinsic value" },
+          { label: "Stock Battle", href: "/battle", desc: "Vote: which to buy?" },
         ],
       },
       {
-        title: "Insights",
+        title: "Stay Informed",
         links: [
-          { label: "2026 Predictions", href: "/insights/2026-stock-predictions", desc: "Market outlook" },
-          { label: "Best Stocks 2026", href: "/insights/best-stocks-2026", desc: "Top picks" },
-          { label: "AI Stocks", href: "/insights/ai-stocks-2026", desc: "AI revolution" },
-          { label: "Dividend Stocks", href: "/insights/dividend-stocks-2026", desc: "Income plays" },
+          { label: "Newsletter", href: "/newsletter", desc: "Daily market insights" },
+          { label: "Market News", href: "/news", desc: "Latest headlines" },
+          { label: "Stock Analysis", href: "/learn/stock-analysis", desc: "How to analyze" },
         ],
       },
     ],
