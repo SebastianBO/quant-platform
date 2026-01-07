@@ -250,13 +250,19 @@ interface LicianScoreData {
 
 async function getLicianScore(ticker: string): Promise<LicianScoreData | null> {
   try {
+    // Use VERCEL_URL for production, fall back to localhost for dev
+    const baseUrl = process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/score/${ticker}?includeFactors=false`,
+      `${baseUrl}/api/score/${ticker}?includeFactors=false`,
       { next: { revalidate: 3600 } }
     )
     if (!response.ok) return null
     return response.json()
   } catch {
+    // Silently fail - score is optional enhancement
     return null
   }
 }
