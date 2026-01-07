@@ -1,7 +1,6 @@
-import { streamText, convertToCoreMessages, stepCountIs } from 'ai'
+import { streamText, convertToCoreMessages } from 'ai'
 import { anthropic } from '@ai-sdk/anthropic'
 import { openai } from '@ai-sdk/openai'
-import { scrapeTool, searchTool } from 'firecrawl-aisdk'
 import { financialTools } from '@/lib/ai-tools'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -92,11 +91,7 @@ export async function POST(req: NextRequest) {
         getMarketOverview: financialTools.getMarketOverview,
         getTechnicalAnalysis: financialTools.getTechnicalAnalysis,
         calculate: financialTools.calculate,
-        // Web research tools (Firecrawl)
-        webSearch: searchTool,
-        webScrape: scrapeTool,
       },
-      stopWhen: stepCountIs(10), // Allow up to 10 steps for multi-tool reasoning
       toolChoice: 'auto', // Let model decide when to use tools
     })
 
@@ -117,8 +112,7 @@ export async function GET() {
     tools: [
       'getStockQuote', 'getFinancials', 'getSECFilings', 'getEarnings',
       'getInsiderTrades', 'getShortInterest', 'getOptionsChain', 'getBiotechCatalysts',
-      'screenStocks', 'getMarketOverview', 'getTechnicalAnalysis', 'calculate',
-      'webSearch', 'webScrape'
+      'screenStocks', 'getMarketOverview', 'getTechnicalAnalysis', 'calculate'
     ],
     model: process.env.ANTHROPIC_API_KEY ? 'claude-sonnet-4' : 'gpt-4o'
   })
