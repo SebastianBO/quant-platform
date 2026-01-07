@@ -122,7 +122,7 @@ export default function TerminalPage() {
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="text-xs gap-1">
               <Zap className="h-3 w-3" />
-              14 Tools
+              AI Chat
             </Badge>
           </div>
         </div>
