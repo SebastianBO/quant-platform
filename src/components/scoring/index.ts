@@ -8,3 +8,6 @@ export {
   ScoreBreakdownCard
 } from './ScoreBreakdown'
 export type { ScoreDimensions, ScoreBreakdownProps, BreakdownSize, BreakdownLayout } from './ScoreBreakdown'
+
+// Server-side rendering compatible components
+export { default as LicianScoreSSR, LicianScoreBadge } from './LicianScoreSSR'

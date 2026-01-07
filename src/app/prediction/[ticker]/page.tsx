@@ -11,7 +11,6 @@ import {
   getFAQSchema,
   getStockFAQsExtended,
   getCorporationSchema,
-  getDatasetSchema,
   SITE_URL,
 } from '@/lib/seo'
 
@@ -448,14 +447,6 @@ export default async function PredictionPage({ params }: Props) {
     url: pageUrl,
   })
 
-  // Dataset Schema for historical prediction data
-  const datasetSchema = getDatasetSchema({
-    ticker: symbol,
-    name: companyName,
-    description: `Historical price predictions and forecasts for ${companyName} (${symbol})`,
-    url: pageUrl,
-  })
-
   // Extended FAQ Schema with 18 questions
   const extendedFaqs = getStockFAQsExtended(symbol, companyName, price, metricsData)
   const faqSchema = getFAQSchema(extendedFaqs)
@@ -468,7 +459,6 @@ export default async function PredictionPage({ params }: Props) {
     breadcrumbSchema,
     articleSchema,
     corporationSchema,
-    datasetSchema,
     faqSchema,
     ...eventSchemas,
   ]

@@ -4,6 +4,7 @@ import DashboardContent from '@/components/DashboardContent'
 import StockSSRContent from '@/components/StockSSRContent'
 import { LastUpdatedStatic } from '@/components/seo/LastUpdated'
 import { UpcomingCatalysts, generateEventSchemas, CatalystEvent } from '@/components/UpcomingCatalysts'
+import LicianScoreSSR from '@/components/scoring/LicianScoreSSR'
 import {
   getBreadcrumbSchema,
   getArticleSchema,
@@ -11,7 +12,6 @@ import {
   getFAQSchema,
   getStockFAQsExtended,
   getCorporationSchema,
-  getDatasetSchema,
   getAggregateRatingSchema,
   SITE_URL,
 } from '@/lib/seo'
@@ -234,6 +234,33 @@ async function getPeerData(peerTickers: string[]) {
   }
 }
 
+// Fetch Lician Score for a stock
+interface LicianScoreData {
+  licianScore: number
+  confidence: number
+  summary: string
+  dimensions: {
+    value: { score: number }
+    growth: { score: number }
+    quality: { score: number }
+    momentum: { score: number }
+    safety: { score: number }
+  }
+}
+
+async function getLicianScore(ticker: string): Promise<LicianScoreData | null> {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/score/${ticker}?includeFactors=false`,
+      { next: { revalidate: 3600 } }
+    )
+    if (!response.ok) return null
+    return response.json()
+  } catch {
+    return null
+  }
+}
+
 // Generate initial catalyst events from stock data
 function buildInitialEvents(ticker: string, companyName: string, snapshot: any): CatalystEvent[] {
   const events: CatalystEvent[] = []
@@ -304,7 +331,10 @@ export default async function StockPage({ params }: Props) {
 
   // Get peer data for comparison section (creates unique content per stock)
   const peerTickers = getPeerTickers(symbol, industry, sector)
-  const peers = await getPeerData(peerTickers)
+  const [peers, licianScore] = await Promise.all([
+    getPeerData(peerTickers),
+    getLicianScore(symbol)
+  ])
 
   // Build initial catalyst events from stock data
   const initialEvents = buildInitialEvents(symbol, companyName, stockData?.snapshot)
@@ -363,18 +393,20 @@ export default async function StockPage({ params }: Props) {
     url: pageUrl,
   })
 
-  // Dataset Schema for historical data
-  const datasetSchema = getDatasetSchema({
-    ticker: symbol,
-    name: companyName,
-    description: `Historical price and trading data for ${companyName} (${symbol})`,
-    url: pageUrl,
-  })
-
-  // Aggregate Rating Schema (if we have analyst data)
+  // Aggregate Rating Schema - Use Lician Score (1-10 scale) if available, else analyst ratings
   let aggregateRatingSchema = null
-  if (stockData?.analystRatings?.length > 0) {
-    // Calculate average rating (assuming ratings are on a 1-5 scale where 5=Strong Buy)
+  if (licianScore) {
+    // Use Lician Score as the primary rating (1-10 scale)
+    aggregateRatingSchema = getAggregateRatingSchema({
+      ticker: symbol,
+      ratingValue: licianScore.licianScore,
+      ratingCount: 5, // Represents the 5 dimensions scored
+      bestRating: 10,
+      worstRating: 1,
+      url: pageUrl,
+    })
+  } else if (stockData?.analystRatings?.length > 0) {
+    // Fallback to analyst ratings (1-5 scale)
     const ratings = stockData.analystRatings
     const ratingMap = { 'Strong Buy': 5, 'Buy': 4, 'Hold': 3, 'Sell': 2, 'Strong Sell': 1 }
     const avgRating = ratings.reduce((sum: number, r: any) => {
@@ -402,7 +434,6 @@ export default async function StockPage({ params }: Props) {
     articleSchema,
     financialProductSchema,
     corporationSchema,
-    datasetSchema,
     faqSchema,
     ...eventSchemas,
   ]
@@ -461,6 +492,25 @@ export default async function StockPage({ params }: Props) {
             prefix="Data Updated"
           />
         </div>
+
+        {/* Lician Score Section - SSR for SEO */}
+        {licianScore && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-4">
+            <LicianScoreSSR
+              score={licianScore.licianScore}
+              confidence={licianScore.confidence}
+              summary={licianScore.summary}
+              dimensions={{
+                value: licianScore.dimensions.value.score,
+                growth: licianScore.dimensions.growth.score,
+                quality: licianScore.dimensions.quality.score,
+                momentum: licianScore.dimensions.momentum.score,
+                safety: licianScore.dimensions.safety.score,
+              }}
+              ticker={symbol}
+            />
+          </div>
+        )}
 
         {/* Upcoming Catalysts Section - SSR for SEO, timely content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
