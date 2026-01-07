@@ -5,6 +5,7 @@ import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import SEOSidebar from '@/components/SEOSidebar'
 import { PopularComparisons } from '@/components/seo/RelatedLinks'
+import { LastUpdatedStatic } from '@/components/seo/LastUpdated'
 import {
   getBreadcrumbSchema,
   getArticleSchema,
@@ -187,6 +188,27 @@ function parseComparison(slugs: string): { ticker1: string; ticker2: string } | 
   return { ticker1: match[1].toUpperCase(), ticker2: match[2].toUpperCase() }
 }
 
+// Fetch stock data for metadata
+async function getStockDataForMeta(ticker: string) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/stock?ticker=${ticker}`,
+      { next: { revalidate: 3600 } }
+    )
+    if (!response.ok) return null
+    return response.json()
+  } catch {
+    return null
+  }
+}
+
+// Format market cap for display
+function formatMarketCapShort(cap: number): string {
+  if (cap >= 1e12) return `$${(cap / 1e12).toFixed(1)}T`
+  if (cap >= 1e9) return `$${(cap / 1e9).toFixed(0)}B`
+  return `$${(cap / 1e6).toFixed(0)}M`
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slugs } = await params
   const parsed = parseComparison(slugs)
@@ -197,10 +219,59 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { ticker1, ticker2 } = parsed
   const currentYear = new Date().getFullYear()
+  const currentMonth = new Date().toLocaleString('en-US', { month: 'short' })
+  const currentDay = new Date().getDate()
+
+  // Fetch real data for both stocks
+  const [stock1Data, stock2Data] = await Promise.all([
+    getStockDataForMeta(ticker1),
+    getStockDataForMeta(ticker2)
+  ])
+
+  const price1 = stock1Data?.snapshot?.price
+  const price2 = stock2Data?.snapshot?.price
+  const pe1 = stock1Data?.metrics?.price_to_earnings_ratio
+  const pe2 = stock2Data?.metrics?.price_to_earnings_ratio
+  const cap1 = stock1Data?.snapshot?.market_cap
+  const cap2 = stock2Data?.snapshot?.market_cap
+
+  // Build dynamic title (under 60 chars)
+  // Format: "AAPL vs MSFT 2026: Which Stock Wins?"
+  let title = `${ticker1} vs ${ticker2} ${currentYear}: Which Stock Wins?`
+  if (title.length > 60) {
+    title = `${ticker1} vs ${ticker2}: Stock Comparison ${currentYear}`
+  }
+  if (title.length > 60) {
+    title = `${ticker1} vs ${ticker2} | Stock Comparison`
+  }
+
+  // Build dynamic description (155-160 chars max)
+  // Formula: Both prices + Key metrics + Winner hint + CTA
+  let description = `Compare ${ticker1} vs ${ticker2} stock. Side-by-side valuation, growth & profitability analysis. Updated ${currentMonth} ${currentDay}.`
+
+  if (price1 && price2) {
+    const stock1Str = `${ticker1} ($${price1.toFixed(0)}${pe1 && pe1 > 0 ? `, PE ${pe1.toFixed(0)}` : ''})`
+    const stock2Str = `${ticker2} ($${price2.toFixed(0)}${pe2 && pe2 > 0 ? `, PE ${pe2.toFixed(0)}` : ''})`
+    const ctaStr = `. Full comparison & winner.`
+
+    description = `${stock1Str} vs ${stock2Str}${ctaStr}`
+
+    // Add cap info if space allows
+    if (description.length < 130 && cap1 && cap2) {
+      const capStr = ` ${formatMarketCapShort(cap1)} vs ${formatMarketCapShort(cap2)} cap.`
+      if ((description + capStr).length <= 160) {
+        description = `${stock1Str} vs ${stock2Str}.${capStr.slice(1)}${ctaStr}`
+      }
+    }
+
+    if (description.length > 160) {
+      description = `${ticker1} at $${price1.toFixed(0)} vs ${ticker2} at $${price2.toFixed(0)}. Compare PE, growth & margins. See which wins.`
+    }
+  }
 
   return {
-    title: `${ticker1} vs ${ticker2}: Which Stock is Better in ${currentYear}?`,
-    description: `Compare ${ticker1} vs ${ticker2} stock. Side-by-side analysis of valuation, growth, profitability, and investment potential.`,
+    title,
+    description,
     keywords: [
       `${ticker1} vs ${ticker2}`,
       `${ticker1} or ${ticker2}`,
@@ -210,7 +281,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ],
     openGraph: {
       title: `${ticker1} vs ${ticker2} Stock Comparison`,
-      description: `Head-to-head comparison of ${ticker1} and ${ticker2} stocks.`,
+      description,
       type: 'article',
     },
     alternates: {
@@ -245,6 +316,9 @@ export default async function ComparePage({ params }: Props) {
 
   const { ticker1, ticker2 } = parsed
   const currentYear = new Date().getFullYear()
+
+  // Capture the data fetch time for freshness signal
+  const dataFetchTime = new Date()
 
   const [stock1Data, stock2Data] = await Promise.all([
     getStockData(ticker1),
@@ -298,11 +372,12 @@ export default async function ComparePage({ params }: Props) {
     { name: `${ticker1} vs ${ticker2}`, url: pageUrl },
   ])
 
-  // Article Schema
+  // Article Schema with dateModified
   const articleSchema = getArticleSchema({
     headline: `${ticker1} vs ${ticker2}: Which Stock is Better in ${currentYear}?`,
     description: `Head-to-head comparison of ${stock1.name} (${ticker1}) and ${stock2.name} (${ticker2}). Compare valuation, growth, profitability, and investment potential.`,
     url: pageUrl,
+    dateModified: dataFetchTime.toISOString(),
     keywords: [
       `${ticker1} vs ${ticker2}`,
       `${ticker1} or ${ticker2}`,
@@ -351,9 +426,16 @@ export default async function ComparePage({ params }: Props) {
           <h1 className="text-4xl font-bold mb-4">
             {ticker1} vs {ticker2}: Which Stock is Better?
           </h1>
-          <p className="text-xl text-muted-foreground mb-8">
+          <p className="text-xl text-muted-foreground mb-4">
             Side-by-side comparison of {stock1.name} and {stock2.name} in {currentYear}
           </p>
+
+          {/* Last Updated Timestamp */}
+          <LastUpdatedStatic
+            timestamp={dataFetchTime}
+            className="mb-8"
+            prefix="Comparison Updated"
+          />
 
           {/* Header Cards */}
           <div className="grid grid-cols-2 gap-6 mb-8">

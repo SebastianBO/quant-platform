@@ -1,7 +1,10 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { Suspense } from 'react'
 import { RelatedLinks } from '@/components/seo/RelatedLinks'
+import { LastUpdatedStatic } from '@/components/seo/LastUpdated'
+import { TargetPriceCalculator } from '@/components/calculators'
 import {
   getBreadcrumbSchema,
   getArticleSchema,
@@ -16,14 +19,73 @@ interface Props {
 
 export const dynamic = 'force-dynamic'
 
+// Fetch stock data for metadata
+async function getStockDataForMeta(ticker: string) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/stock?ticker=${ticker}`,
+      { next: { revalidate: 3600 } }
+    )
+    if (!response.ok) return null
+    return response.json()
+  } catch {
+    return null
+  }
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { ticker } = await params
   const symbol = ticker.toUpperCase()
   const currentYear = new Date().getFullYear()
+  const currentMonth = new Date().toLocaleString('en-US', { month: 'short' })
+  const currentDay = new Date().getDate()
+
+  // Fetch real data for compelling meta description
+  const stockData = await getStockDataForMeta(symbol)
+  const price = stockData?.snapshot?.price
+  const dayChangePercent = stockData?.snapshot?.day_change_percent
+  const revenueGrowth = stockData?.metrics?.revenue_growth || 0
+  const companyName = stockData?.companyFacts?.name || symbol
+
+  // Calculate forecast targets (same logic as page)
+  const moderateTarget = price ? price * (1 + Math.max(revenueGrowth, 0.10)) : null
+  const aggressiveTarget = price ? price * (1 + Math.max(revenueGrowth * 1.5, 0.20)) : null
+  const moderateUpside = price && moderateTarget ? ((moderateTarget - price) / price * 100) : null
+
+  // Build dynamic title (under 60 chars)
+  // Format: "AAPL Forecast 2026: $312 Target | Analysis"
+  let title = `${symbol} Stock Forecast ${currentYear} | Price Targets`
+  if (moderateTarget) {
+    const shortTitle = `${symbol} Forecast ${currentYear}: $${moderateTarget.toFixed(0)} Target`
+    if (shortTitle.length <= 60) {
+      title = shortTitle
+    }
+  }
+
+  // Build dynamic description (155-160 chars max)
+  // Formula: Current price + Forecast range + Upside % + CTA + Freshness
+  let description = `${symbol} stock forecast for ${currentYear}. Analyst price targets, 12-month projections & AI analysis. Updated ${currentMonth} ${currentDay}.`
+
+  if (price && moderateTarget && aggressiveTarget && moderateUpside !== null) {
+    const priceStr = `${symbol} at $${price.toFixed(0)}`
+    const changeStr = dayChangePercent !== undefined ? ` (${dayChangePercent >= 0 ? '+' : ''}${dayChangePercent.toFixed(1)}%)` : ''
+    const targetStr = `. ${currentYear} forecast: $${moderateTarget.toFixed(0)}-$${aggressiveTarget.toFixed(0)}`
+    const upsideStr = ` (+${moderateUpside.toFixed(0)}% upside)`
+    const ctaStr = `. Full analysis inside.`
+
+    // Build description within limit
+    description = `${priceStr}${changeStr}${targetStr}${upsideStr}${ctaStr}`
+    if (description.length > 160) {
+      description = `${priceStr}${targetStr}${upsideStr}${ctaStr}`
+    }
+    if (description.length > 160) {
+      description = `${priceStr}${targetStr}. Analyst estimates & AI projections. Updated ${currentMonth} ${currentDay}.`
+    }
+  }
 
   return {
-    title: `${symbol} Stock Forecast ${currentYear} - Price Target & Analyst Predictions`,
-    description: `${symbol} stock forecast for ${currentYear}. See analyst price targets, consensus estimates, 12-month projections, and AI-powered stock analysis.`,
+    title,
+    description,
     keywords: [
       `${symbol} stock forecast`,
       `${symbol} stock forecast ${currentYear}`,
@@ -33,8 +95,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       `${symbol} 12 month forecast`,
     ],
     openGraph: {
-      title: `${symbol} Stock Forecast ${currentYear} | Analyst Price Targets`,
-      description: `Complete ${symbol} stock forecast with analyst ratings, price targets, and ${currentYear} predictions.`,
+      title: `${symbol} Stock Forecast ${currentYear} | ${companyName}`,
+      description,
       type: 'article',
     },
     alternates: {
@@ -60,6 +122,9 @@ export default async function ForecastPage({ params }: Props) {
   const { ticker } = await params
   const symbol = ticker.toUpperCase()
   const currentYear = new Date().getFullYear()
+
+  // Capture the data fetch time for freshness signal
+  const dataFetchTime = new Date()
 
   const stockData = await getStockData(symbol)
 
@@ -128,6 +193,7 @@ export default async function ForecastPage({ params }: Props) {
     headline: `${symbol} Stock Forecast ${currentYear} - Price Targets & Analyst Predictions`,
     description: `Complete stock forecast for ${symbol} (${companyName}) with 12-month price targets and analyst consensus.`,
     url: pageUrl,
+    dateModified: dataFetchTime.toISOString(),
     keywords: [
       `${symbol} stock forecast`,
       `${symbol} forecast ${currentYear}`,
@@ -168,9 +234,16 @@ export default async function ForecastPage({ params }: Props) {
           <h1 className="text-4xl font-bold mb-4">
             {symbol} Stock Forecast {currentYear}
           </h1>
-          <p className="text-xl text-muted-foreground mb-8">
+          <p className="text-xl text-muted-foreground mb-4">
             Price targets and analyst projections for {companyName}
           </p>
+
+          {/* Last Updated Timestamp */}
+          <LastUpdatedStatic
+            timestamp={dataFetchTime}
+            className="mb-8"
+            prefix="Forecast Updated"
+          />
 
           {/* Current Price Card */}
           <div className="bg-card p-6 rounded-xl border border-border mb-8">
@@ -217,6 +290,25 @@ export default async function ForecastPage({ params }: Props) {
                 <p className="text-sm text-purple-500 mt-1">+{aggressiveUpside}% upside</p>
               </div>
             </div>
+          </section>
+
+          {/* Interactive Target Price Calculator */}
+          <section className="mb-12">
+            <Suspense fallback={
+              <div className="bg-card p-8 rounded-lg border border-border animate-pulse">
+                <div className="h-8 bg-secondary/50 rounded w-1/3 mb-4"></div>
+                <div className="h-64 bg-secondary/30 rounded"></div>
+              </div>
+            }>
+              <TargetPriceCalculator
+                ticker={symbol}
+                companyName={companyName}
+                currentPrice={price}
+                avgTargetPrice={moderateTarget}
+                highTargetPrice={aggressiveTarget}
+                lowTargetPrice={conservativeTarget}
+              />
+            </Suspense>
           </section>
 
           {/* Key Metrics */}

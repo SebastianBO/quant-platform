@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { getBreadcrumbSchema, getArticleSchema, SITE_URL } from '@/lib/seo'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
+import PredictionAccuracy from '@/components/PredictionAccuracy'
 
 export const metadata: Metadata = {
   title: 'Stock Market Insights 2026 - Predictions, Analysis & Trends | Lician',
@@ -20,6 +21,14 @@ export const metadata: Metadata = {
 
 const insights = [
   {
+    title: 'Our Prediction Track Record',
+    description: 'Transparent accountability: See how our AI predictions performed against actual results and Wall Street consensus.',
+    href: '/insights/prediction-accuracy',
+    category: 'Accountability',
+    icon: '🎯',
+    featured: true,
+  },
+  {
     title: 'Stock Market Predictions 2026',
     description: 'Comprehensive market forecasts, trends analysis, and expert predictions for the 2026 stock market.',
     href: '/insights/2026-stock-predictions',
@@ -31,7 +40,7 @@ const insights = [
     description: 'Top stock picks across all sectors with detailed fundamental analysis and growth potential.',
     href: '/insights/best-stocks-2026',
     category: 'Stock Picks',
-    icon: '🎯',
+    icon: '🚀',
   },
   {
     title: 'Best AI Stocks for 2026',
@@ -89,6 +98,22 @@ export default function InsightsPage() {
             </p>
           </div>
 
+          {/* Prediction Accuracy Summary Banner */}
+          <section className="mb-12">
+            <Link href="/insights/prediction-accuracy" className="block hover:opacity-90 transition-opacity">
+              <PredictionAccuracy />
+            </Link>
+            <div className="mt-3 text-center">
+              <Link
+                href="/insights/prediction-accuracy"
+                className="text-emerald-500 hover:text-emerald-400 font-medium text-sm inline-flex items-center gap-1"
+              >
+                View Full Track Record
+                <span>→</span>
+              </Link>
+            </div>
+          </section>
+
           {/* Featured Insights Grid */}
           <section className="mb-16">
             <h2 className="text-3xl font-bold mb-8">Featured Analysis</h2>
@@ -97,18 +122,29 @@ export default function InsightsPage() {
                 <Link
                   key={insight.href}
                   href={insight.href}
-                  className="group bg-card p-8 rounded-xl border border-border hover:border-green-500/50 transition-all duration-300"
+                  className={`group bg-card p-8 rounded-xl border transition-all duration-300 ${
+                    insight.featured
+                      ? 'border-emerald-500/50 hover:border-emerald-500 bg-gradient-to-br from-emerald-500/10 to-transparent'
+                      : 'border-border hover:border-green-500/50'
+                  }`}
                 >
                   <div className="flex items-start gap-4 mb-4">
                     <span className="text-4xl">{insight.icon}</span>
                     <div className="flex-1">
-                      <span className="text-xs text-green-500 font-medium uppercase tracking-wider">
+                      <span className={`text-xs font-medium uppercase tracking-wider ${
+                        insight.featured ? 'text-emerald-500' : 'text-green-500'
+                      }`}>
                         {insight.category}
                       </span>
                       <h3 className="text-2xl font-bold mt-1 group-hover:text-green-500 transition-colors">
                         {insight.title}
                       </h3>
                     </div>
+                    {insight.featured && (
+                      <span className="bg-emerald-500/20 text-emerald-500 text-xs px-2 py-1 rounded-full font-medium">
+                        New
+                      </span>
+                    )}
                   </div>
                   <p className="text-muted-foreground mb-4">
                     {insight.description}

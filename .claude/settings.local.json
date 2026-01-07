@@ -95,7 +95,10 @@
       "Bash(npx -y googleapis-cli sites:list --key-file=/Users/sebastianbenzianolsson/gsc-key.json)",
       "Bash(npx:*)",
       "Bash(GOOGLE_APPLICATION_CREDENTIALS=\"/Users/sebastianbenzianolsson/gsc-key.json\" timeout 10 npx:*)",
-      "mcp__gsc__list_sites"
+      "mcp__gsc__list_sites",
+      "Bash(rm:*)",
+      "WebFetch(domain:ai-sdk.dev)",
+      "Bash(NEXT_TURBO_DISABLED=1 npm run build:*)"
     ],
     "deny": [],
     "ask": []

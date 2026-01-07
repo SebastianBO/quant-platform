@@ -1,7 +1,9 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { Suspense } from 'react'
 import { RelatedLinks } from '@/components/seo/RelatedLinks'
+import { TargetPriceCalculator } from '@/components/calculators'
 import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL } from '@/lib/seo'
 
 interface Props {
@@ -273,6 +275,25 @@ export default async function TargetPricePage({ params }: Props) {
               </div>
             </section>
           )}
+
+          {/* Interactive Target Price Calculator */}
+          <section className="mb-12">
+            <Suspense fallback={
+              <div className="bg-card p-8 rounded-lg border border-border animate-pulse">
+                <div className="h-8 bg-secondary/50 rounded w-1/3 mb-4"></div>
+                <div className="h-64 bg-secondary/30 rounded"></div>
+              </div>
+            }>
+              <TargetPriceCalculator
+                ticker={symbol}
+                companyName={companyName}
+                currentPrice={price}
+                avgTargetPrice={avgTarget || undefined}
+                highTargetPrice={highTarget || undefined}
+                lowTargetPrice={lowTarget || undefined}
+              />
+            </Suspense>
+          </section>
 
           {/* Consensus Rating */}
           {totalRatings > 0 && (

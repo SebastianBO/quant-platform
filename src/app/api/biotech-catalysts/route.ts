@@ -206,11 +206,23 @@ export async function GET(request: NextRequest) {
           []
         )
 
+        // Calculate summary stats for fallback response
+        const upcomingCount = catalysts.filter(c => c.status === 'UPCOMING').length
+        const imminentCount = catalysts.filter(c => c.status === 'IMMINENT').length
+        const highImportanceCount = catalysts.filter(c => c.importance === 'HIGH').length
+        const phase3Count = catalysts.filter(c => c.phase === 'PHASE3').length
+
         return NextResponse.json({
           ticker: ticker.toUpperCase(),
           companyName: ticker.toUpperCase(),
           catalysts: catalysts.slice(0, limit),
           totalCount: catalysts.length,
+          summary: {
+            upcoming: upcomingCount,
+            imminent: imminentCount,
+            highImportance: highImportanceCount,
+            phase3Trials: phase3Count
+          },
           _meta: {
             source: 'clinicaltrials.gov',
             fetchedAt: new Date().toISOString()

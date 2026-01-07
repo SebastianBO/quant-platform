@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { RelatedLinks } from '@/components/seo/RelatedLinks'
+import PeerComparison from '@/components/PeerComparison'
 import {
   getBreadcrumbSchema,
   getArticleSchema,
@@ -107,24 +108,24 @@ function ValuationVerdict({ verdict, reason }: { verdict: 'undervalued' | 'fairl
       bgColor: 'bg-green-50 dark:bg-green-950/30',
       borderColor: 'border-green-500',
       label: 'Potentially Undervalued',
-      icon: '↑',
-      emoji: '🟢',
+      icon: 'up',
+      emoji: '',
     },
     'fairly-valued': {
       color: 'text-yellow-600 dark:text-yellow-400',
       bgColor: 'bg-yellow-50 dark:bg-yellow-950/30',
       borderColor: 'border-yellow-500',
       label: 'Fairly Valued',
-      icon: '→',
-      emoji: '🟡',
+      icon: 'right',
+      emoji: '',
     },
     overvalued: {
       color: 'text-red-600 dark:text-red-400',
       bgColor: 'bg-red-50 dark:bg-red-950/30',
       borderColor: 'border-red-500',
       label: 'Potentially Overvalued',
-      icon: '↓',
-      emoji: '🔴',
+      icon: 'down',
+      emoji: '',
     },
   }
 
@@ -133,7 +134,11 @@ function ValuationVerdict({ verdict, reason }: { verdict: 'undervalued' | 'fairl
   return (
     <div className={`rounded-xl border-2 ${config.borderColor} ${config.bgColor} p-6 md:p-8`}>
       <div className="flex items-start gap-4">
-        <span className="text-5xl">{config.emoji}</span>
+        <div className={`w-12 h-12 rounded-full flex items-center justify-center ${verdict === 'undervalued' ? 'bg-green-500' : verdict === 'overvalued' ? 'bg-red-500' : 'bg-yellow-500'}`}>
+          <span className="text-white text-2xl font-bold">
+            {verdict === 'undervalued' ? '+' : verdict === 'overvalued' ? '-' : '='}
+          </span>
+        </div>
         <div>
           <h3 className={`text-3xl font-bold ${config.color} mb-2`}>{config.label}</h3>
           <p className="text-gray-700 dark:text-gray-300 text-lg">{reason}</p>
@@ -220,6 +225,8 @@ export default async function ValuationPage({ params }: Props) {
   const price = stockData.snapshot?.price || 0
   const metrics = stockData.metrics || {}
   const pageUrl = `${SITE_URL}/valuation/${ticker.toLowerCase()}`
+  const sector = stockData.companyFacts?.sector
+  const industry = stockData.companyFacts?.industry
 
   // Get valuation metrics
   const pe = metrics.price_to_earnings_ratio || 0
@@ -227,6 +234,8 @@ export default async function ValuationPage({ params }: Props) {
   const ps = metrics.price_to_sales_ratio || 0
   const evToEbitda = metrics.enterprise_value_to_ebitda || 0
   const marketCap = stockData.snapshot?.market_cap || 0
+  const revenueGrowth = metrics.revenue_growth || 0
+  const profitMargin = metrics.profit_margin || 0
 
   // Determine valuation verdict
   let verdict: 'undervalued' | 'fairly-valued' | 'overvalued' = 'fairly-valued'
@@ -348,9 +357,9 @@ export default async function ValuationPage({ params }: Props) {
                   day: 'numeric'
                 })}
               </time>
-              <span>•</span>
+              <span>-</span>
               <span>6 min read</span>
-              <span>•</span>
+              <span>-</span>
               <Link href={`/stock/${ticker.toLowerCase()}`} className="text-green-600 dark:text-green-400 hover:underline">
                 View Full Analysis
               </Link>
@@ -455,6 +464,20 @@ export default async function ValuationPage({ params }: Props) {
               </div>
             </div>
           </section>
+
+          {/* Peer Comparison - Valuation Focused */}
+          <PeerComparison
+            ticker={symbol}
+            companyName={companyName}
+            sector={sector}
+            industry={industry}
+            marketCap={marketCap}
+            pe={pe}
+            revenueGrowth={revenueGrowth}
+            profitMargin={profitMargin}
+            price={price}
+            variant="valuation"
+          />
 
           {/* What This Means Section */}
           <section className="mb-12">

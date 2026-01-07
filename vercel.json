@@ -9,8 +9,12 @@
       "schedule": "0 21 * * 1-5"
     },
     {
-      "path": "/api/cron/sync-financials?mode=continue&limit=5",
+      "path": "/api/cron/sync-financials?mode=continue&limit=50",
       "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/cron/sync-international-financials?mode=all&limit=30",
+      "schedule": "0 7 * * *"
     }
   ]
 }

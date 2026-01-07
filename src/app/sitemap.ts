@@ -83,6 +83,12 @@ const SECTORS = [
   'communication-services'
 ]
 
+// Sector Prediction Hub Pages - for topical authority on "stock predictions"
+const PREDICTION_SECTORS = [
+  'technology', 'healthcare', 'financials', 'energy', 'consumer-discretionary',
+  'consumer-staples', 'industrials', 'materials', 'utilities', 'real-estate',
+]
+
 // Industries
 const INDUSTRIES = [
   'software', 'semiconductors', 'banks', 'retail', 'pharmaceuticals',
@@ -192,6 +198,15 @@ const STOCK_PAGE_TYPES = [
   'market-cap', 'roe',
 ]
 
+// High-value pillar content pages - these are cornerstone content that support cluster pages
+const PILLAR_PAGES = [
+  { url: 'insights/stock-predictions-2026', priority: 0.95, changeFrequency: 'weekly' as const },
+  { url: 'insights/2026-stock-predictions', priority: 0.9, changeFrequency: 'weekly' as const },
+  { url: 'insights/best-stocks-2026', priority: 0.9, changeFrequency: 'weekly' as const },
+  { url: 'insights/ai-stocks-2026', priority: 0.9, changeFrequency: 'weekly' as const },
+  { url: 'insights/dividend-stocks-2026', priority: 0.9, changeFrequency: 'weekly' as const },
+]
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://lician.com'
   const currentDate = new Date().toISOString()
@@ -221,6 +236,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   })
 
+  // Pillar content pages - high priority for topical authority
+  PILLAR_PAGES.forEach((page) => {
+    routes.push({
+      url: `${baseUrl}/${page.url}`,
+      lastModified: currentDate,
+      changeFrequency: page.changeFrequency,
+      priority: page.priority,
+    })
+  })
+
   // Sector pages
   SECTORS.forEach((sector) => {
     routes.push({
@@ -228,6 +253,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: currentDate,
       changeFrequency: 'daily',
       priority: 0.8,
+    })
+  })
+
+  // Sector Prediction Hub Pages - High priority for "stock predictions" topical authority
+  PREDICTION_SECTORS.forEach((sector) => {
+    routes.push({
+      url: `${baseUrl}/predictions/${sector}`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 0.85,
     })
   })
 

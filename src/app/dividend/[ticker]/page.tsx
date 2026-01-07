@@ -1,7 +1,9 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { Suspense } from 'react'
 import { RelatedLinks } from '@/components/seo/RelatedLinks'
+import { DividendCalculator } from '@/components/calculators'
 import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, getCorporationSchema, SITE_URL } from '@/lib/seo'
 
 interface Props {
@@ -66,6 +68,7 @@ export default async function DividendPage({ params }: Props) {
   const payoutRatio = metrics?.payout_ratio
   const dividendPerShare = metrics?.dividends_per_common_share || companyFacts?.dividendShare
   const exDividendDate = companyFacts?.exDividendDate
+  const dividendGrowthRate = metrics?.dividend_growth_rate || 0.05
 
   const paysDividend = dividendYield && dividendYield > 0
 
@@ -199,23 +202,25 @@ export default async function DividendPage({ params }: Props) {
             </section>
           )}
 
-          {/* Income Calculator */}
-          {paysDividend && (
-            <section className="mb-12">
-              <h2 className="text-2xl font-bold mb-4">Dividend Income Calculator</h2>
-              <div className="bg-card p-6 rounded-lg border border-border">
-                <p className="text-muted-foreground mb-4">Based on current dividend yield of {(dividendYield * 100).toFixed(2)}%:</p>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {[1000, 5000, 10000, 50000].map(investment => (
-                    <div key={investment} className="text-center p-3 bg-secondary/30 rounded-lg">
-                      <p className="text-sm text-muted-foreground">${investment.toLocaleString()} invested</p>
-                      <p className="text-xl font-bold text-green-500">${(investment * dividendYield).toFixed(0)}/yr</p>
-                    </div>
-                  ))}
-                </div>
+          {/* Interactive Dividend Income Calculator */}
+          <section className="mb-12">
+            <Suspense fallback={
+              <div className="bg-card p-8 rounded-lg border border-border animate-pulse">
+                <div className="h-8 bg-secondary/50 rounded w-1/3 mb-4"></div>
+                <div className="h-64 bg-secondary/30 rounded"></div>
               </div>
-            </section>
-          )}
+            }>
+              <DividendCalculator
+                ticker={symbol}
+                companyName={companyName}
+                currentPrice={snapshot.price || 0}
+                dividendYield={dividendYield || 0}
+                annualDividend={dividendPerShare}
+                payoutFrequency="quarterly"
+                dividendGrowthRate={dividendGrowthRate}
+              />
+            </Suspense>
+          </section>
 
           {/* CTA */}
           <section className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 p-8 rounded-xl border border-purple-500/30 text-center mb-12">
