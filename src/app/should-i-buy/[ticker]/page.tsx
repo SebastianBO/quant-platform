@@ -4,7 +4,8 @@ import { notFound } from 'next/navigation'
 import { RelatedLinks } from '@/components/seo/RelatedLinks'
 import { LastUpdatedStatic } from '@/components/seo/LastUpdated'
 import PeerComparison from '@/components/PeerComparison'
-import { UpcomingCatalysts, generateEventSchemas, CatalystEvent } from '@/components/UpcomingCatalysts'
+import { UpcomingCatalysts, CatalystEvent } from '@/components/UpcomingCatalysts'
+import { generateEventSchemas } from '@/lib/event-schemas'
 import {
   getBreadcrumbSchema,
   getArticleSchema,
