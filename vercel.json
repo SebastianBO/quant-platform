@@ -1,5 +1,6 @@
 {
   "installCommand": "npm install --legacy-peer-deps",
+  "buildCommand": "NODE_OPTIONS='--max-old-space-size=8192' npm run build",
   "env": {
     "VERCEL_BYPASS_FALLBACK_OVERSIZED_ERROR": "1"
   },
