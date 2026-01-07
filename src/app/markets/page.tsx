@@ -9,6 +9,7 @@ import {
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import SEOSidebar from '@/components/SEOSidebar'
+import MarketPulseClient from './MarketPulseClient'
 
 export const metadata: Metadata = {
   title: 'Stock Market Movers Today - Top Gainers, Losers & Most Active Stocks',
@@ -152,6 +153,11 @@ export default function MarketsHubPage() {
               Find top gainers, losers, most active stocks, and more.
             </p>
           </div>
+
+          {/* Real-Time Market Pulse */}
+          <section className="mb-12">
+            <MarketPulseClient />
+          </section>
 
           {/* Market Pages Grid */}
           <section className="mb-12 sm:mb-16">
