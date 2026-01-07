@@ -1,4 +1,7 @@
+"use client"
+
 import Link from "next/link"
+import NewsletterSignup from "./NewsletterSignup"
 
 // Popular stocks for SEO internal linking
 const POPULAR_STOCKS = {
@@ -256,6 +259,11 @@ export function Footer() {
               ))}
             </div>
           </details>
+        </div>
+
+        {/* Newsletter Signup */}
+        <div className="mb-8 pb-8 border-b border-border">
+          <NewsletterSignup source="footer" variant="card" />
         </div>
 
         {/* Bottom Links */}
