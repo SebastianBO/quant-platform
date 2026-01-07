@@ -428,6 +428,7 @@ export default async function PredictionPage({ params }: Props) {
     headline: `${symbol} Stock Price Prediction ${currentYear}-${currentYear + 1}`,
     description: `AI-powered price forecast and analysis for ${symbol} (${companyName}) with bull, base, and bear case price targets.`,
     url: pageUrl,
+    image: `${SITE_URL}/api/og/stock/${ticker.toLowerCase()}`,
     dateModified: dataFetchTime.toISOString(),
     keywords: [
       `${symbol} stock prediction`,

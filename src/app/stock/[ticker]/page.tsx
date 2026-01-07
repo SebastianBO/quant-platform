@@ -362,6 +362,7 @@ export default async function StockPage({ params }: Props) {
     headline: `${symbol} Stock Analysis - ${companyName}`,
     description: `Comprehensive stock analysis for ${companyName} (${symbol}) including financials, valuation, and AI insights.`,
     url: pageUrl,
+    image: `${SITE_URL}/api/og/stock/${ticker.toLowerCase()}`,
     dateModified: dataFetchTime.toISOString(),
     keywords: [
       `${symbol} stock`,
