@@ -1,9 +1,7 @@
 {
   "installCommand": "npm install --legacy-peer-deps",
-  "buildCommand": "next build --webpack",
   "env": {
-    "VERCEL_BYPASS_FALLBACK_OVERSIZED_ERROR": "1",
-    "NODE_OPTIONS": "--max-old-space-size=8192"
+    "VERCEL_BYPASS_FALLBACK_OVERSIZED_ERROR": "1"
   },
   "functions": {
     "src/app/**/*.tsx": {
@@ -18,10 +16,6 @@
     {
       "path": "/api/cron/sync-financials?mode=continue&limit=50",
       "schedule": "0 6 * * *"
-    },
-    {
-      "path": "/api/cron/sync-international-financials?mode=all&limit=30",
-      "schedule": "0 7 * * *"
     }
   ]
 }
