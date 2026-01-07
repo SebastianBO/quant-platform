@@ -7,7 +7,7 @@ import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import SEOSidebar from '@/components/SEOSidebar'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 // SEO Metadata
 export const metadata: Metadata = {

@@ -11,3 +11,7 @@ export type { ScoreDimensions, ScoreBreakdownProps, BreakdownSize, BreakdownLayo
 
 // Server-side rendering compatible components
 export { default as LicianScoreSSR, LicianScoreBadge } from './LicianScoreSSR'
+
+// Financial Snowflake visualization
+export { default as FinancialSnowflake, SnowflakeCard, SnowflakeBadge } from './FinancialSnowflake'
+export type { SnowflakeDimensions } from './FinancialSnowflake'

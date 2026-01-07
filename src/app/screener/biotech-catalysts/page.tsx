@@ -1,4 +1,7 @@
 import { Metadata } from 'next'
+
+// Force dynamic rendering to avoid build-time API calls
+export const dynamic = 'force-dynamic'
 import Link from 'next/link'
 import { getBreadcrumbSchema, getArticleSchema, getFAQSchema, SITE_URL } from '@/lib/seo'
 import { Header } from '@/components/header'

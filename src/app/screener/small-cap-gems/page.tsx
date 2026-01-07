@@ -4,6 +4,7 @@ import { supabase, CompanyFundamentals } from '@/lib/supabase'
 
 // Force dynamic rendering since we query Supabase at runtime
 export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import {

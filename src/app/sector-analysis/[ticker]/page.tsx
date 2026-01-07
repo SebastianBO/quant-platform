@@ -18,7 +18,7 @@ interface Props {
 }
 
 // Dynamic rendering for fresh data
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 // Helper function to format market cap
 function formatMarketCap(marketCap: number): string {

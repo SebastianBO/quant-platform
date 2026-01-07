@@ -6,7 +6,7 @@ interface Props {
   params: Promise<{ ticker: string }>
 }
 
-// Dynamic rendering - this page fetches data for metadata
+// Force dynamic - this redirect page should not be pre-rendered
 export const dynamic = 'force-dynamic'
 
 // List of valid stock tickers (top 100 most searched)

@@ -10,6 +10,7 @@ import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import SEOSidebar from '@/components/SEOSidebar'
 import MarketPulseClient from './MarketPulseClient'
+import { MarketHeatmap } from '@/components/MarketHeatmap'
 
 export const metadata: Metadata = {
   title: 'Stock Market Movers Today - Top Gainers, Losers & Most Active Stocks',
@@ -157,6 +158,11 @@ export default function MarketsHubPage() {
           {/* Real-Time Market Pulse */}
           <section className="mb-12">
             <MarketPulseClient />
+          </section>
+
+          {/* Market Heatmap */}
+          <section className="mb-12 bg-zinc-900/50 rounded-2xl border border-zinc-800 p-6">
+            <MarketHeatmap />
           </section>
 
           {/* Market Pages Grid */}

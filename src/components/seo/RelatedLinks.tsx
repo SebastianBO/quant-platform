@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { getRelatedStocks, getComparisonPairs, SITE_URL } from '@/lib/seo'
+import { STOCK_CATEGORIES } from '@/lib/stocks'
 import {
   TrendingUp,
   DollarSign,
@@ -10,26 +11,99 @@ import {
   ArrowRight,
   Scale,
   Target,
-  Calendar
+  Calendar,
+  LineChart,
+  Building2,
+  Users,
+  FileText,
+  Newspaper,
+  Layers,
+  GitCompare,
+  ChevronRight
 } from 'lucide-react'
 
 interface RelatedLinksProps {
   ticker: string
   currentPage: string
   companyName?: string
+  sector?: string
+  industry?: string
 }
 
-export function RelatedLinks({ ticker, currentPage, companyName }: RelatedLinksProps) {
+// Sector to peer mapping for intelligent cross-linking
+const SECTOR_PEERS: Record<string, string[]> = {
+  'Technology': ['AAPL', 'MSFT', 'GOOGL', 'META', 'NVDA', 'AMD', 'CRM', 'ADBE', 'ORCL', 'INTC'],
+  'Healthcare': ['JNJ', 'UNH', 'PFE', 'ABBV', 'MRK', 'LLY', 'TMO', 'ABT', 'BMY', 'AMGN'],
+  'Financial Services': ['JPM', 'BAC', 'WFC', 'GS', 'MS', 'BLK', 'C', 'AXP', 'V', 'MA'],
+  'Financials': ['JPM', 'BAC', 'WFC', 'GS', 'MS', 'BLK', 'C', 'AXP', 'V', 'MA'],
+  'Consumer Cyclical': ['AMZN', 'TSLA', 'HD', 'MCD', 'NKE', 'SBUX', 'TGT', 'LOW', 'BKNG', 'CMG'],
+  'Consumer Defensive': ['WMT', 'PG', 'KO', 'PEP', 'COST', 'PM', 'MO', 'CL', 'KMB', 'GIS'],
+  'Energy': ['XOM', 'CVX', 'COP', 'SLB', 'EOG', 'MPC', 'PSX', 'VLO', 'OXY', 'HAL'],
+  'Industrials': ['UNP', 'CAT', 'BA', 'HON', 'RTX', 'GE', 'LMT', 'DE', 'UPS', 'FDX'],
+  'Communication Services': ['GOOGL', 'META', 'NFLX', 'DIS', 'VZ', 'T', 'TMUS', 'CMCSA', 'EA', 'TTWO'],
+  'Real Estate': ['PLD', 'AMT', 'EQIX', 'CCI', 'PSA', 'WELL', 'DLR', 'O', 'SPG', 'AVB'],
+  'Utilities': ['NEE', 'DUK', 'SO', 'D', 'AEP', 'EXC', 'SRE', 'XEL', 'ED', 'WEC'],
+  'Materials': ['LIN', 'APD', 'SHW', 'ECL', 'FCX', 'NEM', 'DD', 'DOW', 'NUE', 'VMC'],
+}
+
+// Get sector prediction page slug
+function getSectorSlug(sector?: string): string | null {
+  if (!sector) return null
+  const sectorMappings: Record<string, string> = {
+    'Technology': 'technology',
+    'Healthcare': 'healthcare',
+    'Financial Services': 'financials',
+    'Financials': 'financials',
+    'Consumer Cyclical': 'consumer-discretionary',
+    'Consumer Discretionary': 'consumer-discretionary',
+    'Consumer Defensive': 'consumer-staples',
+    'Consumer Staples': 'consumer-staples',
+    'Energy': 'energy',
+    'Industrials': 'industrials',
+    'Communication Services': 'communication-services',
+    'Real Estate': 'real-estate',
+    'Utilities': 'utilities',
+    'Materials': 'materials',
+    'Basic Materials': 'materials',
+  }
+  return sectorMappings[sector] || null
+}
+
+export function RelatedLinks({ ticker, currentPage, companyName, sector, industry }: RelatedLinksProps) {
   const symbol = ticker.toUpperCase()
   const currentYear = new Date().getFullYear()
   const relatedStocks = getRelatedStocks(symbol)
   const comparisons = getComparisonPairs(symbol)
   const name = companyName || symbol
+  const sectorSlug = getSectorSlug(sector)
 
-  // Top stock predictions
+  // Get sector peers for cross-linking
+  const sectorPeers = sector ? (SECTOR_PEERS[sector] || []).filter(s => s !== symbol).slice(0, 8) : []
+
+  // Top stock predictions for discovery
   const topPredictionStocks = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA', 'TSLA', 'META', 'NFLX'].filter(
     stock => stock !== symbol
   )
+
+  // All analysis pages for this stock - comprehensive internal linking
+  const allAnalysisLinks = [
+    { href: `/stock/${symbol}`, label: `${symbol} Stock`, icon: TrendingUp, current: currentPage === 'stock' },
+    { href: `/prediction/${symbol.toLowerCase()}`, label: `${symbol} Price Prediction`, icon: Target, current: currentPage === 'prediction' },
+    { href: `/should-i-buy/${symbol.toLowerCase()}`, label: `Should I Buy ${symbol}?`, icon: Scale, current: currentPage === 'should-i-buy' },
+    { href: `/forecast/${symbol.toLowerCase()}`, label: `${symbol} Stock Forecast`, icon: LineChart, current: currentPage === 'forecast' },
+    { href: `/earnings/${symbol.toLowerCase()}`, label: `${symbol} Earnings Date`, icon: Calendar, current: currentPage === 'earnings' },
+    { href: `/price/${symbol.toLowerCase()}`, label: `${symbol} Stock Price`, icon: DollarSign, current: currentPage === 'price' },
+    { href: `/analysis/${symbol.toLowerCase()}/valuation`, label: `${symbol} Valuation`, icon: PieChart, current: currentPage === 'valuation' },
+    { href: `/analysis/${symbol.toLowerCase()}/growth`, label: `${symbol} Growth Analysis`, icon: Activity, current: currentPage === 'growth' },
+    { href: `/analysis/${symbol.toLowerCase()}/health`, label: `${symbol} Financial Health`, icon: Heart, current: currentPage === 'health' },
+    { href: `/analysis/${symbol.toLowerCase()}/dividend`, label: `${symbol} Dividend`, icon: DollarSign, current: currentPage === 'dividend' },
+    { href: `/financials/${symbol.toLowerCase()}`, label: `${symbol} Financials`, icon: FileText, current: currentPage === 'financials' },
+    { href: `/news/${symbol.toLowerCase()}`, label: `${symbol} News`, icon: Newspaper, current: currentPage === 'news' },
+    { href: `/analyst/${symbol.toLowerCase()}`, label: `${symbol} Analyst Ratings`, icon: Users, current: currentPage === 'analyst' },
+    { href: `/insider/${symbol.toLowerCase()}`, label: `${symbol} Insider Trading`, icon: Building2, current: currentPage === 'insider' },
+    { href: `/institutional/${symbol.toLowerCase()}`, label: `${symbol} Institutional Ownership`, icon: Layers, current: currentPage === 'institutional' },
+    { href: `/competitors/${symbol.toLowerCase()}`, label: `${symbol} Competitors`, icon: GitCompare, current: currentPage === 'competitors' },
+  ]
 
   // Deep dive analysis links for should-i-buy and buy pages
   const deepDiveLinks = [
@@ -215,96 +289,48 @@ export function RelatedLinks({ ticker, currentPage, companyName }: RelatedLinksP
         </div>
       )}
 
-      {/* Original Related Links */}
-      <h3 className="text-lg font-bold mb-6">Related Analysis</h3>
-
-      {/* Direct Links for Current Stock */}
+      {/* All Analysis Pages - Complete internal linking web */}
       <div className="mb-8">
-        <h4 className="text-sm font-medium text-muted-foreground mb-3">More on {symbol}</h4>
-        <div className="flex flex-wrap gap-2">
-          {currentPage !== 'stock' && (
-            <Link
-              href={`/stock/${symbol}`}
-              className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors"
-            >
-              {symbol} Overview
-            </Link>
-          )}
-          <Link
-            href={`/analysis/${symbol.toLowerCase()}/valuation`}
-            className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors"
-          >
-            Valuation Analysis
-          </Link>
-          <Link
-            href={`/analysis/${symbol.toLowerCase()}/growth`}
-            className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors"
-          >
-            Growth Analysis
-          </Link>
-          {currentPage !== 'should-i-buy' && (
-            <Link
-              href={`/should-i-buy/${symbol.toLowerCase()}`}
-              className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors"
-            >
-              Should I Buy {symbol}?
-            </Link>
-          )}
-          {currentPage !== 'prediction' && (
-            <Link
-              href={`/prediction/${symbol.toLowerCase()}`}
-              className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors"
-            >
-              {symbol} Price Prediction {currentYear}
-            </Link>
-          )}
-          {currentPage !== 'forecast' && (
-            <Link
-              href={`/forecast/${symbol.toLowerCase()}`}
-              className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors"
-            >
-              {symbol} Stock Forecast {currentYear}
-            </Link>
-          )}
-          {currentPage !== 'earnings' && (
-            <Link
-              href={`/earnings/${symbol.toLowerCase()}`}
-              className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors"
-            >
-              {symbol} Earnings Date
-            </Link>
-          )}
-          {currentPage !== 'price' && (
-            <Link
-              href={`/price/${symbol.toLowerCase()}`}
-              className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors"
-            >
-              {symbol} Stock Price
-            </Link>
-          )}
-
-          {currentPage !== 'health' && (
-            <Link
-              href={`/analysis/${symbol.toLowerCase()}/health`}
-              className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors"
-            >
-              {symbol} Financial Health
-            </Link>
-          )}
-          <Link
-            href={`/dashboard?ticker=${symbol}&tab=ai`}
-            className="px-3 py-1.5 bg-green-600/20 text-green-500 rounded-lg text-sm hover:bg-green-600/30 transition-colors"
-          >
-            AI Analysis
-          </Link>
-          <Link
-            href={`/dashboard?ticker=${symbol}&tab=dcf`}
-            className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors"
-          >
-            DCF Valuation
-          </Link>
+        <h3 className="text-lg font-bold mb-4">Complete {symbol} Analysis</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+          {allAnalysisLinks.filter(link => !link.current).slice(0, 12).map((link) => {
+            const Icon = link.icon
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="flex items-center gap-2 px-3 py-2 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors group"
+              >
+                <Icon size={14} className="text-muted-foreground group-hover:text-green-500" />
+                <span className="truncate">{link.label}</span>
+              </Link>
+            )
+          })}
         </div>
       </div>
+
+      {/* Sector Hub Link */}
+      {sectorSlug && (
+        <div className="mb-8">
+          <h4 className="text-sm font-medium text-muted-foreground mb-3">{sector} Sector</h4>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href={`/sectors/${sectorSlug}`}
+              className="px-4 py-2 bg-green-600/20 text-green-500 rounded-lg text-sm hover:bg-green-600/30 transition-colors inline-flex items-center gap-2"
+            >
+              <Layers size={16} />
+              {sector} Stocks Overview
+            </Link>
+            <Link
+              href={`/predictions/${sectorSlug}`}
+              className="px-4 py-2 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors inline-flex items-center gap-2"
+            >
+              <Target size={16} />
+              {sector} Predictions {currentYear}
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* Compare Predictions - Only show on prediction page */}
       {currentPage === 'prediction' && (
@@ -340,6 +366,30 @@ export function RelatedLinks({ ticker, currentPage, companyName }: RelatedLinksP
           ))}
         </div>
       </div>
+
+      {/* Sector Peers - Cross-linking with same sector stocks */}
+      {sectorPeers.length > 0 && (
+        <div className="mb-8">
+          <h4 className="text-sm font-medium text-muted-foreground mb-3">Other {sector} Stocks</h4>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {sectorPeers.slice(0, 8).map((stock) => (
+              <Link
+                key={stock}
+                href={`/stock/${stock}`}
+                className="bg-card p-3 rounded-lg border border-border hover:border-green-500/50 transition-colors group"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-bold text-green-500">{stock}</p>
+                    <p className="text-xs text-muted-foreground">View Analysis</p>
+                  </div>
+                  <ChevronRight size={16} className="text-muted-foreground group-hover:text-green-500" />
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Related Stock Analysis */}
       {currentPage !== 'prediction' && (
@@ -424,10 +474,89 @@ export function PopularComparisons({ currentSlug }: { currentSlug: string }) {
     { slug: 'tsla-vs-rivn', label: 'TSLA vs RIVN' },
     { slug: 'jpm-vs-bac', label: 'JPM vs BAC' },
     { slug: 'amzn-vs-wmt', label: 'AMZN vs WMT' },
+    { slug: 'spy-vs-qqq', label: 'SPY vs QQQ' },
+    { slug: 'ko-vs-pep', label: 'KO vs PEP' },
   ]
+
+  // Get the tickers from the current comparison for related links
+  const match = currentSlug.match(/^([a-z0-9.]+)-vs-([a-z0-9.]+)$/i)
+  const ticker1 = match?.[1]?.toUpperCase() || ''
+  const ticker2 = match?.[2]?.toUpperCase() || ''
 
   return (
     <section className="mt-12 border-t border-border pt-8">
+      {/* Individual Stock Analysis Links */}
+      {ticker1 && ticker2 && (
+        <div className="mb-8">
+          <h3 className="text-lg font-bold mb-4">Analyze Each Stock</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Stock 1 Links */}
+            <div className="bg-card p-4 rounded-lg border border-green-500/30">
+              <h4 className="font-bold text-green-500 mb-3">{ticker1} Analysis</h4>
+              <div className="grid grid-cols-2 gap-2">
+                <Link href={`/stock/${ticker1.toLowerCase()}`} className="text-sm px-3 py-2 bg-secondary rounded hover:bg-secondary/80">
+                  {ticker1} Overview
+                </Link>
+                <Link href={`/prediction/${ticker1.toLowerCase()}`} className="text-sm px-3 py-2 bg-secondary rounded hover:bg-secondary/80">
+                  {ticker1} Prediction
+                </Link>
+                <Link href={`/should-i-buy/${ticker1.toLowerCase()}`} className="text-sm px-3 py-2 bg-secondary rounded hover:bg-secondary/80">
+                  Should I Buy {ticker1}?
+                </Link>
+                <Link href={`/earnings/${ticker1.toLowerCase()}`} className="text-sm px-3 py-2 bg-secondary rounded hover:bg-secondary/80">
+                  {ticker1} Earnings
+                </Link>
+              </div>
+            </div>
+            {/* Stock 2 Links */}
+            <div className="bg-card p-4 rounded-lg border border-blue-500/30">
+              <h4 className="font-bold text-blue-500 mb-3">{ticker2} Analysis</h4>
+              <div className="grid grid-cols-2 gap-2">
+                <Link href={`/stock/${ticker2.toLowerCase()}`} className="text-sm px-3 py-2 bg-secondary rounded hover:bg-secondary/80">
+                  {ticker2} Overview
+                </Link>
+                <Link href={`/prediction/${ticker2.toLowerCase()}`} className="text-sm px-3 py-2 bg-secondary rounded hover:bg-secondary/80">
+                  {ticker2} Prediction
+                </Link>
+                <Link href={`/should-i-buy/${ticker2.toLowerCase()}`} className="text-sm px-3 py-2 bg-secondary rounded hover:bg-secondary/80">
+                  Should I Buy {ticker2}?
+                </Link>
+                <Link href={`/earnings/${ticker2.toLowerCase()}`} className="text-sm px-3 py-2 bg-secondary rounded hover:bg-secondary/80">
+                  {ticker2} Earnings
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Other Comparisons for These Stocks */}
+      {ticker1 && ticker2 && (
+        <div className="mb-8">
+          <h3 className="text-lg font-bold mb-4">More Comparisons</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {getRelatedStocks(ticker1).filter(s => s !== ticker2).slice(0, 4).map(stock => (
+              <Link
+                key={`${ticker1}-${stock}`}
+                href={`/compare/${ticker1.toLowerCase()}-vs-${stock.toLowerCase()}`}
+                className="text-sm px-3 py-2 bg-secondary rounded hover:bg-secondary/80 text-center"
+              >
+                {ticker1} vs {stock}
+              </Link>
+            ))}
+            {getRelatedStocks(ticker2).filter(s => s !== ticker1).slice(0, 4).map(stock => (
+              <Link
+                key={`${ticker2}-${stock}`}
+                href={`/compare/${ticker2.toLowerCase()}-vs-${stock.toLowerCase()}`}
+                className="text-sm px-3 py-2 bg-secondary rounded hover:bg-secondary/80 text-center"
+              >
+                {ticker2} vs {stock}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
       <h3 className="text-lg font-bold mb-4">Popular Stock Comparisons</h3>
       <div className="flex flex-wrap gap-2">
         {popularPairs
@@ -441,6 +570,22 @@ export function PopularComparisons({ currentSlug }: { currentSlug: string }) {
               {pair.label}
             </Link>
           ))}
+      </div>
+
+      {/* Cross-links to prediction pages */}
+      <div className="mt-6">
+        <h4 className="text-sm font-medium text-muted-foreground mb-3">Price Predictions</h4>
+        <div className="flex flex-wrap gap-2">
+          {[...STOCK_CATEGORIES.MEGA_CAP.slice(0, 8)].map(stock => (
+            <Link
+              key={stock}
+              href={`/prediction/${stock.toLowerCase()}`}
+              className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors"
+            >
+              {stock} Prediction
+            </Link>
+          ))}
+        </div>
       </div>
     </section>
   )
@@ -477,14 +622,17 @@ export function CategoryLinks({ currentCategory }: { currentCategory: string }) 
     { key: 'healthcare', label: 'Healthcare Sector' },
     { key: 'financials', label: 'Financial Sector' },
     { key: 'energy', label: 'Energy Sector' },
+    { key: 'consumer-discretionary', label: 'Consumer Discretionary' },
+    { key: 'industrials', label: 'Industrials Sector' },
   ]
 
   return (
     <section className="mt-12 border-t border-border pt-8">
       <h3 className="text-lg font-bold mb-4">Explore Other Categories</h3>
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="flex flex-wrap gap-2 mb-6">
         {categories
           .filter((cat) => cat.key !== currentCategory.toLowerCase())
+          .slice(0, 15)
           .map((cat) => (
             <Link
               key={cat.key}
@@ -495,8 +643,9 @@ export function CategoryLinks({ currentCategory }: { currentCategory: string }) 
             </Link>
           ))}
       </div>
+
       <h4 className="text-sm font-medium text-muted-foreground mb-3">Browse by Sector</h4>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 mb-6">
         {sectors.map((sector) => (
           <Link
             key={sector.key}
@@ -513,6 +662,84 @@ export function CategoryLinks({ currentCategory }: { currentCategory: string }) 
           View All Sectors
         </Link>
       </div>
+
+      {/* Sector Predictions */}
+      <h4 className="text-sm font-medium text-muted-foreground mb-3">Sector Predictions</h4>
+      <div className="flex flex-wrap gap-2">
+        {sectors.map((sector) => (
+          <Link
+            key={`pred-${sector.key}`}
+            href={`/predictions/${sector.key}`}
+            className="px-3 py-1.5 bg-secondary rounded-lg text-sm hover:bg-secondary/80 transition-colors"
+          >
+            {sector.label.replace(' Sector', '')} Predictions
+          </Link>
+        ))}
+      </div>
     </section>
+  )
+}
+
+// Compare With CTA - Can be embedded anywhere
+export function CompareWithCTA({
+  ticker,
+  companyName,
+  peers = []
+}: {
+  ticker: string
+  companyName?: string
+  peers?: string[]
+}) {
+  const symbol = ticker.toUpperCase()
+  const relatedStocks = peers.length > 0 ? peers : getRelatedStocks(symbol)
+
+  return (
+    <div className="bg-gradient-to-br from-blue-600/10 to-purple-600/10 p-6 rounded-xl border border-blue-500/20">
+      <div className="flex items-center gap-2 mb-4">
+        <Scale className="text-blue-500" size={24} />
+        <h3 className="text-lg font-bold">Compare {symbol}</h3>
+      </div>
+      <p className="text-sm text-muted-foreground mb-4">
+        See how {companyName || symbol} stacks up against competitors
+      </p>
+      <div className="flex flex-wrap gap-2">
+        {relatedStocks.slice(0, 4).map(stock => (
+          <Link
+            key={stock}
+            href={`/compare/${symbol.toLowerCase()}-vs-${stock.toLowerCase()}`}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-lg hover:border-blue-500/50 transition-colors group"
+          >
+            <span className="font-medium">{symbol} vs {stock}</span>
+            <ArrowRight size={16} className="text-muted-foreground group-hover:text-blue-500 group-hover:translate-x-1 transition-all" />
+          </Link>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// Breadcrumb Navigation Component
+export function StockBreadcrumbs({
+  items
+}: {
+  items: { name: string; href?: string }[]
+}) {
+  return (
+    <nav className="text-sm text-muted-foreground mb-6" aria-label="Breadcrumb">
+      <ol className="flex flex-wrap items-center gap-1">
+        {items.map((item, index) => (
+          <li key={index} className="flex items-center">
+            {index > 0 && <span className="mx-2">/</span>}
+            {item.href ? (
+              <Link href={item.href} className="hover:text-foreground transition-colors">
+                {item.name}
+              </Link>
+            ) : (
+              <span className="text-foreground">{item.name}</span>
+            )}
+          </li>
+        ))}
+      </ol>
+    </nav>
   )
 }

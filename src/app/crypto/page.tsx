@@ -6,7 +6,7 @@ import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import SEOSidebar from '@/components/SEOSidebar'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Cryptocurrency Prices Today | Live Bitcoin, Ethereum & Crypto Market Cap - Lician',

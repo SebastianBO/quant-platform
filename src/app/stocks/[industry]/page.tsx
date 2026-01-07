@@ -447,7 +447,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 // Dynamic rendering for fresh data
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 export default async function IndustryPage({ params }: Props) {
   const { industry } = await params

@@ -7,7 +7,7 @@ interface Props {
   params: Promise<{ ticker: string }>
 }
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 async function getStockData(ticker: string) {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'

@@ -376,7 +376,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 // Dynamic rendering - Supabase needs env vars at runtime
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 // No static params - render on demand
 // export async function generateStaticParams() {

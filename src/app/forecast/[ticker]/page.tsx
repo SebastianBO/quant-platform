@@ -17,7 +17,7 @@ interface Props {
   params: Promise<{ ticker: string }>
 }
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 // Fetch stock data for metadata
 async function getStockDataForMeta(ticker: string) {

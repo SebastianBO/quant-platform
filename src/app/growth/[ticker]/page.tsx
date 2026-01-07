@@ -8,7 +8,7 @@ interface Props {
 }
 
 // Allow dynamic rendering
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 // Fetch growth data
 async function getGrowthData(ticker: string) {

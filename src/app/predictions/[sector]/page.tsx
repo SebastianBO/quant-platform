@@ -430,7 +430,7 @@ function formatMarketCap(marketCap: number): string {
 // Fetch stocks from Supabase based on sector
 async function fetchSectorStocks(sectorSlug: string): Promise<CompanyFundamentals[]> {
   const sectorNames = SECTOR_MAPPINGS[sectorSlug]
-  if (!sectorNames) {
+  if (!sectorNames || !supabase) {
     return []
   }
 
@@ -476,7 +476,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 // Dynamic rendering - Supabase needs env vars at runtime
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 export default async function SectorPredictionPage({ params }: Props) {
   const { sector } = await params

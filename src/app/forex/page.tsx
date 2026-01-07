@@ -10,7 +10,7 @@ import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import SEOSidebar from '@/components/SEOSidebar'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Live Forex Rates - EUR/USD, GBP/USD, USD/JPY Currency Exchange Rates',

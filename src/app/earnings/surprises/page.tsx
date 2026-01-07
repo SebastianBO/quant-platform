@@ -14,7 +14,7 @@ import { TrendingUp, TrendingDown, Calendar, Target, Award } from 'lucide-react'
 import StockLogo from '@/components/StockLogo'
 
 // Dynamic rendering - Supabase needs env vars at runtime
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Earnings Surprises 2025 - Stocks That Beat & Miss Earnings Estimates',

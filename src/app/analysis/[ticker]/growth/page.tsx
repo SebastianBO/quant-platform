@@ -15,7 +15,7 @@ interface Props {
 // Pre-render top 500+ stocks at build time
 
 // Allow dynamic rendering for stocks not in the pre-rendered list
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 // Fetch all necessary data
 async function getGrowthData(ticker: string) {

@@ -14,7 +14,7 @@ interface Props {
 }
 
 // Dynamic rendering - valuation data needs to be fresh
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 // Fetch stock data
 async function getStockData(ticker: string) {

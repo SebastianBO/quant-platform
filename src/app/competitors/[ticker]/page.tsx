@@ -17,7 +17,7 @@ interface Props {
 }
 
 // Allow dynamic rendering
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

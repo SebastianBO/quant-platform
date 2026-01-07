@@ -13,7 +13,7 @@ interface Props {
 }
 
 // Dynamic rendering - analysis pages need fresh financial data
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 // Fetch stock data
 async function getStockData(ticker: string) {

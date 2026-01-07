@@ -6,6 +6,7 @@ import { LastUpdatedStatic } from '@/components/seo/LastUpdated'
 import { UpcomingCatalysts, CatalystEvent } from '@/components/UpcomingCatalysts'
 import { generateEventSchemas } from '@/lib/event-schemas'
 import LicianScoreSSR from '@/components/scoring/LicianScoreSSR'
+import { SnowflakeCard } from '@/components/scoring'
 import {
   getBreadcrumbSchema,
   getArticleSchema,
@@ -339,9 +340,8 @@ export default async function StockPage({ params }: Props) {
   // Get peer data for comparison section (creates unique content per stock)
   const peerTickers = getPeerTickers(symbol, industry, sector)
   const peers = await getPeerData(peerTickers)
-  // TODO: Re-enable after fixing API call issue
-  // const licianScore = await getLicianScore(symbol)
-  const licianScore: LicianScoreData | null = null
+  // Fetch Lician Score for display
+  const licianScore = await getLicianScore(symbol)
 
   // Build initial catalyst events from stock data
   const initialEvents = buildInitialEvents(symbol, companyName, stockData?.snapshot)
@@ -401,10 +401,17 @@ export default async function StockPage({ params }: Props) {
     url: pageUrl,
   })
 
-  // Aggregate Rating Schema - Use analyst ratings when available
-  // TODO: Re-enable Lician Score after fixing API call issue
+  // Aggregate Rating Schema - Use Lician Score when available, fallback to analyst ratings
   let aggregateRatingSchema = null
-  if (stockData?.analystRatings?.length > 0) {
+  if (licianScore) {
+    // Use Lician Score (1-10 scale, convert to 1-5 for schema)
+    aggregateRatingSchema = getAggregateRatingSchema({
+      ticker: symbol,
+      ratingValue: licianScore.licianScore / 2, // Convert 1-10 to 1-5
+      ratingCount: 5, // 5 dimensions (value, growth, quality, momentum, safety)
+      url: pageUrl,
+    })
+  } else if (stockData?.analystRatings?.length > 0) {
     // Fallback to analyst ratings (1-5 scale)
     const ratings = stockData.analystRatings
     const ratingMap = { 'Strong Buy': 5, 'Buy': 4, 'Hold': 3, 'Sell': 2, 'Strong Sell': 1 }
@@ -492,26 +499,38 @@ export default async function StockPage({ params }: Props) {
           />
         </div>
 
-        {/* Lician Score Section - Temporarily disabled
-        TODO: Re-enable after fixing API call issue
+        {/* Lician Score & Financial Snowflake Section */}
         {licianScore && (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-4">
-            <LicianScoreSSR
-              score={licianScore.licianScore}
-              confidence={licianScore.confidence}
-              summary={licianScore.summary}
-              dimensions={{
-                value: licianScore.dimensions.value.score,
-                growth: licianScore.dimensions.growth.score,
-                quality: licianScore.dimensions.quality.score,
-                momentum: licianScore.dimensions.momentum.score,
-                safety: licianScore.dimensions.safety.score,
-              }}
-              ticker={symbol}
-            />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Score Summary */}
+              <LicianScoreSSR
+                score={licianScore.licianScore}
+                confidence={licianScore.confidence}
+                summary={licianScore.summary}
+                dimensions={{
+                  value: licianScore.dimensions.value.score,
+                  growth: licianScore.dimensions.growth.score,
+                  quality: licianScore.dimensions.quality.score,
+                  momentum: licianScore.dimensions.momentum.score,
+                  safety: licianScore.dimensions.safety.score,
+                }}
+                ticker={symbol}
+              />
+              {/* Financial Snowflake Visualization */}
+              <SnowflakeCard
+                dimensions={{
+                  value: licianScore.dimensions.value.score,
+                  growth: licianScore.dimensions.growth.score,
+                  quality: licianScore.dimensions.quality.score,
+                  momentum: licianScore.dimensions.momentum.score,
+                  safety: licianScore.dimensions.safety.score,
+                }}
+                ticker={symbol}
+              />
+            </div>
           </div>
         )}
-        */}
 
         {/* Upcoming Catalysts Section - SSR for SEO, timely content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">

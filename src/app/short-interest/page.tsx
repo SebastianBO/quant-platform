@@ -13,7 +13,7 @@ import { Footer } from '@/components/footer'
 import SEOSidebar from '@/components/SEOSidebar'
 
 // Dynamic rendering - Supabase needs env vars at runtime
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Short Interest Data - Most Shorted Stocks & Short Squeeze Candidates',

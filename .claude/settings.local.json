@@ -99,7 +99,15 @@
       "Bash(rm:*)",
       "WebFetch(domain:ai-sdk.dev)",
       "Bash(NEXT_TURBO_DISABLED=1 npm run build:*)",
-      "Bash(next build:*)"
+      "Bash(next build:*)",
+      "Skill(ralph-wiggum:ralph-loop)",
+      "Skill(ralph-wiggum:help)",
+      "Bash(while read f)",
+      "Bash(do if ! grep -q \"export const dynamic\" \"$f\")",
+      "Bash(then echo \"$f\")",
+      "Bash(fi)",
+      "Bash(for f in src/app/insights/*/page.tsx)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "ask": []
