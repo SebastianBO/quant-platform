@@ -167,12 +167,14 @@ function mapIncomeStatement(
   data: EODHDIncomeStatement,
   periodType: 'annual' | 'quarterly'
 ): Record<string, unknown> {
-  // For international stocks, we use ticker as the identifier (no CIK)
-  const cik = `EODHD_${ticker.replace('.', '_')}`
+  // Full symbol includes exchange for international stocks (e.g., VOLV-B.ST)
+  const fullTicker = `${ticker}.${exchange}`
+  // CIK is VARCHAR(10) so we create a compact identifier: E + exchange(2) + ticker(5)
+  const cik = `E${exchange.slice(0,2)}${ticker.slice(0,5).replace(/-/g, '')}`.toUpperCase().slice(0, 10)
 
   return {
     cik,
-    ticker,
+    ticker: fullTicker,
     report_period: data.date,
     fiscal_period: periodType === 'quarterly' ? 'Q' : 'FY',
     period: periodType,
@@ -205,11 +207,12 @@ function mapBalanceSheet(
   data: EODHDBalanceSheet,
   periodType: 'annual' | 'quarterly'
 ): Record<string, unknown> {
-  const cik = `EODHD_${ticker.replace('.', '_')}`
+  const fullTicker = `${ticker}.${exchange}`
+  const cik = `E${exchange.slice(0,2)}${ticker.slice(0,5).replace(/-/g, '')}`.toUpperCase().slice(0, 10)
 
   return {
     cik,
-    ticker,
+    ticker: fullTicker,
     report_period: data.date,
     fiscal_period: periodType === 'quarterly' ? 'Q' : 'FY',
     period: periodType,
@@ -250,11 +253,12 @@ function mapCashFlow(
   data: EODHDCashFlow,
   periodType: 'annual' | 'quarterly'
 ): Record<string, unknown> {
-  const cik = `EODHD_${ticker.replace('.', '_')}`
+  const fullTicker = `${ticker}.${exchange}`
+  const cik = `E${exchange.slice(0,2)}${ticker.slice(0,5).replace(/-/g, '')}`.toUpperCase().slice(0, 10)
 
   return {
     cik,
-    ticker,
+    ticker: fullTicker,
     report_period: data.date,
     fiscal_period: periodType === 'quarterly' ? 'Q' : 'FY',
     period: periodType,
