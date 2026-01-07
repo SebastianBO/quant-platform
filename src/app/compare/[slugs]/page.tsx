@@ -202,8 +202,17 @@ async function getStockDataForMeta(ticker: string) {
   }
 }
 
+// Safe formatting helper for metadata (before safeFixed is defined in component)
+function safeNum(val: unknown, decimals: number = 0): string {
+  if (val === null || val === undefined) return 'N/A'
+  const num = Number(val)
+  if (isNaN(num)) return 'N/A'
+  return num.toFixed(decimals)
+}
+
 // Format market cap for display
 function formatMarketCapShort(cap: number): string {
+  if (typeof cap !== 'number' || isNaN(cap)) return 'N/A'
   if (cap >= 1e12) return `$${(cap / 1e12).toFixed(1)}T`
   if (cap >= 1e9) return `$${(cap / 1e9).toFixed(0)}B`
   return `$${(cap / 1e6).toFixed(0)}M`
@@ -249,15 +258,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // Formula: Both prices + Key metrics + Winner hint + CTA
   let description = `Compare ${ticker1} vs ${ticker2} stock. Side-by-side valuation, growth & profitability analysis. Updated ${currentMonth} ${currentDay}.`
 
-  if (price1 && price2) {
-    const stock1Str = `${ticker1} ($${price1.toFixed(0)}${pe1 && pe1 > 0 ? `, PE ${pe1.toFixed(0)}` : ''})`
-    const stock2Str = `${ticker2} ($${price2.toFixed(0)}${pe2 && pe2 > 0 ? `, PE ${pe2.toFixed(0)}` : ''})`
+  if (typeof price1 === 'number' && typeof price2 === 'number' && !isNaN(price1) && !isNaN(price2)) {
+    const peStr1 = typeof pe1 === 'number' && pe1 > 0 ? `, PE ${safeNum(pe1, 0)}` : ''
+    const peStr2 = typeof pe2 === 'number' && pe2 > 0 ? `, PE ${safeNum(pe2, 0)}` : ''
+    const stock1Str = `${ticker1} ($${safeNum(price1, 0)}${peStr1})`
+    const stock2Str = `${ticker2} ($${safeNum(price2, 0)}${peStr2})`
     const ctaStr = `. Full comparison & winner.`
 
     description = `${stock1Str} vs ${stock2Str}${ctaStr}`
 
     // Add cap info if space allows
-    if (description.length < 130 && cap1 && cap2) {
+    if (description.length < 130 && typeof cap1 === 'number' && typeof cap2 === 'number') {
       const capStr = ` ${formatMarketCapShort(cap1)} vs ${formatMarketCapShort(cap2)} cap.`
       if ((description + capStr).length <= 160) {
         description = `${stock1Str} vs ${stock2Str}.${capStr.slice(1)}${ctaStr}`
@@ -265,7 +276,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 
     if (description.length > 160) {
-      description = `${ticker1} at $${price1.toFixed(0)} vs ${ticker2} at $${price2.toFixed(0)}. Compare PE, growth & margins. See which wins.`
+      description = `${ticker1} at $${safeNum(price1, 0)} vs ${ticker2} at $${safeNum(price2, 0)}. Compare PE, growth & margins. See which wins.`
     }
   }
 
