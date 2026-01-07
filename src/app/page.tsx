@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import { Suspense } from "react"
+import HeroAIChat from "@/components/HeroAIChat"
 import DashboardContent from "@/components/DashboardContent"
 import FeaturedArticles from "@/components/FeaturedArticles"
 import { Footer } from "@/components/footer"
@@ -50,6 +51,7 @@ function LoadingState() {
 export default function Home() {
   return (
     <>
+      <HeroAIChat />
       <Suspense fallback={<LoadingState />}>
         <DashboardContent />
       </Suspense>
