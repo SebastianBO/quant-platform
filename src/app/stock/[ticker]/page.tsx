@@ -7,6 +7,8 @@ import { UpcomingCatalysts, CatalystEvent } from '@/components/UpcomingCatalysts
 import { generateEventSchemas } from '@/lib/event-schemas'
 import LicianScoreSSR from '@/components/scoring/LicianScoreSSR'
 import { SnowflakeCard } from '@/components/scoring'
+import { WatchlistActions } from '@/components/WatchlistButton'
+import { EarningsAlertButton } from '@/components/EarningsAlertSignup'
 import {
   getBreadcrumbSchema,
   getArticleSchema,
@@ -497,6 +499,14 @@ export default async function StockPage({ params }: Props) {
             timestamp={dataFetchTime}
             prefix="Data Updated"
           />
+        </div>
+
+        {/* Watchlist & Alert Actions */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-4">
+          <div className="flex flex-wrap items-center gap-4">
+            <WatchlistActions ticker={symbol} />
+            <EarningsAlertButton ticker={symbol} />
+          </div>
         </div>
 
         {/* Lician Score & Financial Snowflake Section */}
