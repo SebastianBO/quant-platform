@@ -351,7 +351,16 @@ export default async function ComparePage({ params }: Props) {
     grossMargin: stock2Data.metrics?.gross_margin || 0,
   }
 
+  // Safe number formatting helper - prevents toFixed errors on null/undefined/NaN
+  const safeFixed = (val: unknown, decimals: number = 1): string => {
+    if (val === null || val === undefined) return 'N/A'
+    const num = Number(val)
+    if (isNaN(num)) return 'N/A'
+    return num.toFixed(decimals)
+  }
+
   const formatMarketCap = (cap: number) => {
+    if (typeof cap !== 'number' || isNaN(cap)) return 'N/A'
     if (cap >= 1e12) return `$${(cap / 1e12).toFixed(2)}T`
     if (cap >= 1e9) return `$${(cap / 1e9).toFixed(2)}B`
     return `$${(cap / 1e6).toFixed(2)}M`
@@ -398,7 +407,7 @@ export default async function ComparePage({ params }: Props) {
     },
     {
       question: `Which stock has better value: ${ticker1} or ${ticker2}?`,
-      answer: `Based on P/E ratios, ${stock1.pe > 0 && stock2.pe > 0 ? (stock1.pe < stock2.pe ? `${ticker1} trades at a lower multiple (${stock1.pe.toFixed(1)}x vs ${stock2.pe.toFixed(1)}x)` : `${ticker2} trades at a lower multiple (${stock2.pe.toFixed(1)}x vs ${stock1.pe.toFixed(1)}x)`) : 'compare detailed valuation metrics on our dashboard'}.`,
+      answer: `Based on P/E ratios, ${typeof stock1.pe === 'number' && typeof stock2.pe === 'number' && stock1.pe > 0 && stock2.pe > 0 ? (stock1.pe < stock2.pe ? `${ticker1} trades at a lower multiple (${safeFixed(stock1.pe, 1)}x vs ${safeFixed(stock2.pe, 1)}x)` : `${ticker2} trades at a lower multiple (${safeFixed(stock2.pe, 1)}x vs ${safeFixed(stock1.pe, 1)}x)`) : 'compare detailed valuation metrics on our dashboard'}.`,
     },
   ]
   const faqSchema = getFAQSchema(comparisonFaqs)
@@ -477,8 +486,8 @@ export default async function ComparePage({ params }: Props) {
                   </tr>
                   <tr>
                     <td className="p-4">P/E Ratio</td>
-                    <td className="text-center p-4">{stock1.pe > 0 ? stock1.pe.toFixed(2) : 'N/A'}</td>
-                    <td className="text-center p-4">{stock2.pe > 0 ? stock2.pe.toFixed(2) : 'N/A'}</td>
+                    <td className="text-center p-4">{typeof stock1.pe === 'number' && stock1.pe > 0 ? safeFixed(stock1.pe, 2) : 'N/A'}</td>
+                    <td className="text-center p-4">{typeof stock2.pe === 'number' && stock2.pe > 0 ? safeFixed(stock2.pe, 2) : 'N/A'}</td>
                     <td className="text-center p-4">
                       <span className={getWinner(stock1.pe, stock2.pe, false) === 'stock1' ? 'text-green-500' : getWinner(stock1.pe, stock2.pe, false) === 'stock2' ? 'text-blue-500' : ''}>
                         {getWinner(stock1.pe, stock2.pe, false) === 'stock1' ? stock1.symbol : getWinner(stock1.pe, stock2.pe, false) === 'stock2' ? stock2.symbol : 'Tie'}
@@ -487,8 +496,8 @@ export default async function ComparePage({ params }: Props) {
                   </tr>
                   <tr>
                     <td className="p-4">EPS (TTM)</td>
-                    <td className="text-center p-4">${stock1.eps > 0 ? stock1.eps.toFixed(2) : 'N/A'}</td>
-                    <td className="text-center p-4">${stock2.eps > 0 ? stock2.eps.toFixed(2) : 'N/A'}</td>
+                    <td className="text-center p-4">${typeof stock1.eps === 'number' && stock1.eps > 0 ? safeFixed(stock1.eps, 2) : 'N/A'}</td>
+                    <td className="text-center p-4">${typeof stock2.eps === 'number' && stock2.eps > 0 ? safeFixed(stock2.eps, 2) : 'N/A'}</td>
                     <td className="text-center p-4">
                       <span className={getWinner(stock1.eps, stock2.eps) === 'stock1' ? 'text-green-500' : getWinner(stock1.eps, stock2.eps) === 'stock2' ? 'text-blue-500' : ''}>
                         {getWinner(stock1.eps, stock2.eps) === 'stock1' ? stock1.symbol : getWinner(stock1.eps, stock2.eps) === 'stock2' ? stock2.symbol : 'Tie'}
@@ -497,8 +506,8 @@ export default async function ComparePage({ params }: Props) {
                   </tr>
                   <tr>
                     <td className="p-4">Revenue Growth</td>
-                    <td className="text-center p-4">{(stock1.revenueGrowth * 100).toFixed(1)}%</td>
-                    <td className="text-center p-4">{(stock2.revenueGrowth * 100).toFixed(1)}%</td>
+                    <td className="text-center p-4">{safeFixed(stock1.revenueGrowth * 100, 1)}%</td>
+                    <td className="text-center p-4">{safeFixed(stock2.revenueGrowth * 100, 1)}%</td>
                     <td className="text-center p-4">
                       <span className={getWinner(stock1.revenueGrowth, stock2.revenueGrowth) === 'stock1' ? 'text-green-500' : getWinner(stock1.revenueGrowth, stock2.revenueGrowth) === 'stock2' ? 'text-blue-500' : ''}>
                         {getWinner(stock1.revenueGrowth, stock2.revenueGrowth) === 'stock1' ? stock1.symbol : getWinner(stock1.revenueGrowth, stock2.revenueGrowth) === 'stock2' ? stock2.symbol : 'Tie'}
@@ -507,8 +516,8 @@ export default async function ComparePage({ params }: Props) {
                   </tr>
                   <tr>
                     <td className="p-4">Gross Margin</td>
-                    <td className="text-center p-4">{(stock1.grossMargin * 100).toFixed(1)}%</td>
-                    <td className="text-center p-4">{(stock2.grossMargin * 100).toFixed(1)}%</td>
+                    <td className="text-center p-4">{safeFixed(stock1.grossMargin * 100, 1)}%</td>
+                    <td className="text-center p-4">{safeFixed(stock2.grossMargin * 100, 1)}%</td>
                     <td className="text-center p-4">
                       <span className={getWinner(stock1.grossMargin, stock2.grossMargin) === 'stock1' ? 'text-green-500' : getWinner(stock1.grossMargin, stock2.grossMargin) === 'stock2' ? 'text-blue-500' : ''}>
                         {getWinner(stock1.grossMargin, stock2.grossMargin) === 'stock1' ? stock1.symbol : getWinner(stock1.grossMargin, stock2.grossMargin) === 'stock2' ? stock2.symbol : 'Tie'}
