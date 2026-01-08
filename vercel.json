@@ -15,12 +15,28 @@
       "schedule": "0 21 * * 1-5"
     },
     {
-      "path": "/api/cron/sync-financials?mode=priority&limit=100",
-      "schedule": "0 */6 * * *"
+      "path": "/api/cron/sync-financials?mode=priority&limit=150",
+      "schedule": "0 */4 * * *"
     },
     {
-      "path": "/api/cron/sync-financials?mode=continue&limit=200",
+      "path": "/api/cron/sync-financials?mode=continue&limit=300",
+      "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/sync-financials?mode=continue&limit=300",
       "schedule": "30 * * * *"
+    },
+    {
+      "path": "/api/cron/sync-insider-trades?limit=50",
+      "schedule": "15 */2 * * *"
+    },
+    {
+      "path": "/api/cron/sync-short-volume",
+      "schedule": "0 22 * * 1-5"
+    },
+    {
+      "path": "/api/cron/sync-8k-filings?limit=100",
+      "schedule": "45 * * * *"
     }
   ]
 }

@@ -81,14 +81,39 @@ import { financialTools } from '../tools'
 
 type ModelProvider = Parameters<typeof generateText>[0]['model']
 
+// Available models via Vercel AI Gateway
+export const GATEWAY_MODELS = {
+  // Best reasoning (expensive)
+  'claude-sonnet-4': 'anthropic/claude-sonnet-4',
+  'gpt-4o': 'openai/gpt-4o',
+  'gpt-4-turbo': 'openai/gpt-4-turbo',
+
+  // Good balance (recommended)
+  'claude-3-5-sonnet': 'anthropic/claude-3-5-sonnet',
+  'gpt-4o-mini': 'openai/gpt-4o-mini',
+  'llama-3.3-70b': 'meta/llama-3.3-70b',
+
+  // Fast/cheap (for tool selection)
+  'gpt-4o-mini-fast': 'openai/gpt-4o-mini',
+  'llama-3.1-8b': 'meta/llama-3.1-8b-instruct',
+  'gemini-flash': 'google/gemini-2.0-flash',
+} as const
+
+export type GatewayModelId = keyof typeof GATEWAY_MODELS
+
 export class Agent {
   private model: ModelProvider
+  private fastModel: ModelProvider // For tool selection (like Dexter uses gpt-5-mini)
   private maxIterations: number
   private callbacks?: AgentCallbacks
   private state: AgentState | null = null
 
-  constructor(model: ModelProvider, config?: Partial<AgentConfig>) {
+  constructor(
+    model: ModelProvider,
+    config?: Partial<AgentConfig> & { fastModel?: ModelProvider }
+  ) {
     this.model = model
+    this.fastModel = config?.fastModel ?? model // Default to same model
     this.maxIterations = config?.maxIterations ?? 5
     this.callbacks = config?.callbacks
   }
