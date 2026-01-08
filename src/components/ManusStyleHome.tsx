@@ -82,13 +82,20 @@ const MORE_TOOLS = [
   { label: "Economic Calendar", icon: Globe, href: "/economic-calendar" },
 ]
 
-// Manus-style bottom carousel slides
+// Manus-style bottom carousel slides with clickable tags
 const CAROUSEL_SLIDES = [
   {
     id: "data",
     title: "Powerful Financial Data",
     subtitle: "Access comprehensive market intelligence",
-    tags: ["SEC EDGAR", "Norway Data", "UK Companies", "EU Markets", "Insider Trading", "Real-time Prices"],
+    tags: [
+      { label: "SEC EDGAR", query: "Show me the latest SEC filings" },
+      { label: "Norway Data", query: "Find top Norwegian companies by revenue" },
+      { label: "UK Companies", query: "Analyze UK companies with highest growth" },
+      { label: "EU Markets", query: "Compare European market performance" },
+      { label: "Insider Trading", query: "Show recent insider trading activity" },
+      { label: "Real-time Prices", query: "What are today's top market movers?" },
+    ],
     icon: "chart",
     link: "/data-sources",
   },
@@ -104,7 +111,13 @@ const CAROUSEL_SLIDES = [
     id: "coverage",
     title: "100,000+ Companies Analyzed",
     subtitle: "US, Norway, UK, Finland, Denmark and growing",
-    tags: ["🇺🇸 US", "🇳🇴 Norway", "🇬🇧 UK", "🇫🇮 Finland", "🇩🇰 Denmark"],
+    tags: [
+      { label: "🇺🇸 US", query: "Show me top US tech companies" },
+      { label: "🇳🇴 Norway", query: "Analyze Norwegian oil and energy stocks" },
+      { label: "🇬🇧 UK", query: "Find UK FTSE 100 companies" },
+      { label: "🇫🇮 Finland", query: "Show Finnish companies like Nokia" },
+      { label: "🇩🇰 Denmark", query: "Analyze Danish companies like Novo Nordisk" },
+    ],
     icon: "globe",
     link: "/markets",
   },
@@ -801,16 +814,22 @@ export default function ManusStyleHome() {
                                 {CAROUSEL_SLIDES[carouselIndex].subtitle}
                               </p>
 
-                              {/* Tags */}
+                              {/* Clickable Tags */}
                               {CAROUSEL_SLIDES[carouselIndex].tags.length > 0 && (
                                 <div className="flex flex-wrap gap-2">
                                   {CAROUSEL_SLIDES[carouselIndex].tags.map((tag) => (
-                                    <span
-                                      key={tag}
-                                      className="px-3 py-1.5 text-xs rounded-full border border-border bg-secondary/50 text-muted-foreground"
+                                    <button
+                                      key={tag.label}
+                                      onClick={(e) => {
+                                        e.stopPropagation()
+                                        setInputValue(tag.query)
+                                        // Focus the input
+                                        textareaRef.current?.focus()
+                                      }}
+                                      className="px-3 py-1.5 text-xs rounded-full border border-border bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground hover:border-green-500/50 transition-all cursor-pointer"
                                     >
-                                      {tag}
-                                    </span>
+                                      {tag.label}
+                                    </button>
                                   ))}
                                 </div>
                               )}
