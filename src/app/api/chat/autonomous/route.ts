@@ -21,9 +21,26 @@ const gateway = createGateway({
   apiKey: process.env.AI_GATEWAY_API_KEY ?? '',
 })
 
+// Available models via Vercel AI Gateway
+export const AVAILABLE_MODELS = {
+  // Best reasoning (expensive)
+  'gpt-4o': { id: 'openai/gpt-4o', name: 'GPT-4o', tier: 'premium' },
+  'claude-sonnet-4': { id: 'anthropic/claude-sonnet-4', name: 'Claude Sonnet 4', tier: 'premium' },
+
+  // Good balance (recommended)
+  'gpt-4o-mini': { id: 'openai/gpt-4o-mini', name: 'GPT-4o Mini', tier: 'standard' },
+  'claude-3-5-sonnet': { id: 'anthropic/claude-3-5-sonnet', name: 'Claude 3.5 Sonnet', tier: 'standard' },
+  'llama-3.3-70b': { id: 'meta/llama-3.3-70b', name: 'Llama 3.3 70B', tier: 'standard' },
+
+  // Fast (for simple queries)
+  'gemini-flash': { id: 'google/gemini-2.0-flash', name: 'Gemini Flash', tier: 'fast' },
+} as const
+
+export type ModelKey = keyof typeof AVAILABLE_MODELS
+
 // Rate limiting
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
-const RATE_LIMIT = 5 // Lower limit for autonomous (more expensive)
+const RATE_LIMIT = 10 // Increased for multi-model support
 const RATE_WINDOW = 60 * 60 * 1000 // 1 hour
 
 function getRateLimitKey(req: NextRequest): string {
@@ -48,9 +65,14 @@ function checkRateLimit(key: string): { allowed: boolean; remaining: number } {
   return { allowed: true, remaining: RATE_LIMIT - record.count }
 }
 
+export async function GET() {
+  // Return available models for UI
+  return NextResponse.json({ models: AVAILABLE_MODELS })
+}
+
 export async function POST(req: NextRequest) {
   const rateLimitKey = getRateLimitKey(req)
-  const { allowed } = checkRateLimit(rateLimitKey)
+  const { allowed, remaining } = checkRateLimit(rateLimitKey)
 
   if (!allowed) {
     return NextResponse.json(
@@ -61,7 +83,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json()
-    const { query, conversationHistory, stream = true } = body
+    const { query, conversationHistory, stream = true, model: modelKey = 'gpt-4o-mini' } = body
 
     if (!query || typeof query !== 'string') {
       return NextResponse.json(
@@ -70,8 +92,9 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Use Llama 3.3-70B for autonomous reasoning
-    const model = gateway('meta/llama-3.3-70b')
+    // Get model from available models, default to gpt-4o-mini
+    const modelConfig = AVAILABLE_MODELS[modelKey as ModelKey] || AVAILABLE_MODELS['gpt-4o-mini']
+    const model = gateway(modelConfig.id as Parameters<typeof gateway>[0])
 
     const agent = new Agent(model, {
       maxIterations: 3, // Keep it efficient
@@ -84,6 +107,10 @@ export async function POST(req: NextRequest) {
       const readable = new ReadableStream({
         async start(controller) {
           try {
+            // Send model info first
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'model', data: { key: modelKey, name: modelConfig.name } })}\n\n`))
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'remaining', data: remaining })}\n\n`))
+
             for await (const event of agent.runStreaming(query, conversationHistory)) {
               const data = `data: ${JSON.stringify(event)}\n\n`
               controller.enqueue(encoder.encode(data))
@@ -108,7 +135,11 @@ export async function POST(req: NextRequest) {
     } else {
       // Non-streaming response
       const answer = await agent.run(query, conversationHistory)
-      return NextResponse.json({ answer })
+      return NextResponse.json({
+        answer,
+        model: { key: modelKey, name: modelConfig.name },
+        remaining
+      })
     }
   } catch (error) {
     console.error('Autonomous agent error:', error)
