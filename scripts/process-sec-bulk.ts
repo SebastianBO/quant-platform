@@ -16,8 +16,22 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { execSync } from 'child_process'
 
-// Load env
-import 'dotenv/config'
+// Load env from .env.local manually (handles malformed files)
+function loadEnv(): Record<string, string> {
+  const envPath = path.join(process.cwd(), '.env.local')
+  const content = fs.readFileSync(envPath, 'utf-8')
+  const env: Record<string, string> = {}
+
+  for (const line of content.split('\n')) {
+    const match = line.match(/^([^=]+)=["']?(.+?)["']?\\?n?"?$/)
+    if (match) {
+      env[match[1]] = match[2].replace(/\\n$/, '').replace(/\\n"$/, '')
+    }
+  }
+  return env
+}
+
+const ENV = loadEnv()
 
 const SEC_COMPANYFACTS_URL = 'https://www.sec.gov/Archives/edgar/daily-index/xbrl/companyfacts.zip'
 const SEC_USER_AGENT = 'Lician contact@lician.com'
@@ -25,10 +39,28 @@ const DATA_DIR = path.join(process.cwd(), 'data', 'sec-bulk')
 const ZIP_FILE = path.join(DATA_DIR, 'companyfacts.zip')
 const EXTRACT_DIR = path.join(DATA_DIR, 'companyfacts')
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+// Supabase URL and key
+const SUPABASE_URL = 'https://wcckhqxkmhyzfpynthte.supabase.co'
+// Service role key required to bypass RLS for bulk inserts
+const SUPABASE_SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndjY2tocXhrbWh5emZweW50aHRlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NTQ4MzMyMiwiZXhwIjoyMDYxMDU5MzIyfQ.JpvVhcIJsWFrEJntLhKBba0E0F4M-pJzFocIUw3O_N4'
+const SUPABASE_KEY = ENV['SUPABASE_SERVICE_ROLE_KEY'] ||
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
+  SUPABASE_SERVICE_ROLE_KEY
+
+// Decode JWT to check role
+function getJwtRole(jwt: string): string {
+  try {
+    const payload = JSON.parse(Buffer.from(jwt.split('.')[1], 'base64').toString())
+    return payload.role || 'unknown'
+  } catch {
+    return 'invalid'
+  }
+}
+
+console.log(`Using Supabase: ${SUPABASE_URL}`)
+console.log(`Key type: ${getJwtRole(SUPABASE_KEY)}`)
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 
 interface CompanyFacts {
   cik: number
@@ -154,10 +186,10 @@ async function processCompanyFile(filePath: string): Promise<{ ticker: string; i
             stmt = { ticker, cik, report_period: reportPeriod, period }
             incomeStatements.push(stmt)
           }
-          if (concepts.revenue.includes(concept)) stmt.total_revenue = entry.val
+          if (concepts.revenue.includes(concept)) stmt.revenue = entry.val
           if (concepts.netIncome.includes(concept)) stmt.net_income = entry.val
-          if (concepts.epsBasic.includes(concept)) stmt.eps_basic = entry.val
-          if (concepts.epsDiluted.includes(concept)) stmt.eps_diluted = entry.val
+          if (concepts.epsBasic.includes(concept)) stmt.earnings_per_share = entry.val
+          if (concepts.epsDiluted.includes(concept)) stmt.earnings_per_share_diluted = entry.val
         }
 
         // Balance sheet items
@@ -181,38 +213,51 @@ async function processCompanyFile(filePath: string): Promise<{ ticker: string; i
             stmt = { ticker, cik, report_period: reportPeriod, period }
             cashFlows.push(stmt)
           }
-          if (concepts.operatingCashFlow.includes(concept)) stmt.operating_cash_flow = entry.val
-          if (concepts.investingCashFlow.includes(concept)) stmt.investing_cash_flow = entry.val
-          if (concepts.financingCashFlow.includes(concept)) stmt.financing_cash_flow = entry.val
+          if (concepts.operatingCashFlow.includes(concept)) stmt.net_cash_flow_from_operations = entry.val
+          if (concepts.investingCashFlow.includes(concept)) stmt.net_cash_flow_from_investing = entry.val
+          if (concepts.financingCashFlow.includes(concept)) stmt.net_cash_flow_from_financing = entry.val
         }
       }
     }
 
     let totalItems = 0
+    let errorLogged = false
 
     // Batch upsert
     if (incomeStatements.length > 0) {
       const { error } = await supabase
         .from('income_statements')
         .upsert(incomeStatements.map(i => ({ ...i, source: 'SEC_BULK', updated_at: new Date().toISOString() })),
-          { onConflict: 'ticker,report_period,period' })
-      if (!error) totalItems += incomeStatements.length
+          { onConflict: 'cik,report_period,period' })
+      if (error) {
+        if (!errorLogged) { console.error('Income statement error:', error.message); errorLogged = true }
+      } else {
+        totalItems += incomeStatements.length
+      }
     }
 
     if (balanceSheets.length > 0) {
       const { error } = await supabase
         .from('balance_sheets')
         .upsert(balanceSheets.map(b => ({ ...b, source: 'SEC_BULK', updated_at: new Date().toISOString() })),
-          { onConflict: 'ticker,report_period,period' })
-      if (!error) totalItems += balanceSheets.length
+          { onConflict: 'cik,report_period,period' })
+      if (error) {
+        if (!errorLogged) { console.error('Balance sheet error:', error.message); errorLogged = true }
+      } else {
+        totalItems += balanceSheets.length
+      }
     }
 
     if (cashFlows.length > 0) {
       const { error } = await supabase
         .from('cash_flow_statements')
         .upsert(cashFlows.map(c => ({ ...c, source: 'SEC_BULK', updated_at: new Date().toISOString() })),
-          { onConflict: 'ticker,report_period,period' })
-      if (!error) totalItems += cashFlows.length
+          { onConflict: 'cik,report_period,period' })
+      if (error) {
+        if (!errorLogged) { console.error('Cash flow error:', error.message); errorLogged = true }
+      } else {
+        totalItems += cashFlows.length
+      }
     }
 
     return { ticker, items: totalItems }

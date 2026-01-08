@@ -4,6 +4,145 @@ import { createClient } from '@supabase/supabase-js'
 import Firecrawl from '@mendable/firecrawl-js'
 import * as financialAPI from './financial-datasets-api'
 
+// =============================================================================
+// ROBUST ERROR HANDLING UTILITIES
+// =============================================================================
+
+interface RetryOptions {
+  maxRetries?: number
+  baseDelayMs?: number
+  maxDelayMs?: number
+  timeoutMs?: number
+  retryOn?: (error: Error, response?: Response) => boolean
+}
+
+const DEFAULT_RETRY_OPTIONS: Required<RetryOptions> = {
+  maxRetries: 3,
+  baseDelayMs: 1000,
+  maxDelayMs: 10000,
+  timeoutMs: 30000,
+  retryOn: (error, response) => {
+    // Retry on network errors
+    if (error.name === 'AbortError' || error.name === 'TypeError') return true
+    // Retry on rate limits and server errors
+    if (response && (response.status === 429 || response.status >= 500)) return true
+    return false
+  }
+}
+
+/**
+ * Fetch with retry and timeout
+ * - Exponential backoff with jitter
+ * - Configurable timeout per request
+ * - Smart retry on transient errors (429, 5xx, network)
+ */
+async function fetchWithRetry(
+  url: string,
+  options: RequestInit = {},
+  retryOptions: RetryOptions = {}
+): Promise<Response> {
+  const opts = { ...DEFAULT_RETRY_OPTIONS, ...retryOptions }
+  let lastError: Error = new Error('Unknown error')
+
+  for (let attempt = 0; attempt <= opts.maxRetries; attempt++) {
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), opts.timeoutMs)
+
+    try {
+      const response = await fetch(url, {
+        ...options,
+        signal: controller.signal,
+      })
+      clearTimeout(timeoutId)
+
+      // Check if we should retry based on response
+      if (!response.ok && opts.retryOn(new Error(`HTTP ${response.status}`), response)) {
+        if (attempt < opts.maxRetries) {
+          const delay = Math.min(
+            opts.baseDelayMs * Math.pow(2, attempt) + Math.random() * 1000,
+            opts.maxDelayMs
+          )
+          await new Promise(r => setTimeout(r, delay))
+          continue
+        }
+      }
+
+      return response
+    } catch (error) {
+      clearTimeout(timeoutId)
+      lastError = error as Error
+
+      // Check if retryable
+      if (opts.retryOn(lastError) && attempt < opts.maxRetries) {
+        const delay = Math.min(
+          opts.baseDelayMs * Math.pow(2, attempt) + Math.random() * 1000,
+          opts.maxDelayMs
+        )
+        await new Promise(r => setTimeout(r, delay))
+        continue
+      }
+
+      throw lastError
+    }
+  }
+
+  throw lastError
+}
+
+/**
+ * Wrap any async operation with timeout
+ * Handles both Promises and thenable objects (like Supabase query builders)
+ */
+async function withTimeout<T>(
+  promiseOrThenable: Promise<T> | { then: (fn: (value: T) => void) => unknown },
+  timeoutMs: number,
+  operation: string
+): Promise<T> {
+  // Convert thenable to proper Promise if needed (for Supabase query builders)
+  const promise = Promise.resolve(promiseOrThenable)
+
+  let timeoutId: NodeJS.Timeout
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timeoutId = setTimeout(() => {
+      reject(new Error(`${operation} timed out after ${timeoutMs}ms`))
+    }, timeoutMs)
+  })
+
+  try {
+    const result = await Promise.race([promise, timeoutPromise])
+    clearTimeout(timeoutId!)
+    return result
+  } catch (error) {
+    clearTimeout(timeoutId!)
+    throw error
+  }
+}
+
+/**
+ * Create detailed error response with context
+ */
+function createErrorResponse(
+  error: unknown,
+  context: { operation: string; ticker?: string; attempt?: number }
+): { success: false; error: string; details: Record<string, unknown> } {
+  const err = error as Error
+  return {
+    success: false,
+    error: `${context.operation} failed: ${err.message || 'Unknown error'}`,
+    details: {
+      operation: context.operation,
+      ticker: context.ticker,
+      errorType: err.name || 'Error',
+      attempt: context.attempt,
+      timestamp: new Date().toISOString(),
+    }
+  }
+}
+
+// =============================================================================
+// SUPABASE CLIENT
+// =============================================================================
+
 // Lazy-load Supabase client to avoid build-time errors
 let supabaseClient: ReturnType<typeof createClient> | null = null
 
@@ -29,7 +168,7 @@ const hasFinancialAPI = () => !!process.env.FINANCIAL_DATASETS_API_KEY
 
 /**
  * Tool: Get Stock Quote
- * Fetches real-time stock price and basic info
+ * Fetches real-time stock price and basic info with retry
  */
 export const getStockQuoteTool = tool({
   description: 'Get real-time stock quote with price, change, volume, and market cap for a given ticker symbol',
@@ -37,20 +176,79 @@ export const getStockQuoteTool = tool({
     ticker: z.string().describe('Stock ticker symbol (e.g., AAPL, MSFT, TSLA)'),
   }),
   execute: async ({ ticker }) => {
-    try {
-      const response = await fetch(`${getBaseUrl()}/api/quotes/realtime?symbols=${ticker.toUpperCase()}`)
-      const data = await response.json()
+    const t = ticker.toUpperCase()
+    const operation = `getStockQuote(${t})`
 
-      if (data.quotes && data.quotes[ticker.toUpperCase()]) {
+    // Strategy 1: Internal realtime API with retry
+    try {
+      const response = await fetchWithRetry(
+        `${getBaseUrl()}/api/quotes/realtime?symbols=${t}`,
+        {},
+        { timeoutMs: 15000, maxRetries: 2 }
+      )
+
+      const data = await response.json()
+      if (data.quotes && data.quotes[t]) {
         return {
           success: true,
-          data: data.quotes[ticker.toUpperCase()],
+          source: 'realtime-api',
+          data: data.quotes[t],
         }
       }
-      return { success: false, error: 'Quote not found' }
-    } catch (error) {
-      return { success: false, error: 'Failed to fetch quote' }
+    } catch (err) {
+      console.error('Realtime quote API failed:', err)
     }
+
+    // Strategy 2: Try trending API (might have the stock)
+    try {
+      const response = await fetchWithRetry(
+        `${getBaseUrl()}/api/trending`,
+        {},
+        { timeoutMs: 10000, maxRetries: 1 }
+      )
+
+      const data = await response.json()
+      const allStocks = [...(data.gainers || []), ...(data.losers || []), ...(data.trending || [])]
+      const match = allStocks.find((s: { symbol: string }) => s.symbol === t)
+
+      if (match) {
+        return {
+          success: true,
+          source: 'trending-api',
+          data: match,
+        }
+      }
+    } catch (err) {
+      console.error('Trending API fallback failed:', err)
+    }
+
+    // Strategy 3: Supabase price snapshot
+    try {
+      const result = await withTimeout(
+        getSupabase()
+          .from('stock_prices_snapshot')
+          .select('*')
+          .eq('ticker', t)
+          .single(),
+        10000,
+        'price_snapshot'
+      ) as { data: Record<string, unknown> | null }
+
+      if (result.data) {
+        return {
+          success: true,
+          source: 'supabase-snapshot',
+          data: result.data,
+        }
+      }
+    } catch (err) {
+      console.error('Supabase snapshot fallback failed:', err)
+    }
+
+    return createErrorResponse(
+      new Error('Quote not available from any source'),
+      { operation, ticker: t }
+    )
   },
 })
 
@@ -452,33 +650,112 @@ export const getBiotechCatalystsTool = tool({
 
 /**
  * Tool: Search Stocks
- * Searches for stocks by name or ticker
+ * Searches for stocks by name or ticker with retry and fallback
  */
 export const searchStocksTool = tool({
-  description: 'Search for stocks by company name or ticker symbol',
+  description: 'Search for stocks by company name or ticker symbol. Finds peer companies and similar stocks.',
   inputSchema: z.object({
-    query: z.string().describe('Search query (company name or ticker)'),
+    query: z.string().describe('Search query (company name, ticker, or industry like "ad tech" or "biotech")'),
     limit: z.number().min(1).max(20).default(10).describe('Number of results'),
   }),
   execute: async ({ query, limit }) => {
-    try {
-      const { data, error } = await getSupabase()
-        .from('company_fundamentals')
-        .select('ticker, company_name, sector, industry, market_cap')
-        .or(`ticker.ilike.%${query}%,company_name.ilike.%${query}%`)
-        .order('market_cap', { ascending: false, nullsFirst: false })
-        .limit(limit)
+    const operation = `searchStocks(${query})`
 
-      if (error) throw error
+    // Strategy 1: Try Supabase company_fundamentals (with retry)
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        const { data, error } = await withTimeout(
+          getSupabase()
+            .from('company_fundamentals')
+            .select('ticker, company_name, sector, industry, market_cap')
+            .or(`ticker.ilike.%${query}%,company_name.ilike.%${query}%,industry.ilike.%${query}%,sector.ilike.%${query}%`)
+            .order('market_cap', { ascending: false, nullsFirst: false })
+            .limit(limit),
+          15000,
+          'Supabase search'
+        )
 
-      return {
-        success: true,
-        query,
-        results: data || [],
+        if (!error && data && data.length > 0) {
+          return {
+            success: true,
+            query,
+            source: 'supabase',
+            results: data,
+          }
+        }
+
+        if (error) {
+          console.error(`Search attempt ${attempt + 1} failed:`, error.message)
+          if (attempt < 2) {
+            await new Promise(r => setTimeout(r, 1000 * (attempt + 1)))
+            continue
+          }
+        }
+        break
+      } catch (err) {
+        console.error(`Search attempt ${attempt + 1} error:`, err)
+        if (attempt < 2) {
+          await new Promise(r => setTimeout(r, 1000 * (attempt + 1)))
+        }
       }
-    } catch (error) {
-      return { success: false, error: 'Failed to search stocks' }
     }
+
+    // Strategy 2: Try internal search API (has EODHD fallback)
+    try {
+      const response = await fetchWithRetry(
+        `${getBaseUrl()}/api/search?q=${encodeURIComponent(query)}&limit=${limit}`,
+        {},
+        { timeoutMs: 10000, maxRetries: 2 }
+      )
+
+      if (response.ok) {
+        const data = await response.json()
+        if (data.results && data.results.length > 0) {
+          return {
+            success: true,
+            query,
+            source: 'search-api',
+            results: data.results.map((r: { symbol?: string; ticker?: string; name?: string; exchange?: string }) => ({
+              ticker: r.symbol || r.ticker,
+              company_name: r.name,
+              exchange: r.exchange,
+            })),
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Search API fallback failed:', err)
+    }
+
+    // Strategy 3: Try financial_metrics table (different schema)
+    try {
+      const result = await withTimeout(
+        getSupabase()
+          .from('financial_metrics')
+          .select('ticker')
+          .ilike('ticker', `%${query}%`)
+          .limit(limit),
+        10000,
+        'financial_metrics search'
+      ) as { data: { ticker: string }[] | null }
+
+      if (result.data && result.data.length > 0) {
+        return {
+          success: true,
+          query,
+          source: 'financial_metrics',
+          results: result.data.map(d => ({ ticker: d.ticker })),
+          note: 'Limited results - only tickers found',
+        }
+      }
+    } catch (err) {
+      console.error('financial_metrics fallback failed:', err)
+    }
+
+    return createErrorResponse(
+      new Error('All search strategies exhausted'),
+      { operation, ticker: query }
+    )
   },
 })
 
@@ -510,7 +787,7 @@ export const getMarketMoversTool = tool({
 
 /**
  * Tool: Compare Stocks
- * Compares key metrics between two stocks
+ * Compares key metrics between two stocks with retry and fallback
  */
 export const compareStocksTool = tool({
   description: 'Compare key financial metrics between two stocks side by side',
@@ -519,34 +796,108 @@ export const compareStocksTool = tool({
     ticker2: z.string().describe('Second stock ticker'),
   }),
   execute: async ({ ticker1, ticker2 }) => {
+    const t1 = ticker1.toUpperCase()
+    const t2 = ticker2.toUpperCase()
+    const operation = `compareStocks(${t1}, ${t2})`
+
+    // Helper to fetch single stock data with retries
+    const fetchStockData = async (ticker: string) => {
+      // Strategy 1: Try financial_metrics
+      for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+          const { data, error } = await withTimeout(
+            getSupabase()
+              .from('financial_metrics')
+              .select('*')
+              .eq('ticker', ticker)
+              .order('report_period', { ascending: false })
+              .limit(1)
+              .single(),
+            15000,
+            `financial_metrics(${ticker})`
+          )
+
+          if (!error && data) return { source: 'financial_metrics', data }
+        } catch (err) {
+          if (attempt === 0) await new Promise(r => setTimeout(r, 1000))
+        }
+      }
+
+      // Strategy 2: Try company_fundamentals
+      try {
+        const { data } = await withTimeout(
+          getSupabase()
+            .from('company_fundamentals')
+            .select('*')
+            .eq('ticker', ticker)
+            .single(),
+          10000,
+          `company_fundamentals(${ticker})`
+        )
+
+        if (data) return { source: 'company_fundamentals', data }
+      } catch (err) {
+        console.error(`company_fundamentals fallback failed for ${ticker}:`, err)
+      }
+
+      // Strategy 3: Try Financial Datasets API
+      if (hasFinancialAPI()) {
+        try {
+          const apiData = await withTimeout(
+            financialAPI.getFinancialMetricsSnapshot(ticker),
+            15000,
+            `FinancialAPI(${ticker})`
+          )
+
+          if (apiData) {
+            return { source: 'financial_datasets_api', data: apiData }
+          }
+        } catch (err) {
+          console.error(`Financial Datasets API fallback failed for ${ticker}:`, err)
+        }
+      }
+
+      return { source: 'none', data: null, error: `No data found for ${ticker}` }
+    }
+
     try {
-      // Fetch fundamentals for both
-      const [result1, result2] = await Promise.all([
-        getSupabase()
-          .from('financial_metrics')
-          .select('*')
-          .eq('ticker', ticker1.toUpperCase())
-          .order('report_period', { ascending: false })
-          .limit(1)
-          .single(),
-        getSupabase()
-          .from('financial_metrics')
-          .select('*')
-          .eq('ticker', ticker2.toUpperCase())
-          .order('report_period', { ascending: false })
-          .limit(1)
-          .single(),
+      // Fetch both stocks in parallel
+      const [stock1, stock2] = await Promise.all([
+        fetchStockData(t1),
+        fetchStockData(t2),
       ])
+
+      // Check if we got any data
+      const hasData1 = stock1.data !== null
+      const hasData2 = stock2.data !== null
+
+      if (!hasData1 && !hasData2) {
+        return createErrorResponse(
+          new Error(`No data found for either ${t1} or ${t2}`),
+          { operation }
+        )
+      }
 
       return {
         success: true,
         comparison: {
-          [ticker1.toUpperCase()]: result1.data || {},
-          [ticker2.toUpperCase()]: result2.data || {},
+          [t1]: {
+            found: hasData1,
+            source: stock1.source,
+            data: stock1.data || {},
+          },
+          [t2]: {
+            found: hasData2,
+            source: stock2.source,
+            data: stock2.data || {},
+          },
         },
+        note: !hasData1 || !hasData2
+          ? `Partial data: ${!hasData1 ? t1 : t2} not found`
+          : undefined,
       }
     } catch (error) {
-      return { success: false, error: 'Failed to compare stocks' }
+      return createErrorResponse(error, { operation })
     }
   },
 })
