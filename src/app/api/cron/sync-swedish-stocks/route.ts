@@ -210,108 +210,67 @@ const SWEDISH_TICKERS = [
   'WIHL.ST',    // Wihlborgs
 ]
 
-// Fetch company data from Yahoo Finance (PRIMARY - FREE)
+// Fetch company data from Yahoo Finance v8 API (works without auth!)
 async function fetchFromYahoo(ticker: string): Promise<EODHDFundamentals | null> {
   try {
-    // Get crumb and cookies for authentication
-    const auth = await getYahooCrumb()
-    if (!auth) {
-      console.log('Could not get Yahoo authentication')
-      return null
-    }
+    // Use the v8 chart API which works without authentication
+    const chartUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?range=1d&interval=1d`
 
-    // Yahoo uses same .ST suffix for Swedish stocks
-    const url = `${YAHOO_FUNDAMENTALS_URL}/${ticker}?modules=assetProfile,summaryDetail,financialData,defaultKeyStatistics,incomeStatementHistory,balanceSheetHistory&crumb=${encodeURIComponent(auth.crumb)}`
-
-    const response = await fetch(url, {
+    const chartRes = await fetch(chartUrl, {
       headers: {
         'Accept': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Cookie': auth.cookies,
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
       }
     })
 
-    if (!response.ok) {
-      console.log(`Yahoo returned ${response.status} for ${ticker}`)
-      // Invalidate crumb cache on auth errors
-      if (response.status === 401) {
-        yahooCrumb = null
-        yahooCookies = null
-      }
+    if (!chartRes.ok) {
+      console.log(`Yahoo v8 returned ${chartRes.status} for ${ticker}`)
       return null
     }
 
-    const data = await response.json()
-    const result = data?.quoteSummary?.result?.[0]
-    if (!result) return null
+    const chartData = await chartRes.json()
+    const meta = chartData?.chart?.result?.[0]?.meta
+    if (!meta) return null
 
-    const profile = result.assetProfile || {}
-    const summary = result.summaryDetail || {}
-    const financialData = result.financialData || {}
-    const keyStats = result.defaultKeyStatistics || {}
-    const incomeHistory = result.incomeStatementHistory?.incomeStatementHistory || []
-    const balanceHistory = result.balanceSheetHistory?.balanceSheetStatements || []
+    // Try to get more data from quote endpoint
+    const quoteUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${ticker}`
+    let quote: any = {}
 
-    // Convert to EODHD-compatible format
+    try {
+      const quoteRes = await fetch(quoteUrl, {
+        headers: {
+          'Accept': 'application/json',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        }
+      })
+      if (quoteRes.ok) {
+        const quoteData = await quoteRes.json()
+        quote = quoteData?.quoteResponse?.result?.[0] || {}
+      }
+    } catch (e) {
+      // Quote endpoint failed, continue with chart data
+    }
+
+    // Build fundamentals from available data
     const fundamentals: EODHDFundamentals = {
       General: {
-        Name: profile.longBusinessSummary ? ticker.replace('.ST', '') : undefined,
+        Name: meta.shortName || meta.longName || quote.shortName || ticker.replace('.ST', ''),
         Code: ticker.replace('.ST', ''),
-        Sector: profile.sector,
-        Industry: profile.industry,
-        Address: profile.address1,
-        WebURL: profile.website,
-        FullTimeEmployees: profile.fullTimeEmployees,
+        Sector: quote.sector,
+        Industry: quote.industry,
         CountryISO: 'SE',
       },
       Highlights: {
-        MarketCapitalization: summary.marketCap?.raw,
-        PERatio: summary.trailingPE?.raw,
-        DividendYield: summary.dividendYield?.raw,
-        RevenueTTM: financialData.totalRevenue?.raw,
-        ProfitMargin: financialData.profitMargins?.raw,
-        OperatingMarginTTM: financialData.operatingMargins?.raw,
-        ReturnOnAssetsTTM: financialData.returnOnAssets?.raw,
-        ReturnOnEquityTTM: financialData.returnOnEquity?.raw,
-        EBITDA: financialData.ebitda?.raw,
-        BookValue: keyStats.bookValue?.raw,
+        MarketCapitalization: quote.marketCap,
+        PERatio: quote.trailingPE,
+        DividendYield: quote.trailingAnnualDividendYield,
+        EarningsShare: quote.epsTrailingTwelveMonths,
+        BookValue: quote.bookValue,
       },
       Financials: {
         Income_Statement: { yearly: {} },
         Balance_Sheet: { yearly: {} },
       },
-    }
-
-    // Parse income statements
-    for (const stmt of incomeHistory) {
-      const date = stmt.endDate?.fmt
-      if (!date) continue
-      fundamentals.Financials!.Income_Statement!.yearly![date] = {
-        totalRevenue: stmt.totalRevenue?.raw?.toString(),
-        grossProfit: stmt.grossProfit?.raw?.toString(),
-        operatingIncome: stmt.operatingIncome?.raw?.toString(),
-        incomeBeforeTax: stmt.incomeBeforeTax?.raw?.toString(),
-        incomeTaxExpense: stmt.incomeTaxExpense?.raw?.toString(),
-        netIncome: stmt.netIncome?.raw?.toString(),
-        ebit: stmt.ebit?.raw?.toString(),
-      }
-    }
-
-    // Parse balance sheets
-    for (const stmt of balanceHistory) {
-      const date = stmt.endDate?.fmt
-      if (!date) continue
-      fundamentals.Financials!.Balance_Sheet!.yearly![date] = {
-        totalAssets: stmt.totalAssets?.raw?.toString(),
-        totalCurrentAssets: stmt.totalCurrentAssets?.raw?.toString(),
-        totalLiab: stmt.totalLiab?.raw?.toString(),
-        totalCurrentLiabilities: stmt.totalCurrentLiabilities?.raw?.toString(),
-        totalStockholderEquity: stmt.totalStockholderEquity?.raw?.toString(),
-        retainedEarnings: stmt.retainedEarnings?.raw?.toString(),
-        cash: stmt.cash?.raw?.toString(),
-        shortTermDebt: stmt.shortTermBorrowings?.raw?.toString(),
-        longTermDebt: stmt.longTermDebt?.raw?.toString(),
-      }
     }
 
     return fundamentals
