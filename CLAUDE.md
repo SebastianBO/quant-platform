@@ -292,3 +292,151 @@ their specific ROI before making a decision
 - **Tech Stack**: Next.js 16, React, Supabase, Tailwind CSS
 - **Build**: Use `next build --webpack` to avoid Turbopack bugs
 - **MCP Tools Available**: Google Search Console (gsc), Supabase, Playwright
+
+---
+
+# FINANCIAL DATA PIPELINE
+
+## Overview
+
+Lician replicates FinancialDatasets.ai's business model using **FREE data sources**. We scrape SEC EDGAR, Yahoo Finance, FINRA, and EODHD to populate Supabase. FinancialDatasets.ai is only a fallback (with auto-caching).
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         DATA SOURCES                                     │
+├───────────────┬──────────────┬──────────────┬──────────────┬────────────┤
+│   SEC EDGAR   │    Yahoo     │    EODHD     │    FINRA     │   Others   │
+│  (FREE)       │   Finance    │   (Paid)     │   (FREE)     │            │
+│  Financials   │   (FREE)     │   Prices     │   Short Vol  │ ClinTrials │
+│  Insider      │   Prices     │   Batch      │              │ OpenFIGI   │
+│  13F Holdings │   Estimates  │              │              │            │
+└───────┬───────┴──────┬───────┴──────┬───────┴──────┬───────┴──────┬─────┘
+        │              │              │              │              │
+        ▼              ▼              ▼              ▼              ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        CRON JOBS (Vercel + Supabase pg_cron)            │
+│  sync-financials | sync-prices | sync-insider-trades | sync-short-vol   │
+└────────────────────────────────┬────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                           SUPABASE (Cache)                               │
+│  90+ tables: income_statements, balance_sheets, insider_trades, etc.    │
+└────────────────────────────────┬────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                          v1 API ENDPOINTS                                │
+│  Cache-first → Paid API fallback (auto-cache) → Free forever            │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+## STARTUP CHECKLIST
+
+When starting a session, always check:
+
+```bash
+# 1. Check scraper health
+curl https://lician.com/api/monitoring/scraper-status
+
+# 2. If critical issues, investigate cron job logs
+# 3. Manually trigger failing syncs if needed
+```
+
+## CRON JOBS
+
+| Endpoint | Schedule | What it does |
+|----------|----------|--------------|
+| `/api/cron/sync-financials?mode=continue&limit=500` | 3x hourly | Syncs SEC EDGAR financials (36,000 stocks/day) |
+| `/api/cron/sync-financials?mode=priority&limit=200` | Every 2h | Refreshes top stocks |
+| `/api/cron/sync-prices?limit=200` | Every 10min (market hours) | EODHD batch + Yahoo fallback |
+| `/api/cron/sync-insider-trades?limit=100` | Hourly | SEC EDGAR Form 4 |
+| `/api/cron/sync-short-volume` | Daily 10pm | FINRA short volume |
+| `/api/cron/sync-8k-filings?limit=200` | Hourly | SEC EDGAR material events |
+| `/api/cron/sync-analyst-estimates?limit=30` | Daily 5am | Yahoo Finance scraping |
+| `/api/monitoring/scraper-status` | Daily 7am | Health check dashboard |
+
+## KEY FILES
+
+### Cron Jobs
+- `src/app/api/cron/sync-financials/route.ts` - SEC EDGAR financials
+- `src/app/api/cron/sync-prices/route.ts` - EODHD + Yahoo prices
+- `src/app/api/cron/sync-insider-trades/route.ts` - Form 4 insider trades
+- `src/app/api/cron/sync-analyst-estimates/route.ts` - Yahoo scraping
+- `src/app/api/cron/sync-short-volume/route.ts` - FINRA data
+- `src/app/api/cron/sync-8k-filings/route.ts` - SEC material events
+
+### SEC EDGAR Integration
+- `src/lib/sec-edgar/client.ts` - SEC API client with rate limiting
+- `src/lib/sec-edgar/sync.ts` - Orchestrates data sync to Supabase
+- `src/lib/sec-edgar/financial-parser.ts` - XBRL to normalized format
+
+### Shared Utilities
+- `src/lib/cron-utils.ts` - Retry logic, rate limiting, logging
+
+### v1 API (FinancialDatasets-compatible)
+- `src/app/api/v1/financials/income-statements/route.ts`
+- `src/app/api/v1/financials/balance-sheets/route.ts`
+- `src/app/api/v1/financials/cash-flow-statements/route.ts`
+- `src/app/api/v1/insider-trades/route.ts`
+- `src/app/api/v1/institutional-ownership/route.ts`
+- `src/app/api/v1/prices/snapshot/route.ts`
+
+### Monitoring
+- `src/app/api/monitoring/scraper-status/route.ts` - Health dashboard
+
+## DATABASE TABLES
+
+Key tables in Supabase:
+- `income_statements` - Quarterly/annual income data
+- `balance_sheets` - Assets, liabilities, equity
+- `cash_flow_statements` - Operating, investing, financing
+- `insider_trades` - Form 4 transactions
+- `institutional_holdings` - 13F holdings
+- `stock_prices_snapshot` - Latest prices
+- `analyst_estimates` - EPS/revenue estimates
+- `short_volume` - Daily short volume
+- `sec_filings` - 8-K, 10-K, 10-Q filings
+- `cron_job_log` - Sync history
+
+## TROUBLESHOOTING
+
+### Prices not saving
+Check column names match table schema in `supabase/migrations/20251210000003_prices_news.sql`
+
+### Financials not syncing
+1. Check SEC rate limit (10 req/sec)
+2. Verify XBRL parsing in `financial-parser.ts`
+3. Check for UNIQUE constraint violations
+
+### Cron jobs not running
+1. Check Vercel cron logs
+2. Check Supabase pg_cron status: `SELECT * FROM cron_job_status`
+3. Manually trigger: `curl https://lician.com/api/cron/[job-name]`
+
+## FUTURE: EU MARKETS
+
+Plan to expand beyond US:
+- London Stock Exchange (LSE)
+- Frankfurt (XETRA)
+- Paris (Euronext)
+- Other EU exchanges
+
+Will need:
+- New data sources for EU financials
+- ISIN/CUSIP mapping
+- Currency conversion
+- Different reporting standards (IFRS vs GAAP)
+
+## DATA FLOW STRATEGY
+
+```
+1. Supabase cache FIRST (free)
+2. Paid API fallback ONLY if missing
+3. Auto-cache paid results → free forever
+4. Scrapers run continuously to minimize fallback usage
+```
+
+Goal: **Zero paid API calls** once all stocks are synced.
