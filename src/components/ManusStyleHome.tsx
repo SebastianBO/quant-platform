@@ -23,7 +23,6 @@ import {
   Briefcase,
   Zap,
   ChevronDown,
-  ChevronLeft,
   ChevronRight,
   Newspaper,
   Shield,
@@ -83,11 +82,40 @@ const MORE_TOOLS = [
   { label: "Economic Calendar", icon: Globe, href: "/economic-calendar" },
 ]
 
-// Carousel slides for bottom card
+// Manus-style bottom carousel slides
 const CAROUSEL_SLIDES = [
-  { id: "movers", title: "Today's Market Movers", type: "movers" },
-  { id: "earnings", title: "Upcoming Earnings", type: "earnings" },
-  { id: "trending", title: "Trending Research", type: "trending" },
+  {
+    id: "data",
+    title: "Powerful Financial Data",
+    subtitle: "Access comprehensive market intelligence",
+    tags: ["SEC EDGAR", "Norway Data", "UK Companies", "EU Markets", "Insider Trading", "Real-time Prices"],
+    icon: "chart",
+    link: "/data-sources",
+  },
+  {
+    id: "share",
+    title: "Share your research and get credits",
+    subtitle: "Share on LinkedIn and tag @Lician. Then DM us to get credits.",
+    tags: [],
+    icon: "social",
+    link: null,
+  },
+  {
+    id: "coverage",
+    title: "100,000+ Companies Analyzed",
+    subtitle: "US, Norway, UK, Finland, Denmark and growing",
+    tags: ["🇺🇸 US", "🇳🇴 Norway", "🇬🇧 UK", "🇫🇮 Finland", "🇩🇰 Denmark"],
+    icon: "globe",
+    link: "/markets",
+  },
+]
+
+// Sample prompts for modal
+const SAMPLE_PROMPTS = [
+  { text: "Analyze Tesla's insider trading patterns", icon: Building2 },
+  { text: "Compare NVIDIA vs AMD financials", icon: LineChart },
+  { text: "Find undervalued Norwegian stocks", icon: Globe },
+  { text: "UK companies with highest revenue growth", icon: TrendingUp },
 ]
 
 // AI Models
@@ -119,15 +147,6 @@ interface Message {
   content: string
 }
 
-interface NewsItem {
-  title: string
-  date: string
-  link: string
-  symbols: string[]
-  sentiment: { polarity: number }
-  source?: string
-}
-
 interface Task {
   id: string
   description: string
@@ -139,7 +158,6 @@ export default function ManusStyleHome() {
   const [loading, setLoading] = useState(true)
   const [credits, setCredits] = useState(300)
   const [movers, setMovers] = useState<Mover[]>([])
-  const [news, setNews] = useState<NewsItem[]>([])
   const [showMoreTools, setShowMoreTools] = useState(false)
   const [sidebarExpanded, setSidebarExpanded] = useState(false)
   const [carouselIndex, setCarouselIndex] = useState(0)
@@ -155,6 +173,8 @@ export default function ManusStyleHome() {
   const [selectedModel, setSelectedModel] = useState(MODELS[0])
   const [tasks, setTasks] = useState<Task[]>([])
   const [copiedId, setCopiedId] = useState<string | null>(null)
+  const [carouselDismissed, setCarouselDismissed] = useState(false)
+  const [showDismissTooltip, setShowDismissTooltip] = useState(false)
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -167,6 +187,28 @@ export default function ManusStyleHome() {
       setInputValue(query)
     }
   }, [searchParams])
+
+  // Check if carousel was dismissed
+  useEffect(() => {
+    const dismissed = localStorage.getItem("carousel_dismissed")
+    if (dismissed === "true") {
+      setCarouselDismissed(true)
+    }
+  }, [])
+
+  const handleDismissCarousel = () => {
+    setCarouselDismissed(true)
+    localStorage.setItem("carousel_dismissed", "true")
+  }
+
+  const handleCarouselClick = (slide: typeof CAROUSEL_SLIDES[0]) => {
+    if (slide.link) {
+      router.push(slide.link)
+    } else if (slide.id === "share") {
+      // Open LinkedIn share
+      window.open("https://www.linkedin.com/sharing/share-offsite/?url=https://lician.com", "_blank")
+    }
+  }
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -185,20 +227,12 @@ export default function ManusStyleHome() {
     }
     checkAuth()
 
-    // Fetch trending stocks
+    // Fetch trending stocks for stock logos
     fetch("/api/trending")
       .then(res => res.json())
       .then(data => {
         const all = [...(data.gainers || []), ...(data.losers || [])].slice(0, 6)
         setMovers(all)
-      })
-      .catch(() => {})
-
-    // Fetch market news
-    fetch("/api/market-news?limit=5")
-      .then(res => res.json())
-      .then(data => {
-        if (data.news) setNews(data.news.slice(0, 4))
       })
       .catch(() => {})
   }, [supabase.auth])
@@ -770,48 +804,101 @@ export default function ManusStyleHome() {
                     </div>
                   </div>
 
-                  {/* Bottom carousel card */}
-                  {movers.length > 0 && (
-                    <div className="w-full max-w-lg mx-auto mt-4">
+                  {/* Manus-style bottom carousel */}
+                  {!carouselDismissed && (
+                    <div className="w-full max-w-2xl mx-auto mt-8">
                       <div className="relative">
-                        {/* Carousel navigation */}
-                        <button
-                          onClick={() => setCarouselIndex((prev) => (prev - 1 + CAROUSEL_SLIDES.length) % CAROUSEL_SLIDES.length)}
-                          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 p-1.5 rounded-full bg-card border border-border shadow-lg hover:bg-secondary transition-colors"
+                        <div
+                          onClick={() => handleCarouselClick(CAROUSEL_SLIDES[carouselIndex])}
+                          className="bg-card/80 border border-border rounded-2xl p-5 cursor-pointer hover:bg-card transition-colors group"
                         >
-                          <ChevronLeft className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => setCarouselIndex((prev) => (prev + 1) % CAROUSEL_SLIDES.length)}
-                          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 p-1.5 rounded-full bg-card border border-border shadow-lg hover:bg-secondary transition-colors"
-                        >
-                          <ChevronRight className="w-4 h-4" />
-                        </button>
-
-                        <Link href="/markets" className="block">
-                          <div className="bg-card border border-border rounded-2xl p-4 flex items-center gap-4 shadow-lg hover:border-green-500/50 transition-colors">
+                          <div className="flex items-start justify-between gap-6">
+                            {/* Left content */}
                             <div className="flex-1">
-                              <p className="font-medium mb-1">{CAROUSEL_SLIDES[carouselIndex].title}</p>
-                              <p className="text-sm text-muted-foreground">
-                                {movers[0]?.symbol} {movers[0]?.changePercent > 0 ? "+" : ""}{movers[0]?.changePercent?.toFixed(2)}%
-                                {movers[1] && ` · ${movers[1].symbol} ${movers[1].changePercent > 0 ? "+" : ""}${movers[1].changePercent?.toFixed(2)}%`}
+                              <div className="flex items-center gap-2 mb-2">
+                                <h3 className="font-semibold text-lg">{CAROUSEL_SLIDES[carouselIndex].title}</h3>
+                                <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+                              </div>
+                              <p className="text-sm text-muted-foreground mb-4">
+                                {CAROUSEL_SLIDES[carouselIndex].subtitle}
                               </p>
-                            </div>
-                            <div className="flex -space-x-2">
-                              {movers.slice(0, 3).map((mover) => (
-                                <div
-                                  key={mover.symbol}
-                                  className="w-10 h-10 rounded-full border-2 border-background overflow-hidden"
-                                >
-                                  <StockLogo symbol={mover.symbol} size="md" />
+
+                              {/* Tags */}
+                              {CAROUSEL_SLIDES[carouselIndex].tags.length > 0 && (
+                                <div className="flex flex-wrap gap-2">
+                                  {CAROUSEL_SLIDES[carouselIndex].tags.map((tag) => (
+                                    <span
+                                      key={tag}
+                                      className="px-3 py-1.5 text-xs rounded-full border border-border bg-secondary/50 text-muted-foreground"
+                                    >
+                                      {tag}
+                                    </span>
+                                  ))}
                                 </div>
-                              ))}
+                              )}
+                            </div>
+
+                            {/* Right visual */}
+                            <div className="hidden sm:flex flex-shrink-0 w-32 h-24 bg-gradient-to-br from-green-500/20 to-blue-500/20 rounded-xl items-center justify-center">
+                              {CAROUSEL_SLIDES[carouselIndex].icon === "chart" && (
+                                <div className="relative">
+                                  <BarChart3 className="w-10 h-10 text-green-500" />
+                                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                                    <TrendingUp className="w-2.5 h-2.5 text-white" />
+                                  </div>
+                                </div>
+                              )}
+                              {CAROUSEL_SLIDES[carouselIndex].icon === "social" && (
+                                <div className="w-16 h-16 bg-card rounded-lg border border-border shadow-lg p-2">
+                                  <div className="w-full h-2 bg-muted-foreground/20 rounded mb-1" />
+                                  <div className="w-3/4 h-2 bg-muted-foreground/20 rounded mb-1" />
+                                  <div className="w-1/2 h-2 bg-muted-foreground/20 rounded" />
+                                  <div className="flex items-center gap-1 mt-2">
+                                    <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />
+                                    <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />
+                                    <div className="w-2 h-2 rounded-full bg-blue-500" />
+                                  </div>
+                                </div>
+                              )}
+                              {CAROUSEL_SLIDES[carouselIndex].icon === "globe" && (
+                                <Globe className="w-12 h-12 text-blue-500" />
+                              )}
                             </div>
                           </div>
-                        </Link>
+
+                          {/* Dismiss button */}
+                          <div className="absolute top-3 right-3">
+                            <div className="relative">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  setShowDismissTooltip(true)
+                                }}
+                                className="p-1.5 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+
+                              {showDismissTooltip && (
+                                <div className="absolute top-full right-0 mt-1 z-50">
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      handleDismissCarousel()
+                                      setShowDismissTooltip(false)
+                                    }}
+                                    className="whitespace-nowrap px-3 py-2 bg-foreground text-background text-sm rounded-lg shadow-xl"
+                                  >
+                                    Don't show again
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
 
                         {/* Pagination dots */}
-                        <div className="flex items-center justify-center gap-2 mt-3">
+                        <div className="flex items-center justify-center gap-2 mt-4">
                           {CAROUSEL_SLIDES.map((_, index) => (
                             <button
                               key={index}
@@ -823,52 +910,6 @@ export default function ManusStyleHome() {
                             />
                           ))}
                         </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* News Headlines */}
-                  {news.length > 0 && (
-                    <div className="w-full max-w-2xl mx-auto mt-6">
-                      <div className="flex items-center gap-2 mb-3">
-                        <Newspaper className="w-4 h-4 text-muted-foreground" />
-                        <span className="text-sm font-medium text-muted-foreground">Market News</span>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        {news.map((item, i) => (
-                          <a
-                            key={i}
-                            href={item.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="block p-3 rounded-lg border border-border bg-card hover:bg-secondary/50 transition-colors group"
-                          >
-                            <div className="flex items-start gap-2">
-                              {item.sentiment?.polarity > 0.1 ? (
-                                <TrendingUp className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
-                              ) : item.sentiment?.polarity < -0.1 ? (
-                                <TrendingDown className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
-                              ) : (
-                                <Newspaper className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
-                              )}
-                              <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium line-clamp-2 group-hover:text-green-500 transition-colors">
-                                  {item.title}
-                                </p>
-                                <div className="flex items-center gap-2 mt-1">
-                                  <span className="text-xs px-1.5 py-0.5 bg-secondary rounded text-muted-foreground">
-                                    {item.source || 'News'}
-                                  </span>
-                                  {item.symbols?.length > 0 && (
-                                    <span className="text-xs text-green-500 font-mono">
-                                      ${item.symbols[0]}
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          </a>
-                        ))}
                       </div>
                     </div>
                   )}
@@ -884,6 +925,14 @@ export default function ManusStyleHome() {
         <div
           className="fixed inset-0 z-40"
           onClick={() => setShowMoreTools(false)}
+        />
+      )}
+
+      {/* Click outside to close dismiss tooltip */}
+      {showDismissTooltip && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setShowDismissTooltip(false)}
         />
       )}
     </div>
