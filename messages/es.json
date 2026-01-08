@@ -1,0 +1,111 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Exitoso",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "back": "Atr\u00e1s",
+    "next": "Siguiente",
+    "more": "M\u00e1s",
+    "less": "Menos",
+    "search": "Buscar",
+    "signIn": "Iniciar sesi\u00f3n",
+    "signUp": "Registrarse",
+    "signOut": "Cerrar sesi\u00f3n",
+    "freePlan": "Plan gratuito",
+    "startFreeTrial": "Iniciar prueba gratis",
+    "inviteFriends": "Invita amigos para cr\u00e9ditos gratis"
+  },
+  "nav": {
+    "newChat": "Nuevo chat",
+    "search": "Buscar",
+    "markets": "Mercados",
+    "history": "Historial",
+    "portfolio": "Portafolio",
+    "watchlist": "Lista de seguimiento",
+    "screener": "Filtro de acciones",
+    "alerts": "Alertas",
+    "settings": "Configuraci\u00f3n"
+  },
+  "home": {
+    "title": "\u00bfQu\u00e9 puedo hacer por ti?",
+    "placeholder": "Pregunta sobre cualquier acci\u00f3n, tendencias del mercado o an\u00e1lisis financiero...",
+    "connectPortfolio": "Conecta tu portafolio para insights personalizados",
+    "marketNews": "Noticias del Mercado"
+  },
+  "tools": {
+    "connectPortfolio": "Conectar Portafolio",
+    "stockScreener": "Filtro de Acciones",
+    "compareStocks": "Comparar Acciones",
+    "calculateTaxes": "Calcular Impuestos",
+    "more": "M\u00e1s",
+    "earningsCalendar": "Calendario de Ganancias",
+    "dcfValuation": "Valoraci\u00f3n DCF",
+    "insiderTrading": "Trading Interno",
+    "topGainers": "Mayores Ganancias",
+    "shortInterest": "Inter\u00e9s Corto",
+    "fdaCalendar": "Calendario FDA",
+    "marketNews": "Noticias del Mercado",
+    "economicCalendar": "Calendario Econ\u00f3mico"
+  },
+  "carousel": {
+    "todaysMovers": "Movimientos del D\u00eda",
+    "upcomingEarnings": "Pr\u00f3ximas Ganancias",
+    "trendingResearch": "Investigaci\u00f3n Tendencia"
+  },
+  "chat": {
+    "researching": "Investigando...",
+    "attachFile": "Adjuntar PDF o documento",
+    "parsingDocument": "Analizando documento...",
+    "documentParsed": "Documento analizado exitosamente",
+    "documentFailed": "Error al analizar documento",
+    "errorMessage": "Algo sali\u00f3 mal. Por favor intenta de nuevo.",
+    "requestFailed": "Lo siento, la solicitud fall\u00f3. Por favor intenta de nuevo."
+  },
+  "suggestions": {
+    "analyzeAppleVsMicrosoft": "Analizar Apple vs Microsoft",
+    "teslaInsiderTrading": "Trading interno de Tesla",
+    "nvidiaRevenueBreakdown": "Desglose de ingresos de NVIDIA",
+    "bestDividendStocks": "Mejores acciones de dividendos"
+  },
+  "financial": {
+    "revenue": "Ingresos",
+    "netIncome": "Ingreso Neto",
+    "marketCap": "Cap. de Mercado",
+    "peRatio": "Ratio P/E",
+    "eps": "BPA",
+    "dividend": "Dividendo",
+    "volume": "Volumen",
+    "change": "Cambio",
+    "price": "Precio",
+    "open": "Apertura",
+    "high": "M\u00e1ximo",
+    "low": "M\u00ednimo",
+    "close": "Cierre"
+  },
+  "auth": {
+    "email": "Correo electr\u00f3nico",
+    "password": "Contrase\u00f1a",
+    "login": "Iniciar sesi\u00f3n",
+    "register": "Crear cuenta",
+    "forgotPassword": "\u00bfOlvidaste tu contrase\u00f1a?",
+    "checkEmail": "Revisa tu correo",
+    "magicLinkSent": "Enviamos un enlace m\u00e1gico a tu correo"
+  },
+  "errors": {
+    "generic": "Algo sali\u00f3 mal",
+    "notFound": "No encontrado",
+    "unauthorized": "No autorizado",
+    "networkError": "Error de red. Por favor verifica tu conexi\u00f3n."
+  },
+  "language": {
+    "select": "Seleccionar idioma",
+    "en": "Ingl\u00e9s",
+    "es": "Espa\u00f1ol",
+    "de": "Alem\u00e1n",
+    "sv": "Sueco",
+    "fr": "Franc\u00e9s"
+  }
+}

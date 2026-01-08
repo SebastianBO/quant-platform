@@ -1,0 +1,111 @@
+{
+  "common": {
+    "loading": "Laden...",
+    "error": "Fehler",
+    "success": "Erfolgreich",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "close": "Schlie\u00dfen",
+    "back": "Zur\u00fcck",
+    "next": "Weiter",
+    "more": "Mehr",
+    "less": "Weniger",
+    "search": "Suchen",
+    "signIn": "Anmelden",
+    "signUp": "Registrieren",
+    "signOut": "Abmelden",
+    "freePlan": "Kostenloser Plan",
+    "startFreeTrial": "Kostenlose Testversion starten",
+    "inviteFriends": "Freunde einladen f\u00fcr Gratis-Credits"
+  },
+  "nav": {
+    "newChat": "Neuer Chat",
+    "search": "Suchen",
+    "markets": "M\u00e4rkte",
+    "history": "Verlauf",
+    "portfolio": "Portfolio",
+    "watchlist": "Watchlist",
+    "screener": "Aktien-Screener",
+    "alerts": "Benachrichtigungen",
+    "settings": "Einstellungen"
+  },
+  "home": {
+    "title": "Was kann ich f\u00fcr Sie tun?",
+    "placeholder": "Fragen Sie nach Aktien, Markttrends oder Finanzanalysen...",
+    "connectPortfolio": "Verbinden Sie Ihr Portfolio f\u00fcr personalisierte Einblicke",
+    "marketNews": "Marktnachrichten"
+  },
+  "tools": {
+    "connectPortfolio": "Portfolio verbinden",
+    "stockScreener": "Aktien-Screener",
+    "compareStocks": "Aktien vergleichen",
+    "calculateTaxes": "Steuern berechnen",
+    "more": "Mehr",
+    "earningsCalendar": "Gewinnkalender",
+    "dcfValuation": "DCF-Bewertung",
+    "insiderTrading": "Insiderhandel",
+    "topGainers": "Top-Gewinner",
+    "shortInterest": "Short-Interest",
+    "fdaCalendar": "FDA-Kalender",
+    "marketNews": "Marktnachrichten",
+    "economicCalendar": "Wirtschaftskalender"
+  },
+  "carousel": {
+    "todaysMovers": "Heutige Marktbewegungen",
+    "upcomingEarnings": "Kommende Gewinne",
+    "trendingResearch": "Trend-Research"
+  },
+  "chat": {
+    "researching": "Recherchiere...",
+    "attachFile": "PDF oder Dokument anh\u00e4ngen",
+    "parsingDocument": "Dokument wird analysiert...",
+    "documentParsed": "Dokument erfolgreich analysiert",
+    "documentFailed": "Dokument konnte nicht analysiert werden",
+    "errorMessage": "Etwas ist schief gelaufen. Bitte versuchen Sie es erneut.",
+    "requestFailed": "Die Anfrage ist fehlgeschlagen. Bitte versuchen Sie es erneut."
+  },
+  "suggestions": {
+    "analyzeAppleVsMicrosoft": "Apple vs Microsoft analysieren",
+    "teslaInsiderTrading": "Tesla Insiderhandel",
+    "nvidiaRevenueBreakdown": "NVIDIA Umsatzaufschl\u00fcsselung",
+    "bestDividendStocks": "Beste Dividendenaktien"
+  },
+  "financial": {
+    "revenue": "Umsatz",
+    "netIncome": "Nettogewinn",
+    "marketCap": "Marktkapitalisierung",
+    "peRatio": "KGV",
+    "eps": "Gewinn pro Aktie",
+    "dividend": "Dividende",
+    "volume": "Volumen",
+    "change": "\u00c4nderung",
+    "price": "Preis",
+    "open": "Er\u00f6ffnung",
+    "high": "Hoch",
+    "low": "Tief",
+    "close": "Schluss"
+  },
+  "auth": {
+    "email": "E-Mail",
+    "password": "Passwort",
+    "login": "Anmelden",
+    "register": "Konto erstellen",
+    "forgotPassword": "Passwort vergessen?",
+    "checkEmail": "\u00dcberpr\u00fcfen Sie Ihre E-Mail",
+    "magicLinkSent": "Wir haben einen Magic Link an Ihre E-Mail gesendet"
+  },
+  "errors": {
+    "generic": "Etwas ist schief gelaufen",
+    "notFound": "Nicht gefunden",
+    "unauthorized": "Nicht autorisiert",
+    "networkError": "Netzwerkfehler. Bitte \u00fcberpr\u00fcfen Sie Ihre Verbindung."
+  },
+  "language": {
+    "select": "Sprache w\u00e4hlen",
+    "en": "Englisch",
+    "es": "Spanisch",
+    "de": "Deutsch",
+    "sv": "Schwedisch",
+    "fr": "Franz\u00f6sisch"
+  }
+}

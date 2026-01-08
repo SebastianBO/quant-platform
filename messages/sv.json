@@ -1,0 +1,111 @@
+{
+  "common": {
+    "loading": "Laddar...",
+    "error": "Fel",
+    "success": "Lyckades",
+    "save": "Spara",
+    "cancel": "Avbryt",
+    "close": "St\u00e4ng",
+    "back": "Tillbaka",
+    "next": "N\u00e4sta",
+    "more": "Mer",
+    "less": "Mindre",
+    "search": "S\u00f6k",
+    "signIn": "Logga in",
+    "signUp": "Registrera",
+    "signOut": "Logga ut",
+    "freePlan": "Gratisplan",
+    "startFreeTrial": "Starta gratis provperiod",
+    "inviteFriends": "Bjud in v\u00e4nner f\u00f6r gratis krediter"
+  },
+  "nav": {
+    "newChat": "Ny chatt",
+    "search": "S\u00f6k",
+    "markets": "Marknader",
+    "history": "Historik",
+    "portfolio": "Portf\u00f6lj",
+    "watchlist": "Bevakningslista",
+    "screener": "Aktie-screener",
+    "alerts": "Notiser",
+    "settings": "Inst\u00e4llningar"
+  },
+  "home": {
+    "title": "Vad kan jag hj\u00e4lpa dig med?",
+    "placeholder": "Fr\u00e5ga om aktier, marknadstrender eller finansiell analys...",
+    "connectPortfolio": "Koppla din portf\u00f6lj f\u00f6r personliga insikter",
+    "marketNews": "Marknadsnyheter"
+  },
+  "tools": {
+    "connectPortfolio": "Koppla portf\u00f6lj",
+    "stockScreener": "Aktie-screener",
+    "compareStocks": "J\u00e4mf\u00f6r aktier",
+    "calculateTaxes": "Ber\u00e4kna skatt",
+    "more": "Mer",
+    "earningsCalendar": "Resultatkalender",
+    "dcfValuation": "DCF-v\u00e4rdering",
+    "insiderTrading": "Insiderhandel",
+    "topGainers": "St\u00f6rsta vinnare",
+    "shortInterest": "Blankning",
+    "fdaCalendar": "FDA-kalender",
+    "marketNews": "Marknadsnyheter",
+    "economicCalendar": "Ekonomisk kalender"
+  },
+  "carousel": {
+    "todaysMovers": "Dagens r\u00f6relser",
+    "upcomingEarnings": "Kommande resultat",
+    "trendingResearch": "Popul\u00e4r research"
+  },
+  "chat": {
+    "researching": "Unders\u00f6ker...",
+    "attachFile": "Bifoga PDF eller dokument",
+    "parsingDocument": "Analyserar dokument...",
+    "documentParsed": "Dokument analyserat",
+    "documentFailed": "Kunde inte analysera dokument",
+    "errorMessage": "N\u00e5got gick fel. F\u00f6rs\u00f6k igen.",
+    "requestFailed": "Beg\u00e4ran misslyckades. F\u00f6rs\u00f6k igen."
+  },
+  "suggestions": {
+    "analyzeAppleVsMicrosoft": "Analysera Apple vs Microsoft",
+    "teslaInsiderTrading": "Tesla insiderhandel",
+    "nvidiaRevenueBreakdown": "NVIDIA int\u00e4ktsf\u00f6rdelning",
+    "bestDividendStocks": "B\u00e4sta utdelningsaktier"
+  },
+  "financial": {
+    "revenue": "Int\u00e4kter",
+    "netIncome": "Nettoresultat",
+    "marketCap": "B\u00f6rsv\u00e4rde",
+    "peRatio": "P/E-tal",
+    "eps": "Vinst per aktie",
+    "dividend": "Utdelning",
+    "volume": "Volym",
+    "change": "F\u00f6r\u00e4ndring",
+    "price": "Pris",
+    "open": "\u00d6ppning",
+    "high": "H\u00f6gsta",
+    "low": "L\u00e4gsta",
+    "close": "St\u00e4ngning"
+  },
+  "auth": {
+    "email": "E-post",
+    "password": "L\u00f6senord",
+    "login": "Logga in",
+    "register": "Skapa konto",
+    "forgotPassword": "Gl\u00f6mt l\u00f6senord?",
+    "checkEmail": "Kolla din e-post",
+    "magicLinkSent": "Vi har skickat en magisk l\u00e4nk till din e-post"
+  },
+  "errors": {
+    "generic": "N\u00e5got gick fel",
+    "notFound": "Hittades inte",
+    "unauthorized": "Ej beh\u00f6rig",
+    "networkError": "N\u00e4tverksfel. Kontrollera din anslutning."
+  },
+  "language": {
+    "select": "V\u00e4lj spr\u00e5k",
+    "en": "Engelska",
+    "es": "Spanska",
+    "de": "Tyska",
+    "sv": "Svenska",
+    "fr": "Franska"
+  }
+}

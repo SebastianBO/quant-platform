@@ -1,0 +1,111 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "more": "More",
+    "less": "Less",
+    "search": "Search",
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "signOut": "Sign out",
+    "freePlan": "Free plan",
+    "startFreeTrial": "Start free trial",
+    "inviteFriends": "Invite friends for free credits"
+  },
+  "nav": {
+    "newChat": "New chat",
+    "search": "Search",
+    "markets": "Markets",
+    "history": "History",
+    "portfolio": "Portfolio",
+    "watchlist": "Watchlist",
+    "screener": "Screener",
+    "alerts": "Alerts",
+    "settings": "Settings"
+  },
+  "home": {
+    "title": "What can I do for you?",
+    "placeholder": "Ask about any stock, market trends, or financial analysis...",
+    "connectPortfolio": "Connect your portfolio for personalized insights",
+    "marketNews": "Market News"
+  },
+  "tools": {
+    "connectPortfolio": "Connect Portfolio",
+    "stockScreener": "Stock Screener",
+    "compareStocks": "Compare Stocks",
+    "calculateTaxes": "Calculate Taxes",
+    "more": "More",
+    "earningsCalendar": "Earnings Calendar",
+    "dcfValuation": "DCF Valuation",
+    "insiderTrading": "Insider Trading",
+    "topGainers": "Top Gainers",
+    "shortInterest": "Short Interest",
+    "fdaCalendar": "FDA Calendar",
+    "marketNews": "Market News",
+    "economicCalendar": "Economic Calendar"
+  },
+  "carousel": {
+    "todaysMovers": "Today's Market Movers",
+    "upcomingEarnings": "Upcoming Earnings",
+    "trendingResearch": "Trending Research"
+  },
+  "chat": {
+    "researching": "Researching...",
+    "attachFile": "Attach PDF or document",
+    "parsingDocument": "Parsing uploaded document...",
+    "documentParsed": "Document parsed successfully",
+    "documentFailed": "Failed to parse document",
+    "errorMessage": "Something went wrong. Please try again.",
+    "requestFailed": "Sorry, the request failed. Please try again."
+  },
+  "suggestions": {
+    "analyzeAppleVsMicrosoft": "Analyze Apple vs Microsoft",
+    "teslaInsiderTrading": "Tesla insider trading",
+    "nvidiaRevenueBreakdown": "NVIDIA revenue breakdown",
+    "bestDividendStocks": "Best dividend stocks"
+  },
+  "financial": {
+    "revenue": "Revenue",
+    "netIncome": "Net Income",
+    "marketCap": "Market Cap",
+    "peRatio": "P/E Ratio",
+    "eps": "EPS",
+    "dividend": "Dividend",
+    "volume": "Volume",
+    "change": "Change",
+    "price": "Price",
+    "open": "Open",
+    "high": "High",
+    "low": "Low",
+    "close": "Close"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "login": "Log in",
+    "register": "Create account",
+    "forgotPassword": "Forgot password?",
+    "checkEmail": "Check your email",
+    "magicLinkSent": "We sent a magic link to your email"
+  },
+  "errors": {
+    "generic": "Something went wrong",
+    "notFound": "Not found",
+    "unauthorized": "Unauthorized",
+    "networkError": "Network error. Please check your connection."
+  },
+  "language": {
+    "select": "Select language",
+    "en": "English",
+    "es": "Spanish",
+    "de": "German",
+    "sv": "Swedish",
+    "fr": "French"
+  }
+}
