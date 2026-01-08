@@ -454,14 +454,14 @@ export const compareStocksTool = tool({
     try {
       // Fetch fundamentals for both
       const [result1, result2] = await Promise.all([
-        supabase
+        getSupabase()
           .from('financial_metrics')
           .select('*')
           .eq('ticker', ticker1.toUpperCase())
           .order('report_period', { ascending: false })
           .limit(1)
           .single(),
-        supabase
+        getSupabase()
           .from('financial_metrics')
           .select('*')
           .eq('ticker', ticker2.toUpperCase())
@@ -500,11 +500,11 @@ export const scrapeWebContentTool = tool({
       }
 
       const firecrawl = new Firecrawl({ apiKey })
-      const result = await firecrawl.scrapeUrl(url, {
+      const result = await firecrawl.scrape(url, {
         formats: ['markdown'],
-      })
+      }) as { markdown?: string; metadata?: { title?: string } }
 
-      if (result.success && result.markdown) {
+      if (result.markdown) {
         // Truncate content to avoid token limits
         const content = result.markdown.substring(0, 4000)
         return {
@@ -540,13 +540,15 @@ export const searchFinancialNewsTool = tool({
       }
 
       const firecrawl = new Firecrawl({ apiKey })
-      const results = await firecrawl.search(query, { limit })
+      type SearchResult = { url: string; markdown?: string; metadata?: { title?: string } }
+      const searchResponse = await firecrawl.search(query, { limit }) as { data?: SearchResult[] }
+      const results = searchResponse.data || []
 
-      if (results && results.length > 0) {
+      if (results.length > 0) {
         return {
           success: true,
           query,
-          results: results.map((r: { url: string; markdown?: string; metadata?: { title?: string } }) => ({
+          results: results.map((r) => ({
             url: r.url,
             title: r.metadata?.title || 'Unknown',
             snippet: r.markdown?.substring(0, 500) || '',
