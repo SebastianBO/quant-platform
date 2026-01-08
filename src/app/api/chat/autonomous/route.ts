@@ -22,7 +22,7 @@ const gateway = createGateway({
 })
 
 // Available models via Vercel AI Gateway
-export const AVAILABLE_MODELS = {
+const AVAILABLE_MODELS = {
   // Best reasoning (expensive)
   'gpt-4o': { id: 'openai/gpt-4o', name: 'GPT-4o', tier: 'premium' },
   'claude-sonnet-4': { id: 'anthropic/claude-sonnet-4', name: 'Claude Sonnet 4', tier: 'premium' },
@@ -36,7 +36,7 @@ export const AVAILABLE_MODELS = {
   'gemini-flash': { id: 'google/gemini-2.0-flash', name: 'Gemini Flash', tier: 'fast' },
 } as const
 
-export type ModelKey = keyof typeof AVAILABLE_MODELS
+type ModelKey = keyof typeof AVAILABLE_MODELS
 
 // Rate limiting
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
