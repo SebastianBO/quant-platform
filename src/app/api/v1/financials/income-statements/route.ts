@@ -19,7 +19,7 @@ function getSupabase() {
   return supabase
 }
 
-// Fallback to Financial Datasets API
+// Fallback to Financial Datasets API with auto-caching
 async function fetchFromFinancialDatasets(ticker: string, period: string, limit: number) {
   if (!FINANCIAL_DATASETS_API_KEY) return null
 
@@ -32,11 +32,59 @@ async function fetchFromFinancialDatasets(ticker: string, period: string, limit:
     if (!response.ok) return null
 
     const data = await response.json()
-    return data.income_statements || []
+    const statements = data.income_statements || []
+
+    // Auto-cache: Store fetched data in Supabase for future requests
+    if (statements.length > 0) {
+      cacheIncomeStatements(statements, ticker).catch(err =>
+        console.error('Failed to cache income statements:', err)
+      )
+    }
+
+    return statements
   } catch (error) {
     console.error('Financial Datasets API error:', error)
     return null
   }
+}
+
+// Cache fetched data in Supabase (fire and forget)
+async function cacheIncomeStatements(statements: any[], ticker: string) {
+  const records = statements.map(s => ({
+    ticker: ticker.toUpperCase(),
+    cik: s.cik || null,
+    report_period: s.report_period,
+    fiscal_period: s.fiscal_period,
+    period: s.period,
+    currency: s.currency || 'USD',
+    revenue: s.revenue,
+    cost_of_revenue: s.cost_of_revenue,
+    gross_profit: s.gross_profit,
+    operating_expense: s.operating_expense,
+    selling_general_and_administrative_expenses: s.selling_general_and_administrative_expenses,
+    research_and_development: s.research_and_development,
+    operating_income: s.operating_income,
+    interest_expense: s.interest_expense,
+    ebit: s.ebit,
+    income_tax_expense: s.income_tax_expense,
+    net_income_discontinued_operations: s.net_income_discontinued_operations,
+    net_income_non_controlling_interests: s.net_income_non_controlling_interests,
+    net_income: s.net_income,
+    net_income_common_stock: s.net_income_common_stock,
+    preferred_dividends_impact: s.preferred_dividends_impact,
+    consolidated_income: s.consolidated_income,
+    earnings_per_share: s.earnings_per_share,
+    earnings_per_share_diluted: s.earnings_per_share_diluted,
+    dividends_per_common_share: s.dividends_per_common_share,
+    weighted_average_shares: s.weighted_average_shares,
+    weighted_average_shares_diluted: s.weighted_average_shares_diluted,
+    source: 'FINANCIAL_DATASETS',
+    updated_at: new Date().toISOString(),
+  }))
+
+  await getSupabase()
+    .from('income_statements')
+    .upsert(records, { onConflict: 'ticker,report_period,period' })
 }
 
 // Parse date filter parameters
