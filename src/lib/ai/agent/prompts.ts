@@ -9,6 +9,7 @@ const getCurrentDate = () => new Date().toISOString().split('T')[0]
 
 // Common ticker mappings for entity normalization
 const COMPANY_TICKERS: Record<string, string> = {
+  // US Companies
   'apple': 'AAPL',
   'microsoft': 'MSFT',
   'google': 'GOOGL',
@@ -38,6 +39,38 @@ const COMPANY_TICKERS: Record<string, string> = {
   'wells fargo': 'WFC',
   'visa': 'V',
   'mastercard': 'MA',
+  // Swedish Companies (use EU tools)
+  'volvo': 'EU:SE:VOLVO',
+  'ericsson': 'EU:SE:ERICSSON',
+  'h&m': 'EU:SE:HM',
+  'hm': 'EU:SE:HM',
+  'hennes & mauritz': 'EU:SE:HM',
+  'seb': 'EU:SE:SEB',
+  'nordea': 'EU:SE:NORDEA',
+  'atlas copco': 'EU:SE:ATLASCOPCO',
+  'sandvik': 'EU:SE:SANDVIK',
+  'ikea': 'EU:SE:IKEA',
+  'klarna': 'EU:SE:KLARNA',
+  // Norwegian Companies (use EU tools)
+  'equinor': 'EU:NO:EQUINOR',
+  'statoil': 'EU:NO:EQUINOR',
+  'dnb': 'EU:NO:DNB',
+  'telenor': 'EU:NO:TELENOR',
+  'norsk hydro': 'EU:NO:HYDRO',
+  'yara': 'EU:NO:YARA',
+  'mowi': 'EU:NO:MOWI',
+  'orkla': 'EU:NO:ORKLA',
+  // UK Companies (use EU tools)
+  'shell': 'EU:GB:SHELL',
+  'bp': 'EU:GB:BP',
+  'hsbc': 'EU:GB:HSBC',
+  'unilever': 'EU:GB:UNILEVER',
+  'astrazeneca': 'EU:GB:ASTRAZENECA',
+  'glaxosmithkline': 'EU:GB:GSK',
+  'gsk': 'EU:GB:GSK',
+  'barclays': 'EU:GB:BARCLAYS',
+  'lloyds': 'EU:GB:LLOYDS',
+  'tesco': 'EU:GB:TESCO',
 }
 
 export const UNDERSTAND_SYSTEM_PROMPT = `You are Lician AI, an autonomous financial research agent on lician.com.
@@ -107,6 +140,12 @@ ADVANCED FIRECRAWL TOOLS (for web research when database doesn't have the data):
 20. firecrawlAgent - Autonomous web agent to find specific data
 21. crawlInvestorRelations - Crawl entire investor relations websites
 
+EUROPEAN COMPANY TOOLS (for Swedish, Norwegian, UK, and other EU companies):
+22. searchEUCompanies - Search European companies by name or country (SE, NO, GB, DE, FR)
+23. getEUCompanyDetails - Get detailed info about European companies (Volvo, H&M, Equinor, Shell)
+24. getEUFinancialStatements - Get income statements and balance sheets for EU companies
+25. compareEUCompanies - Compare multiple European companies
+
 PLANNING RULES:
 - Create 2-5 tasks maximum
 - Each task description: max 6 words
@@ -171,6 +210,12 @@ ADVANCED FIRECRAWL TOOLS (use when database doesn't have the data or for web res
 - searchRecentNews: { query: string, timeRange: "day"|"week"|"month"|"year", limit: number, newsOnly: boolean }
 - firecrawlAgent: { prompt: string, focusUrls?: string[] }
 - crawlInvestorRelations: { url: string, maxPages: number (1-20) }
+
+EUROPEAN COMPANY TOOLS (for Swedish, Norwegian, UK, and other EU companies):
+- searchEUCompanies: { query?: string, country?: "SE"|"NO"|"GB"|"DE"|"FR"|"DK"|"FI"|"NL", limit: number }
+- getEUCompanyDetails: { name?: string, orgNumber?: string, country?: string }
+- getEUFinancialStatements: { name?: string, orgNumber?: string, country?: string, statementType: "income"|"balance"|"both" }
+- compareEUCompanies: { companies: string[] } // Array of company names like ["Volvo", "BMW", "Mercedes"]
 
 SELECTION RULES:
 - Select 1-3 tools per task
