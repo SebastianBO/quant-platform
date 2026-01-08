@@ -1,4 +1,4 @@
-import { streamText, convertToModelMessages, type UIMessage, createGateway } from 'ai'
+import { streamText, createGateway } from 'ai'
 import { NextRequest, NextResponse } from 'next/server'
 import { financialTools } from '@/lib/ai/tools'
 import { createClient } from '@supabase/supabase-js'
@@ -98,11 +98,27 @@ export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json()
 
-    // Get RAG context
-    const lastUserMessage = [...messages].reverse().find((m: { role: string }) => m.role === 'user')
-    const userQuery = typeof lastUserMessage?.content === 'string'
-      ? lastUserMessage.content
-      : ''
+    // Extract text from various message formats
+    type MessagePart = { type: string; text?: string }
+    type RawMessage = { role: string; parts?: MessagePart[]; content?: string; text?: string }
+
+    const getTextFromMessage = (msg: RawMessage): string => {
+      // Handle { text: '...' } format
+      if (typeof msg.text === 'string') {
+        return msg.text
+      }
+      // Handle { parts: [{ type: 'text', text: '...' }] } format
+      if (msg.parts) {
+        const textPart = msg.parts.find((p) => p.type === 'text')
+        return textPart?.text || ''
+      }
+      // Handle { content: '...' } format
+      return typeof msg.content === 'string' ? msg.content : ''
+    }
+
+    // Get RAG context from last user message
+    const lastUserMessage = [...(messages as RawMessage[])].reverse().find((m) => m.role === 'user')
+    const userQuery = lastUserMessage ? getTextFromMessage(lastUserMessage) : ''
 
     const ragContext = await fetchRelevantContext(userQuery)
 
@@ -110,11 +126,17 @@ export async function POST(req: NextRequest) {
       ? `${SYSTEM_PROMPT}\n\nContext:${ragContext}`
       : SYSTEM_PROMPT
 
+    // Convert messages to model format (role + content)
+    const modelMessages = (messages as RawMessage[]).map((msg) => ({
+      role: msg.role as 'user' | 'assistant',
+      content: getTextFromMessage(msg),
+    }))
+
     // Use Llama 3.3-70B via Vercel AI Gateway
     const result = streamText({
       model: gateway('meta/llama-3.3-70b'),
       system: systemPrompt,
-      messages: convertToModelMessages(messages as UIMessage[]),
+      messages: modelMessages,
       tools: financialTools,
       toolChoice: 'auto',
     })

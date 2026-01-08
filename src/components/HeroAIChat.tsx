@@ -148,10 +148,7 @@ export default function HeroAIChat() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!inputValue.trim() || isLoading) return
-    sendMessage({
-      role: 'user',
-      content: inputValue,
-    })
+    sendMessage({ text: inputValue })
     setInputValue("")
   }
 
