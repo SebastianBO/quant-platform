@@ -55,6 +55,8 @@ export default function Home() {
   return (
     <>
       <Header />
+      {/* Spacer for fixed header - adjust based on header height */}
+      <div className="h-16 sm:h-18 lg:h-20" />
       <EnhancedMarketMovers />
       <main className="min-h-screen bg-background">
         <AutonomousChat />

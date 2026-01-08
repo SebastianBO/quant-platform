@@ -4,7 +4,8 @@ import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { useRouter, usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Menu, X, ChevronDown, LogOut, User, TrendingUp, BarChart3, Calendar, BookOpen, Globe, Search, Wallet } from "lucide-react"
+import { Menu, X, ChevronDown, LogOut, User, TrendingUp, BarChart3, Calendar, BookOpen, Globe, Wallet } from "lucide-react"
+import { StockSearchCommand } from "@/components/StockSearchCommand"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { createClient } from "@/lib/supabase-browser"
 import type { User as SupabaseUser } from "@supabase/supabase-js"
@@ -217,11 +218,8 @@ export function Header() {
         </div>
 
         <div className="hidden lg:flex items-center gap-3">
-          {/* Search */}
-          <Link href="/screener" className="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors">
-            <Search className="w-4 h-4" />
-            <span className="hidden xl:inline">Search</span>
-          </Link>
+          {/* Search Command */}
+          <StockSearchCommand />
 
           {/* Portfolio Connect */}
           {!user && !loading && (
