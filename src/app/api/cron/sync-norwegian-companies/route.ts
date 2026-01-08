@@ -317,33 +317,38 @@ export async function GET(request: NextRequest) {
       const kommune = query || '0301' // Default to Oslo
       orgNumbers = await searchCompanies({ kommunenummer: kommune, size: limit, page: Math.floor(offset / limit) })
     } else if (mode === 'bulk') {
-      // Bulk mode: Cycle through major municipalities
-      // Each municipality can return up to 10,000 companies
+      // Bulk mode: Cycle through kommune + orgForm combinations
+      // 20 kommuner × 7 org forms = 140 combinations × 10K each = 1.4M potential
       const kommuner = [
         '0301', // Oslo ~100K companies
         '4601', // Bergen ~30K companies
         '5001', // Trondheim ~25K companies
         '1103', // Stavanger ~20K companies
-        '1505', // Kristiansund
-        '1902', // Tromsø
-        '0906', // Arendal
-        '1804', // Bodø
         '1001', // Kristiansand
-        '1601', // Trondheim old
+        '1902', // Tromsø
+        '1804', // Bodø
         '0602', // Drammen
-        '0502', // Gjøvik
-        '1106', // Haugesund
-        '0706', // Sandefjord
-        '1149', // Karmøy
-        '0403', // Hamar
-        '0231', // Skedsmo
-        '0104', // Moss
-        '0220', // Asker
         '0219', // Bærum
+        '0220', // Asker
       ]
-      const kommuneIndex = Math.floor(offset / 10000) % kommuner.length
+      const orgForms = ['AS', 'ENK', 'NUF', 'ANS', 'DA', 'SA', 'ASA']
+      // Each combo can return 10K companies (pages 0-99)
+      const comboCount = kommuner.length * orgForms.length // 70 combinations
+      const comboIndex = Math.floor(offset / 10000) % comboCount
+      const kommuneIndex = Math.floor(comboIndex / orgForms.length)
+      const formIndex = comboIndex % orgForms.length
       const innerPage = Math.floor((offset % 10000) / limit)
-      orgNumbers = await searchCompanies({ kommunenummer: kommuner[kommuneIndex], size: limit, page: innerPage })
+      // Max page is 99 (Brreg API limit)
+      if (innerPage >= 100) {
+        orgNumbers = []
+      } else {
+        orgNumbers = await searchCompanies({
+          kommunenummer: kommuner[kommuneIndex],
+          orgForm: orgForms[formIndex],
+          size: limit,
+          page: innerPage
+        })
+      }
     } else {
       // Default: known major companies
       orgNumbers = KNOWN_NORWEGIAN_COMPANIES.slice(offset, offset + limit)
