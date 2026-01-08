@@ -19,7 +19,7 @@ function getSupabase() {
   return supabase
 }
 
-// Fallback to Financial Datasets API
+// Fallback to Financial Datasets API with auto-caching
 async function fetchFromFinancialDatasets(ticker: string, period: string, limit: number) {
   if (!FINANCIAL_DATASETS_API_KEY) return null
 
@@ -32,11 +32,64 @@ async function fetchFromFinancialDatasets(ticker: string, period: string, limit:
     if (!response.ok) return null
 
     const data = await response.json()
-    return data.balance_sheets || []
+    const sheets = data.balance_sheets || []
+
+    // Auto-cache: Store fetched data in Supabase for future requests
+    if (sheets.length > 0) {
+      cacheBalanceSheets(sheets, ticker).catch(err =>
+        console.error('Failed to cache balance sheets:', err)
+      )
+    }
+
+    return sheets
   } catch (error) {
     console.error('Financial Datasets API error:', error)
     return null
   }
+}
+
+// Cache fetched data in Supabase (fire and forget)
+async function cacheBalanceSheets(sheets: any[], ticker: string) {
+  const records = sheets.map(s => ({
+    ticker: ticker.toUpperCase(),
+    cik: s.cik || null,
+    report_period: s.report_period,
+    fiscal_period: s.fiscal_period,
+    period: s.period,
+    currency: s.currency || 'USD',
+    total_assets: s.total_assets,
+    current_assets: s.current_assets,
+    cash_and_equivalents: s.cash_and_equivalents,
+    short_term_investments: s.current_investments,
+    accounts_receivable: s.trade_and_non_trade_receivables,
+    inventory: s.inventory,
+    non_current_assets: s.non_current_assets,
+    property_plant_and_equipment: s.property_plant_and_equipment,
+    goodwill: s.goodwill,
+    intangible_assets: s.intangible_assets,
+    investments: s.investments || s.non_current_investments,
+    tax_assets: s.tax_assets,
+    total_liabilities: s.total_liabilities,
+    current_liabilities: s.current_liabilities,
+    current_debt: s.current_debt,
+    accounts_payable: s.trade_and_non_trade_payables,
+    deferred_revenue: s.deferred_revenue,
+    deposit_liabilities: s.deposit_liabilities,
+    non_current_liabilities: s.non_current_liabilities,
+    long_term_debt: s.non_current_debt,
+    tax_liabilities: s.tax_liabilities,
+    shareholders_equity: s.shareholders_equity,
+    retained_earnings: s.retained_earnings,
+    accumulated_other_comprehensive_income: s.accumulated_other_comprehensive_income,
+    total_debt: s.total_debt,
+    outstanding_shares: s.outstanding_shares,
+    source: 'FINANCIAL_DATASETS',
+    updated_at: new Date().toISOString(),
+  }))
+
+  await getSupabase()
+    .from('balance_sheets')
+    .upsert(records, { onConflict: 'ticker,report_period,period' })
 }
 
 // Parse date filter parameters

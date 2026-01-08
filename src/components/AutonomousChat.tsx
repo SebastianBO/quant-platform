@@ -1,24 +1,31 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Separator } from "@/components/ui/separator"
+import { Skeleton } from "@/components/ui/skeleton"
 import {
-  Send,
-  Bot,
-  User,
-  Loader2,
-  Brain,
-  ListChecks,
-  Play,
-  RefreshCw,
-  MessageSquare,
-  CheckCircle2,
-  AlertCircle,
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+import {
+  ArrowUp,
   ChevronDown,
-  ChevronUp,
-  Sparkles,
+  Loader2,
+  CheckCircle2,
+  Search,
+  Lightbulb,
+  ListTodo,
+  Zap,
+  FileText,
+  RotateCcw,
+  Square,
+  Copy,
+  Check,
 } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 type Phase = 'idle' | 'understand' | 'plan' | 'execute' | 'reflect' | 'answer' | 'complete' | 'error'
 
@@ -39,15 +46,15 @@ interface ToolResult {
   result: unknown
 }
 
-const PHASE_INFO: Record<Phase, { label: string; icon: typeof Brain; color: string }> = {
-  idle: { label: 'Ready', icon: Bot, color: 'text-gray-400' },
-  understand: { label: 'Understanding Query', icon: Brain, color: 'text-blue-500' },
-  plan: { label: 'Planning Research', icon: ListChecks, color: 'text-purple-500' },
-  execute: { label: 'Executing Tasks', icon: Play, color: 'text-yellow-500' },
-  reflect: { label: 'Evaluating Results', icon: RefreshCw, color: 'text-orange-500' },
-  answer: { label: 'Generating Answer', icon: MessageSquare, color: 'text-green-500' },
-  complete: { label: 'Complete', icon: CheckCircle2, color: 'text-green-600' },
-  error: { label: 'Error', icon: AlertCircle, color: 'text-red-500' },
+const PHASE_CONFIG: Record<Phase, { label: string; icon: typeof Search; activeLabel: string }> = {
+  idle: { label: 'Ready', icon: Search, activeLabel: 'Ready' },
+  understand: { label: 'Understanding', icon: Lightbulb, activeLabel: 'Understanding your question...' },
+  plan: { label: 'Planning', icon: ListTodo, activeLabel: 'Planning research tasks...' },
+  execute: { label: 'Researching', icon: Zap, activeLabel: 'Gathering data...' },
+  reflect: { label: 'Analyzing', icon: RotateCcw, activeLabel: 'Analyzing results...' },
+  answer: { label: 'Writing', icon: FileText, activeLabel: 'Writing response...' },
+  complete: { label: 'Complete', icon: CheckCircle2, activeLabel: 'Complete' },
+  error: { label: 'Error', icon: Square, activeLabel: 'Error occurred' },
 }
 
 interface Message {
@@ -57,6 +64,232 @@ interface Message {
   phases?: Phase[]
   tasks?: Task[]
   toolResults?: ToolResult[]
+  thinkingTime?: number
+}
+
+// Collapsible section component like Morphic
+function ResearchSection({
+  title,
+  badge,
+  isOpen,
+  onOpenChange,
+  children,
+  isLoading = false,
+}: {
+  title: string
+  badge?: string
+  isOpen: boolean
+  onOpenChange: (open: boolean) => void
+  children: React.ReactNode
+  isLoading?: boolean
+}) {
+  return (
+    <Collapsible open={isOpen} onOpenChange={onOpenChange}>
+      <CollapsibleTrigger className="group flex items-center gap-2 w-full text-left py-2">
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          {isLoading ? (
+            <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+          ) : (
+            <CheckCircle2 className="w-4 h-4 text-green-500" />
+          )}
+          <span className="text-sm font-medium truncate">{title}</span>
+          {badge && (
+            <span className="text-xs text-muted-foreground bg-secondary px-2 py-0.5 rounded-full">
+              {badge}
+            </span>
+          )}
+        </div>
+        <ChevronDown className="w-4 h-4 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180" />
+      </CollapsibleTrigger>
+      <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapse-up data-[state=open]:animate-collapse-down">
+        <div className="pt-2 pb-3 text-sm text-muted-foreground">
+          {children}
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
+  )
+}
+
+// Message component
+function ChatMessage({
+  message,
+  isStreaming = false
+}: {
+  message: Message
+  isStreaming?: boolean
+}) {
+  const [copied, setCopied] = useState(false)
+  const [sectionsOpen, setSectionsOpen] = useState<Record<string, boolean>>({})
+
+  const copyToClipboard = useCallback(() => {
+    navigator.clipboard.writeText(message.content)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }, [message.content])
+
+  if (message.role === 'user') {
+    return (
+      <div className="flex justify-end mb-6">
+        <div className="bg-primary text-primary-foreground rounded-2xl px-4 py-3 max-w-[80%]">
+          <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="mb-6 animate-fade-in">
+      {/* Research phases section */}
+      {message.tasks && message.tasks.length > 0 && (
+        <div className="mb-4 border border-border rounded-xl p-3 bg-card">
+          <ResearchSection
+            title="Research Plan"
+            badge={`${message.tasks.filter(t => t.status === 'completed').length}/${message.tasks.length} tasks`}
+            isOpen={sectionsOpen['plan'] ?? false}
+            onOpenChange={(open) => setSectionsOpen(prev => ({ ...prev, plan: open }))}
+          >
+            <div className="space-y-2">
+              {message.tasks.map(task => (
+                <div key={task.id} className="flex items-start gap-2">
+                  {task.status === 'completed' ? (
+                    <CheckCircle2 className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  ) : task.status === 'running' ? (
+                    <Loader2 className="w-4 h-4 animate-spin text-blue-500 mt-0.5 flex-shrink-0" />
+                  ) : (
+                    <div className="w-4 h-4 rounded-full border border-muted-foreground/30 mt-0.5 flex-shrink-0" />
+                  )}
+                  <span className={cn(
+                    "text-sm",
+                    task.status === 'completed' && "text-muted-foreground"
+                  )}>
+                    {task.description}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </ResearchSection>
+        </div>
+      )}
+
+      {/* Tool results section */}
+      {message.toolResults && message.toolResults.length > 0 && (
+        <div className="mb-4 border border-border rounded-xl p-3 bg-card">
+          <ResearchSection
+            title="Data Sources"
+            badge={`${message.toolResults.length} sources`}
+            isOpen={sectionsOpen['sources'] ?? false}
+            onOpenChange={(open) => setSectionsOpen(prev => ({ ...prev, sources: open }))}
+          >
+            <div className="flex flex-wrap gap-2">
+              {message.toolResults.map((result, idx) => (
+                <span
+                  key={idx}
+                  className="text-xs bg-secondary px-2 py-1 rounded-md"
+                >
+                  {result.tool}
+                </span>
+              ))}
+            </div>
+          </ResearchSection>
+        </div>
+      )}
+
+      {/* Answer content */}
+      <div className="prose prose-sm dark:prose-invert max-w-none">
+        <p className="text-sm leading-relaxed whitespace-pre-wrap">
+          {message.content}
+          {isStreaming && (
+            <span className="inline-flex gap-1 ml-1">
+              <span className="w-1.5 h-1.5 bg-foreground/60 rounded-full typing-dot" />
+              <span className="w-1.5 h-1.5 bg-foreground/60 rounded-full typing-dot" />
+              <span className="w-1.5 h-1.5 bg-foreground/60 rounded-full typing-dot" />
+            </span>
+          )}
+        </p>
+      </div>
+
+      {/* Actions */}
+      {!isStreaming && message.content && (
+        <div className="flex items-center gap-2 mt-3">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 px-2 text-muted-foreground hover:text-foreground"
+            onClick={copyToClipboard}
+          >
+            {copied ? (
+              <Check className="w-4 h-4" />
+            ) : (
+              <Copy className="w-4 h-4" />
+            )}
+          </Button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Loading skeleton
+function ResearchSkeleton({ phase }: { phase: Phase }) {
+  const config = PHASE_CONFIG[phase]
+  const Icon = config.icon
+
+  return (
+    <div className="mb-6 animate-fade-in">
+      <div className="border border-border rounded-xl p-4 bg-card">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+            <Icon className="w-4 h-4 text-primary" />
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <Loader2 className="w-4 h-4 animate-spin text-primary" />
+              <span className="text-sm font-medium">{config.activeLabel}</span>
+            </div>
+          </div>
+        </div>
+        <Separator className="my-3" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-3/4" />
+          <Skeleton className="h-4 w-1/2" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Empty state
+function EmptyState({ onPromptClick }: { onPromptClick: (prompt: string) => void }) {
+  const suggestions = [
+    "Analyze Apple's financial health vs Microsoft",
+    "What are the insider trading trends for Tesla?",
+    "Research NVIDIA's revenue segments and growth",
+    "Compare Amazon and Walmart's profit margins",
+  ]
+
+  return (
+    <div className="flex flex-col items-center justify-center py-16 px-4">
+      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center mb-6">
+        <Search className="w-8 h-8 text-primary" />
+      </div>
+      <h2 className="text-xl font-semibold mb-2">Financial Research Agent</h2>
+      <p className="text-muted-foreground text-center max-w-md mb-8">
+        Ask complex financial questions. I&apos;ll plan research tasks, gather data from multiple sources, and synthesize a comprehensive answer.
+      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-xl">
+        {suggestions.map((prompt) => (
+          <button
+            key={prompt}
+            onClick={() => onPromptClick(prompt)}
+            className="text-left text-sm px-4 py-3 rounded-xl border border-border bg-card hover:bg-secondary/50 transition-colors"
+          >
+            {prompt}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
 }
 
 export default function AutonomousChat() {
@@ -65,8 +298,9 @@ export default function AutonomousChat() {
   const [isLoading, setIsLoading] = useState(false)
   const [currentPhase, setCurrentPhase] = useState<Phase>('idle')
   const [tasks, setTasks] = useState<Task[]>([])
-  const [expandedPhases, setExpandedPhases] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const [streamingMessageId, setStreamingMessageId] = useState<string | null>(null)
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -74,8 +308,16 @@ export default function AutonomousChat() {
     }
   }, [messages, currentPhase])
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto'
+      textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 200) + 'px'
+    }
+  }, [inputValue])
+
+  const handleSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault()
     if (!inputValue.trim() || isLoading) return
 
     const userMessage: Message = {
@@ -91,6 +333,7 @@ export default function AutonomousChat() {
     setTasks([])
 
     const assistantId = (Date.now() + 1).toString()
+    setStreamingMessageId(assistantId)
     let answerContent = ""
     const collectedPhases: Phase[] = []
     const collectedTasks: Task[] = []
@@ -211,7 +454,7 @@ export default function AutonomousChat() {
                     {
                       id: assistantId,
                       role: 'assistant',
-                      content: `Error: ${event.data}`,
+                      content: `Something went wrong. Please try again.`,
                     },
                   ])
                   break
@@ -222,7 +465,7 @@ export default function AutonomousChat() {
           }
         }
       }
-    } catch (error) {
+    } catch {
       setCurrentPhase('error')
       setMessages(prev => [
         ...prev,
@@ -234,212 +477,107 @@ export default function AutonomousChat() {
       ])
     } finally {
       setIsLoading(false)
+      setStreamingMessageId(null)
       setTimeout(() => setCurrentPhase('idle'), 2000)
     }
   }
 
-  const PhaseIndicator = ({ phase }: { phase: Phase }) => {
-    const info = PHASE_INFO[phase]
-    const Icon = info.icon
-    return (
-      <div className={`flex items-center gap-2 ${info.color}`}>
-        {phase !== 'idle' && phase !== 'complete' && phase !== 'error' ? (
-          <Loader2 className="w-4 h-4 animate-spin" />
-        ) : (
-          <Icon className="w-4 h-4" />
-        )}
-        <span className="text-sm font-medium">{info.label}</span>
-      </div>
-    )
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      handleSubmit()
+    }
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <div className="bg-card border border-border rounded-2xl shadow-xl overflow-hidden">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-                <Brain className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h2 className="font-semibold text-white">Autonomous Research Agent</h2>
-                <p className="text-sm text-white/80">Multi-phase financial analysis</p>
-              </div>
-            </div>
-            {currentPhase !== 'idle' && (
-              <PhaseIndicator phase={currentPhase} />
+    <div className="flex flex-col h-[calc(100vh-200px)] max-w-3xl mx-auto">
+      {/* Messages area */}
+      <div
+        ref={scrollRef}
+        className="flex-1 overflow-y-auto px-4 py-6"
+      >
+        {messages.length === 0 ? (
+          <EmptyState onPromptClick={setInputValue} />
+        ) : (
+          <>
+            {messages.map(message => (
+              <ChatMessage
+                key={message.id}
+                message={message}
+                isStreaming={message.id === streamingMessageId}
+              />
+            ))}
+
+            {/* Loading state */}
+            {isLoading && !messages.find(m => m.id === streamingMessageId) && (
+              <ResearchSkeleton phase={currentPhase} />
             )}
-          </div>
-        </div>
 
-        {/* Task Progress */}
-        {tasks.length > 0 && (
-          <div className="px-4 py-3 bg-secondary/30 border-b border-border">
-            <button
-              onClick={() => setExpandedPhases(!expandedPhases)}
-              className="flex items-center justify-between w-full text-sm"
-            >
-              <span className="font-medium">
-                Research Plan ({tasks.filter(t => t.status === 'completed').length}/{tasks.length} tasks)
-              </span>
-              {expandedPhases ? (
-                <ChevronUp className="w-4 h-4" />
-              ) : (
-                <ChevronDown className="w-4 h-4" />
-              )}
-            </button>
-            {expandedPhases && (
-              <div className="mt-2 space-y-1">
-                {tasks.map(task => (
-                  <div
-                    key={task.id}
-                    className="flex items-center gap-2 text-xs py-1"
-                  >
-                    {task.status === 'completed' ? (
-                      <CheckCircle2 className="w-3 h-3 text-green-500" />
-                    ) : task.status === 'running' ? (
-                      <Loader2 className="w-3 h-3 animate-spin text-yellow-500" />
-                    ) : (
-                      <div className="w-3 h-3 rounded-full border border-gray-400" />
-                    )}
-                    <span className={task.status === 'completed' ? 'text-muted-foreground' : ''}>
-                      {task.description}
-                    </span>
-                    <span className="text-muted-foreground">
-                      ({task.taskType === 'use_tools' ? 'data' : 'analysis'})
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Messages */}
-        <div
-          ref={scrollRef}
-          className="h-[400px] overflow-y-auto p-4 space-y-4"
-        >
-          {messages.length === 0 && (
-            <div className="text-center py-8 text-muted-foreground">
-              <Brain className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p className="text-lg font-medium mb-2">Autonomous Financial Research</p>
-              <p className="text-sm max-w-md mx-auto">
-                Ask complex financial questions. I&apos;ll plan research tasks,
-                gather data from multiple sources, and synthesize a comprehensive answer.
-              </p>
-              <div className="mt-4 flex flex-wrap justify-center gap-2">
-                {[
-                  "Analyze Apple's financial health and compare to Microsoft",
-                  "What are the insider trading trends for Tesla?",
-                  "Research NVIDIA's revenue segments and growth",
-                ].map(prompt => (
-                  <button
-                    key={prompt}
-                    onClick={() => setInputValue(prompt)}
-                    className="text-xs px-3 py-1.5 bg-secondary rounded-full hover:bg-secondary/80"
-                  >
-                    {prompt}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {messages.map(message => (
-            <div
-              key={message.id}
-              className={`flex gap-3 ${
-                message.role === 'user' ? 'justify-end' : 'justify-start'
-              }`}
-            >
-              {message.role === 'assistant' && (
-                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 flex items-center justify-center flex-shrink-0">
-                  <Bot className="w-4 h-4 text-white" />
-                </div>
-              )}
-              <div
-                className={`rounded-2xl px-4 py-3 max-w-[85%] ${
-                  message.role === 'user'
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-secondary'
-                }`}
-              >
-                {message.phases && message.phases.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mb-2">
-                    {message.phases.map(phase => (
-                      <span
-                        key={phase}
-                        className="text-[10px] px-2 py-0.5 bg-background rounded-full"
-                      >
-                        {PHASE_INFO[phase]?.label}
-                      </span>
-                    ))}
-                  </div>
-                )}
-                <p className="text-sm whitespace-pre-wrap leading-relaxed">
-                  {message.content}
-                </p>
-                {message.toolResults && message.toolResults.length > 0 && (
-                  <div className="mt-2 pt-2 border-t border-border/50">
-                    <p className="text-xs text-muted-foreground">
-                      Data from: {message.toolResults.map(t => t.tool).join(', ')}
-                    </p>
-                  </div>
-                )}
-              </div>
-              {message.role === 'user' && (
-                <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
-                  <User className="w-4 h-4" />
-                </div>
-              )}
-            </div>
-          ))}
-
-          {isLoading && messages[messages.length - 1]?.role === 'user' && (
-            <div className="flex gap-3 justify-start">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 flex items-center justify-center flex-shrink-0">
-                <Bot className="w-4 h-4 text-white" />
-              </div>
-              <div className="bg-secondary rounded-2xl px-4 py-3">
-                <div className="flex items-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span className="text-sm text-muted-foreground">
-                    {PHASE_INFO[currentPhase]?.label || 'Researching...'}
+            {/* Live task progress */}
+            {isLoading && tasks.length > 0 && currentPhase === 'execute' && (
+              <div className="mb-6 border border-border rounded-xl p-4 bg-card animate-fade-in">
+                <div className="flex items-center gap-2 mb-3">
+                  <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                  <span className="text-sm font-medium">Researching...</span>
+                  <span className="text-xs text-muted-foreground">
+                    {tasks.filter(t => t.status === 'completed').length}/{tasks.length}
                   </span>
                 </div>
+                <div className="space-y-2">
+                  {tasks.map(task => (
+                    <div key={task.id} className="flex items-start gap-2">
+                      {task.status === 'completed' ? (
+                        <CheckCircle2 className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                      ) : task.status === 'running' ? (
+                        <Loader2 className="w-4 h-4 animate-spin text-blue-500 mt-0.5 flex-shrink-0" />
+                      ) : (
+                        <div className="w-4 h-4 rounded-full border border-muted-foreground/30 mt-0.5 flex-shrink-0" />
+                      )}
+                      <span className={cn(
+                        "text-sm",
+                        task.status === 'completed' && "text-muted-foreground"
+                      )}>
+                        {task.description}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </>
+        )}
+      </div>
 
-        {/* Input */}
-        <div className="border-t border-border p-4 bg-secondary/30">
-          <form onSubmit={handleSubmit} className="flex gap-3">
-            <Input
+      {/* Input area */}
+      <div className="border-t border-border bg-background p-4">
+        <div className="max-w-3xl mx-auto">
+          <div className="relative">
+            <Textarea
+              ref={textareaRef}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Ask a complex financial question..."
-              className="flex-1 bg-background border-border h-12 text-base"
+              onKeyDown={handleKeyDown}
+              placeholder="Ask a financial question..."
+              className="min-h-[52px] max-h-[200px] pr-14 resize-none rounded-xl border-border bg-secondary/30 focus-visible:ring-1 focus-visible:ring-ring"
               disabled={isLoading}
+              rows={1}
             />
             <Button
-              type="submit"
+              type="button"
+              size="icon"
               disabled={isLoading || !inputValue.trim()}
-              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 h-12 px-6"
+              onClick={() => handleSubmit()}
+              className="absolute right-2 bottom-2 h-9 w-9 rounded-lg bg-primary hover:bg-primary/90"
             >
               {isLoading ? (
-                <Loader2 className="h-5 w-5 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                <Send className="h-5 w-5" />
+                <ArrowUp className="h-4 w-4" />
               )}
             </Button>
-          </form>
+          </div>
           <p className="text-xs text-muted-foreground mt-2 text-center">
-            <Sparkles className="w-3 h-3 inline mr-1" />
-            Powered by autonomous multi-phase reasoning
+            Press Enter to send, Shift+Enter for new line
           </p>
         </div>
       </div>

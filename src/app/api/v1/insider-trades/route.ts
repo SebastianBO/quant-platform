@@ -19,7 +19,7 @@ function getSupabase() {
   return supabase
 }
 
-// Fallback to Financial Datasets API
+// Fallback to Financial Datasets API with auto-caching
 async function fetchFromFinancialDatasets(ticker: string, limit: number) {
   if (!FINANCIAL_DATASETS_API_KEY) return null
 
@@ -32,11 +32,46 @@ async function fetchFromFinancialDatasets(ticker: string, limit: number) {
     if (!response.ok) return null
 
     const data = await response.json()
-    return data.insider_trades || []
+    const trades = data.insider_trades || []
+
+    // Auto-cache: Store fetched data in Supabase for future requests
+    if (trades.length > 0) {
+      cacheInsiderTrades(trades, ticker).catch(err =>
+        console.error('Failed to cache insider trades:', err)
+      )
+    }
+
+    return trades
   } catch (error) {
     console.error('Financial Datasets API error:', error)
     return null
   }
+}
+
+// Cache fetched data in Supabase (fire and forget)
+async function cacheInsiderTrades(trades: any[], ticker: string) {
+  const records = trades.map(t => ({
+    ticker: ticker.toUpperCase(),
+    issuer: t.issuer,
+    name: t.name,
+    title: t.title,
+    is_board_director: t.is_board_director,
+    transaction_date: t.transaction_date,
+    transaction_shares: t.transaction_shares,
+    transaction_price_per_share: t.transaction_price_per_share,
+    transaction_value: t.transaction_value,
+    shares_owned_before_transaction: t.shares_owned_before_transaction,
+    shares_owned_after_transaction: t.shares_owned_after_transaction,
+    security_title: t.security_title,
+    filing_date: t.filing_date,
+    accession_number: t.accession_number || `${ticker}-${t.filing_date}-${t.name}`,
+    source: 'FINANCIAL_DATASETS',
+    updated_at: new Date().toISOString(),
+  }))
+
+  await getSupabase()
+    .from('insider_trades')
+    .upsert(records, { onConflict: 'accession_number' })
 }
 
 // Parse date filter parameters

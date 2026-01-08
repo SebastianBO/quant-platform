@@ -207,7 +207,7 @@ async function scrapeYahooAnalystEstimates(ticker: string): Promise<YahooAnalyst
 
       for (const row of rows) {
         const cells = row.match(/<td[^>]*>([\s\S]*?)<\/td>/gi) || []
-        if (cells.length >= 2) {
+        if (cells.length >= 2 && cells[0]) {
           const label = cells[0].replace(/<[^>]*>/g, '').trim()
           if (label.includes('Avg. Estimate')) {
             // Parse quarter columns

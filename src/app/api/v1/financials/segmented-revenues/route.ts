@@ -19,7 +19,7 @@ function getSupabase() {
   return supabase
 }
 
-// Fallback to Financial Datasets API
+// Fallback to Financial Datasets API with auto-caching
 async function fetchFromFinancialDatasets(ticker: string, period: string, limit: number) {
   if (!FINANCIAL_DATASETS_API_KEY) return null
 
@@ -32,10 +32,49 @@ async function fetchFromFinancialDatasets(ticker: string, period: string, limit:
     if (!response.ok) return null
 
     const data = await response.json()
-    return data.segmented_revenues || []
+    const revenues = data.segmented_revenues || []
+
+    // Auto-cache: Store fetched data in Supabase for future requests
+    if (revenues.length > 0) {
+      cacheSegmentedRevenues(revenues, ticker).catch(err =>
+        console.error('Failed to cache segmented revenues:', err)
+      )
+    }
+
+    return revenues
   } catch (error) {
     console.error('Financial Datasets API error:', error)
     return null
+  }
+}
+
+// Cache fetched data in Supabase (fire and forget)
+async function cacheSegmentedRevenues(revenues: any[], ticker: string) {
+  const records: any[] = []
+
+  for (const rev of revenues) {
+    if (rev.segments && Array.isArray(rev.segments)) {
+      for (const segment of rev.segments) {
+        records.push({
+          ticker: ticker.toUpperCase(),
+          cik: rev.cik || null,
+          report_period: rev.report_period,
+          period: rev.period,
+          segment_type: segment.segment_type,
+          segment_name: segment.segment_name,
+          revenue: segment.revenue,
+          revenue_percent: segment.revenue_percent,
+          source: 'FINANCIAL_DATASETS',
+          updated_at: new Date().toISOString(),
+        })
+      }
+    }
+  }
+
+  if (records.length > 0) {
+    await getSupabase()
+      .from('segmented_revenues')
+      .upsert(records, { onConflict: 'ticker,report_period,period,segment_type,segment_name' })
   }
 }
 

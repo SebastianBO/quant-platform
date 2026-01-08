@@ -19,7 +19,7 @@ function getSupabase() {
   return supabase
 }
 
-// Fallback to Financial Datasets API
+// Fallback to Financial Datasets API with auto-caching
 async function fetchFromFinancialDatasets(ticker: string, period: string, limit: number) {
   if (!FINANCIAL_DATASETS_API_KEY) return null
 
@@ -32,11 +32,84 @@ async function fetchFromFinancialDatasets(ticker: string, period: string, limit:
     if (!response.ok) return null
 
     const data = await response.json()
-    return data.financial_metrics || []
+    const metrics = data.financial_metrics || []
+
+    // Auto-cache: Store fetched data in Supabase for future requests
+    if (metrics.length > 0) {
+      cacheFinancialMetrics(metrics, ticker).catch(err =>
+        console.error('Failed to cache financial metrics:', err)
+      )
+    }
+
+    return metrics
   } catch (error) {
     console.error('Financial Datasets API error:', error)
     return null
   }
+}
+
+// Cache fetched data in Supabase (fire and forget)
+async function cacheFinancialMetrics(metrics: any[], ticker: string) {
+  const records = metrics.map(m => ({
+    ticker: ticker.toUpperCase(),
+    cik: m.cik || null,
+    report_period: m.report_period,
+    fiscal_period: m.fiscal_period,
+    period: m.period,
+    currency: m.currency || 'USD',
+    // Valuation
+    market_cap: m.market_cap,
+    enterprise_value: m.enterprise_value,
+    price_to_earnings_ratio: m.price_to_earnings_ratio,
+    price_to_book_ratio: m.price_to_book_ratio,
+    price_to_sales_ratio: m.price_to_sales_ratio,
+    enterprise_value_to_ebitda_ratio: m.enterprise_value_to_ebitda_ratio,
+    enterprise_value_to_revenue_ratio: m.enterprise_value_to_revenue_ratio,
+    free_cash_flow_yield: m.free_cash_flow_yield,
+    peg_ratio: m.peg_ratio,
+    // Profitability
+    gross_margin: m.gross_margin,
+    operating_margin: m.operating_margin,
+    net_margin: m.net_margin,
+    return_on_equity: m.return_on_equity,
+    return_on_assets: m.return_on_assets,
+    return_on_invested_capital: m.return_on_invested_capital,
+    // Efficiency
+    asset_turnover: m.asset_turnover,
+    inventory_turnover: m.inventory_turnover,
+    receivables_turnover: m.receivables_turnover,
+    days_sales_outstanding: m.days_sales_outstanding,
+    operating_cycle: m.operating_cycle,
+    working_capital_turnover: m.working_capital_turnover,
+    // Liquidity
+    current_ratio: m.current_ratio,
+    quick_ratio: m.quick_ratio,
+    cash_ratio: m.cash_ratio,
+    operating_cash_flow_ratio: m.operating_cash_flow_ratio,
+    // Leverage
+    debt_to_equity: m.debt_to_equity,
+    debt_to_assets: m.debt_to_assets,
+    interest_coverage: m.interest_coverage,
+    // Growth
+    revenue_growth: m.revenue_growth,
+    earnings_growth: m.earnings_growth,
+    book_value_growth: m.book_value_growth,
+    earnings_per_share_growth: m.earnings_per_share_growth,
+    free_cash_flow_growth: m.free_cash_flow_growth,
+    operating_income_growth: m.operating_income_growth,
+    ebitda_growth: m.ebitda_growth,
+    // Per Share
+    payout_ratio: m.payout_ratio,
+    earnings_per_share: m.earnings_per_share,
+    book_value_per_share: m.book_value_per_share,
+    free_cash_flow_per_share: m.free_cash_flow_per_share,
+    source: 'FINANCIAL_DATASETS',
+    updated_at: new Date().toISOString(),
+  }))
+
+  await getSupabase()
+    .from('financial_metrics')
+    .upsert(records, { onConflict: 'ticker,report_period,period' })
 }
 
 export async function GET(request: NextRequest) {

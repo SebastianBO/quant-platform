@@ -19,7 +19,7 @@ function getSupabase() {
   return supabase
 }
 
-// Fallback to Financial Datasets API
+// Fallback to Financial Datasets API with auto-caching
 async function fetchFromFinancialDatasets(ticker: string, period: string, limit: number) {
   if (!FINANCIAL_DATASETS_API_KEY) return null
 
@@ -32,11 +32,54 @@ async function fetchFromFinancialDatasets(ticker: string, period: string, limit:
     if (!response.ok) return null
 
     const data = await response.json()
-    return data.cash_flow_statements || []
+    const statements = data.cash_flow_statements || []
+
+    // Auto-cache: Store fetched data in Supabase for future requests
+    if (statements.length > 0) {
+      cacheCashFlowStatements(statements, ticker).catch(err =>
+        console.error('Failed to cache cash flow statements:', err)
+      )
+    }
+
+    return statements
   } catch (error) {
     console.error('Financial Datasets API error:', error)
     return null
   }
+}
+
+// Cache fetched data in Supabase (fire and forget)
+async function cacheCashFlowStatements(statements: any[], ticker: string) {
+  const records = statements.map(s => ({
+    ticker: ticker.toUpperCase(),
+    cik: s.cik || null,
+    report_period: s.report_period,
+    fiscal_period: s.fiscal_period,
+    period: s.period,
+    currency: s.currency || 'USD',
+    net_income: s.net_income,
+    depreciation_and_amortization: s.depreciation_and_amortization,
+    share_based_compensation: s.share_based_compensation,
+    net_cash_flow_from_operations: s.net_cash_flow_from_operations,
+    capital_expenditure: s.capital_expenditure,
+    acquisitions: s.business_acquisitions_and_disposals,
+    purchases_of_investments: s.investment_acquisitions_and_disposals,
+    net_cash_flow_from_investing: s.net_cash_flow_from_investing,
+    debt_issuance: s.issuance_or_repayment_of_debt_securities,
+    common_stock_issuance: s.issuance_or_purchase_of_equity_shares,
+    dividends_paid: s.dividends_and_other_cash_distributions,
+    net_cash_flow_from_financing: s.net_cash_flow_from_financing,
+    change_in_cash_and_equivalents: s.change_in_cash_and_equivalents,
+    effect_of_exchange_rate_changes: s.effect_of_exchange_rate_changes,
+    ending_cash_balance: s.ending_cash_balance,
+    free_cash_flow: s.free_cash_flow,
+    source: 'FINANCIAL_DATASETS',
+    updated_at: new Date().toISOString(),
+  }))
+
+  await getSupabase()
+    .from('cash_flow_statements')
+    .upsert(records, { onConflict: 'ticker,report_period,period' })
 }
 
 // Parse date filter parameters

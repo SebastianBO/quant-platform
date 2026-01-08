@@ -118,7 +118,8 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:v5.ai-sdk.dev)",
       "mcp__plugin_supabase-toolkit_supabase__get_logs",
-      "Bash(NEXT_TURBO_DISABLED=1 npx next build:*)"
+      "Bash(NEXT_TURBO_DISABLED=1 npx next build:*)",
+      "WebFetch(domain:beta.morphic.sh)"
     ],
     "deny": [],
     "ask": []

@@ -19,7 +19,7 @@ function getSupabase() {
   return supabase
 }
 
-// Fallback to Financial Datasets API
+// Fallback to Financial Datasets API with auto-caching
 async function fetchFromFinancialDatasets(ticker: string, limit: number) {
   if (!FINANCIAL_DATASETS_API_KEY) return null
 
@@ -32,11 +32,44 @@ async function fetchFromFinancialDatasets(ticker: string, limit: number) {
     if (!response.ok) return null
 
     const data = await response.json()
-    return data.analyst_estimates || []
+    const estimates = data.analyst_estimates || []
+
+    // Auto-cache: Store fetched data in Supabase for future requests
+    if (estimates.length > 0) {
+      cacheAnalystEstimates(estimates, ticker).catch(err =>
+        console.error('Failed to cache analyst estimates:', err)
+      )
+    }
+
+    return estimates
   } catch (error) {
     console.error('Financial Datasets API error:', error)
     return null
   }
+}
+
+// Cache fetched data in Supabase (fire and forget)
+async function cacheAnalystEstimates(estimates: any[], ticker: string) {
+  const records = estimates.map(e => ({
+    ticker: ticker.toUpperCase(),
+    fiscal_period: e.fiscal_period,
+    period: e.period || 'quarterly',
+    eps_estimate: e.eps_estimate,
+    eps_actual: e.eps_actual,
+    eps_surprise: e.eps_surprise,
+    eps_surprise_percent: e.eps_surprise_percent,
+    revenue_estimate: e.revenue_estimate,
+    revenue_actual: e.revenue_actual,
+    revenue_surprise: e.revenue_surprise,
+    revenue_surprise_percent: e.revenue_surprise_percent,
+    num_analysts: e.num_analysts,
+    source: 'FINANCIAL_DATASETS',
+    updated_at: new Date().toISOString(),
+  }))
+
+  await getSupabase()
+    .from('analyst_estimates')
+    .upsert(records, { onConflict: 'ticker,fiscal_period,period' })
 }
 
 export async function GET(request: NextRequest) {
