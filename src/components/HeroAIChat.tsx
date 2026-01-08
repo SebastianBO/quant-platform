@@ -31,6 +31,12 @@ const TOOL_ICONS: Record<string, typeof Database> = {
   compareStocks: BarChart3,
   scrapeWebContent: Search,
   searchFinancialNews: Search,
+  // New tools
+  getSECFilings: Database,
+  getPriceHistory: TrendingUp,
+  getFinancialNews: Search,
+  getSegmentedRevenue: PieChart,
+  getAnalystEstimates: BarChart3,
 }
 
 // Tool display names
@@ -48,6 +54,12 @@ const TOOL_NAMES: Record<string, string> = {
   compareStocks: "Comparing Stocks",
   scrapeWebContent: "Reading Article",
   searchFinancialNews: "Searching News",
+  // New tools
+  getSECFilings: "Loading SEC Filings",
+  getPriceHistory: "Fetching Price History",
+  getFinancialNews: "Getting News",
+  getSegmentedRevenue: "Analyzing Segments",
+  getAnalystEstimates: "Loading Estimates",
 }
 
 interface ToolInvocationProps {
@@ -196,7 +208,7 @@ export default function HeroAIChat() {
                 </div>
                 <div>
                   <h2 className="font-semibold text-white">Lician AI Assistant</h2>
-                  <p className="text-sm text-white/80">Real-time data • 13 financial tools</p>
+                  <p className="text-sm text-white/80">Real-time data • 18 financial tools</p>
                 </div>
               </div>
             </div>

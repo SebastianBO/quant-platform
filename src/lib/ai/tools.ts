@@ -2,6 +2,7 @@ import { tool } from 'ai'
 import { z } from 'zod'
 import { createClient } from '@supabase/supabase-js'
 import Firecrawl from '@mendable/firecrawl-js'
+import * as financialAPI from './financial-datasets-api'
 
 // Lazy-load Supabase client to avoid build-time errors
 let supabaseClient: ReturnType<typeof createClient> | null = null
@@ -22,6 +23,9 @@ const getBaseUrl = () => {
   if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL
   return 'http://localhost:3000'
 }
+
+// Check if Financial Datasets API is configured
+const hasFinancialAPI = () => !!process.env.FINANCIAL_DATASETS_API_KEY
 
 /**
  * Tool: Get Stock Quote
@@ -52,7 +56,7 @@ export const getStockQuoteTool = tool({
 
 /**
  * Tool: Get Company Fundamentals
- * Fetches comprehensive fundamental data from Supabase
+ * Fetches comprehensive fundamental data from Supabase, falls back to Financial Datasets API
  */
 export const getCompanyFundamentalsTool = tool({
   description: 'Get company fundamentals including PE ratio, market cap, revenue, profit margins, debt ratios, and growth metrics',
@@ -62,7 +66,7 @@ export const getCompanyFundamentalsTool = tool({
   execute: async ({ ticker }) => {
     try {
       // First try financial_metrics table
-      const { data: metrics, error: metricsError } = await getSupabase()
+      const { data: metrics } = await getSupabase()
         .from('financial_metrics')
         .select('*')
         .eq('ticker', ticker.toUpperCase())
@@ -74,6 +78,7 @@ export const getCompanyFundamentalsTool = tool({
         const m = metrics as Record<string, unknown>
         return {
           success: true,
+          source: 'supabase',
           data: {
             ticker: ticker.toUpperCase(),
             pe_ratio: m.pe_ratio,
@@ -105,11 +110,30 @@ export const getCompanyFundamentalsTool = tool({
         .single()
 
       if (fundamentals) {
-        return { success: true, data: fundamentals }
+        return { success: true, source: 'supabase', data: fundamentals }
+      }
+
+      // Fallback to Financial Datasets API
+      if (hasFinancialAPI()) {
+        const apiMetrics = await financialAPI.getFinancialMetricsSnapshot(ticker.toUpperCase())
+        if (apiMetrics) {
+          return {
+            success: true,
+            source: 'financialdatasets.ai',
+            data: apiMetrics,
+          }
+        }
       }
 
       return { success: false, error: 'Fundamentals not found' }
     } catch (error) {
+      // Last resort: try API
+      if (hasFinancialAPI()) {
+        const apiMetrics = await financialAPI.getFinancialMetricsSnapshot(ticker.toUpperCase())
+        if (apiMetrics) {
+          return { success: true, source: 'financialdatasets.ai', data: apiMetrics }
+        }
+      }
       return { success: false, error: 'Failed to fetch fundamentals' }
     }
   },
@@ -117,7 +141,7 @@ export const getCompanyFundamentalsTool = tool({
 
 /**
  * Tool: Get Financial Statements
- * Fetches income statement, balance sheet, or cash flow data
+ * Fetches income statement, balance sheet, or cash flow data with API fallback
  */
 export const getFinancialStatementsTool = tool({
   description: 'Get financial statements (income statement, balance sheet, or cash flow) for a company',
@@ -143,7 +167,37 @@ export const getFinancialStatementsTool = tool({
         .order('report_period', { ascending: false })
         .limit(limit)
 
-      if (error) throw error
+      if (!error && data && data.length > 0) {
+        return {
+          success: true,
+          source: 'supabase',
+          statement_type,
+          period,
+          data,
+        }
+      }
+
+      // Fallback to Financial Datasets API
+      if (hasFinancialAPI()) {
+        let apiData: unknown[] = []
+        if (statement_type === 'income') {
+          apiData = await financialAPI.getIncomeStatements(ticker.toUpperCase(), period, limit)
+        } else if (statement_type === 'balance') {
+          apiData = await financialAPI.getBalanceSheets(ticker.toUpperCase(), period, limit)
+        } else if (statement_type === 'cashflow') {
+          apiData = await financialAPI.getCashFlowStatements(ticker.toUpperCase(), period, limit)
+        }
+
+        if (apiData.length > 0) {
+          return {
+            success: true,
+            source: 'financialdatasets.ai',
+            statement_type,
+            period,
+            data: apiData,
+          }
+        }
+      }
 
       return {
         success: true,
@@ -152,6 +206,20 @@ export const getFinancialStatementsTool = tool({
         data: data || [],
       }
     } catch (error) {
+      // Try API on error
+      if (hasFinancialAPI()) {
+        let apiData: unknown[] = []
+        if (statement_type === 'income') {
+          apiData = await financialAPI.getIncomeStatements(ticker.toUpperCase(), period, limit)
+        } else if (statement_type === 'balance') {
+          apiData = await financialAPI.getBalanceSheets(ticker.toUpperCase(), period, limit)
+        } else if (statement_type === 'cashflow') {
+          apiData = await financialAPI.getCashFlowStatements(ticker.toUpperCase(), period, limit)
+        }
+        if (apiData.length > 0) {
+          return { success: true, source: 'financialdatasets.ai', statement_type, period, data: apiData }
+        }
+      }
       return { success: false, error: 'Failed to fetch financial statements' }
     }
   },
@@ -564,6 +632,227 @@ export const searchFinancialNewsTool = tool({
 })
 
 /**
+ * Tool: Get SEC Filings
+ * Fetches 10K, 10Q, 8K and other SEC filings
+ */
+export const getSECFilingsTool = tool({
+  description: 'Get SEC filings (10K annual reports, 10Q quarterly reports, 8K current reports) for a company',
+  inputSchema: z.object({
+    ticker: z.string().describe('Stock ticker symbol'),
+    form_type: z.enum(['10-K', '10-Q', '8-K', 'all']).default('all').describe('Type of SEC filing'),
+    limit: z.number().min(1).max(20).default(10).describe('Number of filings to return'),
+  }),
+  execute: async ({ ticker, form_type, limit }) => {
+    try {
+      if (!hasFinancialAPI()) {
+        return { success: false, error: 'Financial Datasets API key not configured' }
+      }
+
+      const formTypeFilter = form_type === 'all' ? undefined : form_type
+      const filings = await financialAPI.getFilings(ticker.toUpperCase(), formTypeFilter, limit)
+
+      if (filings.length > 0) {
+        return {
+          success: true,
+          ticker: ticker.toUpperCase(),
+          form_type,
+          filings: filings.map(f => ({
+            form_type: f.form_type,
+            filed_date: f.filed_date,
+            period_of_report: f.period_of_report,
+            url: f.url,
+          })),
+        }
+      }
+
+      return { success: false, error: 'No filings found' }
+    } catch (error) {
+      return { success: false, error: 'Failed to fetch SEC filings' }
+    }
+  },
+})
+
+/**
+ * Tool: Get Price History
+ * Fetches historical stock prices
+ */
+export const getPriceHistoryTool = tool({
+  description: 'Get historical stock price data including open, high, low, close, and volume',
+  inputSchema: z.object({
+    ticker: z.string().describe('Stock ticker symbol'),
+    days: z.number().min(1).max(365).default(30).describe('Number of days of price history'),
+  }),
+  execute: async ({ ticker, days }) => {
+    try {
+      if (!hasFinancialAPI()) {
+        return { success: false, error: 'Financial Datasets API key not configured' }
+      }
+
+      const endDate = new Date().toISOString().split('T')[0]
+      const startDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+
+      const prices = await financialAPI.getPrices(ticker.toUpperCase(), startDate, endDate, days)
+
+      if (prices.length > 0) {
+        const latest = prices[0]
+        const oldest = prices[prices.length - 1]
+        const priceChange = latest.close - oldest.close
+        const percentChange = (priceChange / oldest.close) * 100
+
+        return {
+          success: true,
+          ticker: ticker.toUpperCase(),
+          period_days: days,
+          summary: {
+            current_price: latest.close,
+            period_high: Math.max(...prices.map(p => p.high)),
+            period_low: Math.min(...prices.map(p => p.low)),
+            price_change: priceChange,
+            percent_change: percentChange,
+            avg_volume: prices.reduce((sum, p) => sum + p.volume, 0) / prices.length,
+          },
+          prices: prices.slice(0, 10), // Return last 10 days
+        }
+      }
+
+      return { success: false, error: 'No price data found' }
+    } catch (error) {
+      return { success: false, error: 'Failed to fetch price history' }
+    }
+  },
+})
+
+/**
+ * Tool: Get Financial News
+ * Fetches news from Financial Datasets API
+ */
+export const getFinancialNewsTool = tool({
+  description: 'Get recent financial news articles about a stock from professional news sources',
+  inputSchema: z.object({
+    ticker: z.string().describe('Stock ticker symbol'),
+    limit: z.number().min(1).max(20).default(5).describe('Number of news articles'),
+  }),
+  execute: async ({ ticker, limit }) => {
+    try {
+      if (!hasFinancialAPI()) {
+        return { success: false, error: 'Financial Datasets API key not configured' }
+      }
+
+      const news = await financialAPI.getNews(ticker.toUpperCase(), limit)
+
+      if (news.length > 0) {
+        return {
+          success: true,
+          ticker: ticker.toUpperCase(),
+          articles: news.map(n => ({
+            title: n.title,
+            source: n.source,
+            published_at: n.published_at,
+            sentiment: n.sentiment,
+            summary: n.summary,
+            url: n.url,
+          })),
+        }
+      }
+
+      return { success: false, error: 'No news found' }
+    } catch (error) {
+      return { success: false, error: 'Failed to fetch news' }
+    }
+  },
+})
+
+/**
+ * Tool: Get Segmented Revenue
+ * Fetches revenue breakdown by business segment
+ */
+export const getSegmentedRevenueTool = tool({
+  description: 'Get revenue breakdown by business segment or geography for a company',
+  inputSchema: z.object({
+    ticker: z.string().describe('Stock ticker symbol'),
+    period: z.enum(['annual', 'quarterly']).default('annual').describe('Annual or quarterly data'),
+    limit: z.number().min(1).max(10).default(4).describe('Number of periods'),
+  }),
+  execute: async ({ ticker, period, limit }) => {
+    try {
+      if (!hasFinancialAPI()) {
+        return { success: false, error: 'Financial Datasets API key not configured' }
+      }
+
+      const segments = await financialAPI.getSegmentedRevenues(ticker.toUpperCase(), period, limit)
+
+      if (segments.length > 0) {
+        // Group by report period
+        const byPeriod: Record<string, typeof segments> = {}
+        segments.forEach(s => {
+          if (!byPeriod[s.report_period]) byPeriod[s.report_period] = []
+          byPeriod[s.report_period].push(s)
+        })
+
+        return {
+          success: true,
+          ticker: ticker.toUpperCase(),
+          period,
+          segments_by_period: byPeriod,
+        }
+      }
+
+      return { success: false, error: 'No segment data found' }
+    } catch (error) {
+      return { success: false, error: 'Failed to fetch segmented revenue' }
+    }
+  },
+})
+
+/**
+ * Tool: Get Analyst Estimates
+ * Fetches detailed analyst estimates and forecasts
+ */
+export const getAnalystEstimatesTool = tool({
+  description: 'Get detailed analyst estimates including EPS, revenue forecasts, and price targets',
+  inputSchema: z.object({
+    ticker: z.string().describe('Stock ticker symbol'),
+  }),
+  execute: async ({ ticker }) => {
+    try {
+      // First try Supabase
+      const { data: estimates } = await getSupabase()
+        .from('analyst_estimates')
+        .select('*')
+        .eq('ticker', ticker.toUpperCase())
+        .order('period_end', { ascending: false })
+        .limit(8)
+
+      if (estimates && estimates.length > 0) {
+        return {
+          success: true,
+          source: 'supabase',
+          ticker: ticker.toUpperCase(),
+          estimates,
+        }
+      }
+
+      // Fallback to API
+      if (hasFinancialAPI()) {
+        const apiEstimates = await financialAPI.getAnalystEstimates(ticker.toUpperCase())
+        if (apiEstimates.length > 0) {
+          return {
+            success: true,
+            source: 'financialdatasets.ai',
+            ticker: ticker.toUpperCase(),
+            estimates: apiEstimates,
+          }
+        }
+      }
+
+      return { success: false, error: 'No analyst estimates found' }
+    } catch (error) {
+      return { success: false, error: 'Failed to fetch analyst estimates' }
+    }
+  },
+})
+
+/**
  * All tools exported as an object for use in the chat API
  */
 export const financialTools = {
@@ -580,4 +869,10 @@ export const financialTools = {
   compareStocks: compareStocksTool,
   scrapeWebContent: scrapeWebContentTool,
   searchFinancialNews: searchFinancialNewsTool,
+  // New tools with API support
+  getSECFilings: getSECFilingsTool,
+  getPriceHistory: getPriceHistoryTool,
+  getFinancialNews: getFinancialNewsTool,
+  getSegmentedRevenue: getSegmentedRevenueTool,
+  getAnalystEstimates: getAnalystEstimatesTool,
 }

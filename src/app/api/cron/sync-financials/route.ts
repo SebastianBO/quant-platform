@@ -38,19 +38,35 @@ async function fetchAllCompanyTickers(): Promise<SECCompanyTicker[]> {
   return Object.values(data) as SECCompanyTicker[]
 }
 
-// Top tickers by priority (market cap order roughly)
+// Top tickers by priority - Mega caps + high search volume stocks
 const PRIORITY_TICKERS = [
-  'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA', 'TSLA', 'META', 'BRK-B', 'JPM', 'V',
-  'UNH', 'JNJ', 'WMT', 'XOM', 'MA', 'PG', 'HD', 'CVX', 'LLY', 'MRK',
-  'ABBV', 'KO', 'PEP', 'COST', 'AVGO', 'BAC', 'MCD', 'TMO', 'CSCO', 'ABT',
-  'CRM', 'ACN', 'DHR', 'NKE', 'ORCL', 'VZ', 'ADBE', 'AMD', 'CMCSA', 'INTC',
-  'NFLX', 'TXN', 'PM', 'WFC', 'DIS', 'NEE', 'RTX', 'HON', 'UPS', 'QCOM',
-  'IBM', 'CAT', 'SPGI', 'BA', 'INTU', 'GE', 'AMGN', 'LOW', 'DE', 'AMAT',
-  'BLK', 'SBUX', 'PLD', 'ISRG', 'ADP', 'MDLZ', 'GILD', 'ADI', 'BKNG', 'TJX',
-  'VRTX', 'MMC', 'SYK', 'AXP', 'REGN', 'LRCX', 'CVS', 'CI', 'PGR', 'SCHW',
-  'PANW', 'KLAC', 'MU', 'CME', 'SNPS', 'EOG', 'ETN', 'CDNS', 'SO', 'SLB',
-  'FI', 'APD', 'CL', 'MCO', 'NOC', 'DUK', 'ICE', 'AON', 'WM', 'ITW',
-  // Add more as needed - this covers top 100
+  // Magnificent 7 + Tech giants
+  'AAPL', 'MSFT', 'GOOGL', 'GOOG', 'AMZN', 'NVDA', 'META', 'TSLA',
+  'AVGO', 'ORCL', 'CRM', 'ADBE', 'AMD', 'INTC', 'CSCO', 'QCOM',
+  'TXN', 'AMAT', 'MU', 'LRCX', 'KLAC', 'SNPS', 'CDNS', 'MRVL',
+  // Finance
+  'JPM', 'BAC', 'WFC', 'GS', 'MS', 'C', 'BLK', 'SCHW', 'AXP', 'V', 'MA',
+  // Healthcare
+  'UNH', 'JNJ', 'LLY', 'PFE', 'ABBV', 'MRK', 'TMO', 'ABT', 'DHR', 'BMY',
+  // Consumer
+  'WMT', 'COST', 'HD', 'MCD', 'SBUX', 'NKE', 'TGT', 'LOW', 'TJX', 'BKNG',
+  'DIS', 'NFLX', 'CMCSA', 'PG', 'KO', 'PEP',
+  // Energy & Industrial
+  'XOM', 'CVX', 'COP', 'SLB', 'EOG', 'CAT', 'DE', 'BA', 'HON', 'UPS', 'RTX', 'GE', 'LMT',
+  // Meme stocks (very high search volume)
+  'GME', 'AMC', 'BB', 'NOK', 'PLTR', 'SOFI', 'LCID', 'RIVN', 'NIO',
+  'HOOD', 'COIN', 'MARA', 'RIOT', 'CLSK',
+  // AI hype stocks
+  'SMCI', 'ARM', 'SNOW', 'PATH', 'DDOG', 'NET', 'CRWD', 'ZS',
+  // EV & Clean Energy
+  'XPEV', 'LI', 'F', 'GM', 'ENPH', 'SEDG', 'FSLR',
+  // Biotech popular
+  'MRNA', 'BNTX', 'REGN', 'VRTX', 'GILD', 'BIIB', 'ILMN',
+  // Other large caps
+  'BRK-A', 'BRK-B', 'NEE', 'ACN', 'IBM', 'INTU', 'AMGN', 'ISRG', 'ADP',
+  'MDLZ', 'ADI', 'MMC', 'SYK', 'CVS', 'CI', 'PGR', 'PANW', 'CME',
+  'ETN', 'SO', 'FI', 'APD', 'CL', 'MCO', 'NOC', 'DUK', 'ICE', 'AON', 'WM', 'ITW',
+  'PYPL', 'SQ', 'MSTR', 'UBER', 'ABNB', 'DASH', 'RBLX', 'U', 'TTWO', 'EA',
 ]
 
 export async function GET(request: NextRequest) {
