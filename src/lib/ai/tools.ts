@@ -163,7 +163,7 @@ export const getFinancialStatementsTool = tool({
         .from(tableMap[statement_type])
         .select('*')
         .eq('ticker', ticker.toUpperCase())
-        .eq('period_type', period)
+        .eq('period', period)
         .order('report_period', { ascending: false })
         .limit(limit)
 
