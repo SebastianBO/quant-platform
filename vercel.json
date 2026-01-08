@@ -57,6 +57,18 @@
     {
       "path": "/api/monitoring/scraper-status",
       "schedule": "0 7 * * *"
+    },
+    {
+      "path": "/api/cron/sync-norwegian-companies?mode=asa&limit=100",
+      "schedule": "0 */6 * * *"
+    },
+    {
+      "path": "/api/cron/sync-norwegian-companies?mode=as&limit=100",
+      "schedule": "30 */6 * * *"
+    },
+    {
+      "path": "/api/cron/sync-norwegian-financials?mode=continue&limit=50",
+      "schedule": "0 */4 * * *"
     }
   ]
 }

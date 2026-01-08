@@ -1,6 +1,8 @@
 "use client"
 
 import { useState, useRef, useEffect, useCallback } from "react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
@@ -24,6 +26,15 @@ import {
   Square,
   Copy,
   Check,
+  Wallet,
+  Calculator,
+  BarChart3,
+  LineChart,
+  MoreHorizontal,
+  Paperclip,
+  Upload,
+  X,
+  Sparkles,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import {
@@ -32,6 +43,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+
+// Financial tool actions (matching ManusStyleHome)
+const FINANCIAL_TOOLS = [
+  { id: "portfolio", label: "Connect Portfolio", icon: Wallet, href: "/dashboard/portfolios" },
+  { id: "screener", label: "Stock Screener", icon: BarChart3, href: "/screener" },
+  { id: "compare", label: "Compare Stocks", icon: LineChart, href: "/compare" },
+  { id: "taxes", label: "Calculate Taxes", icon: Calculator, href: "/tools/tax-calculator" },
+]
 
 type Phase = 'idle' | 'understand' | 'plan' | 'execute' | 'reflect' | 'answer' | 'complete' | 'error'
 
@@ -281,34 +300,172 @@ function ResearchSkeleton({ phase }: { phase: Phase }) {
   )
 }
 
-// Empty state
-function EmptyState({ onPromptClick }: { onPromptClick: (prompt: string) => void }) {
+// Empty state - Manus-style welcome UI
+function EmptyState({
+  onPromptClick,
+  inputValue,
+  onInputChange,
+  onSubmit,
+  isLoading,
+  attachedFile,
+  onFileAttach,
+  onFileRemove,
+}: {
+  onPromptClick: (prompt: string) => void
+  inputValue: string
+  onInputChange: (value: string) => void
+  onSubmit: () => void
+  isLoading: boolean
+  attachedFile: File | null
+  onFileAttach: (file: File) => void
+  onFileRemove: () => void
+}) {
+  const router = useRouter()
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+
   const suggestions = [
-    "Analyze Apple's financial health vs Microsoft",
-    "What are the insider trading trends for Tesla?",
-    "Research NVIDIA's revenue segments and growth",
-    "Compare Amazon and Walmart's profit margins",
+    "Analyze Apple vs Microsoft",
+    "Tesla insider trading trends",
+    "NVIDIA revenue breakdown",
+    "Amazon vs Walmart margins",
   ]
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      onSubmit()
+    }
+  }
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      // Accept PDFs and common document types
+      if (file.type === 'application/pdf' || file.type.startsWith('text/') || file.type.includes('document')) {
+        onFileAttach(file)
+      }
+    }
+    // Reset input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+  }
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto'
+      textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 150) + 'px'
+    }
+  }, [inputValue])
+
   return (
-    <div className="flex flex-col items-center justify-center py-16 px-4">
-      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center mb-6">
-        <Search className="w-8 h-8 text-primary" />
-      </div>
-      <h2 className="text-xl font-semibold mb-2">Financial Research Agent</h2>
-      <p className="text-muted-foreground text-center max-w-md mb-8">
-        Ask complex financial questions. I&apos;ll plan research tasks, gather data from multiple sources, and synthesize a comprehensive answer.
-      </p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-xl">
-        {suggestions.map((prompt) => (
-          <button
-            key={prompt}
-            onClick={() => onPromptClick(prompt)}
-            className="text-left text-sm px-4 py-3 rounded-xl border border-border bg-card hover:bg-secondary/50 transition-colors"
-          >
-            {prompt}
-          </button>
-        ))}
+    <div className="flex flex-col items-center justify-center h-full min-h-[500px] px-6 py-12">
+      {/* Heading */}
+      <h1 className="text-4xl md:text-5xl font-semibold text-center mb-10">
+        What can I do for you?
+      </h1>
+
+      {/* Chat input */}
+      <div className="w-full max-w-2xl">
+        <div className="relative bg-card border border-border rounded-2xl shadow-lg focus-within:border-green-500/50 transition-all">
+          {/* Attached file preview */}
+          {attachedFile && (
+            <div className="px-4 pt-3 pb-0">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-secondary/50 rounded-lg text-sm">
+                <FileText className="w-4 h-4 text-muted-foreground" />
+                <span className="truncate max-w-[200px]">{attachedFile.name}</span>
+                <button
+                  onClick={onFileRemove}
+                  className="p-0.5 hover:bg-secondary rounded transition-colors"
+                >
+                  <X className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground" />
+                </button>
+              </div>
+            </div>
+          )}
+
+          <textarea
+            ref={textareaRef}
+            value={inputValue}
+            onChange={(e) => onInputChange(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Ask about any stock, market trends, or financial analysis..."
+            className="w-full min-h-[60px] max-h-[150px] py-4 px-5 pr-14 text-lg bg-transparent border-none resize-none focus:outline-none placeholder:text-muted-foreground"
+            disabled={isLoading}
+            rows={1}
+          />
+
+          {/* Input actions */}
+          <div className="flex items-center justify-between px-4 pb-3">
+            <div className="flex items-center gap-1">
+              {/* File attachment button */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".pdf,.txt,.csv,.doc,.docx"
+                onChange={handleFileSelect}
+                className="hidden"
+              />
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors"
+                title="Attach PDF or document"
+              >
+                <Paperclip className="w-5 h-5" />
+              </button>
+            </div>
+
+            <button
+              onClick={onSubmit}
+              disabled={isLoading || (!inputValue.trim() && !attachedFile)}
+              className={cn(
+                "w-9 h-9 rounded-xl flex items-center justify-center transition-colors",
+                inputValue.trim() || attachedFile
+                  ? "bg-green-600 hover:bg-green-500 text-white"
+                  : "bg-secondary text-muted-foreground"
+              )}
+            >
+              {isLoading ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <Sparkles className="w-5 h-5" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Quick suggestion chips */}
+        <div className="flex flex-wrap gap-2 justify-center mt-4">
+          {suggestions.map((prompt) => (
+            <button
+              key={prompt}
+              onClick={() => onPromptClick(prompt)}
+              className="text-sm px-3 py-2 rounded-full border border-border bg-card hover:bg-secondary/50 transition-colors"
+            >
+              {prompt}
+            </button>
+          ))}
+        </div>
+
+        {/* Financial tool buttons */}
+        <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
+          {FINANCIAL_TOOLS.map((tool) => (
+            <Link
+              key={tool.id}
+              href={tool.href}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2.5 rounded-full",
+                "border border-border bg-card hover:bg-secondary",
+                "text-sm font-medium transition-colors"
+              )}
+            >
+              <tool.icon className="w-4 h-4" />
+              {tool.label}
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   )
@@ -321,8 +478,10 @@ export default function AutonomousChat() {
   const [currentPhase, setCurrentPhase] = useState<Phase>('idle')
   const [tasks, setTasks] = useState<Task[]>([])
   const [selectedModel, setSelectedModel] = useState(MODELS[0])
+  const [attachedFile, setAttachedFile] = useState<File | null>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [streamingMessageId, setStreamingMessageId] = useState<string | null>(null)
 
   useEffect(() => {
@@ -341,16 +500,26 @@ export default function AutonomousChat() {
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault()
-    if (!inputValue.trim() || isLoading) return
+    if ((!inputValue.trim() && !attachedFile) || isLoading) return
+
+    // Build query with file info if attached
+    let queryContent = inputValue.trim()
+    if (attachedFile) {
+      // For now, indicate file was attached - in future, parse and include content
+      queryContent = queryContent
+        ? `${queryContent}\n\n[Attached file: ${attachedFile.name}]`
+        : `Please analyze the attached file: ${attachedFile.name}`
+    }
 
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
-      content: inputValue,
+      content: queryContent,
     }
 
     setMessages(prev => [...prev, userMessage])
     setInputValue("")
+    setAttachedFile(null) // Clear attached file after sending
     setIsLoading(true)
     setCurrentPhase('understand')
     setTasks([])
@@ -367,7 +536,7 @@ export default function AutonomousChat() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          query: inputValue,
+          query: queryContent,
           conversationHistory: messages.slice(-6).map(m => ({
             role: m.role,
             content: m.content,
@@ -521,7 +690,23 @@ export default function AutonomousChat() {
         className="flex-1 overflow-y-auto px-4 py-6"
       >
         {messages.length === 0 ? (
-          <EmptyState onPromptClick={setInputValue} />
+          <EmptyState
+            onPromptClick={(prompt) => {
+              setInputValue(prompt)
+              // Auto-submit after small delay for UX
+              setTimeout(() => {
+                const fakeEvent = { preventDefault: () => {} } as React.FormEvent
+                handleSubmit(fakeEvent)
+              }, 100)
+            }}
+            inputValue={inputValue}
+            onInputChange={setInputValue}
+            onSubmit={() => handleSubmit()}
+            isLoading={isLoading}
+            attachedFile={attachedFile}
+            onFileAttach={setAttachedFile}
+            onFileRemove={() => setAttachedFile(null)}
+          />
         ) : (
           <>
             {messages.map(message => (
@@ -572,68 +757,109 @@ export default function AutonomousChat() {
         )}
       </div>
 
-      {/* Input area */}
-      <div className="border-t border-border bg-background p-4">
-        <div className="max-w-3xl mx-auto">
-          <div className="relative">
-            <Textarea
-              ref={textareaRef}
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Ask a financial question..."
-              className="min-h-[52px] max-h-[200px] pr-14 resize-none rounded-xl border-border bg-secondary/30 focus-visible:ring-1 focus-visible:ring-ring"
-              disabled={isLoading}
-              rows={1}
+      {/* Input area - only show when there are messages */}
+      {messages.length > 0 && (
+        <div className="border-t border-border bg-background p-4">
+          <div className="max-w-3xl mx-auto">
+            {/* Hidden file input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".pdf,.txt,.csv,.doc,.docx"
+              onChange={(e) => {
+                const file = e.target.files?.[0]
+                if (file && (file.type === 'application/pdf' || file.type.startsWith('text/') || file.type.includes('document'))) {
+                  setAttachedFile(file)
+                }
+                if (fileInputRef.current) fileInputRef.current.value = ''
+              }}
+              className="hidden"
             />
-            <Button
-              type="button"
-              size="icon"
-              disabled={isLoading || !inputValue.trim()}
-              onClick={() => handleSubmit()}
-              className="absolute right-2 bottom-2 h-9 w-9 rounded-lg bg-primary hover:bg-primary/90"
-            >
-              {isLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <ArrowUp className="h-4 w-4" />
-              )}
-            </Button>
-          </div>
-          <div className="flex items-center justify-between mt-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 gap-2 text-muted-foreground hover:text-foreground">
-                  <span className="text-xs">{selectedModel.name}</span>
-                  <ChevronDown className="w-3 h-3" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-48">
-                {MODELS.map((model) => (
-                  <DropdownMenuItem
-                    key={model.key}
-                    onClick={() => setSelectedModel(model)}
-                    className="flex items-center justify-between"
+
+            {/* Attached file preview */}
+            {attachedFile && (
+              <div className="mb-2">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-secondary/50 rounded-lg text-sm">
+                  <FileText className="w-4 h-4 text-muted-foreground" />
+                  <span className="truncate max-w-[200px]">{attachedFile.name}</span>
+                  <button
+                    onClick={() => setAttachedFile(null)}
+                    className="p-0.5 hover:bg-secondary rounded transition-colors"
                   >
-                    <span className="text-sm">{model.name}</span>
-                    <span className={cn(
-                      "text-[10px] px-1.5 py-0.5 rounded",
-                      model.tier === 'premium' && "bg-amber-500/20 text-amber-600",
-                      model.tier === 'standard' && "bg-blue-500/20 text-blue-600",
-                      model.tier === 'fast' && "bg-green-500/20 text-green-600"
-                    )}>
-                      {model.tier}
-                    </span>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <p className="text-xs text-muted-foreground">
-              Enter to send
-            </p>
+                    <X className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground" />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <div className="relative">
+              <Textarea
+                ref={textareaRef}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Ask a follow-up question..."
+                className="min-h-[52px] max-h-[200px] pl-12 pr-14 resize-none rounded-xl border-border bg-secondary/30 focus-visible:ring-1 focus-visible:ring-ring"
+                disabled={isLoading}
+                rows={1}
+              />
+              {/* File attachment button */}
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="absolute left-3 bottom-3 p-1.5 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors"
+                title="Attach PDF or document"
+              >
+                <Paperclip className="w-5 h-5" />
+              </button>
+              <Button
+                type="button"
+                size="icon"
+                disabled={isLoading || (!inputValue.trim() && !attachedFile)}
+                onClick={() => handleSubmit()}
+                className="absolute right-2 bottom-2 h-9 w-9 rounded-lg bg-green-600 hover:bg-green-500"
+              >
+                {isLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Sparkles className="h-4 w-4" />
+                )}
+              </Button>
+            </div>
+            <div className="flex items-center justify-between mt-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="h-8 gap-2 text-muted-foreground hover:text-foreground">
+                    <span className="text-xs">{selectedModel.name}</span>
+                    <ChevronDown className="w-3 h-3" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-48">
+                  {MODELS.map((model) => (
+                    <DropdownMenuItem
+                      key={model.key}
+                      onClick={() => setSelectedModel(model)}
+                      className="flex items-center justify-between"
+                    >
+                      <span className="text-sm">{model.name}</span>
+                      <span className={cn(
+                        "text-[10px] px-1.5 py-0.5 rounded",
+                        model.tier === 'premium' && "bg-amber-500/20 text-amber-600",
+                        model.tier === 'standard' && "bg-blue-500/20 text-blue-600",
+                        model.tier === 'fast' && "bg-green-500/20 text-green-600"
+                      )}>
+                        {model.tier}
+                      </span>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <p className="text-xs text-muted-foreground">
+                Enter to send
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
