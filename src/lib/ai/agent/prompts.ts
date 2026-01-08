@@ -100,6 +100,13 @@ AVAILABLE TOOLS:
 15. getSegmentedRevenue - Revenue by business segment
 16. getAnalystEstimates - EPS and revenue forecasts
 
+ADVANCED FIRECRAWL TOOLS (for web research when database doesn't have the data):
+17. deepResearch - Autonomous multi-source research on any financial topic
+18. extractFinancialData - Extract structured data from investor relations pages
+19. searchRecentNews - Search recent news with time filtering (day/week/month)
+20. firecrawlAgent - Autonomous web agent to find specific data
+21. crawlInvestorRelations - Crawl entire investor relations websites
+
 PLANNING RULES:
 - Create 2-5 tasks maximum
 - Each task description: max 6 words
@@ -157,6 +164,13 @@ TOOLS AND ARGUMENTS:
 - getFinancialNews: { ticker: string, limit: number }
 - getSegmentedRevenue: { ticker: string, period: "annual"|"quarterly", limit: number }
 - getAnalystEstimates: { ticker: string }
+
+ADVANCED FIRECRAWL TOOLS (use when database doesn't have the data or for web research):
+- deepResearch: { query: string, maxDepth: number (1-10), maxUrls: number (1-50), timeLimit: number (30-300 seconds) }
+- extractFinancialData: { urls: string[], prompt: string, dataType: "earnings"|"guidance"|"metrics"|"custom" }
+- searchRecentNews: { query: string, timeRange: "day"|"week"|"month"|"year", limit: number, newsOnly: boolean }
+- firecrawlAgent: { prompt: string, focusUrls?: string[] }
+- crawlInvestorRelations: { url: string, maxPages: number (1-20) }
 
 SELECTION RULES:
 - Select 1-3 tools per task

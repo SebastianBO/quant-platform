@@ -199,16 +199,18 @@ async function savePrices(prices: PriceData[]): Promise<number> {
     updated_at: new Date().toISOString(),
   }))
 
-  const { error } = await getSupabase()
+  const { data, error } = await getSupabase()
     .from('stock_prices_snapshot')
     .upsert(records, { onConflict: 'ticker' })
+    .select()
 
   if (error) {
-    console.error('Failed to save prices:', error)
-    return 0
+    console.error('Failed to save prices:', error.message, error.details, error.hint)
+    // Return error info for debugging
+    throw new Error(`Upsert failed: ${error.message} - ${error.details || ''} - ${error.hint || ''}`)
   }
 
-  return records.length
+  return data?.length || records.length
 }
 
 // ============================================================================
