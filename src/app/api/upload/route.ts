@@ -23,11 +23,24 @@ interface ParsedDocument {
 }
 
 async function parsePDF(buffer: Buffer): Promise<{ text: string; pages: number }> {
-  // For now, return a placeholder - PDF parsing requires additional setup
-  // The AI can still see that a PDF was uploaded and discuss it generally
-  return {
-    text: `[PDF document uploaded - ${Math.round(buffer.length / 1024)}KB]\n\nNote: Full PDF text extraction is being processed. Please describe what you'd like to know about this document.`,
-    pages: 1
+  try {
+    // Dynamic import of pdf-parse v2.x (uses PDFParse class)
+    const { PDFParse } = await import("pdf-parse")
+    const parser = new PDFParse(buffer)
+    await (parser as any).load()
+    const result = await (parser as any).getText()
+
+    return {
+      text: result.text || `[PDF document - ${Math.round(buffer.length / 1024)}KB, unable to extract text]`,
+      pages: result.numpages || 1
+    }
+  } catch (error) {
+    console.error("PDF parsing error:", error)
+    // Fallback if pdf-parse fails
+    return {
+      text: `[PDF document uploaded - ${Math.round(buffer.length / 1024)}KB]\n\nNote: Could not extract text from this PDF. The document may be scanned or image-based. Please describe what you'd like to know about this document.`,
+      pages: 1
+    }
   }
 }
 
