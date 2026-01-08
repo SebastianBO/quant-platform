@@ -29,7 +29,7 @@ const getBaseUrl = () => {
  */
 export const getStockQuoteTool = tool({
   description: 'Get real-time stock quote with price, change, volume, and market cap for a given ticker symbol',
-  parameters: z.object({
+  inputSchema: z.object({
     ticker: z.string().describe('Stock ticker symbol (e.g., AAPL, MSFT, TSLA)'),
   }),
   execute: async ({ ticker }) => {
@@ -56,7 +56,7 @@ export const getStockQuoteTool = tool({
  */
 export const getCompanyFundamentalsTool = tool({
   description: 'Get company fundamentals including PE ratio, market cap, revenue, profit margins, debt ratios, and growth metrics',
-  parameters: z.object({
+  inputSchema: z.object({
     ticker: z.string().describe('Stock ticker symbol'),
   }),
   execute: async ({ ticker }) => {
@@ -71,27 +71,28 @@ export const getCompanyFundamentalsTool = tool({
         .single()
 
       if (metrics) {
+        const m = metrics as Record<string, unknown>
         return {
           success: true,
           data: {
             ticker: ticker.toUpperCase(),
-            pe_ratio: metrics.pe_ratio,
-            pb_ratio: metrics.pb_ratio,
-            ps_ratio: metrics.ps_ratio,
-            ev_ebitda: metrics.ev_to_ebitda,
-            debt_to_equity: metrics.debt_to_equity,
-            current_ratio: metrics.current_ratio,
-            gross_margin: metrics.gross_margin,
-            operating_margin: metrics.operating_margin,
-            net_margin: metrics.net_margin,
-            roe: metrics.return_on_equity,
-            roa: metrics.return_on_assets,
-            roic: metrics.return_on_invested_capital,
-            revenue_growth: metrics.revenue_growth,
-            earnings_growth: metrics.earnings_growth,
-            free_cash_flow_yield: metrics.free_cash_flow_yield,
-            dividend_yield: metrics.dividend_yield,
-            report_period: metrics.report_period,
+            pe_ratio: m.pe_ratio,
+            pb_ratio: m.pb_ratio,
+            ps_ratio: m.ps_ratio,
+            ev_ebitda: m.ev_to_ebitda,
+            debt_to_equity: m.debt_to_equity,
+            current_ratio: m.current_ratio,
+            gross_margin: m.gross_margin,
+            operating_margin: m.operating_margin,
+            net_margin: m.net_margin,
+            roe: m.return_on_equity,
+            roa: m.return_on_assets,
+            roic: m.return_on_invested_capital,
+            revenue_growth: m.revenue_growth,
+            earnings_growth: m.earnings_growth,
+            free_cash_flow_yield: m.free_cash_flow_yield,
+            dividend_yield: m.dividend_yield,
+            report_period: m.report_period,
           },
         }
       }
@@ -120,7 +121,7 @@ export const getCompanyFundamentalsTool = tool({
  */
 export const getFinancialStatementsTool = tool({
   description: 'Get financial statements (income statement, balance sheet, or cash flow) for a company',
-  parameters: z.object({
+  inputSchema: z.object({
     ticker: z.string().describe('Stock ticker symbol'),
     statement_type: z.enum(['income', 'balance', 'cashflow']).describe('Type of financial statement'),
     period: z.enum(['annual', 'quarterly']).default('annual').describe('Annual or quarterly data'),
@@ -162,7 +163,7 @@ export const getFinancialStatementsTool = tool({
  */
 export const getInsiderTradesTool = tool({
   description: 'Get insider trading activity (buys and sells by executives and directors) for a stock',
-  parameters: z.object({
+  inputSchema: z.object({
     ticker: z.string().describe('Stock ticker symbol'),
     days: z.number().min(7).max(365).default(90).describe('Number of days of history'),
   }),
@@ -191,8 +192,10 @@ export const getInsiderTradesTool = tool({
       if (error) throw error
 
       // Summarize the data
-      const buys = data?.filter(t => t.transaction_type === 'P' || t.transaction_type === 'Buy') || []
-      const sells = data?.filter(t => t.transaction_type === 'S' || t.transaction_type === 'Sell') || []
+      type InsiderTrade = { transaction_type: string; total_value: number | null }
+      const trades = (data || []) as InsiderTrade[]
+      const buys = trades.filter(t => t.transaction_type === 'P' || t.transaction_type === 'Buy')
+      const sells = trades.filter(t => t.transaction_type === 'S' || t.transaction_type === 'Sell')
 
       return {
         success: true,
@@ -204,7 +207,7 @@ export const getInsiderTradesTool = tool({
           buy_value: buys.reduce((sum, t) => sum + (t.total_value || 0), 0),
           sell_value: sells.reduce((sum, t) => sum + (t.total_value || 0), 0),
         },
-        recent_transactions: data?.slice(0, 10) || [],
+        recent_transactions: (data as unknown[])?.slice(0, 10) || [],
       }
     } catch (error) {
       return { success: false, error: 'Failed to fetch insider trades' }
@@ -218,7 +221,7 @@ export const getInsiderTradesTool = tool({
  */
 export const getInstitutionalOwnershipTool = tool({
   description: 'Get institutional ownership data (13F holdings) showing which hedge funds and institutions own a stock',
-  parameters: z.object({
+  inputSchema: z.object({
     ticker: z.string().describe('Stock ticker symbol'),
   }),
   execute: async ({ ticker }) => {
@@ -241,18 +244,20 @@ export const getInstitutionalOwnershipTool = tool({
 
       if (error) throw error
 
-      const totalShares = data?.reduce((sum, h) => sum + (h.shares || 0), 0) || 0
-      const totalValue = data?.reduce((sum, h) => sum + (h.value || 0), 0) || 0
+      type Holding = { shares: number | null; value: number | null }
+      const holdings = (data || []) as Holding[]
+      const totalShares = holdings.reduce((sum, h) => sum + (h.shares || 0), 0)
+      const totalValue = holdings.reduce((sum, h) => sum + (h.value || 0), 0)
 
       return {
         success: true,
         ticker: ticker.toUpperCase(),
         summary: {
-          total_institutional_holders: data?.length || 0,
+          total_institutional_holders: holdings.length,
           total_shares_held: totalShares,
           total_value: totalValue,
         },
-        top_holders: data?.slice(0, 10) || [],
+        top_holders: (data as unknown[])?.slice(0, 10) || [],
       }
     } catch (error) {
       return { success: false, error: 'Failed to fetch institutional ownership' }
@@ -266,7 +271,7 @@ export const getInstitutionalOwnershipTool = tool({
  */
 export const getAnalystRatingsTool = tool({
   description: 'Get analyst ratings consensus, price targets, and recent rating changes for a stock',
-  parameters: z.object({
+  inputSchema: z.object({
     ticker: z.string().describe('Stock ticker symbol'),
   }),
   execute: async ({ ticker }) => {
@@ -297,7 +302,7 @@ export const getAnalystRatingsTool = tool({
  */
 export const getShortInterestTool = tool({
   description: 'Get short interest and short volume data showing how much of a stock is being shorted',
-  parameters: z.object({
+  inputSchema: z.object({
     ticker: z.string().describe('Stock ticker symbol'),
     days: z.number().min(7).max(90).default(30).describe('Number of days of history'),
   }),
@@ -316,15 +321,17 @@ export const getShortInterestTool = tool({
 
       if (error) throw error
 
+      type ShortData = { short_percent: number | null }
+      const shortData = (data || []) as ShortData[]
       const latestData = data?.[0]
-      const avgShortPercent = data?.reduce((sum, d) => sum + (d.short_percent || 0), 0) / (data?.length || 1)
+      const avgShortPercent = shortData.reduce((sum, d) => sum + (d.short_percent || 0), 0) / (shortData.length || 1)
 
       return {
         success: true,
         ticker: ticker.toUpperCase(),
-        latest: latestData,
+        latest: latestData as unknown,
         average_short_percent: avgShortPercent,
-        trend: data?.slice(0, 10) || [],
+        trend: (data as unknown[])?.slice(0, 10) || [],
       }
     } catch (error) {
       return { success: false, error: 'Failed to fetch short interest' }
@@ -338,7 +345,7 @@ export const getShortInterestTool = tool({
  */
 export const getBiotechCatalystsTool = tool({
   description: 'Get biotech catalysts including FDA approval dates, PDUFA dates, and clinical trial results for biotech stocks',
-  parameters: z.object({
+  inputSchema: z.object({
     ticker: z.string().optional().describe('Optional: specific biotech ticker. If not provided, returns upcoming catalysts for all biotech stocks'),
     days_ahead: z.number().min(1).max(365).default(90).describe('Number of days ahead to look for catalysts'),
   }),
@@ -347,7 +354,7 @@ export const getBiotechCatalystsTool = tool({
       const futureDate = new Date()
       futureDate.setDate(futureDate.getDate() + days_ahead)
 
-      let query = supabase
+      let query = getSupabase()
         .from('biotech_catalysts')
         .select('*')
         .gte('expected_date', new Date().toISOString().split('T')[0])
@@ -381,7 +388,7 @@ export const getBiotechCatalystsTool = tool({
  */
 export const searchStocksTool = tool({
   description: 'Search for stocks by company name or ticker symbol',
-  parameters: z.object({
+  inputSchema: z.object({
     query: z.string().describe('Search query (company name or ticker)'),
     limit: z.number().min(1).max(20).default(10).describe('Number of results'),
   }),
@@ -413,7 +420,7 @@ export const searchStocksTool = tool({
  */
 export const getMarketMoversTool = tool({
   description: 'Get market movers - top gainers, top losers, or most active stocks',
-  parameters: z.object({
+  inputSchema: z.object({
     type: z.enum(['gainers', 'losers', 'active']).describe('Type of market movers'),
     limit: z.number().min(5).max(20).default(10).describe('Number of stocks to return'),
   }),
@@ -439,7 +446,7 @@ export const getMarketMoversTool = tool({
  */
 export const compareStocksTool = tool({
   description: 'Compare key financial metrics between two stocks side by side',
-  parameters: z.object({
+  inputSchema: z.object({
     ticker1: z.string().describe('First stock ticker'),
     ticker2: z.string().describe('Second stock ticker'),
   }),
@@ -482,7 +489,7 @@ export const compareStocksTool = tool({
  */
 export const scrapeWebContentTool = tool({
   description: 'Scrape financial news articles, research reports, or company information from a URL. Use this to get latest news or research about a stock.',
-  parameters: z.object({
+  inputSchema: z.object({
     url: z.string().url().describe('URL to scrape (e.g., news article, SEC filing, company page)'),
   }),
   execute: async ({ url }) => {
@@ -521,7 +528,7 @@ export const scrapeWebContentTool = tool({
  */
 export const searchFinancialNewsTool = tool({
   description: 'Search the web for recent financial news about a stock, company, or market topic',
-  parameters: z.object({
+  inputSchema: z.object({
     query: z.string().describe('Search query (e.g., "AAPL earnings report", "Tesla delivery numbers")'),
     limit: z.number().min(1).max(5).default(3).describe('Number of results'),
   }),

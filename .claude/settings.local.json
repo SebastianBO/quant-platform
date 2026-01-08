@@ -110,7 +110,9 @@
       "Bash(git checkout:*)",
       "mcp__plugin_supabase-toolkit_supabase__list_migrations",
       "mcp__plugin_supabase-toolkit_supabase__list_extensions",
-      "WebFetch(domain:docs.firecrawl.dev)"
+      "WebFetch(domain:docs.firecrawl.dev)",
+      "mcp__plugin_supabase-toolkit_supabase__search_docs",
+      "WebFetch(domain:sdk.vercel.ai)"
     ],
     "deny": [],
     "ask": []

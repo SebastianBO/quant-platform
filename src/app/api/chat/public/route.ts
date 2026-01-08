@@ -1,7 +1,7 @@
-import { streamText } from 'ai'
-import { anthropic } from '@ai-sdk/anthropic'
+import { streamText, createGateway } from 'ai'
 import { NextRequest, NextResponse } from 'next/server'
 import { financialTools } from '@/lib/ai/tools'
+import { createClient } from '@supabase/supabase-js'
 
 export const maxDuration = 60
 
@@ -9,6 +9,24 @@ export const maxDuration = 60
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
 const RATE_LIMIT = 10 // 10 requests per window
 const RATE_WINDOW = 60 * 60 * 1000 // 1 hour
+
+// Lazy-load Supabase client
+let supabaseClient: ReturnType<typeof createClient> | null = null
+function getSupabase() {
+  if (!supabaseClient) {
+    supabaseClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+  }
+  return supabaseClient
+}
+
+// Initialize Vercel AI Gateway - uses free $5/month credits!
+// Llama 3.3-70B: $0.03/M input, $0.05/M output (100x cheaper than Claude!)
+const gateway = createGateway({
+  apiKey: process.env.AI_GATEWAY_API_KEY,
+})
 
 function getRateLimitKey(req: NextRequest): string {
   const forwarded = req.headers.get('x-forwarded-for')
@@ -31,6 +49,66 @@ function checkRateLimit(key: string): { allowed: boolean; remaining: number } {
 
   record.count++
   return { allowed: true, remaining: RATE_LIMIT - record.count }
+}
+
+// RAG: Fetch relevant context from Supabase based on query
+async function fetchRelevantContext(query: string): Promise<string> {
+  try {
+    const supabase = getSupabase()
+
+    // Extract potential ticker from query
+    const tickerMatch = query.match(/\b([A-Z]{1,5})\b/g)
+    const potentialTickers = tickerMatch?.slice(0, 3) || []
+
+    let context = ''
+
+    if (potentialTickers.length > 0) {
+      // Fetch company fundamentals for mentioned tickers
+      const { data: fundamentals } = await supabase
+        .from('company_fundamentals')
+        .select('ticker, company_name, sector, industry, market_cap, pe_ratio, eps, revenue, description')
+        .in('ticker', potentialTickers)
+        .limit(3)
+
+      if (fundamentals && fundamentals.length > 0) {
+        context += '\n\n## Relevant Company Data:\n'
+        for (const f of fundamentals) {
+          context += `\n### ${f.company_name} (${f.ticker})\n`
+          context += `- Sector: ${f.sector || 'N/A'} | Industry: ${f.industry || 'N/A'}\n`
+          context += `- Market Cap: $${f.market_cap ? (f.market_cap / 1e9).toFixed(2) + 'B' : 'N/A'}\n`
+          context += `- P/E Ratio: ${f.pe_ratio?.toFixed(2) || 'N/A'} | EPS: $${f.eps?.toFixed(2) || 'N/A'}\n`
+          if (f.description) {
+            context += `- Description: ${f.description.substring(0, 200)}...\n`
+          }
+        }
+      }
+
+      // Fetch recent financial metrics
+      const { data: metrics } = await supabase
+        .from('financial_metrics')
+        .select('ticker, report_period, pe_ratio, pb_ratio, ps_ratio, gross_margin, operating_margin, net_margin, return_on_equity, debt_to_equity')
+        .in('ticker', potentialTickers)
+        .order('report_period', { ascending: false })
+        .limit(3)
+
+      if (metrics && metrics.length > 0) {
+        context += '\n\n## Latest Financial Metrics:\n'
+        for (const m of metrics) {
+          context += `\n### ${m.ticker} (${m.report_period})\n`
+          context += `- P/E: ${m.pe_ratio?.toFixed(2) || 'N/A'} | P/B: ${m.pb_ratio?.toFixed(2) || 'N/A'} | P/S: ${m.ps_ratio?.toFixed(2) || 'N/A'}\n`
+          context += `- Gross Margin: ${m.gross_margin ? (m.gross_margin * 100).toFixed(1) + '%' : 'N/A'}\n`
+          context += `- Operating Margin: ${m.operating_margin ? (m.operating_margin * 100).toFixed(1) + '%' : 'N/A'}\n`
+          context += `- ROE: ${m.return_on_equity ? (m.return_on_equity * 100).toFixed(1) + '%' : 'N/A'}\n`
+          context += `- Debt/Equity: ${m.debt_to_equity?.toFixed(2) || 'N/A'}\n`
+        }
+      }
+    }
+
+    return context
+  } catch (error) {
+    console.error('RAG context fetch error:', error)
+    return ''
+  }
 }
 
 const SYSTEM_PROMPT = `You are Lician AI, an expert financial analyst assistant on lician.com - a comprehensive stock analysis platform.
@@ -97,12 +175,26 @@ export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json()
 
+    // Get the latest user message for RAG context
+    const lastUserMessage = [...messages].reverse().find((m: { role: string }) => m.role === 'user')
+    const userQuery = lastUserMessage?.content || ''
+
+    // Fetch relevant context from Supabase (RAG)
+    const ragContext = await fetchRelevantContext(userQuery)
+
+    // Enhance system prompt with RAG context
+    const enhancedSystemPrompt = ragContext
+      ? `${SYSTEM_PROMPT}\n\n## Pre-loaded Context from Database:${ragContext}\n\nUse this context along with your tools to provide accurate answers.`
+      : SYSTEM_PROMPT
+
+    // Use Vercel AI Gateway with Llama 3.3-70B (100x cheaper!)
+    // Alternative models: 'deepseek/deepseek-v3', 'google/gemini-2.0-flash'
     const result = streamText({
-      model: anthropic('claude-sonnet-4-20250514'),
-      system: SYSTEM_PROMPT,
+      model: gateway('meta-llama/llama-3.3-70b-instruct'),
+      system: enhancedSystemPrompt,
       messages,
       tools: financialTools,
-      toolChoice: 'auto', // Allow the model to choose which tools to use
+      toolChoice: 'auto',
     })
 
     return result.toTextStreamResponse({
