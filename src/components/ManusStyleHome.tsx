@@ -43,6 +43,7 @@ import {
 import { cn } from "@/lib/utils"
 import { createClient } from "@/lib/supabase-browser"
 import StockLogo from "@/components/StockLogo"
+import { parseTickerSymbolsWithMarkdown } from "@/lib/parseTickerSymbols"
 
 // Sidebar navigation - main tools
 const SIDEBAR_TOP = [
@@ -563,7 +564,12 @@ export default function ManusStyleHome() {
                           : "bg-card border border-border"
                       )}
                     >
-                      <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                      <div className="text-sm whitespace-pre-wrap">
+                        {message.role === 'assistant'
+                          ? parseTickerSymbolsWithMarkdown(message.content)
+                          : message.content
+                        }
+                      </div>
                       {message.role === 'assistant' && message.content && (
                         <button
                           onClick={() => copyToClipboard(message.content, message.id)}
