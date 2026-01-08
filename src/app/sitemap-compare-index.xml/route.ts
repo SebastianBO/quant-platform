@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { ALL_STOCKS } from '@/lib/stocks'
+import { ALL_STOCKS_FULL as ALL_STOCKS } from '@/lib/stocks-full'
 
 // Sitemap index for all comparison sitemaps
 // Links to paginated sitemap-compare.xml?page=N

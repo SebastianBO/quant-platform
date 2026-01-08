@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { ALL_STOCKS } from '@/lib/stocks'
+import { ALL_STOCKS_FULL as ALL_STOCKS } from '@/lib/stocks-full'
 
 // All metric page types from the app
 const METRIC_PAGES = [

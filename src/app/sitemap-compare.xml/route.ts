@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { ALL_STOCKS } from '@/lib/stocks'
+import { ALL_STOCKS_FULL as ALL_STOCKS } from '@/lib/stocks-full'
 
 // Generate sitemap for ALL stock comparisons
 // Formula: n * (n-1) / 2 unique pairs (order doesn't matter for SEO)
