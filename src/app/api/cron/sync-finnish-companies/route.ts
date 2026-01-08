@@ -404,8 +404,7 @@ export async function GET(request: NextRequest) {
               businessId: id,
               name: company.name,
               success: false,
-              error: 'Save failed',
-              debug: { orgNum: company.businessId, form: company.companyForm }
+              error: 'Save failed'
             })
           }
         } else {
