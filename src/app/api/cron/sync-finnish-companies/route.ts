@@ -51,6 +51,17 @@ interface FinnishFinancials {
   // IXBRL data available
 }
 
+// Finnish company form codes
+const FINNISH_COMPANY_FORMS: Record<string, string> = {
+  '1': 'OY',     // Osakeyhtiö (Private limited)
+  '17': 'OYJ',   // Julkinen osakeyhtiö (Public limited)
+  '2': 'KY',     // Kommandiittiyhtiö
+  '3': 'AY',     // Avoin yhtiö
+  '4': 'OK',     // Osuuskunta
+  '5': 'SRY',    // Säätiö (Foundation)
+  '27': 'ASY',   // Asunto-osakeyhtiö
+}
+
 // Fetch company from PRH YTJ API (NO AUTH!)
 async function fetchCompany(businessId: string): Promise<FinnishCompany | null> {
   try {
@@ -78,37 +89,51 @@ async function fetchCompany(businessId: string): Promise<FinnishCompany | null> 
 
     if (!company) return null
 
-    // Find current name
-    const currentName = company.names?.find((n: any) => n.type === '1')?.name ||
+    // Find current name (type 1 = official name, without endDate)
+    const currentName = company.names?.find((n: any) => n.type === '1' && !n.endDate)?.name ||
+                       company.names?.find((n: any) => n.type === '1')?.name ||
                        company.names?.[0]?.name
 
     // Find current address (type 1 = business, type 2 = postal)
     const currentAddress = company.addresses?.find((a: any) => a.type === 1) ||
                           company.addresses?.[0]
 
-    // Find current company form
-    const currentForm = company.companyForms?.find((f: any) => !f.endDate)?.type ||
-                       company.companyForms?.[0]?.type
+    // Find current company form (get the type code)
+    const currentFormCode = company.companyForms?.find((f: any) => !f.endDate)?.type ||
+                           company.companyForms?.[0]?.type
+    const currentFormDescription = company.companyForms?.[0]?.descriptions?.find(
+      (d: any) => d.languageCode === '3' // English
+    )?.description || company.companyForms?.[0]?.descriptions?.[0]?.description
+
+    // Get city from postOffices array (prefer Finnish/English)
+    const cityObj = currentAddress?.postOffices?.find((p: any) => p.languageCode === '1') ||
+                   currentAddress?.postOffices?.[0]
+
+    // Get business line description
+    const businessLineDesc = company.mainBusinessLine?.descriptions?.find(
+      (d: any) => d.languageCode === '3'
+    )?.description || company.mainBusinessLine?.descriptions?.find(
+      (d: any) => d.languageCode === '1'
+    )?.description
 
     return {
-      businessId: company.businessId?.identifier,
-      euId: company.euId,
+      businessId: company.businessId?.value, // Note: it's .value not .identifier!
+      euId: company.euId?.value,
       name: currentName,
-      companyForm: currentForm,
+      companyForm: FINNISH_COMPANY_FORMS[currentFormCode] || currentFormDescription || currentFormCode,
       mainBusinessLine: company.mainBusinessLine ? {
-        code: company.mainBusinessLine.code,
-        description: company.mainBusinessLine.descriptions?.en ||
-                    company.mainBusinessLine.descriptions?.fi
+        code: company.mainBusinessLine.type || company.mainBusinessLine.code,
+        description: businessLineDesc
       } : undefined,
       address: currentAddress ? {
-        street: currentAddress.street,
+        street: [currentAddress.street, currentAddress.buildingNumber].filter(Boolean).join(' '),
         postalCode: currentAddress.postCode,
-        city: currentAddress.postOffices?.[0],
-        country: currentAddress.country || 'FI',
+        city: cityObj?.city,
+        country: 'FI',
       } : undefined,
-      registrationDate: company.registrationDate,
+      registrationDate: company.businessId?.registrationDate,
       lastModified: company.lastModified,
-      tradeRegisterStatus: company.tradeRegisterStatus,
+      tradeRegisterStatus: company.tradeRegisterStatus?.toString(),
     }
   } catch (error) {
     console.error(`Error fetching Finnish company ${businessId}:`, error)
@@ -187,8 +212,9 @@ async function saveCompany(company: FinnishCompany): Promise<boolean> {
     'AOY': 'Asunto-osakeyhtiö',
   }
 
-  // Trade register status: 2 = Active
-  const isActive = company.tradeRegisterStatus === '2'
+  // Trade register status: 1 = Registered in Trade Register, which means active
+  // Status 2 = "Rekisterissä" (In register) is also active
+  const isActive = company.tradeRegisterStatus === '1' || company.tradeRegisterStatus === '2'
 
   const record = {
     org_number: company.businessId,
