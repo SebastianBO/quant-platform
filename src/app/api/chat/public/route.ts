@@ -1,4 +1,5 @@
-import { streamText, createGateway } from 'ai'
+import { streamText } from 'ai'
+import { anthropic } from '@ai-sdk/anthropic'
 import { NextRequest, NextResponse } from 'next/server'
 import { financialTools } from '@/lib/ai/tools'
 import { createClient } from '@supabase/supabase-js'
@@ -21,13 +22,6 @@ function getSupabase() {
   }
   return supabaseClient
 }
-
-// Vercel AI Gateway - 100x cheaper than Claude!
-// Llama 3.3-70B: $0.03/M input, $0.05/M output
-// Uses free $5/month Vercel credits
-const gateway = createGateway({
-  apiKey: process.env.AI_GATEWAY_API_KEY,
-})
 
 function getRateLimitKey(req: NextRequest): string {
   const forwarded = req.headers.get('x-forwarded-for')
@@ -190,10 +184,10 @@ export async function POST(req: NextRequest) {
       ? `${SYSTEM_PROMPT}\n\n## Pre-loaded Context from Database:${ragContext}\n\nUse this context along with your tools to provide accurate answers.`
       : SYSTEM_PROMPT
 
-    // Use Llama 3.3-70B via Vercel AI Gateway - 100x cheaper!
-    // $0.03/M input, $0.05/M output vs Claude's $3/M input, $15/M output
+    // Use Claude Sonnet - reliable with tool calling
+    // TODO: Debug Vercel AI Gateway for 100x cost savings
     const result = streamText({
-      model: gateway('meta/llama-3.3-70b'),
+      model: anthropic('claude-sonnet-4-20250514'),
       system: enhancedSystemPrompt,
       messages,
       tools: financialTools,
