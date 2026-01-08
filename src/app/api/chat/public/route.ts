@@ -121,9 +121,9 @@ export async function POST(req: NextRequest) {
 
     return result.toUIMessageStreamResponse()
   } catch (error) {
-    console.error('Chat error:', error)
+    console.error('Chat error:', error instanceof Error ? error.stack : error)
     return NextResponse.json(
-      { error: 'Something went wrong' },
+      { error: error instanceof Error ? error.message : 'Something went wrong' },
       { status: 500 }
     )
   }
