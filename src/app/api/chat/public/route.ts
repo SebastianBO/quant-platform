@@ -96,7 +96,15 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { messages } = await req.json()
+    const body = await req.json()
+    const messages = body?.messages || []
+
+    if (!Array.isArray(messages) || messages.length === 0) {
+      return NextResponse.json(
+        { error: 'No messages provided' },
+        { status: 400 }
+      )
+    }
 
     // Extract text from various message formats
     type MessagePart = { type: string; text?: string }
@@ -143,9 +151,10 @@ export async function POST(req: NextRequest) {
 
     return result.toUIMessageStreamResponse()
   } catch (error) {
-    console.error('Chat error:', error)
+    const msg = error instanceof Error ? error.message : String(error)
+    console.error('Chat error:', msg)
     return NextResponse.json(
-      { error: 'Something went wrong' },
+      { error: msg || 'Something went wrong' },
       { status: 500 }
     )
   }
