@@ -183,20 +183,19 @@ async function fetchYahooQuote(ticker: string): Promise<PriceData | null> {
 async function savePrices(prices: PriceData[]): Promise<number> {
   if (prices.length === 0) return 0
 
+  const today = new Date().toISOString().split('T')[0]
+
   const records = prices.map(p => ({
     ticker: p.ticker,
-    price: p.price,
-    close: p.price,
-    previous_close: p.previousClose,
+    date: today,
     open: p.open,
-    day_high: p.high,
-    day_low: p.low,
+    high: p.high,
+    low: p.low,
+    close: p.price,
+    volume: p.volume,
+    prev_close: p.previousClose,
     change: p.change,
     change_percent: p.changePercent,
-    volume: p.volume,
-    time: new Date(p.time * 1000).toISOString(),
-    time_milliseconds: p.time * 1000,
-    source: p.source,
     updated_at: new Date().toISOString(),
   }))
 
