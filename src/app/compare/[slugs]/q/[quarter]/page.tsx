@@ -14,14 +14,14 @@ type Props = {
 
 interface IncomeStatement {
   ticker: string
-  fiscal_year: number
+  report_period: string
   fiscal_period: string
   revenue: number | null
   gross_profit: number | null
   operating_income: number | null
   net_income: number | null
-  eps_diluted: number | null
-  ebitda: number | null
+  earnings_per_share_diluted: number | null
+  ebit: number | null
 }
 
 function formatValue(value: number | null | undefined): string {
@@ -50,18 +50,19 @@ async function getQuarterlyData(ticker: string, quarter: string): Promise<Income
 
   try {
     const response = await fetch(
-      `${getBaseUrl()}/api/v1/financials/income-statements?ticker=${ticker.toUpperCase()}&period=quarterly&limit=20`,
+      `${getBaseUrl()}/api/v1/financials/income-statements?ticker=${ticker.toUpperCase()}&period=quarterly&limit=24`,
       { next: { revalidate: 86400 } }
     )
 
     if (!response.ok) return null
     const data = await response.json()
 
-    // Find matching quarter
+    // Find matching quarter - report_period is like "2024-06-29"
     const statements = data.income_statements || []
-    return statements.find((s: IncomeStatement) =>
-      s.fiscal_year === year && s.fiscal_period === period
-    ) || null
+    return statements.find((s: IncomeStatement) => {
+      const reportYear = parseInt(s.report_period?.split('-')[0] || '0')
+      return reportYear === year && s.fiscal_period === period
+    }) || null
   } catch {
     return null
   }
@@ -127,8 +128,7 @@ export default async function QuarterlyComparisonPage({ params }: Props) {
     { label: 'Gross Profit', v1: formatValue(data1?.gross_profit), v2: formatValue(data2?.gross_profit), winner: (data1?.gross_profit || 0) > (data2?.gross_profit || 0) ? 1 : (data2?.gross_profit || 0) > (data1?.gross_profit || 0) ? 2 : 0 },
     { label: 'Operating Income', v1: formatValue(data1?.operating_income), v2: formatValue(data2?.operating_income), winner: (data1?.operating_income || 0) > (data2?.operating_income || 0) ? 1 : (data2?.operating_income || 0) > (data1?.operating_income || 0) ? 2 : 0 },
     { label: 'Net Income', v1: formatValue(data1?.net_income), v2: formatValue(data2?.net_income), winner: (data1?.net_income || 0) > (data2?.net_income || 0) ? 1 : (data2?.net_income || 0) > (data1?.net_income || 0) ? 2 : 0 },
-    { label: 'EPS (Diluted)', v1: data1?.eps_diluted ? `$${data1.eps_diluted.toFixed(2)}` : '-', v2: data2?.eps_diluted ? `$${data2.eps_diluted.toFixed(2)}` : '-', winner: (data1?.eps_diluted || 0) > (data2?.eps_diluted || 0) ? 1 : (data2?.eps_diluted || 0) > (data1?.eps_diluted || 0) ? 2 : 0 },
-    { label: 'EBITDA', v1: formatValue(data1?.ebitda), v2: formatValue(data2?.ebitda), winner: (data1?.ebitda || 0) > (data2?.ebitda || 0) ? 1 : (data2?.ebitda || 0) > (data1?.ebitda || 0) ? 2 : 0 },
+    { label: 'EPS (Diluted)', v1: data1?.earnings_per_share_diluted ? `$${data1.earnings_per_share_diluted.toFixed(2)}` : '-', v2: data2?.earnings_per_share_diluted ? `$${data2.earnings_per_share_diluted.toFixed(2)}` : '-', winner: (data1?.earnings_per_share_diluted || 0) > (data2?.earnings_per_share_diluted || 0) ? 1 : (data2?.earnings_per_share_diluted || 0) > (data1?.earnings_per_share_diluted || 0) ? 2 : 0 },
     { label: 'Gross Margin', v1: formatPercent(margins1.gross), v2: formatPercent(margins2.gross), winner: (margins1.gross || 0) > (margins2.gross || 0) ? 1 : (margins2.gross || 0) > (margins1.gross || 0) ? 2 : 0 },
     { label: 'Operating Margin', v1: formatPercent(margins1.operating), v2: formatPercent(margins2.operating), winner: (margins1.operating || 0) > (margins2.operating || 0) ? 1 : (margins2.operating || 0) > (margins1.operating || 0) ? 2 : 0 },
     { label: 'Net Margin', v1: formatPercent(margins1.net), v2: formatPercent(margins2.net), winner: (margins1.net || 0) > (margins2.net || 0) ? 1 : (margins2.net || 0) > (margins1.net || 0) ? 2 : 0 },
