@@ -131,14 +131,17 @@ const SAMPLE_PROMPTS = [
   { text: "UK companies with highest revenue growth", icon: TrendingUp },
 ]
 
-// AI Models
+// AI Models - Must match /api/chat/autonomous AVAILABLE_MODELS
 const MODELS = [
-  { key: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash', tier: 'standard' },
+  // Fast (default)
+  { key: 'gemini-flash', name: 'Gemini Flash', tier: 'fast' },
+  // Standard
   { key: 'gpt-4o-mini', name: 'GPT-4o Mini', tier: 'standard' },
-  { key: 'claude-3-5-haiku', name: 'Claude 3.5 Haiku', tier: 'standard' },
+  { key: 'claude-3-5-sonnet', name: 'Claude 3.5 Sonnet', tier: 'standard' },
+  { key: 'llama-3.3-70b', name: 'Llama 3.3 70B', tier: 'standard' },
+  // Premium (requires subscription)
   { key: 'gpt-4o', name: 'GPT-4o', tier: 'premium' },
   { key: 'claude-sonnet-4', name: 'Claude Sonnet 4', tier: 'premium' },
-  { key: 'gemini-2.0-pro', name: 'Gemini 2.0 Pro', tier: 'premium' },
 ]
 
 
@@ -735,8 +738,30 @@ export default function ManusStyleHome() {
                     </button>
 
                     {showModelSelector && (
-                      <div className="absolute bottom-full left-0 mb-2 w-52 bg-card border border-border rounded-xl shadow-xl py-2 z-50">
-                        <div className="px-3 py-1.5 text-xs font-medium text-muted-foreground uppercase">Standard</div>
+                      <div className="absolute bottom-full left-0 mb-2 w-56 bg-card border border-border rounded-xl shadow-xl py-2 z-50">
+                        {/* Fast */}
+                        <div className="px-3 py-1.5 text-xs font-medium text-muted-foreground uppercase">Fast</div>
+                        {MODELS.filter(m => m.tier === 'fast').map((model) => (
+                          <button
+                            key={model.key}
+                            onClick={() => {
+                              setSelectedModel(model)
+                              setShowModelSelector(false)
+                            }}
+                            className={cn(
+                              "w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors",
+                              selectedModel.key === model.key
+                                ? "bg-green-500/10 text-green-500"
+                                : "text-foreground hover:bg-secondary"
+                            )}
+                          >
+                            <Zap className="w-4 h-4 text-blue-500" />
+                            {model.name}
+                            {selectedModel.key === model.key && <Check className="w-4 h-4 ml-auto" />}
+                          </button>
+                        ))}
+                        {/* Standard */}
+                        <div className="px-3 py-1.5 text-xs font-medium text-muted-foreground uppercase mt-2 border-t border-border pt-2">Standard</div>
                         {MODELS.filter(m => m.tier === 'standard').map((model) => (
                           <button
                             key={model.key}
@@ -756,6 +781,7 @@ export default function ManusStyleHome() {
                             {selectedModel.key === model.key && <Check className="w-4 h-4 ml-auto" />}
                           </button>
                         ))}
+                        {/* Premium */}
                         <div className="px-3 py-1.5 text-xs font-medium text-muted-foreground uppercase mt-2 border-t border-border pt-2">Premium</div>
                         {MODELS.filter(m => m.tier === 'premium').map((model) => (
                           <button
