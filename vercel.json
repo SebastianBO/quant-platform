@@ -15,36 +15,48 @@
       "schedule": "0 21 * * 1-5"
     },
     {
-      "path": "/api/cron/sync-financials?mode=priority&limit=150",
-      "schedule": "0 */4 * * *"
+      "path": "/api/cron/sync-financials?mode=priority&limit=200",
+      "schedule": "0 */2 * * *"
     },
     {
-      "path": "/api/cron/sync-financials?mode=continue&limit=300",
+      "path": "/api/cron/sync-financials?mode=continue&limit=500",
       "schedule": "0 * * * *"
     },
     {
-      "path": "/api/cron/sync-financials?mode=continue&limit=300",
-      "schedule": "30 * * * *"
+      "path": "/api/cron/sync-financials?mode=continue&limit=500",
+      "schedule": "20 * * * *"
     },
     {
-      "path": "/api/cron/sync-insider-trades?limit=50",
-      "schedule": "15 */2 * * *"
+      "path": "/api/cron/sync-financials?mode=continue&limit=500",
+      "schedule": "40 * * * *"
+    },
+    {
+      "path": "/api/cron/sync-insider-trades?limit=100",
+      "schedule": "10 * * * *"
     },
     {
       "path": "/api/cron/sync-short-volume",
       "schedule": "0 22 * * 1-5"
     },
     {
-      "path": "/api/cron/sync-8k-filings?limit=100",
-      "schedule": "45 * * * *"
+      "path": "/api/cron/sync-8k-filings?limit=200",
+      "schedule": "30 * * * *"
     },
     {
-      "path": "/api/cron/sync-prices?limit=70",
-      "schedule": "*/15 14-21 * * 1-5"
+      "path": "/api/cron/sync-prices?limit=200",
+      "schedule": "*/10 14-21 * * 1-5"
     },
     {
-      "path": "/api/cron/sync-analyst-estimates?limit=20",
-      "schedule": "0 6 * * *"
+      "path": "/api/cron/sync-prices?limit=200",
+      "schedule": "0 6,12,18 * * *"
+    },
+    {
+      "path": "/api/cron/sync-analyst-estimates?limit=30",
+      "schedule": "0 5 * * *"
+    },
+    {
+      "path": "/api/monitoring/scraper-status",
+      "schedule": "0 7 * * *"
     }
   ]
 }

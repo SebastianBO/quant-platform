@@ -112,8 +112,9 @@ export async function POST(req: NextRequest) {
     }
   } catch (error) {
     console.error('Autonomous agent error:', error)
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.json(
-      { error: 'Research failed' },
+      { error: 'Research failed', details: errorMessage },
       { status: 500 }
     )
   }
