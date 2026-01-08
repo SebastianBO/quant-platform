@@ -193,7 +193,7 @@ export async function POST(req: NextRequest) {
     // Use Llama 3.3-70B via Vercel AI Gateway - 100x cheaper!
     // $0.03/M input, $0.05/M output vs Claude's $3/M input, $15/M output
     const result = streamText({
-      model: gateway('meta-llama/llama-3.3-70b-instruct'),
+      model: gateway('meta/llama-3.3-70b'),
       system: enhancedSystemPrompt,
       messages,
       tools: financialTools,
