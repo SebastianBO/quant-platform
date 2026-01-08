@@ -853,3 +853,52 @@ firecrawlAgent, crawlInvestorRelations
 ```
 
 **Total: 25 tools** available to the autonomous research agent
+
+---
+
+# CRITICAL REFERENCES - DO NOT HALLUCINATE
+
+**IMPORTANT: Always reference these exact values. NEVER guess or make up model names, API endpoints, or configurations.**
+
+## AI Models (Vercel AI Gateway)
+
+Source: `src/app/api/chat/autonomous/route.ts`
+
+```typescript
+const AVAILABLE_MODELS = {
+  // Fast (default for free users)
+  'gemini-flash': { id: 'google/gemini-2.0-flash', name: 'Gemini Flash', tier: 'fast' },
+
+  // Standard (free)
+  'gpt-4o-mini': { id: 'openai/gpt-4o-mini', name: 'GPT-4o Mini', tier: 'standard' },
+  'claude-3-5-sonnet': { id: 'anthropic/claude-3-5-sonnet', name: 'Claude 3.5 Sonnet', tier: 'standard' },
+  'llama-3.3-70b': { id: 'meta/llama-3.3-70b', name: 'Llama 3.3 70B', tier: 'standard' },
+
+  // Premium (requires subscription → Stripe checkout)
+  'gpt-4o': { id: 'openai/gpt-4o', name: 'GPT-4o', tier: 'premium' },
+  'claude-sonnet-4': { id: 'anthropic/claude-sonnet-4', name: 'Claude Sonnet 4', tier: 'premium' },
+}
+```
+
+**Frontend must match**: `src/components/ManusStyleHome.tsx` MODELS constant
+
+## Stripe Configuration
+
+- Checkout endpoint: `/api/stripe/quick-checkout?plan=monthly` or `?plan=annual`
+- Premium models should redirect to Stripe checkout
+- Required env vars: `STRIPE_SECRET_KEY`, `STRIPE_MONTHLY_PRICE_ID`, `STRIPE_ANNUAL_PRICE_ID`
+
+## Homepage Components
+
+Source: `src/components/ManusStyleHome.tsx`
+
+- **Carousel slides**: 3 slides (Powerful Financial Data, Share for credits, 100K+ Companies)
+- **Tool buttons**: Connect Portfolio, Stock Screener, Compare Stocks, DCF Valuation, More
+- **Model selector**: Bottom-left of input, shows Fast/Standard/Premium tiers
+
+## Before Making UI Changes
+
+1. **READ the source file first** - Don't assume what exists
+2. **Check API routes for data structures** - Models, endpoints, response formats
+3. **Verify constants exist** - grep before creating new ones
+4. **Match backend exactly** - Frontend constants must mirror backend
