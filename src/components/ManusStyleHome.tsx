@@ -301,21 +301,19 @@ export default function ManusStyleHome() {
           </div>
         </header>
 
-        {/* Market Movers Bar */}
-        <EnhancedMarketMovers />
-
         {/* Chat or Welcome Screen */}
         <div className="flex-1 overflow-y-auto">
           {showChat ? (
             <div className="min-h-full flex flex-col">
+              {/* Market Movers Bar - only show in chat mode */}
+              <EnhancedMarketMovers />
               <div className="flex-1">
                 <AutonomousChat />
               </div>
               <Footer />
             </div>
           ) : (
-            <>
-              <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
+            <div className="h-full flex flex-col items-center justify-center px-6 py-12">
                 {/* Heading */}
                 <h1 className="text-4xl md:text-5xl font-semibold text-center mb-10">
                   What can I do for you?
@@ -458,11 +456,7 @@ export default function ManusStyleHome() {
                     </div>
                   </div>
                 )}
-              </div>
-
-              {/* Footer for welcome screen */}
-              <Footer />
-            </>
+            </div>
           )}
         </div>
       </main>
