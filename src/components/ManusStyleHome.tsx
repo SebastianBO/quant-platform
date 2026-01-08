@@ -181,6 +181,7 @@ export default function ManusStyleHome() {
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const [carouselDismissed, setCarouselDismissed] = useState(false)
   const [showDismissTooltip, setShowDismissTooltip] = useState(false)
+  const [showModelSelector, setShowModelSelector] = useState(false)
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -703,19 +704,80 @@ export default function ManusStyleHome() {
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="Ask about any stock, market trends, or financial analysis..."
-                  className="w-full min-h-[60px] max-h-[150px] py-4 px-5 pl-14 pr-14 text-lg bg-transparent border-none resize-none focus:outline-none placeholder:text-muted-foreground"
+                  className="w-full min-h-[80px] max-h-[150px] py-4 px-5 pb-14 pr-14 text-lg bg-transparent border-none resize-none focus:outline-none placeholder:text-muted-foreground"
                   disabled={isLoading}
                   rows={1}
                 />
 
-                {/* File attachment button */}
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="absolute left-4 bottom-4 p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors"
-                  title="Attach PDF or document"
-                >
-                  <Paperclip className="w-5 h-5" />
-                </button>
+                {/* Bottom toolbar */}
+                <div className="absolute left-3 bottom-3 flex items-center gap-1">
+                  {/* File attachment button */}
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors"
+                    title="Attach PDF or document"
+                  >
+                    <Paperclip className="w-5 h-5" />
+                  </button>
+
+                  {/* Model selector */}
+                  <div className="relative">
+                    <button
+                      onClick={() => setShowModelSelector(!showModelSelector)}
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors text-sm"
+                      title="Select AI model"
+                    >
+                      <Sparkles className="w-4 h-4" />
+                      <span className="hidden sm:inline">{selectedModel.name}</span>
+                      <ChevronDown className={cn("w-3.5 h-3.5 transition-transform", showModelSelector && "rotate-180")} />
+                    </button>
+
+                    {showModelSelector && (
+                      <div className="absolute bottom-full left-0 mb-2 w-52 bg-card border border-border rounded-xl shadow-xl py-2 z-50">
+                        <div className="px-3 py-1.5 text-xs font-medium text-muted-foreground uppercase">Standard</div>
+                        {MODELS.filter(m => m.tier === 'standard').map((model) => (
+                          <button
+                            key={model.key}
+                            onClick={() => {
+                              setSelectedModel(model)
+                              setShowModelSelector(false)
+                            }}
+                            className={cn(
+                              "w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors",
+                              selectedModel.key === model.key
+                                ? "bg-green-500/10 text-green-500"
+                                : "text-foreground hover:bg-secondary"
+                            )}
+                          >
+                            <Sparkles className="w-4 h-4" />
+                            {model.name}
+                            {selectedModel.key === model.key && <Check className="w-4 h-4 ml-auto" />}
+                          </button>
+                        ))}
+                        <div className="px-3 py-1.5 text-xs font-medium text-muted-foreground uppercase mt-2 border-t border-border pt-2">Premium</div>
+                        {MODELS.filter(m => m.tier === 'premium').map((model) => (
+                          <button
+                            key={model.key}
+                            onClick={() => {
+                              setSelectedModel(model)
+                              setShowModelSelector(false)
+                            }}
+                            className={cn(
+                              "w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors",
+                              selectedModel.key === model.key
+                                ? "bg-green-500/10 text-green-500"
+                                : "text-foreground hover:bg-secondary"
+                            )}
+                          >
+                            <Zap className="w-4 h-4 text-yellow-500" />
+                            {model.name}
+                            {selectedModel.key === model.key && <Check className="w-4 h-4 ml-auto" />}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
 
                 {/* Submit button */}
                 <button
@@ -930,6 +992,14 @@ export default function ManusStyleHome() {
         <div
           className="fixed inset-0 z-40"
           onClick={() => setShowDismissTooltip(false)}
+        />
+      )}
+
+      {/* Click outside to close model selector */}
+      {showModelSelector && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setShowModelSelector(false)}
         />
       )}
     </div>
