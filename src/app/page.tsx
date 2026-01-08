@@ -1,12 +1,5 @@
 import { Metadata } from 'next'
-import { Suspense } from "react"
-import { Header } from "@/components/header"
-import EnhancedMarketMovers from "@/components/EnhancedMarketMovers"
-import AutonomousChat from "@/components/AutonomousChat"
-import QuickActions from "@/components/QuickActions"
-import DashboardContent from "@/components/DashboardContent"
-import FeaturedArticles from "@/components/FeaturedArticles"
-import { Footer } from "@/components/footer"
+import ManusStyleHome from "@/components/ManusStyleHome"
 import { SITE_URL } from "@/lib/seo"
 
 export const metadata: Metadata = {
@@ -40,34 +33,6 @@ export const metadata: Metadata = {
   },
 }
 
-function LoadingState() {
-  return (
-    <div className="flex items-center justify-center h-screen bg-background">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-primary mx-auto mb-4"></div>
-        <p className="text-muted-foreground">Loading Lician...</p>
-      </div>
-    </div>
-  )
-}
-
 export default function Home() {
-  return (
-    <>
-      <Header />
-      {/* Spacer for fixed header - adjust based on header height */}
-      <div className="h-16 sm:h-18 lg:h-20" />
-      <EnhancedMarketMovers />
-      <main className="min-h-screen bg-background">
-        <AutonomousChat />
-        <QuickActions />
-      </main>
-      <Suspense fallback={<LoadingState />}>
-        <DashboardContent />
-      </Suspense>
-      <FeaturedArticles />
-      <Footer />
-    </>
-  )
+  return <ManusStyleHome />
 }
-// Deployment: 1767853754

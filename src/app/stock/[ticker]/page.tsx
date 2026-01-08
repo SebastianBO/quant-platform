@@ -9,6 +9,7 @@ import LicianScoreSSR from '@/components/scoring/LicianScoreSSR'
 import { SnowflakeCard } from '@/components/scoring'
 import { WatchlistActions } from '@/components/WatchlistButton'
 import { EarningsAlertButton } from '@/components/EarningsAlertSignup'
+import { AskAIPopup } from '@/components/AskAIPopup'
 import {
   getBreadcrumbSchema,
   getArticleSchema,
@@ -559,6 +560,9 @@ export default async function StockPage({ params }: Props) {
       <Suspense fallback={<LoadingState />}>
         <DashboardContent initialTicker={symbol} initialTab="overview" />
       </Suspense>
+
+      {/* Ask AI Popup - Floating chat for stock-specific questions */}
+      <AskAIPopup ticker={symbol} companyName={companyName} />
     </>
   )
 }
