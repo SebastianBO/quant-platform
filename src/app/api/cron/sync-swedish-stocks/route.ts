@@ -15,6 +15,69 @@ const EODHD_API_KEY = process.env.EODHD_API_KEY || ''
 const YAHOO_QUOTE_URL = 'https://query1.finance.yahoo.com/v7/finance/quote'
 const YAHOO_FUNDAMENTALS_URL = 'https://query2.finance.yahoo.com/v10/finance/quoteSummary'
 
+// Cache for Yahoo crumb and cookies (valid for ~1 hour)
+let yahooCrumb: string | null = null
+let yahooCookies: string | null = null
+let crumbTimestamp: number = 0
+const CRUMB_TTL = 3600000 // 1 hour
+
+// Get Yahoo Finance crumb and cookies for authentication
+async function getYahooCrumb(): Promise<{ crumb: string; cookies: string } | null> {
+  // Return cached if still valid
+  if (yahooCrumb && yahooCookies && Date.now() - crumbTimestamp < CRUMB_TTL) {
+    return { crumb: yahooCrumb, cookies: yahooCookies }
+  }
+
+  try {
+    // Step 1: Get initial cookies from Yahoo Finance homepage
+    const homepageRes = await fetch('https://finance.yahoo.com', {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      },
+    })
+
+    // Extract Set-Cookie headers
+    const setCookies = homepageRes.headers.get('set-cookie') || ''
+    const cookies = setCookies
+      .split(',')
+      .map(c => c.split(';')[0].trim())
+      .filter(c => c.includes('='))
+      .join('; ')
+
+    // Step 2: Get crumb from Yahoo's crumb endpoint
+    const crumbRes = await fetch('https://query1.finance.yahoo.com/v1/test/getcrumb', {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': '*/*',
+        'Cookie': cookies,
+      },
+    })
+
+    if (!crumbRes.ok) {
+      console.log('Failed to get Yahoo crumb:', crumbRes.status)
+      return null
+    }
+
+    const crumb = await crumbRes.text()
+    if (!crumb || crumb.includes('error')) {
+      console.log('Invalid crumb response:', crumb)
+      return null
+    }
+
+    // Cache the crumb and cookies
+    yahooCrumb = crumb
+    yahooCookies = cookies
+    crumbTimestamp = Date.now()
+
+    console.log('Got Yahoo crumb successfully')
+    return { crumb, cookies }
+  } catch (error) {
+    console.error('Error getting Yahoo crumb:', error)
+    return null
+  }
+}
+
 let supabase: SupabaseClient | null = null
 
 function getSupabase(): SupabaseClient {
@@ -150,19 +213,31 @@ const SWEDISH_TICKERS = [
 // Fetch company data from Yahoo Finance (PRIMARY - FREE)
 async function fetchFromYahoo(ticker: string): Promise<EODHDFundamentals | null> {
   try {
+    // Get crumb and cookies for authentication
+    const auth = await getYahooCrumb()
+    if (!auth) {
+      console.log('Could not get Yahoo authentication')
+      return null
+    }
+
     // Yahoo uses same .ST suffix for Swedish stocks
-    const response = await fetch(
-      `${YAHOO_FUNDAMENTALS_URL}/${ticker}?modules=assetProfile,summaryDetail,financialData,defaultKeyStatistics,incomeStatementHistory,balanceSheetHistory`,
-      {
-        headers: {
-          'Accept': 'application/json',
-          'User-Agent': 'Mozilla/5.0 (compatible; LicianBot/1.0)',
-        }
+    const url = `${YAHOO_FUNDAMENTALS_URL}/${ticker}?modules=assetProfile,summaryDetail,financialData,defaultKeyStatistics,incomeStatementHistory,balanceSheetHistory&crumb=${encodeURIComponent(auth.crumb)}`
+
+    const response = await fetch(url, {
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Cookie': auth.cookies,
       }
-    )
+    })
 
     if (!response.ok) {
       console.log(`Yahoo returned ${response.status} for ${ticker}`)
+      // Invalidate crumb cache on auth errors
+      if (response.status === 401) {
+        yahooCrumb = null
+        yahooCookies = null
+      }
       return null
     }
 
