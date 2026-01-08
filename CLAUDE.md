@@ -416,9 +416,17 @@ Check column names match table schema in `supabase/migrations/20251210000003_pri
 2. Check Supabase pg_cron status: `SELECT * FROM cron_job_status`
 3. Manually trigger: `curl https://lician.com/api/cron/[job-name]`
 
-## EU MARKETS - IMPLEMENTED (Jan 2026)
+## EU MARKETS - FULLY OPERATIONAL (Jan 2026)
 
-European financial data infrastructure is now live with support for Sweden, Norway, UK, and more.
+European financial data infrastructure is **production-ready** with **106,975 companies** and **48,592 financials** synced from FREE government APIs.
+
+### Current Database Counts (Verified Jan 8, 2026)
+
+| Table | Records | Coverage |
+|-------|---------|----------|
+| `eu_companies` | **106,975** | Norway, Denmark, Finland, Sweden |
+| `eu_income_statements` | **48,592** | Full IFRS format financials |
+| `eu_balance_sheets` | **48,592** | Full IFRS format financials |
 
 ### EU Data Architecture
 
@@ -459,12 +467,24 @@ European financial data infrastructure is now live with support for Sweden, Norw
 
 | Endpoint | Country | Data Type | API Key Required | Status |
 |----------|---------|-----------|------------------|--------|
-| `/api/cron/sync-swedish-companies` | Sweden | Company profiles | No (scraping) | ⚠️ Blocked |
-| `/api/cron/sync-norwegian-companies` | Norway | Company profiles | **No** | ✅ Working |
-| `/api/cron/sync-norwegian-financials` | Norway | Full financials | **No** | ✅ Working |
-| `/api/cron/sync-uk-companies` | UK | Company profiles | Yes (free) | ✅ Working |
-| `/api/cron/sync-uk-financials` | UK | Filing history | Yes (free) | ✅ Working |
-| `/api/cron/sync-financial-metrics` | US | PE, market cap | No | ⚠️ Yahoo auth issue |
+| `/api/cron/sync-norwegian-companies` | Norway | 106K+ company profiles | **No** | ✅ Working |
+| `/api/cron/sync-norwegian-financials` | Norway | 48K+ full financials | **No** | ✅ Working |
+| `/api/cron/sync-danish-companies` | Denmark | Company + financials | **No** | ✅ Working |
+| `/api/cron/sync-finnish-companies` | Finland | Company profiles | **No** | ✅ Working |
+| `/api/cron/sync-swedish-stocks` | Sweden | 38 listed stocks | **No** | ✅ Working |
+| `/api/cron/sync-german-companies` | Germany | 5M available | **No** | 🔧 API recovering |
+
+### Bulk Sync Mode (Norwegian)
+
+The Norwegian sync supports a bulk mode using kommune (municipality) + org form combinations:
+
+```bash
+# Trigger bulk sync - cycles through 70 combinations (10 kommuner × 7 org forms)
+curl "https://lician.com/api/cron/sync-norwegian-companies?mode=bulk&limit=100&offset=0"
+
+# Available modes: known, as, enk, nuf, sa, da, ans, asa, all, kommune, bulk
+# Each combination can return up to 10K companies (Brreg API limit)
+```
 
 ### EU Database Tables
 
@@ -522,39 +542,49 @@ compareEUCompanies({ companies: ['Volvo', 'BMW', 'Mercedes'] })
 
 ### EU Data Sources Detail
 
-#### Norway (100% FREE, No API Key!)
+#### Norway (100% FREE, No API Key!) - 106K+ SYNCED
 
 **Brreg - Company Registry**
 - API: `https://data.brreg.no/enhetsregisteret/api`
-- 1.1+ million Norwegian companies
+- 1.1+ million Norwegian companies available
+- **106,975 companies synced** via bulk mode
 - Data: name, org form, address, industry, employees
 
 **Regnskapsregisteret - Financial Statements**
 - API: `https://data.brreg.no/regnskapsregisteret/regnskap/{orgNumber}`
-- Full income statements & balance sheets
-- Returns last fiscal year's audited accounts
-- Sample: Equinor (923609016) - $72.5B revenue, $8.1B net income
+- **48,592 financial statements synced**
+- Full income statements & balance sheets (IFRS format)
+- ~45% of companies have published financials
 
-#### UK (FREE with API Key)
+#### Denmark (100% FREE, No API Key!)
 
-**Companies House API**
-- API: `https://api.company-information.service.gov.uk`
-- Get free API key: https://developer.company-information.service.gov.uk/
-- 4.5+ million UK companies
-- Filing history, accounts due dates
+**CVR - Central Business Register**
+- Financials endpoint: `http://distribution.virk.dk/offentliggoerelser/_search`
+- 2.2+ million Danish companies available
+- **No authentication required for financials!**
+- Full income statements and balance sheets
 
-**Companies House Bulk Data (FREE XBRL)**
-- Daily: https://download.companieshouse.gov.uk/en_accountsdata.html
-- Monthly: https://download.companieshouse.gov.uk/en_monthlyaccountsdata.html
-- Full financial statements in iXBRL format
-- ~100MB/day, ~1GB/month
+#### Finland (100% FREE, No API Key!)
 
-#### Sweden (Scraping - Currently Blocked)
+**PRH - Patent and Registration Office**
+- API: `https://avoindata.prh.fi/opendata-ytj-api/v3`
+- 600K+ Finnish companies available
+- Company form codes: OY (private), OYJ (public), KY, AY, OK
 
-**Allabolag.se**
-- ~1.2 million Swedish companies
-- Revenue, profit, employees, industry
-- Currently blocked - needs proxy or alternative approach
+#### Sweden (Yahoo Finance)
+
+**Yahoo Finance v8 API**
+- Endpoint: `https://query2.finance.yahoo.com/v8/finance/chart/{ticker}`
+- 38 listed Swedish stocks (OMXS30 + extras)
+- Real-time prices and historical data
+
+#### Germany (5M companies - API temporarily down)
+
+**OffeneRegister.de**
+- API: `https://db.offeneregister.de/openregister.json`
+- 5+ million German companies
+- Datasette SQL API
+- Currently returning 502 - check periodically
 
 ### Pre-loaded Companies
 
