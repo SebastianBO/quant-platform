@@ -243,23 +243,48 @@ export default function ManusStyleHome() {
     if ((!inputValue.trim() && !attachedFile) || isLoading) return
 
     let queryContent = inputValue.trim()
+    let fileContent = ""
+
+    // If file attached, upload and parse it first
     if (attachedFile) {
+      setIsLoading(true)
+      setTasks([{ id: "upload", description: "Parsing uploaded document...", status: "running" }])
+
+      try {
+        const formData = new FormData()
+        formData.append("file", attachedFile)
+
+        const uploadRes = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        })
+
+        if (uploadRes.ok) {
+          const parsed = await uploadRes.json()
+          fileContent = `\n\n--- Uploaded Document: ${parsed.filename} ---\n${parsed.content}\n--- End Document ---`
+          setTasks([{ id: "upload", description: "Document parsed successfully", status: "completed" }])
+        } else {
+          setTasks([{ id: "upload", description: "Failed to parse document", status: "completed" }])
+        }
+      } catch {
+        setTasks([{ id: "upload", description: "Failed to parse document", status: "completed" }])
+      }
+
       queryContent = queryContent
-        ? `${queryContent}\n\n[Attached file: ${attachedFile.name}]`
-        : `Please analyze the attached file: ${attachedFile.name}`
+        ? `${queryContent}${fileContent}`
+        : `Please analyze the following document:${fileContent}`
     }
 
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
-      content: queryContent,
+      content: inputValue.trim() || `Analyzing: ${attachedFile?.name}`,
     }
 
     setMessages(prev => [...prev, userMessage])
     setInputValue("")
     setAttachedFile(null)
     setIsLoading(true)
-    setTasks([])
 
     const assistantId = (Date.now() + 1).toString()
     let answerContent = ""
@@ -451,7 +476,7 @@ export default function ManusStyleHome() {
               <div className="flex items-center gap-2 text-sm">
                 <span className="text-muted-foreground">Free plan</span>
                 <span className="text-muted-foreground">|</span>
-                <Link href="/premium" className="text-green-500 hover:text-green-400 font-medium">
+                <Link href="/api/stripe/quick-checkout?plan=annual" className="text-green-500 hover:text-green-400 font-medium">
                   Start free trial
                 </Link>
               </div>

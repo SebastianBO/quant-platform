@@ -2,13 +2,18 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { withCronLogging, RateLimiter } from '@/lib/cron-utils'
 
-// Sync Swedish Listed Companies from EODHD (Stockholm Exchange - ST)
-// Uses same EODHD API as US stocks - reliable paid data source
+// Sync Swedish Listed Companies (Stockholm Exchange - ST)
+// Primary: Yahoo Finance (FREE) - works well for Swedish stocks
+// Fallback: EODHD (requires All-In-One package for EU fundamentals)
 // Exchange code: ST (Nasdaq Stockholm)
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 const EODHD_API_KEY = process.env.EODHD_API_KEY || ''
+
+// Yahoo Finance API - works for Swedish stocks with .ST suffix
+const YAHOO_QUOTE_URL = 'https://query1.finance.yahoo.com/v7/finance/quote'
+const YAHOO_FUNDAMENTALS_URL = 'https://query2.finance.yahoo.com/v10/finance/quoteSummary'
 
 let supabase: SupabaseClient | null = null
 
@@ -142,10 +147,108 @@ const SWEDISH_TICKERS = [
   'WIHL.ST',    // Wihlborgs
 ]
 
-// Fetch company fundamentals from EODHD
-async function fetchFundamentals(ticker: string): Promise<EODHDFundamentals | null> {
+// Fetch company data from Yahoo Finance (PRIMARY - FREE)
+async function fetchFromYahoo(ticker: string): Promise<EODHDFundamentals | null> {
+  try {
+    // Yahoo uses same .ST suffix for Swedish stocks
+    const response = await fetch(
+      `${YAHOO_FUNDAMENTALS_URL}/${ticker}?modules=assetProfile,summaryDetail,financialData,defaultKeyStatistics,incomeStatementHistory,balanceSheetHistory`,
+      {
+        headers: {
+          'Accept': 'application/json',
+          'User-Agent': 'Mozilla/5.0 (compatible; LicianBot/1.0)',
+        }
+      }
+    )
+
+    if (!response.ok) {
+      console.log(`Yahoo returned ${response.status} for ${ticker}`)
+      return null
+    }
+
+    const data = await response.json()
+    const result = data?.quoteSummary?.result?.[0]
+    if (!result) return null
+
+    const profile = result.assetProfile || {}
+    const summary = result.summaryDetail || {}
+    const financialData = result.financialData || {}
+    const keyStats = result.defaultKeyStatistics || {}
+    const incomeHistory = result.incomeStatementHistory?.incomeStatementHistory || []
+    const balanceHistory = result.balanceSheetHistory?.balanceSheetStatements || []
+
+    // Convert to EODHD-compatible format
+    const fundamentals: EODHDFundamentals = {
+      General: {
+        Name: profile.longBusinessSummary ? ticker.replace('.ST', '') : undefined,
+        Code: ticker.replace('.ST', ''),
+        Sector: profile.sector,
+        Industry: profile.industry,
+        Address: profile.address1,
+        WebURL: profile.website,
+        FullTimeEmployees: profile.fullTimeEmployees,
+        CountryISO: 'SE',
+      },
+      Highlights: {
+        MarketCapitalization: summary.marketCap?.raw,
+        PERatio: summary.trailingPE?.raw,
+        DividendYield: summary.dividendYield?.raw,
+        RevenueTTM: financialData.totalRevenue?.raw,
+        ProfitMargin: financialData.profitMargins?.raw,
+        OperatingMarginTTM: financialData.operatingMargins?.raw,
+        ReturnOnAssetsTTM: financialData.returnOnAssets?.raw,
+        ReturnOnEquityTTM: financialData.returnOnEquity?.raw,
+        EBITDA: financialData.ebitda?.raw,
+        BookValue: keyStats.bookValue?.raw,
+      },
+      Financials: {
+        Income_Statement: { yearly: {} },
+        Balance_Sheet: { yearly: {} },
+      },
+    }
+
+    // Parse income statements
+    for (const stmt of incomeHistory) {
+      const date = stmt.endDate?.fmt
+      if (!date) continue
+      fundamentals.Financials!.Income_Statement!.yearly![date] = {
+        totalRevenue: stmt.totalRevenue?.raw?.toString(),
+        grossProfit: stmt.grossProfit?.raw?.toString(),
+        operatingIncome: stmt.operatingIncome?.raw?.toString(),
+        incomeBeforeTax: stmt.incomeBeforeTax?.raw?.toString(),
+        incomeTaxExpense: stmt.incomeTaxExpense?.raw?.toString(),
+        netIncome: stmt.netIncome?.raw?.toString(),
+        ebit: stmt.ebit?.raw?.toString(),
+      }
+    }
+
+    // Parse balance sheets
+    for (const stmt of balanceHistory) {
+      const date = stmt.endDate?.fmt
+      if (!date) continue
+      fundamentals.Financials!.Balance_Sheet!.yearly![date] = {
+        totalAssets: stmt.totalAssets?.raw?.toString(),
+        totalCurrentAssets: stmt.totalCurrentAssets?.raw?.toString(),
+        totalLiab: stmt.totalLiab?.raw?.toString(),
+        totalCurrentLiabilities: stmt.totalCurrentLiabilities?.raw?.toString(),
+        totalStockholderEquity: stmt.totalStockholderEquity?.raw?.toString(),
+        retainedEarnings: stmt.retainedEarnings?.raw?.toString(),
+        cash: stmt.cash?.raw?.toString(),
+        shortTermDebt: stmt.shortTermBorrowings?.raw?.toString(),
+        longTermDebt: stmt.longTermDebt?.raw?.toString(),
+      }
+    }
+
+    return fundamentals
+  } catch (error) {
+    console.error(`Error fetching ${ticker} from Yahoo:`, error)
+    return null
+  }
+}
+
+// Fetch company fundamentals from EODHD (FALLBACK - requires paid plan)
+async function fetchFromEODHD(ticker: string): Promise<EODHDFundamentals | null> {
   if (!EODHD_API_KEY) {
-    console.log('EODHD API key not configured')
     return null
   }
 
@@ -168,21 +271,35 @@ async function fetchFundamentals(ticker: string): Promise<EODHDFundamentals | nu
   }
 }
 
+// Combined fetch - Yahoo primary, EODHD fallback
+async function fetchFundamentals(ticker: string): Promise<{ data: EODHDFundamentals | null; source: string }> {
+  // Try Yahoo first (FREE)
+  const yahooData = await fetchFromYahoo(ticker)
+  if (yahooData?.General?.Name || Object.keys(yahooData?.Financials?.Income_Statement?.yearly || {}).length > 0) {
+    return { data: yahooData, source: 'YAHOO' }
+  }
+
+  // Try EODHD as fallback
+  const eodhData = await fetchFromEODHD(ticker)
+  if (eodhData?.General?.Name) {
+    return { data: eodhData, source: 'EODHD' }
+  }
+
+  return { data: null, source: 'NONE' }
+}
+
 // Save company to Supabase
-async function saveCompany(ticker: string, data: EODHDFundamentals): Promise<boolean> {
+async function saveCompany(ticker: string, data: EODHDFundamentals, source: string = 'YAHOO'): Promise<boolean> {
   const general = data.General || {}
   const highlights = data.Highlights || {}
 
-  // Extract org number from ISIN if available (SE + 10 digits)
-  let orgNumber = ticker.replace('.ST', '')
-  if (general.ISIN?.startsWith('SE')) {
-    orgNumber = general.ISIN.slice(2, 12)
-  }
+  // Use ticker as org number for Swedish stocks (we don't always have ISIN)
+  const orgNumber = ticker.replace('.ST', '').replace('-', '')
 
   const record = {
     org_number: orgNumber,
     country_code: 'SE',
-    name: general.Name,
+    name: general.Name || ticker.replace('.ST', ''),
     ticker: ticker.replace('.ST', ''),
     exchange: 'NASDAQ_STOCKHOLM',
     isin: general.ISIN,
@@ -194,7 +311,7 @@ async function saveCompany(ticker: string, data: EODHDFundamentals): Promise<boo
     revenue_latest: highlights.RevenueTTM,
     is_listed: true,
     is_active: true,
-    source: 'EODHD',
+    source: source,
     source_url: general.WebURL,
     updated_at: new Date().toISOString(),
   }
@@ -215,14 +332,12 @@ async function saveCompany(ticker: string, data: EODHDFundamentals): Promise<boo
 }
 
 // Save financial statements
-async function saveFinancials(ticker: string, data: EODHDFundamentals): Promise<{ income: boolean; balance: boolean }> {
+async function saveFinancials(ticker: string, data: EODHDFundamentals, source: string = 'YAHOO'): Promise<{ income: boolean; balance: boolean }> {
   const financials = data.Financials
   const general = data.General || {}
 
-  let orgNumber = ticker.replace('.ST', '')
-  if (general.ISIN?.startsWith('SE')) {
-    orgNumber = general.ISIN.slice(2, 12)
-  }
+  // Use ticker as org number for Swedish stocks
+  const orgNumber = ticker.replace('.ST', '').replace('-', '')
 
   let incomeSuccess = false
   let balanceSuccess = false
@@ -249,7 +364,7 @@ async function saveFinancials(ticker: string, data: EODHDFundamentals): Promise<
         income_tax_expense: income.incomeTaxExpense ? parseFloat(income.incomeTaxExpense) : null,
         profit_for_the_year: income.netIncome ? parseFloat(income.netIncome) : null,
         ebitda: income.ebitda ? parseFloat(income.ebitda) : null,
-        source: 'EODHD',
+        source: source,
         updated_at: new Date().toISOString(),
       }
 
@@ -288,7 +403,7 @@ async function saveFinancials(ticker: string, data: EODHDFundamentals): Promise<
         cash_and_equivalents: balance.cash ? parseFloat(balance.cash) : null,
         short_term_debt: balance.shortTermDebt ? parseFloat(balance.shortTermDebt) : null,
         long_term_debt: balance.longTermDebt ? parseFloat(balance.longTermDebt) : null,
-        source: 'EODHD',
+        source: source,
         updated_at: new Date().toISOString(),
       }
 
@@ -317,44 +432,37 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Supabase configuration missing' }, { status: 500 })
   }
 
-  if (!EODHD_API_KEY) {
-    return NextResponse.json({
-      error: 'EODHD API key required',
-      note: 'Set EODHD_API_KEY environment variable',
-    }, { status: 500 })
-  }
-
   const startTime = Date.now()
 
   return withCronLogging('sync-swedish-stocks', async () => {
     // Single ticker mode
     if (ticker) {
       const fullTicker = ticker.includes('.ST') ? ticker : `${ticker}.ST`
-      const data = await fetchFundamentals(fullTicker)
+      const { data, source } = await fetchFundamentals(fullTicker)
 
-      if (!data || !data.General?.Name) {
+      if (!data || (!data.General?.Name && Object.keys(data.Financials?.Income_Statement?.yearly || {}).length === 0)) {
         return NextResponse.json({
           success: false,
           ticker: fullTicker,
-          error: 'Could not fetch data from EODHD',
+          error: 'Could not fetch data from Yahoo or EODHD',
         }, { status: 404 })
       }
 
-      const saved = await saveCompany(fullTicker, data)
-      const financials = await saveFinancials(fullTicker, data)
+      const saved = await saveCompany(fullTicker, data, source)
+      const financials = await saveFinancials(fullTicker, data, source)
 
       return NextResponse.json({
         success: saved,
         ticker: fullTicker,
         company: {
-          name: data.General.Name,
+          name: data.General?.Name || fullTicker.replace('.ST', ''),
           sector: data.General?.Sector,
           industry: data.General?.Industry,
           revenue: data.Highlights?.RevenueTTM,
           marketCap: data.Highlights?.MarketCapitalization,
         },
         financials: financials,
-        source: 'EODHD',
+        source: source,
         duration: Date.now() - startTime,
       })
     }
@@ -371,12 +479,13 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    // Rate limit: EODHD allows ~5 req/sec
-    const rateLimiter = new RateLimiter(3)
+    // Rate limit: Yahoo allows ~2 req/sec to be safe
+    const rateLimiter = new RateLimiter(2)
     const results: Array<{
       ticker: string
       name?: string
       success: boolean
+      source?: string
       financials?: { income: boolean; balance: boolean }
       error?: string
     }> = []
@@ -384,25 +493,30 @@ export async function GET(request: NextRequest) {
     let failCount = 0
     let incomeCount = 0
     let balanceCount = 0
+    let yahooCount = 0
+    let eodhCount = 0
 
     for (const tick of tickers) {
       await rateLimiter.wait()
 
       try {
-        const data = await fetchFundamentals(tick)
+        const { data, source } = await fetchFundamentals(tick)
 
-        if (data && data.General?.Name) {
-          const saved = await saveCompany(tick, data)
-          const financials = await saveFinancials(tick, data)
+        if (data && (data.General?.Name || Object.keys(data.Financials?.Income_Statement?.yearly || {}).length > 0)) {
+          const saved = await saveCompany(tick, data, source)
+          const financials = await saveFinancials(tick, data, source)
 
           if (saved) {
             successCount++
+            if (source === 'YAHOO') yahooCount++
+            else if (source === 'EODHD') eodhCount++
             if (financials.income) incomeCount++
             if (financials.balance) balanceCount++
             results.push({
               ticker: tick,
-              name: data.General.Name,
+              name: data.General?.Name || tick.replace('.ST', ''),
               success: true,
+              source,
               financials
             })
           } else {
@@ -425,7 +539,7 @@ export async function GET(request: NextRequest) {
 
     // Log sync
     await getSupabase().from('eu_sync_log').insert({
-      source: 'EODHD',
+      source: 'YAHOO_FINANCE',
       country_code: 'SE',
       sync_type: 'STOCKS',
       completed_at: new Date().toISOString(),
@@ -434,20 +548,22 @@ export async function GET(request: NextRequest) {
       financials_synced: incomeCount + balanceCount,
       errors: failCount,
       last_offset: offset + tickers.length,
-      details: { mode, incomeStatements: incomeCount, balanceSheets: balanceCount }
+      details: { mode, incomeStatements: incomeCount, balanceSheets: balanceCount, fromYahoo: yahooCount, fromEODHD: eodhCount }
     })
 
     return NextResponse.json({
       success: true,
-      source: 'EODHD',
+      source: 'YAHOO_FINANCE',
       country: 'SE',
       exchange: 'NASDAQ_STOCKHOLM',
-      apiNote: 'Uses EODHD API - requires API key',
+      apiNote: 'FREE - Uses Yahoo Finance (primary) with EODHD fallback',
       summary: {
         mode,
         tickersProcessed: tickers.length,
         successCount,
         failCount,
+        fromYahoo: yahooCount,
+        fromEODHD: eodhCount,
         incomeStatementsSaved: incomeCount,
         balanceSheetsSaved: balanceCount,
         duration: Date.now() - startTime,
