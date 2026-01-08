@@ -29,7 +29,7 @@ export default function HeroAIChat() {
   ]
 
   const transport = useMemo(() => new DefaultChatTransport({
-    api: "/api/chat",
+    api: "/api/chat/public", // Public endpoint with rate limiting (no auth required)
   }), [])
 
   const { messages, sendMessage, status, error } = useChat({
@@ -156,9 +156,14 @@ export default function HeroAIChat() {
                 </div>
               )}
               {error && (
-                <div className="text-center py-4">
-                  <p className="text-sm text-red-500 mb-2">Something went wrong. Please try again.</p>
-                  <Link href="/premium" className="text-sm text-green-500 hover:underline">
+                <div className="text-center py-4 px-4 bg-secondary/50 rounded-xl mx-4">
+                  <p className="text-sm text-muted-foreground mb-2">
+                    {error.message?.includes('429') || error.message?.includes('Rate limit')
+                      ? "You've used your free questions for this hour!"
+                      : "Something went wrong. Please try again."}
+                  </p>
+                  <Link href="/premium" className="inline-flex items-center gap-2 text-sm text-green-500 hover:underline font-medium">
+                    <Sparkles className="w-4 h-4" />
                     Upgrade to Premium for unlimited AI access
                   </Link>
                 </div>
