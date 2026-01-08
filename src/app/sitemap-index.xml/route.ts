@@ -43,6 +43,60 @@ ${Array.from({ length: warmSitemapCount }, (_, i) => `  <sitemap>
     <loc>${baseUrl}/sitemap-stocks-cold.xml?page=1</loc>
     <lastmod>${today}</lastmod>
   </sitemap>
+
+  <!-- METRIC PAGES: 442 metrics × 6,960 tickers = 3.1M pages -->
+  <sitemap>
+    <loc>${baseUrl}/sitemap-metrics-index.xml</loc>
+    <lastmod>${today}</lastmod>
+  </sitemap>
+
+  <!-- COMPARISON PAGES BY YEAR: 24M pairs × 12 years = 290M pages -->
+  <sitemap>
+    <loc>${baseUrl}/sitemap-compare-years-index.xml</loc>
+    <lastmod>${today}</lastmod>
+  </sitemap>
+
+  <!-- COMPARISON PAGES BY QUARTER: 24M pairs × 24 quarters = 581M pages -->
+  <sitemap>
+    <loc>${baseUrl}/sitemap-compare-quarters-index.xml</loc>
+    <lastmod>${today}</lastmod>
+  </sitemap>
+
+  <!-- COMPARISON PAGES: Base compare sitemap -->
+  <sitemap>
+    <loc>${baseUrl}/sitemap-compare-index.xml</loc>
+    <lastmod>${today}</lastmod>
+  </sitemap>
+
+  <!-- EARNINGS PAGES: 6,960 tickers × 24 quarters = 167K pages -->
+  <sitemap>
+    <loc>${baseUrl}/sitemap-earnings-index.xml</loc>
+    <lastmod>${today}</lastmod>
+  </sitemap>
+
+  <!-- INSIDER TRADING: ~7K pages -->
+  <sitemap>
+    <loc>${baseUrl}/sitemap-insider-index.xml</loc>
+    <lastmod>${today}</lastmod>
+  </sitemap>
+
+  <!-- INSTITUTIONAL HOLDINGS: ~7K pages -->
+  <sitemap>
+    <loc>${baseUrl}/sitemap-institutional-index.xml</loc>
+    <lastmod>${today}</lastmod>
+  </sitemap>
+
+  <!-- SHORT INTEREST: ~7K pages -->
+  <sitemap>
+    <loc>${baseUrl}/sitemap-short-interest-index.xml</loc>
+    <lastmod>${today}</lastmod>
+  </sitemap>
+
+  <!-- SECTORS: Industry & sector pages -->
+  <sitemap>
+    <loc>${baseUrl}/sitemap-sectors.xml</loc>
+    <lastmod>${today}</lastmod>
+  </sitemap>
 </sitemapindex>`
 
   return new NextResponse(sitemapIndex, {
