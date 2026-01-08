@@ -114,7 +114,9 @@
       "mcp__plugin_supabase-toolkit_supabase__search_docs",
       "WebFetch(domain:sdk.vercel.ai)",
       "WebFetch(domain:lician.com)",
-      "Bash(timeout 45 curl:*)"
+      "Bash(timeout 45 curl:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:v5.ai-sdk.dev)"
     ],
     "deny": [],
     "ask": []
