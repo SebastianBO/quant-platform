@@ -6,41 +6,40 @@ completion_promise: "LICIAN FULLY IMPROVED"
 started_at: "2026-01-08T12:30:00Z"
 ---
 
-## Ralph Loop Progress - Iteration 2
+## Ralph Loop Progress - Iteration 3
 
 ### COMPLETED THIS ITERATION:
 
-1. **File Upload API** (`/api/upload`)
-   - Supports PDF, TXT, CSV files
-   - Up to 10MB file size
-   - Returns parsed content for AI processing
+1. **Build Errors Fixed**
+   - Added global-error.tsx for proper error boundary
+   - Set best-stocks pages to force-dynamic to avoid prerender issues
+   - Build now completes successfully
 
-2. **Source Attribution Components** (`/components/ui/source-badge.tsx`)
-   - SourceBadge shows data origin (Lician, Web, SEC, Company, Market)
-   - SourceCitation for listing multiple sources
-   - Color-coded badges with icons
+2. **News Headlines Integrated**
+   - Fetches market news from /api/market-news on homepage load
+   - Displays 4 news headlines in 2-column responsive grid
+   - Shows sentiment indicators (green up/red down/neutral)
+   - Displays source badges (Bloomberg, Reuters, etc.)
+   - Shows relevant ticker symbols
+   - Links open in new tab
 
-3. **News Components** (`/components/ui/news-card.tsx`)
-   - NewsCard for individual news items with sentiment
-   - NewsList for displaying multiple headlines
-   - Time-ago formatting, source badges, ticker tags
+### PREVIOUSLY COMPLETED:
 
-4. **Stripe Quick Checkout** (`/api/stripe/quick-checkout`)
-   - Direct checkout without login required
-   - Redirects straight to Stripe from "Start free trial"
-   - Supports annual (3-day trial) and monthly plans
-
-5. **ManusStyleHome Improvements**
-   - File upload now parses content before sending to chat
-   - Shows upload progress in task list
-   - "Start free trial" links directly to Stripe checkout
+- File Upload API (`/api/upload`) - PDF, TXT, CSV support
+- Source Attribution Components (`SourceBadge`, `SourceCitation`)
+- News Components (`NewsCard`, `NewsList`)
+- Stripe Quick Checkout (`/api/stripe/quick-checkout`)
+- ManusStyleHome integrated chat (no transition)
 
 ### REMAINING OBJECTIVES:
-- Fix build errors in some pages (global-error, best-stocks)
-- Integrate news headlines into the chat interface
-- Add more PDF parsing capability (full text extraction)
-- Test all flows end-to-end
-- Add portfolio connection (Plaid integration exists but needs UI)
+- Add proper PDF text extraction (current is placeholder)
+- Add portfolio connection UI (Plaid APIs exist)
+- Test all flows end-to-end on production
 
-### STATUS: Making Progress
-More iterations needed to complete all objectives.
+### STATUS: Good Progress
+Platform now has:
+- Manus-style chat interface
+- News headlines with sentiment
+- File upload (basic)
+- Direct Stripe checkout
+- Market movers carousel
