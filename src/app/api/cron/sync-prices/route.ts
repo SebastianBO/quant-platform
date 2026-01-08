@@ -9,7 +9,7 @@ import {
 // SMART PRICE SYNC - Uses BOTH EODHD (batch) + Yahoo Finance (backup)
 // EODHD for efficiency (20+ stocks per request)
 // Yahoo Finance for any missing/failed stocks
-// VERSION: 2026-01-08-v2
+// VERSION: 2026-01-08-v3 - Force redeploy to apply DB fixes
 
 const EODHD_API_KEY = process.env.EODHD_API_KEY || ''
 const YAHOO_FINANCE_URL = 'https://query1.finance.yahoo.com/v8/finance/chart'
@@ -248,7 +248,7 @@ export async function GET(request: NextRequest) {
           const saved = await savePrices([priceData])
           return NextResponse.json({
             success: true,
-            version: 'v2',
+            version: 'v3',
             ticker: priceData.ticker,
             price: priceData.price,
             change: priceData.change,
