@@ -311,6 +311,39 @@ export async function GET(request: NextRequest) {
       const formIndex = Math.floor(offset / 10000) % orgForms.length
       const innerPage = Math.floor((offset % 10000) / limit)
       orgNumbers = await searchCompanies({ orgForm: orgForms[formIndex], size: limit, page: innerPage })
+    } else if (mode === 'kommune') {
+      // Search by municipality - use kommune parameter to filter
+      // Major Norwegian municipalities: Oslo (0301), Bergen (4601), Trondheim (5001), Stavanger (1103), etc.
+      const kommune = query || '0301' // Default to Oslo
+      orgNumbers = await searchCompanies({ kommunenummer: kommune, size: limit, page: Math.floor(offset / limit) })
+    } else if (mode === 'bulk') {
+      // Bulk mode: Cycle through major municipalities
+      // Each municipality can return up to 10,000 companies
+      const kommuner = [
+        '0301', // Oslo ~100K companies
+        '4601', // Bergen ~30K companies
+        '5001', // Trondheim ~25K companies
+        '1103', // Stavanger ~20K companies
+        '1505', // Kristiansund
+        '1902', // Tromsø
+        '0906', // Arendal
+        '1804', // Bodø
+        '1001', // Kristiansand
+        '1601', // Trondheim old
+        '0602', // Drammen
+        '0502', // Gjøvik
+        '1106', // Haugesund
+        '0706', // Sandefjord
+        '1149', // Karmøy
+        '0403', // Hamar
+        '0231', // Skedsmo
+        '0104', // Moss
+        '0220', // Asker
+        '0219', // Bærum
+      ]
+      const kommuneIndex = Math.floor(offset / 10000) % kommuner.length
+      const innerPage = Math.floor((offset % 10000) / limit)
+      orgNumbers = await searchCompanies({ kommunenummer: kommuner[kommuneIndex], size: limit, page: innerPage })
     } else {
       // Default: known major companies
       orgNumbers = KNOWN_NORWEGIAN_COMPANIES.slice(offset, offset + limit)
