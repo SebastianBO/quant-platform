@@ -1,9 +1,9 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { Database, Globe, FileText, Building2, BarChart3 } from "lucide-react"
+import { Database, Globe, FileText, Building2, BarChart3, Brain, Sparkles } from "lucide-react"
 
-export type SourceType = "lician" | "web" | "sec" | "company" | "market"
+export type SourceType = "lician" | "web" | "sec" | "company" | "market" | "deep-thinking" | "firecrawl"
 
 interface SourceBadgeProps {
   type: SourceType
@@ -36,6 +36,16 @@ const SOURCE_CONFIG = {
     icon: BarChart3,
     label: "Market Data",
     color: "bg-cyan-500/10 text-cyan-600 border-cyan-500/20",
+  },
+  "deep-thinking": {
+    icon: Brain,
+    label: "Deep Thinking",
+    color: "bg-violet-500/10 text-violet-600 border-violet-500/20",
+  },
+  firecrawl: {
+    icon: Sparkles,
+    label: "Firecrawl",
+    color: "bg-orange-500/10 text-orange-600 border-orange-500/20",
   },
 }
 
