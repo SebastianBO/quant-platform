@@ -204,21 +204,24 @@ async function saveCompany(company: FinnishCompany): Promise<boolean> {
     founded_year: company.registrationDate ? parseInt(company.registrationDate.split('-')[0]) : undefined,
     is_active: isActive,
     is_listed: company.companyForm === 'OYJ', // Public limited companies
-    lei: company.euId, // Store EU business ID in LEI field (similar identifier)
+    // Note: company.euId stored in trade_name as PRH EU identifier
+    trade_name: company.euId,
     source: 'PRH',
     source_url: `https://tietopalvelu.ytj.fi/yritystiedot.aspx?yavain=${company.businessId?.replace('-', '')}`,
     updated_at: new Date().toISOString(),
   }
 
-  const { error } = await getSupabase()
+  const { error, data } = await getSupabase()
     .from('eu_companies')
     .upsert(record, {
       onConflict: 'country_code,org_number',
       ignoreDuplicates: false
     })
+    .select()
 
   if (error) {
-    console.error(`Failed to save Finnish company ${company.businessId}:`, error)
+    console.error(`Failed to save Finnish company ${company.businessId}:`, JSON.stringify(error, null, 2))
+    console.error('Record attempted:', JSON.stringify(record, null, 2))
     return false
   }
 
