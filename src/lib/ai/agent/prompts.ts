@@ -369,7 +369,7 @@ ANSWER GUIDELINES:
 - Use plain text, no markdown headers
 - Keep it concise but complete
 
-IMPORTANT: End with a "Sources" section listing the data tools used.`
+Do NOT include a sources section - sources are automatically displayed by the UI.`
 
 export const ANSWER_USER_PROMPT = (
   query: string,
