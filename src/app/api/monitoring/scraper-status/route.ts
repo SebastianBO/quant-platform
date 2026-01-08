@@ -86,6 +86,7 @@ export async function GET(request: NextRequest) {
 
 async function getTableStats(): Promise<TableStats[]> {
   const tables = [
+    // US Tables
     { name: 'income_statements', minDaily: 50 },
     { name: 'balance_sheets', minDaily: 50 },
     { name: 'cash_flow_statements', minDaily: 50 },
@@ -96,6 +97,12 @@ async function getTableStats(): Promise<TableStats[]> {
     { name: 'short_volume', minDaily: 100 },
     { name: 'sec_filings', minDaily: 20 },
     { name: 'clinical_trials', minDaily: 0 },
+    // EU Tables
+    { name: 'eu_companies', minDaily: 10 },
+    { name: 'eu_income_statements', minDaily: 5 },
+    { name: 'eu_balance_sheets', minDaily: 5 },
+    { name: 'eu_cash_flow_statements', minDaily: 0 },
+    { name: 'eu_sync_log', minDaily: 1 },
   ]
 
   const stats: TableStats[] = []
