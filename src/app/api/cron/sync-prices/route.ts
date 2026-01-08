@@ -243,16 +243,28 @@ export async function GET(request: NextRequest) {
       }
 
       if (priceData) {
-        await savePrices([priceData])
-        return NextResponse.json({
-          success: true,
-          ticker: priceData.ticker,
-          price: priceData.price,
-          change: priceData.change,
-          changePercent: priceData.changePercent,
-          source: priceData.source,
-          duration: Date.now() - startTime,
-        })
+        try {
+          const saved = await savePrices([priceData])
+          return NextResponse.json({
+            success: true,
+            ticker: priceData.ticker,
+            price: priceData.price,
+            change: priceData.change,
+            changePercent: priceData.changePercent,
+            source: priceData.source,
+            saved,
+            duration: Date.now() - startTime,
+          })
+        } catch (saveError) {
+          return NextResponse.json({
+            success: false,
+            ticker: priceData.ticker,
+            price: priceData.price,
+            error: saveError instanceof Error ? saveError.message : 'Save failed',
+            source: priceData.source,
+            duration: Date.now() - startTime,
+          })
+        }
       }
 
       return NextResponse.json({

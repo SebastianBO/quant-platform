@@ -1152,7 +1152,7 @@ export const crawlInvestorRelationsTool = tool({
           formats: ['markdown'],
           onlyMainContent: true,
         },
-      }) as { success?: boolean; data?: Array<{ url: string; markdown?: string; metadata?: { title?: string } }> }
+      }) as unknown as { success?: boolean; data?: Array<{ url: string; markdown?: string; metadata?: { title?: string } }> }
 
       if (crawlResult.success && crawlResult.data && crawlResult.data.length > 0) {
         // Summarize findings
