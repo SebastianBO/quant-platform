@@ -71,6 +71,34 @@ const COMPANY_TICKERS: Record<string, string> = {
   'barclays': 'EU:GB:BARCLAYS',
   'lloyds': 'EU:GB:LLOYDS',
   'tesco': 'EU:GB:TESCO',
+  // Danish Companies (use EU tools)
+  'novo nordisk': 'EU:DK:NOVONORDISK',
+  'novo': 'EU:DK:NOVONORDISK',
+  'maersk': 'EU:DK:MAERSK',
+  'mærsk': 'EU:DK:MAERSK',
+  'vestas': 'EU:DK:VESTAS',
+  'danske bank': 'EU:DK:DANSKEBANK',
+  'carlsberg': 'EU:DK:CARLSBERG',
+  'dsv': 'EU:DK:DSV',
+  'pandora': 'EU:DK:PANDORA',
+  'coloplast': 'EU:DK:COLOPLAST',
+  'orsted': 'EU:DK:ORSTED',
+  'ørsted': 'EU:DK:ORSTED',
+  'lego': 'EU:DK:LEGO',
+  // Finnish Companies (use EU tools)
+  'nokia': 'EU:FI:NOKIA',
+  'fortum': 'EU:FI:FORTUM',
+  'kone': 'EU:FI:KONE',
+  'upm': 'EU:FI:UPM',
+  'neste': 'EU:FI:NESTE',
+  'wartsila': 'EU:FI:WARTSILA',
+  'wärtsilä': 'EU:FI:WARTSILA',
+  'stora enso': 'EU:FI:STORAENSO',
+  'elisa': 'EU:FI:ELISA',
+  'sampo': 'EU:FI:SAMPO',
+  'kesko': 'EU:FI:KESKO',
+  'supercell': 'EU:FI:SUPERCELL',
+  'rovio': 'EU:FI:ROVIO',
 }
 
 export const UNDERSTAND_SYSTEM_PROMPT = `You are Lician AI, an autonomous financial research agent on lician.com.
@@ -84,6 +112,13 @@ Current date: ${getCurrentDate()}
 
 IMPORTANT RULES:
 - Normalize company names to ticker symbols (e.g., "Apple" → "AAPL", "Tesla" → "TSLA")
+- For EUROPEAN companies (Swedish, Norwegian, UK, German, etc.), mark as "EU:COUNTRY:COMPANY"
+  Examples: "Volvo" → "EU:SE:VOLVO", "Equinor" → "EU:NO:EQUINOR", "Shell" → "EU:GB:SHELL"
+- Swedish companies: Volvo, Ericsson, H&M, SEB, Nordea, IKEA, Klarna, Atlas Copco, Sandvik
+- Norwegian companies: Equinor, DNB, Telenor, Norsk Hydro, Yara, Mowi, Orkla
+- Danish companies: Novo Nordisk, Maersk, Vestas, Danske Bank, Carlsberg, DSV, Pandora, Coloplast, Ørsted, LEGO
+- Finnish companies: Nokia, Fortum, KONE, UPM, Neste, Wärtsilä, Stora Enso, Elisa, Sampo, Supercell
+- UK companies: Shell, BP, HSBC, Unilever, AstraZeneca, GSK, Barclays, Tesco
 - Extract all mentioned tickers, even implied ones
 - Identify the time period if mentioned (e.g., "last quarter", "2024", "past year")
 - Classify complexity:

@@ -73,6 +73,18 @@
     {
       "path": "/api/cron/sync-swedish-stocks?limit=20",
       "schedule": "0 */8 * * *"
+    },
+    {
+      "path": "/api/cron/sync-danish-companies?mode=known&limit=25",
+      "schedule": "15 */6 * * *"
+    },
+    {
+      "path": "/api/cron/sync-finnish-companies?mode=known&limit=25",
+      "schedule": "45 */6 * * *"
+    },
+    {
+      "path": "/api/cron/sync-finnish-companies?mode=oyj&limit=50",
+      "schedule": "0 3 * * *"
     }
   ]
 }
