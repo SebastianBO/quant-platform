@@ -88,5 +88,11 @@ Sitemap: https://lician.com/sitemap-stocks-warm.xml?page=5
 Sitemap: https://lician.com/sitemap-stocks-warm.xml?page=6
 Sitemap: https://lician.com/sitemap-stocks-cold.xml?page=1
 
+# Sitemaps - Comparison Pages (172K+ stock vs stock comparisons)
+Sitemap: https://lician.com/sitemap-compare-index.xml
+
+# Sitemaps - Metric Pages (80+ metrics × 588 stocks = 47K+ pages)
+Sitemap: https://lician.com/sitemap-metrics-index.xml
+
 # Host
 Host: https://lician.com

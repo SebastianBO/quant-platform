@@ -107,7 +107,10 @@
       "Bash(then echo \"$f\")",
       "Bash(fi)",
       "Bash(for f in src/app/insights/*/page.tsx)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "mcp__plugin_supabase-toolkit_supabase__list_migrations",
+      "mcp__plugin_supabase-toolkit_supabase__list_extensions",
+      "WebFetch(domain:docs.firecrawl.dev)"
     ],
     "deny": [],
     "ask": []

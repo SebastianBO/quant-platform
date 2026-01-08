@@ -105,6 +105,47 @@ const SP500_ADDITIONAL = [
   'BXP', 'VNO',
 ]
 
+// Extended S&P 500 + Russell 1000 stocks for comprehensive coverage
+const EXTENDED_STOCKS = [
+  // More S&P 500
+  'AIG', 'AIZ', 'AJG', 'AKAM', 'ALB', 'ALGN', 'ALLE', 'AMCR', 'AOS', 'APA',
+  'APH', 'APTV', 'ARE', 'ATO', 'AWK', 'BBY', 'BDX', 'BEN', 'BIO', 'BK',
+  'BR', 'BRO', 'BWA', 'CAG', 'CAH', 'CARR', 'CBOE', 'CDW', 'CE', 'CEG',
+  'CF', 'CFG', 'CHRW', 'CINF', 'CMA', 'CMS', 'CNC', 'CNP', 'COO', 'CPB',
+  'CPT', 'CRL', 'CSGP', 'CTLT', 'CTRA', 'CTSH', 'CTVA', 'CZR', 'DAL', 'DFS',
+  'DGX', 'DOV', 'DPZ', 'DRI', 'DTE', 'DVA', 'EBAY', 'EFX', 'EG', 'EIX',
+  'EL', 'EMN', 'EPAM', 'ES', 'ESS', 'ETR', 'EVRG', 'EW', 'EXPD', 'EXPE',
+  'FFIV', 'FIS', 'FITB', 'FLT', 'FMC', 'FOX', 'FOXA', 'FRT', 'FTNT', 'FTV',
+  'GEN', 'GL', 'GLW', 'GPC', 'GPN', 'GRMN', 'GWW', 'HAS', 'HBAN', 'HOLX',
+  'HPE', 'HPQ', 'HRL', 'HSIC', 'HST', 'HUBB', 'HWM', 'IEX', 'IFF', 'ILMN',
+  'INCY', 'INVH', 'IP', 'IPG', 'IR', 'IRM', 'IT', 'IVZ', 'J', 'JBHT',
+  'JCI', 'JKHY', 'JNPR', 'K', 'KDP', 'KEY', 'KEYS', 'KIM', 'KMX', 'L',
+  'LDOS', 'LH', 'LHX', 'LKQ', 'LNC', 'LNT', 'LVS', 'LW', 'LYB', 'LYV',
+  'MAA', 'MAS', 'MCHP', 'MCK', 'MCO', 'MGM', 'MHK', 'MKC', 'MKTX', 'MLM',
+  'MOS', 'MPWR', 'MRO', 'MSCI', 'MSI', 'MTB', 'MTCH', 'MTD', 'NDAQ', 'NDSN',
+  'NI', 'NRG', 'NTAP', 'NTRS', 'NVR', 'NWL', 'NWS', 'NWSA', 'OGN', 'OMC',
+  'PARA', 'PAYC', 'PCAR', 'PCG', 'PEAK', 'PEG', 'PFG', 'PKG', 'PNR', 'PNW',
+  'POOL', 'PPG', 'PPL', 'PRU', 'PTC', 'PVH', 'PWR', 'QRVO', 'REG', 'RF',
+  'RHI', 'RJF', 'RL', 'RMD', 'ROL', 'ROP', 'RVTY', 'SJM', 'SLB', 'SMCI',
+  'SNPS', 'STE', 'STLD', 'STT', 'STX', 'SWK', 'SWKS', 'SYF', 'SYY', 'TAP',
+  'TECH', 'TEL', 'TER', 'TFC', 'TFX', 'TPR', 'TRGP', 'TRMB', 'TROW', 'TSCO',
+  'TSN', 'TT', 'TYL', 'UAL', 'UDR', 'UHS', 'ULTA', 'URI', 'VFC', 'VLTO',
+  'VTR', 'VTRS', 'WAB', 'WAT', 'WBA', 'WDC', 'WRB', 'WRK', 'WST', 'WTW',
+  'WY', 'WYNN', 'XRAY', 'XYL', 'ZBH', 'ZBRA', 'ZION',
+  // Popular meme/retail stocks
+  'GME', 'AMC', 'BBBY', 'BB', 'NOK', 'WISH', 'CLOV', 'SPCE', 'LCID', 'TLRY',
+  'SNDL', 'PLUG', 'FCEL', 'BLNK', 'QS', 'CHPT', 'GOEV', 'RIDE', 'WKHS', 'FSR',
+  // High-growth tech
+  'PATH', 'MNDY', 'CFLT', 'BILL', 'HUBS', 'TWLO', 'SQ', 'AFRM', 'UPST', 'LC',
+  'TOST', 'BROS', 'DTC', 'FVRR', 'ETSY', 'W', 'CHWY', 'PTON', 'BMBL', 'MTTR',
+  // Biotech
+  'SGEN', 'ALNY', 'EXAS', 'RARE', 'NBIX', 'SRPT', 'IONS', 'BMRN', 'UTHR', 'INCY',
+  'HZNP', 'JAZZ', 'BIO', 'TECH', 'HOLX', 'ALGN', 'PODD', 'DXCM', 'NVST', 'TFX',
+  // International ADRs
+  'BABA', 'JD', 'PDD', 'BIDU', 'NIO', 'XPEV', 'LI', 'TSM', 'ASML', 'SAP',
+  'NVS', 'AZN', 'GSK', 'SNY', 'NVO', 'SONY', 'TM', 'HMC', 'MUFG', 'SMFG',
+]
+
 // Combine all stocks and remove duplicates
 export const ALL_STOCKS = Array.from(new Set([
   ...MEGA_CAP,
@@ -120,6 +161,7 @@ export const ALL_STOCKS = Array.from(new Set([
   ...GROWTH,
   ...ETFS,
   ...SP500_ADDITIONAL,
+  ...EXTENDED_STOCKS,
 ]))
 
 // Export total count for reference
