@@ -26,8 +26,30 @@ import {
   Check,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 type Phase = 'idle' | 'understand' | 'plan' | 'execute' | 'reflect' | 'answer' | 'complete' | 'error'
+
+// Available models
+interface ModelOption {
+  key: string
+  name: string
+  tier: 'premium' | 'standard' | 'fast'
+}
+
+const MODELS: ModelOption[] = [
+  { key: 'gpt-4o-mini', name: 'GPT-4o Mini', tier: 'standard' },
+  { key: 'claude-3-5-sonnet', name: 'Claude 3.5 Sonnet', tier: 'standard' },
+  { key: 'gpt-4o', name: 'GPT-4o', tier: 'premium' },
+  { key: 'claude-sonnet-4', name: 'Claude Sonnet 4', tier: 'premium' },
+  { key: 'llama-3.3-70b', name: 'Llama 3.3 70B', tier: 'standard' },
+  { key: 'gemini-flash', name: 'Gemini Flash', tier: 'fast' },
+]
 
 interface AgentEvent {
   type: string
@@ -298,6 +320,7 @@ export default function AutonomousChat() {
   const [isLoading, setIsLoading] = useState(false)
   const [currentPhase, setCurrentPhase] = useState<Phase>('idle')
   const [tasks, setTasks] = useState<Task[]>([])
+  const [selectedModel, setSelectedModel] = useState(MODELS[0])
   const scrollRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [streamingMessageId, setStreamingMessageId] = useState<string | null>(null)
@@ -349,6 +372,7 @@ export default function AutonomousChat() {
             role: m.role,
             content: m.content,
           })),
+          model: selectedModel.key,
           stream: true,
         }),
       })
@@ -576,9 +600,38 @@ export default function AutonomousChat() {
               )}
             </Button>
           </div>
-          <p className="text-xs text-muted-foreground mt-2 text-center">
-            Press Enter to send, Shift+Enter for new line
-          </p>
+          <div className="flex items-center justify-between mt-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-8 gap-2 text-muted-foreground hover:text-foreground">
+                  <span className="text-xs">{selectedModel.name}</span>
+                  <ChevronDown className="w-3 h-3" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-48">
+                {MODELS.map((model) => (
+                  <DropdownMenuItem
+                    key={model.key}
+                    onClick={() => setSelectedModel(model)}
+                    className="flex items-center justify-between"
+                  >
+                    <span className="text-sm">{model.name}</span>
+                    <span className={cn(
+                      "text-[10px] px-1.5 py-0.5 rounded",
+                      model.tier === 'premium' && "bg-amber-500/20 text-amber-600",
+                      model.tier === 'standard' && "bg-blue-500/20 text-blue-600",
+                      model.tier === 'fast' && "bg-green-500/20 text-green-600"
+                    )}>
+                      {model.tier}
+                    </span>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <p className="text-xs text-muted-foreground">
+              Enter to send
+            </p>
+          </div>
         </div>
       </div>
     </div>
