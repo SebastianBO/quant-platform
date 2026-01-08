@@ -198,6 +198,9 @@ async function getFinancialPeriods(businessId: string): Promise<Array<{ date: st
   }
 }
 
+// Track the last error for debugging
+let lastSaveError: any = null
+
 // Save company to Supabase
 async function saveCompany(company: FinnishCompany): Promise<boolean> {
   // Finnish company form codes
@@ -246,12 +249,19 @@ async function saveCompany(company: FinnishCompany): Promise<boolean> {
     .select()
 
   if (error) {
+    lastSaveError = { error, record }
     console.error(`Failed to save Finnish company ${company.businessId}:`, JSON.stringify(error, null, 2))
     console.error('Record attempted:', JSON.stringify(record, null, 2))
     return false
   }
 
+  lastSaveError = null
   return true
+}
+
+// Get last save error for debugging
+function getLastSaveError() {
+  return lastSaveError
 }
 
 // Major Finnish companies (OMXH25 + notable)
@@ -390,7 +400,13 @@ export async function GET(request: NextRequest) {
             })
           } else {
             failCount++
-            results.push({ businessId: id, name: company.name, success: false, error: 'Save failed' })
+            results.push({
+              businessId: id,
+              name: company.name,
+              success: false,
+              error: 'Save failed',
+              debug: { orgNum: company.businessId, form: company.companyForm }
+            })
           }
         } else {
           failCount++
@@ -438,6 +454,7 @@ export async function GET(request: NextRequest) {
         nextOffset: offset + businessIds.length,
       },
       results: results.slice(0, 10),
+      lastError: failCount > 0 ? getLastSaveError() : null,
     })
   })
 }
