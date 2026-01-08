@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import {
@@ -10,6 +10,7 @@ import {
   Calculator,
   BarChart3,
   TrendingUp,
+  TrendingDown,
   Search,
   Calendar,
   FileText,
@@ -25,33 +26,60 @@ import {
   Building2,
   LineChart,
   Briefcase,
+  Zap,
+  Share2,
+  ChevronDown,
+  Loader2,
+  CheckCircle2,
+  User,
+  CreditCard,
+  Gift,
+  LayoutDashboard,
+  Target,
+  Newspaper,
+  Shield,
+  Globe,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { createClient } from "@/lib/supabase-browser"
 import StockLogo from "@/components/StockLogo"
+import AutonomousChat from "@/components/AutonomousChat"
 
-// Financial tool actions
+// Sidebar navigation - main tools
+const SIDEBAR_TOP = [
+  { id: "new", icon: Plus, label: "New chat", href: null, action: "new" },
+  { id: "search", icon: Search, label: "Search stocks", href: "/screener" },
+  { id: "markets", icon: TrendingUp, label: "Markets", href: "/markets" },
+  { id: "screener", icon: BarChart3, label: "Screener", href: "/screener" },
+]
+
+// Sidebar - account & settings
+const SIDEBAR_BOTTOM = [
+  { id: "portfolio", icon: Briefcase, label: "Portfolio", href: "/dashboard/portfolios" },
+  { id: "watchlist", icon: Target, label: "Watchlist", href: "/dashboard/watchlist" },
+  { id: "alerts", icon: Bell, label: "Alerts", href: "/dashboard/alerts" },
+  { id: "settings", icon: Settings, label: "Settings", href: "/dashboard/settings" },
+]
+
+// Financial tool actions (shown as pill buttons)
 const FINANCIAL_TOOLS = [
   { id: "portfolio", label: "Connect Portfolio", icon: Wallet, href: "/dashboard/portfolios" },
   { id: "screener", label: "Stock Screener", icon: BarChart3, href: "/screener" },
   { id: "compare", label: "Compare Stocks", icon: LineChart, href: "/compare" },
-  { id: "earnings", label: "Earnings Calendar", icon: Calendar, href: "/earnings" },
+  { id: "taxes", label: "Calculate Taxes", icon: Calculator, href: "/tools/tax-calculator" },
   { id: "more", label: "More", icon: MoreHorizontal, href: null },
 ]
 
-// Sidebar navigation items
-const SIDEBAR_ITEMS = [
-  { id: "new", icon: Plus, label: "New chat", href: "/" },
-  { id: "search", icon: Search, label: "Search", href: "/screener" },
-  { id: "markets", icon: TrendingUp, label: "Markets", href: "/markets" },
-  { id: "history", icon: History, label: "History", href: "/dashboard" },
-]
-
-const SIDEBAR_BOTTOM = [
-  { id: "portfolio", icon: Briefcase, label: "Portfolio", href: "/dashboard/portfolios" },
-  { id: "tools", icon: PieChart, label: "Tools", href: "/tools" },
-  { id: "alerts", icon: Bell, label: "Alerts", href: "/dashboard/alerts" },
-  { id: "settings", icon: Settings, label: "Settings", href: "/dashboard/settings" },
+// More tools dropdown
+const MORE_TOOLS = [
+  { label: "Earnings Calendar", icon: Calendar, href: "/earnings" },
+  { label: "DCF Valuation", icon: FileText, href: "/tools/dcf" },
+  { label: "Insider Trading", icon: Building2, href: "/insider-trading" },
+  { label: "Top Gainers", icon: Flame, href: "/markets/top-gainers" },
+  { label: "Short Interest", icon: TrendingDown, href: "/short-interest" },
+  { label: "FDA Calendar", icon: Shield, href: "/biotech/fda-calendar" },
+  { label: "Market News", icon: Newspaper, href: "/news" },
+  { label: "Economic Calendar", icon: Globe, href: "/economic-calendar" },
 ]
 
 interface Mover {
@@ -64,18 +92,37 @@ interface Mover {
 export default function ManusStyleHome() {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-  const [input, setInput] = useState("")
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [credits, setCredits] = useState(300) // Default free credits
+  const [showChat, setShowChat] = useState(false)
   const [movers, setMovers] = useState<Mover[]>([])
   const [showMoreTools, setShowMoreTools] = useState(false)
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const [sidebarExpanded, setSidebarExpanded] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
   const supabase = createClient()
+
+  // Check for query param to auto-start chat
+  useEffect(() => {
+    const query = searchParams.get("q")
+    if (query) {
+      setShowChat(true)
+    }
+  }, [searchParams])
 
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       setUser(user)
+
+      // Load credits from localStorage or default
+      if (user) {
+        const savedCredits = localStorage.getItem(`credits_${user.id}`)
+        setCredits(savedCredits ? parseInt(savedCredits, 10) : 1000) // Premium users get more
+      } else {
+        const savedCredits = localStorage.getItem("credits_anonymous")
+        setCredits(savedCredits ? parseInt(savedCredits, 10) : 300)
+      }
+
       setLoading(false)
     }
     checkAuth()
@@ -90,14 +137,6 @@ export default function ManusStyleHome() {
       .catch(() => {})
   }, [supabase.auth])
 
-  const handleSubmit = async () => {
-    if (!input.trim() || isSubmitting) return
-    setIsSubmitting(true)
-
-    // Navigate to chat with the query
-    router.push(`/?q=${encodeURIComponent(input.trim())}`)
-  }
-
   const handleToolClick = (tool: typeof FINANCIAL_TOOLS[0]) => {
     if (tool.id === "more") {
       setShowMoreTools(!showMoreTools)
@@ -106,39 +145,55 @@ export default function ManusStyleHome() {
     }
   }
 
-  // More tools dropdown
-  const MORE_TOOLS = [
-    { label: "Calculate Taxes", icon: Calculator, href: "/tools/tax-calculator" },
-    { label: "DCF Valuation", icon: FileText, href: "/tools/dcf" },
-    { label: "Insider Trading", icon: Building2, href: "/insider-trading" },
-    { label: "Top Gainers", icon: Flame, href: "/markets/top-gainers" },
-  ]
+  const handleSidebarAction = (item: typeof SIDEBAR_TOP[0]) => {
+    if (item.action === "new") {
+      setShowChat(false)
+      // Small delay then show fresh chat
+      setTimeout(() => setShowChat(true), 100)
+    } else if (item.href) {
+      router.push(item.href)
+    }
+  }
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-screen bg-background overflow-hidden">
       {/* Left Sidebar */}
-      <aside className="w-14 flex flex-col items-center py-4 border-r border-border bg-card/50">
+      <aside
+        className={cn(
+          "flex flex-col items-center py-4 border-r border-border bg-card/50 transition-all duration-200",
+          sidebarExpanded ? "w-48" : "w-14"
+        )}
+        onMouseEnter={() => setSidebarExpanded(true)}
+        onMouseLeave={() => setSidebarExpanded(false)}
+      >
         {/* Logo */}
-        <Link href="/" className="mb-6">
-          <div className="w-9 h-9 bg-green-600 rounded-xl flex items-center justify-center">
+        <Link href="/" className="mb-6 flex items-center gap-3 px-2">
+          <div className="w-9 h-9 bg-green-600 rounded-xl flex items-center justify-center flex-shrink-0">
             <Sparkles className="w-5 h-5 text-white" />
           </div>
+          {sidebarExpanded && (
+            <span className="font-semibold text-lg whitespace-nowrap">Lician</span>
+          )}
         </Link>
 
         {/* Top nav items */}
-        <nav className="flex flex-col items-center gap-2">
-          {SIDEBAR_ITEMS.map((item) => (
-            <Link
+        <nav className="flex flex-col items-start gap-1 w-full px-2">
+          {SIDEBAR_TOP.map((item) => (
+            <button
               key={item.id}
-              href={item.href}
+              onClick={() => handleSidebarAction(item)}
               className={cn(
-                "w-10 h-10 flex items-center justify-center rounded-xl transition-colors",
-                "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                "w-full flex items-center gap-3 px-2 py-2.5 rounded-xl transition-colors",
+                "text-muted-foreground hover:text-foreground hover:bg-secondary",
+                item.action === "new" && "bg-secondary/50"
               )}
               title={item.label}
             >
-              <item.icon className="w-5 h-5" />
-            </Link>
+              <item.icon className="w-5 h-5 flex-shrink-0" />
+              {sidebarExpanded && (
+                <span className="text-sm whitespace-nowrap">{item.label}</span>
+              )}
+            </button>
           ))}
         </nav>
 
@@ -146,30 +201,33 @@ export default function ManusStyleHome() {
         <div className="flex-1" />
 
         {/* Bottom nav items */}
-        <nav className="flex flex-col items-center gap-2">
+        <nav className="flex flex-col items-start gap-1 w-full px-2">
           {SIDEBAR_BOTTOM.map((item) => (
             <Link
               key={item.id}
               href={item.href}
               className={cn(
-                "w-10 h-10 flex items-center justify-center rounded-xl transition-colors",
+                "w-full flex items-center gap-3 px-2 py-2.5 rounded-xl transition-colors",
                 "text-muted-foreground hover:text-foreground hover:bg-secondary"
               )}
               title={item.label}
             >
-              <item.icon className="w-5 h-5" />
+              <item.icon className="w-5 h-5 flex-shrink-0" />
+              {sidebarExpanded && (
+                <span className="text-sm whitespace-nowrap">{item.label}</span>
+              )}
             </Link>
           ))}
         </nav>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col">
+      <main className="flex-1 flex flex-col overflow-hidden">
         {/* Top bar */}
-        <header className="flex items-center justify-between px-6 py-3 border-b border-border">
+        <header className="flex items-center justify-between px-6 py-3 border-b border-border flex-shrink-0">
           <div className="flex items-center gap-2">
             <span className="font-semibold">Lician AI</span>
-            <span className="text-xs text-muted-foreground">v1.0</span>
+            <ChevronDown className="w-4 h-4 text-muted-foreground" />
           </div>
 
           <div className="flex items-center gap-4">
@@ -183,6 +241,20 @@ export default function ManusStyleHome() {
                 </Link>
               </div>
             )}
+
+            {/* Credits */}
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-secondary/50 rounded-full">
+              <Zap className="w-4 h-4 text-yellow-500" />
+              <span className="text-sm font-medium">{credits}</span>
+            </div>
+
+            {/* Share credits */}
+            <button
+              className="p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors"
+              title="Share credits"
+            >
+              <Gift className="w-5 h-5" />
+            </button>
 
             {/* Notifications */}
             <button className="p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors">
@@ -211,145 +283,144 @@ export default function ManusStyleHome() {
           </div>
         </header>
 
-        {/* Center content */}
-        <div className="flex-1 flex flex-col items-center justify-center px-6 pb-20">
-          {/* Heading */}
-          <h1 className="text-4xl md:text-5xl font-semibold text-center mb-10">
-            What can I do for you?
-          </h1>
+        {/* Chat or Welcome Screen */}
+        <div className="flex-1 overflow-hidden">
+          {showChat ? (
+            <div className="h-full">
+              <AutonomousChat />
+            </div>
+          ) : (
+            <div className="h-full flex flex-col items-center justify-center px-6 pb-32">
+              {/* Heading */}
+              <h1 className="text-4xl md:text-5xl font-semibold text-center mb-10">
+                What can I do for you?
+              </h1>
 
-          {/* Chat input */}
-          <div className="w-full max-w-2xl">
-            <div className="relative bg-card border border-border rounded-2xl shadow-lg">
-              <Textarea
-                ref={textareaRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault()
-                    handleSubmit()
-                  }
-                }}
-                placeholder="Ask about any stock, market trends, or financial analysis..."
-                className="min-h-[60px] max-h-[200px] resize-none border-0 bg-transparent text-lg pr-24 py-4 px-5 focus-visible:ring-0"
-                disabled={isSubmitting}
-              />
-
-              {/* Input actions */}
-              <div className="absolute left-4 bottom-3 flex items-center gap-2">
-                <button className="p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors">
-                  <Plus className="w-5 h-5" />
-                </button>
-              </div>
-
-              <div className="absolute right-4 bottom-3 flex items-center gap-2">
-                <Button
-                  size="icon"
-                  onClick={handleSubmit}
-                  disabled={!input.trim() || isSubmitting}
-                  className={cn(
-                    "w-9 h-9 rounded-xl transition-all",
-                    input.trim()
-                      ? "bg-green-600 hover:bg-green-500 text-white"
-                      : "bg-secondary text-muted-foreground"
-                  )}
+              {/* Chat input */}
+              <div className="w-full max-w-2xl">
+                <div
+                  className="relative bg-card border border-border rounded-2xl shadow-lg cursor-text"
+                  onClick={() => setShowChat(true)}
                 >
-                  <ArrowUp className="w-5 h-5" />
-                </Button>
-              </div>
-            </div>
+                  <div className="min-h-[60px] py-4 px-5 text-lg text-muted-foreground">
+                    Ask about any stock, market trends, or financial analysis...
+                  </div>
 
-            {/* Tool integration hint */}
-            <div className="flex items-center justify-between px-2 py-3 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Wallet className="w-4 h-4" />
-                <span>Connect your portfolio for personalized insights</span>
-              </div>
-              <div className="flex items-center gap-1">
-                {movers.slice(0, 4).map((mover) => (
-                  <Link
-                    key={mover.symbol}
-                    href={`/${mover.symbol}`}
-                    className="w-6 h-6 rounded-full overflow-hidden hover:scale-110 transition-transform"
-                    title={mover.symbol}
-                  >
-                    <StockLogo symbol={mover.symbol} size="sm" />
-                  </Link>
-                ))}
-              </div>
-            </div>
+                  {/* Input actions */}
+                  <div className="absolute left-4 bottom-3 flex items-center gap-2">
+                    <button className="p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors">
+                      <Plus className="w-5 h-5" />
+                    </button>
+                  </div>
 
-            {/* Financial tool buttons */}
-            <div className="flex flex-wrap items-center justify-center gap-3 mt-4">
-              {FINANCIAL_TOOLS.map((tool) => (
-                <div key={tool.id} className="relative">
-                  <button
-                    onClick={() => handleToolClick(tool)}
-                    className={cn(
-                      "flex items-center gap-2 px-4 py-2.5 rounded-full",
-                      "border border-border bg-card hover:bg-secondary",
-                      "text-sm font-medium transition-colors"
-                    )}
-                  >
-                    <tool.icon className="w-4 h-4" />
-                    {tool.label}
-                  </button>
-
-                  {/* More tools dropdown */}
-                  {tool.id === "more" && showMoreTools && (
-                    <div className="absolute top-full left-0 mt-2 w-48 bg-card border border-border rounded-xl shadow-xl py-2 z-50">
-                      {MORE_TOOLS.map((moreTool) => (
-                        <Link
-                          key={moreTool.label}
-                          href={moreTool.href}
-                          className="flex items-center gap-3 px-4 py-2.5 hover:bg-secondary transition-colors"
-                          onClick={() => setShowMoreTools(false)}
-                        >
-                          <moreTool.icon className="w-4 h-4 text-muted-foreground" />
-                          <span className="text-sm">{moreTool.label}</span>
-                        </Link>
-                      ))}
+                  <div className="absolute right-4 bottom-3 flex items-center gap-2">
+                    <div className="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center">
+                      <ArrowUp className="w-5 h-5 text-muted-foreground" />
                     </div>
-                  )}
+                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
 
-        {/* Bottom promotional card */}
-        {movers.length > 0 && (
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-full max-w-lg px-6">
-            <div className="bg-card border border-border rounded-2xl p-4 flex items-center gap-4 shadow-lg">
-              <div className="flex-1">
-                <p className="font-medium mb-1">Today's Market Movers</p>
-                <p className="text-sm text-muted-foreground">
-                  {movers[0]?.symbol} {movers[0]?.changePercent > 0 ? "+" : ""}{movers[0]?.changePercent?.toFixed(2)}%
-                  {movers[1] && ` · ${movers[1].symbol} ${movers[1].changePercent > 0 ? "+" : ""}${movers[1].changePercent?.toFixed(2)}%`}
-                </p>
+                {/* Tool integration hint */}
+                <div className="flex items-center justify-between px-2 py-3 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-2">
+                    <Wallet className="w-4 h-4" />
+                    <span>Connect your portfolio for personalized insights</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    {movers.slice(0, 4).map((mover) => (
+                      <Link
+                        key={mover.symbol}
+                        href={`/stock/${mover.symbol}`}
+                        className="w-6 h-6 rounded-full overflow-hidden hover:scale-110 transition-transform"
+                        title={mover.symbol}
+                      >
+                        <StockLogo symbol={mover.symbol} size="sm" />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Financial tool buttons */}
+                <div className="flex flex-wrap items-center justify-center gap-3 mt-4">
+                  {FINANCIAL_TOOLS.map((tool) => (
+                    <div key={tool.id} className="relative">
+                      <button
+                        onClick={() => handleToolClick(tool)}
+                        className={cn(
+                          "flex items-center gap-2 px-4 py-2.5 rounded-full",
+                          "border border-border bg-card hover:bg-secondary",
+                          "text-sm font-medium transition-colors"
+                        )}
+                      >
+                        <tool.icon className="w-4 h-4" />
+                        {tool.label}
+                      </button>
+
+                      {/* More tools dropdown */}
+                      {tool.id === "more" && showMoreTools && (
+                        <div className="absolute top-full right-0 mt-2 w-56 bg-card border border-border rounded-xl shadow-xl py-2 z-50">
+                          {MORE_TOOLS.map((moreTool) => (
+                            <Link
+                              key={moreTool.label}
+                              href={moreTool.href}
+                              className="flex items-center gap-3 px-4 py-2.5 hover:bg-secondary transition-colors"
+                              onClick={() => setShowMoreTools(false)}
+                            >
+                              <moreTool.icon className="w-4 h-4 text-muted-foreground" />
+                              <span className="text-sm">{moreTool.label}</span>
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="flex -space-x-2">
-                {movers.slice(0, 3).map((mover) => (
-                  <Link
-                    key={mover.symbol}
-                    href={`/${mover.symbol}`}
-                    className="w-10 h-10 rounded-full border-2 border-background overflow-hidden hover:scale-110 transition-transform z-10"
-                  >
-                    <StockLogo symbol={mover.symbol} size="md" />
+
+              {/* Bottom promotional card */}
+              {movers.length > 0 && (
+                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-full max-w-lg px-6">
+                  <Link href="/markets" className="block">
+                    <div className="bg-card border border-border rounded-2xl p-4 flex items-center gap-4 shadow-lg hover:border-green-500/50 transition-colors">
+                      <div className="flex-1">
+                        <p className="font-medium mb-1">Today's Market Movers</p>
+                        <p className="text-sm text-muted-foreground">
+                          {movers[0]?.symbol} {movers[0]?.changePercent > 0 ? "+" : ""}{movers[0]?.changePercent?.toFixed(2)}%
+                          {movers[1] && ` · ${movers[1].symbol} ${movers[1].changePercent > 0 ? "+" : ""}${movers[1].changePercent?.toFixed(2)}%`}
+                        </p>
+                      </div>
+                      <div className="flex -space-x-2">
+                        {movers.slice(0, 3).map((mover) => (
+                          <div
+                            key={mover.symbol}
+                            className="w-10 h-10 rounded-full border-2 border-background overflow-hidden"
+                          >
+                            <StockLogo symbol={mover.symbol} size="md" />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </Link>
-                ))}
-              </div>
+                  {/* Pagination dots */}
+                  <div className="flex items-center justify-center gap-2 mt-3">
+                    <div className="w-2 h-2 rounded-full bg-foreground" />
+                    <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />
+                    <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />
+                  </div>
+                </div>
+              )}
             </div>
-            {/* Pagination dots */}
-            <div className="flex items-center justify-center gap-2 mt-3">
-              <div className="w-2 h-2 rounded-full bg-foreground" />
-              <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />
-              <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </main>
+
+      {/* Click outside to close more tools */}
+      {showMoreTools && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setShowMoreTools(false)}
+        />
+      )}
     </div>
   )
 }

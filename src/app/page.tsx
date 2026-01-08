@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { Suspense } from 'react'
 import ManusStyleHome from "@/components/ManusStyleHome"
 import { SITE_URL } from "@/lib/seo"
 
@@ -33,6 +34,21 @@ export const metadata: Metadata = {
   },
 }
 
+function LoadingState() {
+  return (
+    <div className="flex items-center justify-center h-screen bg-background">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-green-500 mx-auto mb-4" />
+        <p className="text-muted-foreground">Loading Lician...</p>
+      </div>
+    </div>
+  )
+}
+
 export default function Home() {
-  return <ManusStyleHome />
+  return (
+    <Suspense fallback={<LoadingState />}>
+      <ManusStyleHome />
+    </Suspense>
+  )
 }

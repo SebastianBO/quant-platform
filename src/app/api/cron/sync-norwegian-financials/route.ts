@@ -78,14 +78,14 @@ async function fetchFinancials(orgNumber: string): Promise<NorwegianFinancials |
 
     const data = await response.json()
 
-    // The API returns an array of years, get the latest
-    const regnskap = data._embedded?.regnskapList?.[0] || data
+    // The API returns an array directly, get the latest year
+    const regnskap = Array.isArray(data) ? data[0] : data
     if (!regnskap || !regnskap.regnskapsperiode) return null
 
     const period = regnskap.regnskapsperiode
     const result = regnskap.resultatregnskapResultat || {}
-    const balance = regnskap.balanseEiendeler || {}
-    const equity = regnskap.balanseEgenkapitalGjeld || {}
+    const balance = regnskap.eiendeler || {} // Assets
+    const equityDebt = regnskap.egenkapitalGjeld || {} // Equity & Liabilities
 
     return {
       orgNumber: cleanOrg,
@@ -96,7 +96,7 @@ async function fetchFinancials(orgNumber: string): Promise<NorwegianFinancials |
       operatingExpenses: result.driftsresultat?.driftskostnad?.sumDriftskostnad,
       operatingProfit: result.driftsresultat?.driftsresultat,
       financeIncome: result.finansresultat?.finansinntekt?.sumFinansinntekter,
-      financeExpenses: result.finansresultat?.finanskostnad?.sumFinanskostnader,
+      financeExpenses: result.finansresultat?.finanskostnad?.sumFinanskostnad,
       profitBeforeTax: result.ordinaertResultatFoerSkattekostnad,
       taxExpense: result.skattekostnadOrdinaertResultat,
       netIncome: result.aarsresultat,
@@ -105,12 +105,12 @@ async function fetchFinancials(orgNumber: string): Promise<NorwegianFinancials |
       currentAssets: balance.omloepsmidler?.sumOmloepsmidler,
       totalAssets: balance.sumEiendeler,
       // Balance Sheet - Equity & Liabilities
-      equity: equity.egenkapital?.sumEgenkapital,
-      retainedEarnings: equity.egenkapital?.opptjentEgenkapital?.sumOpptjentEgenkapital,
-      longTermDebt: equity.gjeldOversikt?.langsiktigGjeld?.sumLangsiktigGjeld,
-      shortTermDebt: equity.gjeldOversikt?.kortsiktigGjeld?.sumKortsiktigGjeld,
-      totalDebt: equity.gjeldOversikt?.sumGjeld,
-      totalEquityAndLiabilities: equity.sumEgenkapitalGjeld,
+      equity: equityDebt.egenkapital?.sumEgenkapital,
+      retainedEarnings: equityDebt.egenkapital?.opptjentEgenkapital?.sumOpptjentEgenkapital,
+      longTermDebt: equityDebt.gjeldOversikt?.langsiktigGjeld?.sumLangsiktigGjeld,
+      shortTermDebt: equityDebt.gjeldOversikt?.kortsiktigGjeld?.sumKortsiktigGjeld,
+      totalDebt: equityDebt.gjeldOversikt?.sumGjeld,
+      totalEquityAndLiabilities: equityDebt.sumEgenkapitalGjeld,
       // Metadata
       isAudited: regnskap.revispilogrupsjon?.revipilogrupsjon === 'fullpilosjon',
       accountingStandard: regnskap.regnskapstype,
