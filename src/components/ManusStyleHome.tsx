@@ -44,6 +44,8 @@ import { cn } from "@/lib/utils"
 import { createClient } from "@/lib/supabase-browser"
 import StockLogo from "@/components/StockLogo"
 import AutonomousChat from "@/components/AutonomousChat"
+import EnhancedMarketMovers from "@/components/EnhancedMarketMovers"
+import { Footer } from "@/components/footer"
 
 // Sidebar navigation - main tools
 const SIDEBAR_TOP = [
@@ -283,14 +285,21 @@ export default function ManusStyleHome() {
           </div>
         </header>
 
+        {/* Market Movers Bar */}
+        <EnhancedMarketMovers />
+
         {/* Chat or Welcome Screen */}
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-y-auto">
           {showChat ? (
-            <div className="h-full">
-              <AutonomousChat />
+            <div className="min-h-full flex flex-col">
+              <div className="flex-1">
+                <AutonomousChat />
+              </div>
+              <Footer />
             </div>
           ) : (
-            <div className="h-full flex flex-col items-center justify-center px-6 pb-32">
+            <>
+            <div className="flex-1 flex flex-col items-center justify-center px-6 pb-32">
               {/* Heading */}
               <h1 className="text-4xl md:text-5xl font-semibold text-center mb-10">
                 What can I do for you?
@@ -377,39 +386,11 @@ export default function ManusStyleHome() {
                 </div>
               </div>
 
-              {/* Bottom promotional card */}
-              {movers.length > 0 && (
-                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-full max-w-lg px-6">
-                  <Link href="/markets" className="block">
-                    <div className="bg-card border border-border rounded-2xl p-4 flex items-center gap-4 shadow-lg hover:border-green-500/50 transition-colors">
-                      <div className="flex-1">
-                        <p className="font-medium mb-1">Today's Market Movers</p>
-                        <p className="text-sm text-muted-foreground">
-                          {movers[0]?.symbol} {movers[0]?.changePercent > 0 ? "+" : ""}{movers[0]?.changePercent?.toFixed(2)}%
-                          {movers[1] && ` · ${movers[1].symbol} ${movers[1].changePercent > 0 ? "+" : ""}${movers[1].changePercent?.toFixed(2)}%`}
-                        </p>
-                      </div>
-                      <div className="flex -space-x-2">
-                        {movers.slice(0, 3).map((mover) => (
-                          <div
-                            key={mover.symbol}
-                            className="w-10 h-10 rounded-full border-2 border-background overflow-hidden"
-                          >
-                            <StockLogo symbol={mover.symbol} size="md" />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </Link>
-                  {/* Pagination dots */}
-                  <div className="flex items-center justify-center gap-2 mt-3">
-                    <div className="w-2 h-2 rounded-full bg-foreground" />
-                    <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />
-                    <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />
-                  </div>
-                </div>
-              )}
             </div>
+
+            {/* Footer for welcome screen */}
+            <Footer />
+            </>
           )}
         </div>
       </main>
