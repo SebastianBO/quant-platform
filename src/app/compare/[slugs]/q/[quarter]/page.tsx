@@ -4,9 +4,10 @@ import { notFound } from 'next/navigation'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { QUARTERS } from '@/lib/stocks-full'
+import { supabase } from '@/lib/supabase'
 
-export const dynamic = 'force-static'
-export const revalidate = 86400
+export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 type Props = {
   params: Promise<{ slugs: string; quarter: string }>
@@ -21,7 +22,6 @@ interface IncomeStatement {
   operating_income: number | null
   net_income: number | null
   earnings_per_share_diluted: number | null
-  ebit: number | null
 }
 
 function formatValue(value: number | null | undefined): string {
@@ -38,31 +38,26 @@ function formatPercent(value: number | null | undefined): string {
   return `${(value * 100).toFixed(1)}%`
 }
 
-function getBaseUrl() {
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`
-  return process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-}
-
 async function getQuarterlyData(ticker: string, quarter: string): Promise<IncomeStatement | null> {
   // Parse quarter format: "2024-Q3" -> year: 2024, period: Q3
   const [yearStr, period] = quarter.split('-')
-  const year = parseInt(yearStr)
 
   try {
-    const response = await fetch(
-      `${getBaseUrl()}/api/v1/financials/income-statements?ticker=${ticker.toUpperCase()}&period=quarterly&limit=24`,
-      { next: { revalidate: 86400 } }
-    )
+    // Query Supabase directly for quarterly income statements
+    const { data, error } = await supabase
+      .from('income_statements')
+      .select('ticker, report_period, fiscal_period, revenue, gross_profit, operating_income, net_income, earnings_per_share_diluted')
+      .eq('ticker', ticker.toUpperCase())
+      .eq('period', 'quarterly')
+      .eq('fiscal_period', period)
+      .gte('report_period', `${yearStr}-01-01`)
+      .lte('report_period', `${yearStr}-12-31`)
+      .order('report_period', { ascending: false })
+      .limit(1)
+      .single()
 
-    if (!response.ok) return null
-    const data = await response.json()
-
-    // Find matching quarter - report_period is like "2024-06-29"
-    const statements = data.income_statements || []
-    return statements.find((s: IncomeStatement) => {
-      const reportYear = parseInt(s.report_period?.split('-')[0] || '0')
-      return reportYear === year && s.fiscal_period === period
-    }) || null
+    if (error) return null
+    return data as IncomeStatement
   } catch {
     return null
   }
