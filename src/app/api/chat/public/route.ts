@@ -1,5 +1,4 @@
-import { streamText, convertToModelMessages, type UIMessage } from 'ai'
-import { createGatewayProvider } from '@ai-sdk/gateway'
+import { streamText, convertToModelMessages, type UIMessage, createGateway } from 'ai'
 import { NextRequest, NextResponse } from 'next/server'
 import { financialTools } from '@/lib/ai/tools'
 import { createClient } from '@supabase/supabase-js'
@@ -7,8 +6,8 @@ import { createClient } from '@supabase/supabase-js'
 export const maxDuration = 60
 
 // Vercel AI Gateway - 100x cheaper!
-const gateway = createGatewayProvider({
-  baseURL: process.env.AI_GATEWAY_BASE_URL,
+const gateway = createGateway({
+  apiKey: process.env.AI_GATEWAY_API_KEY ?? '',
 })
 
 // Simple in-memory rate limiting (resets on deploy)
