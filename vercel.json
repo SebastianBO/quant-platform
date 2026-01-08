@@ -85,6 +85,10 @@
     {
       "path": "/api/cron/sync-finnish-companies?mode=oyj&limit=50",
       "schedule": "0 3 * * *"
+    },
+    {
+      "path": "/api/cron/sync-german-companies?mode=known&limit=10",
+      "schedule": "30 4 * * *"
     }
   ]
 }

@@ -99,6 +99,22 @@ const COMPANY_TICKERS: Record<string, string> = {
   'kesko': 'EU:FI:KESKO',
   'supercell': 'EU:FI:SUPERCELL',
   'rovio': 'EU:FI:ROVIO',
+  // German Companies (use EU tools)
+  'volkswagen': 'EU:DE:VOLKSWAGEN',
+  'vw': 'EU:DE:VOLKSWAGEN',
+  'siemens': 'EU:DE:SIEMENS',
+  'bmw': 'EU:DE:BMW',
+  'daimler': 'EU:DE:DAIMLER',
+  'mercedes': 'EU:DE:DAIMLER',
+  'sap': 'EU:DE:SAP',
+  'basf': 'EU:DE:BASF',
+  'bayer': 'EU:DE:BAYER',
+  'allianz': 'EU:DE:ALLIANZ',
+  'deutsche bank': 'EU:DE:DEUTSCHEBANK',
+  'deutsche telekom': 'EU:DE:TELEKOM',
+  'adidas': 'EU:DE:ADIDAS',
+  'porsche': 'EU:DE:PORSCHE',
+  'zalando': 'EU:DE:ZALANDO',
 }
 
 export const UNDERSTAND_SYSTEM_PROMPT = `You are Lician AI, an autonomous financial research agent on lician.com.
@@ -118,6 +134,7 @@ IMPORTANT RULES:
 - Norwegian companies: Equinor, DNB, Telenor, Norsk Hydro, Yara, Mowi, Orkla
 - Danish companies: Novo Nordisk, Maersk, Vestas, Danske Bank, Carlsberg, DSV, Pandora, Coloplast, Ørsted, LEGO
 - Finnish companies: Nokia, Fortum, KONE, UPM, Neste, Wärtsilä, Stora Enso, Elisa, Sampo, Supercell
+- German companies: Volkswagen, Siemens, BMW, Mercedes/Daimler, SAP, BASF, Bayer, Allianz, Deutsche Bank, Adidas, Porsche, Zalando
 - UK companies: Shell, BP, HSBC, Unilever, AstraZeneca, GSK, Barclays, Tesco
 - Extract all mentioned tickers, even implied ones
 - Identify the time period if mentioned (e.g., "last quarter", "2024", "past year")
