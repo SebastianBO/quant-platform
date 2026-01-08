@@ -10,7 +10,8 @@
  * 5. Answer - Generate final response
  */
 
-import { generateText, streamText, type CoreMessage } from 'ai'
+import { generateText, generateObject, streamText } from 'ai'
+import { z } from 'zod'
 import type {
   AgentState,
   AgentConfig,
@@ -38,6 +39,44 @@ import {
   ANSWER_USER_PROMPT,
   formatTaskResults,
 } from './prompts'
+
+// Zod Schemas for structured outputs (like Dexter)
+const EntitySchema = z.object({
+  type: z.enum(['ticker', 'company', 'date', 'metric', 'period', 'other']),
+  value: z.string(),
+  normalized: z.string().optional(),
+})
+
+const UnderstandingSchema = z.object({
+  intent: z.string().describe('Clear statement of what the user wants to know'),
+  entities: z.array(EntitySchema).describe('Extracted entities from the query'),
+  timeframe: z.string().nullable().describe('Time period mentioned'),
+  complexity: z.enum(['simple', 'moderate', 'complex']).describe('Query complexity'),
+})
+
+const TaskSchema = z.object({
+  id: z.string(),
+  description: z.string().max(50).describe('Short task description (max 6 words)'),
+  taskType: z.enum(['use_tools', 'reason']),
+  dependsOn: z.array(z.string()),
+})
+
+const PlanSchema = z.object({
+  summary: z.string().max(100).describe('Plan summary in under 15 words'),
+  tasks: z.array(TaskSchema).min(1).max(5),
+})
+
+const ReflectionSchema = z.object({
+  isComplete: z.boolean().describe('Whether we have enough data to answer'),
+  reasoning: z.string().describe('Explanation of completeness or gaps'),
+  missingInfo: z.array(z.string()).describe('List of missing information'),
+  suggestedNextSteps: z.string().describe('Guidance for next iteration'),
+})
+
+const ToolSelectionSchema = z.array(z.object({
+  toolName: z.string(),
+  args: z.record(z.unknown()),
+}))
 import { financialTools } from '../tools'
 
 type ModelProvider = Parameters<typeof generateText>[0]['model']
@@ -149,7 +188,7 @@ export class Agent {
   }
 
   /**
-   * Phase 1: Understand the query
+   * Phase 1: Understand the query (uses structured output like Dexter)
    */
   private async understandPhase(): Promise<void> {
     this.state!.currentPhase = 'understand'
@@ -160,28 +199,43 @@ export class Agent {
       .map(m => `${m.role}: ${m.content}`)
       .join('\n')
 
-    const { text } = await generateText({
-      model: this.model,
-      system: UNDERSTAND_SYSTEM_PROMPT,
-      prompt: UNDERSTAND_USER_PROMPT(this.state!.query, historyContext),
-    })
-
     try {
-      const understanding = JSON.parse(this.extractJSON(text)) as Understanding
-      this.state!.understanding = understanding
-      this.callbacks?.onUnderstanding?.(understanding)
-    } catch {
-      // Fallback understanding
+      const { object } = await generateObject({
+        model: this.model,
+        schema: UnderstandingSchema,
+        system: UNDERSTAND_SYSTEM_PROMPT,
+        prompt: UNDERSTAND_USER_PROMPT(this.state!.query, historyContext),
+      })
+
       this.state!.understanding = {
-        intent: this.state!.query,
-        entities: [],
-        complexity: 'simple',
+        ...object,
+        timeframe: object.timeframe || undefined,
+      } as Understanding
+      this.callbacks?.onUnderstanding?.(this.state!.understanding)
+    } catch (error) {
+      // Fallback to text-based extraction
+      const { text } = await generateText({
+        model: this.model,
+        system: UNDERSTAND_SYSTEM_PROMPT,
+        prompt: UNDERSTAND_USER_PROMPT(this.state!.query, historyContext),
+      })
+
+      try {
+        const understanding = JSON.parse(this.extractJSON(text)) as Understanding
+        this.state!.understanding = understanding
+        this.callbacks?.onUnderstanding?.(understanding)
+      } catch {
+        this.state!.understanding = {
+          intent: this.state!.query,
+          entities: [],
+          complexity: 'simple',
+        }
       }
     }
   }
 
   /**
-   * Phase 2: Create execution plan
+   * Phase 2: Create execution plan (uses structured output like Dexter)
    */
   private async planPhase(): Promise<void> {
     this.state!.currentPhase = 'plan'
@@ -193,30 +247,49 @@ export class Agent {
 
     const reflectionGuidance = this.state!.reflection?.suggestedNextSteps
 
-    const { text } = await generateText({
-      model: this.model,
-      system: PLAN_SYSTEM_PROMPT,
-      prompt: PLAN_USER_PROMPT(this.state!.understanding!, previousResults) +
-        (reflectionGuidance ? `\n\nGuidance from previous iteration: ${reflectionGuidance}` : ''),
-    })
-
     try {
-      const plan = JSON.parse(this.extractJSON(text)) as Plan
-      // Initialize task statuses
-      plan.tasks = plan.tasks.map(t => ({ ...t, status: 'pending' as const }))
+      const { object } = await generateObject({
+        model: this.model,
+        schema: PlanSchema,
+        system: PLAN_SYSTEM_PROMPT,
+        prompt: PLAN_USER_PROMPT(this.state!.understanding!, previousResults) +
+          (reflectionGuidance ? `\n\nGuidance from previous iteration: ${reflectionGuidance}` : ''),
+      })
+
+      const plan: Plan = {
+        summary: object.summary,
+        tasks: object.tasks.map(t => ({
+          ...t,
+          taskType: t.taskType as 'use_tools' | 'reason',
+          status: 'pending' as const,
+        })),
+      }
       this.state!.plan = plan
       this.callbacks?.onPlan?.(plan)
-    } catch {
-      // Fallback plan
-      this.state!.plan = {
-        summary: 'Gather data and analyze',
-        tasks: [{
-          id: 'task_1',
-          description: 'Fetch relevant data',
-          taskType: 'use_tools',
-          dependsOn: [],
-          status: 'pending',
-        }],
+    } catch (error) {
+      // Fallback to text-based
+      const { text } = await generateText({
+        model: this.model,
+        system: PLAN_SYSTEM_PROMPT,
+        prompt: PLAN_USER_PROMPT(this.state!.understanding!, previousResults),
+      })
+
+      try {
+        const parsed = JSON.parse(this.extractJSON(text)) as Plan
+        parsed.tasks = parsed.tasks.map(t => ({ ...t, status: 'pending' as const }))
+        this.state!.plan = parsed
+        this.callbacks?.onPlan?.(parsed)
+      } catch {
+        this.state!.plan = {
+          summary: 'Gather data and analyze',
+          tasks: [{
+            id: 'task_1',
+            description: 'Fetch relevant data',
+            taskType: 'use_tools',
+            dependsOn: [],
+            status: 'pending',
+          }],
+        }
       }
     }
   }
@@ -327,29 +400,46 @@ export class Agent {
   }
 
   /**
-   * Select tools for a task
+   * Select tools for a task (uses structured output like Dexter)
    */
   private async selectTools(task: Task): Promise<ToolCall[]> {
     const entities = this.state!.understanding!.entities
       .map(e => `${e.type}: ${e.normalized || e.value}`)
       .join(', ')
 
-    const { text } = await generateText({
-      model: this.model,
-      system: TOOL_SELECTION_SYSTEM_PROMPT,
-      prompt: TOOL_SELECTION_USER_PROMPT(task.description, entities),
-    })
-
     try {
-      const selections = JSON.parse(this.extractJSON(text)) as Array<{ toolName: string; args: Record<string, unknown> }>
-      return selections.map((s, i) => ({
+      const { object } = await generateObject({
+        model: this.model,
+        schema: ToolSelectionSchema,
+        system: TOOL_SELECTION_SYSTEM_PROMPT,
+        prompt: TOOL_SELECTION_USER_PROMPT(task.description, entities),
+      })
+
+      return object.map((s, i) => ({
         id: `${task.id}_tool_${i}`,
         toolName: s.toolName,
-        args: s.args,
+        args: s.args as Record<string, unknown>,
         status: 'pending' as const,
       }))
     } catch {
-      return []
+      // Fallback to text-based
+      const { text } = await generateText({
+        model: this.model,
+        system: TOOL_SELECTION_SYSTEM_PROMPT,
+        prompt: TOOL_SELECTION_USER_PROMPT(task.description, entities),
+      })
+
+      try {
+        const selections = JSON.parse(this.extractJSON(text)) as Array<{ toolName: string; args: Record<string, unknown> }>
+        return selections.map((s, i) => ({
+          id: `${task.id}_tool_${i}`,
+          toolName: s.toolName,
+          args: s.args,
+          status: 'pending' as const,
+        }))
+      } catch {
+        return []
+      }
     }
   }
 
@@ -407,34 +497,67 @@ export class Agent {
   }
 
   /**
-   * Phase 4: Reflect on progress
+   * Phase 4: Reflect on progress (uses structured output like Dexter)
+   * Includes loop detection via iteration limits
    */
   private async reflectPhase(): Promise<boolean> {
     this.state!.currentPhase = 'reflect'
     this.callbacks?.onPhaseChange?.('reflect')
 
-    const taskResultsStr = formatTaskResults(this.state!.taskResults)
-
-    const { text } = await generateText({
-      model: this.model,
-      system: REFLECT_SYSTEM_PROMPT,
-      prompt: REFLECT_USER_PROMPT(
-        this.state!.query,
-        this.state!.understanding!,
-        taskResultsStr,
-        this.state!.iteration,
-        this.maxIterations
-      ),
-    })
-
-    try {
-      const reflection = JSON.parse(this.extractJSON(text)) as Reflection
+    // Loop detection: force completion at max iterations (like Dexter)
+    if (this.state!.iteration >= this.maxIterations) {
+      const reflection: Reflection = {
+        isComplete: true,
+        reasoning: `Reached maximum iterations (${this.maxIterations}). Proceeding with available data.`,
+        missingInfo: [],
+        suggestedNextSteps: '',
+      }
       this.state!.reflection = reflection
       this.callbacks?.onReflection?.(reflection)
-      return !reflection.isComplete
-    } catch {
-      // If we can't parse, assume complete
       return false
+    }
+
+    const taskResultsStr = formatTaskResults(this.state!.taskResults)
+
+    try {
+      const { object } = await generateObject({
+        model: this.model,
+        schema: ReflectionSchema,
+        system: REFLECT_SYSTEM_PROMPT,
+        prompt: REFLECT_USER_PROMPT(
+          this.state!.query,
+          this.state!.understanding!,
+          taskResultsStr,
+          this.state!.iteration,
+          this.maxIterations
+        ),
+      })
+
+      this.state!.reflection = object as Reflection
+      this.callbacks?.onReflection?.(this.state!.reflection)
+      return !object.isComplete
+    } catch {
+      // Fallback to text-based
+      const { text } = await generateText({
+        model: this.model,
+        system: REFLECT_SYSTEM_PROMPT,
+        prompt: REFLECT_USER_PROMPT(
+          this.state!.query,
+          this.state!.understanding!,
+          taskResultsStr,
+          this.state!.iteration,
+          this.maxIterations
+        ),
+      })
+
+      try {
+        const reflection = JSON.parse(this.extractJSON(text)) as Reflection
+        this.state!.reflection = reflection
+        this.callbacks?.onReflection?.(reflection)
+        return !reflection.isComplete
+      } catch {
+        return false
+      }
     }
   }
 
