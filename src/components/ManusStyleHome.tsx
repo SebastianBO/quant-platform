@@ -118,6 +118,15 @@ interface Message {
   content: string
 }
 
+interface NewsItem {
+  title: string
+  date: string
+  link: string
+  symbols: string[]
+  sentiment: { polarity: number }
+  source?: string
+}
+
 interface Task {
   id: string
   description: string
@@ -129,6 +138,7 @@ export default function ManusStyleHome() {
   const [loading, setLoading] = useState(true)
   const [credits, setCredits] = useState(300)
   const [movers, setMovers] = useState<Mover[]>([])
+  const [news, setNews] = useState<NewsItem[]>([])
   const [showMoreTools, setShowMoreTools] = useState(false)
   const [sidebarExpanded, setSidebarExpanded] = useState(false)
   const [carouselIndex, setCarouselIndex] = useState(0)
@@ -180,6 +190,14 @@ export default function ManusStyleHome() {
       .then(data => {
         const all = [...(data.gainers || []), ...(data.losers || [])].slice(0, 6)
         setMovers(all)
+      })
+      .catch(() => {})
+
+    // Fetch market news
+    fetch("/api/market-news?limit=5")
+      .then(res => res.json())
+      .then(data => {
+        if (data.news) setNews(data.news.slice(0, 4))
       })
       .catch(() => {})
   }, [supabase.auth])
@@ -799,6 +817,52 @@ export default function ManusStyleHome() {
                             />
                           ))}
                         </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* News Headlines */}
+                  {news.length > 0 && (
+                    <div className="w-full max-w-2xl mx-auto mt-6">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Newspaper className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm font-medium text-muted-foreground">Market News</span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        {news.map((item, i) => (
+                          <a
+                            key={i}
+                            href={item.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block p-3 rounded-lg border border-border bg-card hover:bg-secondary/50 transition-colors group"
+                          >
+                            <div className="flex items-start gap-2">
+                              {item.sentiment?.polarity > 0.1 ? (
+                                <TrendingUp className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                              ) : item.sentiment?.polarity < -0.1 ? (
+                                <TrendingDown className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
+                              ) : (
+                                <Newspaper className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
+                              )}
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium line-clamp-2 group-hover:text-green-500 transition-colors">
+                                  {item.title}
+                                </p>
+                                <div className="flex items-center gap-2 mt-1">
+                                  <span className="text-xs px-1.5 py-0.5 bg-secondary rounded text-muted-foreground">
+                                    {item.source || 'News'}
+                                  </span>
+                                  {item.symbols?.length > 0 && (
+                                    <span className="text-xs text-green-500 font-mono">
+                                      ${item.symbols[0]}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </a>
+                        ))}
                       </div>
                     </div>
                   )}
