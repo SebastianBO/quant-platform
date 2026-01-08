@@ -285,11 +285,32 @@ export async function GET(request: NextRequest) {
     } else if (mode === 'recent') {
       orgNumbers = await getRecentlyUpdated(limit)
     } else if (mode === 'as') {
-      // Only AS (Aksjeselskap) companies - private limited companies
+      // Only AS (Aksjeselskap) companies - private limited companies ~370K
       orgNumbers = await searchCompanies({ orgForm: 'AS', size: limit, page: Math.floor(offset / limit) })
     } else if (mode === 'asa') {
-      // Only ASA (Allmennaksjeselskap) companies - public limited (usually listed)
+      // Only ASA (Allmennaksjeselskap) companies - public limited (usually listed) ~200
       orgNumbers = await searchCompanies({ orgForm: 'ASA', size: limit, page: Math.floor(offset / limit) })
+    } else if (mode === 'enk') {
+      // Enkeltpersonforetak - sole proprietorships ~500K
+      orgNumbers = await searchCompanies({ orgForm: 'ENK', size: limit, page: Math.floor(offset / limit) })
+    } else if (mode === 'nuf') {
+      // NUF - Norwegian registered foreign enterprises ~30K
+      orgNumbers = await searchCompanies({ orgForm: 'NUF', size: limit, page: Math.floor(offset / limit) })
+    } else if (mode === 'sa') {
+      // SA - Cooperative societies ~5K
+      orgNumbers = await searchCompanies({ orgForm: 'SA', size: limit, page: Math.floor(offset / limit) })
+    } else if (mode === 'da') {
+      // DA - Shared liability company ~10K
+      orgNumbers = await searchCompanies({ orgForm: 'DA', size: limit, page: Math.floor(offset / limit) })
+    } else if (mode === 'ans') {
+      // ANS - General partnership ~15K
+      orgNumbers = await searchCompanies({ orgForm: 'ANS', size: limit, page: Math.floor(offset / limit) })
+    } else if (mode === 'all') {
+      // All company types - cycle through based on offset to get diverse coverage
+      const orgForms = ['AS', 'ENK', 'NUF', 'ANS', 'DA', 'SA', 'ASA']
+      const formIndex = Math.floor(offset / 10000) % orgForms.length
+      const innerPage = Math.floor((offset % 10000) / limit)
+      orgNumbers = await searchCompanies({ orgForm: orgForms[formIndex], size: limit, page: innerPage })
     } else {
       // Default: known major companies
       orgNumbers = KNOWN_NORWEGIAN_COMPANIES.slice(offset, offset + limit)
