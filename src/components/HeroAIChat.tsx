@@ -150,7 +150,7 @@ export default function HeroAIChat() {
     if (!inputValue.trim() || isLoading) return
     sendMessage({
       role: 'user',
-      parts: [{ type: 'text', text: inputValue }],
+      content: inputValue,
     })
     setInputValue("")
   }

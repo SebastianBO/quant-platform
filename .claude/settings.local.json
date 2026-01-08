@@ -116,7 +116,8 @@
       "WebFetch(domain:lician.com)",
       "Bash(timeout 45 curl:*)",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "WebFetch(domain:v5.ai-sdk.dev)"
+      "WebFetch(domain:v5.ai-sdk.dev)",
+      "mcp__plugin_supabase-toolkit_supabase__get_logs"
     ],
     "deny": [],
     "ask": []
