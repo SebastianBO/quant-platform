@@ -56,25 +56,25 @@ const SIDEBAR_TOP = [
 // Sidebar - account & settings
 const SIDEBAR_BOTTOM = [
   { id: "portfolio", icon: Briefcase, label: "Portfolio", href: "/dashboard/portfolios" },
-  { id: "watchlist", icon: Star, label: "Watchlist", href: "/dashboard/watchlist" },
+  { id: "watchlist", icon: Star, label: "Watchlist", href: "/portfolio" },
   { id: "screener", icon: BarChart3, label: "Screener", href: "/screener" },
-  { id: "alerts", icon: Bell, label: "Alerts", href: "/dashboard/alerts" },
-  { id: "settings", icon: Settings, label: "Settings", href: "/dashboard/settings" },
+  { id: "alerts", icon: Bell, label: "Alerts", href: "/dashboard" },
+  { id: "settings", icon: Settings, label: "Settings", href: "/settings" },
 ]
 
 // Financial tool actions (shown as pill buttons)
 const FINANCIAL_TOOLS = [
   { id: "portfolio", label: "Connect Portfolio", icon: Wallet, href: "/dashboard/portfolios" },
   { id: "screener", label: "Stock Screener", icon: BarChart3, href: "/screener" },
-  { id: "compare", label: "Compare Stocks", icon: LineChart, href: "/compare" },
-  { id: "taxes", label: "Calculate Taxes", icon: Calculator, href: "/tools/tax-calculator" },
+  { id: "compare", label: "Compare Stocks", icon: LineChart, href: "/compare/AAPL-vs-MSFT" },
+  { id: "valuation", label: "DCF Valuation", icon: Calculator, href: "/learn/dcf-valuation" },
   { id: "more", label: "More", icon: MoreHorizontal, href: null },
 ]
 
 // More tools dropdown
 const MORE_TOOLS = [
   { label: "Earnings Calendar", icon: Calendar, href: "/earnings" },
-  { label: "DCF Valuation", icon: FileText, href: "/tools/dcf" },
+  { label: "Learn Investing", icon: FileText, href: "/learn" },
   { label: "Insider Trading", icon: Building2, href: "/insider-trading" },
   { label: "Top Gainers", icon: Flame, href: "/markets/top-gainers" },
   { label: "Short Interest", icon: TrendingDown, href: "/short-interest" },
