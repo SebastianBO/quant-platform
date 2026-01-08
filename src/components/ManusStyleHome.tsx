@@ -126,13 +126,6 @@ const MODELS = [
   { key: 'claude-sonnet-4', name: 'Claude Sonnet 4', tier: 'premium' },
 ]
 
-// Quick suggestions
-const SUGGESTIONS = [
-  "Analyze Apple vs Microsoft",
-  "Tesla insider trading",
-  "NVIDIA revenue breakdown",
-  "Best dividend stocks",
-]
 
 interface Mover {
   symbol: string
@@ -730,26 +723,11 @@ export default function ManusStyleHome() {
                 </button>
               </div>
 
-              {/* Suggestions - only show when no messages */}
+              {/* Tool buttons - only show when no messages */}
               {!hasMessages && (
                 <>
-                  <div className="flex flex-wrap gap-2 justify-center mt-4">
-                    {SUGGESTIONS.map((suggestion) => (
-                      <button
-                        key={suggestion}
-                        onClick={() => {
-                          setInputValue(suggestion)
-                          setTimeout(() => handleSubmit(), 100)
-                        }}
-                        className="text-sm px-3 py-2 rounded-full border border-border bg-card hover:bg-secondary/50 transition-colors"
-                      >
-                        {suggestion}
-                      </button>
-                    ))}
-                  </div>
-
                   {/* Financial tool buttons */}
-                  <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
+                  <div className="flex flex-wrap items-center justify-center gap-3 mt-4">
                     {FINANCIAL_TOOLS.map((tool) => (
                       <div key={tool.id} className="relative">
                         <button
