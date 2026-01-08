@@ -204,7 +204,7 @@ async function saveCompany(company: FinnishCompany): Promise<boolean> {
     founded_year: company.registrationDate ? parseInt(company.registrationDate.split('-')[0]) : undefined,
     is_active: isActive,
     is_listed: company.companyForm === 'OYJ', // Public limited companies
-    isin: company.euId, // EU business ID
+    lei: company.euId, // Store EU business ID in LEI field (similar identifier)
     source: 'PRH',
     source_url: `https://tietopalvelu.ytj.fi/yritystiedot.aspx?yavain=${company.businessId?.replace('-', '')}`,
     updated_at: new Date().toISOString(),
