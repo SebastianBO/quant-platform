@@ -24,9 +24,9 @@ function getSupabase() {
 
 // Initialize Vercel AI Gateway - uses free $5/month credits!
 // Llama 3.3-70B: $0.03/M input, $0.05/M output (100x cheaper than Claude!)
-const gateway = createGateway({
-  apiKey: process.env.AI_GATEWAY_API_KEY,
-})
+// On Vercel deployments: Uses OIDC authentication automatically (no API key needed)
+// Local development: Set AI_GATEWAY_API_KEY env var or use `vercel dev`
+const gateway = createGateway()
 
 function getRateLimitKey(req: NextRequest): string {
   const forwarded = req.headers.get('x-forwarded-for')
@@ -72,13 +72,14 @@ async function fetchRelevantContext(query: string): Promise<string> {
 
       if (fundamentals && fundamentals.length > 0) {
         context += '\n\n## Relevant Company Data:\n'
-        for (const f of fundamentals) {
+        type Fundamental = Record<string, unknown>
+        for (const f of fundamentals as Fundamental[]) {
           context += `\n### ${f.company_name} (${f.ticker})\n`
           context += `- Sector: ${f.sector || 'N/A'} | Industry: ${f.industry || 'N/A'}\n`
-          context += `- Market Cap: $${f.market_cap ? (f.market_cap / 1e9).toFixed(2) + 'B' : 'N/A'}\n`
-          context += `- P/E Ratio: ${f.pe_ratio?.toFixed(2) || 'N/A'} | EPS: $${f.eps?.toFixed(2) || 'N/A'}\n`
+          context += `- Market Cap: $${f.market_cap ? ((f.market_cap as number) / 1e9).toFixed(2) + 'B' : 'N/A'}\n`
+          context += `- P/E Ratio: ${(f.pe_ratio as number)?.toFixed(2) || 'N/A'} | EPS: $${(f.eps as number)?.toFixed(2) || 'N/A'}\n`
           if (f.description) {
-            context += `- Description: ${f.description.substring(0, 200)}...\n`
+            context += `- Description: ${(f.description as string).substring(0, 200)}...\n`
           }
         }
       }
@@ -93,13 +94,14 @@ async function fetchRelevantContext(query: string): Promise<string> {
 
       if (metrics && metrics.length > 0) {
         context += '\n\n## Latest Financial Metrics:\n'
-        for (const m of metrics) {
+        type Metric = Record<string, unknown>
+        for (const m of metrics as Metric[]) {
           context += `\n### ${m.ticker} (${m.report_period})\n`
-          context += `- P/E: ${m.pe_ratio?.toFixed(2) || 'N/A'} | P/B: ${m.pb_ratio?.toFixed(2) || 'N/A'} | P/S: ${m.ps_ratio?.toFixed(2) || 'N/A'}\n`
-          context += `- Gross Margin: ${m.gross_margin ? (m.gross_margin * 100).toFixed(1) + '%' : 'N/A'}\n`
-          context += `- Operating Margin: ${m.operating_margin ? (m.operating_margin * 100).toFixed(1) + '%' : 'N/A'}\n`
-          context += `- ROE: ${m.return_on_equity ? (m.return_on_equity * 100).toFixed(1) + '%' : 'N/A'}\n`
-          context += `- Debt/Equity: ${m.debt_to_equity?.toFixed(2) || 'N/A'}\n`
+          context += `- P/E: ${(m.pe_ratio as number)?.toFixed(2) || 'N/A'} | P/B: ${(m.pb_ratio as number)?.toFixed(2) || 'N/A'} | P/S: ${(m.ps_ratio as number)?.toFixed(2) || 'N/A'}\n`
+          context += `- Gross Margin: ${m.gross_margin ? ((m.gross_margin as number) * 100).toFixed(1) + '%' : 'N/A'}\n`
+          context += `- Operating Margin: ${m.operating_margin ? ((m.operating_margin as number) * 100).toFixed(1) + '%' : 'N/A'}\n`
+          context += `- ROE: ${m.return_on_equity ? ((m.return_on_equity as number) * 100).toFixed(1) + '%' : 'N/A'}\n`
+          context += `- Debt/Equity: ${(m.debt_to_equity as number)?.toFixed(2) || 'N/A'}\n`
         }
       }
     }
