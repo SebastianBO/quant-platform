@@ -440,3 +440,77 @@ Will need:
 ```
 
 Goal: **Zero paid API calls** once all stocks are synced.
+
+---
+
+# AUTONOMOUS RESEARCH AGENT
+
+## Overview
+
+The main page (lician.com) features a **Dexter-inspired autonomous research agent** with a **Morphic-style UI**. See full docs: `docs/AUTONOMOUS_AGENT.md`
+
+## Quick Reference
+
+### Architecture
+- **5-Phase Workflow**: Understand → Plan → Execute → Reflect → Answer
+- **Multi-Model**: Vercel AI Gateway (GPT-4o, Claude, Llama, Gemini)
+- **21 Tools**: Supabase (11) + Financial Datasets API (5) + Firecrawl (5)
+
+### Key Files
+```
+src/lib/ai/agent/
+├── orchestrator.ts    # Main Agent class with 5-phase workflow
+├── prompts.ts         # System prompts for each phase
+├── types.ts           # TypeScript types and Zod schemas
+└── index.ts           # Public exports
+
+src/lib/ai/
+├── tools.ts           # All 21 financial tools
+└── financial-datasets-api.ts  # API fallback client
+
+src/app/api/chat/
+├── autonomous/route.ts  # Streaming agent API
+└── public/route.ts      # Basic chat API
+
+src/components/
+└── AutonomousChat.tsx   # Morphic-style UI
+```
+
+### Tools Available
+
+**Supabase Data (11):**
+getStockQuote, getCompanyFundamentals, getFinancialStatements, getInsiderTrades, getInstitutionalOwnership, getAnalystRatings, getShortInterest, getBiotechCatalysts, searchStocks, getMarketMovers, compareStocks
+
+**Financial Datasets API (5):**
+getSECFilings, getPriceHistory, getFinancialNews, getSegmentedRevenue, getAnalystEstimates
+
+**Firecrawl Web Research (5):**
+- `deepResearch` - Autonomous multi-source research
+- `extractFinancialData` - Schema-based extraction from IR pages
+- `searchRecentNews` - Time-filtered news (day/week/month/year)
+- `firecrawlAgent` - Autonomous data discovery without URLs
+- `crawlInvestorRelations` - Full IR website crawl
+
+### API Usage
+
+```bash
+# Get available models
+curl https://lician.com/api/chat/autonomous
+
+# Research query
+curl -X POST https://lician.com/api/chat/autonomous \
+  -H "Content-Type: application/json" \
+  -d '{"query":"What is Apple Q3 revenue?","model":"gpt-4o-mini","stream":false}'
+```
+
+### Environment Variables
+```bash
+AI_GATEWAY_API_KEY=vck_...        # Vercel AI Gateway
+FIRECRAWL_API_KEY=fc-...          # Firecrawl web research
+FINANCIAL_DATASETS_API_KEY=...    # Fallback API
+```
+
+### Rate Limits
+- 10 requests/hour per IP
+- Max 3 iterations per query
+- 120 second timeout
