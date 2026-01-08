@@ -9,6 +9,9 @@ import {
   SITE_URL,
 } from '@/lib/seo'
 
+// Force dynamic rendering to avoid prerender issues
+export const dynamic = 'force-dynamic'
+
 interface Props {
   params: Promise<{ category: string }>
 }
