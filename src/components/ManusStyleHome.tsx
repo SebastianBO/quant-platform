@@ -133,10 +133,12 @@ const SAMPLE_PROMPTS = [
 
 // AI Models
 const MODELS = [
+  { key: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash', tier: 'standard' },
   { key: 'gpt-4o-mini', name: 'GPT-4o Mini', tier: 'standard' },
-  { key: 'claude-3-5-sonnet', name: 'Claude 3.5 Sonnet', tier: 'standard' },
+  { key: 'claude-3-5-haiku', name: 'Claude 3.5 Haiku', tier: 'standard' },
   { key: 'gpt-4o', name: 'GPT-4o', tier: 'premium' },
   { key: 'claude-sonnet-4', name: 'Claude Sonnet 4', tier: 'premium' },
+  { key: 'gemini-2.0-pro', name: 'Gemini 2.0 Pro', tier: 'premium' },
 ]
 
 
@@ -759,19 +761,15 @@ export default function ManusStyleHome() {
                           <button
                             key={model.key}
                             onClick={() => {
-                              setSelectedModel(model)
                               setShowModelSelector(false)
+                              // Redirect to Stripe checkout for premium
+                              router.push('/api/stripe/quick-checkout?plan=monthly')
                             }}
-                            className={cn(
-                              "w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors",
-                              selectedModel.key === model.key
-                                ? "bg-green-500/10 text-green-500"
-                                : "text-foreground hover:bg-secondary"
-                            )}
+                            className="w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors text-foreground hover:bg-secondary"
                           >
                             <Zap className="w-4 h-4 text-yellow-500" />
                             {model.name}
-                            {selectedModel.key === model.key && <Check className="w-4 h-4 ml-auto" />}
+                            <span className="ml-auto text-xs text-yellow-500 bg-yellow-500/10 px-1.5 py-0.5 rounded">PRO</span>
                           </button>
                         ))}
                       </div>
