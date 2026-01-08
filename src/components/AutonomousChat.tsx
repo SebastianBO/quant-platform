@@ -514,7 +514,7 @@ export default function AutonomousChat() {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-200px)] max-w-3xl mx-auto">
+    <div className="flex flex-col min-h-[500px] max-w-3xl mx-auto">
       {/* Messages area */}
       <div
         ref={scrollRef}

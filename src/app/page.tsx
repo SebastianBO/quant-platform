@@ -1,6 +1,9 @@
 import { Metadata } from 'next'
 import { Suspense } from "react"
+import { Header } from "@/components/header"
+import EnhancedMarketMovers from "@/components/EnhancedMarketMovers"
 import AutonomousChat from "@/components/AutonomousChat"
+import QuickActions from "@/components/QuickActions"
 import DashboardContent from "@/components/DashboardContent"
 import FeaturedArticles from "@/components/FeaturedArticles"
 import { Footer } from "@/components/footer"
@@ -51,8 +54,11 @@ function LoadingState() {
 export default function Home() {
   return (
     <>
-      <main className="min-h-screen bg-background pt-4">
+      <Header />
+      <EnhancedMarketMovers />
+      <main className="min-h-screen bg-background">
         <AutonomousChat />
+        <QuickActions />
       </main>
       <Suspense fallback={<LoadingState />}>
         <DashboardContent />
