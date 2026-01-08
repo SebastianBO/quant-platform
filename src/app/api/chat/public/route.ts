@@ -97,15 +97,23 @@ export async function POST(req: NextRequest) {
 
   try {
     const { messages } = await req.json()
+    console.log('Received messages:', JSON.stringify(messages))
 
     // Get RAG context
     const lastUserMessage = [...messages].reverse().find((m: { role: string }) => m.role === 'user')
-    const userQuery = lastUserMessage?.content || ''
+    const userQuery = typeof lastUserMessage?.content === 'string'
+      ? lastUserMessage.content
+      : ''
+    console.log('User query:', userQuery)
+
     const ragContext = await fetchRelevantContext(userQuery)
 
     const systemPrompt = ragContext
       ? `${SYSTEM_PROMPT}\n\nContext:${ragContext}`
       : SYSTEM_PROMPT
+
+    console.log('Calling gateway with model meta/llama-3.3-70b')
+    console.log('API Key present:', !!process.env.AI_GATEWAY_API_KEY)
 
     // Use Llama 3.3-70B via Vercel AI Gateway
     const result = streamText({
@@ -121,9 +129,11 @@ export async function POST(req: NextRequest) {
 
     return result.toUIMessageStreamResponse()
   } catch (error) {
-    console.error('Chat error:', error instanceof Error ? error.stack : error)
+    const errorMsg = error instanceof Error ? error.message : String(error)
+    const errorStack = error instanceof Error ? error.stack : ''
+    console.error('Chat error:', errorMsg, errorStack)
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Something went wrong' },
+      { error: errorMsg },
       { status: 500 }
     )
   }
