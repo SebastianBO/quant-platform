@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { ALL_STOCKS_FULL, QUARTERS } from '@/lib/stocks-full'
+import { ALL_STOCKS_FULL } from '@/lib/stocks-full'
 
 export const revalidate = 86400
 
@@ -8,15 +8,12 @@ export async function GET(request: Request) {
   const page = parseInt(searchParams.get('page') || '1')
   const perPage = 50000
 
+  // Only generate base ticker URLs - quarter-specific routes don't exist
   const urls: string[] = []
 
-  // Add main institutional pages and quarterly variations
   for (const ticker of ALL_STOCKS_FULL) {
     const t = ticker.toLowerCase()
     urls.push(`/institutional/${t}`)
-    for (const quarter of QUARTERS) {
-      urls.push(`/institutional/${t}/${quarter}`)
-    }
   }
 
   const start = (page - 1) * perPage

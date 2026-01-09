@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { ALL_STOCKS_FULL, YEARS } from '@/lib/stocks-full'
+import { ALL_STOCKS_FULL } from '@/lib/stocks-full'
 
 export const revalidate = 86400
 
@@ -8,14 +8,12 @@ export async function GET(request: Request) {
   const page = parseInt(searchParams.get('page') || '1')
   const perPage = 50000
 
+  // Only generate base ticker URLs - year-specific routes don't exist
   const urls: string[] = []
 
   for (const ticker of ALL_STOCKS_FULL) {
     const t = ticker.toLowerCase()
     urls.push(`/insider/${t}`)
-    for (const year of YEARS) {
-      urls.push(`/insider/${t}/${year}`)
-    }
   }
 
   const start = (page - 1) * perPage
