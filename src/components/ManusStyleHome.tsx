@@ -996,6 +996,103 @@ export default function ManusStyleHome() {
                       </div>
                     </div>
                   )}
+
+                  {/* Popular Analysis - SEO Internal Links */}
+                  <div className="w-full max-w-3xl mx-auto mt-12 space-y-8">
+                    {/* Popular Stock Analysis */}
+                    <div>
+                      <h2 className="text-lg font-semibold mb-4 text-center">Popular Stock Analysis</h2>
+                      <div className="flex flex-wrap justify-center gap-2">
+                        {['AAPL', 'MSFT', 'NVDA', 'TSLA', 'GOOGL', 'META', 'AMZN', 'AMD'].map((ticker) => (
+                          <Link
+                            key={ticker}
+                            href={`/stock/${ticker.toLowerCase()}`}
+                            className="px-4 py-2 bg-card border border-border rounded-lg hover:border-green-500/50 hover:bg-secondary transition-all text-sm font-medium"
+                          >
+                            {ticker}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Price Predictions */}
+                    <div>
+                      <h2 className="text-lg font-semibold mb-4 text-center">Stock Price Predictions 2026</h2>
+                      <div className="flex flex-wrap justify-center gap-2">
+                        {['AAPL', 'MSFT', 'NVDA', 'TSLA', 'GOOGL', 'META', 'AMZN', 'AMD'].map((ticker) => (
+                          <Link
+                            key={ticker}
+                            href={`/prediction/${ticker.toLowerCase()}`}
+                            className="px-4 py-2 bg-card border border-border rounded-lg hover:border-green-500/50 hover:bg-secondary transition-all text-sm"
+                          >
+                            {ticker} Prediction
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Popular Comparisons */}
+                    <div>
+                      <h2 className="text-lg font-semibold mb-4 text-center">Compare Stocks</h2>
+                      <div className="flex flex-wrap justify-center gap-2">
+                        {[
+                          { slug: 'aapl-vs-msft', label: 'AAPL vs MSFT' },
+                          { slug: 'nvda-vs-amd', label: 'NVDA vs AMD' },
+                          { slug: 'googl-vs-meta', label: 'GOOGL vs META' },
+                          { slug: 'tsla-vs-rivn', label: 'TSLA vs RIVN' },
+                          { slug: 'amzn-vs-wmt', label: 'AMZN vs WMT' },
+                          { slug: 'jpm-vs-bac', label: 'JPM vs BAC' },
+                        ].map((pair) => (
+                          <Link
+                            key={pair.slug}
+                            href={`/compare/${pair.slug}`}
+                            className="px-4 py-2 bg-card border border-border rounded-lg hover:border-green-500/50 hover:bg-secondary transition-all text-sm"
+                          >
+                            {pair.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Should I Buy */}
+                    <div>
+                      <h2 className="text-lg font-semibold mb-4 text-center">Investment Decisions</h2>
+                      <div className="flex flex-wrap justify-center gap-2">
+                        {['AAPL', 'MSFT', 'NVDA', 'TSLA', 'GOOGL', 'META'].map((ticker) => (
+                          <Link
+                            key={ticker}
+                            href={`/should-i-buy/${ticker.toLowerCase()}`}
+                            className="px-4 py-2 bg-card border border-border rounded-lg hover:border-green-500/50 hover:bg-secondary transition-all text-sm"
+                          >
+                            Should I Buy {ticker}?
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Sectors */}
+                    <div>
+                      <h2 className="text-lg font-semibold mb-4 text-center">Browse by Sector</h2>
+                      <div className="flex flex-wrap justify-center gap-2">
+                        {[
+                          { slug: 'technology', label: 'Technology' },
+                          { slug: 'healthcare', label: 'Healthcare' },
+                          { slug: 'financials', label: 'Financials' },
+                          { slug: 'energy', label: 'Energy' },
+                          { slug: 'consumer-discretionary', label: 'Consumer' },
+                          { slug: 'industrials', label: 'Industrials' },
+                        ].map((sector) => (
+                          <Link
+                            key={sector.slug}
+                            href={`/sectors/${sector.slug}`}
+                            className="px-4 py-2 bg-green-600/20 text-green-500 border border-green-500/30 rounded-lg hover:bg-green-600/30 transition-all text-sm"
+                          >
+                            {sector.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 </>
               )}
             </div>
