@@ -13,6 +13,7 @@ import {
   getStockFAQsExtended,
   getCorporationSchema,
   getAggregateRatingSchema,
+  getHowToSchema,
   SITE_URL,
 } from '@/lib/seo'
 
@@ -816,7 +817,39 @@ export default async function ShouldIBuyPage({ params }: Props) {
   const faqSchema = getFAQSchema(extendedFaqs)
   const eventSchemas = generateEventSchemas(symbol, companyName, initialEvents, SITE_URL)
 
-  const schemas: object[] = [breadcrumbSchema, articleSchema, corporationSchema, faqSchema, ...eventSchemas]
+  // HowTo Schema for "How to decide if you should buy X stock"
+  const howToSchema = getHowToSchema({
+    name: `How to Decide if You Should Buy ${symbol} Stock`,
+    description: `A step-by-step guide to evaluate whether ${companyName} (${symbol}) is a good investment for your portfolio.`,
+    steps: [
+      {
+        name: 'Analyze the Valuation',
+        text: `Check ${symbol}'s P/E ratio (${peRatio > 0 ? peRatio.toFixed(1) + 'x' : 'N/A'}) and compare it to industry peers. A lower P/E may indicate undervaluation, while a higher P/E may suggest growth expectations.`,
+      },
+      {
+        name: 'Evaluate Growth Metrics',
+        text: `Review ${symbol}'s revenue growth (${metrics?.revenue_growth ? (metrics.revenue_growth * 100).toFixed(1) + '%' : 'N/A'}) and earnings trends. Consistent growth indicates a healthy business with expanding opportunities.`,
+      },
+      {
+        name: 'Assess Profitability',
+        text: `Examine profit margins (${metrics?.profit_margin ? (metrics.profit_margin * 100).toFixed(1) + '%' : 'N/A'}) and return on equity. Strong profitability suggests competitive advantages and efficient capital allocation.`,
+      },
+      {
+        name: 'Check Financial Health',
+        text: `Review ${symbol}'s debt levels, current ratio, and cash position. A strong balance sheet provides resilience during economic downturns.`,
+      },
+      {
+        name: 'Review Insider Activity',
+        text: `Monitor insider buying and selling patterns. Net insider buying often signals management confidence in the company's future.`,
+      },
+      {
+        name: 'Consider Your Investment Goals',
+        text: `Determine if ${symbol} aligns with your risk tolerance, time horizon, and portfolio diversification needs. Our decision score of ${decisionScore.toFixed(1)}/10 summarizes these factors.`,
+      },
+    ],
+  })
+
+  const schemas: object[] = [breadcrumbSchema, articleSchema, corporationSchema, faqSchema, howToSchema, ...eventSchemas]
   if (aggregateRatingSchema) schemas.push(aggregateRatingSchema)
 
   return (
