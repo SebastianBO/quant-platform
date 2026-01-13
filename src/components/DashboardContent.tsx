@@ -3,26 +3,16 @@
 import { useState, useEffect } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import Link from "next/link"
+import dynamic from "next/dynamic"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import DCFCalculator from "@/components/DCFCalculator"
-import PeerComparison from "@/components/PeerComparison"
+// Light components - load immediately
 import StockScreener from "@/components/StockScreener"
 import EarningsCalendar from "@/components/EarningsCalendar"
-import IPValuation from "@/components/IPValuation"
-import QuantAnalysis from "@/components/QuantAnalysis"
-import FinancialSnowflake from "@/components/FinancialSnowflake"
 import NewsSentiment from "@/components/NewsSentiment"
 import MarketNewsFeed from "@/components/MarketNewsFeed"
-import AIInvestmentSummary from "@/components/AIInvestmentSummary"
-import FinancialStatements from "@/components/FinancialStatements"
-import OptionsFlow from "@/components/OptionsFlow"
 import TreasuryYields from "@/components/TreasuryYields"
-import TechnicalAnalysis from "@/components/TechnicalAnalysis"
-import ShortVolume from "@/components/ShortVolume"
-import BorrowData from "@/components/BorrowData"
-import OptionsChain from "@/components/OptionsChain"
 import PortfolioAnalyzer from "@/components/PortfolioAnalyzer"
 import UserPortfolios from "@/components/UserPortfolios"
 import StockSearch from "@/components/StockSearch"
@@ -30,21 +20,35 @@ import StockLogo from "@/components/StockLogo"
 import StockSidebar from "@/components/StockSidebar"
 import TrendingTickers from "@/components/TrendingTickers"
 import MarketOverview from "@/components/MarketOverview"
-import InstitutionalOwnership from "@/components/InstitutionalOwnership"
-import SECFilings from "@/components/SECFilings"
-import AnalystRatings from "@/components/AnalystRatings"
-import InsiderTrading from "@/components/InsiderTrading"
 import OwnershipBreakdown from "@/components/OwnershipBreakdown"
 import CompanyDebt from "@/components/CompanyDebt"
-import DebtAnalysis from "@/components/DebtAnalysis"
 import StockChartSwitcher from "@/components/StockChartSwitcher"
-import { BiotechCatalysts } from "@/components/BiotechCatalysts"
 import MarketDataTable from "@/components/MarketDataTable"
 import MarketSidebar from "@/components/MarketSidebar"
 import UserAvatar from "@/components/UserAvatar"
 import StockDiscussions from "@/components/StockDiscussions"
 import StockInternalLinks from "@/components/StockInternalLinks"
 import { InvestmentCalculator } from "@/components/calculators"
+
+// Heavy components - lazy load only when tab is active
+const DCFCalculator = dynamic(() => import("@/components/DCFCalculator"), { ssr: false })
+const PeerComparison = dynamic(() => import("@/components/PeerComparison"), { ssr: false })
+const IPValuation = dynamic(() => import("@/components/IPValuation"), { ssr: false })
+const QuantAnalysis = dynamic(() => import("@/components/QuantAnalysis"), { ssr: false })
+const FinancialSnowflake = dynamic(() => import("@/components/FinancialSnowflake"), { ssr: false })
+const AIInvestmentSummary = dynamic(() => import("@/components/AIInvestmentSummary"), { ssr: false })
+const FinancialStatements = dynamic(() => import("@/components/FinancialStatements"), { ssr: false })
+const OptionsFlow = dynamic(() => import("@/components/OptionsFlow"), { ssr: false })
+const TechnicalAnalysis = dynamic(() => import("@/components/TechnicalAnalysis"), { ssr: false })
+const ShortVolume = dynamic(() => import("@/components/ShortVolume"), { ssr: false })
+const BorrowData = dynamic(() => import("@/components/BorrowData"), { ssr: false })
+const OptionsChain = dynamic(() => import("@/components/OptionsChain"), { ssr: false })
+const InstitutionalOwnership = dynamic(() => import("@/components/InstitutionalOwnership"), { ssr: false })
+const SECFilings = dynamic(() => import("@/components/SECFilings"), { ssr: false })
+const AnalystRatings = dynamic(() => import("@/components/AnalystRatings"), { ssr: false })
+const InsiderTrading = dynamic(() => import("@/components/InsiderTrading"), { ssr: false })
+const DebtAnalysis = dynamic(() => import("@/components/DebtAnalysis"), { ssr: false })
+const BiotechCatalysts = dynamic(() => import("@/components/BiotechCatalysts").then(mod => ({ default: mod.BiotechCatalysts })), { ssr: false })
 import { formatCurrency, formatPercent } from "@/lib/utils"
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts"
 import { TrendingUp, TrendingDown, Star, Share2, Menu, X } from "lucide-react"

@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+// Increase timeout to 60 seconds for heavy API aggregation
+export const maxDuration = 60
+
 const FINANCIAL_DATASETS_API_KEY = process.env.FINANCIAL_DATASETS_API_KEY || ""
 const EODHD_API_KEY = process.env.EODHD_API_KEY || ""
 const FD_BASE_URL = "https://api.financialdatasets.ai"
@@ -486,7 +489,8 @@ export async function GET(request: NextRequest) {
       phone: eohdGeneral?.Phone || null,
     }
 
-    return NextResponse.json({
+    // Return response with caching headers (1 hour cache)
+    const response = NextResponse.json({
       snapshot: enhancedSnapshot,
       companyFacts: mergedCompanyFacts,
       // Annual statements - with EODHD fallback
@@ -524,6 +528,10 @@ export async function GET(request: NextRequest) {
       // Data source tracking - shows whether data came from Supabase cache or API
       dataSources,
     })
+
+    // Add cache headers - 1 hour browser cache, 2 hour CDN cache
+    response.headers.set('Cache-Control', 'public, max-age=3600, s-maxage=7200, stale-while-revalidate=3600')
+    return response
   } catch (error) {
     console.error('Stock API error:', error)
     return NextResponse.json({ error: 'Failed to fetch stock data' }, { status: 500 })

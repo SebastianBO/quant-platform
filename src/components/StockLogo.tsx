@@ -79,12 +79,12 @@ export default function StockLogo({
     >
       <Image
         src={logoUrl}
-        alt={symbol}
+        alt={`${symbol} logo`}
         width={imageSize}
         height={imageSize}
-        className="object-contain"
-        style={{ width: imageSize * 0.8, height: imageSize * 0.8 }}
+        className="object-contain p-0.5"
         onError={() => setError(true)}
+        loading="lazy"
       />
     </div>
   )
