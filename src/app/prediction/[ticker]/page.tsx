@@ -12,6 +12,7 @@ import {
   getFAQSchema,
   getStockFAQsExtended,
   getCorporationSchema,
+  getDatasetSchema,
   SITE_URL,
 } from '@/lib/seo'
 
@@ -469,12 +470,21 @@ export default async function PredictionPage({ params }: Props) {
   // Event Schema for upcoming catalysts
   const eventSchemas = generateEventSchemas(symbol, companyName, initialEvents, SITE_URL)
 
+  // Dataset Schema for price predictions
+  const datasetSchema = getDatasetSchema({
+    ticker: symbol,
+    name: companyName,
+    description: `${symbol} stock price prediction data including bull case ($${bullCase.toFixed(2)}), base case ($${baseCase.toFixed(2)}), and bear case ($${bearCase.toFixed(2)}) targets for ${currentYear}-${currentYear + 1}. ${source === 'analyst' ? `Based on ${analystCount} analyst price targets.` : 'Based on fundamental analysis.'}`,
+    url: pageUrl,
+  })
+
   // Combine all schemas
   const schemas: object[] = [
     breadcrumbSchema,
     articleSchema,
     corporationSchema,
     faqSchema,
+    datasetSchema,
     ...eventSchemas,
   ]
 
