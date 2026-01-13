@@ -721,6 +721,7 @@ export default function ManusStyleHome() {
                     onClick={() => fileInputRef.current?.click()}
                     className="p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors"
                     title="Attach PDF or document"
+                    aria-label="Attach PDF or document"
                   >
                     <Paperclip className="w-5 h-5" />
                   </button>
@@ -731,6 +732,8 @@ export default function ManusStyleHome() {
                       onClick={() => setShowModelSelector(!showModelSelector)}
                       className="flex items-center gap-1.5 px-2.5 py-1.5 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors text-sm"
                       title="Select AI model"
+                      aria-label="Select AI model"
+                      aria-expanded={showModelSelector}
                     >
                       <Sparkles className="w-4 h-4" />
                       <span className="hidden sm:inline">{selectedModel.name}</span>
@@ -861,29 +864,36 @@ export default function ManusStyleHome() {
                     ))}
                   </div>
 
-                  {/* Tool integration hint with stock logos */}
-                  <div className="flex items-center justify-between px-2 py-4 text-sm text-muted-foreground">
+                  {/* Tool integration hint with stock logos - fixed height to prevent CLS */}
+                  <div className="flex items-center justify-between px-2 py-4 text-sm text-muted-foreground h-14">
                     <div className="flex items-center gap-2">
                       <Wallet className="w-4 h-4" />
                       <span>Connect your portfolio for personalized insights</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      {movers.slice(0, 4).map((mover) => (
-                        <Link
-                          key={mover.symbol}
-                          href={`/stock/${mover.symbol}`}
-                          className="hover:scale-110 transition-transform"
-                          title={`${mover.symbol} - ${mover.changePercent > 0 ? '+' : ''}${mover.changePercent?.toFixed(2)}%`}
-                        >
-                          <StockLogo symbol={mover.symbol} size="sm" />
-                        </Link>
-                      ))}
+                    <div className="flex items-center gap-1 w-[104px]">
+                      {movers.length > 0 ? (
+                        movers.slice(0, 4).map((mover) => (
+                          <Link
+                            key={mover.symbol}
+                            href={`/stock/${mover.symbol}`}
+                            className="hover:scale-110 transition-transform"
+                            title={`${mover.symbol} - ${mover.changePercent > 0 ? '+' : ''}${mover.changePercent?.toFixed(2)}%`}
+                          >
+                            <StockLogo symbol={mover.symbol} size="sm" />
+                          </Link>
+                        ))
+                      ) : (
+                        /* Skeleton placeholders to prevent CLS */
+                        Array.from({ length: 4 }).map((_, i) => (
+                          <div key={i} className="w-6 h-6 rounded-lg bg-muted animate-pulse" />
+                        ))
+                      )}
                     </div>
                   </div>
 
-                  {/* Manus-style bottom carousel */}
-                  {!carouselDismissed && (
-                    <div className="w-full max-w-2xl mx-auto mt-8">
+                  {/* Manus-style bottom carousel - fixed height container to prevent CLS */}
+                  <div className="w-full max-w-2xl mx-auto mt-8 min-h-[180px]">
+                    {!carouselDismissed && (
                       <div className="relative">
                         <div
                           onClick={() => handleCarouselClick(CAROUSEL_SLIDES[carouselIndex])}
@@ -958,6 +968,7 @@ export default function ManusStyleHome() {
                                   setShowDismissTooltip(true)
                                 }}
                                 className="p-1.5 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
+                                aria-label="Dismiss carousel"
                               >
                                 <X className="w-4 h-4" />
                               </button>
@@ -981,8 +992,8 @@ export default function ManusStyleHome() {
                         </div>
 
                         {/* Pagination dots */}
-                        <div className="flex items-center justify-center gap-2 mt-4">
-                          {CAROUSEL_SLIDES.map((_, index) => (
+                        <div className="flex items-center justify-center gap-2 mt-4" role="tablist" aria-label="Carousel navigation">
+                          {CAROUSEL_SLIDES.map((slide, index) => (
                             <button
                               key={index}
                               onClick={() => setCarouselIndex(index)}
@@ -990,12 +1001,15 @@ export default function ManusStyleHome() {
                                 "w-2 h-2 rounded-full transition-colors",
                                 index === carouselIndex ? "bg-foreground" : "bg-muted-foreground/30"
                               )}
+                              aria-label={`Go to slide ${index + 1}: ${slide.title}`}
+                              aria-selected={index === carouselIndex}
+                              role="tab"
                             />
                           ))}
                         </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
 
                   {/* Popular Analysis - SEO Internal Links */}
                   <div className="w-full max-w-3xl mx-auto mt-12 space-y-8">
