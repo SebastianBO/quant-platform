@@ -30,6 +30,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${symbol} Insider Trading - Executive Stock Transactions`,
       description: `Track ${symbol} insider buying and selling activity from executives and directors.`,
       type: 'article',
+      url: `https://lician.com/insider/${ticker.toLowerCase()}`,
+      images: [{
+        url: `https://lician.com/api/og/stock/${ticker.toLowerCase()}`,
+        width: 1200,
+        height: 630,
+        alt: `${symbol} Insider Trading Activity`,
+      }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${symbol} Insider Trading ${currentYear}`,
+      description: `Track ${symbol} insider buying and selling activity from executives and directors.`,
+      images: [`https://lician.com/api/og/stock/${ticker.toLowerCase()}`],
     },
     alternates: {
       canonical: `https://lician.com/insider/${ticker.toLowerCase()}`,
@@ -78,6 +91,7 @@ export default async function InsiderPage({ params }: Props) {
 
   const netSentiment = buys.length > sells.length ? 'Bullish' : sells.length > buys.length ? 'Bearish' : 'Neutral'
 
+  const netBuyValue = totalBuyValue - totalSellValue
   const insiderFaqs = [
     {
       question: `Are insiders buying or selling ${symbol}?`,
@@ -98,6 +112,24 @@ export default async function InsiderPage({ params }: Props) {
     {
       question: `Why do insiders sell ${symbol} stock?`,
       answer: `Insiders may sell for various reasons including diversification, personal financial needs, or as part of planned 10b5-1 trading plans. Insider selling doesn't always indicate bearish sentiment - context matters.`
+    },
+    {
+      question: `What is the net insider activity for ${symbol}?`,
+      answer: trades.length > 0
+        ? `${symbol} insiders have net ${netBuyValue > 0 ? 'bought' : 'sold'} ${formatCurrency(Math.abs(netBuyValue))} worth of stock recently. ${netBuyValue > 0 ? 'Net buying indicates collective insider confidence in the stock.' : 'Net selling may reflect profit-taking or diversification needs.'}`
+        : `Net insider activity data for ${symbol} will be available when recent transactions are reported.`
+    },
+    {
+      question: `How do I track ${symbol} insider trades?`,
+      answer: `${symbol} insider trades are disclosed through SEC Form 4 filings, which must be submitted within 2 business days of the transaction. This page automatically tracks and displays the latest Form 4 filings for ${companyName}.`
+    },
+    {
+      question: `What is a 10b5-1 trading plan for ${symbol}?`,
+      answer: `A 10b5-1 trading plan allows ${symbol} insiders to set up predetermined trading schedules when they don't have material non-public information. This protects executives from insider trading accusations while allowing them to diversify holdings.`
+    },
+    {
+      question: `Is ${symbol} insider buying a good sign?`,
+      answer: `${symbol} insider buying can be a positive signal since executives know the company intimately. However, context matters - consider the size of purchases relative to their holdings, the number of insiders buying, and whether it's open market purchases versus options exercises.`
     },
   ]
 
