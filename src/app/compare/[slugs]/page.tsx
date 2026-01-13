@@ -294,6 +294,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${ticker1} vs ${ticker2} Stock Comparison`,
       description,
       type: 'article',
+      url: `${SITE_URL}/compare/${slugs.toLowerCase()}`,
+      images: [{
+        url: `${SITE_URL}/api/og/stock/${ticker1.toLowerCase()}`,
+        width: 1200,
+        height: 630,
+        alt: `${ticker1} vs ${ticker2} Stock Comparison`,
+      }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${ticker1} vs ${ticker2}: Which Stock is Better?`,
+      description,
+      images: [`${SITE_URL}/api/og/stock/${ticker1.toLowerCase()}`],
     },
     alternates: {
       canonical: `https://lician.com/compare/${slugs.toLowerCase()}`,

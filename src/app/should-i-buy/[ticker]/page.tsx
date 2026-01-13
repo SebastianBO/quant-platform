@@ -106,6 +106,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `Should I Buy ${symbol} Stock? | ${companyName}`,
       description,
       type: 'article',
+      url: `${SITE_URL}/should-i-buy/${ticker.toLowerCase()}`,
+      images: [{
+        url: `${SITE_URL}/api/og/stock/${ticker.toLowerCase()}`,
+        width: 1200,
+        height: 630,
+        alt: `Should I Buy ${symbol} Stock Analysis`,
+      }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `Should I Buy ${symbol}? | Expert Analysis`,
+      description,
+      images: [`${SITE_URL}/api/og/stock/${ticker.toLowerCase()}`],
     },
     alternates: {
       canonical: `https://lician.com/should-i-buy/${ticker.toLowerCase()}`,
