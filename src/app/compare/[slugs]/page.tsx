@@ -422,7 +422,12 @@ export default async function ComparePage({ params }: Props) {
     ],
   })
 
-  // FAQ Schema for comparison
+  // FAQ Schema for comparison - expanded to 8 FAQs for better SEO
+  const peWinner = stock1.pe > 0 && stock2.pe > 0 ? (stock1.pe < stock2.pe ? ticker1 : ticker2) : null
+  const growthWinner = stock1.revenueGrowth > stock2.revenueGrowth ? ticker1 : stock2.revenueGrowth > stock1.revenueGrowth ? ticker2 : null
+  const marginWinner = stock1.grossMargin > stock2.grossMargin ? ticker1 : stock2.grossMargin > stock1.grossMargin ? ticker2 : null
+  const capWinner = stock1.marketCap > stock2.marketCap ? ticker1 : ticker2
+
   const comparisonFaqs = [
     {
       question: `Is ${ticker1} or ${ticker2} a better investment?`,
@@ -434,7 +439,31 @@ export default async function ComparePage({ params }: Props) {
     },
     {
       question: `Which stock has better value: ${ticker1} or ${ticker2}?`,
-      answer: `Based on P/E ratios, ${typeof stock1.pe === 'number' && typeof stock2.pe === 'number' && stock1.pe > 0 && stock2.pe > 0 ? (stock1.pe < stock2.pe ? `${ticker1} trades at a lower multiple (${safeFixed(stock1.pe, 1)}x vs ${safeFixed(stock2.pe, 1)}x)` : `${ticker2} trades at a lower multiple (${safeFixed(stock2.pe, 1)}x vs ${safeFixed(stock1.pe, 1)}x)`) : 'compare detailed valuation metrics on our dashboard'}.`,
+      answer: `Based on P/E ratios, ${peWinner ? (peWinner === ticker1 ? `${ticker1} trades at a lower multiple (${safeFixed(stock1.pe, 1)}x vs ${safeFixed(stock2.pe, 1)}x)` : `${ticker2} trades at a lower multiple (${safeFixed(stock2.pe, 1)}x vs ${safeFixed(stock1.pe, 1)}x)`) : 'compare detailed valuation metrics on our dashboard'}.`,
+    },
+    {
+      question: `Which is growing faster: ${ticker1} or ${ticker2}?`,
+      answer: growthWinner
+        ? `${growthWinner === ticker1 ? ticker1 : ticker2} has higher revenue growth at ${safeFixed((growthWinner === ticker1 ? stock1.revenueGrowth : stock2.revenueGrowth) * 100, 1)}% vs ${safeFixed((growthWinner === ticker1 ? stock2.revenueGrowth : stock1.revenueGrowth) * 100, 1)}% for ${growthWinner === ticker1 ? ticker2 : ticker1}.`
+        : `Both ${ticker1} and ${ticker2} show similar growth rates. Check our detailed analysis for quarterly trends.`,
+    },
+    {
+      question: `Which company is more profitable: ${ticker1} or ${ticker2}?`,
+      answer: marginWinner
+        ? `${marginWinner === ticker1 ? stock1.name : stock2.name} (${marginWinner}) has higher gross margins at ${safeFixed((marginWinner === ticker1 ? stock1.grossMargin : stock2.grossMargin) * 100, 1)}% compared to ${safeFixed((marginWinner === ticker1 ? stock2.grossMargin : stock1.grossMargin) * 100, 1)}% for ${marginWinner === ticker1 ? ticker2 : ticker1}.`
+        : `Both companies show comparable profitability metrics. View the full comparison above for detailed analysis.`,
+    },
+    {
+      question: `Which is the larger company: ${ticker1} or ${ticker2}?`,
+      answer: `${capWinner === ticker1 ? stock1.name : stock2.name} (${capWinner}) is larger with a market cap of ${formatMarketCap(capWinner === ticker1 ? stock1.marketCap : stock2.marketCap)} compared to ${formatMarketCap(capWinner === ticker1 ? stock2.marketCap : stock1.marketCap)} for ${capWinner === ticker1 ? ticker2 : ticker1}.`,
+    },
+    {
+      question: `Should I buy ${ticker1} or ${ticker2} in ${currentYear}?`,
+      answer: `Both ${ticker1} and ${ticker2} have investment merit. ${ticker1} trades at $${safeFixed(stock1.price, 2)} while ${ticker2} trades at $${safeFixed(stock2.price, 2)}. Consider your investment goals, risk tolerance, and portfolio diversification before deciding. Our AI analysis tools can provide personalized insights.`,
+    },
+    {
+      question: `What are the key differences between ${ticker1} and ${ticker2} stock?`,
+      answer: `Key differences: Market Cap (${formatMarketCap(stock1.marketCap)} vs ${formatMarketCap(stock2.marketCap)}), P/E Ratio (${stock1.pe > 0 ? safeFixed(stock1.pe, 1) + 'x' : 'N/A'} vs ${stock2.pe > 0 ? safeFixed(stock2.pe, 1) + 'x' : 'N/A'}), Revenue Growth (${safeFixed(stock1.revenueGrowth * 100, 1)}% vs ${safeFixed(stock2.revenueGrowth * 100, 1)}%), Gross Margin (${safeFixed(stock1.grossMargin * 100, 1)}% vs ${safeFixed(stock2.grossMargin * 100, 1)}%).`,
     },
   ]
   const faqSchema = getFAQSchema(comparisonFaqs)
