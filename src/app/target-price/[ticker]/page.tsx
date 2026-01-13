@@ -32,6 +32,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${symbol} Price Target ${currentYear} - Analyst Estimates`,
       description: `Wall Street analyst price targets and consensus estimates for ${symbol}.`,
       type: 'article',
+      url: `https://lician.com/target-price/${ticker.toLowerCase()}`,
+      images: [{
+        url: `https://lician.com/api/og/stock/${ticker.toLowerCase()}`,
+        width: 1200,
+        height: 630,
+        alt: `${symbol} Price Target Analysis`,
+      }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${symbol} Price Target ${currentYear}`,
+      description: `Wall Street analyst price targets and consensus estimates for ${symbol}.`,
+      images: [`https://lician.com/api/og/stock/${ticker.toLowerCase()}`],
     },
     alternates: {
       canonical: `https://lician.com/target-price/${ticker.toLowerCase()}`,

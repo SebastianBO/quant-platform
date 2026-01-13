@@ -29,6 +29,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${symbol} Buybacks | Share Repurchase Program Analysis`,
       description: `Comprehensive ${symbol} buyback analysis with historical repurchase data and shareholder value impact.`,
       type: 'article',
+      url: `https://lician.com/buybacks/${ticker.toLowerCase()}`,
+      images: [{
+        url: `https://lician.com/api/og/stock/${ticker.toLowerCase()}`,
+        width: 1200,
+        height: 630,
+        alt: `${symbol} Buyback Analysis`,
+      }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${symbol} Buybacks`,
+      description: `Comprehensive ${symbol} buyback analysis with historical repurchase data and shareholder value impact.`,
+      images: [`https://lician.com/api/og/stock/${ticker.toLowerCase()}`],
     },
     alternates: {
       canonical: `https://lician.com/buybacks/${ticker.toLowerCase()}`,

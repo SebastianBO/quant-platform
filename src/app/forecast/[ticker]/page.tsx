@@ -98,6 +98,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${symbol} Stock Forecast ${currentYear} | ${companyName}`,
       description,
       type: 'article',
+      url: `https://lician.com/forecast/${ticker.toLowerCase()}`,
+      images: [{
+        url: `https://lician.com/api/og/stock/${ticker.toLowerCase()}`,
+        width: 1200,
+        height: 630,
+        alt: `${symbol} Stock Forecast`,
+      }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${symbol} Stock Forecast ${currentYear}`,
+      description,
+      images: [`https://lician.com/api/og/stock/${ticker.toLowerCase()}`],
     },
     alternates: {
       canonical: `https://lician.com/forecast/${ticker.toLowerCase()}`,

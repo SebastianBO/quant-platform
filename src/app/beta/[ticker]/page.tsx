@@ -29,6 +29,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${symbol} Stock Beta | Risk & Volatility Analysis`,
       description: `Comprehensive ${symbol} beta analysis with systematic risk and market correlation metrics.`,
       type: 'article',
+      url: `https://lician.com/beta/${ticker.toLowerCase()}`,
+      images: [{
+        url: `https://lician.com/api/og/stock/${ticker.toLowerCase()}`,
+        width: 1200,
+        height: 630,
+        alt: `${symbol} Beta Analysis`,
+      }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${symbol} Stock Beta`,
+      description: `Comprehensive ${symbol} beta analysis with systematic risk and market correlation metrics.`,
+      images: [`https://lician.com/api/og/stock/${ticker.toLowerCase()}`],
     },
     alternates: {
       canonical: `https://lician.com/beta/${ticker.toLowerCase()}`,

@@ -38,6 +38,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${symbol} Short Interest & Short Squeeze Analysis`,
       description: `Complete ${symbol} short interest data with real-time short selling metrics and squeeze potential analysis.`,
       type: 'article',
+      url: `https://lician.com/short-interest/${ticker.toLowerCase()}`,
+      images: [{
+        url: `https://lician.com/api/og/stock/${ticker.toLowerCase()}`,
+        width: 1200,
+        height: 630,
+        alt: `${symbol} Short Interest Analysis`,
+      }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${symbol} Short Interest`,
+      description: `Complete ${symbol} short interest data with real-time short selling metrics and squeeze potential analysis.`,
+      images: [`https://lician.com/api/og/stock/${ticker.toLowerCase()}`],
     },
     alternates: {
       canonical: `https://lician.com/short-interest/${ticker.toLowerCase()}`,
