@@ -1,6 +1,26 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Experimental performance optimizations
+  experimental: {
+    // Optimize CSS for better performance
+    optimizeCss: true,
+    // Tree-shake large packages automatically
+    optimizePackageImports: [
+      'lucide-react',
+      '@radix-ui/react-icons',
+      'date-fns',
+      'lodash',
+    ],
+  },
+
+  // Modularize imports for better tree-shaking
+  modularizeImports: {
+    'lucide-react': {
+      transform: 'lucide-react/dist/esm/icons/{{kebabCase member}}',
+    },
+  },
+
   // Image optimization for Core Web Vitals
   images: {
     formats: ['image/avif', 'image/webp'],
