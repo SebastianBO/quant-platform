@@ -1996,6 +1996,157 @@ export const getSemanticContextTool = tool({
 })
 
 /**
+ * Earnings Calendar Tool
+ * Get upcoming and recent earnings reports
+ */
+export const getEarningsCalendarTool = tool({
+  description: 'Get upcoming earnings calendar and recent earnings results. Returns earnings dates, EPS estimates, and historical beat/miss data.',
+  inputSchema: z.object({
+    tickers: z.array(z.string()).optional().describe('Optional list of tickers to filter (e.g., ["AAPL", "MSFT"])'),
+    days: z.number().min(1).max(90).default(14).describe('Number of days forward/backward to search'),
+    direction: z.enum(['upcoming', 'recent', 'both']).default('upcoming').describe('Get upcoming, recent, or both earnings'),
+    limit: z.number().min(1).max(100).default(20).describe('Maximum results to return'),
+  }),
+  execute: async ({ tickers, days = 14, direction = 'upcoming', limit = 20 }) => {
+    const supabase = getSupabase()
+    if (!supabase) return { success: false, error: 'Database not configured' }
+
+    interface UpcomingEarning {
+      symbol: string
+      company_name: string | null
+      report_date: string
+      report_time: string | null
+      eps_estimate: number | null
+      revenue_estimate: number | null
+      fiscal_quarter: number | null
+      fiscal_year: number | null
+    }
+
+    interface RecentEarning {
+      symbol: string
+      company_name: string | null
+      report_date: string
+      eps_actual: number | null
+      eps_estimate: number | null
+      eps_surprise: number | null
+      eps_surprise_percent: number | null
+      revenue_actual: number | null
+    }
+
+    try {
+      const now = new Date()
+      const upcomingResults: Array<{
+        ticker: string
+        company: string
+        date: string
+        time: string
+        epsEstimate: number | null
+        revenueEstimate: number | null
+        fiscalQuarter: string | null
+      }> = []
+      const recentResults: Array<{
+        ticker: string
+        company: string
+        date: string
+        epsActual: number | null
+        epsEstimate: number | null
+        epsSurprise: number | null
+        epsSurprisePercent: number | null
+        revenueActual: number | null
+        beat: 'beat' | 'miss' | 'met' | 'pending'
+      }> = []
+
+      // Get upcoming earnings
+      if (direction === 'upcoming' || direction === 'both') {
+        const futureDate = new Date(now)
+        futureDate.setDate(futureDate.getDate() + days)
+
+        const tickerList = tickers?.map((t: string) => t.toUpperCase())
+        const { data, error } = await supabase
+          .from('company_earnings')
+          .select('symbol, company_name, report_date, report_time, eps_estimate, revenue_estimate, fiscal_quarter, fiscal_year')
+          .gte('report_date', now.toISOString().split('T')[0])
+          .lte('report_date', futureDate.toISOString().split('T')[0])
+          .order('report_date', { ascending: true })
+          .limit(limit)
+
+        if (!error && data) {
+          const filtered = tickerList && tickerList.length > 0
+            ? (data as UpcomingEarning[]).filter((e: UpcomingEarning) => tickerList.includes(e.symbol))
+            : (data as UpcomingEarning[])
+
+          filtered.forEach((e: UpcomingEarning) => {
+            upcomingResults.push({
+              ticker: e.symbol,
+              company: e.company_name || e.symbol,
+              date: e.report_date,
+              time: e.report_time || 'TBD',
+              epsEstimate: e.eps_estimate,
+              revenueEstimate: e.revenue_estimate,
+              fiscalQuarter: e.fiscal_quarter ? `Q${e.fiscal_quarter} ${e.fiscal_year}` : null
+            })
+          })
+        }
+      }
+
+      // Get recent earnings
+      if (direction === 'recent' || direction === 'both') {
+        const pastDate = new Date(now)
+        pastDate.setDate(pastDate.getDate() - days)
+
+        const tickerList = tickers?.map((t: string) => t.toUpperCase())
+        const { data, error } = await supabase
+          .from('company_earnings')
+          .select('symbol, company_name, report_date, eps_actual, eps_estimate, eps_surprise, eps_surprise_percent, revenue_actual')
+          .lte('report_date', now.toISOString().split('T')[0])
+          .gte('report_date', pastDate.toISOString().split('T')[0])
+          .order('report_date', { ascending: false })
+          .limit(limit)
+
+        if (!error && data) {
+          const filtered = tickerList && tickerList.length > 0
+            ? (data as RecentEarning[]).filter((e: RecentEarning) => tickerList.includes(e.symbol))
+            : (data as RecentEarning[])
+
+          filtered.forEach((e: RecentEarning) => {
+            let beat: 'beat' | 'miss' | 'met' | 'pending' = 'pending'
+            if (e.eps_actual != null && e.eps_estimate != null) {
+              if (e.eps_actual > e.eps_estimate) beat = 'beat'
+              else if (e.eps_actual < e.eps_estimate) beat = 'miss'
+              else beat = 'met'
+            }
+            recentResults.push({
+              ticker: e.symbol,
+              company: e.company_name || e.symbol,
+              date: e.report_date,
+              epsActual: e.eps_actual,
+              epsEstimate: e.eps_estimate,
+              epsSurprise: e.eps_surprise,
+              epsSurprisePercent: e.eps_surprise_percent,
+              revenueActual: e.revenue_actual,
+              beat
+            })
+          })
+        }
+      }
+
+      return {
+        success: true,
+        upcoming: upcomingResults,
+        recent: recentResults,
+        meta: {
+          direction,
+          days,
+          asOf: now.toISOString()
+        }
+      }
+    } catch {
+      return { success: false, error: 'Failed to fetch earnings calendar' }
+    }
+  },
+})
+
+/**
  * All tools exported as an object for use in the chat API
  */
 export const financialTools = {
@@ -2008,6 +2159,7 @@ export const financialTools = {
   getAnalystRatings: getAnalystRatingsTool,
   getShortInterest: getShortInterestTool,
   getBiotechCatalysts: getBiotechCatalystsTool,
+  getEarningsCalendar: getEarningsCalendarTool,
   searchStocks: searchStocksTool,
   getMarketMovers: getMarketMoversTool,
   compareStocks: compareStocksTool,

@@ -213,6 +213,59 @@ async function processFinancialInsights(limit: number): Promise<number> {
   return total
 }
 
+async function processEarningsData(limit: number): Promise<number> {
+  console.log(`\n📅 Processing earnings data (limit: ${limit})...`)
+
+  const { data: earnings, error } = await supabase
+    .from('company_earnings')
+    .select('symbol, company_name, report_date, fiscal_year, fiscal_quarter, eps_estimate, eps_actual, eps_surprise_percent, revenue_estimate, revenue_actual')
+    .not('eps_actual', 'is', null)
+    .order('report_date', { ascending: false })
+    .limit(limit)
+
+  if (error || !earnings) {
+    console.error('Error fetching earnings:', error)
+    return 0
+  }
+
+  // Check existing
+  const { data: existing } = await supabase
+    .from('document_embeddings')
+    .select('ticker, document_date')
+    .eq('document_type', 'earnings_transcript')
+
+  const existingSet = new Set(existing?.map(e => `${e.ticker}-${e.document_date}`) || [])
+  const toEmbed = earnings.filter(e => !existingSet.has(`${e.symbol}-${e.report_date}`))
+
+  console.log(`  Found ${earnings.length} earnings, ${toEmbed.length} need embedding`)
+
+  if (toEmbed.length === 0) return 0
+
+  const documents: DocumentToEmbed[] = toEmbed.map(e => {
+    const beat = e.eps_actual && e.eps_estimate ? (e.eps_actual > e.eps_estimate ? 'beat' : e.eps_actual < e.eps_estimate ? 'missed' : 'met') : 'N/A'
+    const surprise = e.eps_surprise_percent ? `${e.eps_surprise_percent > 0 ? '+' : ''}${e.eps_surprise_percent.toFixed(1)}%` : ''
+
+    return {
+      ticker: e.symbol,
+      document_type: 'earnings_transcript' as const,
+      title: `${e.symbol} ${e.fiscal_quarter || ''} ${e.fiscal_year || ''} Earnings`,
+      content: `${e.company_name} (${e.symbol}) reported earnings on ${e.report_date}. EPS: $${e.eps_actual?.toFixed(2) || 'N/A'} vs estimate $${e.eps_estimate?.toFixed(2) || 'N/A'} - ${beat} expectations ${surprise}. ${e.revenue_actual ? `Revenue: $${(e.revenue_actual / 1e9).toFixed(2)}B` : ''} ${e.revenue_estimate ? `vs estimate $${(e.revenue_estimate / 1e9).toFixed(2)}B` : ''}.`,
+      document_date: e.report_date,
+      metadata: { eps_actual: e.eps_actual, eps_estimate: e.eps_estimate, beat },
+    }
+  })
+
+  let total = 0
+  for (let i = 0; i < documents.length; i += BATCH_SIZE) {
+    const batch = documents.slice(i, i + BATCH_SIZE)
+    console.log(`  Processing batch ${Math.floor(i/BATCH_SIZE) + 1}/${Math.ceil(documents.length/BATCH_SIZE)}...`)
+    total += await generateAndStoreEmbeddings(batch)
+  }
+
+  console.log(`  ✅ Generated ${total} earnings embeddings`)
+  return total
+}
+
 async function main() {
   console.log('🚀 Starting embedding generation...\n')
   console.log('Prioritizing major stocks by market cap (S&P 500, mega caps first)\n')
@@ -225,6 +278,8 @@ async function main() {
     results.companies = await processCompanyFundamentals(1000)
     // Process 2000 financial statements (recent quarters for major stocks)
     results.financials = await processFinancialInsights(2000)
+    // Process earnings data (EPS beats/misses)
+    results.earnings = await processEarningsData(1000)
 
     // Get total count
     const { count } = await supabase
@@ -238,6 +293,7 @@ async function main() {
     console.log('========================================')
     console.log(`Companies: ${results.companies}`)
     console.log(`Financial insights: ${results.financials}`)
+    console.log(`Earnings data: ${results.earnings}`)
     console.log(`Total embeddings in DB: ${count}`)
     console.log(`Duration: ${duration}s`)
     console.log('========================================\n')

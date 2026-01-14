@@ -175,28 +175,29 @@ AVAILABLE TOOLS:
 5. getInstitutionalOwnership - 13F holdings, top institutional holders
 6. getAnalystRatings - Analyst consensus, price targets
 7. getShortInterest - Short volume and short interest data
-8. getBiotechCatalysts - FDA dates, clinical trials (biotech only)
-9. searchStocks - Search by company name or ticker
-10. getMarketMovers - Top gainers, losers, most active
-11. compareStocks - Side-by-side metric comparison
-12. getSECFilings - 10K, 10Q, 8K filings with URLs
-13. getPriceHistory - Historical prices with summary stats
-14. getFinancialNews - News articles with sentiment
-15. getSegmentedRevenue - Revenue by business segment
-16. getAnalystEstimates - EPS and revenue forecasts
+8. getEarningsCalendar - Upcoming and recent earnings dates, EPS estimates, beat/miss data
+9. getBiotechCatalysts - FDA dates, clinical trials (biotech only)
+10. searchStocks - Search by company name or ticker
+11. getMarketMovers - Top gainers, losers, most active
+12. compareStocks - Side-by-side metric comparison
+13. getSECFilings - 10K, 10Q, 8K filings with URLs
+14. getPriceHistory - Historical prices with summary stats
+15. getFinancialNews - News articles with sentiment
+16. getSegmentedRevenue - Revenue by business segment
+17. getAnalystEstimates - EPS and revenue forecasts
 
 ADVANCED FIRECRAWL TOOLS (for web research when database doesn't have the data):
-17. deepResearch - Autonomous multi-source research on any financial topic
-18. extractFinancialData - Extract structured data from investor relations pages
-19. searchRecentNews - Search recent news with time filtering (day/week/month)
-20. firecrawlAgent - Autonomous web agent to find specific data
-21. crawlInvestorRelations - Crawl entire investor relations websites
+18. deepResearch - Autonomous multi-source research on any financial topic
+19. extractFinancialData - Extract structured data from investor relations pages
+20. searchRecentNews - Search recent news with time filtering (day/week/month)
+21. firecrawlAgent - Autonomous web agent to find specific data
+22. crawlInvestorRelations - Crawl entire investor relations websites
 
 EUROPEAN COMPANY TOOLS (for Swedish, Norwegian, UK, and other EU companies):
-22. searchEUCompanies - Search European companies by name or country (SE, NO, GB, DE, FR)
-23. getEUCompanyDetails - Get detailed info about European companies (Volvo, H&M, Equinor, Shell)
-24. getEUFinancialStatements - Get income statements and balance sheets for EU companies
-25. compareEUCompanies - Compare multiple European companies
+23. searchEUCompanies - Search European companies by name or country (SE, NO, GB, DE, FR)
+24. getEUCompanyDetails - Get detailed info about European companies (Volvo, H&M, Equinor, Shell)
+25. getEUFinancialStatements - Get income statements and balance sheets for EU companies
+26. compareEUCompanies - Compare multiple European companies
 
 PLANNING RULES:
 - Create 2-5 tasks maximum
@@ -231,11 +232,11 @@ SMART DATA SOURCE SELECTION:
 - deepResearch for comprehensive multi-source research
 - searchRecentNews for time-filtered news (day/week/month)
 
-**USE EU TOOLS (22-25) when:**
+**USE EU TOOLS (23-26) when:**
 - European companies (Swedish, Norwegian, UK, Danish, Finnish, German)
 - Company names like: Volvo, Equinor, Shell, Novo Nordisk, Nokia, Siemens
 
-**⚠️ RAG TOOLS (26-28) - SLOW PATH - Only use when NECESSARY:**
+**⚠️ RAG TOOLS (27-29) - SLOW PATH - Only use when NECESSARY:**
 RAG is 5-10x SLOWER than direct SQL. Only use for unstructured text queries:
 - "What did [company] say about..." - use searchFinancialDocuments
 - Specific quotes from earnings calls or SEC filing TEXT
@@ -295,6 +296,7 @@ TOOLS AND ARGUMENTS:
 - getInstitutionalOwnership: { ticker: string }
 - getAnalystRatings: { ticker: string }
 - getShortInterest: { ticker: string, days: number (7-90) }
+- getEarningsCalendar: { tickers?: string[], days: number (1-90), direction: "upcoming"|"recent"|"both", limit: number }
 - getBiotechCatalysts: { ticker?: string, days_ahead: number (1-365) }
 - searchStocks: { query: string, limit: number }
 - getMarketMovers: { type: "gainers"|"losers"|"active", limit: number }
