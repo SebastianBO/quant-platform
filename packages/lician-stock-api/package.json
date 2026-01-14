@@ -1,0 +1,49 @@
+{
+  "name": "@lician/stock-api",
+  "version": "1.0.0",
+  "description": "Free stock market data API client - quotes, financials, insider trades, institutional holdings",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "stock",
+    "stocks",
+    "finance",
+    "financial",
+    "api",
+    "market",
+    "data",
+    "quotes",
+    "insider-trading",
+    "institutional",
+    "sec",
+    "edgar",
+    "free"
+  ],
+  "author": "Lician <api@lician.com>",
+  "license": "MIT",
+  "homepage": "https://lician.com/api-docs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SebastianBO/quant-platform.git",
+    "directory": "packages/lician-stock-api"
+  },
+  "bugs": {
+    "url": "https://github.com/SebastianBO/quant-platform/issues"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}
