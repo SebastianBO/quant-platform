@@ -215,12 +215,27 @@ async function auditPage(
 
     // Check for horizontal overflow (mobile)
     if (viewport.width <= 768) {
-      const bodyWidth = await page.evaluate(() => document.body.scrollWidth)
-      if (bodyWidth > viewport.width + 10) {
+      const overflowInfo = await page.evaluate(() => {
+        const body = document.body
+        const html = document.documentElement
+        // Check if there's actual horizontal scrollbar or scrollable content
+        const hasHorizontalScroll = body.scrollWidth > html.clientWidth
+        const scrollableWidth = Math.max(body.scrollWidth, html.scrollWidth)
+        const viewportWidth = html.clientWidth
+        return {
+          scrollableWidth,
+          viewportWidth,
+          hasHorizontalScroll,
+          // Also check for overflow-x style
+          bodyOverflow: getComputedStyle(body).overflowX
+        }
+      })
+      // Only flag if there's actual scrollable overflow and body isn't set to hidden
+      if (overflowInfo.hasHorizontalScroll && overflowInfo.bodyOverflow !== 'hidden') {
         issues.push({
           type: 'error',
           category: 'mobile',
-          message: `Horizontal overflow detected (${bodyWidth}px > ${viewport.width}px)`,
+          message: `Horizontal overflow detected (${overflowInfo.scrollableWidth}px > ${overflowInfo.viewportWidth}px)`,
           severity: 'high',
         })
       }
