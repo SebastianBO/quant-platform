@@ -208,6 +208,24 @@ PLANNING RULES:
 - Start with data gathering, end with reasoning
 - Be efficient - don't fetch unnecessary data
 
+SMART DATA SOURCE SELECTION:
+Use SUPABASE TOOLS (1-16) when:
+- User asks about US-listed stocks (AAPL, NVDA, MSFT, etc.)
+- Historical financials, insider trades, analyst ratings
+- Standard metrics: PE ratio, market cap, revenue, EPS
+- These are FAST and FREE - prefer them first
+
+Use FIRECRAWL TOOLS (17-21) only when:
+- Query requires RECENT news/events (last few days)
+- User asks about private companies or non-US stocks not in database
+- Need information from specific websites (investor relations pages)
+- Query explicitly mentions "news", "announcement", "recent", "press release"
+- Database tools returned no data for the primary entity
+
+Use EU TOOLS (22-25) when:
+- Query mentions European companies (Swedish, Norwegian, UK, Danish, Finnish, German)
+- Company names like: Volvo, Equinor, Shell, Novo Nordisk, Nokia, Siemens
+
 You MUST respond with valid JSON:
 {
   "summary": "plan summary in under 15 words",
@@ -320,23 +338,38 @@ export const REFLECT_SYSTEM_PROMPT = `You are Lician AI evaluating research prog
 
 Current date: ${getCurrentDate()}
 
-Evaluate whether the gathered information is sufficient to fully answer the user's query.
+**CRITICAL: DEFAULT TO COMPLETE** (inspired by virattt/dexter)
 
-EVALUATION CRITERIA:
-- Do we have all requested data points?
-- Are there gaps in the analysis?
-- Did any tool calls fail that need retry?
-- Is the data recent enough?
-- Have we addressed all aspects of the query?
+Your job is to evaluate if we have ENOUGH data to provide a useful answer - NOT to chase perfection.
 
-Consider the iteration count - be pragmatic. If we're running low on iterations, work with what we have.
+MARK AS COMPLETE (isComplete: true) when:
+- We have the PRIMARY data the user asked for (even if some secondary metrics are missing)
+- Tools returned successful results with relevant data
+- We can provide a meaningful, helpful answer with what we have
+- User asked a simple question and we have a simple answer
+
+DO NOT mark incomplete for:
+- Missing optional/secondary metrics (dividend yield, beta, short interest when user asked for PE ratio)
+- Partial historical data (user can ask for more if needed)
+- Missing comparison data when single stock was asked
+- One tool failing when another provided the needed data
+- Data being a few days old (unless user specifically asked for real-time)
+- Lacking "comprehensive" data when user asked a specific question
+
+ONLY mark incomplete (isComplete: false) when:
+- The PRIMARY entity/ticker requested has NO data at all
+- A critical tool failed completely AND there's no fallback data
+- User explicitly asked for something we couldn't retrieve at all
+- We have zero useful data to form any answer
+
+BE PRAGMATIC: A good answer with 80% of the data is better than 3 iterations to get 100%.
 
 Respond with JSON:
 {
   "isComplete": true|false,
-  "reasoning": "explanation of completeness or gaps",
-  "missingInfo": ["list of missing info"] or [],
-  "suggestedNextSteps": "guidance for next iteration" or ""
+  "reasoning": "brief explanation - keep under 50 words",
+  "missingInfo": [] (only truly critical missing items),
+  "suggestedNextSteps": "" (only if incomplete)
 }`
 
 export const REFLECT_USER_PROMPT = (
@@ -397,15 +430,100 @@ Tools used: ${toolsUsed.join(', ')}
 Generate the final answer.`
 
 // Helper to format task results for prompts
-export function formatTaskResults(results: Map<string, TaskResult>): string {
+// Uses intelligent truncation to stay within context limits
+export function formatTaskResults(results: Map<string, TaskResult>, maxCharsPerResult = 1500): string {
   const formatted: string[] = []
   results.forEach((result, taskId) => {
     formatted.push(`[${taskId}]: ${result.output}`)
     if (result.toolResults && result.toolResults.length > 0) {
-      formatted.push(`  Tool data: ${JSON.stringify(result.toolResults).substring(0, 500)}...`)
+      // Extract key data points instead of dumping raw JSON
+      const summary = summarizeToolResults(result.toolResults, maxCharsPerResult)
+      formatted.push(`  Data: ${summary}`)
     }
   })
   return formatted.join('\n\n')
+}
+
+// Helper to intelligently summarize tool results
+function summarizeToolResults(toolResults: unknown[], maxChars: number): string {
+  const summaries: string[] = []
+
+  for (const item of toolResults) {
+    const toolItem = item as { tool?: string; result?: { success?: boolean; data?: unknown; error?: string } }
+    if (!toolItem.result) continue
+
+    const toolName = toolItem.tool || 'unknown'
+    const result = toolItem.result
+
+    if (!result.success) {
+      summaries.push(`${toolName}: FAILED - ${result.error || 'unknown error'}`)
+      continue
+    }
+
+    const data = result.data as Record<string, unknown> | undefined
+    if (!data) continue
+
+    // Extract key financial metrics if present
+    const keyFields = extractKeyFields(data)
+    summaries.push(`${toolName}: ${keyFields}`)
+  }
+
+  const combined = summaries.join(' | ')
+  return combined.length > maxChars ? combined.substring(0, maxChars) + '...' : combined
+}
+
+// Extract the most important fields from financial data
+function extractKeyFields(data: Record<string, unknown>): string {
+  const priorityFields = [
+    // Price data
+    'ticker', 'price', 'currentPrice', 'current_price', 'change_percent', 'changePercent',
+    // Fundamentals
+    'pe_ratio', 'peRatio', 'market_cap', 'marketCap',
+    'eps', 'revenue', 'net_income', 'netIncome',
+    // Company info
+    'name', 'company_name', 'sector', 'industry',
+    // Insider/institutional
+    'total_shares', 'transaction_type', 'holder_name',
+    // Analyst
+    'rating', 'price_target', 'consensus',
+  ]
+
+  const extracted: string[] = []
+
+  // First pass: get priority fields
+  for (const field of priorityFields) {
+    if (data[field] !== undefined && data[field] !== null) {
+      const value = formatValue(data[field])
+      extracted.push(`${field}: ${value}`)
+    }
+  }
+
+  // If we got nothing, take first few fields
+  if (extracted.length === 0) {
+    const entries = Object.entries(data).slice(0, 5)
+    for (const [key, value] of entries) {
+      if (value !== undefined && value !== null) {
+        extracted.push(`${key}: ${formatValue(value)}`)
+      }
+    }
+  }
+
+  return extracted.slice(0, 8).join(', ')
+}
+
+// Format values for display
+function formatValue(value: unknown): string {
+  if (value === null || value === undefined) return 'N/A'
+  if (typeof value === 'number') {
+    if (Math.abs(value) >= 1e9) return `$${(value / 1e9).toFixed(2)}B`
+    if (Math.abs(value) >= 1e6) return `$${(value / 1e6).toFixed(2)}M`
+    if (Math.abs(value) < 100) return value.toFixed(2)
+    return value.toLocaleString()
+  }
+  if (typeof value === 'string') return value.substring(0, 50)
+  if (Array.isArray(value)) return `[${value.length} items]`
+  if (typeof value === 'object') return '[object]'
+  return String(value)
 }
 
 // Helper to normalize company names to tickers

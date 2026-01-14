@@ -214,15 +214,14 @@ export class Agent {
 
   /**
    * Phase 1: Understand the query (uses structured output like Dexter)
+   * Includes conversation context summarization for long histories
    */
   private async understandPhase(): Promise<void> {
     this.state!.currentPhase = 'understand'
     this.callbacks?.onPhaseChange?.('understand')
 
-    const historyContext = this.state!.conversationHistory
-      ?.slice(-4)
-      .map(m => `${m.role}: ${m.content}`)
-      .join('\n')
+    // Smart conversation history handling - summarize if too long
+    const historyContext = this.getOptimizedHistory()
 
     try {
       const { object } = await generateObject({
@@ -426,6 +425,7 @@ export class Agent {
 
   /**
    * Select tools for a task (uses structured output like Dexter)
+   * Uses fastModel for tool selection (like Dexter uses gpt-4-mini for this)
    */
   private async selectTools(task: Task): Promise<ToolCall[]> {
     const entities = this.state!.understanding!.entities
@@ -437,8 +437,9 @@ export class Agent {
     const fallbackTicker = tickerEntity?.normalized || tickerEntity?.value
 
     try {
+      // Use fastModel for tool selection (cheaper, faster) - like Dexter
       const { object } = await generateObject({
-        model: this.model,
+        model: this.fastModel,
         schema: ToolSelectionSchema,
         system: TOOL_SELECTION_SYSTEM_PROMPT,
         prompt: TOOL_SELECTION_USER_PROMPT(task.description, entities),
@@ -461,9 +462,9 @@ export class Agent {
         }
       })
     } catch {
-      // Fallback to text-based
+      // Fallback to text-based (also uses fastModel)
       const { text } = await generateText({
-        model: this.model,
+        model: this.fastModel,
         system: TOOL_SELECTION_SYSTEM_PROMPT,
         prompt: TOOL_SELECTION_USER_PROMPT(task.description, entities),
       })
@@ -691,5 +692,52 @@ export class Agent {
     }
 
     return text
+  }
+
+  /**
+   * Get optimized conversation history
+   * Summarizes long histories to stay within context limits
+   */
+  private getOptimizedHistory(): string | undefined {
+    const history = this.state!.conversationHistory
+    if (!history || history.length === 0) {
+      return undefined
+    }
+
+    // For short histories, just use recent messages
+    if (history.length <= 6) {
+      return history
+        .slice(-4)
+        .map(m => `${m.role}: ${m.content.substring(0, 200)}`)
+        .join('\n')
+    }
+
+    // For longer histories, create a summary of older messages + recent context
+    const olderMessages = history.slice(0, -4)
+    const recentMessages = history.slice(-4)
+
+    // Summarize older messages into key topics
+    const topics = new Set<string>()
+    for (const msg of olderMessages) {
+      // Extract tickers mentioned
+      const tickerMatches = msg.content.match(/\b[A-Z]{1,5}\b/g)
+      if (tickerMatches) {
+        tickerMatches.forEach(t => {
+          if (['AAPL', 'NVDA', 'MSFT', 'GOOGL', 'AMZN', 'META', 'TSLA'].includes(t)) {
+            topics.add(t)
+          }
+        })
+      }
+    }
+
+    const topicSummary = topics.size > 0
+      ? `Previously discussed: ${Array.from(topics).join(', ')}`
+      : 'Continuing conversation'
+
+    const recentContext = recentMessages
+      .map(m => `${m.role}: ${m.content.substring(0, 200)}`)
+      .join('\n')
+
+    return `${topicSummary}\n\nRecent context:\n${recentContext}`
   }
 }

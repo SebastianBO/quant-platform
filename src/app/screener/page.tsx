@@ -146,9 +146,25 @@ function getMarketCapCategory(marketCap: number): string {
   return 'Small Cap'
 }
 
+// Define type for what we actually fetch from company_fundamentals table
+interface ScreenerStock {
+  symbol: string
+  company_name: string | null
+  sector: string | null
+  industry: string | null
+  market_cap: number | null
+  pe_ratio: number | null
+  revenue: number | null
+  exchange_code: string | null
+  profit_margin: number | null
+  revenue_growth: number | null
+  dividend_yield: number | null
+}
+
 // Fetch stocks from Supabase based on filters
-async function fetchStocks(params: SearchParams): Promise<CompanyFundamentals[]> {
+async function fetchStocks(params: SearchParams): Promise<ScreenerStock[]> {
   // Only select needed columns for better performance
+  // Note: Using 'symbol' directly from company_fundamentals table
   const columns = 'symbol,company_name,sector,industry,market_cap,pe_ratio,revenue,exchange_code,profit_margin,revenue_growth,dividend_yield'
 
   let query = supabase
@@ -195,7 +211,7 @@ async function fetchStocks(params: SearchParams): Promise<CompanyFundamentals[]>
     return []
   }
 
-  return (data || []) as CompanyFundamentals[]
+  return (data || []) as ScreenerStock[]
 }
 
 // Loading state component
@@ -379,23 +395,23 @@ async function ScreenerContent({ params }: { params: SearchParams }) {
                 <tbody className="divide-y divide-border">
                   {stocks.map((stock) => (
                     <tr
-                      key={stock.ticker}
+                      key={stock.symbol}
                       className="hover:bg-secondary/30 transition-colors"
                     >
                       <td className="px-3 sm:px-4 py-3">
                         <Link
-                          href={`/stock/${stock.ticker.toLowerCase()}`}
+                          href={`/stock/${stock.symbol.toLowerCase()}`}
                           className="font-bold text-green-500 hover:text-green-400 hover:underline text-xs sm:text-sm"
                         >
-                          {stock.ticker}
+                          {stock.symbol}
                         </Link>
                       </td>
                       <td className="px-3 sm:px-4 py-3 text-xs sm:text-sm">
                         <Link
-                          href={`/stock/${stock.ticker.toLowerCase()}`}
+                          href={`/stock/${stock.symbol.toLowerCase()}`}
                           className="hover:underline"
                         >
-                          {stock.company_name || stock.ticker}
+                          {stock.company_name || stock.symbol}
                         </Link>
                       </td>
                       <td className="px-3 sm:px-4 py-3 text-xs sm:text-sm text-muted-foreground">
@@ -602,8 +618,8 @@ export default async function ScreenerPage({ searchParams }: Props) {
     description: 'Stocks matching screening criteria',
     url: pageUrl,
     items: stocks.slice(0, 50).map((stock, index) => ({
-      name: `${stock.ticker} - ${stock.company_name || stock.ticker}`,
-      url: `${SITE_URL}/stock/${stock.ticker.toLowerCase()}`,
+      name: `${stock.symbol} - ${stock.company_name || stock.symbol}`,
+      url: `${SITE_URL}/stock/${stock.symbol.toLowerCase()}`,
       position: index + 1,
     })),
   })

@@ -96,8 +96,12 @@ export async function POST(req: NextRequest) {
     const modelConfig = AVAILABLE_MODELS[modelKey as ModelKey] || AVAILABLE_MODELS['gpt-4o-mini']
     const model = gateway(modelConfig.id as Parameters<typeof gateway>[0])
 
+    // Use Gemini Flash as fast model for tool selection (like Dexter uses gpt-4-mini)
+    const fastModel = gateway('google/gemini-2.0-flash' as Parameters<typeof gateway>[0])
+
     const agent = new Agent(model, {
       maxIterations: 3, // Keep it efficient
+      fastModel, // Use fast model for tool selection
     })
 
     if (stream) {
