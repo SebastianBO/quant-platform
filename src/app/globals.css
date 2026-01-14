@@ -19,6 +19,7 @@ body:has(main.min-h-screen) .ssr-content {
 
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  overflow-x: hidden;
 }
 
 /* Custom scrollbar - Light mode */

@@ -476,7 +476,7 @@ export default async function StockPage({ params }: Props) {
 
       {/* SSR Content - Visible immediately for crawlers and initial paint */}
       {/* This content is server-rendered and provides unique, indexable content */}
-      <div className="ssr-content">
+      <div className="ssr-content overflow-x-hidden">
         <StockSSRContent
           ticker={symbol}
           companyName={companyName}
