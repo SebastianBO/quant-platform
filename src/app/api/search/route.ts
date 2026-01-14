@@ -26,18 +26,19 @@ export async function GET(request: Request) {
 
   try {
     // Strategy 1: Search Supabase company_fundamentals (141k+ companies)
+    // Note: table uses 'symbol' not 'ticker', and 'exchange_code' not 'exchange'
     const { data: supabaseResults, error } = await getSupabase()
       .from('company_fundamentals')
-      .select('ticker, company_name, sector, industry, market_cap, exchange')
-      .or(`ticker.ilike.%${query}%,company_name.ilike.%${query}%,industry.ilike.%${query}%,sector.ilike.%${query}%`)
+      .select('symbol, company_name, sector, industry, market_cap, exchange_code')
+      .or(`symbol.ilike.%${query}%,company_name.ilike.%${query}%,industry.ilike.%${query}%,sector.ilike.%${query}%`)
       .order('market_cap', { ascending: false, nullsFirst: false })
       .limit(limit)
 
     if (!error && supabaseResults && supabaseResults.length > 0) {
       const results = supabaseResults.map(item => ({
-        symbol: item.ticker,
-        name: item.company_name || item.ticker,
-        exchange: item.exchange || 'US',
+        symbol: item.symbol,
+        name: item.company_name || item.symbol,
+        exchange: item.exchange_code || 'US',
         type: 'Stock',
         sector: item.sector,
         industry: item.industry,
