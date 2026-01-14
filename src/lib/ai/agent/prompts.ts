@@ -271,13 +271,17 @@ EUROPEAN COMPANY TOOLS (for Swedish, Norwegian, UK, and other EU companies):
 
 SELECTION RULES:
 - Select 1-3 tools per task
-- Use extracted tickers from understanding
+- CRITICAL: Extract ticker symbols from "Available entities" and include them in args
+- If entities include "ticker: NVDA", use args: { "ticker": "NVDA" }
 - Match tools to task requirements
-- Include all necessary arguments
+- ALWAYS include all necessary arguments - never leave args empty
 
-Respond with JSON array of tool calls:
+EXAMPLE: If task is "Get stock quote" and entities include "ticker: AAPL":
+[{ "toolName": "getStockQuote", "args": { "ticker": "AAPL" } }]
+
+Respond with JSON array of tool calls with populated args:
 [
-  { "toolName": "toolName", "args": { ... } }
+  { "toolName": "toolName", "args": { "ticker": "SYMBOL", ... } }
 ]`
 
 export const TOOL_SELECTION_USER_PROMPT = (task: string, entities: string) => `
@@ -286,7 +290,9 @@ Select tools for this task:
 Task: ${task}
 Available entities: ${entities}
 
-Respond with JSON array only.`
+IMPORTANT: Extract tickers from entities above and include them in the args. For example, if entities include "ticker: NVDA", your response must include "args": {"ticker": "NVDA"}.
+
+Respond with JSON array only - ensure all tool args are populated from entities.`
 
 export const EXECUTE_SYSTEM_PROMPT = `You are Lician AI performing financial analysis.
 

@@ -432,6 +432,10 @@ export class Agent {
       .map(e => `${e.type}: ${e.normalized || e.value}`)
       .join(', ')
 
+    // Extract ticker from entities for fallback
+    const tickerEntity = this.state!.understanding!.entities.find(e => e.type === 'ticker')
+    const fallbackTicker = tickerEntity?.normalized || tickerEntity?.value
+
     try {
       const { object } = await generateObject({
         model: this.model,
@@ -440,12 +444,22 @@ export class Agent {
         prompt: TOOL_SELECTION_USER_PROMPT(task.description, entities),
       })
 
-      return object.map((s, i) => ({
-        id: `${task.id}_tool_${i}`,
-        toolName: s.toolName,
-        args: s.args as Record<string, unknown>,
-        status: 'pending' as const,
-      }))
+      return object.map((s, i) => {
+        // Auto-populate ticker if args is empty and we have a ticker entity
+        let args = s.args as Record<string, unknown>
+        if (fallbackTicker && (!args || Object.keys(args).length === 0)) {
+          args = { ticker: fallbackTicker }
+        } else if (fallbackTicker && args && !args.ticker) {
+          // Add ticker if missing from args
+          args = { ...args, ticker: fallbackTicker }
+        }
+        return {
+          id: `${task.id}_tool_${i}`,
+          toolName: s.toolName,
+          args,
+          status: 'pending' as const,
+        }
+      })
     } catch {
       // Fallback to text-based
       const { text } = await generateText({
@@ -456,12 +470,21 @@ export class Agent {
 
       try {
         const selections = JSON.parse(this.extractJSON(text)) as Array<{ toolName: string; args: Record<string, unknown> }>
-        return selections.map((s, i) => ({
-          id: `${task.id}_tool_${i}`,
-          toolName: s.toolName,
-          args: s.args,
-          status: 'pending' as const,
-        }))
+        return selections.map((s, i) => {
+          // Auto-populate ticker if args is empty and we have a ticker entity
+          let args = s.args || {}
+          if (fallbackTicker && Object.keys(args).length === 0) {
+            args = { ticker: fallbackTicker }
+          } else if (fallbackTicker && !args.ticker) {
+            args = { ...args, ticker: fallbackTicker }
+          }
+          return {
+            id: `${task.id}_tool_${i}`,
+            toolName: s.toolName,
+            args,
+            status: 'pending' as const,
+          }
+        })
       } catch {
         return []
       }
