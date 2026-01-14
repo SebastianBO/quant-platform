@@ -108,11 +108,13 @@ async function processCompanyFundamentals(limit: number): Promise<number> {
   console.log(`\n📊 Processing company fundamentals (limit: ${limit})...`)
 
   // company_fundamentals uses: symbol, company_name, sector, industry, market_cap, exchange_code
-  // No description column - we'll create summary from available fields
+  // ORDER BY market_cap DESC to get major stocks first (AAPL, MSFT, NVDA, etc.)
   const { data: companies, error } = await supabase
     .from('company_fundamentals')
     .select('symbol, company_name, sector, industry, market_cap, exchange_code')
     .not('company_name', 'is', null)
+    .not('market_cap', 'is', null)
+    .order('market_cap', { ascending: false })
     .limit(limit)
 
   if (error || !companies) {
@@ -213,13 +215,16 @@ async function processFinancialInsights(limit: number): Promise<number> {
 
 async function main() {
   console.log('🚀 Starting embedding generation...\n')
+  console.log('Prioritizing major stocks by market cap (S&P 500, mega caps first)\n')
 
   const startTime = Date.now()
   const results: Record<string, number> = {}
 
   try {
-    results.companies = await processCompanyFundamentals(200)
-    results.financials = await processFinancialInsights(500)
+    // Process 1000 companies by market cap (gets AAPL, MSFT, NVDA, etc.)
+    results.companies = await processCompanyFundamentals(1000)
+    // Process 2000 financial statements (recent quarters for major stocks)
+    results.financials = await processFinancialInsights(2000)
 
     // Get total count
     const { count } = await supabase

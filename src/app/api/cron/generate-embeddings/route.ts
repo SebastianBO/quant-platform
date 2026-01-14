@@ -158,7 +158,7 @@ async function processCompanyFundamentals(limit: number): Promise<number> {
  * Process SEC filings into embeddings
  */
 async function processSECFilings(limit: number): Promise<number> {
-  const { data: filings, error } = await supabase
+  const { data: filings, error } = await getSupabase()
     .from('sec_filings')
     .select('ticker, form_type, filing_date, description, filing_url')
     .not('description', 'is', null)
@@ -171,7 +171,7 @@ async function processSECFilings(limit: number): Promise<number> {
   }
 
   // Check which already have embeddings
-  const { data: existing } = await supabase
+  const { data: existing } = await getSupabase()
     .from('document_embeddings')
     .select('ticker, source_url')
     .eq('document_type', 'sec_filing')
@@ -205,7 +205,7 @@ async function processSECFilings(limit: number): Promise<number> {
  */
 async function processFinancialInsights(limit: number): Promise<number> {
   // Get recent income statements with meaningful data
-  const { data: statements, error } = await supabase
+  const { data: statements, error } = await getSupabase()
     .from('income_statements')
     .select('ticker, report_date, period, revenue, net_income, gross_profit, operating_income, fiscal_year')
     .not('revenue', 'is', null)
@@ -219,7 +219,7 @@ async function processFinancialInsights(limit: number): Promise<number> {
 
   // Check existing
   const keys = statements.map(s => `${s.ticker}-${s.report_date}-${s.period}`)
-  const { data: existing } = await supabase
+  const { data: existing } = await getSupabase()
     .from('document_embeddings')
     .select('ticker, document_date, metadata')
     .eq('document_type', 'sec_filing')
@@ -288,7 +288,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get total count
-    const { count } = await supabase
+    const { count } = await getSupabase()
       .from('document_embeddings')
       .select('*', { count: 'exact', head: true })
 
