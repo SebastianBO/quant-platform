@@ -694,9 +694,10 @@ export default function ManusStyleHome() {
                     <span className="truncate max-w-[200px]">{attachedFile.name}</span>
                     <button
                       onClick={() => setAttachedFile(null)}
-                      className="p-0.5 hover:bg-secondary rounded transition-colors"
+                      className="p-1.5 hover:bg-secondary rounded transition-colors min-w-[28px] min-h-[28px] flex items-center justify-center"
+                      aria-label="Remove attached file"
                     >
-                      <X className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground" />
+                      <X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
                     </button>
                   </div>
                 </div>
@@ -903,7 +904,7 @@ export default function ManusStyleHome() {
                             {/* Left content */}
                             <div className="flex-1">
                               <div className="flex items-center gap-2 mb-2">
-                                <h3 className="font-semibold text-lg">{CAROUSEL_SLIDES[carouselIndex].title}</h3>
+                                <h2 className="font-semibold text-lg">{CAROUSEL_SLIDES[carouselIndex].title}</h2>
                                 <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
                               </div>
                               <p className="text-sm text-muted-foreground mb-4">

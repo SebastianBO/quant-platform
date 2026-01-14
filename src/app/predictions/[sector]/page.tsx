@@ -477,6 +477,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 // Dynamic rendering - Supabase needs env vars at runtime
 export const revalidate = 3600
+// Increase timeout to prevent 5xx errors during initial generation
+export const maxDuration = 60
 
 export default async function SectorPredictionPage({ params }: Props) {
   const { sector } = await params

@@ -19,6 +19,8 @@ interface Props {
 
 // Dynamic rendering for fresh data
 export const revalidate = 3600
+// Increase timeout to prevent 5xx errors
+export const maxDuration = 60
 
 // Helper function to format market cap
 function formatMarketCap(marketCap: number): string {
