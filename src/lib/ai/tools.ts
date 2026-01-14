@@ -1932,59 +1932,24 @@ export const searchFinancialDocumentsTool = tool({
 
 /**
  * Tool: Search Similar Earnings Patterns
- * Find companies with similar earnings surprise patterns
+ * NOTE: Currently disabled - the earnings_embeddings table uses a legacy schema.
+ * Use searchFinancialDocuments with document_type='earnings_transcript' instead.
  */
 export const searchEarningsPatternsTool = tool({
-  description: 'Find companies with similar earnings surprise patterns. Use for finding comparable earnings reactions or predicting post-earnings moves.',
+  description: 'Find companies with similar earnings surprise patterns. NOTE: Currently redirects to document search - use searchFinancialDocuments for earnings-related queries.',
   inputSchema: z.object({
     ticker: z.string().describe('Reference ticker to find similar patterns for'),
     surpriseBucket: z.enum(['massive_beat', 'beat', 'inline', 'miss', 'massive_miss']).optional().describe('Filter by surprise type'),
     limit: z.number().optional().default(10).describe('Maximum results to return'),
   }),
-  execute: async ({ ticker, surpriseBucket, limit }) => {
-    try {
-      // Get the reference earnings embedding
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { data: refEarnings } = await getSupabase()
-        .from('earnings_embeddings' as any)
-        .select('insight_embedding, eps_surprise_bucket, insight_text')
-        .eq('ticker', ticker.toUpperCase())
-        .order('report_date', { ascending: false })
-        .limit(1)
-        .single() as { data: { insight_embedding: number[]; eps_surprise_bucket: string; insight_text: string } | null }
-
-      if (!refEarnings?.insight_embedding) {
-        return {
-          success: false,
-          error: `No earnings embedding found for ${ticker}`,
-        }
-      }
-
-      // Search for similar patterns
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { data, error } = await (getSupabase().rpc as any)('match_earnings_patterns', {
-        query_embedding: refEarnings.insight_embedding,
-        match_count: limit || 10,
-        filter_surprise_bucket: surpriseBucket || null,
-      })
-
-      if (error) {
-        return { success: false, error: 'Earnings pattern search failed' }
-      }
-
-      return {
-        success: true,
-        source: 'supabase-rag',
-        reference: {
-          ticker: ticker.toUpperCase(),
-          surpriseBucket: refEarnings.eps_surprise_bucket,
-          insight: refEarnings.insight_text,
-        },
-        similarPatterns: data || [],
-        count: data?.length || 0,
-      }
-    } catch (error) {
-      return { success: false, error: 'Earnings pattern search failed' }
+  execute: async ({ ticker }) => {
+    // This tool is currently disabled due to legacy schema mismatch
+    // Redirect users to use searchFinancialDocuments instead
+    return {
+      success: false,
+      error: 'Earnings pattern search is currently being upgraded',
+      suggestion: `Use searchFinancialDocuments with query "earnings ${ticker}" and documentType="earnings_transcript" instead`,
+      ticker: ticker.toUpperCase(),
     }
   },
 })
