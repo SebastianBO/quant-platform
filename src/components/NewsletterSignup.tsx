@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Mail, Check, Loader2, Zap } from 'lucide-react'
+import { trackEvent } from '@/lib/analytics'
 
 interface NewsletterSignupProps {
   source?: string
@@ -25,18 +26,24 @@ export default function NewsletterSignup({
     setStatus('loading')
 
     try {
-      const response = await fetch('/api/newsletter/subscribe', {
+      const response = await fetch('/api/email/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source, interests }),
+        body: JSON.stringify({ email, source }),
       })
 
       const data = await response.json()
 
-      if (data.success) {
+      if (response.ok) {
         setStatus('success')
         setMessage(data.message || 'Thanks for subscribing!')
         setEmail('')
+
+        // Track newsletter signup
+        trackEvent('newsletter_signup', {
+          source,
+          status: data.status,
+        })
       } else {
         setStatus('error')
         setMessage(data.error || 'Something went wrong')
