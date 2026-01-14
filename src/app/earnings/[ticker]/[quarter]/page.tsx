@@ -7,6 +7,7 @@ import { ALL_STOCKS_FULL, QUARTERS } from '@/lib/stocks-full'
 
 export const dynamic = 'force-static'
 export const revalidate = 86400
+export const maxDuration = 60
 
 type Props = {
   params: Promise<{ ticker: string; quarter: string }>

@@ -16,6 +16,7 @@ interface Props {
 
 // Allow dynamic rendering for stocks not in the pre-rendered list
 export const revalidate = 3600
+export const maxDuration = 60
 
 // Fetch all necessary data
 async function getGrowthData(ticker: string) {

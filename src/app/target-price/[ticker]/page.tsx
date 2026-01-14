@@ -11,6 +11,7 @@ interface Props {
 }
 
 export const revalidate = 3600
+export const maxDuration = 60
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { ticker } = await params

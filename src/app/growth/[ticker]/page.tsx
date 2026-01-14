@@ -9,6 +9,7 @@ interface Props {
 
 // Allow dynamic rendering
 export const revalidate = 3600
+export const maxDuration = 60
 
 // Fetch growth data
 async function getGrowthData(ticker: string) {

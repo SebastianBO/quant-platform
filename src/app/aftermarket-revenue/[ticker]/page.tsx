@@ -8,6 +8,7 @@ interface Props {
 }
 
 export const revalidate = 3600
+export const maxDuration = 60
 
 async function getStockData(ticker: string) {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'

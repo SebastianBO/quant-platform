@@ -18,6 +18,7 @@ interface Props {
 }
 
 export const revalidate = 3600
+export const maxDuration = 60
 
 // Fetch stock data for metadata
 async function getStockDataForMeta(ticker: string) {

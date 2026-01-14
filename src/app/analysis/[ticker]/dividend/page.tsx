@@ -18,6 +18,7 @@ interface Props {
 
 // Allow dynamic rendering for stocks not in the pre-rendered list
 export const revalidate = 3600
+export const maxDuration = 60
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

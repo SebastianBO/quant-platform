@@ -14,6 +14,7 @@ interface Props {
 
 // Dynamic rendering - analysis pages need fresh financial data
 export const revalidate = 3600
+export const maxDuration = 60
 
 // Fetch stock data
 async function getStockData(ticker: string) {

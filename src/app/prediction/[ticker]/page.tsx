@@ -24,6 +24,7 @@ interface Props {
 // ISR with 5 minute revalidation - balances freshness with crawl reliability
 // This prevents Google crawl failures from API timeouts
 export const revalidate = 300
+export const maxDuration = 60
 
 // Fetch stock data for rich metadata
 async function getStockDataForMeta(ticker: string) {

@@ -29,6 +29,7 @@ interface Props {
 // ISR with 60 second revalidation - balances freshness with crawl reliability
 // This prevents Google crawl failures from API timeouts while keeping data fresh
 export const revalidate = 60
+export const maxDuration = 60
 
 // Industry to peer mapping for smart peer selection
 const INDUSTRY_PEERS: Record<string, string[]> = {

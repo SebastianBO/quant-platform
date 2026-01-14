@@ -16,6 +16,7 @@ interface Props {
 
 // Dynamic rendering - quote pages need fresh data
 export const revalidate = 3600
+export const maxDuration = 60
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
