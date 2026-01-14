@@ -166,8 +166,11 @@ interface Task {
 
 export default function ManusStyleHome() {
   const [user, setUser] = useState<any>(null)
+  const [isPremium, setIsPremium] = useState(false)
   const [loading, setLoading] = useState(true)
   const [credits, setCredits] = useState(300)
+  const [showAuthPrompt, setShowAuthPrompt] = useState(false)
+  const [showPaymentPrompt, setShowPaymentPrompt] = useState(false)
   const [movers, setMovers] = useState<Mover[]>([])
   const [showMoreTools, setShowMoreTools] = useState(false)
   const [sidebarExpanded, setSidebarExpanded] = useState(false)
@@ -230,9 +233,19 @@ export default function ManusStyleHome() {
       if (user) {
         const savedCredits = localStorage.getItem(`credits_${user.id}`)
         setCredits(savedCredits ? parseInt(savedCredits, 10) : 1000)
+
+        // Check premium status
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('is_premium')
+          .eq('id', user.id)
+          .single()
+
+        setIsPremium(profile?.is_premium || false)
       } else {
         const savedCredits = localStorage.getItem("credits_anonymous")
         setCredits(savedCredits ? parseInt(savedCredits, 10) : 300)
+        setIsPremium(false)
       }
 
       setLoading(false)
@@ -306,6 +319,24 @@ export default function ManusStyleHome() {
 
   const handleSubmit = async () => {
     if ((!inputValue.trim() && !attachedFile) || isLoading) return
+
+    // Check if user is authenticated
+    if (!user) {
+      setShowAuthPrompt(true)
+      return
+    }
+
+    // Check if user has premium (allow 3 free queries for non-premium)
+    const freeQueries = parseInt(localStorage.getItem(`free_queries_${user.id}`) || '0', 10)
+    if (!isPremium && freeQueries >= 3) {
+      setShowPaymentPrompt(true)
+      return
+    }
+
+    // Track free query usage for non-premium users
+    if (!isPremium) {
+      localStorage.setItem(`free_queries_${user.id}`, String(freeQueries + 1))
+    }
 
     let queryContent = inputValue.trim()
     let fileContent = ""
@@ -1137,6 +1168,84 @@ export default function ManusStyleHome() {
           className="fixed inset-0 z-40"
           onClick={() => setShowModelSelector(false)}
         />
+      )}
+
+      {/* Auth Prompt Modal */}
+      {showAuthPrompt && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="bg-background border border-border rounded-2xl p-8 max-w-md mx-4 shadow-2xl">
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Sparkles className="w-8 h-8 text-green-500" />
+              </div>
+              <h2 className="text-2xl font-bold mb-2">Sign in to continue</h2>
+              <p className="text-muted-foreground">
+                Create a free account to use AI-powered stock analysis
+              </p>
+            </div>
+            <div className="space-y-3">
+              <Link
+                href="/auth/login"
+                className="w-full block text-center py-3 px-4 bg-green-600 hover:bg-green-500 text-white rounded-lg font-medium transition-colors"
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/auth/signup"
+                className="w-full block text-center py-3 px-4 bg-secondary hover:bg-secondary/80 text-foreground rounded-lg font-medium transition-colors"
+              >
+                Create free account
+              </Link>
+            </div>
+            <button
+              onClick={() => setShowAuthPrompt(false)}
+              className="w-full mt-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Maybe later
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Payment Prompt Modal */}
+      {showPaymentPrompt && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="bg-background border border-border rounded-2xl p-8 max-w-md mx-4 shadow-2xl">
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Zap className="w-8 h-8 text-white" />
+              </div>
+              <h2 className="text-2xl font-bold mb-2">Upgrade to Premium</h2>
+              <p className="text-muted-foreground">
+                You have used your 3 free queries. Upgrade for unlimited AI analysis.
+              </p>
+            </div>
+            <div className="bg-secondary/50 rounded-xl p-4 mb-6">
+              <div className="flex items-center justify-between mb-2">
+                <span className="font-medium">Lician Pro</span>
+                <span className="text-green-500 font-bold">$58/mo</span>
+              </div>
+              <ul className="text-sm text-muted-foreground space-y-1">
+                <li>Unlimited AI queries</li>
+                <li>Premium models (GPT-4o, Claude Sonnet 4)</li>
+                <li>Advanced financial analysis</li>
+                <li>Priority support</li>
+              </ul>
+            </div>
+            <Link
+              href="/api/stripe/quick-checkout?plan=annual"
+              className="w-full block text-center py-3 px-4 bg-green-600 hover:bg-green-500 text-white rounded-lg font-medium transition-colors"
+            >
+              Start 3-day free trial
+            </Link>
+            <button
+              onClick={() => setShowPaymentPrompt(false)}
+              className="w-full mt-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Maybe later
+            </button>
+          </div>
+        </div>
       )}
     </div>
   )
