@@ -1032,6 +1032,119 @@ src/lib/ai/tools.ts  # Added 4 EU company tools
 
 ---
 
+# DEVELOPMENT LOG (Jan 14, 2026 - Evening Session)
+
+## Issues Found and Fixed
+
+### 1. EODHD API Daily Limit Exceeded
+
+**Problem**: The search API and AI tools were failing because EODHD API hit its daily limit. The `/api/search` route was returning `{"results":[],"error":"Search failed"}`.
+
+**Root Cause**: Search route used EODHD as primary source, not Supabase.
+
+**Fix**: Updated `/api/search/route.ts` to use Supabase `company_fundamentals` (141k+ companies) as primary source:
+
+```typescript
+// Strategy 1: Search Supabase company_fundamentals (primary)
+const { data } = await getSupabase()
+  .from('company_fundamentals')
+  .select('symbol, company_name, sector, industry, market_cap, exchange_code')
+  .or(`symbol.ilike.%${query}%,company_name.ilike.%${query}%,...`)
+  .order('market_cap', { ascending: false })
+  .limit(limit)
+
+// Strategy 2: Fallback to income_statements tickers
+// Strategy 3: EODHD API (only if Supabase returns nothing)
+```
+
+**Commit**: `6dbb8d12 fix: Use Supabase as primary search source instead of EODHD`
+
+### 2. Wrong Field Names in AI Tools
+
+**Problem**: `getCompanyFundamentalsTool` returned null PE ratios even though data existed.
+
+**Root Cause**: Tool was using `m.pe_ratio` but database column is `price_to_earnings_ratio`.
+
+**Fix**: Updated field mappings in `src/lib/ai/tools.ts`:
+
+```typescript
+// Before (wrong)
+pe_ratio: m.pe_ratio,
+pb_ratio: m.pb_ratio,
+
+// After (correct)
+pe_ratio: m.price_to_earnings_ratio,
+pb_ratio: m.price_to_book_ratio,
+ps_ratio: m.price_to_sales_ratio,
+ev_ebitda: m.enterprise_value_to_ebitda_ratio,
+```
+
+**Commit**: `2180bee1 fix: Use correct field names for financial_metrics in AI tools`
+
+### 3. AI Not Passing Ticker Args to Tools
+
+**Problem**: Gemini Flash was selecting correct tools but passing empty args: `{"toolName":"getStockQuote","args":{}}` causing "Cannot read properties of undefined (reading 'toUpperCase')" errors.
+
+**Root Cause**: The AI model wasn't extracting tickers from the entities and including them in tool args.
+
+**Fix**: Added auto-populate fallback in `src/lib/ai/agent/orchestrator.ts`:
+
+```typescript
+private async selectTools(task: Task): Promise<ToolCall[]> {
+  // Extract ticker from entities for fallback
+  const tickerEntity = this.state!.understanding!.entities.find(e => e.type === 'ticker')
+  const fallbackTicker = tickerEntity?.normalized || tickerEntity?.value
+
+  // ... AI generates tool selections ...
+
+  return object.map((s, i) => {
+    // Auto-populate ticker if args is empty and we have a ticker entity
+    let args = s.args as Record<string, unknown>
+    if (fallbackTicker && (!args || Object.keys(args).length === 0)) {
+      args = { ticker: fallbackTicker }
+    }
+    // ...
+  })
+}
+```
+
+Also improved `TOOL_SELECTION_SYSTEM_PROMPT` with explicit examples.
+
+**Commit**: `b389221d fix: Auto-populate ticker args from entities when AI returns empty args`
+
+## Test Results After Fixes
+
+| Query | Status | Result |
+|-------|--------|--------|
+| "What is NVDA market cap?" | ✅ Working | $4.5T, PE 45.89, margins, growth rates |
+| "What is AAPL PE ratio?" | ✅ Working | PE 34.84, Market cap $3.85T |
+| Search "technology" | ✅ Working | NVDA, AAPL from Supabase |
+
+## API Updates Research (2026)
+
+| API | Changes | Notes |
+|-----|---------|-------|
+| **EODHD** | No major changes | Python library updated Jan 10, 2026 |
+| **SEC EDGAR** | Same endpoints | 10 req/sec limit, bulk ZIP files available |
+| **Yahoo Finance** | Broken | Requires cookie+crumb auth since late 2024 |
+
+## Known Limitations
+
+1. **EODHD Daily Limit**: Free tier has ~100k requests/day. When exceeded, search falls back to Supabase.
+2. **Vercel AI Gateway Rate Limits**: Free tier can hit limits during heavy usage, causing reflect/answer phases to fail.
+3. **Yahoo Finance**: Direct API calls fail - use EODHD for real-time quotes instead.
+
+## Files Modified
+
+```
+src/app/api/search/route.ts          # Supabase-first search
+src/lib/ai/tools.ts                  # Correct field mappings
+src/lib/ai/agent/orchestrator.ts     # Auto-populate ticker args
+src/lib/ai/agent/prompts.ts          # Better tool selection prompts
+```
+
+---
+
 # DATA ARCHITECTURE: US vs EU (Decision Log)
 
 ## Current State (Jan 14, 2026)

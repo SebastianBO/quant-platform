@@ -1,46 +1,46 @@
 {
   "summary": {
-    "timestamp": "2026-01-14T20:47:11.642Z",
+    "timestamp": "2026-01-14T21:01:33.444Z",
     "pagesAudited": 5,
     "viewportsTested": 4,
     "totalTests": 20,
-    "totalIssues": 46,
+    "totalIssues": 44,
     "issuesByCategory": {
-      "performance": 7,
+      "performance": 5,
       "ux": 20,
       "mobile": 11,
       "seo": 8
     },
     "issuesBySeverity": {
-      "medium": 32,
-      "high": 6,
-      "low": 8
+      "medium": 35,
+      "low": 8,
+      "high": 1
     }
   },
   "results": [
     {
-      "timestamp": "2026-01-14T20:45:25.265Z",
+      "timestamp": "2026-01-14T20:59:56.659Z",
       "url": "https://lician.com/",
       "viewport": {
         "width": 1920,
         "height": 1080
       },
       "metrics": {
-        "loadTime": 9707,
-        "domContentLoaded": 734
+        "loadTime": 6821,
+        "domContentLoaded": 253
       },
       "issues": [
         {
           "type": "warning",
           "category": "performance",
-          "message": "Slow page load: 9707ms (target: <5000ms)",
+          "message": "Slow page load: 6821ms (target: <5000ms)",
           "severity": "medium"
         },
         {
           "type": "error",
           "category": "ux",
-          "message": "9 console errors detected",
-          "severity": "high"
+          "message": "5 console errors detected",
+          "severity": "medium"
         }
       ],
       "screenshots": [
@@ -48,33 +48,29 @@
       ],
       "consoleErrors": [
         "Failed to load resource: the server responded with a status of 404 ()",
-        "Access to fetch at 'https://checkout.stripe.com/c/pay/cs_test_b1xru0lUfGHYUPNPWqtE9lckSC5QWWTHYCKN2Idyfjep5o7MzKClpRujAB#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWjA0V25mfzZBNGdjblZvc2lraX1wVFVVVW9cSFNgXHF1N3VmN0lWMWFMUm5AU2JPPURrcG5iVl1vYFMyNVExaHJTU2NnQ1BuNnxDY09rPWp%2FMk9WXXROc0BENTVuVTZ%2FQjAwRycpJ2N3amhWYHdzYHcnP3F3cGApJ2dkZm5id2pwa2FGamlqdyc%2FJyZjY2NjY2MnKSdpZHxqcHFRfHVgJz8naHBpcWxabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl' (redirected from 'https://lician.com/api/stripe/quick-checkout?plan=annual&_rsc=1r34m') from origin 'https://lician.com' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
-        "Failed to load resource: net::ERR_FAILED",
         "Failed to load resource: the server responded with a status of 400 ()",
         "Failed to load resource: the server responded with a status of 400 ()",
         "Failed to load resource: the server responded with a status of 400 ()",
-        "Failed to load resource: the server responded with a status of 400 ()",
-        "Access to fetch at 'https://checkout.stripe.com/c/pay/cs_test_b1hQ6U5tkDuVWSpAdhf9pGbZARLmXSc9g7j9WGqiP9IQ87WSi1mirBG69h#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWjA0V25mfzZBNGdjblZvc2lraX1wVFVVVW9cSFNgXHF1N3VmN0lWMWFMUm5AU2JPPURrcG5iVl1vYFMyNVExaHJTU2NnQ1BuNnxDY09rPWp%2FMk9WXXROc0BENTVuVTZ%2FQjAwRycpJ2N3amhWYHdzYHcnP3F3cGApJ2dkZm5id2pwa2FGamlqdyc%2FJyZjY2NjY2MnKSdpZHxqcHFRfHVgJz8naHBpcWxabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl' (redirected from 'https://lician.com/api/stripe/quick-checkout?_rsc=1r34m') from origin 'https://lician.com' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
-        "Failed to load resource: net::ERR_FAILED"
+        "Failed to load resource: the server responded with a status of 400 ()"
       ]
     },
     {
-      "timestamp": "2026-01-14T20:45:32.785Z",
+      "timestamp": "2026-01-14T21:00:03.265Z",
       "url": "https://lician.com/",
       "viewport": {
         "width": 1440,
         "height": 900
       },
       "metrics": {
-        "loadTime": 3642,
-        "domContentLoaded": 239
+        "loadTime": 2653,
+        "domContentLoaded": 182
       },
       "issues": [
         {
           "type": "error",
           "category": "ux",
-          "message": "9 console errors detected",
-          "severity": "high"
+          "message": "5 console errors detected",
+          "severity": "medium"
         }
       ],
       "screenshots": [
@@ -82,26 +78,22 @@
       ],
       "consoleErrors": [
         "Failed to load resource: the server responded with a status of 404 ()",
-        "Access to fetch at 'https://checkout.stripe.com/c/pay/cs_test_b1Zx7P0qiCwhLe6yJJSf1B56UyvxXMbNIEGziTKLDQC1eT06ffgjRTp5Bn#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWjA0V25mfzZBNGdjblZvc2lraX1wVFVVVW9cSFNgXHF1N3VmN0lWMWFMUm5AU2JPPURrcG5iVl1vYFMyNVExaHJTU2NnQ1BuNnxDY09rPWp%2FMk9WXXROc0BENTVuVTZ%2FQjAwRycpJ2N3amhWYHdzYHcnP3F3cGApJ2dkZm5id2pwa2FGamlqdyc%2FJyZjY2NjY2MnKSdpZHxqcHFRfHVgJz8naHBpcWxabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl' (redirected from 'https://lician.com/api/stripe/quick-checkout?plan=annual&_rsc=1r34m') from origin 'https://lician.com' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
-        "Failed to load resource: net::ERR_FAILED",
         "Failed to load resource: the server responded with a status of 400 ()",
         "Failed to load resource: the server responded with a status of 400 ()",
         "Failed to load resource: the server responded with a status of 400 ()",
-        "Failed to load resource: the server responded with a status of 400 ()",
-        "Access to fetch at 'https://checkout.stripe.com/c/pay/cs_test_b1arAZ9SLuG0EVyYdjx2Jz5grCu9Dqh1OmYlvYBSpB3azc67r9lNw1NSNw#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWjA0V25mfzZBNGdjblZvc2lraX1wVFVVVW9cSFNgXHF1N3VmN0lWMWFMUm5AU2JPPURrcG5iVl1vYFMyNVExaHJTU2NnQ1BuNnxDY09rPWp%2FMk9WXXROc0BENTVuVTZ%2FQjAwRycpJ2N3amhWYHdzYHcnP3F3cGApJ2dkZm5id2pwa2FGamlqdyc%2FJyZjY2NjY2MnKSdpZHxqcHFRfHVgJz8naHBpcWxabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl' (redirected from 'https://lician.com/api/stripe/quick-checkout?_rsc=1r34m') from origin 'https://lician.com' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
-        "Failed to load resource: net::ERR_FAILED"
+        "Failed to load resource: the server responded with a status of 400 ()"
       ]
     },
     {
-      "timestamp": "2026-01-14T20:45:40.872Z",
+      "timestamp": "2026-01-14T21:00:10.559Z",
       "url": "https://lician.com/",
       "viewport": {
         "width": 768,
         "height": 1024
       },
       "metrics": {
-        "loadTime": 4194,
-        "domContentLoaded": 194
+        "loadTime": 3449,
+        "domContentLoaded": 185
       },
       "issues": [
         {
@@ -113,8 +105,8 @@
         {
           "type": "error",
           "category": "ux",
-          "message": "9 console errors detected",
-          "severity": "high"
+          "message": "5 console errors detected",
+          "severity": "medium"
         }
       ],
       "screenshots": [
@@ -122,26 +114,22 @@
       ],
       "consoleErrors": [
         "Failed to load resource: the server responded with a status of 404 ()",
-        "Access to fetch at 'https://checkout.stripe.com/c/pay/cs_test_b1orwMguUM8fnRJt4Eax58TVrTec7qCm4lDWixewZC7ZYhEHeJPVyr0d5L#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWjA0V25mfzZBNGdjblZvc2lraX1wVFVVVW9cSFNgXHF1N3VmN0lWMWFMUm5AU2JPPURrcG5iVl1vYFMyNVExaHJTU2NnQ1BuNnxDY09rPWp%2FMk9WXXROc0BENTVuVTZ%2FQjAwRycpJ2N3amhWYHdzYHcnP3F3cGApJ2dkZm5id2pwa2FGamlqdyc%2FJyZjY2NjY2MnKSdpZHxqcHFRfHVgJz8naHBpcWxabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl' (redirected from 'https://lician.com/api/stripe/quick-checkout?plan=annual&_rsc=1r34m') from origin 'https://lician.com' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
-        "Failed to load resource: net::ERR_FAILED",
         "Failed to load resource: the server responded with a status of 400 ()",
         "Failed to load resource: the server responded with a status of 400 ()",
         "Failed to load resource: the server responded with a status of 400 ()",
-        "Failed to load resource: the server responded with a status of 400 ()",
-        "Access to fetch at 'https://checkout.stripe.com/c/pay/cs_test_b1lFgVvAQwZzSQi3sg9ZBVGMTvoqkXtBMpatKP6UsGW8lIXKafQ38i6GvA#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWjA0V25mfzZBNGdjblZvc2lraX1wVFVVVW9cSFNgXHF1N3VmN0lWMWFMUm5AU2JPPURrcG5iVl1vYFMyNVExaHJTU2NnQ1BuNnxDY09rPWp%2FMk9WXXROc0BENTVuVTZ%2FQjAwRycpJ2N3amhWYHdzYHcnP3F3cGApJ2dkZm5id2pwa2FGamlqdyc%2FJyZjY2NjY2MnKSdpZHxqcHFRfHVgJz8naHBpcWxabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl' (redirected from 'https://lician.com/api/stripe/quick-checkout?_rsc=1r34m') from origin 'https://lician.com' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
-        "Failed to load resource: net::ERR_FAILED"
+        "Failed to load resource: the server responded with a status of 400 ()"
       ]
     },
     {
-      "timestamp": "2026-01-14T20:45:47.598Z",
+      "timestamp": "2026-01-14T21:00:16.738Z",
       "url": "https://lician.com/",
       "viewport": {
         "width": 375,
         "height": 812
       },
       "metrics": {
-        "loadTime": 2711,
-        "domContentLoaded": 189
+        "loadTime": 2285,
+        "domContentLoaded": 212
       },
       "issues": [
         {
@@ -153,8 +141,8 @@
         {
           "type": "error",
           "category": "ux",
-          "message": "9 console errors detected",
-          "severity": "high"
+          "message": "5 console errors detected",
+          "severity": "medium"
         }
       ],
       "screenshots": [
@@ -162,26 +150,22 @@
       ],
       "consoleErrors": [
         "Failed to load resource: the server responded with a status of 404 ()",
-        "Access to fetch at 'https://checkout.stripe.com/c/pay/cs_test_b1xZ9I21lRZY4e9VwRDthQNQnIjudhWYJuGPmdU8Mgh4vZO48RBcwMzM09#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWjA0V25mfzZBNGdjblZvc2lraX1wVFVVVW9cSFNgXHF1N3VmN0lWMWFMUm5AU2JPPURrcG5iVl1vYFMyNVExaHJTU2NnQ1BuNnxDY09rPWp%2FMk9WXXROc0BENTVuVTZ%2FQjAwRycpJ2N3amhWYHdzYHcnP3F3cGApJ2dkZm5id2pwa2FGamlqdyc%2FJyZjY2NjY2MnKSdpZHxqcHFRfHVgJz8naHBpcWxabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl' (redirected from 'https://lician.com/api/stripe/quick-checkout?plan=annual&_rsc=1r34m') from origin 'https://lician.com' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
-        "Failed to load resource: net::ERR_FAILED",
         "Failed to load resource: the server responded with a status of 400 ()",
         "Failed to load resource: the server responded with a status of 400 ()",
         "Failed to load resource: the server responded with a status of 400 ()",
-        "Failed to load resource: the server responded with a status of 400 ()",
-        "Access to fetch at 'https://checkout.stripe.com/c/pay/cs_test_b1L4nB4XjmXfypixxnGc1oOynM8kCP0oawIEAflJaqpiwHFNN4kN0MQZFI#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWjA0V25mfzZBNGdjblZvc2lraX1wVFVVVW9cSFNgXHF1N3VmN0lWMWFMUm5AU2JPPURrcG5iVl1vYFMyNVExaHJTU2NnQ1BuNnxDY09rPWp%2FMk9WXXROc0BENTVuVTZ%2FQjAwRycpJ2N3amhWYHdzYHcnP3F3cGApJ2dkZm5id2pwa2FGamlqdyc%2FJyZjY2NjY2MnKSdpZHxqcHFRfHVgJz8naHBpcWxabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl' (redirected from 'https://lician.com/api/stripe/quick-checkout?_rsc=1r34m') from origin 'https://lician.com' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
-        "Failed to load resource: net::ERR_FAILED"
+        "Failed to load resource: the server responded with a status of 400 ()"
       ]
     },
     {
-      "timestamp": "2026-01-14T20:45:53.868Z",
+      "timestamp": "2026-01-14T21:00:24.638Z",
       "url": "https://lician.com/stock/AAPL",
       "viewport": {
         "width": 1920,
         "height": 1080
       },
       "metrics": {
-        "loadTime": 3464,
-        "domContentLoaded": 556
+        "loadTime": 4401,
+        "domContentLoaded": 1125
       },
       "issues": [
         {
@@ -209,15 +193,15 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T20:45:57.865Z",
+      "timestamp": "2026-01-14T21:00:28.831Z",
       "url": "https://lician.com/stock/AAPL",
       "viewport": {
         "width": 1440,
         "height": 900
       },
       "metrics": {
-        "loadTime": 2496,
-        "domContentLoaded": 519
+        "loadTime": 2525,
+        "domContentLoaded": 405
       },
       "issues": [
         {
@@ -245,15 +229,15 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T20:46:01.900Z",
+      "timestamp": "2026-01-14T21:00:32.706Z",
       "url": "https://lician.com/stock/AAPL",
       "viewport": {
         "width": 768,
         "height": 1024
       },
       "metrics": {
-        "loadTime": 2525,
-        "domContentLoaded": 516
+        "loadTime": 2426,
+        "domContentLoaded": 491
       },
       "issues": [
         {
@@ -287,15 +271,15 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T20:46:05.730Z",
+      "timestamp": "2026-01-14T21:00:36.588Z",
       "url": "https://lician.com/stock/AAPL",
       "viewport": {
         "width": 375,
         "height": 812
       },
       "metrics": {
-        "loadTime": 2397,
-        "domContentLoaded": 493
+        "loadTime": 2606,
+        "domContentLoaded": 499
       },
       "issues": [
         {
@@ -335,23 +319,17 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T20:46:18.103Z",
+      "timestamp": "2026-01-14T21:00:40.995Z",
       "url": "https://lician.com/compare/aapl-vs-msft",
       "viewport": {
         "width": 1920,
         "height": 1080
       },
       "metrics": {
-        "loadTime": 10910,
-        "domContentLoaded": 197
+        "loadTime": 3672,
+        "domContentLoaded": 215
       },
       "issues": [
-        {
-          "type": "warning",
-          "category": "performance",
-          "message": "Slow page load: 10910ms (target: <5000ms)",
-          "severity": "high"
-        },
         {
           "type": "error",
           "category": "ux",
@@ -367,15 +345,15 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T20:46:21.722Z",
+      "timestamp": "2026-01-14T21:00:44.717Z",
       "url": "https://lician.com/compare/aapl-vs-msft",
       "viewport": {
         "width": 1440,
         "height": 900
       },
       "metrics": {
-        "loadTime": 3028,
-        "domContentLoaded": 214
+        "loadTime": 3131,
+        "domContentLoaded": 194
       },
       "issues": [
         {
@@ -393,15 +371,15 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T20:46:24.135Z",
+      "timestamp": "2026-01-14T21:00:47.084Z",
       "url": "https://lician.com/compare/aapl-vs-msft",
       "viewport": {
         "width": 768,
         "height": 1024
       },
       "metrics": {
-        "loadTime": 1741,
-        "domContentLoaded": 200
+        "loadTime": 1798,
+        "domContentLoaded": 251
       },
       "issues": [
         {
@@ -425,15 +403,15 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T20:46:25.899Z",
+      "timestamp": "2026-01-14T21:00:48.804Z",
       "url": "https://lician.com/compare/aapl-vs-msft",
       "viewport": {
         "width": 375,
         "height": 812
       },
       "metrics": {
-        "loadTime": 1199,
-        "domContentLoaded": 195
+        "loadTime": 1193,
+        "domContentLoaded": 169
       },
       "issues": [
         {
@@ -457,21 +435,21 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T20:46:34.470Z",
+      "timestamp": "2026-01-14T21:00:57.898Z",
       "url": "https://lician.com/screener",
       "viewport": {
         "width": 1920,
         "height": 1080
       },
       "metrics": {
-        "loadTime": 7911,
-        "domContentLoaded": 3770
+        "loadTime": 8436,
+        "domContentLoaded": 3663
       },
       "issues": [
         {
           "type": "warning",
           "category": "performance",
-          "message": "Slow page load: 7911ms (target: <5000ms)",
+          "message": "Slow page load: 8436ms (target: <5000ms)",
           "severity": "medium"
         },
         {
@@ -495,21 +473,21 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T20:46:42.102Z",
+      "timestamp": "2026-01-14T21:01:05.964Z",
       "url": "https://lician.com/screener",
       "viewport": {
         "width": 1440,
         "height": 900
       },
       "metrics": {
-        "loadTime": 7078,
-        "domContentLoaded": 3771
+        "loadTime": 7523,
+        "domContentLoaded": 4105
       },
       "issues": [
         {
           "type": "warning",
           "category": "performance",
-          "message": "Slow page load: 7078ms (target: <5000ms)",
+          "message": "Slow page load: 7523ms (target: <5000ms)",
           "severity": "medium"
         },
         {
@@ -533,21 +511,21 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T20:46:48.259Z",
+      "timestamp": "2026-01-14T21:01:12.080Z",
       "url": "https://lician.com/screener",
       "viewport": {
         "width": 768,
         "height": 1024
       },
       "metrics": {
-        "loadTime": 5512,
-        "domContentLoaded": 3596
+        "loadTime": 5540,
+        "domContentLoaded": 3633
       },
       "issues": [
         {
           "type": "warning",
           "category": "performance",
-          "message": "Slow page load: 5512ms (target: <5000ms)",
+          "message": "Slow page load: 5540ms (target: <5000ms)",
           "severity": "medium"
         },
         {
@@ -577,21 +555,21 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T20:46:54.253Z",
+      "timestamp": "2026-01-14T21:01:18.008Z",
       "url": "https://lician.com/screener",
       "viewport": {
         "width": 375,
         "height": 812
       },
       "metrics": {
-        "loadTime": 5547,
-        "domContentLoaded": 3719
+        "loadTime": 5444,
+        "domContentLoaded": 3716
       },
       "issues": [
         {
           "type": "warning",
           "category": "performance",
-          "message": "Slow page load: 5547ms (target: <5000ms)",
+          "message": "Slow page load: 5444ms (target: <5000ms)",
           "severity": "medium"
         },
         {
@@ -621,23 +599,17 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T20:47:00.362Z",
+      "timestamp": "2026-01-14T21:01:22.902Z",
       "url": "https://lician.com/markets",
       "viewport": {
         "width": 1920,
         "height": 1080
       },
       "metrics": {
-        "loadTime": 5407,
-        "domContentLoaded": 667
+        "loadTime": 4172,
+        "domContentLoaded": 381
       },
       "issues": [
-        {
-          "type": "warning",
-          "category": "performance",
-          "message": "Slow page load: 5407ms (target: <5000ms)",
-          "severity": "medium"
-        },
         {
           "type": "error",
           "category": "ux",
@@ -653,15 +625,15 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T20:47:05.472Z",
+      "timestamp": "2026-01-14T21:01:27.365Z",
       "url": "https://lician.com/markets",
       "viewport": {
         "width": 1440,
         "height": 900
       },
       "metrics": {
-        "loadTime": 4401,
-        "domContentLoaded": 245
+        "loadTime": 3755,
+        "domContentLoaded": 172
       },
       "issues": [
         {
@@ -679,15 +651,15 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T20:47:08.782Z",
+      "timestamp": "2026-01-14T21:01:30.717Z",
       "url": "https://lician.com/markets",
       "viewport": {
         "width": 768,
         "height": 1024
       },
       "metrics": {
-        "loadTime": 2664,
-        "domContentLoaded": 201
+        "loadTime": 2555,
+        "domContentLoaded": 186
       },
       "issues": [
         {
@@ -711,15 +683,15 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T20:47:11.642Z",
+      "timestamp": "2026-01-14T21:01:33.443Z",
       "url": "https://lician.com/markets",
       "viewport": {
         "width": 375,
         "height": 812
       },
       "metrics": {
-        "loadTime": 2272,
-        "domContentLoaded": 213
+        "loadTime": 2129,
+        "domContentLoaded": 175
       },
       "issues": [
         {
