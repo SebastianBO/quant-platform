@@ -1992,10 +1992,10 @@ Displays on stock pages after watchlist buttons. Tracks clicks via GA4.
 | Free | $0 | Weekly digest, AI picks, catalyst previews |
 | Premium | $9.99/mo or $79.99/yr | Real-time insider alerts, institutional flow, 8-K alerts |
 
-**Environment Variables Required**:
+**Environment Variables Required** (LIVE in Vercel Production):
 ```bash
-STRIPE_NEWSLETTER_MONTHLY_PRICE_ID=price_xxx
-STRIPE_NEWSLETTER_ANNUAL_PRICE_ID=price_xxx
+STRIPE_NEWSLETTER_MONTHLY_PRICE_ID=price_1SpclhDF7IaViaQF7v5pjaY4
+STRIPE_NEWSLETTER_ANNUAL_PRICE_ID=price_1SpclpDF7IaViaQFBXCMFtHd
 ```
 
 ## 3. Developer API Access
@@ -2015,10 +2015,10 @@ STRIPE_NEWSLETTER_ANNUAL_PRICE_ID=price_xxx
 
 **Database Table**: `api_keys` (migration: `20260114000001_api_keys.sql`)
 
-**Environment Variables Required**:
+**Environment Variables Required** (LIVE in Vercel Production):
 ```bash
-STRIPE_API_BASIC_PRICE_ID=price_xxx
-STRIPE_API_PRO_PRICE_ID=price_xxx
+STRIPE_API_BASIC_PRICE_ID=price_1SpclxDF7IaViaQFN0M839UB
+STRIPE_API_PRO_PRICE_ID=price_1Spcm4DF7IaViaQFXTSkAgT0
 ```
 
 ## Files Created
@@ -2033,30 +2033,21 @@ src/app/developers/signup/page.tsx           # API key signup form
 supabase/migrations/20260114000001_api_keys.sql  # API keys table
 ```
 
-## Stripe Setup Required
+## Stripe Setup Status ✅ COMPLETE (Jan 14, 2026)
 
-1. **Switch to Live Mode** in Stripe Dashboard
-2. **Create Products**:
-   - Newsletter Monthly ($9.99)
-   - Newsletter Annual ($79.99)
-   - API Basic ($29)
-   - API Pro ($99)
-3. **Update Environment Variables** in Vercel with live price IDs
-4. **Run Migration** for `api_keys` table
+All products created and environment variables configured:
 
-## MCP Integration
+| Product | Price ID | Status |
+|---------|----------|--------|
+| Newsletter Monthly | `price_1SpclhDF7IaViaQF7v5pjaY4` | ✅ Live |
+| Newsletter Annual | `price_1SpclpDF7IaViaQFBXCMFtHd` | ✅ Live |
+| API Basic | `price_1SpclxDF7IaViaQFN0M839UB` | ✅ Live |
+| API Pro | `price_1Spcm4DF7IaViaQFXTSkAgT0` | ✅ Live |
 
-Stripe MCP configured in `.mcp.json`:
-```json
-{
-  "stripe": {
-    "type": "http",
-    "url": "https://mcp.stripe.com"
-  }
-}
-```
-
-Restart Claude Code to connect. Uses OAuth for authentication.
+**Checkout Endpoints**:
+- Newsletter: `https://quant-platform.vercel.app/api/stripe/newsletter-checkout?plan=monthly|annual`
+- API Access: `https://quant-platform.vercel.app/api/stripe/api-checkout?plan=basic|pro`
+- Premium: POST to `/api/stripe/create-checkout` with `{ planId: "monthly"|"annual" }`
 
 ---
 
