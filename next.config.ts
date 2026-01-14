@@ -14,13 +14,6 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // Modularize imports for better tree-shaking
-  modularizeImports: {
-    'lucide-react': {
-      transform: 'lucide-react/dist/esm/icons/{{kebabCase member}}',
-    },
-  },
-
   // Image optimization for Core Web Vitals
   images: {
     formats: ['image/avif', 'image/webp'],
