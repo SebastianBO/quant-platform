@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || "https://lician.com"}/?canceled=true`,
       allow_promotion_codes: true,
       billing_address_collection: "auto",
-      customer_creation: "always",
+      // Note: customer_creation is not needed for subscription mode - customers are created automatically
       tax_id_collection: {
         enabled: true
       }
