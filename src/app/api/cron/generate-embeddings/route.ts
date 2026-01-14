@@ -9,10 +9,12 @@ import { openai } from '@ai-sdk/openai'
 // Uses AI SDK embedMany() with text-embedding-3-small (5x cheaper than ada-002)
 // =============================================================================
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
 // Chunk size for batch embedding (OpenAI limit is ~8000 tokens per batch)
 const BATCH_SIZE = 50
@@ -93,7 +95,7 @@ async function generateAndStoreEmbeddings(documents: DocumentToEmbed[]): Promise
   }))
 
   // Insert into document_embeddings (use insert, duplicates handled by checking first)
-  const { error } = await supabase
+  const { error } = await getSupabase()
     .from('document_embeddings')
     .insert(records)
 
@@ -110,7 +112,7 @@ async function generateAndStoreEmbeddings(documents: DocumentToEmbed[]): Promise
  */
 async function processCompanyFundamentals(limit: number): Promise<number> {
   // Get companies that don't have embeddings yet
-  const { data: companies, error } = await supabase
+  const { data: companies, error } = await getSupabase()
     .from('company_fundamentals')
     .select('symbol, company_name, sector, industry, description, market_cap, exchange_code')
     .not('description', 'is', null)
@@ -123,7 +125,7 @@ async function processCompanyFundamentals(limit: number): Promise<number> {
 
   // Check which already have embeddings
   const symbols = companies.map(c => c.symbol)
-  const { data: existing } = await supabase
+  const { data: existing } = await getSupabase()
     .from('document_embeddings')
     .select('ticker')
     .eq('document_type', 'company_overview')

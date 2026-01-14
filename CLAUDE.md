@@ -2446,11 +2446,99 @@ Example: "NVDA is up 2.3% today, trading at $142. PE ratio is 45, above sector a
 
 ---
 
+# SPEED ARCHITECTURE - HOW DEXTER DOES IT (Jan 15, 2026)
+
+## The Key Insight
+
+**Dexter does NOT use RAG for financial data. It uses DIRECT API calls.**
+
+This is why it's fast. Our architecture follows the same pattern:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     SPEED TIERS - QUERY PATH SELECTION                       │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  🚀 FAST PATH (90%+ of queries) - Direct Supabase SQL                       │
+│  ────────────────────────────────────────────────────────────────────────   │
+│  Query: "What is AAPL's PE ratio?"                                          │
+│         ↓                                                                   │
+│  Tool: getCompanyFundamentals({ ticker: "AAPL" })                          │
+│         ↓                                                                   │
+│  Supabase: SELECT * FROM financial_metrics WHERE ticker = 'AAPL'           │
+│         ↓                                                                   │
+│  Response: ~50-100ms                                                        │
+│                                                                             │
+│  🐢 SLOW PATH (rare queries) - RAG Embeddings                               │
+│  ────────────────────────────────────────────────────────────────────────   │
+│  Query: "What did Apple say about iPhone sales in earnings?"                │
+│         ↓                                                                   │
+│  Tool: searchFinancialDocuments({ query: "...", ticker: "AAPL" })          │
+│         ↓                                                                   │
+│  AI SDK: embed() → vector                                                   │
+│         ↓                                                                   │
+│  Supabase: match_documents() → cosine similarity                           │
+│         ↓                                                                   │
+│  Response: ~500-1000ms                                                      │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+## When to Use Each Path
+
+### FAST PATH - Direct SQL (Use for 90%+ of queries)
+
+| Query Type | Tool | Latency |
+|------------|------|---------|
+| Price quotes | `getStockQuote` | ~50ms |
+| PE ratio, market cap | `getCompanyFundamentals` | ~50ms |
+| Revenue, income | `getFinancialStatements` | ~100ms |
+| Insider trades | `getInsiderTrades` | ~100ms |
+| Analyst ratings | `getAnalystRatings` | ~100ms |
+| Short interest | `getShortInterest` | ~100ms |
+| Compare stocks | `compareStocks` | ~150ms |
+
+**All structured financial data = Direct SQL = FAST**
+
+### SLOW PATH - RAG (Use only when needed)
+
+| Query Type | Tool | Latency |
+|------------|------|---------|
+| "What did X say about..." | `searchFinancialDocuments` | ~500ms |
+| Management commentary | `searchFinancialDocuments` | ~500ms |
+| Earnings call quotes | `getSemanticContext` | ~1000ms |
+
+**RAG = Only for unstructured text (transcripts, narratives, news)**
+
+## Why This Matters
+
+```
+❌ WRONG: "Get AAPL's revenue" → RAG search → 1000ms
+✅ RIGHT: "Get AAPL's revenue" → Direct SQL → 100ms
+
+❌ WRONG: "What is NVDA's PE?" → RAG search → 1000ms
+✅ RIGHT: "What is NVDA's PE?" → Direct SQL → 50ms
+
+✅ CORRECT: "What did Tim Cook say about AI?" → RAG search → 500ms
+   (This SHOULD use RAG - it's searching for specific text)
+```
+
+## Speed Optimizations Implemented
+
+1. **Gemini Flash for tool selection** - Fast, cheap model picks tools
+2. **DEFAULT TO COMPLETE** - Don't over-iterate
+3. **Just-in-time tool selection** - Only load what's needed
+4. **Direct Supabase queries** - No unnecessary abstraction
+5. **HNSW index** - Fastest vector search algorithm
+6. **halfvec storage** - 50% smaller, same speed
+
+---
+
 # RAG EMBEDDINGS INFRASTRUCTURE (Jan 15, 2026)
 
 ## Overview
 
-Lician uses **pgvector** with **halfvec** storage and **HNSW** indexes for semantic search on financial documents. This enables queries like "What did Apple say about iPhone sales?" to return relevant passages from SEC filings and earnings transcripts.
+RAG is the **SLOW PATH** - only use for unstructured text queries. Lician uses **pgvector** with **halfvec** storage and **HNSW** indexes for semantic search on financial documents. This enables queries like "What did Apple say about iPhone sales?" to return relevant passages from SEC filings and earnings transcripts.
 
 ## Architecture
 

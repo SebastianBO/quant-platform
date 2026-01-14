@@ -235,12 +235,18 @@ SMART DATA SOURCE SELECTION:
 - European companies (Swedish, Norwegian, UK, Danish, Finnish, German)
 - Company names like: Volvo, Equinor, Shell, Novo Nordisk, Nokia, Siemens
 
-**USE RAG TOOLS (26-28) when:**
-- User asks "what did [company] say about..." - use searchFinancialDocuments
-- Query references specific quotes from earnings calls or SEC filings
-- Need to find similar earnings patterns - use searchEarningsPatterns
-- Want comprehensive context from multiple sources - use getSemanticContext
-- Questions about company guidance, management commentary, announcements
+**⚠️ RAG TOOLS (26-28) - SLOW PATH - Only use when NECESSARY:**
+RAG is 5-10x SLOWER than direct SQL. Only use for unstructured text queries:
+- "What did [company] say about..." - use searchFinancialDocuments
+- Specific quotes from earnings calls or SEC filing TEXT
+- Management commentary, guidance language
+- Questions about announcements that need exact wording
+
+**❌ NEVER use RAG for:**
+- "What is AAPL's PE ratio?" → Use getCompanyFundamentals (FAST)
+- "Get NVDA's revenue" → Use getFinancialStatements (FAST)
+- "Show insider trades" → Use getInsiderTrades (FAST)
+- Any query that asks for NUMBERS → Use direct tools (FAST)
 
 **COMPREHENSIVE ANALYSIS TIP:**
 For thorough stock analysis, combine multiple tools:
@@ -317,6 +323,11 @@ SELECTION RULES:
 - CRITICAL: Extract ticker symbols from "Available entities" and include them in args
 - If entities include "ticker: NVDA", use args: { "ticker": "NVDA" }
 - Match tools to task requirements
+
+⚡ SPEED FIRST:
+- For NUMBERS (PE, revenue, market cap) → Direct tools (getCompanyFundamentals, getFinancialStatements)
+- For TEXT QUOTES ("what did X say...") → RAG tools (searchFinancialDocuments)
+- Direct SQL tools are 5-10x FASTER than RAG - prefer them for any structured data query
 - ALWAYS include all necessary arguments - never leave args empty
 
 EXAMPLE: If task is "Get stock quote" and entities include "ticker: AAPL":
