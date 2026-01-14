@@ -1,11 +1,19 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
 const EODHD_API_KEY = process.env.EODHD_API_KEY
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+
+// Lazy-load Supabase client to avoid build-time errors
+let supabaseClient: SupabaseClient | null = null
+function getSupabase() {
+  if (!supabaseClient) {
+    supabaseClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+  }
+  return supabaseClient
+}
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -18,7 +26,7 @@ export async function GET(request: Request) {
 
   try {
     // Strategy 1: Search Supabase company_fundamentals (141k+ companies)
-    const { data: supabaseResults, error } = await supabase
+    const { data: supabaseResults, error } = await getSupabase()
       .from('company_fundamentals')
       .select('ticker, company_name, sector, industry, market_cap, exchange')
       .or(`ticker.ilike.%${query}%,company_name.ilike.%${query}%,industry.ilike.%${query}%,sector.ilike.%${query}%`)
@@ -40,7 +48,7 @@ export async function GET(request: Request) {
     }
 
     // Strategy 2: Fallback to income_statements tickers
-    const { data: tickerResults } = await supabase
+    const { data: tickerResults } = await getSupabase()
       .from('income_statements')
       .select('ticker')
       .ilike('ticker', `%${query}%`)
