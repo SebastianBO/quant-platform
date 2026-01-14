@@ -1027,8 +1027,62 @@ src/lib/ai/tools.ts  # Added 4 EU company tools
 ### What Needs Fixing
 
 1. **Swedish scraper** - Allabolag.se blocking requests
-2. **US financial_metrics** - Yahoo Finance now requires auth crumb
+2. **US financial_metrics** - ✅ FIXED - Now uses EODHD API (Jan 14, 2026)
 3. **UK Companies House** - Need to add `COMPANIES_HOUSE_API_KEY` to Vercel env
+
+---
+
+# DATA ARCHITECTURE: US vs EU (Decision Log)
+
+## Current State (Jan 14, 2026)
+
+**US and EU data use SEPARATE schemas** - this is intentional.
+
+### Why Separate Schemas?
+
+| Aspect | US Tables | EU Tables |
+|--------|-----------|-----------|
+| **Accounting Standard** | US-GAAP | IFRS |
+| **Company Identifier** | `cik` (SEC) + `ticker` | `org_number` + `country_code` |
+| **Net Income Field** | `net_income` | `profit_for_the_year` |
+| **Operating Income** | `operating_income` | `operating_profit` |
+| **Cost Field** | `cost_of_revenue` | `cost_of_sales` |
+| **Tables** | `income_statements`, `balance_sheets`, `cash_flow_statements` | `eu_income_statements`, `eu_balance_sheets`, `eu_cash_flow_statements` |
+
+### Data Coverage (Jan 14, 2026)
+
+**US Data:**
+| Table | Records | Companies |
+|-------|---------|-----------|
+| `income_statements` | 313,902 | 5,345 |
+| `balance_sheets` | 302,139 | ~5,345 |
+| `cash_flow_statements` | 223,317 | ~5,345 |
+| `financial_metrics` | 4,100 | 4,100 |
+| **Total** | **839,358** | **5,345 unique** |
+
+**EU Data:**
+| Table | Records | Countries |
+|-------|---------|-----------|
+| `eu_companies` | 106,975 | NO, FI, SE |
+| `eu_income_statements` | 48,592 | NO |
+| `eu_balance_sheets` | 48,592 | NO |
+
+### Future Decision: Unified View vs Separate
+
+**Options:**
+1. **Keep Separate (Current)** - More accurate, respects US-GAAP vs IFRS differences
+2. **Create Unified View** - Map common fields (`revenue`, `net_income_normalized`) for AI queries
+3. **Smart AI Routing** - AI detects company region and queries appropriate table
+
+**Recommendation:** Keep separate for data integrity. Create unified view only if AI query experience suffers.
+
+### SEC Bulk Import Gap
+
+- SEC has **10,303** companies with tickers
+- We imported **5,345** companies (52%)
+- Gap: ~5,000 companies whose XBRL uses non-standard concept names
+- Most missing are: OTC stocks, shell corps, non-standard filers
+- Major stocks (S&P 500, NASDAQ-100) are all covered
 
 ---
 
@@ -1110,3 +1164,117 @@ Source: `src/components/ManusStyleHome.tsx`
 2. **Check API routes for data structures** - Models, endpoints, response formats
 3. **Verify constants exist** - grep before creating new ones
 4. **Match backend exactly** - Frontend constants must mirror backend
+
+---
+
+# EMAIL INFRASTRUCTURE (Jan 2026)
+
+## Overview
+
+Lician uses a multi-provider email system with automatic fallback. **Elastic Email** is the primary provider due to cost ($0.09/1,000 emails).
+
+## Email Providers (Priority Order)
+
+| Provider | Cost | Env Variable | Status |
+|----------|------|--------------|--------|
+| **Elastic Email** | $0.09/1k | `ELASTIC_EMAIL_API_KEY` | ✅ Primary |
+| Brevo | 9k free/month | `BREVO_API_KEY` | Fallback |
+| Resend | $0.10/email | `RESEND_API_KEY` | Fallback |
+
+The system auto-detects which provider is configured and uses the first available.
+
+## DNS Records for lician.com (Loopia)
+
+**Configured Jan 14, 2026** - All records verified and saved:
+
+| Record Type | Name | Value | Status |
+|-------------|------|-------|--------|
+| **SPF** | @ (root) | `v=spf1 a mx include:_spf.google.com -all` | ✅ SAVED |
+| **DKIM** | `api._domainkey` | `k=rsa;t=s;p=MIGfMA0GCSqGSIb3DQEBAQUAA4G...` | ✅ SAVED |
+| **CNAME** | `tracking` | `api.elasticemail.com` | ✅ SAVED |
+| **DMARC** | `_dmarc` | `v=DMARC1;p=none;` | ✅ SAVED |
+
+**DNS Propagation**: 15min-48h for full global propagation.
+
+## Key Files
+
+### Email Service Library
+- `src/lib/email.ts` - Multi-provider email service with templates
+- `src/types/elasticemail.d.ts` - TypeScript declarations for Elastic Email SDK
+
+### API Endpoints
+- `POST /api/email/subscribe` - Newsletter subscription
+- `GET /api/email/confirm?token=xxx` - Email confirmation
+- `GET /api/cron/send-weekly-digest` - Weekly newsletter (cron)
+
+### Components
+- `src/components/NewsletterSignup.tsx` - 3 variants: inline, card, hero
+
+## Database Tables
+
+```sql
+-- email_subscribers table (Supabase)
+email_subscribers (
+  id UUID PRIMARY KEY,
+  email TEXT UNIQUE NOT NULL,
+  status TEXT DEFAULT 'pending',  -- pending, confirmed, unsubscribed
+  source TEXT,                     -- homepage, footer, popup, etc.
+  confirmation_token UUID,
+  confirmed_at TIMESTAMPTZ,
+  unsubscribed_at TIMESTAMPTZ,
+  subscribed_weekly_digest BOOLEAN DEFAULT true,
+  subscribed_alerts BOOLEAN DEFAULT true,
+  emails_sent INT DEFAULT 0,
+  last_email_sent_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT now()
+)
+```
+
+## Email Templates
+
+Three templates available in `src/lib/email.ts`:
+
+1. **Welcome Email** - Sent on subscription with confirmation link
+2. **Weekly Digest** - Market movers, insider trades, AI insights
+3. **Market Alert** - Price alerts, insider activity, earnings
+
+## Testing Email
+
+```bash
+# Trigger welcome email
+curl -X POST https://lician.com/api/email/subscribe \
+  -H "Content-Type: application/json" \
+  -d '{"email": "test@example.com", "source": "test"}'
+
+# Test weekly digest (add ?test=true for local testing)
+curl "https://lician.com/api/cron/send-weekly-digest?test=true"
+```
+
+## Cron Setup (Vercel)
+
+Add to `vercel.json`:
+```json
+{
+  "crons": [{
+    "path": "/api/cron/send-weekly-digest",
+    "schedule": "0 8 * * 1"
+  }]
+}
+```
+
+Required env var: `CRON_SECRET` for authentication.
+
+## Troubleshooting
+
+### Emails not sending
+1. Check DNS propagation: https://mxtoolbox.com/spf.aspx (search `lician.com`)
+2. Verify domain in Elastic Email dashboard → Settings → Domains
+3. Check Vercel logs for errors
+
+### DNS Verification Tools
+- MXToolbox: https://mxtoolbox.com/spf.aspx
+- Google Admin Toolbox: toolbox.googleapps.com/apps/checkmx/
+- DNSChecker: https://dnschecker.org/
+
+### Provider Fallback
+If Elastic Email fails, add `BREVO_API_KEY` or `RESEND_API_KEY` to Vercel env vars as backup.
