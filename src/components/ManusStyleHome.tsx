@@ -621,7 +621,7 @@ export default function ManusStyleHome() {
               <div className="flex items-center gap-2 text-sm">
                 <span className="text-muted-foreground">Free plan</span>
                 <span className="text-muted-foreground">|</span>
-                <Link href="/api/stripe/quick-checkout?plan=annual" className="text-green-500 hover:text-green-400 font-medium">
+                <Link href="/api/stripe/quick-checkout?plan=annual" prefetch={false} className="text-green-500 hover:text-green-400 font-medium">
                   Start free trial
                 </Link>
               </div>
@@ -1285,6 +1285,7 @@ export default function ManusStyleHome() {
             </div>
             <Link
               href="/api/stripe/quick-checkout?plan=annual"
+              prefetch={false}
               onClick={() => {
                 trackCTAClick('start_trial', 'payment_modal')
                 trackBeginCheckout('annual', 58)
