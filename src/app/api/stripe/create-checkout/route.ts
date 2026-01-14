@@ -20,13 +20,17 @@ function getSupabase() {
   return createClient(supabaseUrl, supabaseKey)
 }
 
-const PRICE_IDS = {
-  monthly: process.env.STRIPE_MONTHLY_PRICE_ID || "",
-  annual: process.env.STRIPE_ANNUAL_PRICE_ID || ""
+// Read env vars at runtime, not build time
+function getPriceId(plan: string): string {
+  const priceIds: Record<string, string> = {
+    monthly: process.env.STRIPE_MONTHLY_PRICE_ID || "",
+    annual: process.env.STRIPE_ANNUAL_PRICE_ID || ""
+  }
+  return priceIds[plan] || ""
 }
 
 // Free trial only for annual plan
-const TRIAL_DAYS = {
+const TRIAL_DAYS: Record<string, number> = {
   monthly: 0,
   annual: 3
 }
@@ -45,14 +49,13 @@ export async function POST(request: NextRequest) {
     // Use authenticated user's ID (NOT from request body for security)
     const userId = user.userId
 
-    if (!planId || !PRICE_IDS[planId as keyof typeof PRICE_IDS]) {
+    const priceId = getPriceId(planId)
+    if (!planId || !priceId) {
       return NextResponse.json(
         { error: "Invalid plan selected" },
         { status: 400 }
       )
     }
-
-    const priceId = PRICE_IDS[planId as keyof typeof PRICE_IDS]
 
     // Get or create Stripe customer
     let customerId: string | undefined

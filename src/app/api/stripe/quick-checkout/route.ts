@@ -12,9 +12,13 @@ function getStripe() {
   return new Stripe(stripeKey)
 }
 
-const PRICE_IDS = {
-  monthly: process.env.STRIPE_MONTHLY_PRICE_ID || "",
-  annual: process.env.STRIPE_ANNUAL_PRICE_ID || ""
+function getPriceId(plan: string): string {
+  // Read env vars at runtime, not build time
+  const priceIds: Record<string, string> = {
+    monthly: process.env.STRIPE_MONTHLY_PRICE_ID || "",
+    annual: process.env.STRIPE_ANNUAL_PRICE_ID || ""
+  }
+  return priceIds[plan] || ""
 }
 
 export async function GET(request: NextRequest) {
@@ -22,7 +26,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const plan = searchParams.get("plan") || "annual"
 
-    const priceId = PRICE_IDS[plan as keyof typeof PRICE_IDS]
+    const priceId = getPriceId(plan)
 
     if (!priceId) {
       // If no price configured, redirect to premium page
