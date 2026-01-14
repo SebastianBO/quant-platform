@@ -286,7 +286,7 @@ export default function HeroAIChat() {
                       ? "You've used your free questions for this hour!"
                       : "Something went wrong. Please try again."}
                   </p>
-                  <Link href="/premium" className="inline-flex items-center gap-2 text-sm text-green-500 hover:underline font-medium">
+                  <Link href="/api/stripe/quick-checkout?plan=annual" className="inline-flex items-center gap-2 text-sm text-green-500 hover:underline font-medium">
                     <Sparkles className="w-4 h-4" />
                     Upgrade to Premium for unlimited AI access
                   </Link>

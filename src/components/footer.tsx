@@ -211,7 +211,7 @@ export function Footer() {
             </p>
             <div className="flex gap-3 mt-4">
               <Link
-                href="/premium"
+                href="/api/stripe/quick-checkout?plan=annual"
                 className="px-4 py-2 bg-green-600 hover:bg-green-500 text-white rounded-lg text-sm font-medium transition-colors"
               >
                 Get Premium

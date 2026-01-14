@@ -472,6 +472,7 @@ function EmptyState({
 }
 
 export default function AutonomousChat() {
+  const router = useRouter()
   const [messages, setMessages] = useState<Message[]>([])
   const [inputValue, setInputValue] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -837,7 +838,14 @@ export default function AutonomousChat() {
                   {MODELS.map((model) => (
                     <DropdownMenuItem
                       key={model.key}
-                      onClick={() => setSelectedModel(model)}
+                      onClick={() => {
+                        if (model.tier === 'premium') {
+                          // Redirect to Stripe checkout for premium models
+                          router.push('/api/stripe/quick-checkout?plan=monthly')
+                        } else {
+                          setSelectedModel(model)
+                        }
+                      }}
                       className="flex items-center justify-between"
                     >
                       <span className="text-sm">{model.name}</span>
