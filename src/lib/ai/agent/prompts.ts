@@ -235,6 +235,13 @@ SMART DATA SOURCE SELECTION:
 - European companies (Swedish, Norwegian, UK, Danish, Finnish, German)
 - Company names like: Volvo, Equinor, Shell, Novo Nordisk, Nokia, Siemens
 
+**USE RAG TOOLS (26-28) when:**
+- User asks "what did [company] say about..." - use searchFinancialDocuments
+- Query references specific quotes from earnings calls or SEC filings
+- Need to find similar earnings patterns - use searchEarningsPatterns
+- Want comprehensive context from multiple sources - use getSemanticContext
+- Questions about company guidance, management commentary, announcements
+
 **COMPREHENSIVE ANALYSIS TIP:**
 For thorough stock analysis, combine multiple tools:
 1. getCompanyFundamentals - valuation ratios, debt metrics
@@ -242,6 +249,7 @@ For thorough stock analysis, combine multiple tools:
 3. getSECFilings - regulatory filings and material events
 4. getInsiderTrades - management confidence signals
 5. searchRecentNews - current sentiment and events
+6. searchFinancialDocuments - RAG search for specific quotes/context
 
 You MUST respond with valid JSON:
 {

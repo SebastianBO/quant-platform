@@ -1840,6 +1840,234 @@ export const compareEUCompaniesTool = tool({
   },
 })
 
+// =============================================================================
+// RAG (Retrieval-Augmented Generation) TOOLS
+// Uses pgvector for semantic search on financial documents
+// =============================================================================
+
+/**
+ * Tool: Search Financial Documents (RAG)
+ * Semantic search on SEC filings, earnings transcripts, news, research
+ */
+export const searchFinancialDocumentsTool = tool({
+  description: 'Search financial documents using semantic similarity (RAG). Use for questions about what a company said in earnings calls, SEC filings, or recent announcements.',
+  inputSchema: z.object({
+    query: z.string().describe('The search query - what you want to find in documents'),
+    ticker: z.string().optional().describe('Filter by ticker symbol'),
+    documentType: z.enum(['sec_filing', 'earnings_transcript', 'news', 'research', 'company_overview']).optional().describe('Filter by document type'),
+    limit: z.number().optional().default(5).describe('Maximum results to return'),
+  }),
+  execute: async ({ query, ticker, documentType, limit }) => {
+    try {
+      // First, generate embedding for the query using OpenAI
+      const openaiKey = process.env.OPENAI_API_KEY
+      if (!openaiKey) {
+        return { success: false, error: 'OpenAI API key not configured for embeddings' }
+      }
+
+      // Get embedding for query
+      const embeddingResponse = await fetch('https://api.openai.com/v1/embeddings', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${openaiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'text-embedding-ada-002',
+          input: query,
+        }),
+      })
+
+      if (!embeddingResponse.ok) {
+        return { success: false, error: 'Failed to generate query embedding' }
+      }
+
+      const embeddingData = await embeddingResponse.json()
+      const queryEmbedding = embeddingData.data[0].embedding
+
+      // Search using Supabase RPC function
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data, error } = await (getSupabase().rpc as any)('match_documents', {
+        query_embedding: queryEmbedding,
+        match_threshold: 0.7,
+        match_count: limit || 5,
+        filter_ticker: ticker?.toUpperCase() || null,
+        filter_doc_type: documentType || null,
+      })
+
+      if (error) {
+        console.error('RAG search error:', error)
+        return { success: false, error: 'Document search failed' }
+      }
+
+      if (!data || data.length === 0) {
+        return {
+          success: true,
+          source: 'supabase-rag',
+          message: 'No matching documents found',
+          results: [],
+        }
+      }
+
+      return {
+        success: true,
+        source: 'supabase-rag',
+        results: data.map((doc: { id: string; ticker: string; document_type: string; title: string; content: string; source_url: string; document_date: string; similarity: number }) => ({
+          ticker: doc.ticker,
+          type: doc.document_type,
+          title: doc.title,
+          excerpt: doc.content?.substring(0, 500) + '...',
+          sourceUrl: doc.source_url,
+          date: doc.document_date,
+          relevanceScore: doc.similarity,
+        })),
+        count: data.length,
+      }
+    } catch (error) {
+      console.error('RAG search error:', error)
+      return { success: false, error: 'Document search failed' }
+    }
+  },
+})
+
+/**
+ * Tool: Search Similar Earnings Patterns
+ * Find companies with similar earnings surprise patterns
+ */
+export const searchEarningsPatternsTool = tool({
+  description: 'Find companies with similar earnings surprise patterns. Use for finding comparable earnings reactions or predicting post-earnings moves.',
+  inputSchema: z.object({
+    ticker: z.string().describe('Reference ticker to find similar patterns for'),
+    surpriseBucket: z.enum(['massive_beat', 'beat', 'inline', 'miss', 'massive_miss']).optional().describe('Filter by surprise type'),
+    limit: z.number().optional().default(10).describe('Maximum results to return'),
+  }),
+  execute: async ({ ticker, surpriseBucket, limit }) => {
+    try {
+      // Get the reference earnings embedding
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data: refEarnings } = await getSupabase()
+        .from('earnings_embeddings' as any)
+        .select('insight_embedding, eps_surprise_bucket, insight_text')
+        .eq('ticker', ticker.toUpperCase())
+        .order('report_date', { ascending: false })
+        .limit(1)
+        .single() as { data: { insight_embedding: number[]; eps_surprise_bucket: string; insight_text: string } | null }
+
+      if (!refEarnings?.insight_embedding) {
+        return {
+          success: false,
+          error: `No earnings embedding found for ${ticker}`,
+        }
+      }
+
+      // Search for similar patterns
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data, error } = await (getSupabase().rpc as any)('match_earnings_patterns', {
+        query_embedding: refEarnings.insight_embedding,
+        match_count: limit || 10,
+        filter_surprise_bucket: surpriseBucket || null,
+      })
+
+      if (error) {
+        return { success: false, error: 'Earnings pattern search failed' }
+      }
+
+      return {
+        success: true,
+        source: 'supabase-rag',
+        reference: {
+          ticker: ticker.toUpperCase(),
+          surpriseBucket: refEarnings.eps_surprise_bucket,
+          insight: refEarnings.insight_text,
+        },
+        similarPatterns: data || [],
+        count: data?.length || 0,
+      }
+    } catch (error) {
+      return { success: false, error: 'Earnings pattern search failed' }
+    }
+  },
+})
+
+/**
+ * Tool: Get Semantic Context for Query
+ * Retrieves relevant context from all document types for RAG
+ */
+export const getSemanticContextTool = tool({
+  description: 'Get relevant context from financial documents to augment AI responses. Combines SEC filings, earnings, and news for comprehensive context.',
+  inputSchema: z.object({
+    query: z.string().describe('The question or topic to find context for'),
+    tickers: z.array(z.string()).optional().describe('List of tickers to search'),
+    topK: z.number().optional().default(3).describe('Number of context chunks per source'),
+  }),
+  execute: async ({ query, tickers, topK }) => {
+    try {
+      const openaiKey = process.env.OPENAI_API_KEY
+      if (!openaiKey) {
+        return { success: false, error: 'OpenAI API key not configured' }
+      }
+
+      // Generate query embedding
+      const embeddingResponse = await fetch('https://api.openai.com/v1/embeddings', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${openaiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'text-embedding-ada-002',
+          input: query,
+        }),
+      })
+
+      if (!embeddingResponse.ok) {
+        return { success: false, error: 'Failed to generate embedding' }
+      }
+
+      const embeddingData = await embeddingResponse.json()
+      const queryEmbedding = embeddingData.data[0].embedding
+
+      // Search across document types
+      const contexts: { type: string; ticker: string; content: string; score: number }[] = []
+
+      for (const docType of ['sec_filing', 'earnings_transcript', 'news']) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data } = await (getSupabase().rpc as any)('match_documents', {
+          query_embedding: queryEmbedding,
+          match_threshold: 0.65,
+          match_count: topK || 3,
+          filter_ticker: tickers?.[0]?.toUpperCase() || null,
+          filter_doc_type: docType,
+        })
+
+        if (data) {
+          for (const doc of data) {
+            contexts.push({
+              type: doc.document_type,
+              ticker: doc.ticker,
+              content: doc.content?.substring(0, 800),
+              score: doc.similarity,
+            })
+          }
+        }
+      }
+
+      // Sort by relevance score
+      contexts.sort((a, b) => b.score - a.score)
+
+      return {
+        success: true,
+        source: 'supabase-rag',
+        contexts: contexts.slice(0, (topK || 3) * 3),
+        totalFound: contexts.length,
+        query,
+      }
+    } catch (error) {
+      return { success: false, error: 'Context retrieval failed' }
+    }
+  },
+})
+
 /**
  * All tools exported as an object for use in the chat API
  */
@@ -1880,4 +2108,9 @@ export const financialTools = {
   getEUCompanyDetails: getEUCompanyDetailsTool,
   getEUFinancialStatements: getEUFinancialStatementsTool,
   compareEUCompanies: compareEUCompaniesTool,
+
+  // RAG (Retrieval-Augmented Generation) tools
+  searchFinancialDocuments: searchFinancialDocumentsTool,
+  searchEarningsPatterns: searchEarningsPatternsTool,
+  getSemanticContext: getSemanticContextTool,
 }
