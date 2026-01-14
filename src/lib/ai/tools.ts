@@ -279,10 +279,10 @@ export const getCompanyFundamentalsTool = tool({
           source: 'supabase',
           data: {
             ticker: ticker.toUpperCase(),
-            pe_ratio: m.pe_ratio,
-            pb_ratio: m.pb_ratio,
-            ps_ratio: m.ps_ratio,
-            ev_ebitda: m.ev_to_ebitda,
+            pe_ratio: m.price_to_earnings_ratio,
+            pb_ratio: m.price_to_book_ratio,
+            ps_ratio: m.price_to_sales_ratio,
+            ev_ebitda: m.enterprise_value_to_ebitda_ratio,
             debt_to_equity: m.debt_to_equity,
             current_ratio: m.current_ratio,
             gross_margin: m.gross_margin,
@@ -296,6 +296,10 @@ export const getCompanyFundamentalsTool = tool({
             free_cash_flow_yield: m.free_cash_flow_yield,
             dividend_yield: m.dividend_yield,
             report_period: m.report_period,
+            market_cap: m.market_cap,
+            enterprise_value: m.enterprise_value,
+            peg_ratio: m.peg_ratio,
+            eps: m.earnings_per_share,
           },
         }
       }
