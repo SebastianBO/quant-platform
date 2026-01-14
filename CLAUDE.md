@@ -1952,3 +1952,430 @@ The audit now checks `getComputedStyle(body).overflowX` - if set to 'hidden', ov
 # Override test URL (default: https://lician.com)
 TEST_URL=http://localhost:3000 npx tsx scripts/ui-audit.ts
 ```
+
+---
+
+# ROADMAP TO #1 FINANCIAL AI AGENT (Jan 2026)
+
+## Research Summary
+
+Based on comprehensive research of the 2025-2026 financial AI landscape, here's what differentiates the best financial AI agents:
+
+### Market Leaders Analysis
+
+| Platform | Strengths | Cost | Gap vs Lician |
+|----------|-----------|------|---------------|
+| **Bloomberg Terminal** | Comprehensive data, 40+ years | $20,000/yr | We're FREE |
+| **AlphaSense** | Document analysis, sentiment | $$$$ | We need RAG |
+| **Perplexity Finance** | Real-time, earnings hub | Free | We need live transcripts |
+| **Morgan Stanley AI** | RAG, portfolio-specific | Internal | We need portfolio integration |
+
+### Key Industry Trends (Gartner 2026)
+
+- 40% of finance departments will deploy autonomous agents by 2027
+- Global AI in financial services: $35B market (24.5% CAGR)
+- Investment banks seeing 27-35% productivity gains from AI
+- RAG + Multi-Agent systems becoming standard
+
+### Sources
+- [AI Agents for Finance 2026 Guide](https://rtslabs.com/ai-agents-for-finance/)
+- [Perplexity Finance](https://www.perplexity.ai/finance)
+- [RAG in Finance Use Cases](https://arya.ai/blog/rag-in-finance-top-10-use-cases)
+- [Vercel AI SDK Agents](https://sdk.vercel.ai/docs/foundations/agents)
+- [MongoDB Agentic Portfolio Management](https://www.mongodb.com/docs/atlas/architecture/current/solutions-library/fin-services-agentic-portfolio/)
+
+## Current State (Jan 14, 2026)
+
+### What's Working ✅
+
+| Feature | Status | Details |
+|---------|--------|---------|
+| **5-Phase Workflow** | ✅ | Understand → Plan → Execute → Reflect → Answer |
+| **Multi-Model Gateway** | ✅ | 6 models (GPT-4o, Claude, Gemini, Llama) |
+| **Supabase Integration** | ✅ | 839K+ financial records, 5.3K US companies |
+| **EU Companies** | ✅ | 107K+ companies (Norway, Sweden, etc.) |
+| **SEC Filings Tool** | ✅ | 10-K, 10-Q, 8-K access |
+| **Firecrawl Web Research** | ✅ | Deep research, news, IR crawling |
+| **Smart Validation** | ✅ | "DEFAULT TO COMPLETE" logic |
+| **Fast Model Routing** | ✅ | Gemini Flash for tool selection |
+| **Debt Ratio Calculation** | ✅ | Auto-calculate from balance sheet |
+
+### Gaps vs Industry Leaders ❌
+
+| Feature | Bloomberg | Perplexity | AlphaSense | Lician |
+|---------|-----------|------------|------------|--------|
+| RAG/Vector Search | ✅ | ✅ | ✅ | ❌ |
+| Live Earnings Transcripts | ✅ | ✅ | ✅ | ❌ |
+| Sentiment Analysis | ✅ | ✅ | ✅ | ❌ |
+| Portfolio Integration | ✅ | ❌ | ❌ | ❌ |
+| Crypto Data | ✅ | ✅ | ❌ | ❌ |
+| Automated Alerts | ✅ | ✅ | ✅ | ❌ |
+| Multi-Agent Workflows | ❌ | ❌ | ❌ | Partial |
+
+## PHASE 1: Foundation (Week 1-2)
+
+### 1.1 RAG Infrastructure with Vector Database
+
+**Why**: RAG is the #1 differentiator. Morgan Stanley, AlphaSense all use it.
+
+```typescript
+// Implementation Plan
+// 1. Add Supabase pgvector extension
+CREATE EXTENSION vector;
+
+// 2. Create embeddings table
+CREATE TABLE document_embeddings (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  ticker TEXT NOT NULL,
+  document_type TEXT NOT NULL, -- 'sec_filing', 'earnings_call', 'news', 'research'
+  source_url TEXT,
+  content TEXT NOT NULL,
+  embedding vector(1536), -- OpenAI ada-002 dimensions
+  metadata JSONB,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+// 3. Create similarity search function
+CREATE FUNCTION match_documents(
+  query_embedding vector(1536),
+  match_threshold float,
+  match_count int
+) RETURNS TABLE (
+  id UUID,
+  ticker TEXT,
+  content TEXT,
+  similarity float
+);
+```
+
+**New Tools to Add**:
+```typescript
+// RAG Specialist Agent tools
+searchFinancialDocuments({ query: string, ticker?: string, docType?: string })
+embedAndStoreDocument({ content: string, ticker: string, docType: string, metadata: object })
+getSemanticContext({ query: string, topK: number })
+```
+
+### 1.2 Live Earnings Transcripts
+
+**Why**: Perplexity's #1 feature. Real-time insights during earnings calls.
+
+```typescript
+// Earnings Hub Implementation
+interface EarningsEvent {
+  ticker: string
+  company: string
+  date: string
+  time: string
+  estimatedEPS: number
+  status: 'upcoming' | 'live' | 'completed'
+  transcriptUrl?: string
+}
+
+// New Cron Job: /api/cron/sync-earnings-calendar
+// Sources: SEC EDGAR, Yahoo Finance earnings API
+// Frequency: Every 6 hours
+
+// Live Transcript Processing
+// 1. Use Firecrawl to monitor IR page during earnings
+// 2. Process transcript in real-time with streaming
+// 3. Extract key metrics: revenue, EPS, guidance
+// 4. Generate AI summary while call is live
+```
+
+**New Tools to Add**:
+```typescript
+getUpcomingEarnings({ days?: number, tickers?: string[] })
+getLiveEarningsTranscript({ ticker: string })
+getEarningsSummary({ ticker: string, quarter: string })
+```
+
+### 1.3 Enhanced Multi-Agent Architecture
+
+**Why**: Deloitte shows 27-35% productivity gains from specialized agents.
+
+```typescript
+// Agent Specializations
+const SPECIALIST_AGENTS = {
+  // Data Retrieval Specialist
+  dataRetriever: {
+    model: 'gemini-flash', // Fast, cheap
+    tools: ['getStockQuote', 'getFinancialStatements', 'searchStocks'],
+    role: 'Fetch accurate, timely market data'
+  },
+
+  // RAG Specialist
+  ragSpecialist: {
+    model: 'gpt-4o-mini', // Good at semantic search
+    tools: ['searchFinancialDocuments', 'getSemanticContext'],
+    role: 'Retrieve relevant context from knowledge base'
+  },
+
+  // Analysis Specialist
+  analysisSpecialist: {
+    model: 'claude-sonnet-4', // Best reasoning
+    tools: ['compareStocks', 'getAnalystRatings'],
+    role: 'Perform deep financial analysis'
+  },
+
+  // News & Sentiment Specialist
+  sentimentSpecialist: {
+    model: 'gpt-4o-mini',
+    tools: ['searchRecentNews', 'analyzeSentiment'],
+    role: 'Analyze market sentiment and news'
+  }
+}
+
+// Orchestrator coordinates specialists
+class MultiAgentOrchestrator {
+  async run(query: string) {
+    // 1. Route to appropriate specialist(s)
+    // 2. Aggregate results
+    // 3. Synthesize final answer
+  }
+}
+```
+
+## PHASE 2: Differentiation (Week 3-4)
+
+### 2.1 Sentiment Analysis Engine
+
+**Why**: NLP on earnings calls reveals subtle confidence shifts.
+
+```typescript
+// Sentiment Analysis Pipeline
+interface SentimentResult {
+  overall: 'bullish' | 'neutral' | 'bearish'
+  confidence: number
+  signals: {
+    source: string
+    text: string
+    sentiment: number
+    impact: 'high' | 'medium' | 'low'
+  }[]
+}
+
+// Implementation using Vercel AI SDK
+const analyzeSentimentTool = tool({
+  description: 'Analyze sentiment from news, earnings calls, social media',
+  inputSchema: z.object({
+    ticker: z.string(),
+    sources: z.array(z.enum(['news', 'earnings', 'social', 'sec_filings'])),
+    timeRange: z.enum(['day', 'week', 'month'])
+  }),
+  execute: async ({ ticker, sources, timeRange }) => {
+    // 1. Fetch content from each source
+    // 2. Run through sentiment model
+    // 3. Aggregate and weight by source reliability
+    // 4. Return structured sentiment analysis
+  }
+})
+```
+
+### 2.2 Portfolio Integration
+
+**Why**: Morgan Stanley's RAG is portfolio-specific. Personalization wins.
+
+```typescript
+// Portfolio-Aware Analysis
+interface PortfolioContext {
+  holdings: { ticker: string; shares: number; avgCost: number }[]
+  sectors: { name: string; weight: number }[]
+  totalValue: number
+  riskProfile: 'conservative' | 'moderate' | 'aggressive'
+}
+
+// New System Prompt Addition
+const PORTFOLIO_AWARE_PROMPT = `
+You have access to the user's portfolio. Provide personalized analysis:
+- Highlight how news affects their specific holdings
+- Suggest rebalancing if sector weights are off
+- Alert on concentrated risk exposure
+- Calculate portfolio-level impact of market moves
+`
+
+// New Tools
+getPortfolioContext({ userId: string })
+analyzePortfolioImpact({ event: string, portfolio: PortfolioContext })
+suggestRebalancing({ portfolio: PortfolioContext, targetAllocation: object })
+```
+
+### 2.3 Crypto Integration
+
+**Why**: Perplexity partnered with Coinbase. Growing demand.
+
+```typescript
+// Crypto Data Sources
+// 1. CoinGecko API (free tier: 10-30 req/min)
+// 2. Coinbase API (real-time prices)
+// 3. On-chain data via Dune Analytics
+
+// New Tools
+getCryptoPrice({ symbol: string }) // BTC, ETH, etc.
+getCryptoMarketData({ limit?: number }) // Top cryptos
+getCryptoSentiment({ symbol: string }) // Social sentiment
+compareCryptoToTraditional({ crypto: string, stock: string })
+```
+
+## PHASE 3: Moat Building (Week 5-6)
+
+### 3.1 Automated Research Tasks
+
+**Why**: Perplexity's automated tasks are a killer feature.
+
+```typescript
+// Scheduled Research Tasks
+interface ResearchTask {
+  id: string
+  userId: string
+  query: string
+  frequency: 'once' | 'daily' | 'weekly' | 'monthly'
+  deliveryMethod: 'email' | 'push' | 'in-app'
+  lastRun?: Date
+  nextRun: Date
+}
+
+// Cron Job: /api/cron/run-research-tasks
+// Executes user-defined research queries on schedule
+// Sends results via preferred delivery method
+
+// New API Endpoints
+POST /api/tasks/create
+GET /api/tasks/list
+DELETE /api/tasks/:id
+```
+
+### 3.2 Global Coverage Expansion
+
+**Why**: Currently US + EU. Add Asia, LATAM for global reach.
+
+```typescript
+// Priority Markets
+const EXPANSION_MARKETS = {
+  // Asia (High Priority)
+  'JP': { exchanges: ['TSE'], companies: 3800, source: 'JPX API' },
+  'HK': { exchanges: ['HKEX'], companies: 2600, source: 'HKEX API' },
+  'CN': { exchanges: ['SSE', 'SZSE'], companies: 5000, source: 'Wind/Tushare' },
+
+  // LATAM (Medium Priority)
+  'BR': { exchanges: ['B3'], companies: 400, source: 'B3 API' },
+  'MX': { exchanges: ['BMV'], companies: 150, source: 'BMV API' },
+
+  // Rest of World
+  'AU': { exchanges: ['ASX'], companies: 2200, source: 'ASX API' },
+  'IN': { exchanges: ['NSE', 'BSE'], companies: 7000, source: 'NSE API' },
+}
+```
+
+### 3.3 Voice Interface (Mobile App)
+
+**Why**: Mobile is the future. Voice commands for quick queries.
+
+```typescript
+// Voice Query Flow (React Native)
+// 1. Speech-to-text via Whisper API
+// 2. Process query through autonomous agent
+// 3. Text-to-speech response via ElevenLabs
+
+// Mobile-Optimized Responses
+const VOICE_RESPONSE_PROMPT = `
+Keep responses concise for voice (under 30 seconds spoken).
+Lead with the key number or insight.
+Skip detailed breakdowns unless asked.
+Example: "NVDA is up 2.3% today, trading at $142. PE ratio is 45, above sector average."
+`
+```
+
+## Implementation Priority Matrix
+
+| Feature | Impact | Effort | Priority |
+|---------|--------|--------|----------|
+| RAG/Vector Search | 🔴 High | 🟡 Medium | **P0** |
+| Live Earnings Hub | 🔴 High | 🟡 Medium | **P0** |
+| Sentiment Analysis | 🟡 Medium | 🟡 Medium | **P1** |
+| Portfolio Integration | 🔴 High | 🟢 Low | **P1** |
+| Multi-Agent Workflow | 🟡 Medium | 🔴 High | **P2** |
+| Automated Tasks | 🟡 Medium | 🟢 Low | **P2** |
+| Crypto Integration | 🟢 Low | 🟢 Low | **P3** |
+| Global Expansion | 🟡 Medium | 🔴 High | **P3** |
+| Voice Interface | 🟢 Low | 🟡 Medium | **P4** |
+
+## Success Metrics
+
+### User Engagement
+- **Query Success Rate**: % of queries answered completely (target: >90%)
+- **Time to Insight**: Average seconds to answer (target: <15s)
+- **Return Rate**: % of users who return within 7 days (target: >40%)
+
+### Data Quality
+- **Data Freshness**: Max age of financial data (target: <1 hour)
+- **Coverage**: % of S&P 500 with full data (target: 100%)
+- **Accuracy**: Error rate in financial figures (target: <0.1%)
+
+### Competitive Position
+- **Feature Parity**: Match Perplexity Finance features (target: 100%)
+- **Cost Advantage**: Stay free while others charge (target: $0)
+- **Speed**: Faster than Bloomberg on basic queries (target: 3x)
+
+## Technical Architecture (Target State)
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            USER INTERFACES                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│   Web (lician.com)  │  Mobile (iOS/Android)  │  API (developers)  │  Voice │
+└───────────┬─────────────────────┬──────────────────────┬───────────────────┘
+            │                     │                      │
+            ▼                     ▼                      ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        MULTI-AGENT ORCHESTRATOR                              │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐ │
+│  │ Data Agent  │  │ RAG Agent   │  │ Analysis    │  │ Sentiment Agent     │ │
+│  │ (Gemini)    │  │ (GPT-4o)    │  │ (Claude)    │  │ (GPT-4o-mini)       │ │
+│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────────────┘ │
+└───────────┬─────────────────────┬──────────────────────┬───────────────────┘
+            │                     │                      │
+            ▼                     ▼                      ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           DATA LAYER                                         │
+├─────────────────┬───────────────────┬───────────────────┬───────────────────┤
+│   Supabase      │   Vector DB       │   Real-time       │   External APIs   │
+│   (Structured)  │   (Embeddings)    │   (WebSocket)     │   (Fallback)      │
+│   - Financials  │   - SEC Filings   │   - Prices        │   - Financial     │
+│   - Companies   │   - Earnings      │   - Earnings      │     Datasets      │
+│   - Prices      │   - News          │   - Alerts        │   - EODHD         │
+│   - EU Data     │   - Research      │                   │   - Firecrawl     │
+└─────────────────┴───────────────────┴───────────────────┴───────────────────┘
+```
+
+## Next Immediate Actions
+
+1. **Enable pgvector on Supabase** (5 min)
+   ```sql
+   CREATE EXTENSION IF NOT EXISTS vector;
+   ```
+
+2. **Create embeddings table** (10 min)
+   - Run migration for document_embeddings
+
+3. **Add embedding generation** (30 min)
+   - Use OpenAI ada-002 for embeddings
+   - Embed SEC filings on sync
+
+4. **Create RAG search tool** (1 hour)
+   - searchFinancialDocuments tool
+   - Integrate into orchestrator
+
+5. **Test RAG queries** (30 min)
+   - "What did Apple say about iPhone sales in Q3 earnings?"
+   - Should return relevant passages from earnings transcript
+
+---
+
+**The Goal**: Be the #1 FREE financial AI agent by combining:
+- Bloomberg's data depth
+- Perplexity's real-time intelligence
+- AlphaSense's document analysis
+- Morgan Stanley's personalization
+
+**All for $0.**
