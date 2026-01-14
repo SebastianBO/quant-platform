@@ -28,8 +28,9 @@ CREATE TABLE IF NOT EXISTS document_embeddings (
   content TEXT NOT NULL,
   content_chunk_index INTEGER DEFAULT 0, -- For long documents split into chunks
 
-  -- Embedding (1536 dims for OpenAI ada-002, or 384 for gte-small)
-  embedding vector(1536),
+  -- Embedding (1536 dims for OpenAI ada-002)
+  -- Using halfvec for 50% storage savings (16-bit vs 32-bit floats)
+  embedding halfvec(1536),
 
   -- Metadata
   metadata JSONB DEFAULT '{}',
@@ -44,11 +45,11 @@ CREATE INDEX IF NOT EXISTS idx_document_embeddings_ticker ON document_embeddings
 CREATE INDEX IF NOT EXISTS idx_document_embeddings_type ON document_embeddings(document_type);
 CREATE INDEX IF NOT EXISTS idx_document_embeddings_date ON document_embeddings(document_date DESC);
 
--- Vector similarity index (IVFFlat for large datasets)
+-- Vector similarity index (HNSW for fast approximate search)
+-- HNSW is faster than IVFFlat and doesn't require training
 CREATE INDEX IF NOT EXISTS idx_document_embeddings_vector
   ON document_embeddings
-  USING ivfflat (embedding vector_cosine_ops)
-  WITH (lists = 100);
+  USING hnsw (embedding halfvec_cosine_ops);
 
 -- ============================================
 -- PHASE 3: Earnings Embeddings Table
@@ -66,11 +67,12 @@ CREATE TABLE IF NOT EXISTS earnings_embeddings (
   fiscal_quarter INTEGER,
 
   -- Multiple embedding types (384 dims for gte-small)
-  insight_embedding vector(384),           -- Text insight embedding
-  surprise_pattern_embedding vector(384),  -- Numerical pattern embedding
-  performance_embedding vector(384),       -- Performance context embedding
-  timing_embedding vector(384),            -- Timing pattern embedding
-  market_reaction_embedding vector(384),   -- Market reaction embedding
+  -- Using halfvec for storage efficiency
+  insight_embedding halfvec(384),           -- Text insight embedding
+  surprise_pattern_embedding halfvec(384),  -- Numerical pattern embedding
+  performance_embedding halfvec(384),       -- Performance context embedding
+  timing_embedding halfvec(384),            -- Timing pattern embedding
+  market_reaction_embedding halfvec(384),   -- Market reaction embedding
 
   -- Categorization
   insight_text TEXT,
@@ -93,11 +95,10 @@ CREATE INDEX IF NOT EXISTS idx_earnings_embeddings_ticker ON earnings_embeddings
 CREATE INDEX IF NOT EXISTS idx_earnings_embeddings_date ON earnings_embeddings(report_date DESC);
 CREATE INDEX IF NOT EXISTS idx_earnings_embeddings_surprise ON earnings_embeddings(eps_surprise_bucket);
 
--- Vector indexes for similarity search
+-- Vector indexes for similarity search (HNSW)
 CREATE INDEX IF NOT EXISTS idx_earnings_embeddings_insight_vector
   ON earnings_embeddings
-  USING ivfflat (insight_embedding vector_cosine_ops)
-  WITH (lists = 50);
+  USING hnsw (insight_embedding halfvec_cosine_ops);
 
 -- ============================================
 -- PHASE 4: Embedding Queue Table
@@ -133,7 +134,7 @@ CREATE INDEX IF NOT EXISTS idx_embedding_queue_status ON embedding_queue(status,
 
 -- Search documents by semantic similarity
 CREATE OR REPLACE FUNCTION match_documents(
-  query_embedding vector(1536),
+  query_embedding halfvec(1536),
   match_threshold float DEFAULT 0.7,
   match_count int DEFAULT 10,
   filter_ticker text DEFAULT NULL,
@@ -174,7 +175,7 @@ $$;
 
 -- Search earnings by surprise pattern similarity
 CREATE OR REPLACE FUNCTION match_earnings_patterns(
-  query_embedding vector(384),
+  query_embedding halfvec(384),
   match_count int DEFAULT 10,
   filter_surprise_bucket text DEFAULT NULL
 )
