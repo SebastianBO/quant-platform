@@ -255,6 +255,7 @@ export const getStockQuoteTool = tool({
 /**
  * Tool: Get Company Fundamentals
  * Fetches comprehensive fundamental data from Supabase, falls back to Financial Datasets API
+ * Now also calculates debt ratios from balance sheet when not available in financial_metrics
  */
 export const getCompanyFundamentalsTool = tool({
   description: 'Get company fundamentals including PE ratio, market cap, revenue, profit margins, debt ratios, and growth metrics',
@@ -263,14 +264,46 @@ export const getCompanyFundamentalsTool = tool({
   }),
   execute: async ({ ticker }) => {
     try {
+      const t = ticker.toUpperCase()
+
       // First try financial_metrics table
       const { data: metrics } = await getSupabase()
         .from('financial_metrics')
         .select('*')
-        .eq('ticker', ticker.toUpperCase())
+        .eq('ticker', t)
         .order('report_period', { ascending: false })
         .limit(1)
         .single()
+
+      // Also fetch balance sheet for debt ratio calculations
+      const { data: balanceSheet } = await getSupabase()
+        .from('balance_sheets')
+        .select('total_assets, total_liabilities, total_debt, shareholders_equity, current_assets, current_liabilities')
+        .eq('ticker', t)
+        .order('report_period', { ascending: false })
+        .limit(1)
+        .single()
+
+      // Calculate debt ratios from balance sheet if not in financial_metrics
+      let calculatedDebtToEquity: number | null = null
+      let calculatedCurrentRatio: number | null = null
+
+      if (balanceSheet) {
+        const bs = balanceSheet as Record<string, number | null>
+        // Calculate debt-to-equity: total_liabilities / shareholders_equity
+        // If shareholders_equity not available, estimate as: total_assets - total_liabilities
+        const equity = bs.shareholders_equity || (bs.total_assets && bs.total_liabilities ? bs.total_assets - bs.total_liabilities : null)
+        if (equity && equity > 0) {
+          const debt = bs.total_debt || bs.total_liabilities
+          if (debt) {
+            calculatedDebtToEquity = Number((debt / equity).toFixed(2))
+          }
+        }
+        // Calculate current ratio: current_assets / current_liabilities
+        if (bs.current_assets && bs.current_liabilities && bs.current_liabilities > 0) {
+          calculatedCurrentRatio = Number((bs.current_assets / bs.current_liabilities).toFixed(2))
+        }
+      }
 
       if (metrics) {
         const m = metrics as Record<string, unknown>
@@ -278,13 +311,14 @@ export const getCompanyFundamentalsTool = tool({
           success: true,
           source: 'supabase',
           data: {
-            ticker: ticker.toUpperCase(),
+            ticker: t,
             pe_ratio: m.price_to_earnings_ratio,
             pb_ratio: m.price_to_book_ratio,
             ps_ratio: m.price_to_sales_ratio,
             ev_ebitda: m.enterprise_value_to_ebitda_ratio,
-            debt_to_equity: m.debt_to_equity,
-            current_ratio: m.current_ratio,
+            // Use calculated values if metrics table doesn't have them
+            debt_to_equity: m.debt_to_equity ?? calculatedDebtToEquity,
+            current_ratio: m.current_ratio ?? calculatedCurrentRatio,
             gross_margin: m.gross_margin,
             operating_margin: m.operating_margin,
             net_margin: m.net_margin,
@@ -300,6 +334,9 @@ export const getCompanyFundamentalsTool = tool({
             enterprise_value: m.enterprise_value,
             peg_ratio: m.peg_ratio,
             eps: m.earnings_per_share,
+            // Include balance sheet context if available
+            total_debt: balanceSheet ? (balanceSheet as Record<string, unknown>).total_debt || (balanceSheet as Record<string, unknown>).total_liabilities : null,
+            total_assets: balanceSheet ? (balanceSheet as Record<string, unknown>).total_assets : null,
           },
         }
       }

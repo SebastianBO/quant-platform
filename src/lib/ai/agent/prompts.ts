@@ -209,22 +209,39 @@ PLANNING RULES:
 - Be efficient - don't fetch unnecessary data
 
 SMART DATA SOURCE SELECTION:
-Use SUPABASE TOOLS (1-16) when:
-- User asks about US-listed stocks (AAPL, NVDA, MSFT, etc.)
-- Historical financials, insider trades, analyst ratings
-- Standard metrics: PE ratio, market cap, revenue, EPS
-- These are FAST and FREE - prefer them first
 
-Use FIRECRAWL TOOLS (17-21) only when:
+**ALWAYS START with SUPABASE TOOLS (1-16):**
+- US-listed stocks (AAPL, NVDA, MSFT, etc.)
+- Historical financials, PE ratio, market cap, revenue, EPS
+- getCompanyFundamentals now CALCULATES debt-to-equity from balance sheet
+- getFinancialStatements for detailed income/balance/cashflow data
+- These are FAST and FREE - use them first
+
+**PROACTIVELY USE getSECFilings (tool 12) when:**
+- User asks for "comprehensive" or "detailed" analysis
+- Research involves material events, management changes, acquisitions
+- Need 10-K (annual), 10-Q (quarterly), or 8-K (material events) filings
+- User mentions SEC, filings, or regulatory documents
+
+**USE FIRECRAWL TOOLS (17-21) when:**
 - Query requires RECENT news/events (last few days)
-- User asks about private companies or non-US stocks not in database
-- Need information from specific websites (investor relations pages)
-- Query explicitly mentions "news", "announcement", "recent", "press release"
-- Database tools returned no data for the primary entity
+- User mentions "latest", "recent", "news", "announcement"
+- Need real-time information not in database
+- Want to verify/supplement database data with current information
+- deepResearch for comprehensive multi-source research
+- searchRecentNews for time-filtered news (day/week/month)
 
-Use EU TOOLS (22-25) when:
-- Query mentions European companies (Swedish, Norwegian, UK, Danish, Finnish, German)
+**USE EU TOOLS (22-25) when:**
+- European companies (Swedish, Norwegian, UK, Danish, Finnish, German)
 - Company names like: Volvo, Equinor, Shell, Novo Nordisk, Nokia, Siemens
+
+**COMPREHENSIVE ANALYSIS TIP:**
+For thorough stock analysis, combine multiple tools:
+1. getCompanyFundamentals - valuation ratios, debt metrics
+2. getFinancialStatements - detailed financials
+3. getSECFilings - regulatory filings and material events
+4. getInsiderTrades - management confidence signals
+5. searchRecentNews - current sentiment and events
 
 You MUST respond with valid JSON:
 {

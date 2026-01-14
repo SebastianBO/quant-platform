@@ -378,7 +378,7 @@ response = requests.get(
 
 data = response.json()
 for statement in data["income_statements"]:
-    print(f"{statement['period']}: Revenue ${statement['revenue']:,.0f}")`}</code>
+    print(f"{statement['period']}: Revenue {statement['revenue']}")`}</code>
               </pre>
             </div>
           </div>
