@@ -1,38 +1,39 @@
 {
   "summary": {
-    "timestamp": "2026-01-14T21:11:20.485Z",
+    "timestamp": "2026-01-14T21:15:47.314Z",
     "pagesAudited": 5,
     "viewportsTested": 4,
     "totalTests": 20,
-    "totalIssues": 43,
+    "totalIssues": 44,
     "issuesByCategory": {
-      "performance": 5,
+      "performance": 6,
       "ux": 20,
       "mobile": 10,
       "seo": 8
     },
     "issuesBySeverity": {
       "medium": 35,
-      "low": 8
+      "low": 8,
+      "high": 1
     }
   },
   "results": [
     {
-      "timestamp": "2026-01-14T21:09:47.427Z",
+      "timestamp": "2026-01-14T21:13:55.782Z",
       "url": "https://lician.com/",
       "viewport": {
         "width": 1920,
         "height": 1080
       },
       "metrics": {
-        "loadTime": 5223,
-        "domContentLoaded": 238
+        "loadTime": 6387,
+        "domContentLoaded": 227
       },
       "issues": [
         {
           "type": "warning",
           "category": "performance",
-          "message": "Slow page load: 5223ms (target: <5000ms)",
+          "message": "Slow page load: 6387ms (target: <5000ms)",
           "severity": "medium"
         },
         {
@@ -54,15 +55,15 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T21:09:53.995Z",
+      "timestamp": "2026-01-14T21:14:02.396Z",
       "url": "https://lician.com/",
       "viewport": {
         "width": 1440,
         "height": 900
       },
       "metrics": {
-        "loadTime": 2682,
-        "domContentLoaded": 225
+        "loadTime": 2706,
+        "domContentLoaded": 174
       },
       "issues": [
         {
@@ -84,15 +85,15 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T21:10:01.313Z",
+      "timestamp": "2026-01-14T21:14:09.814Z",
       "url": "https://lician.com/",
       "viewport": {
         "width": 768,
         "height": 1024
       },
       "metrics": {
-        "loadTime": 3448,
-        "domContentLoaded": 160
+        "loadTime": 3485,
+        "domContentLoaded": 166
       },
       "issues": [
         {
@@ -120,15 +121,15 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T21:10:07.617Z",
+      "timestamp": "2026-01-14T21:14:15.915Z",
       "url": "https://lician.com/",
       "viewport": {
         "width": 375,
         "height": 812
       },
       "metrics": {
-        "loadTime": 2357,
-        "domContentLoaded": 222
+        "loadTime": 2116,
+        "domContentLoaded": 162
       },
       "issues": [
         {
@@ -156,15 +157,15 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T21:10:11.779Z",
+      "timestamp": "2026-01-14T21:14:23.498Z",
       "url": "https://lician.com/stock/AAPL",
       "viewport": {
         "width": 1920,
         "height": 1080
       },
       "metrics": {
-        "loadTime": 2594,
-        "domContentLoaded": 703
+        "loadTime": 4104,
+        "domContentLoaded": 1665
       },
       "issues": [
         {
@@ -192,15 +193,15 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T21:10:15.808Z",
+      "timestamp": "2026-01-14T21:14:27.559Z",
       "url": "https://lician.com/stock/AAPL",
       "viewport": {
         "width": 1440,
         "height": 900
       },
       "metrics": {
-        "loadTime": 2624,
-        "domContentLoaded": 636
+        "loadTime": 2379,
+        "domContentLoaded": 386
       },
       "issues": [
         {
@@ -228,15 +229,15 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T21:10:19.952Z",
+      "timestamp": "2026-01-14T21:14:31.658Z",
       "url": "https://lician.com/stock/AAPL",
       "viewport": {
         "width": 768,
         "height": 1024
       },
       "metrics": {
-        "loadTime": 2601,
-        "domContentLoaded": 587
+        "loadTime": 2716,
+        "domContentLoaded": 576
       },
       "issues": [
         {
@@ -270,15 +271,15 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T21:10:23.699Z",
+      "timestamp": "2026-01-14T21:14:35.563Z",
       "url": "https://lician.com/stock/AAPL",
       "viewport": {
         "width": 375,
         "height": 812
       },
       "metrics": {
-        "loadTime": 2385,
-        "domContentLoaded": 374
+        "loadTime": 2552,
+        "domContentLoaded": 507
       },
       "issues": [
         {
@@ -312,15 +313,15 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T21:10:28.020Z",
+      "timestamp": "2026-01-14T21:14:40.102Z",
       "url": "https://lician.com/compare/aapl-vs-msft",
       "viewport": {
         "width": 1920,
         "height": 1080
       },
       "metrics": {
-        "loadTime": 3601,
-        "domContentLoaded": 237
+        "loadTime": 3762,
+        "domContentLoaded": 209
       },
       "issues": [
         {
@@ -338,15 +339,15 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T21:10:31.835Z",
+      "timestamp": "2026-01-14T21:14:43.825Z",
       "url": "https://lician.com/compare/aapl-vs-msft",
       "viewport": {
         "width": 1440,
         "height": 900
       },
       "metrics": {
-        "loadTime": 3137,
-        "domContentLoaded": 188
+        "loadTime": 3041,
+        "domContentLoaded": 216
       },
       "issues": [
         {
@@ -364,14 +365,14 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T21:10:33.933Z",
+      "timestamp": "2026-01-14T21:14:46.263Z",
       "url": "https://lician.com/compare/aapl-vs-msft",
       "viewport": {
         "width": 768,
         "height": 1024
       },
       "metrics": {
-        "loadTime": 1522,
+        "loadTime": 1766,
         "domContentLoaded": 175
       },
       "issues": [
@@ -396,15 +397,15 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T21:10:35.615Z",
+      "timestamp": "2026-01-14T21:14:47.990Z",
       "url": "https://lician.com/compare/aapl-vs-msft",
       "viewport": {
         "width": 375,
         "height": 812
       },
       "metrics": {
-        "loadTime": 1146,
-        "domContentLoaded": 221
+        "loadTime": 1189,
+        "domContentLoaded": 197
       },
       "issues": [
         {
@@ -428,21 +429,21 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T21:10:44.523Z",
+      "timestamp": "2026-01-14T21:14:59.501Z",
       "url": "https://lician.com/screener",
       "viewport": {
         "width": 1920,
         "height": 1080
       },
       "metrics": {
-        "loadTime": 8344,
-        "domContentLoaded": 4103
+        "loadTime": 8446,
+        "domContentLoaded": 3666
       },
       "issues": [
         {
           "type": "warning",
           "category": "performance",
-          "message": "Slow page load: 8344ms (target: <5000ms)",
+          "message": "Slow page load: 8446ms (target: <5000ms)",
           "severity": "medium"
         },
         {
@@ -466,22 +467,22 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T21:10:52.011Z",
+      "timestamp": "2026-01-14T21:15:15.530Z",
       "url": "https://lician.com/screener",
       "viewport": {
         "width": 1440,
         "height": 900
       },
       "metrics": {
-        "loadTime": 6914,
-        "domContentLoaded": 3645
+        "loadTime": 15451,
+        "domContentLoaded": 4218
       },
       "issues": [
         {
           "type": "warning",
           "category": "performance",
-          "message": "Slow page load: 6914ms (target: <5000ms)",
-          "severity": "medium"
+          "message": "Slow page load: 15451ms (target: <5000ms)",
+          "severity": "high"
         },
         {
           "type": "suggestion",
@@ -504,21 +505,21 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T21:10:58.255Z",
+      "timestamp": "2026-01-14T21:15:22.129Z",
       "url": "https://lician.com/screener",
       "viewport": {
         "width": 768,
         "height": 1024
       },
       "metrics": {
-        "loadTime": 5570,
-        "domContentLoaded": 3673
+        "loadTime": 6091,
+        "domContentLoaded": 4116
       },
       "issues": [
         {
           "type": "warning",
           "category": "performance",
-          "message": "Slow page load: 5570ms (target: <5000ms)",
+          "message": "Slow page load: 6091ms (target: <5000ms)",
           "severity": "medium"
         },
         {
@@ -548,21 +549,21 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T21:11:04.289Z",
+      "timestamp": "2026-01-14T21:15:28.785Z",
       "url": "https://lician.com/screener",
       "viewport": {
         "width": 375,
         "height": 812
       },
       "metrics": {
-        "loadTime": 5505,
-        "domContentLoaded": 3658
+        "loadTime": 6069,
+        "domContentLoaded": 4211
       },
       "issues": [
         {
           "type": "warning",
           "category": "performance",
-          "message": "Slow page load: 5505ms (target: <5000ms)",
+          "message": "Slow page load: 6069ms (target: <5000ms)",
           "severity": "medium"
         },
         {
@@ -592,17 +593,23 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T21:11:09.216Z",
+      "timestamp": "2026-01-14T21:15:36.116Z",
       "url": "https://lician.com/markets",
       "viewport": {
         "width": 1920,
         "height": 1080
       },
       "metrics": {
-        "loadTime": 4156,
-        "domContentLoaded": 214
+        "loadTime": 6524,
+        "domContentLoaded": 559
       },
       "issues": [
+        {
+          "type": "warning",
+          "category": "performance",
+          "message": "Slow page load: 6524ms (target: <5000ms)",
+          "severity": "medium"
+        },
         {
           "type": "error",
           "category": "ux",
@@ -618,15 +625,15 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T21:11:14.035Z",
+      "timestamp": "2026-01-14T21:15:40.964Z",
       "url": "https://lician.com/markets",
       "viewport": {
         "width": 1440,
         "height": 900
       },
       "metrics": {
-        "loadTime": 4080,
-        "domContentLoaded": 180
+        "loadTime": 4155,
+        "domContentLoaded": 244
       },
       "issues": [
         {
@@ -644,15 +651,15 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T21:11:17.538Z",
+      "timestamp": "2026-01-14T21:15:44.284Z",
       "url": "https://lician.com/markets",
       "viewport": {
         "width": 768,
         "height": 1024
       },
       "metrics": {
-        "loadTime": 2798,
-        "domContentLoaded": 240
+        "loadTime": 2684,
+        "domContentLoaded": 165
       },
       "issues": [
         {
@@ -676,15 +683,15 @@
       ]
     },
     {
-      "timestamp": "2026-01-14T21:11:20.485Z",
+      "timestamp": "2026-01-14T21:15:47.314Z",
       "url": "https://lician.com/markets",
       "viewport": {
         "width": 375,
         "height": 812
       },
       "metrics": {
-        "loadTime": 2381,
-        "domContentLoaded": 211
+        "loadTime": 2389,
+        "domContentLoaded": 200
       },
       "issues": [
         {

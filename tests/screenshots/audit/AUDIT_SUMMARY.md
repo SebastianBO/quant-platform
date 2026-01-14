@@ -1,6 +1,6 @@
 # UI Audit Report
 
-**Generated:** 2026-01-14T21:11:20.486Z
+**Generated:** 2026-01-14T21:15:47.314Z
 **Base URL:** https://lician.com
 
 ## Summary
@@ -9,9 +9,9 @@
 |--------|-------|
 | Pages Audited | 5 |
 | Viewports Tested | 4 |
-| Total Issues | 43 |
+| Total Issues | 44 |
 | Critical | 0 |
-| High | 0 |
+| High | 1 |
 | Medium | 35 |
 | Low | 8 |
 
@@ -21,7 +21,7 @@
 
 | Severity | Category | Issue |
 |----------|----------|-------|
-| 🟡 medium | performance | Slow page load: 5223ms (target: <5000ms) |
+| 🟡 medium | performance | Slow page load: 6387ms (target: <5000ms) |
 | 🟡 medium | ux | 5 console errors detected |
 | 🟡 medium | ux | 5 console errors detected |
 | 🟡 medium | mobile | 73 tap targets smaller than 44x44px |
@@ -44,20 +44,21 @@
 | 🟡 medium | ux | 1 console errors detected |
 | 🟡 medium | mobile | 144 tap targets smaller than 44x44px |
 | 🟡 medium | ux | 1 console errors detected |
-| 🟡 medium | performance | Slow page load: 8344ms (target: <5000ms) |
+| 🟡 medium | performance | Slow page load: 8446ms (target: <5000ms) |
 | 🟢 low | seo | Multiple H1 headings found (2) |
 | 🟡 medium | ux | 1 console errors detected |
-| 🟡 medium | performance | Slow page load: 6914ms (target: <5000ms) |
+| 🟠 high | performance | Slow page load: 15451ms (target: <5000ms) |
 | 🟢 low | seo | Multiple H1 headings found (2) |
 | 🟡 medium | ux | 1 console errors detected |
-| 🟡 medium | performance | Slow page load: 5570ms (target: <5000ms) |
+| 🟡 medium | performance | Slow page load: 6091ms (target: <5000ms) |
 | 🟢 low | seo | Multiple H1 headings found (2) |
 | 🟡 medium | mobile | 123 tap targets smaller than 44x44px |
 | 🟡 medium | ux | 1 console errors detected |
-| 🟡 medium | performance | Slow page load: 5505ms (target: <5000ms) |
+| 🟡 medium | performance | Slow page load: 6069ms (target: <5000ms) |
 | 🟢 low | seo | Multiple H1 headings found (2) |
 | 🟡 medium | mobile | 129 tap targets smaller than 44x44px |
 | 🟡 medium | ux | 1 console errors detected |
+| 🟡 medium | performance | Slow page load: 6524ms (target: <5000ms) |
 | 🟡 medium | ux | 1 console errors detected |
 | 🟡 medium | ux | 1 console errors detected |
 | 🟡 medium | mobile | 155 tap targets smaller than 44x44px |
@@ -65,7 +66,7 @@
 | 🟡 medium | mobile | 168 tap targets smaller than 44x44px |
 | 🟡 medium | ux | 1 console errors detected |
 
-**Avg Load Time:** 3653ms
+**Avg Load Time:** 4401ms
 
 ### Stock Page (AAPL)
 
@@ -82,7 +83,7 @@
 | 🟡 medium | mobile | 34 tap targets smaller than 44x44px |
 | 🟡 medium | ux | 5 console errors detected |
 
-**Avg Load Time:** 2551ms
+**Avg Load Time:** 2938ms
 
 ### Compare Page
 
@@ -95,33 +96,34 @@
 | 🟡 medium | mobile | 144 tap targets smaller than 44x44px |
 | 🟡 medium | ux | 1 console errors detected |
 
-**Avg Load Time:** 2352ms
+**Avg Load Time:** 2440ms
 
 ### Stock Screener
 
 | Severity | Category | Issue |
 |----------|----------|-------|
-| 🟡 medium | performance | Slow page load: 8344ms (target: <5000ms) |
+| 🟡 medium | performance | Slow page load: 8446ms (target: <5000ms) |
 | 🟢 low | seo | Multiple H1 headings found (2) |
 | 🟡 medium | ux | 1 console errors detected |
-| 🟡 medium | performance | Slow page load: 6914ms (target: <5000ms) |
+| 🟠 high | performance | Slow page load: 15451ms (target: <5000ms) |
 | 🟢 low | seo | Multiple H1 headings found (2) |
 | 🟡 medium | ux | 1 console errors detected |
-| 🟡 medium | performance | Slow page load: 5570ms (target: <5000ms) |
+| 🟡 medium | performance | Slow page load: 6091ms (target: <5000ms) |
 | 🟢 low | seo | Multiple H1 headings found (2) |
 | 🟡 medium | mobile | 123 tap targets smaller than 44x44px |
 | 🟡 medium | ux | 1 console errors detected |
-| 🟡 medium | performance | Slow page load: 5505ms (target: <5000ms) |
+| 🟡 medium | performance | Slow page load: 6069ms (target: <5000ms) |
 | 🟢 low | seo | Multiple H1 headings found (2) |
 | 🟡 medium | mobile | 129 tap targets smaller than 44x44px |
 | 🟡 medium | ux | 1 console errors detected |
 
-**Avg Load Time:** 6583ms
+**Avg Load Time:** 9014ms
 
 ### Markets
 
 | Severity | Category | Issue |
 |----------|----------|-------|
+| 🟡 medium | performance | Slow page load: 6524ms (target: <5000ms) |
 | 🟡 medium | ux | 1 console errors detected |
 | 🟡 medium | ux | 1 console errors detected |
 | 🟡 medium | mobile | 155 tap targets smaller than 44x44px |
@@ -129,9 +131,13 @@
 | 🟡 medium | mobile | 168 tap targets smaller than 44x44px |
 | 🟡 medium | ux | 1 console errors detected |
 
-**Avg Load Time:** 3354ms
+**Avg Load Time:** 3938ms
 
 ## Recommendations
 
 Based on the audit, here are the top priorities:
+
+### 🟠 High Priority
+
+- **[performance]** Slow page load: 15451ms (target: <5000ms)
 

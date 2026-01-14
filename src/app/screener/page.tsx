@@ -148,11 +148,14 @@ function getMarketCapCategory(marketCap: number): string {
 
 // Fetch stocks from Supabase based on filters
 async function fetchStocks(params: SearchParams): Promise<CompanyFundamentals[]> {
+  // Only select needed columns for better performance
+  const columns = 'symbol,company_name,sector,industry,market_cap,pe_ratio,revenue,exchange_code,profit_margin,revenue_growth,dividend_yield'
+
   let query = supabase
     .from('company_fundamentals')
-    .select('*')
+    .select(columns)
     .order('market_cap', { ascending: false, nullsFirst: false })
-    .limit(500)
+    .limit(100) // Reduced from 500 for faster initial load
 
   // Filter by sector
   if (params.sector) {
