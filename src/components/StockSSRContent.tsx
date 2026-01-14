@@ -171,59 +171,59 @@ function PeerComparisonSection({
       </div>
 
       {/* Peer comparison table */}
-      <div className="overflow-x-auto bg-card border border-border rounded-lg">
-        <table className="w-full text-sm">
+      <div className="overflow-x-auto bg-card border border-border rounded-lg -mx-4 sm:mx-0">
+        <table className="w-full text-sm min-w-[500px]">
           <thead className="bg-secondary/50">
             <tr>
-              <th className="p-3 text-left font-medium">Company</th>
-              <th className="p-3 text-right font-medium">Market Cap</th>
-              <th className="p-3 text-right font-medium">P/E</th>
-              <th className="p-3 text-right font-medium">Rev Growth</th>
-              <th className="p-3 text-right font-medium">Margin</th>
-              <th className="p-3 text-center font-medium">Compare</th>
+              <th className="p-2 sm:p-3 text-left font-medium">Company</th>
+              <th className="p-2 sm:p-3 text-right font-medium hidden sm:table-cell">Market Cap</th>
+              <th className="p-2 sm:p-3 text-right font-medium">P/E</th>
+              <th className="p-2 sm:p-3 text-right font-medium">Growth</th>
+              <th className="p-2 sm:p-3 text-right font-medium hidden sm:table-cell">Margin</th>
+              <th className="p-2 sm:p-3 text-center font-medium">Compare</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
             {/* Current stock - highlighted */}
             <tr className="bg-green-500/10">
-              <td className="p-3">
+              <td className="p-2 sm:p-3">
                 <span className="font-bold text-green-500">{symbol}</span>
-                <span className="text-muted-foreground ml-2 text-xs">(This stock)</span>
+                <span className="text-muted-foreground ml-1 sm:ml-2 text-xs hidden sm:inline">(This stock)</span>
               </td>
-              <td className="p-3 text-right font-medium">{formatCurrency(marketCap)}</td>
-              <td className="p-3 text-right">{pe > 0 ? pe.toFixed(1) : 'N/A'}</td>
-              <td className="p-3 text-right">
+              <td className="p-2 sm:p-3 text-right font-medium hidden sm:table-cell">{formatCurrency(marketCap)}</td>
+              <td className="p-2 sm:p-3 text-right">{pe > 0 ? pe.toFixed(1) : 'N/A'}</td>
+              <td className="p-2 sm:p-3 text-right">
                 <span className={revenueGrowth >= 0 ? 'text-green-500' : 'text-red-500'}>
-                  {(revenueGrowth * 100).toFixed(1)}%
+                  {(revenueGrowth * 100).toFixed(0)}%
                 </span>
               </td>
-              <td className="p-3 text-right">{(profitMargin * 100).toFixed(1)}%</td>
-              <td className="p-3 text-center">-</td>
+              <td className="p-2 sm:p-3 text-right hidden sm:table-cell">{(profitMargin * 100).toFixed(1)}%</td>
+              <td className="p-2 sm:p-3 text-center">-</td>
             </tr>
             {/* Peer stocks */}
             {peers.slice(0, 5).map(peer => (
               <tr key={peer.ticker} className="hover:bg-secondary/30">
-                <td className="p-3">
+                <td className="p-2 sm:p-3">
                   <Link
                     href={`/stock/${peer.ticker.toLowerCase()}`}
                     className="font-medium hover:text-green-500 transition-colors"
                   >
                     {peer.ticker}
                   </Link>
-                  <span className="text-muted-foreground ml-2 text-xs">{peer.name.split(' ').slice(0, 2).join(' ')}</span>
+                  <span className="text-muted-foreground ml-1 sm:ml-2 text-xs hidden sm:inline">{peer.name.split(' ').slice(0, 2).join(' ')}</span>
                 </td>
-                <td className="p-3 text-right">{formatCurrency(peer.marketCap)}</td>
-                <td className="p-3 text-right">{peer.pe > 0 ? peer.pe.toFixed(1) : 'N/A'}</td>
-                <td className="p-3 text-right">
+                <td className="p-2 sm:p-3 text-right hidden sm:table-cell">{formatCurrency(peer.marketCap)}</td>
+                <td className="p-2 sm:p-3 text-right">{peer.pe > 0 ? peer.pe.toFixed(1) : 'N/A'}</td>
+                <td className="p-2 sm:p-3 text-right">
                   <span className={peer.revenueGrowth >= 0 ? 'text-green-500' : 'text-red-500'}>
-                    {(peer.revenueGrowth * 100).toFixed(1)}%
+                    {(peer.revenueGrowth * 100).toFixed(0)}%
                   </span>
                 </td>
-                <td className="p-3 text-right">{(peer.profitMargin * 100).toFixed(1)}%</td>
-                <td className="p-3 text-center">
+                <td className="p-2 sm:p-3 text-right hidden sm:table-cell">{(peer.profitMargin * 100).toFixed(1)}%</td>
+                <td className="p-2 sm:p-3 text-center">
                   <Link
                     href={`/compare/${symbol.toLowerCase()}-vs-${peer.ticker.toLowerCase()}`}
-                    className="text-xs px-2 py-1 bg-secondary hover:bg-green-500/20 hover:text-green-500 rounded transition-colors"
+                    className="text-xs px-2 py-1 bg-secondary hover:bg-green-500/20 hover:text-green-500 rounded transition-colors whitespace-nowrap"
                   >
                     vs {peer.ticker}
                   </Link>
@@ -274,7 +274,7 @@ export default function StockSSRContent({
   const isPositive = (dayChange ?? 0) >= 0
 
   return (
-    <article className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+    <article className="max-w-7xl mx-auto px-4 sm:px-6 py-6 overflow-x-hidden">
       {/* Stock Header - Critical for SEO */}
       <header className="mb-8">
         <div className="flex items-start justify-between flex-wrap gap-4">
