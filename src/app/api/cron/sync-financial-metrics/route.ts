@@ -2,13 +2,14 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { withCronLogging, RateLimiter } from '@/lib/cron-utils'
 
-// Sync Financial Metrics from Yahoo Finance (FREE)
-// Fetches: PE ratio, market cap, margins, ROE, debt ratios, etc.
-// Target: ~5,344 US companies with SEC financial data
+// Sync Financial Metrics from EODHD (has free tier, your API key works)
+// Fetches: PE ratio, market cap, margins, ROE, debt ratios, analyst ratings, etc.
+// Target: ~5,345 US companies with SEC financial data
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-const REQUEST_DELAY_MS = 500 // 2 requests/second to avoid rate limits
+const EODHD_API_KEY = process.env.EODHD_API_KEY || ''
+const REQUEST_DELAY_MS = 250 // EODHD allows 100k requests/day
 
 let supabase: SupabaseClient | null = null
 
@@ -19,111 +20,112 @@ function getSupabase(): SupabaseClient {
   return supabase
 }
 
-interface YahooMetrics {
-  ticker: string
-  // Valuation
-  marketCap?: number
-  enterpriseValue?: number
-  peRatio?: number
-  pegRatio?: number
-  priceToBook?: number
-  priceToSales?: number
-  evToRevenue?: number
-  evToEbitda?: number
-  // Profitability
-  grossMargin?: number
-  operatingMargin?: number
-  netMargin?: number
-  returnOnEquity?: number
-  returnOnAssets?: number
-  // Growth
-  revenueGrowth?: number
-  earningsGrowth?: number
-  // Efficiency & Liquidity
-  currentRatio?: number
-  quickRatio?: number
-  debtToEquity?: number
-  // Per Share
-  eps?: number
-  bookValuePerShare?: number
-  freeCashFlowPerShare?: number
+interface EODHDFundamentals {
+  General?: {
+    Code?: string
+    Name?: string
+    Sector?: string
+    Industry?: string
+    Description?: string
+    FullTimeEmployees?: number
+  }
+  Highlights?: {
+    MarketCapitalization?: number
+    EBITDA?: number
+    PERatio?: number
+    PEGRatio?: number
+    WallStreetTargetPrice?: number
+    BookValue?: number
+    DividendShare?: number
+    DividendYield?: number
+    EarningsShare?: number
+    EPSEstimateCurrentYear?: number
+    EPSEstimateNextYear?: number
+    EPSEstimateNextQuarter?: number
+    EPSEstimateCurrentQuarter?: number
+    ProfitMargin?: number
+    OperatingMarginTTM?: number
+    ReturnOnAssetsTTM?: number
+    ReturnOnEquityTTM?: number
+    RevenueTTM?: number
+    RevenuePerShareTTM?: number
+    QuarterlyRevenueGrowthYOY?: number
+    GrossProfitTTM?: number
+    DilutedEpsTTM?: number
+    QuarterlyEarningsGrowthYOY?: number
+  }
+  Valuation?: {
+    TrailingPE?: number
+    ForwardPE?: number
+    PriceSalesTTM?: number
+    PriceBookMRQ?: number
+    EnterpriseValue?: number
+    EnterpriseValueRevenue?: number
+    EnterpriseValueEbitda?: number
+  }
+  SharesStats?: {
+    SharesOutstanding?: number
+    SharesFloat?: number
+    PercentInsiders?: number
+    PercentInstitutions?: number
+    ShortPercentFloat?: number
+  }
+  Technicals?: {
+    Beta?: number
+    '52WeekHigh'?: number
+    '52WeekLow'?: number
+    '50DayMA'?: number
+    '200DayMA'?: number
+  }
+  AnalystRatings?: {
+    Rating?: number
+    TargetPrice?: number
+    StrongBuy?: number
+    Buy?: number
+    Hold?: number
+    Sell?: number
+    StrongSell?: number
+  }
 }
 
-// Scrape key statistics from Yahoo Finance
-async function fetchYahooMetrics(ticker: string): Promise<YahooMetrics | null> {
+// Fetch fundamentals from EODHD
+async function fetchEODHDFundamentals(ticker: string): Promise<EODHDFundamentals | null> {
   try {
-    // Use the quoteSummary endpoint for comprehensive data
-    const url = `https://query1.finance.yahoo.com/v10/finance/quoteSummary/${ticker}?modules=defaultKeyStatistics,financialData,summaryDetail`
+    // EODHD uses .US suffix for US stocks
+    const symbol = ticker.includes('.') ? ticker : `${ticker}.US`
+    const url = `https://eodhd.com/api/fundamentals/${symbol}?api_token=${EODHD_API_KEY}&fmt=json`
 
     const response = await fetch(url, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept': 'application/json',
+        'User-Agent': 'Lician/1.0',
       }
     })
 
     if (!response.ok) {
-      console.log(`Yahoo returned ${response.status} for ${ticker}`)
+      console.log(`EODHD returned ${response.status} for ${ticker}`)
       return null
     }
 
     const data = await response.json()
-    const result = data?.quoteSummary?.result?.[0]
-    if (!result) return null
 
-    const keyStats = result.defaultKeyStatistics || {}
-    const financialData = result.financialData || {}
-    const summaryDetail = result.summaryDetail || {}
-
-    // Helper to extract raw value
-    const raw = (obj: any) => obj?.raw ?? obj?.value ?? null
-
-    const metrics: YahooMetrics = {
-      ticker: ticker.toUpperCase(),
-      // Valuation
-      marketCap: raw(summaryDetail.marketCap),
-      enterpriseValue: raw(keyStats.enterpriseValue),
-      peRatio: raw(summaryDetail.trailingPE) || raw(keyStats.forwardPE),
-      pegRatio: raw(keyStats.pegRatio),
-      priceToBook: raw(keyStats.priceToBook),
-      priceToSales: raw(summaryDetail.priceToSalesTrailing12Months),
-      evToRevenue: raw(keyStats.enterpriseToRevenue),
-      evToEbitda: raw(keyStats.enterpriseToEbitda),
-      // Profitability
-      grossMargin: raw(financialData.grossMargins),
-      operatingMargin: raw(financialData.operatingMargins),
-      netMargin: raw(financialData.profitMargins),
-      returnOnEquity: raw(financialData.returnOnEquity),
-      returnOnAssets: raw(financialData.returnOnAssets),
-      // Growth
-      revenueGrowth: raw(financialData.revenueGrowth),
-      earningsGrowth: raw(financialData.earningsGrowth),
-      // Liquidity & Leverage
-      currentRatio: raw(financialData.currentRatio),
-      quickRatio: raw(financialData.quickRatio),
-      debtToEquity: raw(financialData.debtToEquity),
-      // Per Share
-      eps: raw(keyStats.trailingEps) || raw(summaryDetail.trailingEps),
-      bookValuePerShare: raw(keyStats.bookValue),
-      freeCashFlowPerShare: raw(financialData.freeCashflow) && raw(keyStats.sharesOutstanding)
-        ? raw(financialData.freeCashflow) / raw(keyStats.sharesOutstanding)
-        : undefined,
+    // Check if we got valid data
+    if (!data || data.error || !data.General) {
+      return null
     }
 
-    return metrics
+    return data as EODHDFundamentals
   } catch (error) {
-    console.error(`Error fetching Yahoo metrics for ${ticker}:`, error)
+    console.error(`Error fetching EODHD fundamentals for ${ticker}:`, error)
     return null
   }
 }
 
 // Get unique tickers from income_statements that need metrics
 async function getTickersNeedingMetrics(limit: number, offset: number): Promise<string[]> {
-  // Get tickers from income_statements that don't have recent metrics
   const thirtyDaysAgo = new Date()
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
-  // First get all tickers from income statements
+  // Get all tickers from income statements
   const { data: incomeData, error: incomeError } = await getSupabase()
     .from('income_statements')
     .select('ticker')
@@ -155,48 +157,65 @@ async function getTickersNeedingMetrics(limit: number, offset: number): Promise<
 }
 
 // Save metrics to Supabase
-async function saveMetrics(metrics: YahooMetrics): Promise<boolean> {
+async function saveMetrics(ticker: string, data: EODHDFundamentals): Promise<boolean> {
   const today = new Date().toISOString().split('T')[0]
+  const highlights = data.Highlights || {}
+  const valuation = data.Valuation || {}
+  const general = data.General || {}
+  const technicals = data.Technicals || {}
 
   const record = {
-    ticker: metrics.ticker,
+    ticker: ticker.toUpperCase(),
     report_period: today,
     fiscal_period: 'TTM',
     period: 'ttm',
     currency: 'USD',
+    // Company info
+    company_name: general.Name,
+    sector: general.Sector,
+    industry: general.Industry,
+    employees: general.FullTimeEmployees,
     // Valuation
-    market_cap: metrics.marketCap,
-    enterprise_value: metrics.enterpriseValue,
-    price_to_earnings_ratio: metrics.peRatio,
-    peg_ratio: metrics.pegRatio,
-    price_to_book_ratio: metrics.priceToBook,
-    price_to_sales_ratio: metrics.priceToSales,
-    enterprise_value_to_revenue_ratio: metrics.evToRevenue,
-    enterprise_value_to_ebitda_ratio: metrics.evToEbitda,
+    market_cap: highlights.MarketCapitalization,
+    enterprise_value: valuation.EnterpriseValue,
+    price_to_earnings_ratio: highlights.PERatio || valuation.TrailingPE,
+    forward_pe_ratio: valuation.ForwardPE,
+    peg_ratio: highlights.PEGRatio,
+    price_to_book_ratio: valuation.PriceBookMRQ,
+    price_to_sales_ratio: valuation.PriceSalesTTM,
+    enterprise_value_to_revenue_ratio: valuation.EnterpriseValueRevenue,
+    enterprise_value_to_ebitda_ratio: valuation.EnterpriseValueEbitda,
     // Profitability
-    gross_margin: metrics.grossMargin,
-    operating_margin: metrics.operatingMargin,
-    net_margin: metrics.netMargin,
-    return_on_equity: metrics.returnOnEquity,
-    return_on_assets: metrics.returnOnAssets,
+    gross_margin: highlights.GrossProfitTTM && highlights.RevenueTTM
+      ? highlights.GrossProfitTTM / highlights.RevenueTTM
+      : null,
+    operating_margin: highlights.OperatingMarginTTM,
+    net_margin: highlights.ProfitMargin,
+    return_on_equity: highlights.ReturnOnEquityTTM,
+    return_on_assets: highlights.ReturnOnAssetsTTM,
     // Growth
-    revenue_growth: metrics.revenueGrowth,
-    earnings_growth: metrics.earningsGrowth,
-    // Liquidity & Leverage
-    current_ratio: metrics.currentRatio,
-    quick_ratio: metrics.quickRatio,
-    debt_to_equity: metrics.debtToEquity ? metrics.debtToEquity / 100 : null, // Yahoo returns as percentage
+    revenue_growth: highlights.QuarterlyRevenueGrowthYOY,
+    earnings_growth: highlights.QuarterlyEarningsGrowthYOY,
     // Per Share
-    earnings_per_share: metrics.eps,
-    book_value_per_share: metrics.bookValuePerShare,
-    free_cash_flow_per_share: metrics.freeCashFlowPerShare,
+    earnings_per_share: highlights.EarningsShare || highlights.DilutedEpsTTM,
+    book_value_per_share: highlights.BookValue,
+    revenue_per_share: highlights.RevenuePerShareTTM,
+    dividend_per_share: highlights.DividendShare,
+    dividend_yield: highlights.DividendYield,
+    // EBITDA
+    ebitda: highlights.EBITDA,
+    revenue_ttm: highlights.RevenueTTM,
+    // Technicals
+    beta: technicals.Beta,
+    fifty_two_week_high: technicals['52WeekHigh'],
+    fifty_two_week_low: technicals['52WeekLow'],
+    fifty_day_ma: technicals['50DayMA'],
+    two_hundred_day_ma: technicals['200DayMA'],
     // Source
-    source: 'YAHOO_FINANCE',
+    source: 'EODHD',
     updated_at: new Date().toISOString(),
   }
 
-  // Use upsert with ticker + report_period + period as unique constraint
-  // But we want to update if exists, so use the unique constraint
   const { error } = await getSupabase()
     .from('financial_metrics')
     .upsert(record, {
@@ -205,8 +224,161 @@ async function saveMetrics(metrics: YahooMetrics): Promise<boolean> {
     })
 
   if (error) {
-    console.error(`Failed to save metrics for ${metrics.ticker}:`, error)
+    console.error(`Failed to save metrics for ${ticker}:`, error.message)
     return false
+  }
+
+  return true
+}
+
+// Save analyst ratings to separate table
+async function saveAnalystRatings(ticker: string, data: EODHDFundamentals): Promise<boolean> {
+  const ratings = data.AnalystRatings
+  const highlights = data.Highlights
+
+  if (!ratings && !highlights) return true // No ratings to save
+
+  const record = {
+    ticker: ticker.toUpperCase(),
+    rating_date: new Date().toISOString().split('T')[0],
+    consensus_rating: ratings?.Rating,
+    target_price: ratings?.TargetPrice || highlights?.WallStreetTargetPrice,
+    strong_buy: ratings?.StrongBuy,
+    buy: ratings?.Buy,
+    hold: ratings?.Hold,
+    sell: ratings?.Sell,
+    strong_sell: ratings?.StrongSell,
+    total_analysts: ratings ?
+      (ratings.StrongBuy || 0) + (ratings.Buy || 0) + (ratings.Hold || 0) +
+      (ratings.Sell || 0) + (ratings.StrongSell || 0) : null,
+    source: 'EODHD',
+    updated_at: new Date().toISOString(),
+  }
+
+  // Only save if we have meaningful data
+  if (!record.consensus_rating && !record.target_price) return true
+
+  const { error } = await getSupabase()
+    .from('analyst_ratings')
+    .upsert(record, {
+      onConflict: 'ticker,rating_date',
+      ignoreDuplicates: false
+    })
+
+  if (error) {
+    // Table might not exist, that's ok
+    if (!error.message.includes('does not exist')) {
+      console.error(`Failed to save analyst ratings for ${ticker}:`, error.message)
+    }
+  }
+
+  return true
+}
+
+// Save analyst estimates
+async function saveAnalystEstimates(ticker: string, data: EODHDFundamentals): Promise<boolean> {
+  const highlights = data.Highlights
+  if (!highlights) return true
+
+  const estimates = []
+  const today = new Date().toISOString().split('T')[0]
+
+  // Current quarter estimate
+  if (highlights.EPSEstimateCurrentQuarter) {
+    estimates.push({
+      ticker: ticker.toUpperCase(),
+      fiscal_period: 'current_quarter',
+      period: 'quarterly',
+      eps_estimate: highlights.EPSEstimateCurrentQuarter,
+      source: 'EODHD',
+      updated_at: new Date().toISOString(),
+    })
+  }
+
+  // Next quarter estimate
+  if (highlights.EPSEstimateNextQuarter) {
+    estimates.push({
+      ticker: ticker.toUpperCase(),
+      fiscal_period: 'next_quarter',
+      period: 'quarterly',
+      eps_estimate: highlights.EPSEstimateNextQuarter,
+      source: 'EODHD',
+      updated_at: new Date().toISOString(),
+    })
+  }
+
+  // Current year estimate
+  if (highlights.EPSEstimateCurrentYear) {
+    estimates.push({
+      ticker: ticker.toUpperCase(),
+      fiscal_period: 'current_year',
+      period: 'annual',
+      eps_estimate: highlights.EPSEstimateCurrentYear,
+      source: 'EODHD',
+      updated_at: new Date().toISOString(),
+    })
+  }
+
+  // Next year estimate
+  if (highlights.EPSEstimateNextYear) {
+    estimates.push({
+      ticker: ticker.toUpperCase(),
+      fiscal_period: 'next_year',
+      period: 'annual',
+      eps_estimate: highlights.EPSEstimateNextYear,
+      source: 'EODHD',
+      updated_at: new Date().toISOString(),
+    })
+  }
+
+  if (estimates.length === 0) return true
+
+  const { error } = await getSupabase()
+    .from('analyst_estimates')
+    .upsert(estimates, {
+      onConflict: 'ticker,fiscal_period,period',
+      ignoreDuplicates: false
+    })
+
+  if (error) {
+    console.error(`Failed to save analyst estimates for ${ticker}:`, error.message)
+    return false
+  }
+
+  return true
+}
+
+// Also populate company_fundamentals table
+async function saveCompanyFundamentals(ticker: string, data: EODHDFundamentals): Promise<boolean> {
+  const general = data.General
+  const highlights = data.Highlights
+
+  if (!general) return true
+
+  const record = {
+    ticker: ticker.toUpperCase(),
+    company_name: general.Name,
+    sector: general.Sector,
+    industry: general.Industry,
+    description: general.Description?.substring(0, 2000), // Limit length
+    employees: general.FullTimeEmployees,
+    market_cap: highlights?.MarketCapitalization,
+    source: 'EODHD',
+    updated_at: new Date().toISOString(),
+  }
+
+  const { error } = await getSupabase()
+    .from('company_fundamentals')
+    .upsert(record, {
+      onConflict: 'ticker',
+      ignoreDuplicates: false
+    })
+
+  if (error) {
+    // Table might have different schema, log but don't fail
+    if (!error.message.includes('does not exist')) {
+      console.error(`Failed to save company fundamentals for ${ticker}:`, error.message)
+    }
   }
 
   return true
@@ -215,12 +387,16 @@ async function saveMetrics(metrics: YahooMetrics): Promise<boolean> {
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
   const ticker = searchParams.get('ticker')
-  const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 200)
+  const limit = Math.min(parseInt(searchParams.get('limit') || '100'), 500)
   const offset = parseInt(searchParams.get('offset') || '0')
-  const mode = searchParams.get('mode') || 'continue' // 'continue' or 'priority'
+  const mode = searchParams.get('mode') || 'continue'
 
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-    return NextResponse.json({ error: 'Configuration missing' }, { status: 500 })
+    return NextResponse.json({ error: 'Supabase configuration missing' }, { status: 500 })
+  }
+
+  if (!EODHD_API_KEY) {
+    return NextResponse.json({ error: 'EODHD_API_KEY not configured' }, { status: 500 })
   }
 
   const startTime = Date.now()
@@ -228,28 +404,32 @@ export async function GET(request: NextRequest) {
   return withCronLogging('sync-financial-metrics', async () => {
     // Single ticker mode
     if (ticker) {
-      const metrics = await fetchYahooMetrics(ticker.toUpperCase())
+      const data = await fetchEODHDFundamentals(ticker.toUpperCase())
 
-      if (!metrics) {
+      if (!data) {
         return NextResponse.json({
           success: false,
           ticker: ticker.toUpperCase(),
-          error: 'Could not fetch metrics from Yahoo Finance',
+          error: 'Could not fetch data from EODHD',
         }, { status: 404 })
       }
 
-      const saved = await saveMetrics(metrics)
+      const savedMetrics = await saveMetrics(ticker, data)
+      await saveAnalystRatings(ticker, data)
+      await saveAnalystEstimates(ticker, data)
+      await saveCompanyFundamentals(ticker, data)
 
       return NextResponse.json({
-        success: saved,
-        ticker: metrics.ticker,
-        metrics: {
-          marketCap: metrics.marketCap,
-          peRatio: metrics.peRatio,
-          grossMargin: metrics.grossMargin,
-          returnOnEquity: metrics.returnOnEquity,
+        success: savedMetrics,
+        ticker: ticker.toUpperCase(),
+        data: {
+          marketCap: data.Highlights?.MarketCapitalization,
+          peRatio: data.Highlights?.PERatio,
+          profitMargin: data.Highlights?.ProfitMargin,
+          returnOnEquity: data.Highlights?.ReturnOnEquityTTM,
+          analystRating: data.AnalystRatings?.Rating,
         },
-        source: 'YAHOO_FINANCE',
+        source: 'EODHD',
         duration: Date.now() - startTime,
       })
     }
@@ -258,16 +438,16 @@ export async function GET(request: NextRequest) {
     let tickersToSync: string[]
 
     if (mode === 'priority') {
-      // Priority mode: Focus on major stocks first
+      // Priority mode: Major stocks first
       const priorityTickers = [
         'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA', 'META', 'TSLA', 'BRK-B',
         'JPM', 'V', 'JNJ', 'UNH', 'HD', 'PG', 'MA', 'XOM', 'CVX', 'BAC',
         'ABBV', 'KO', 'PFE', 'MRK', 'PEP', 'COST', 'TMO', 'WMT', 'DIS',
         'CSCO', 'ABT', 'VZ', 'CRM', 'INTC', 'NFLX', 'AMD', 'QCOM', 'TXN',
+        'GME', 'AMC', 'PLTR', 'SOFI', 'RIVN', 'COIN', 'HOOD', 'MARA',
       ].slice(offset, offset + limit)
       tickersToSync = priorityTickers
     } else {
-      // Continue mode: Process all tickers needing metrics
       tickersToSync = await getTickersNeedingMetrics(limit, offset)
     }
 
@@ -279,7 +459,7 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    const rateLimiter = new RateLimiter(2) // 2 requests/second
+    const rateLimiter = new RateLimiter(4) // 4 requests/second (conservative)
     const results: Array<{ ticker: string; success: boolean; error?: string }> = []
     let successCount = 0
     let failCount = 0
@@ -288,28 +468,24 @@ export async function GET(request: NextRequest) {
       await rateLimiter.wait()
 
       try {
-        const metrics = await fetchYahooMetrics(t)
+        const data = await fetchEODHDFundamentals(t)
 
-        if (metrics) {
-          const hasData = metrics.marketCap || metrics.peRatio || metrics.grossMargin
+        if (data && data.Highlights) {
+          const savedMetrics = await saveMetrics(t, data)
+          await saveAnalystRatings(t, data)
+          await saveAnalystEstimates(t, data)
+          await saveCompanyFundamentals(t, data)
 
-          if (hasData) {
-            const saved = await saveMetrics(metrics)
-            if (saved) {
-              successCount++
-              results.push({ ticker: t, success: true })
-            } else {
-              failCount++
-              results.push({ ticker: t, success: false, error: 'Save failed' })
-            }
+          if (savedMetrics) {
+            successCount++
+            results.push({ ticker: t, success: true })
           } else {
-            // No meaningful data from Yahoo
-            results.push({ ticker: t, success: false, error: 'No data available' })
             failCount++
+            results.push({ ticker: t, success: false, error: 'Save failed' })
           }
         } else {
           failCount++
-          results.push({ ticker: t, success: false, error: 'Fetch failed' })
+          results.push({ ticker: t, success: false, error: 'No data available' })
         }
       } catch (error) {
         failCount++
@@ -323,7 +499,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      source: 'YAHOO_FINANCE',
+      source: 'EODHD',
       summary: {
         tickersProcessed: tickersToSync.length,
         successCount,
@@ -336,7 +512,7 @@ export async function GET(request: NextRequest) {
         limit,
         nextOffset: offset + limit,
       },
-      results: results.slice(0, 20), // Only show first 20 for brevity
+      results: results.slice(0, 20),
     })
   })
 }

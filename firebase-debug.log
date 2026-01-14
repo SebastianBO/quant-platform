@@ -1,0 +1,21 @@
+[debug] [2026-01-14T05:33:32.418Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-01-14T05:33:32.421Z] > authorizing via signed-in user (finance@lician.com)
+[debug] [2026-01-14T05:33:32.974Z] Checked if tokens are valid: false, expires at: 1767895440204
+[debug] [2026-01-14T05:33:32.974Z] Checked if tokens are valid: false, expires at: 1767895440204
+[debug] [2026-01-14T05:33:32.975Z] > refreshing access token with scopes: []
+[debug] [2026-01-14T05:33:32.976Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2026-01-14T05:33:32.976Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-01-14T05:33:33.572Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2026-01-14T05:33:33.572Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-01-14T05:33:33.589Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects//services/firebaseappdistribution.googleapis.com [none]
+[debug] [2026-01-14T05:33:33.589Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects//services/firebaseappdistribution.googleapis.com x-goog-quota-user=projects/
+[debug] [2026-01-14T05:33:34.428Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects//services/firebaseappdistribution.googleapis.com 400
+[debug] [2026-01-14T05:33:34.428Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects//services/firebaseappdistribution.googleapis.com [omitted]
+[debug] [2026-01-14T05:39:44.955Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-01-14T05:39:44.957Z] > authorizing via signed-in user (finance@lician.com)
+[debug] [2026-01-14T05:39:45.584Z] Checked if tokens are valid: true, expires at: 1768372412572
+[debug] [2026-01-14T05:39:45.584Z] Checked if tokens are valid: true, expires at: 1768372412572
+[debug] [2026-01-14T05:39:45.585Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects//services/firebaseappdistribution.googleapis.com [none]
+[debug] [2026-01-14T05:39:45.585Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects//services/firebaseappdistribution.googleapis.com x-goog-quota-user=projects/
+[debug] [2026-01-14T05:39:46.643Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects//services/firebaseappdistribution.googleapis.com 400
+[debug] [2026-01-14T05:39:46.643Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects//services/firebaseappdistribution.googleapis.com [omitted]

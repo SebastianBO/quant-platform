@@ -1,14 +1,27 @@
 import { Resend } from 'resend'
 import * as brevo from '@getbrevo/brevo'
+import * as ElasticEmail from '@elasticemail/elasticemail-client'
 
 // Email provider type
-type EmailProvider = 'brevo' | 'resend'
+type EmailProvider = 'elastic' | 'brevo' | 'resend'
 
-// Get configured email provider (Brevo is default - 9,000 free/month)
+// Get configured email provider (Elastic Email is cheapest at scale)
 function getEmailProvider(): EmailProvider {
+  if (process.env.ELASTIC_EMAIL_API_KEY) return 'elastic'
   if (process.env.BREVO_API_KEY) return 'brevo'
   if (process.env.RESEND_API_KEY) return 'resend'
-  throw new Error('No email provider configured. Set BREVO_API_KEY or RESEND_API_KEY')
+  throw new Error('No email provider configured. Set ELASTIC_EMAIL_API_KEY, BREVO_API_KEY, or RESEND_API_KEY')
+}
+
+// Initialize Elastic Email client
+function getElasticEmail() {
+  const apiKey = process.env.ELASTIC_EMAIL_API_KEY
+  if (!apiKey) {
+    throw new Error('ELASTIC_EMAIL_API_KEY environment variable is not set')
+  }
+  const client = ElasticEmail.ApiClient.instance
+  client.authentications['apikey'].apiKey = apiKey
+  return new ElasticEmail.EmailsApi()
 }
 
 // Initialize Brevo client
@@ -40,6 +53,42 @@ async function sendEmail(options: {
 }) {
   const provider = getEmailProvider()
 
+  if (provider === 'elastic') {
+    const elasticApi = getElasticEmail()
+
+    // Parse from address
+    const fromMatch = options.from.match(/^(.+?)\s*<(.+)>$/)
+    const fromName = fromMatch ? fromMatch[1].trim() : 'Lician'
+    const fromEmail = fromMatch ? fromMatch[2] : options.from
+
+    const emailData = ElasticEmail.EmailMessageData.constructFromObject({
+      Recipients: [
+        ElasticEmail.EmailRecipient.constructFromObject({ Email: options.to })
+      ],
+      Content: {
+        Body: [
+          ElasticEmail.BodyPart.constructFromObject({
+            ContentType: 'HTML',
+            Content: options.html
+          })
+        ],
+        Subject: options.subject,
+        From: fromEmail,
+        FromName: fromName
+      }
+    })
+
+    return new Promise((resolve, reject) => {
+      elasticApi.emailsPost(emailData, (error: Error | null, data: unknown) => {
+        if (error) {
+          reject(error)
+        } else {
+          resolve({ id: data })
+        }
+      })
+    })
+  }
+
   if (provider === 'brevo') {
     const brevoApi = getBrevo()
     const sendSmtpEmail = new brevo.SendSmtpEmail()
@@ -70,13 +119,13 @@ async function sendBatchEmails(
 ) {
   const provider = getEmailProvider()
 
-  if (provider === 'brevo') {
-    // Brevo doesn't have batch API, send individually
-    const results = []
+  if (provider === 'elastic' || provider === 'brevo') {
+    // Send individually (these don't have batch API)
+    const results: Array<{ success: boolean; id?: unknown; error?: unknown }> = []
     for (const email of emails) {
       try {
         const result = await sendEmail(email)
-        results.push({ success: true, ...result })
+        results.push({ success: true, id: (result as { id?: unknown })?.id })
       } catch (error) {
         results.push({ success: false, error })
       }
