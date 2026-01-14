@@ -1145,6 +1145,305 @@ src/lib/ai/agent/prompts.ts          # Better tool selection prompts
 
 ---
 
+# AI AGENT ARCHITECTURE (Jan 14, 2026)
+
+## Overview
+
+Lician's AI agent is inspired by [virattt/dexter](https://github.com/virattt/dexter) - an autonomous financial research agent. Our implementation uses the [Vercel AI SDK](https://ai-sdk.dev/docs/introduction) with multi-model support via [Vercel AI Gateway](https://vercel.com/docs/ai-sdk).
+
+## Current Architecture
+
+### 5-Phase Workflow (Dexter-Inspired)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    USER QUERY                                    │
+│              "What is Apple's PE ratio?"                         │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  PHASE 1: UNDERSTAND                                             │
+│  - Extract intent: "Retrieve PE ratio for Apple"                 │
+│  - Extract entities: [ticker: AAPL, metric: PE ratio]           │
+│  - Classify complexity: simple/moderate/complex                  │
+│  Uses: generateObject() with UnderstandingSchema                 │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  PHASE 2: PLAN                                                   │
+│  - Create task breakdown                                         │
+│  - Tasks: [{id, description, taskType: use_tools|reason}]       │
+│  - Task dependencies for execution order                         │
+│  Uses: generateObject() with PlanSchema                          │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  PHASE 3: EXECUTE                                                │
+│  - Select tools for each task (just-in-time selection)          │
+│  - Execute tools against Supabase data                          │
+│  - Auto-populate ticker args from entities (fallback fix)       │
+│  Uses: generateObject() with ToolSelectionSchema                 │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  PHASE 4: REFLECT                                                │
+│  - Evaluate if we have enough data                              │
+│  - If incomplete: loop back to PLAN (max 3 iterations)          │
+│  - If complete: proceed to ANSWER                               │
+│  Uses: generateObject() with ReflectionSchema                    │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  PHASE 5: ANSWER                                                 │
+│  - Synthesize findings from all task results                    │
+│  - Generate final response with key findings first              │
+│  - Stream response chunks for real-time UI                      │
+│  Uses: streamText() for streaming answer generation              │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Key Files
+
+```
+src/lib/ai/agent/
+├── orchestrator.ts    # Agent class with 5-phase workflow
+├── prompts.ts         # System prompts for each phase
+├── types.ts           # TypeScript types and state management
+└── index.ts           # Public exports
+
+src/lib/ai/
+├── tools.ts           # 25 financial tools (Supabase + APIs)
+└── financial-datasets-api.ts  # Fallback API client
+
+src/app/api/chat/autonomous/route.ts  # API endpoint
+```
+
+### Available Models (Vercel AI Gateway)
+
+| Model | ID | Tier | Best For |
+|-------|-----|------|----------|
+| Gemini Flash | `google/gemini-2.0-flash` | Fast | Simple queries, low latency |
+| GPT-4o Mini | `openai/gpt-4o-mini` | Standard | Balanced cost/quality |
+| Claude 3.5 Sonnet | `anthropic/claude-3-5-sonnet` | Standard | Complex reasoning |
+| Llama 3.3 70B | `meta/llama-3.3-70b` | Standard | Open-source alternative |
+| GPT-4o | `openai/gpt-4o` | Premium | Best reasoning |
+| Claude Sonnet 4 | `anthropic/claude-sonnet-4` | Premium | Best analysis |
+
+### Tool Categories
+
+**Supabase Data Tools (11):**
+```typescript
+getStockQuote          // Real-time prices from Yahoo
+getCompanyFundamentals // PE, market cap from financial_metrics
+getFinancialStatements // Income/balance/cashflow from SEC data
+getInsiderTrades       // Form 4 transactions
+getInstitutionalOwnership // 13F holdings
+getAnalystRatings      // Ratings and price targets
+getShortInterest       // Short volume data
+getBiotechCatalysts    // Clinical trial events
+searchStocks           // Search 141k+ companies
+getMarketMovers        // Gainers/losers/active
+compareStocks          // Side-by-side comparison
+```
+
+**External API Tools (5):**
+```typescript
+getSECFilings          // 10-K, 10-Q, 8-K filings
+getPriceHistory        // Historical prices
+getFinancialNews       // News articles
+getSegmentedRevenue    // Business segment breakdown
+getAnalystEstimates    // EPS/revenue estimates
+```
+
+**Firecrawl Web Research Tools (5):**
+```typescript
+deepResearch           // Multi-source autonomous research
+extractFinancialData   // Schema-based extraction from IR pages
+searchRecentNews       // Time-filtered news search
+firecrawlAgent         // Autonomous data discovery
+crawlInvestorRelations // Full IR website crawl
+```
+
+**EU Company Tools (4):**
+```typescript
+searchEUCompanies      // 106k+ European companies
+getEUCompanyDetails    // Company info by org number
+getEUFinancialStatements // IFRS format financials
+compareEUCompanies     // Cross-country comparison
+```
+
+## Comparison with Dexter
+
+| Feature | Dexter | Lician | Gap |
+|---------|--------|--------|-----|
+| **Multi-Agent** | 4 agents (Plan, Action, Validate, Answer) | 1 agent with 5 phases | Similar |
+| **Tool Selection** | Just-in-time with gpt-4-mini | Just-in-time with any model | ✅ Same |
+| **Validation** | "DEFAULT TO COMPLETE" logic | Reflect phase with criteria | Need improvement |
+| **Data Source** | Financial Datasets API only | Supabase + fallback APIs | ✅ Better |
+| **Loop Detection** | Built-in step limits | maxIterations config | ✅ Same |
+| **Streaming** | Terminal UI (Ink) | SSE for web UI | ✅ Same |
+| **Entity Extraction** | Ticker normalization | Company→ticker mapping | ✅ Same |
+
+## Improvement Roadmap
+
+### Priority 1: Smarter Validation (Dexter's "DEFAULT TO COMPLETE")
+
+**Current Issue**: Our reflect phase is too aggressive, often requesting more data when it's unnecessary.
+
+**Dexter's Approach**: Only mark incomplete when "critical primary entity data is ENTIRELY missing."
+
+**Fix**: Update `REFLECT_SYSTEM_PROMPT` to:
+```typescript
+DEFAULT TO COMPLETE unless:
+- Primary ticker data completely missing (not just one metric)
+- User explicitly asked for something we couldn't retrieve
+- Critical calculation failed entirely
+
+DO NOT mark incomplete for:
+- Missing optional metrics (dividend yield, beta)
+- Partial historical data
+- Missing comparison data when single stock was asked
+```
+
+### Priority 2: Better Tool Result Handling (AI SDK 6)
+
+**Current Issue**: Large tool results waste tokens when sent back to model.
+
+**Solution**: Use `toModelOutput` from AI SDK 6 to separate tool results from model context:
+```typescript
+// Instead of returning full data
+return { success: true, data: largeObject }
+
+// Return summarized version for model
+return {
+  success: true,
+  data: largeObject,
+  toModelOutput: () => ({
+    summary: "AAPL PE: 34.84, Market Cap: $3.85T",
+    hasData: true
+  })
+}
+```
+
+### Priority 3: Firecrawl Deep Research Integration
+
+**Current Issue**: Firecrawl tools exist but aren't used intelligently.
+
+**Enhancement**: Add logic to trigger Firecrawl when:
+1. Query asks about recent news/events not in our database
+2. Supabase data is stale (>30 days old)
+3. User asks about private companies or non-US stocks we don't cover
+4. Query requires real-time information (earnings calls, press releases)
+
+### Priority 4: Smarter Model Routing
+
+**Current Issue**: Same model used for all phases.
+
+**Dexter's Approach**: Uses `gpt-4-mini` for tool selection (fast/cheap) and main model for reasoning.
+
+**Enhancement**:
+```typescript
+// Use fast model for mechanical tasks
+const fastModel = gateway('google/gemini-2.0-flash')  // Tool selection
+const reasoningModel = gateway('openai/gpt-4o-mini')   // Planning, answering
+
+// In selectTools()
+const { object } = await generateObject({
+  model: this.fastModel,  // Cheap and fast
+  schema: ToolSelectionSchema,
+  ...
+})
+
+// In answerPhase()
+const { text } = await generateText({
+  model: this.model,  // Better reasoning
+  ...
+})
+```
+
+### Priority 5: Context Window Optimization
+
+**Current Issue**: Sending entire conversation history to each phase.
+
+**Enhancement**: Implement context selection like Dexter:
+```typescript
+// Add CONTEXT_SELECTION phase
+const relevantContext = await selectRelevantContext(
+  query,
+  taskResults,
+  conversationHistory
+)
+
+// Only send relevant results to answer phase
+const answer = await generateAnswer(relevantContext)
+```
+
+### Priority 6: Message Summarization
+
+**Current Issue**: Long conversations bloat context.
+
+**Enhancement**: Add message summarization for long conversations:
+```typescript
+if (conversationHistory.length > 10) {
+  const summary = await summarizeMessages(conversationHistory.slice(0, -4))
+  conversationHistory = [
+    { role: 'system', content: `Previous context: ${summary}` },
+    ...conversationHistory.slice(-4)
+  ]
+}
+```
+
+## Environment Variables
+
+```bash
+# Vercel AI Gateway (required)
+AI_GATEWAY_API_KEY=vck_...
+
+# Firecrawl (for web research)
+FIRECRAWL_API_KEY=fc-...
+
+# Financial Datasets API (fallback)
+FINANCIAL_DATASETS_API_KEY=...
+
+# Supabase (primary data source)
+NEXT_PUBLIC_SUPABASE_URL=https://...
+SUPABASE_SERVICE_ROLE_KEY=...
+```
+
+## Rate Limits
+
+| Service | Limit | Notes |
+|---------|-------|-------|
+| Vercel AI Gateway (Free) | Limited | Subject to abuse prevention |
+| EODHD API | ~100k/day | Affects search, quotes |
+| Firecrawl | 1k credits/month | $16/month for more |
+| Financial Datasets | Pay per call | Fallback only |
+
+## Testing
+
+```bash
+# Run all AI tests (may hit rate limits)
+npx playwright test tests/ai-chat.spec.ts
+
+# Run only Supabase tests (always work)
+npx playwright test tests/ai-chat.spec.ts --grep "Search API|Model Selection|Financial Metrics"
+```
+
+## References
+
+- [Vercel AI SDK Documentation](https://ai-sdk.dev/docs/introduction)
+- [Vercel AI Gateway](https://vercel.com/docs/ai-sdk)
+- [virattt/dexter GitHub](https://github.com/virattt/dexter)
+- [Firecrawl Documentation](https://docs.firecrawl.dev/introduction)
+- [Firecrawl Deep Research](https://www.firecrawl.dev/use-cases/deep-research)
+
+---
+
 # DATA ARCHITECTURE: US vs EU (Decision Log)
 
 ## Current State (Jan 14, 2026)
