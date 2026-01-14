@@ -1,17 +1,19 @@
 "use client"
 
-import { useEffect, useState, Suspense } from "react"
+import { useEffect, useState, Suspense, useRef } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { CheckCircle2, Loader2, ArrowRight, Sparkles } from "lucide-react"
+import { trackPurchase, trackEvent } from "@/lib/analytics"
 
 function SuccessContent() {
   const searchParams = useSearchParams()
   const sessionId = searchParams.get("session_id")
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const purchaseTracked = useRef(false)
 
   useEffect(() => {
     if (sessionId) {
@@ -21,6 +23,21 @@ function SuccessContent() {
       setLoading(false)
     }
   }, [sessionId])
+
+  // Track purchase when page loads successfully
+  useEffect(() => {
+    if (!loading && !error && sessionId && !purchaseTracked.current) {
+      purchaseTracked.current = true
+      // Track the successful purchase
+      trackPurchase(sessionId, 'annual', 58)
+      trackEvent('conversion', {
+        event_category: 'ecommerce',
+        conversion_type: 'subscription',
+        value: 58,
+        currency: 'USD'
+      })
+    }
+  }, [loading, error, sessionId])
 
   const verifySession = async () => {
     try {

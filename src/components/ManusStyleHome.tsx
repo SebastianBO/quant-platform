@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
+import { useAnalytics } from "@/hooks/useAnalytics"
 import { Button } from "@/components/ui/button"
 import {
   Wallet,
@@ -194,6 +195,18 @@ export default function ManusStyleHome() {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const queryStartTime = useRef<number>(0)
+
+  // Analytics tracking
+  const {
+    trackAIQueryStart,
+    trackAIQueryComplete,
+    trackUpgradePrompt,
+    trackCTAClick,
+    trackBeginCheckout,
+    initializeUserAnalytics,
+    trackEvent,
+  } = useAnalytics()
 
   // Check for query param to auto-start chat
   useEffect(() => {
@@ -242,6 +255,13 @@ export default function ManusStyleHome() {
           .single()
 
         setIsPremium(profile?.is_premium || false)
+
+        // Initialize analytics for authenticated user
+        initializeUserAnalytics(
+          user.id,
+          profile?.is_premium || false,
+          profile?.is_premium ? 'annual' : 'free'
+        )
       } else {
         const savedCredits = localStorage.getItem("credits_anonymous")
         setCredits(savedCredits ? parseInt(savedCredits, 10) : 300)
@@ -288,6 +308,7 @@ export default function ManusStyleHome() {
     if (tool.id === "more") {
       setShowMoreTools(!showMoreTools)
     } else if (tool.href) {
+      trackCTAClick(tool.id, 'tool_buttons')
       router.push(tool.href)
     }
   }
@@ -323,6 +344,7 @@ export default function ManusStyleHome() {
     // Check if user is authenticated
     if (!user) {
       setShowAuthPrompt(true)
+      trackUpgradePrompt('auth_required')
       return
     }
 
@@ -330,6 +352,7 @@ export default function ManusStyleHome() {
     const freeQueries = parseInt(localStorage.getItem(`free_queries_${user.id}`) || '0', 10)
     if (!isPremium && freeQueries >= 3) {
       setShowPaymentPrompt(true)
+      trackUpgradePrompt('free_queries_exhausted')
       return
     }
 
@@ -381,6 +404,14 @@ export default function ManusStyleHome() {
     setInputValue("")
     setAttachedFile(null)
     setIsLoading(true)
+
+    // Track AI query start
+    queryStartTime.current = Date.now()
+    trackAIQueryStart({
+      query: queryContent,
+      model: selectedModel.key,
+      model_tier: selectedModel.tier as 'fast' | 'standard' | 'premium',
+    })
 
     const assistantId = (Date.now() + 1).toString()
     let answerContent = ""
@@ -476,8 +507,26 @@ export default function ManusStyleHome() {
         ...prev,
         { id: assistantId, role: 'assistant', content: 'Sorry, the request failed. Please try again.' },
       ])
+      // Track failed query
+      trackAIQueryComplete({
+        query: queryContent,
+        model: selectedModel.key,
+        model_tier: selectedModel.tier as 'fast' | 'standard' | 'premium',
+        response_time_ms: Date.now() - queryStartTime.current,
+        success: false,
+      })
     } finally {
       setIsLoading(false)
+      // Track successful query completion
+      if (answerContent) {
+        trackAIQueryComplete({
+          query: queryContent,
+          model: selectedModel.key,
+          model_tier: selectedModel.tier as 'fast' | 'standard' | 'premium',
+          response_time_ms: Date.now() - queryStartTime.current,
+          success: true,
+        })
+      }
       setTimeout(() => setTasks([]), 1000)
     }
   }
@@ -1186,12 +1235,14 @@ export default function ManusStyleHome() {
             <div className="space-y-3">
               <Link
                 href="/auth/login"
+                onClick={() => trackCTAClick('sign_in', 'auth_modal')}
                 className="w-full block text-center py-3 px-4 bg-green-600 hover:bg-green-500 text-white rounded-lg font-medium transition-colors"
               >
                 Sign in
               </Link>
               <Link
                 href="/auth/signup"
+                onClick={() => trackCTAClick('create_account', 'auth_modal')}
                 className="w-full block text-center py-3 px-4 bg-secondary hover:bg-secondary/80 text-foreground rounded-lg font-medium transition-colors"
               >
                 Create free account
@@ -1234,6 +1285,10 @@ export default function ManusStyleHome() {
             </div>
             <Link
               href="/api/stripe/quick-checkout?plan=annual"
+              onClick={() => {
+                trackCTAClick('start_trial', 'payment_modal')
+                trackBeginCheckout('annual', 58)
+              }}
               className="w-full block text-center py-3 px-4 bg-green-600 hover:bg-green-500 text-white rounded-lg font-medium transition-colors"
             >
               Start 3-day free trial

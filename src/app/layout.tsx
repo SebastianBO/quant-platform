@@ -146,7 +146,7 @@ export default function RootLayout({
           }}
         />
 
-        {/* Google Analytics */}
+        {/* Google Analytics with Enhanced Measurement */}
         {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
           <>
             <script
@@ -161,6 +161,33 @@ export default function RootLayout({
                   gtag('js', new Date());
                   gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}', {
                     page_path: window.location.pathname,
+                    // Enhanced measurement settings
+                    send_page_view: true,
+                    // Custom dimensions for user segmentation
+                    custom_map: {
+                      'dimension1': 'user_type',
+                      'dimension2': 'subscription_tier',
+                      'dimension3': 'model_used'
+                    },
+                    // Link click tracking
+                    link_attribution: true,
+                    // Content grouping for financial pages
+                    content_group1: window.location.pathname.startsWith('/stock/') ? 'Stock Pages' :
+                                    window.location.pathname.startsWith('/compare/') ? 'Compare Pages' :
+                                    window.location.pathname.startsWith('/sectors/') ? 'Sector Pages' :
+                                    window.location.pathname.startsWith('/learn/') ? 'Learn Pages' :
+                                    window.location.pathname === '/' ? 'Homepage' : 'Other'
+                  });
+                  // Track outbound link clicks
+                  document.addEventListener('click', function(e) {
+                    var link = e.target.closest('a');
+                    if (link && link.hostname !== window.location.hostname) {
+                      gtag('event', 'click', {
+                        event_category: 'outbound',
+                        event_label: link.href,
+                        transport_type: 'beacon'
+                      });
+                    }
                   });
                 `,
               }}
