@@ -4,10 +4,10 @@ import { useState } from 'react'
 import { X, Smartphone, Apple, Play } from 'lucide-react'
 import Image from 'next/image'
 
-// App Store links - update these when available
+// App Store links
 const APP_LINKS = {
-  ios: 'https://apps.apple.com/app/lician/id6739498253', // Update with actual ID
-  android: 'https://play.google.com/store/apps/details?id=com.lician', // Update when live
+  ios: 'https://apps.apple.com/app/lician/id6748368400',
+  android: 'https://play.google.com/store/apps/details?id=com.lician',
 }
 
 interface MobileAppPromoProps {

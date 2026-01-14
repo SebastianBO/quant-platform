@@ -1291,7 +1291,7 @@ Lician has a companion mobile app built with **Expo/React Native**. The app prov
 
 | Platform | Bundle ID | Link |
 |----------|-----------|------|
-| **iOS** | `distinct.lician.com` | https://apps.apple.com/app/lician/id6739498253 |
+| **iOS** | `distinct.lician.com` | https://apps.apple.com/app/lician/id6748368400 |
 | **Android** | `com.lician` | https://play.google.com/store/apps/details?id=com.lician |
 
 ## App Details
