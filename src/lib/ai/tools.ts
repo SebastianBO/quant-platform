@@ -1,7 +1,8 @@
-import { tool } from 'ai'
+import { tool, embed } from 'ai'
 import { z } from 'zod'
 import { createClient } from '@supabase/supabase-js'
 import Firecrawl from '@mendable/firecrawl-js'
+import { openai } from '@ai-sdk/openai'
 import * as financialAPI from './financial-datasets-api'
 
 // =============================================================================
@@ -1859,31 +1860,11 @@ export const searchFinancialDocumentsTool = tool({
   }),
   execute: async ({ query, ticker, documentType, limit }) => {
     try {
-      // First, generate embedding for the query using OpenAI
-      const openaiKey = process.env.OPENAI_API_KEY
-      if (!openaiKey) {
-        return { success: false, error: 'OpenAI API key not configured for embeddings' }
-      }
-
-      // Get embedding for query
-      const embeddingResponse = await fetch('https://api.openai.com/v1/embeddings', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${openaiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'text-embedding-ada-002',
-          input: query,
-        }),
+      // Generate embedding using AI SDK with text-embedding-3-small (1536 dims, cheaper than ada-002)
+      const { embedding: queryEmbedding } = await embed({
+        model: openai.embedding('text-embedding-3-small'),
+        value: query,
       })
-
-      if (!embeddingResponse.ok) {
-        return { success: false, error: 'Failed to generate query embedding' }
-      }
-
-      const embeddingData = await embeddingResponse.json()
-      const queryEmbedding = embeddingData.data[0].embedding
 
       // Search using Supabase RPC function
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -1967,30 +1948,11 @@ export const getSemanticContextTool = tool({
   }),
   execute: async ({ query, tickers, topK }) => {
     try {
-      const openaiKey = process.env.OPENAI_API_KEY
-      if (!openaiKey) {
-        return { success: false, error: 'OpenAI API key not configured' }
-      }
-
-      // Generate query embedding
-      const embeddingResponse = await fetch('https://api.openai.com/v1/embeddings', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${openaiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'text-embedding-ada-002',
-          input: query,
-        }),
+      // Generate embedding using AI SDK with text-embedding-3-small
+      const { embedding: queryEmbedding } = await embed({
+        model: openai.embedding('text-embedding-3-small'),
+        value: query,
       })
-
-      if (!embeddingResponse.ok) {
-        return { success: false, error: 'Failed to generate embedding' }
-      }
-
-      const embeddingData = await embeddingResponse.json()
-      const queryEmbedding = embeddingData.data[0].embedding
 
       // Search across document types
       const contexts: { type: string; ticker: string; content: string; score: number }[] = []
