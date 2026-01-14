@@ -1,4 +1,26 @@
 import { Resend } from 'resend'
+import * as brevo from '@getbrevo/brevo'
+
+// Email provider type
+type EmailProvider = 'brevo' | 'resend'
+
+// Get configured email provider (Brevo is default - 9,000 free/month)
+function getEmailProvider(): EmailProvider {
+  if (process.env.BREVO_API_KEY) return 'brevo'
+  if (process.env.RESEND_API_KEY) return 'resend'
+  throw new Error('No email provider configured. Set BREVO_API_KEY or RESEND_API_KEY')
+}
+
+// Initialize Brevo client
+function getBrevo() {
+  const apiKey = process.env.BREVO_API_KEY
+  if (!apiKey) {
+    throw new Error('BREVO_API_KEY environment variable is not set')
+  }
+  const apiInstance = new brevo.TransactionalEmailsApi()
+  apiInstance.setApiKey(brevo.TransactionalEmailsApiApiKeys.apiKey, apiKey)
+  return apiInstance
+}
 
 // Initialize Resend client
 function getResend() {
@@ -7,6 +29,75 @@ function getResend() {
     throw new Error('RESEND_API_KEY environment variable is not set')
   }
   return new Resend(apiKey)
+}
+
+// Unified email send function
+async function sendEmail(options: {
+  to: string
+  from: string
+  subject: string
+  html: string
+}) {
+  const provider = getEmailProvider()
+
+  if (provider === 'brevo') {
+    const brevoApi = getBrevo()
+    const sendSmtpEmail = new brevo.SendSmtpEmail()
+
+    // Parse from address
+    const fromMatch = options.from.match(/^(.+?)\s*<(.+)>$/)
+    const fromName = fromMatch ? fromMatch[1] : 'Lician'
+    const fromEmail = fromMatch ? fromMatch[2] : options.from
+
+    sendSmtpEmail.sender = { name: fromName, email: fromEmail }
+    sendSmtpEmail.to = [{ email: options.to }]
+    sendSmtpEmail.subject = options.subject
+    sendSmtpEmail.htmlContent = options.html
+
+    const result = await brevoApi.sendTransacEmail(sendSmtpEmail)
+    return { id: result.body.messageId }
+  } else {
+    const resend = getResend()
+    const { data, error } = await resend.emails.send(options)
+    if (error) throw error
+    return data
+  }
+}
+
+// Batch send emails
+async function sendBatchEmails(
+  emails: Array<{ to: string; from: string; subject: string; html: string }>
+) {
+  const provider = getEmailProvider()
+
+  if (provider === 'brevo') {
+    // Brevo doesn't have batch API, send individually
+    const results = []
+    for (const email of emails) {
+      try {
+        const result = await sendEmail(email)
+        results.push({ success: true, ...result })
+      } catch (error) {
+        results.push({ success: false, error })
+      }
+      // Small delay to avoid rate limits
+      await new Promise(r => setTimeout(r, 100))
+    }
+    return results
+  } else {
+    const resend = getResend()
+    // Resend batch API (up to 100 per request)
+    const results = []
+    for (let i = 0; i < emails.length; i += 100) {
+      const batch = emails.slice(i, i + 100)
+      const { data, error } = await resend.batch.send(batch)
+      if (error) {
+        console.error('Batch send error:', error)
+      }
+      results.push(data)
+    }
+    return results
+  }
 }
 
 // Email templates
@@ -198,47 +289,40 @@ function generateMarketAlertHtml(alert: MarketAlertData): string {
 
 // Send email functions
 export async function sendWelcomeEmail(email: string, confirmationToken: string) {
-  const resend = getResend()
   const confirmUrl = `https://lician.com/api/email/confirm?token=${confirmationToken}`
-
   const template = emailTemplates.welcome(email, confirmUrl)
 
-  const { data, error } = await resend.emails.send(template)
-
-  if (error) {
+  try {
+    const result = await sendEmail(template)
+    return result
+  } catch (error) {
     console.error('Failed to send welcome email:', error)
     throw error
   }
-
-  return data
 }
 
 export async function sendWeeklyDigest(email: string, data: WeeklyDigestData) {
-  const resend = getResend()
   const template = emailTemplates.weeklyDigest(email, data)
 
-  const { data: result, error } = await resend.emails.send(template)
-
-  if (error) {
+  try {
+    const result = await sendEmail(template)
+    return result
+  } catch (error) {
     console.error('Failed to send weekly digest:', error)
     throw error
   }
-
-  return result
 }
 
 export async function sendMarketAlert(email: string, alert: MarketAlertData) {
-  const resend = getResend()
   const template = emailTemplates.marketAlert(email, alert)
 
-  const { data: result, error } = await resend.emails.send(template)
-
-  if (error) {
+  try {
+    const result = await sendEmail(template)
+    return result
+  } catch (error) {
     console.error('Failed to send market alert:', error)
     throw error
   }
-
-  return result
 }
 
 // Batch send for weekly digest
@@ -246,22 +330,11 @@ export async function sendBatchWeeklyDigest(
   subscribers: Array<{ email: string }>,
   data: WeeklyDigestData
 ) {
-  const resend = getResend()
-
   const emails = subscribers.map(sub => ({
     ...emailTemplates.weeklyDigest(sub.email, data),
   }))
 
-  // Resend batch API (up to 100 per request)
-  const results = []
-  for (let i = 0; i < emails.length; i += 100) {
-    const batch = emails.slice(i, i + 100)
-    const { data, error } = await resend.batch.send(batch)
-    if (error) {
-      console.error('Batch send error:', error)
-    }
-    results.push(data)
-  }
+  const results = await sendBatchEmails(emails)
 
   return results
 }
