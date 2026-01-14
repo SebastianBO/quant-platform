@@ -10,6 +10,7 @@ import { SnowflakeCard } from '@/components/scoring'
 import { WatchlistActions } from '@/components/WatchlistButton'
 import { EarningsAlertButton } from '@/components/EarningsAlertSignup'
 import { AskAIPopup } from '@/components/AskAIPopup'
+import { BrokerAffiliate } from '@/components/BrokerAffiliate'
 import {
   getBreadcrumbSchema,
   getArticleSchema,
@@ -509,6 +510,11 @@ export default async function StockPage({ params }: Props) {
             <WatchlistActions ticker={symbol} />
             <EarningsAlertButton ticker={symbol} />
           </div>
+        </div>
+
+        {/* Broker Affiliate - Trade CTA */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-4">
+          <BrokerAffiliate ticker={symbol} variant="inline" />
         </div>
 
         {/* Lician Score & Financial Snowflake Section */}

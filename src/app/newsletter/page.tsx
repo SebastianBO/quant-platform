@@ -4,7 +4,7 @@ import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { getBreadcrumbSchema, getFAQSchema, SITE_URL } from '@/lib/seo'
 import NewsletterSignup from '@/components/NewsletterSignup'
-import { Mail, TrendingUp, Brain, Zap, Clock, Users } from 'lucide-react'
+import { Mail, TrendingUp, Brain, Zap, Clock, Users, Star, Check, Bell, Shield } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Lician Daily - Free Stock Market Newsletter | AI-Powered Insights',
@@ -175,8 +175,101 @@ export default function NewsletterPage() {
           </div>
         </section>
 
-        {/* Sample Content */}
+        {/* Premium Tier */}
         <section className="py-16">
+          <div className="max-w-5xl mx-auto px-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-center mb-4">
+              Want Real-Time Alerts?
+            </h2>
+            <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+              Upgrade to Premium for instant notifications on insider trades, institutional flows, and market-moving events.
+            </p>
+
+            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              {/* Free Summary */}
+              <div className="bg-card border border-border rounded-2xl p-6">
+                <h3 className="text-xl font-bold mb-2">Free</h3>
+                <p className="text-muted-foreground text-sm mb-4">Weekly digest</p>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-500" />
+                    Weekly market summary
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-500" />
+                    Top gainers & losers
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-500" />
+                    AI stock picks
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-500" />
+                    Catalyst previews
+                  </li>
+                </ul>
+              </div>
+
+              {/* Premium */}
+              <div className="bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary rounded-2xl p-6 relative">
+                <div className="absolute -top-3 right-4">
+                  <span className="px-3 py-1 bg-primary text-primary-foreground text-xs font-medium rounded-full">
+                    Popular
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 mb-2">
+                  <Star className="w-5 h-5 text-yellow-500" />
+                  <h3 className="text-xl font-bold">Premium</h3>
+                </div>
+                <div className="mb-4">
+                  <span className="text-2xl font-bold">$9.99</span>
+                  <span className="text-muted-foreground">/month</span>
+                </div>
+                <ul className="space-y-2 text-sm mb-6">
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-500" />
+                    Everything in Free
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Bell className="w-4 h-4 text-orange-500" />
+                    <strong>Real-time insider trade alerts</strong>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Shield className="w-4 h-4 text-blue-500" />
+                    Institutional flow signals
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Zap className="w-4 h-4 text-yellow-500" />
+                    SEC 8-K filing alerts
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-500" />
+                    Custom watchlist alerts
+                  </li>
+                </ul>
+                <div className="flex gap-2">
+                  <Link
+                    href="/api/stripe/newsletter-checkout?plan=monthly"
+                    prefetch={false}
+                    className="flex-1 px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg transition-colors text-center text-sm"
+                  >
+                    Monthly
+                  </Link>
+                  <Link
+                    href="/api/stripe/newsletter-checkout?plan=annual"
+                    prefetch={false}
+                    className="flex-1 px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg transition-colors text-center text-sm"
+                  >
+                    Annual (Save 33%)
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Sample Content */}
+        <section className="py-16 bg-card/50">
           <div className="max-w-4xl mx-auto px-6">
             <h2 className="text-2xl md:text-3xl font-bold text-center mb-12">
               A Taste of What&apos;s Inside
