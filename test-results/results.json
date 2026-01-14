@@ -1,0 +1,835 @@
+{
+  "config": {
+    "configFile": "/Users/sebastianbenzianolsson/Developer/quant-platform/playwright.config.ts",
+    "rootDir": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 5
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "playwright-report"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results/results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/Users/sebastianbenzianolsson/Developer/quant-platform/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 5
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/sebastianbenzianolsson/Developer/quant-platform/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 5
+        },
+        "id": "mobile",
+        "name": "mobile",
+        "testDir": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.57.0",
+    "workers": 5,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "ai-chat.spec.ts",
+      "file": "ai-chat.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "AI Chat API Tests",
+          "file": "ai-chat.spec.ts",
+          "line": 22,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "Stock Quote Queries",
+              "file": "ai-chat.spec.ts",
+              "line": 23,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should get NVDA stock quote with correct data",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                            "line": 25,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": -1,
+                          "parallelIndex": -1,
+                          "status": "skipped",
+                          "duration": 0,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-14T21:33:33.089Z",
+                          "annotations": [
+                            {
+                              "type": "skip",
+                              "location": {
+                                "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                                "line": 25,
+                                "column": 10
+                              }
+                            }
+                          ],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "1f1ef7bcd9eb87d7ff46-e3eb23c3f56810054b23",
+                  "file": "ai-chat.spec.ts",
+                  "line": 25,
+                  "column": 10
+                },
+                {
+                  "title": "should get AAPL fundamentals from Supabase",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                            "line": 62,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": -1,
+                          "parallelIndex": -1,
+                          "status": "skipped",
+                          "duration": 0,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-14T21:33:33.090Z",
+                          "annotations": [
+                            {
+                              "type": "skip",
+                              "location": {
+                                "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                                "line": 62,
+                                "column": 10
+                              }
+                            }
+                          ],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "1f1ef7bcd9eb87d7ff46-c1c523796abd19a3312c",
+                  "file": "ai-chat.spec.ts",
+                  "line": 62,
+                  "column": 10
+                }
+              ]
+            },
+            {
+              "title": "Financial Statements Queries",
+              "file": "ai-chat.spec.ts",
+              "line": 85,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should get income statement data",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                            "line": 87,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": -1,
+                          "parallelIndex": -1,
+                          "status": "skipped",
+                          "duration": 0,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-14T21:33:33.090Z",
+                          "annotations": [
+                            {
+                              "type": "skip",
+                              "location": {
+                                "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                                "line": 87,
+                                "column": 10
+                              }
+                            }
+                          ],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "1f1ef7bcd9eb87d7ff46-872f5d04287f53c41910",
+                  "file": "ai-chat.spec.ts",
+                  "line": 87,
+                  "column": 10
+                }
+              ]
+            },
+            {
+              "title": "Search Queries",
+              "file": "ai-chat.spec.ts",
+              "line": 109,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should search for technology stocks",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                            "line": 111,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": -1,
+                          "parallelIndex": -1,
+                          "status": "skipped",
+                          "duration": 0,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-14T21:33:33.090Z",
+                          "annotations": [
+                            {
+                              "type": "skip",
+                              "location": {
+                                "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                                "line": 111,
+                                "column": 10
+                              }
+                            }
+                          ],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "1f1ef7bcd9eb87d7ff46-9b8c32022fdaa470fd5a",
+                  "file": "ai-chat.spec.ts",
+                  "line": 111,
+                  "column": 10
+                }
+              ]
+            },
+            {
+              "title": "Streaming Response",
+              "file": "ai-chat.spec.ts",
+              "line": 133,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should stream phases correctly (Dexter-style)",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                            "line": 135,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": -1,
+                          "parallelIndex": -1,
+                          "status": "skipped",
+                          "duration": 0,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-14T21:33:33.090Z",
+                          "annotations": [
+                            {
+                              "type": "skip",
+                              "location": {
+                                "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                                "line": 135,
+                                "column": 10
+                              }
+                            }
+                          ],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "1f1ef7bcd9eb87d7ff46-24769fa06cb746cb4842",
+                  "file": "ai-chat.spec.ts",
+                  "line": 135,
+                  "column": 10
+                }
+              ]
+            },
+            {
+              "title": "Tool Execution",
+              "file": "ai-chat.spec.ts",
+              "line": 169,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should execute getCompanyFundamentals tool correctly",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                            "line": 171,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": -1,
+                          "parallelIndex": -1,
+                          "status": "skipped",
+                          "duration": 0,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-14T21:33:33.090Z",
+                          "annotations": [
+                            {
+                              "type": "skip",
+                              "location": {
+                                "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                                "line": 171,
+                                "column": 10
+                              }
+                            }
+                          ],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "1f1ef7bcd9eb87d7ff46-7fc110ff9c1225b2adeb",
+                  "file": "ai-chat.spec.ts",
+                  "line": 171,
+                  "column": 10
+                },
+                {
+                  "title": "should auto-populate ticker args when missing",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                            "line": 195,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": -1,
+                          "parallelIndex": -1,
+                          "status": "skipped",
+                          "duration": 0,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-14T21:33:33.090Z",
+                          "annotations": [
+                            {
+                              "type": "skip",
+                              "location": {
+                                "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                                "line": 195,
+                                "column": 10
+                              }
+                            }
+                          ],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "1f1ef7bcd9eb87d7ff46-67982a0d256fcdabd897",
+                  "file": "ai-chat.spec.ts",
+                  "line": 195,
+                  "column": 10
+                }
+              ]
+            },
+            {
+              "title": "Error Handling",
+              "file": "ai-chat.spec.ts",
+              "line": 215,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should handle rate limits gracefully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 8211,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-14T21:33:33.772Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "1f1ef7bcd9eb87d7ff46-f299c8bbe5bbdf95b537",
+                  "file": "ai-chat.spec.ts",
+                  "line": 216,
+                  "column": 9
+                },
+                {
+                  "title": "should return remaining requests count",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 1,
+                          "parallelIndex": 3,
+                          "status": "passed",
+                          "duration": 19201,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-14T21:33:33.780Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "1f1ef7bcd9eb87d7ff46-1270286ef167c1658dfb",
+                  "file": "ai-chat.spec.ts",
+                  "line": 230,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Model Selection",
+              "file": "ai-chat.spec.ts",
+              "line": 248,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should return available models",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 4,
+                          "status": "passed",
+                          "duration": 782,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-14T21:33:33.813Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "1f1ef7bcd9eb87d7ff46-73ebc6712371b781061c",
+                  "file": "ai-chat.spec.ts",
+                  "line": 249,
+                  "column": 9
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "AI Chat UI Tests",
+          "file": "ai-chat.spec.ts",
+          "line": 262,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should submit query through UI and get response",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5949,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-14T21:33:33.805Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/sebastianbenzianolsson/Developer/quant-platform/test-results/ai-chat-AI-Chat-UI-Tests-s-9e573-through-UI-and-get-response-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f1ef7bcd9eb87d7ff46-a3362130f5dede26e5ef",
+              "file": "ai-chat.spec.ts",
+              "line": 263,
+              "column": 7
+            },
+            {
+              "title": "should show model selector",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 869,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-14T21:33:33.808Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/sebastianbenzianolsson/Developer/quant-platform/test-results/ai-chat-AI-Chat-UI-Tests-should-show-model-selector-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f1ef7bcd9eb87d7ff46-d8186f21bca44ed54547",
+              "file": "ai-chat.spec.ts",
+              "line": 284,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "title": "Search API Tests",
+          "file": "ai-chat.spec.ts",
+          "line": 295,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should search using Supabase company_fundamentals",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 1688,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-14T21:33:34.610Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f1ef7bcd9eb87d7ff46-623a899f84eac83f2a23",
+              "file": "ai-chat.spec.ts",
+              "line": 296,
+              "column": 7
+            },
+            {
+              "title": "should return company details with search",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 1182,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-14T21:33:35.186Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f1ef7bcd9eb87d7ff46-a00f771a3d4ce98abdf8",
+              "file": "ai-chat.spec.ts",
+              "line": 312,
+              "column": 7
+            }
+          ]
+        },
+        {
+          "title": "Financial Metrics API Tests",
+          "file": "ai-chat.spec.ts",
+          "line": 330,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should return financial metrics for AAPL",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 650,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-14T21:33:36.305Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f1ef7bcd9eb87d7ff46-ef9a5f6514730efa4909",
+              "file": "ai-chat.spec.ts",
+              "line": 331,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-01-14T21:33:33.067Z",
+    "duration": 19983.505,
+    "expected": 8,
+    "skipped": 7,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

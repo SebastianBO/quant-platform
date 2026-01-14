@@ -5,8 +5,11 @@
       "args": ["-y", "@anthropic/mcp-playwright"]
     },
     "stripe": {
-      "type": "http",
-      "url": "https://mcp.stripe.com"
+      "command": "npx",
+      "args": ["-y", "@stripe/agent-toolkit", "mcp"],
+      "env": {
+        "STRIPE_SECRET_KEY": "${STRIPE_SECRET_KEY}"
+      }
     }
   }
 }
