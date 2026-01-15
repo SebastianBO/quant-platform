@@ -44,6 +44,7 @@ import { cn } from "@/lib/utils"
 import { createClient } from "@/lib/supabase-browser"
 import StockLogo from "@/components/StockLogo"
 import { parseTickerSymbolsWithMarkdown } from "@/lib/parseTickerSymbols"
+import { ScrollIndicator } from "@/components/ScrollIndicator"
 
 // Sidebar navigation - main tools
 const SIDEBAR_TOP = [
@@ -1115,8 +1116,13 @@ export default function ManusStyleHome() {
                     )}
                   </div>
 
+                  {/* Scroll indicator - animated arrow to features */}
+                  <div className="flex justify-center mt-6 md:mt-8">
+                    <ScrollIndicator targetId="features" label="Discover more" />
+                  </div>
+
                   {/* Popular Analysis - SEO Internal Links */}
-                  <div className="w-full max-w-3xl mx-auto mt-8 md:mt-12 space-y-6 md:space-y-8">
+                  <div id="features" className="w-full max-w-3xl mx-auto mt-8 md:mt-12 space-y-6 md:space-y-8">
                     {/* Popular Stock Analysis */}
                     <div>
                       <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-center">Popular Stock Analysis</h2>

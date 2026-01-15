@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { ThemeProvider } from "@/components/theme-provider"
 import { PostHogProvider, PostHogPageView } from "@/components/PostHogProvider"
 import GlobalChat from "@/components/GlobalChat"
+import { MobileTabBar } from "@/components/MobileTabBar"
 import { getOrganizationSchema, getWebSiteSchema } from "@/lib/seo"
 import "./globals.css"
 
@@ -227,6 +228,7 @@ export default function RootLayout({
           >
             {children}
             <GlobalChat />
+            <MobileTabBar />
           </ThemeProvider>
           <Analytics />
         </PostHogProvider>
