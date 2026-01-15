@@ -542,10 +542,10 @@ export default function ManusStyleHome() {
 
   return (
     <div className="flex h-screen bg-background overflow-hidden">
-      {/* Left Sidebar */}
+      {/* Left Sidebar - Hidden on mobile */}
       <aside
         className={cn(
-          "flex flex-col py-4 border-r border-border bg-card/50 transition-all duration-200",
+          "hidden md:flex flex-col py-4 border-r border-border bg-card/50 transition-all duration-200",
           sidebarExpanded ? "w-52" : "w-14"
         )}
         onMouseEnter={() => setSidebarExpanded(true)}
@@ -609,16 +609,20 @@ export default function ManusStyleHome() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden">
         {/* Top bar */}
-        <header className="flex items-center justify-between px-6 py-3 border-b border-border flex-shrink-0">
+        <header className="flex items-center justify-between px-4 md:px-6 py-3 border-b border-border flex-shrink-0 safe-area-top">
           <div className="flex items-center gap-2">
+            {/* Mobile: Show logo + brand, Desktop: Just brand name */}
+            <div className="md:hidden w-8 h-8 bg-foreground rounded-lg flex items-center justify-center">
+              <span className="text-background font-bold">L</span>
+            </div>
             <span className="font-semibold">Lician AI</span>
-            <ChevronDown className="w-4 h-4 text-muted-foreground" />
+            <ChevronDown className="w-4 h-4 text-muted-foreground hidden md:block" />
           </div>
 
-          <div className="flex items-center gap-4">
-            {/* Free plan / Start trial */}
+          <div className="flex items-center gap-2 md:gap-4">
+            {/* Free plan / Start trial - hidden on mobile */}
             {!loading && !user && (
-              <div className="flex items-center gap-2 text-sm">
+              <div className="hidden sm:flex items-center gap-2 text-sm">
                 <span className="text-muted-foreground">Free plan</span>
                 <span className="text-muted-foreground">|</span>
                 <Link href="/api/stripe/quick-checkout?plan=annual" prefetch={false} className="text-green-500 hover:text-green-400 font-medium">
@@ -628,21 +632,21 @@ export default function ManusStyleHome() {
             )}
 
             {/* Credits */}
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-secondary/50 rounded-full">
+            <div className="flex items-center gap-1.5 md:gap-2 px-2 md:px-3 py-1.5 bg-secondary/50 rounded-full">
               <Zap className="w-4 h-4 text-yellow-500" />
               <span className="text-sm font-medium">{credits}</span>
             </div>
 
-            {/* Share credits */}
+            {/* Share credits - hidden on mobile */}
             <button
-              className="p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors"
+              className="hidden md:block p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors"
               title="Invite friends for free credits"
             >
               <Gift className="w-5 h-5" />
             </button>
 
-            {/* Notifications */}
-            <button className="p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors">
+            {/* Notifications - hidden on mobile */}
+            <button className="hidden md:block p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors">
               <Bell className="w-5 h-5" />
             </button>
 
@@ -672,8 +676,8 @@ export default function ManusStyleHome() {
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Messages area - scrollable */}
           {hasMessages && (
-            <div className="flex-1 overflow-y-auto px-6 py-6">
-              <div className="max-w-2xl mx-auto space-y-6">
+            <div className="flex-1 overflow-y-auto px-4 md:px-6 py-4 md:py-6 pb-32 md:pb-6">
+              <div className="max-w-2xl mx-auto space-y-4 md:space-y-6">
                 {messages.map((message) => (
                   <div
                     key={message.id}
@@ -745,12 +749,14 @@ export default function ManusStyleHome() {
 
           {/* Centered input area */}
           <div className={cn(
-            "flex flex-col items-center px-6 py-8",
-            hasMessages ? "border-t border-border" : "flex-1 justify-center"
+            "flex flex-col items-center px-4 md:px-6 py-4 md:py-8",
+            hasMessages
+              ? "fixed bottom-0 left-0 right-0 md:relative md:bottom-auto bg-background border-t border-border safe-area-bottom z-40"
+              : "flex-1 justify-center"
           )}>
             {/* Heading - only show when no messages */}
             {!hasMessages && (
-              <h1 className="text-4xl md:text-5xl font-semibold text-center mb-10">
+              <h1 className="text-3xl md:text-5xl font-semibold text-center mb-6 md:mb-10 px-4">
                 What can I do for you?
               </h1>
             )}
@@ -789,26 +795,39 @@ export default function ManusStyleHome() {
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Ask about any stock, market trends, or financial analysis..."
-                  className="w-full min-h-[80px] max-h-[150px] py-4 px-5 pb-14 pr-14 text-lg bg-transparent border-none resize-none focus:outline-none placeholder:text-muted-foreground"
+                  placeholder={hasMessages ? "Ask a follow-up..." : "Ask about any stock, market trends, or financial analysis..."}
+                  className={cn(
+                    "w-full py-3 md:py-4 px-4 md:px-5 pr-14 bg-transparent border-none resize-none focus:outline-none placeholder:text-muted-foreground",
+                    hasMessages
+                      ? "min-h-[52px] max-h-[100px] pb-3 text-base"
+                      : "min-h-[80px] max-h-[150px] pb-14 text-lg"
+                  )}
                   disabled={isLoading}
                   rows={1}
                 />
 
-                {/* Bottom toolbar */}
-                <div className="absolute left-3 bottom-3 flex items-center gap-1">
-                  {/* File attachment button */}
+                {/* Bottom toolbar - simplified on mobile when chatting */}
+                <div className={cn(
+                  "flex items-center gap-1",
+                  hasMessages
+                    ? "absolute right-14 bottom-2"
+                    : "absolute left-3 bottom-3"
+                )}>
+                  {/* File attachment button - hidden on mobile when chatting */}
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors"
+                    className={cn(
+                      "p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors",
+                      hasMessages && "hidden md:block"
+                    )}
                     title="Attach PDF or document"
                     aria-label="Attach PDF or document"
                   >
                     <Paperclip className="w-5 h-5" />
                   </button>
 
-                  {/* Model selector */}
-                  <div className="relative">
+                  {/* Model selector - hidden on mobile when chatting */}
+                  <div className={cn("relative", hasMessages && "hidden md:block")}>
                     <button
                       onClick={() => setShowModelSelector(!showModelSelector)}
                       className="flex items-center gap-1.5 px-2.5 py-1.5 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors text-sm"
@@ -892,7 +911,10 @@ export default function ManusStyleHome() {
                   onClick={handleSubmit}
                   disabled={isLoading || (!inputValue.trim() && !attachedFile)}
                   className={cn(
-                    "absolute right-4 bottom-4 w-9 h-9 rounded-xl flex items-center justify-center transition-colors",
+                    "absolute w-9 h-9 rounded-xl flex items-center justify-center transition-colors",
+                    hasMessages
+                      ? "right-3 bottom-2"
+                      : "right-4 bottom-4",
                     (inputValue.trim() || attachedFile) && !isLoading
                       ? "bg-green-600 hover:bg-green-500 text-white"
                       : "bg-secondary text-muted-foreground"
@@ -909,16 +931,16 @@ export default function ManusStyleHome() {
               {/* Tool buttons - only show when no messages */}
               {!hasMessages && (
                 <>
-                  {/* Financial tool buttons */}
-                  <div className="flex flex-wrap items-center justify-center gap-3 mt-4">
+                  {/* Financial tool buttons - scrollable on mobile */}
+                  <div className="flex items-center gap-2 md:gap-3 mt-4 overflow-x-auto pb-2 md:overflow-visible md:flex-wrap md:justify-center scrollbar-hide">
                     {FINANCIAL_TOOLS.map((tool) => (
-                      <div key={tool.id} className="relative">
+                      <div key={tool.id} className="relative flex-shrink-0">
                         <button
                           onClick={() => handleToolClick(tool)}
                           className={cn(
-                            "flex items-center gap-2 px-4 py-2.5 rounded-full",
+                            "flex items-center gap-2 px-3 md:px-4 py-2 md:py-2.5 rounded-full",
                             "border border-border bg-card hover:bg-secondary",
-                            "text-sm font-medium transition-colors"
+                            "text-sm font-medium transition-colors whitespace-nowrap"
                           )}
                         >
                           <tool.icon className="w-4 h-4" />
@@ -948,10 +970,11 @@ export default function ManusStyleHome() {
                   {/* Tool integration hint with stock logos - fixed height to prevent CLS */}
                   <div className="flex items-center justify-between px-2 py-4 text-sm text-muted-foreground h-14">
                     <div className="flex items-center gap-2">
-                      <Wallet className="w-4 h-4" />
-                      <span>Connect your portfolio for personalized insights</span>
+                      <Wallet className="w-4 h-4 flex-shrink-0" />
+                      <span className="hidden sm:inline">Connect your portfolio for personalized insights</span>
+                      <span className="sm:hidden">Connect portfolio</span>
                     </div>
-                    <div className="flex items-center gap-1 w-[104px]">
+                    <div className="flex items-center gap-1 w-[104px] flex-shrink-0">
                       {movers.length > 0 ? (
                         movers.slice(0, 4).map((mover) => (
                           <Link
@@ -973,18 +996,18 @@ export default function ManusStyleHome() {
                   </div>
 
                   {/* Manus-style bottom carousel - fixed height container to prevent CLS */}
-                  <div className="w-full max-w-2xl mx-auto mt-8 min-h-[180px]">
+                  <div className="w-full max-w-2xl mx-auto mt-6 md:mt-8 min-h-[160px] md:min-h-[180px]">
                     {!carouselDismissed && (
                       <div className="relative">
                         <div
                           onClick={() => handleCarouselClick(CAROUSEL_SLIDES[carouselIndex])}
-                          className="bg-card/80 border border-border rounded-2xl p-5 cursor-pointer hover:bg-card transition-colors group"
+                          className="bg-card/80 border border-border rounded-2xl p-4 md:p-5 cursor-pointer hover:bg-card transition-colors group"
                         >
-                          <div className="flex items-start justify-between gap-6">
+                          <div className="flex items-start justify-between gap-4 md:gap-6">
                             {/* Left content */}
-                            <div className="flex-1">
+                            <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 mb-2">
-                                <h2 className="font-semibold text-lg">{CAROUSEL_SLIDES[carouselIndex].title}</h2>
+                                <h2 className="font-semibold text-base md:text-lg truncate">{CAROUSEL_SLIDES[carouselIndex].title}</h2>
                                 <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
                               </div>
                               <p className="text-sm text-muted-foreground mb-4">
@@ -1093,16 +1116,16 @@ export default function ManusStyleHome() {
                   </div>
 
                   {/* Popular Analysis - SEO Internal Links */}
-                  <div className="w-full max-w-3xl mx-auto mt-12 space-y-8">
+                  <div className="w-full max-w-3xl mx-auto mt-8 md:mt-12 space-y-6 md:space-y-8">
                     {/* Popular Stock Analysis */}
                     <div>
-                      <h2 className="text-lg font-semibold mb-4 text-center">Popular Stock Analysis</h2>
-                      <div className="flex flex-wrap justify-center gap-2">
+                      <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-center">Popular Stock Analysis</h2>
+                      <div className="flex overflow-x-auto md:overflow-visible md:flex-wrap md:justify-center gap-2 pb-2 scrollbar-hide">
                         {['AAPL', 'MSFT', 'NVDA', 'TSLA', 'GOOGL', 'META', 'AMZN', 'AMD'].map((ticker) => (
                           <Link
                             key={ticker}
                             href={`/stock/${ticker.toLowerCase()}`}
-                            className="px-4 py-2 bg-card border border-border rounded-lg hover:border-green-500/50 hover:bg-secondary transition-all text-sm font-medium"
+                            className="px-3 md:px-4 py-2 bg-card border border-border rounded-lg hover:border-green-500/50 hover:bg-secondary transition-all text-sm font-medium flex-shrink-0"
                           >
                             {ticker}
                           </Link>
@@ -1112,13 +1135,13 @@ export default function ManusStyleHome() {
 
                     {/* Price Predictions */}
                     <div>
-                      <h2 className="text-lg font-semibold mb-4 text-center">Stock Price Predictions 2026</h2>
-                      <div className="flex flex-wrap justify-center gap-2">
+                      <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-center">Stock Price Predictions 2026</h2>
+                      <div className="flex overflow-x-auto md:overflow-visible md:flex-wrap md:justify-center gap-2 pb-2 scrollbar-hide">
                         {['AAPL', 'MSFT', 'NVDA', 'TSLA', 'GOOGL', 'META', 'AMZN', 'AMD'].map((ticker) => (
                           <Link
                             key={ticker}
                             href={`/prediction/${ticker.toLowerCase()}`}
-                            className="px-4 py-2 bg-card border border-border rounded-lg hover:border-green-500/50 hover:bg-secondary transition-all text-sm"
+                            className="px-3 md:px-4 py-2 bg-card border border-border rounded-lg hover:border-green-500/50 hover:bg-secondary transition-all text-sm whitespace-nowrap flex-shrink-0"
                           >
                             {ticker} Prediction
                           </Link>
@@ -1128,8 +1151,8 @@ export default function ManusStyleHome() {
 
                     {/* Popular Comparisons */}
                     <div>
-                      <h2 className="text-lg font-semibold mb-4 text-center">Compare Stocks</h2>
-                      <div className="flex flex-wrap justify-center gap-2">
+                      <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-center">Compare Stocks</h2>
+                      <div className="flex overflow-x-auto md:overflow-visible md:flex-wrap md:justify-center gap-2 pb-2 scrollbar-hide">
                         {[
                           { slug: 'aapl-vs-msft', label: 'AAPL vs MSFT' },
                           { slug: 'nvda-vs-amd', label: 'NVDA vs AMD' },
@@ -1141,7 +1164,7 @@ export default function ManusStyleHome() {
                           <Link
                             key={pair.slug}
                             href={`/compare/${pair.slug}`}
-                            className="px-4 py-2 bg-card border border-border rounded-lg hover:border-green-500/50 hover:bg-secondary transition-all text-sm"
+                            className="px-3 md:px-4 py-2 bg-card border border-border rounded-lg hover:border-green-500/50 hover:bg-secondary transition-all text-sm whitespace-nowrap flex-shrink-0"
                           >
                             {pair.label}
                           </Link>
@@ -1151,13 +1174,13 @@ export default function ManusStyleHome() {
 
                     {/* Should I Buy */}
                     <div>
-                      <h2 className="text-lg font-semibold mb-4 text-center">Investment Decisions</h2>
-                      <div className="flex flex-wrap justify-center gap-2">
+                      <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-center">Investment Decisions</h2>
+                      <div className="flex overflow-x-auto md:overflow-visible md:flex-wrap md:justify-center gap-2 pb-2 scrollbar-hide">
                         {['AAPL', 'MSFT', 'NVDA', 'TSLA', 'GOOGL', 'META'].map((ticker) => (
                           <Link
                             key={ticker}
                             href={`/should-i-buy/${ticker.toLowerCase()}`}
-                            className="px-4 py-2 bg-card border border-border rounded-lg hover:border-green-500/50 hover:bg-secondary transition-all text-sm"
+                            className="px-3 md:px-4 py-2 bg-card border border-border rounded-lg hover:border-green-500/50 hover:bg-secondary transition-all text-sm whitespace-nowrap flex-shrink-0"
                           >
                             Should I Buy {ticker}?
                           </Link>
@@ -1167,8 +1190,8 @@ export default function ManusStyleHome() {
 
                     {/* Sectors */}
                     <div>
-                      <h2 className="text-lg font-semibold mb-4 text-center">Browse by Sector</h2>
-                      <div className="flex flex-wrap justify-center gap-2">
+                      <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-center">Browse by Sector</h2>
+                      <div className="flex overflow-x-auto md:overflow-visible md:flex-wrap md:justify-center gap-2 pb-2 scrollbar-hide">
                         {[
                           { slug: 'technology', label: 'Technology' },
                           { slug: 'healthcare', label: 'Healthcare' },
@@ -1180,7 +1203,7 @@ export default function ManusStyleHome() {
                           <Link
                             key={sector.slug}
                             href={`/sectors/${sector.slug}`}
-                            className="px-4 py-2 bg-green-600/20 text-green-500 border border-green-500/30 rounded-lg hover:bg-green-600/30 transition-all text-sm"
+                            className="px-3 md:px-4 py-2 bg-green-600/20 text-green-500 border border-green-500/30 rounded-lg hover:bg-green-600/30 transition-all text-sm whitespace-nowrap flex-shrink-0"
                           >
                             {sector.label}
                           </Link>

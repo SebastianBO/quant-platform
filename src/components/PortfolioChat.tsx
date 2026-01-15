@@ -94,7 +94,7 @@ export default function PortfolioChat({ portfolioContext }: PortfolioChatProps) 
     return (
       <Button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-green-600 hover:bg-green-500 shadow-lg z-50"
+        className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-green-600 hover:bg-green-500 shadow-lg z-50 hidden md:flex"
         size="icon"
       >
         <MessageCircle className="h-6 w-6" />
@@ -105,7 +105,7 @@ export default function PortfolioChat({ portfolioContext }: PortfolioChatProps) 
   // Show upgrade prompt for non-premium users
   if (!isPremiumLoading && !isPremium) {
     return (
-      <Card className="fixed z-50 shadow-2xl border-primary/30 bg-card bottom-6 right-6 w-96 h-auto">
+      <Card className="fixed z-50 shadow-2xl border-primary/30 bg-card bottom-6 right-6 w-96 h-auto hidden md:block">
         <CardHeader className="py-3 px-4 border-b border-border flex flex-row items-center justify-between space-y-0">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
@@ -146,7 +146,7 @@ export default function PortfolioChat({ portfolioContext }: PortfolioChatProps) 
   }
 
   return (
-    <Card className={`fixed z-50 shadow-2xl border-green-500/30 bg-card transition-all duration-300 ${
+    <Card className={`fixed z-50 shadow-2xl border-green-500/30 bg-card transition-all duration-300 hidden md:block ${
       isMinimized
         ? "bottom-6 right-6 w-80 h-14"
         : "bottom-6 right-6 w-96 h-[500px] max-h-[80vh]"
