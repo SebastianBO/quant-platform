@@ -1333,14 +1333,14 @@ export default function ManusStyleHome() {
             </div>
             <div className="space-y-3">
               <Link
-                href="/auth/login"
+                href="/login"
                 onClick={() => trackCTAClick('sign_in', 'auth_modal')}
                 className="w-full block text-center py-3 px-4 bg-green-600 hover:bg-green-500 text-white rounded-lg font-medium transition-colors"
               >
                 Sign in
               </Link>
               <Link
-                href="/auth/signup"
+                href="/login?signup=true"
                 onClick={() => trackCTAClick('create_account', 'auth_modal')}
                 className="w-full block text-center py-3 px-4 bg-secondary hover:bg-secondary/80 text-foreground rounded-lg font-medium transition-colors"
               >

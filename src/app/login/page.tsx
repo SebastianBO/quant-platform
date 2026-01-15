@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase-browser"
 import { Button } from "@/components/ui/button"
@@ -10,6 +10,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 
 export default function LoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const supabase = createClient()
 
   const [email, setEmail] = useState("")
@@ -18,6 +19,13 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   const [mode, setMode] = useState<"login" | "signup" | "magic">("login")
   const [message, setMessage] = useState<string | null>(null)
+
+  // Check for signup query param
+  useEffect(() => {
+    if (searchParams.get('signup') === 'true') {
+      setMode('signup')
+    }
+  }, [searchParams])
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault()
