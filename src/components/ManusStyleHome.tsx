@@ -44,6 +44,7 @@ import { cn } from "@/lib/utils"
 import { createClient } from "@/lib/supabase-browser"
 import StockLogo from "@/components/StockLogo"
 import { parseTickerSymbolsWithMarkdown } from "@/lib/parseTickerSymbols"
+import { renderToolResult, type ToolResult as GenToolResult } from "@/components/chat/GenerativeUI"
 import { ScrollIndicator } from "@/components/ScrollIndicator"
 import { ClaudeChatInput } from "@/components/ui/claude-style-chat-input"
 import { StockSearchCommand } from "@/components/StockSearchCommand"
@@ -156,10 +157,18 @@ interface Mover {
   changePercent: number
 }
 
+interface ToolResult {
+  toolName: string
+  args: Record<string, unknown>
+  result: unknown
+  status: 'pending' | 'success' | 'error'
+}
+
 interface Message {
   id: string
   role: 'user' | 'assistant'
   content: string
+  toolResults?: ToolResult[]
 }
 
 interface Task {
@@ -478,6 +487,25 @@ export default function ManusStyleHome() {
                       t.id === event.data.task?.id ? { ...t, status: 'completed' } : t
                     )
                   )
+                  // Capture tool results for UI rendering
+                  if (event.data.result?.toolResults) {
+                    const toolResults = event.data.result.toolResults.map((tr: { tool: string; result: unknown }) => ({
+                      toolName: tr.tool,
+                      args: {},
+                      result: tr.result,
+                      status: 'success' as const
+                    }))
+                    setMessages(prev => {
+                      const existing = prev.find(m => m.id === assistantId)
+                      if (existing) {
+                        const existingToolResults = existing.toolResults || []
+                        return prev.map(m =>
+                          m.id === assistantId ? { ...m, toolResults: [...existingToolResults, ...toolResults] } : m
+                        )
+                      }
+                      return [...prev, { id: assistantId, role: 'assistant', content: '', toolResults }]
+                    })
+                  }
                   break
 
                 case 'answer-chunk':
@@ -489,7 +517,7 @@ export default function ManusStyleHome() {
                         m.id === assistantId ? { ...m, content: answerContent } : m
                       )
                     }
-                    return [...prev, { id: assistantId, role: 'assistant', content: answerContent }]
+                    return [...prev, { id: assistantId, role: 'assistant', content: answerContent, toolResults: [] }]
                   })
                   break
 
@@ -699,6 +727,25 @@ export default function ManusStyleHome() {
                       t.id === event.data.task?.id ? { ...t, status: 'completed' } : t
                     )
                   )
+                  // Capture tool results for UI rendering
+                  if (event.data.result?.toolResults) {
+                    const toolResults = event.data.result.toolResults.map((tr: { tool: string; result: unknown }) => ({
+                      toolName: tr.tool,
+                      args: {},
+                      result: tr.result,
+                      status: 'success' as const
+                    }))
+                    setMessages(prev => {
+                      const existing = prev.find(m => m.id === assistantId)
+                      if (existing) {
+                        const existingToolResults = existing.toolResults || []
+                        return prev.map(m =>
+                          m.id === assistantId ? { ...m, toolResults: [...existingToolResults, ...toolResults] } : m
+                        )
+                      }
+                      return [...prev, { id: assistantId, role: 'assistant' as const, content: '', toolResults }]
+                    })
+                  }
                   break
 
                 case 'answer-chunk':
@@ -710,7 +757,7 @@ export default function ManusStyleHome() {
                         m.id === assistantId ? { ...m, content: answerContent } : m
                       )
                     } else {
-                      return [...prev, { id: assistantId, role: 'assistant' as const, content: answerContent }]
+                      return [...prev, { id: assistantId, role: 'assistant' as const, content: answerContent, toolResults: [] }]
                     }
                   })
                   break
@@ -920,6 +967,15 @@ export default function ManusStyleHome() {
                           : message.content
                         }
                       </div>
+                      {/* Render Generative UI components from tool results */}
+                      {message.role === 'assistant' && message.toolResults && message.toolResults.length > 0 && (
+                        <div className="mt-3 space-y-2">
+                          {message.toolResults.map((tr, idx) => {
+                            const rendered = renderToolResult(tr as GenToolResult)
+                            return rendered ? <div key={`${tr.toolName}-${idx}`}>{rendered}</div> : null
+                          })}
+                        </div>
+                      )}
                       {message.role === 'assistant' && message.content && (
                         <button
                           onClick={() => copyToClipboard(message.content, message.id)}
