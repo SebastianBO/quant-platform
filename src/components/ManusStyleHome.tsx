@@ -352,8 +352,9 @@ export default function ManusStyleHome() {
     // Check if user has premium (allow 3 free queries for non-premium)
     const freeQueries = parseInt(localStorage.getItem(`free_queries_${user.id}`) || '0', 10)
     if (!isPremium && freeQueries >= 3) {
-      setShowPaymentPrompt(true)
       trackUpgradePrompt('free_queries_exhausted')
+      // Direct to Stripe checkout
+      router.push('/api/stripe/quick-checkout?plan=annual')
       return
     }
 
@@ -798,10 +799,10 @@ export default function ManusStyleHome() {
                   onKeyDown={handleKeyDown}
                   placeholder={hasMessages ? "Ask a follow-up..." : "Ask about any stock, market trends, or financial analysis..."}
                   className={cn(
-                    "w-full py-3 md:py-4 px-4 md:px-5 pr-14 bg-transparent border-none resize-none focus:outline-none placeholder:text-muted-foreground",
+                    "w-full py-4 md:py-5 px-4 md:px-5 pr-14 bg-transparent border-none resize-none focus:outline-none placeholder:text-muted-foreground text-base md:text-lg",
                     hasMessages
-                      ? "min-h-[52px] max-h-[100px] pb-3 text-base"
-                      : "min-h-[80px] max-h-[150px] pb-14 text-lg"
+                      ? "min-h-[60px] max-h-[120px] pb-3"
+                      : "min-h-[120px] max-h-[200px] pb-16"
                   )}
                   disabled={isLoading}
                   rows={1}
@@ -1303,7 +1304,7 @@ export default function ManusStyleHome() {
             <div className="bg-secondary/50 rounded-xl p-4 mb-6">
               <div className="flex items-center justify-between mb-2">
                 <span className="font-medium">Lician Pro</span>
-                <span className="text-green-500 font-bold">$58/mo</span>
+                <span className="text-green-500 font-bold">$109/mo</span>
               </div>
               <ul className="text-sm text-muted-foreground space-y-1">
                 <li>Unlimited AI queries</li>
@@ -1317,7 +1318,7 @@ export default function ManusStyleHome() {
               prefetch={false}
               onClick={() => {
                 trackCTAClick('start_trial', 'payment_modal')
-                trackBeginCheckout('annual', 58)
+                trackBeginCheckout('annual', 109)
               }}
               className="w-full block text-center py-3 px-4 bg-green-600 hover:bg-green-500 text-white rounded-lg font-medium transition-colors"
             >
