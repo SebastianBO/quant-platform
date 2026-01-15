@@ -45,6 +45,7 @@ import { createClient } from "@/lib/supabase-browser"
 import StockLogo from "@/components/StockLogo"
 import { parseTickerSymbolsWithMarkdown } from "@/lib/parseTickerSymbols"
 import { ScrollIndicator } from "@/components/ScrollIndicator"
+import { ClaudeChatInput } from "@/components/ui/claude-style-chat-input"
 
 // Sidebar navigation - main tools
 const SIDEBAR_TOP = [
@@ -136,14 +137,14 @@ const SAMPLE_PROMPTS = [
 // AI Models - Must match /api/chat/autonomous AVAILABLE_MODELS
 const MODELS = [
   // Fast (default)
-  { key: 'gemini-flash', name: 'Gemini Flash', tier: 'fast' },
+  { id: 'gemini-flash', key: 'gemini-flash', name: 'Gemini Flash', description: 'Fastest responses', tier: 'fast' as const },
   // Standard
-  { key: 'gpt-4o-mini', name: 'GPT-4o Mini', tier: 'standard' },
-  { key: 'claude-3-5-sonnet', name: 'Claude 3.5 Sonnet', tier: 'standard' },
-  { key: 'llama-3.3-70b', name: 'Llama 3.3 70B', tier: 'standard' },
+  { id: 'gpt-4o-mini', key: 'gpt-4o-mini', name: 'GPT-4o Mini', description: 'Great for everyday tasks', tier: 'standard' as const },
+  { id: 'claude-3-5-sonnet', key: 'claude-3-5-sonnet', name: 'Claude 3.5 Sonnet', description: 'Balanced performance', tier: 'standard' as const },
+  { id: 'llama-3.3-70b', key: 'llama-3.3-70b', name: 'Llama 3.3 70B', description: 'Open source power', tier: 'standard' as const },
   // Premium (requires subscription)
-  { key: 'gpt-4o', name: 'GPT-4o', tier: 'premium' },
-  { key: 'claude-sonnet-4', name: 'Claude Sonnet 4', tier: 'premium' },
+  { id: 'gpt-4o', key: 'gpt-4o', name: 'GPT-4o', description: 'Most capable', tier: 'premium' as const },
+  { id: 'claude-sonnet-4', key: 'claude-sonnet-4', name: 'Claude Sonnet 4', description: 'Latest & greatest', tier: 'premium' as const },
 ]
 
 
@@ -540,6 +541,216 @@ export default function ManusStyleHome() {
     }
   }
 
+  // Handler for ClaudeChatInput component
+  const handleChatInputSubmit = async (data: {
+    message: string;
+    files: Array<{ id: string; file: File; type: string; preview: string | null; uploadStatus: string; content?: string }>;
+    pastedContent: Array<{ id: string; content: string; timestamp: Date }>;
+    model: string;
+  }) => {
+    if ((!data.message.trim() && data.files.length === 0 && data.pastedContent.length === 0) || isLoading) return
+
+    // Check if user is authenticated
+    if (!user) {
+      setShowAuthPrompt(true)
+      trackUpgradePrompt('auth_required')
+      return
+    }
+
+    // Check if user has premium (allow 3 free queries for non-premium)
+    const freeQueries = parseInt(localStorage.getItem(`free_queries_${user.id}`) || '0', 10)
+    if (!isPremium && freeQueries >= 3) {
+      trackUpgradePrompt('free_queries_exhausted')
+      router.push('/api/stripe/quick-checkout?plan=annual')
+      return
+    }
+
+    // Track free query usage for non-premium users
+    if (!isPremium) {
+      localStorage.setItem(`free_queries_${user.id}`, String(freeQueries + 1))
+    }
+
+    // Update selected model from the input
+    const newModel = MODELS.find(m => m.id === data.model) || MODELS[0]
+    setSelectedModel(newModel)
+
+    let queryContent = data.message.trim()
+    let fileContent = ""
+
+    // Add pasted content
+    if (data.pastedContent.length > 0) {
+      const pastedTexts = data.pastedContent.map(p => p.content).join('\n\n')
+      queryContent = queryContent
+        ? `${queryContent}\n\n--- Pasted Content ---\n${pastedTexts}\n--- End Pasted Content ---`
+        : `Please analyze the following:\n\n${pastedTexts}`
+    }
+
+    // Process file uploads
+    if (data.files.length > 0) {
+      setIsLoading(true)
+      setTasks([{ id: "upload", description: "Parsing uploaded documents...", status: "running" }])
+
+      try {
+        for (const fileItem of data.files) {
+          const formData = new FormData()
+          formData.append("file", fileItem.file)
+
+          const uploadRes = await fetch("/api/upload", {
+            method: "POST",
+            body: formData,
+          })
+
+          if (uploadRes.ok) {
+            const parsed = await uploadRes.json()
+            fileContent += `\n\n--- Document: ${parsed.filename} ---\n${parsed.content}\n--- End Document ---`
+          }
+        }
+        setTasks([{ id: "upload", description: "Documents parsed successfully", status: "completed" }])
+      } catch {
+        setTasks([{ id: "upload", description: "Failed to parse some documents", status: "completed" }])
+      }
+
+      queryContent = queryContent
+        ? `${queryContent}${fileContent}`
+        : `Please analyze the following documents:${fileContent}`
+    }
+
+    const displayContent = data.message.trim() ||
+      (data.files.length > 0 ? `Analyzing: ${data.files.map(f => f.file.name).join(', ')}` : 'Analyzing content...')
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: displayContent,
+    }
+
+    setMessages(prev => [...prev, userMessage])
+    setInputValue("")
+    setAttachedFile(null)
+    setIsLoading(true)
+
+    // Track AI query start
+    queryStartTime.current = Date.now()
+    trackAIQueryStart({
+      query: queryContent,
+      model: newModel.key,
+      model_tier: newModel.tier as 'fast' | 'standard' | 'premium',
+    })
+
+    const assistantId = (Date.now() + 1).toString()
+    let answerContent = ""
+
+    try {
+      const response = await fetch('/api/chat/autonomous', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: queryContent,
+          conversationHistory: messages.slice(-6).map(m => ({
+            role: m.role,
+            content: m.content,
+          })),
+          model: newModel.key,
+          stream: true,
+        }),
+      })
+
+      if (!response.ok) throw new Error('Request failed')
+
+      const reader = response.body?.getReader()
+      if (!reader) throw new Error('No reader')
+
+      const decoder = new TextDecoder()
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+
+        const text = decoder.decode(value)
+        const lines = text.split('\n')
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const lineData = line.slice(6)
+            if (lineData === '[DONE]') continue
+
+            try {
+              const event = JSON.parse(lineData)
+
+              switch (event.type) {
+                case 'plan':
+                  if (event.data?.tasks) {
+                    setTasks(event.data.tasks)
+                  }
+                  break
+
+                case 'task-start':
+                  setTasks(prev =>
+                    prev.map(t =>
+                      t.id === event.data.id ? { ...t, status: 'running' } : t
+                    )
+                  )
+                  break
+
+                case 'task-complete':
+                  setTasks(prev =>
+                    prev.map(t =>
+                      t.id === event.data.task?.id ? { ...t, status: 'completed' } : t
+                    )
+                  )
+                  break
+
+                case 'answer-chunk':
+                  answerContent += event.data as string
+                  setMessages(prev => {
+                    const existing = prev.find(m => m.id === assistantId)
+                    if (existing) {
+                      return prev.map(m =>
+                        m.id === assistantId ? { ...m, content: answerContent } : m
+                      )
+                    } else {
+                      return [...prev, { id: assistantId, role: 'assistant' as const, content: answerContent }]
+                    }
+                  })
+                  break
+              }
+            } catch {
+              // Skip invalid JSON
+            }
+          }
+        }
+      }
+
+      // Track completion
+      trackAIQueryComplete({
+        query: queryContent,
+        model: newModel.key,
+        model_tier: newModel.tier as 'fast' | 'standard' | 'premium',
+        response_time_ms: Date.now() - queryStartTime.current,
+        success: true,
+      })
+    } catch {
+      trackAIQueryComplete({
+        query: queryContent,
+        model: newModel.key,
+        model_tier: newModel.tier as 'fast' | 'standard' | 'premium',
+        response_time_ms: Date.now() - queryStartTime.current,
+        success: false,
+      })
+      setMessages(prev => [
+        ...prev,
+        {
+          id: assistantId,
+          role: 'assistant' as const,
+          content: "I apologize, but I encountered an error processing your request. Please try again.",
+        },
+      ])
+    } finally {
+      setIsLoading(false)
+      setTasks([])
+    }
+  }
+
   const hasMessages = messages.length > 0
 
   return (
@@ -555,8 +766,8 @@ export default function ManusStyleHome() {
       >
         {/* Logo - Lician brand */}
         <Link href="/" className="mb-6 flex items-center gap-3 px-3">
-          <div className="w-9 h-9 bg-foreground rounded-xl flex items-center justify-center flex-shrink-0">
-            <span className="text-background font-bold text-lg">L</span>
+          <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
+            <span className="text-white font-bold text-lg">L</span>
           </div>
           {sidebarExpanded && (
             <span className="font-semibold text-lg whitespace-nowrap">Lician</span>
@@ -614,8 +825,8 @@ export default function ManusStyleHome() {
         <header className="flex items-center justify-between px-4 md:px-6 py-3 border-b border-border flex-shrink-0 safe-area-top">
           <div className="flex items-center gap-2">
             {/* Mobile: Show logo + brand, Desktop: Just brand name */}
-            <div className="md:hidden w-8 h-8 bg-foreground rounded-lg flex items-center justify-center">
-              <span className="text-background font-bold">L</span>
+            <div className="md:hidden w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold">L</span>
             </div>
             <span className="font-semibold">Lician AI</span>
             <ChevronDown className="w-4 h-4 text-muted-foreground hidden md:block" />
@@ -763,172 +974,21 @@ export default function ManusStyleHome() {
               </h1>
             )}
 
-            {/* Chat input */}
+            {/* Chat input - Claude-style premium input */}
             <div className="w-full max-w-2xl">
-              {/* Hidden file input */}
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".pdf,.txt,.csv,.doc,.docx"
-                onChange={handleFileSelect}
-                className="hidden"
+              <ClaudeChatInput
+                onSendMessage={handleChatInputSubmit}
+                models={MODELS}
+                selectedModel={selectedModel.id}
+                onModelChange={(modelId) => {
+                  const model = MODELS.find(m => m.id === modelId)
+                  if (model) setSelectedModel(model)
+                }}
+                isPremium={isPremium}
+                onUpgradeClick={() => router.push('/api/stripe/quick-checkout?plan=monthly')}
+                placeholder={hasMessages ? "Ask a follow-up..." : "Ask about any stock, market trends, or financial analysis..."}
+                disabled={isLoading}
               />
-
-              {/* Attached file preview */}
-              {attachedFile && (
-                <div className="mb-2">
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-secondary/50 rounded-lg text-sm">
-                    <FileText className="w-4 h-4 text-muted-foreground" />
-                    <span className="truncate max-w-[200px]">{attachedFile.name}</span>
-                    <button
-                      onClick={() => setAttachedFile(null)}
-                      className="p-1.5 hover:bg-secondary rounded transition-colors min-w-[28px] min-h-[28px] flex items-center justify-center"
-                      aria-label="Remove attached file"
-                    >
-                      <X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              <div className="relative bg-card border border-border rounded-2xl shadow-lg focus-within:border-green-500/50 transition-all">
-                <textarea
-                  ref={textareaRef}
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder={hasMessages ? "Ask a follow-up..." : "Ask about any stock, market trends, or financial analysis..."}
-                  className={cn(
-                    "w-full py-4 md:py-5 px-4 md:px-5 pr-14 bg-transparent border-none resize-none focus:outline-none placeholder:text-muted-foreground text-base md:text-lg",
-                    hasMessages
-                      ? "min-h-[60px] max-h-[120px] pb-3"
-                      : "min-h-[120px] max-h-[200px] pb-16"
-                  )}
-                  disabled={isLoading}
-                  rows={1}
-                />
-
-                {/* Bottom toolbar - simplified on mobile when chatting */}
-                <div className={cn(
-                  "flex items-center gap-1",
-                  hasMessages
-                    ? "absolute right-14 bottom-2"
-                    : "absolute left-3 bottom-3"
-                )}>
-                  {/* File attachment button - hidden on mobile when chatting */}
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className={cn(
-                      "p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors",
-                      hasMessages && "hidden md:block"
-                    )}
-                    title="Attach PDF or document"
-                    aria-label="Attach PDF or document"
-                  >
-                    <Paperclip className="w-5 h-5" />
-                  </button>
-
-                  {/* Model selector - hidden on mobile when chatting */}
-                  <div className={cn("relative", hasMessages && "hidden md:block")}>
-                    <button
-                      onClick={() => setShowModelSelector(!showModelSelector)}
-                      className="flex items-center gap-1.5 px-2.5 py-1.5 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors text-sm"
-                      title="Select AI model"
-                      aria-label="Select AI model"
-                      aria-expanded={showModelSelector}
-                    >
-                      <Sparkles className="w-4 h-4" />
-                      <span className="hidden sm:inline">{selectedModel.name}</span>
-                      <ChevronDown className={cn("w-3.5 h-3.5 transition-transform", showModelSelector && "rotate-180")} />
-                    </button>
-
-                    {showModelSelector && (
-                      <div className="absolute bottom-full left-0 mb-2 w-56 bg-card border border-border rounded-xl shadow-xl py-2 z-50">
-                        {/* Fast */}
-                        <div className="px-3 py-1.5 text-xs font-medium text-muted-foreground uppercase">Fast</div>
-                        {MODELS.filter(m => m.tier === 'fast').map((model) => (
-                          <button
-                            key={model.key}
-                            onClick={() => {
-                              setSelectedModel(model)
-                              setShowModelSelector(false)
-                            }}
-                            className={cn(
-                              "w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors",
-                              selectedModel.key === model.key
-                                ? "bg-green-500/10 text-green-500"
-                                : "text-foreground hover:bg-secondary"
-                            )}
-                          >
-                            <Zap className="w-4 h-4 text-blue-500" />
-                            {model.name}
-                            {selectedModel.key === model.key && <Check className="w-4 h-4 ml-auto" />}
-                          </button>
-                        ))}
-                        {/* Standard */}
-                        <div className="px-3 py-1.5 text-xs font-medium text-muted-foreground uppercase mt-2 border-t border-border pt-2">Standard</div>
-                        {MODELS.filter(m => m.tier === 'standard').map((model) => (
-                          <button
-                            key={model.key}
-                            onClick={() => {
-                              setSelectedModel(model)
-                              setShowModelSelector(false)
-                            }}
-                            className={cn(
-                              "w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors",
-                              selectedModel.key === model.key
-                                ? "bg-green-500/10 text-green-500"
-                                : "text-foreground hover:bg-secondary"
-                            )}
-                          >
-                            <Sparkles className="w-4 h-4" />
-                            {model.name}
-                            {selectedModel.key === model.key && <Check className="w-4 h-4 ml-auto" />}
-                          </button>
-                        ))}
-                        {/* Premium */}
-                        <div className="px-3 py-1.5 text-xs font-medium text-muted-foreground uppercase mt-2 border-t border-border pt-2">Premium</div>
-                        {MODELS.filter(m => m.tier === 'premium').map((model) => (
-                          <button
-                            key={model.key}
-                            onClick={() => {
-                              setShowModelSelector(false)
-                              // Redirect to Stripe checkout for premium
-                              router.push('/api/stripe/quick-checkout?plan=monthly')
-                            }}
-                            className="w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors text-foreground hover:bg-secondary"
-                          >
-                            <Zap className="w-4 h-4 text-yellow-500" />
-                            {model.name}
-                            <span className="ml-auto text-xs text-yellow-500 bg-yellow-500/10 px-1.5 py-0.5 rounded">PRO</span>
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Submit button */}
-                <button
-                  onClick={handleSubmit}
-                  disabled={isLoading || (!inputValue.trim() && !attachedFile)}
-                  className={cn(
-                    "absolute w-9 h-9 rounded-xl flex items-center justify-center transition-colors",
-                    hasMessages
-                      ? "right-3 bottom-2"
-                      : "right-4 bottom-4",
-                    (inputValue.trim() || attachedFile) && !isLoading
-                      ? "bg-green-600 hover:bg-green-500 text-white"
-                      : "bg-secondary text-muted-foreground"
-                  )}
-                >
-                  {isLoading ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : (
-                    <ArrowUp className="w-5 h-5" />
-                  )}
-                </button>
-              </div>
 
               {/* Tool buttons - only show when no messages */}
               {!hasMessages && (
