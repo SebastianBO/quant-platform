@@ -262,6 +262,10 @@ interface ClaudeChatInputProps {
     placeholder?: string;
     disabled?: boolean;
     className?: string;
+    /** External value for controlled input - when this changes, internal message state updates */
+    value?: string;
+    /** Callback when internal message changes - for two-way binding */
+    onValueChange?: (value: string) => void;
 }
 
 export const ClaudeChatInput: React.FC<ClaudeChatInputProps> = ({
@@ -281,12 +285,30 @@ export const ClaudeChatInput: React.FC<ClaudeChatInputProps> = ({
     placeholder = "Ask about any stock, market trends, or financial analysis...",
     disabled = false,
     className = "",
+    value: externalValue,
+    onValueChange,
 }) => {
-    const [message, setMessage] = useState("");
+    const [internalMessage, setInternalMessage] = useState("");
     const [files, setFiles] = useState<AttachedFile[]>([]);
     const [pastedContent, setPastedContent] = useState<PastedContentItem[]>([]);
     const [isDragging, setIsDragging] = useState(false);
     const [internalSelectedModel, setInternalSelectedModel] = useState(models[0].id);
+
+    // Support controlled mode via external value prop
+    const message = externalValue !== undefined ? externalValue : internalMessage;
+    const setMessage = useCallback((val: string) => {
+        if (onValueChange) {
+            onValueChange(val);
+        }
+        setInternalMessage(val);
+    }, [onValueChange]);
+
+    // Sync external value to internal state when it changes
+    useEffect(() => {
+        if (externalValue !== undefined && externalValue !== internalMessage) {
+            setInternalMessage(externalValue);
+        }
+    }, [externalValue]);
 
     const selectedModelValue = externalSelectedModel || internalSelectedModel;
     const setSelectedModel = onModelChange || setInternalSelectedModel;
@@ -421,7 +443,9 @@ export const ClaudeChatInput: React.FC<ClaudeChatInputProps> = ({
                         <textarea
                             ref={textareaRef}
                             value={message}
-                            onChange={(e) => setMessage(e.target.value)}
+                            onChange={(e) => {
+                                setMessage(e.target.value);
+                            }}
                             onPaste={handlePaste}
                             onKeyDown={handleKeyDown}
                             placeholder={placeholder}

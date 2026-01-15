@@ -123,7 +123,8 @@
       "Bash(chmod:*)",
       "Bash(jq:*)",
       "Bash(# Test financial tool \\(direct implementation\\) echo ''{\"\"jsonrpc\"\":\"\"2.0\"\",\"\"id\"\":1,\"\"method\"\":\"\"tools/call\"\",\"\"params\"\":{\"\"name\"\":\"\"execute\"\",\"\"arguments\"\":{\"\"category\"\":\"\"financial\"\",\"\"tool\"\":\"\"search_stocks\"\",\"\"args\"\":{\"\"query\"\":\"\"Apple\"\",\"\"limit\"\":3}}}}'' | node /Users/sebastianbenzianolsson/Developer/claude-mcp-router/dist/index.js 2>&1 | tail -1 | jq ''.result.content[0].text'' -r | jq . || echo \"\"Raw output:\"\" && echo ''{\"\"jsonrpc\"\":\"\"2.0\"\",\"\"id\"\":1,\"\"method\"\":\"\"tools/call\"\",\"\"params\"\":{\"\"name\"\":\"\"execute\"\",\"\"arguments\"\":{\"\"category\"\":\"\"financial\"\",\"\"tool\"\":\"\"search_stocks\"\",\"\"args\"\":{\"\"query\"\":\"\"Apple\"\",\"\"limit\"\":3}}}}'' | node /Users/sebastianbenzianolsson/Developer/claude-mcp-router/dist/index.js 2>&1)",
-      "Bash(for f in /Users/sebastianbenzianolsson/Developer/globaltrial/CLAUDE.md /Users/sebastianbenzianolsson/Developer/horsecare-expo/CLAUDE.md /Users/sebastianbenzianolsson/Developer/claude-mcp-router/CLAUDE.md /Users/sebastianbenzianolsson/Developer/portfoliocare-expo/CLAUDE.md /Users/sebastianbenzianolsson/Developer/evolve/CLAUDE.md)"
+      "Bash(for f in /Users/sebastianbenzianolsson/Developer/globaltrial/CLAUDE.md /Users/sebastianbenzianolsson/Developer/horsecare-expo/CLAUDE.md /Users/sebastianbenzianolsson/Developer/claude-mcp-router/CLAUDE.md /Users/sebastianbenzianolsson/Developer/portfoliocare-expo/CLAUDE.md /Users/sebastianbenzianolsson/Developer/evolve/CLAUDE.md)",
+      "mcp__mcp-router__execute"
     ],
     "deny": [],
     "ask": []

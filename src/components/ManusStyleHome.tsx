@@ -46,6 +46,7 @@ import StockLogo from "@/components/StockLogo"
 import { parseTickerSymbolsWithMarkdown } from "@/lib/parseTickerSymbols"
 import { ScrollIndicator } from "@/components/ScrollIndicator"
 import { ClaudeChatInput } from "@/components/ui/claude-style-chat-input"
+import { StockSearchCommand } from "@/components/StockSearchCommand"
 
 // Sidebar navigation - main tools
 const SIDEBAR_TOP = [
@@ -754,7 +755,7 @@ export default function ManusStyleHome() {
   const hasMessages = messages.length > 0
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
+    <div className="flex h-screen bg-background">
       {/* Left Sidebar - Hidden on mobile */}
       <aside
         className={cn(
@@ -833,6 +834,9 @@ export default function ManusStyleHome() {
           </div>
 
           <div className="flex items-center gap-2 md:gap-4">
+            {/* Stock Search - Cmd+K */}
+            <StockSearchCommand />
+
             {/* Free plan / Start trial - hidden on mobile */}
             {!loading && !user && (
               <div className="hidden sm:flex items-center gap-2 text-sm">
@@ -886,7 +890,10 @@ export default function ManusStyleHome() {
         </header>
 
         {/* Main chat area - always centered */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className={cn(
+          "flex-1 flex flex-col",
+          hasMessages ? "overflow-hidden" : "overflow-y-auto"
+        )}>
           {/* Messages area - scrollable */}
           {hasMessages && (
             <div className="flex-1 overflow-y-auto px-4 md:px-6 py-4 md:py-6 pb-32 md:pb-6">
@@ -965,7 +972,7 @@ export default function ManusStyleHome() {
             "flex flex-col items-center px-4 md:px-6 py-4 md:py-8",
             hasMessages
               ? "fixed bottom-0 left-0 right-0 md:relative md:bottom-auto bg-background border-t border-border safe-area-bottom z-40"
-              : "flex-1 justify-center"
+              : "min-h-0"
           )}>
             {/* Heading - only show when no messages */}
             {!hasMessages && (
@@ -988,6 +995,8 @@ export default function ManusStyleHome() {
                 onUpgradeClick={() => router.push('/api/stripe/quick-checkout?plan=monthly')}
                 placeholder={hasMessages ? "Ask a follow-up..." : "Ask about any stock, market trends, or financial analysis..."}
                 disabled={isLoading}
+                value={inputValue}
+                onValueChange={setInputValue}
               />
 
               {/* Tool buttons - only show when no messages */}
