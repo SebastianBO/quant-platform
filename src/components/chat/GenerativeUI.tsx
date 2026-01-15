@@ -294,6 +294,26 @@ export function ToolLoadingCard({ toolName }: { toolName: string }) {
   )
 }
 
+// Helper to extract data from tool result (handles nested { success, data } structure)
+function extractToolData<T>(result: unknown): T | null {
+  if (!result) return null
+
+  // Tools return { success: boolean, data: {...} } or { success: boolean, error: string }
+  const toolResult = result as { success?: boolean; data?: T; error?: string }
+
+  if (toolResult.success === false || toolResult.error) {
+    return null
+  }
+
+  // If result has data property, return it
+  if (toolResult.data !== undefined) {
+    return toolResult.data as T
+  }
+
+  // Otherwise assume the result itself is the data (for compatibility)
+  return result as T
+}
+
 // Main renderer for tool results
 export function renderToolResult(toolResult: ToolResult): React.ReactNode {
   const { toolName, result, status } = toolResult
@@ -313,7 +333,7 @@ export function renderToolResult(toolResult: ToolResult): React.ReactNode {
   // Handle different tool types
   switch (toolName) {
     case 'getStockQuote': {
-      const data = result as {
+      const data = extractToolData<{
         symbol: string
         name?: string
         price: number
@@ -321,7 +341,7 @@ export function renderToolResult(toolResult: ToolResult): React.ReactNode {
         changePercent: number
         marketCap?: number
         volume?: number
-      }
+      }>(result)
       if (data?.symbol && data?.price) {
         return <StockQuoteCard {...data} />
       }
@@ -329,7 +349,7 @@ export function renderToolResult(toolResult: ToolResult): React.ReactNode {
     }
 
     case 'compareStocks': {
-      const data = result as {
+      const data = extractToolData<{
         comparison: Array<{
           symbol: string
           name?: string
@@ -338,7 +358,7 @@ export function renderToolResult(toolResult: ToolResult): React.ReactNode {
           pe?: number
           marketCap?: number
         }>
-      }
+      }>(result)
       if (data?.comparison?.length) {
         return <StockComparisonCard stocks={data.comparison} />
       }
@@ -346,7 +366,7 @@ export function renderToolResult(toolResult: ToolResult): React.ReactNode {
     }
 
     case 'getCompanyFundamentals': {
-      const data = result as {
+      const data = extractToolData<{
         symbol: string
         revenue?: number
         netIncome?: number
@@ -354,7 +374,7 @@ export function renderToolResult(toolResult: ToolResult): React.ReactNode {
         pe?: number
         debtToEquity?: number
         profitMargin?: number
-      }
+      }>(result)
       if (data?.symbol) {
         return <FinancialsSummaryCard {...data} />
       }
@@ -362,7 +382,7 @@ export function renderToolResult(toolResult: ToolResult): React.ReactNode {
     }
 
     case 'getMarketMovers': {
-      const data = result as {
+      const data = extractToolData<{
         type: 'gainers' | 'losers' | 'active'
         movers: Array<{
           symbol: string
@@ -370,7 +390,7 @@ export function renderToolResult(toolResult: ToolResult): React.ReactNode {
           price: number
           changePercent: number
         }>
-      }
+      }>(result)
       if (data?.movers?.length) {
         return <MarketMoversCard type={data.type || 'gainers'} stocks={data.movers} />
       }
