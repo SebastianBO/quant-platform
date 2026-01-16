@@ -53,7 +53,7 @@ async function getTreasuryData() {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://lician.com'
     const response = await fetch(`${baseUrl}/api/treasury`, {
-      cache: 'no-store', // Always fetch fresh data
+      next: { revalidate: 3600 }, // Revalidate every hour
     })
 
     if (!response.ok) {

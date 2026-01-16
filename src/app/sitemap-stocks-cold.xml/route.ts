@@ -1,6 +1,7 @@
 // Cold stocks sitemap - Database-driven from Supabase
 // Fetches long-tail stocks (200K+) with weekly updates
 import { NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 7200 // 2 hours for cold stocks
@@ -64,7 +65,7 @@ export async function GET(request: Request) {
       })
     }
   } catch (error) {
-    console.error('Failed to fetch cold tier from edge function:', error)
+    logger.error('Failed to fetch cold sitemap from edge function', { error: error instanceof Error ? error.message : 'Unknown' })
   }
 
   // Fallback - empty sitemap if edge function fails

@@ -258,7 +258,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // Formula: Both prices + Key metrics + Winner hint + CTA
   let description = `Compare ${ticker1} vs ${ticker2} stock. Side-by-side valuation, growth & profitability analysis. Updated ${currentMonth} ${currentDay}.`
 
-  if (typeof price1 === 'number' && typeof price2 === 'number' && !isNaN(price1) && !isNaN(price2)) {
+  // Only include price in description if both prices are valid (non-zero)
+  const hasValidPrices = typeof price1 === 'number' && typeof price2 === 'number' &&
+                         !isNaN(price1) && !isNaN(price2) && price1 > 0 && price2 > 0
+
+  if (hasValidPrices) {
     const peStr1 = typeof pe1 === 'number' && pe1 > 0 ? `, PE ${safeNum(pe1, 0)}` : ''
     const peStr2 = typeof pe2 === 'number' && pe2 > 0 ? `, PE ${safeNum(pe2, 0)}` : ''
     const stock1Str = `${ticker1} ($${safeNum(price1, 0)}${peStr1})`
@@ -268,7 +272,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description = `${stock1Str} vs ${stock2Str}${ctaStr}`
 
     // Add cap info if space allows
-    if (description.length < 130 && typeof cap1 === 'number' && typeof cap2 === 'number') {
+    const hasValidCaps = typeof cap1 === 'number' && typeof cap2 === 'number' && cap1 > 0 && cap2 > 0
+    if (description.length < 130 && hasValidCaps) {
       const capStr = ` ${formatMarketCapShort(cap1)} vs ${formatMarketCapShort(cap2)} cap.`
       if ((description + capStr).length <= 160) {
         description = `${stock1Str} vs ${stock2Str}.${capStr.slice(1)}${ctaStr}`
@@ -359,23 +364,23 @@ export default async function ComparePage({ params }: Props) {
   const stock1 = {
     symbol: ticker1,
     name: stock1Data.companyFacts?.name || ticker1,
-    price: stock1Data.snapshot.price || 0,
-    marketCap: stock1Data.snapshot.market_cap || 0,
-    pe: stock1Data.metrics?.price_to_earnings_ratio || 0,
-    eps: stock1Data.metrics?.earnings_per_share || 0,
-    revenueGrowth: stock1Data.metrics?.revenue_growth || 0,
-    grossMargin: stock1Data.metrics?.gross_margin || 0,
+    price: stock1Data.snapshot.price || null,
+    marketCap: stock1Data.snapshot.market_cap || null,
+    pe: stock1Data.metrics?.price_to_earnings_ratio || null,
+    eps: stock1Data.metrics?.earnings_per_share || null,
+    revenueGrowth: stock1Data.metrics?.revenue_growth ?? null,
+    grossMargin: stock1Data.metrics?.gross_margin ?? null,
   }
 
   const stock2 = {
     symbol: ticker2,
     name: stock2Data.companyFacts?.name || ticker2,
-    price: stock2Data.snapshot.price || 0,
-    marketCap: stock2Data.snapshot.market_cap || 0,
-    pe: stock2Data.metrics?.price_to_earnings_ratio || 0,
-    eps: stock2Data.metrics?.earnings_per_share || 0,
-    revenueGrowth: stock2Data.metrics?.revenue_growth || 0,
-    grossMargin: stock2Data.metrics?.gross_margin || 0,
+    price: stock2Data.snapshot.price || null,
+    marketCap: stock2Data.snapshot.market_cap || null,
+    pe: stock2Data.metrics?.price_to_earnings_ratio || null,
+    eps: stock2Data.metrics?.earnings_per_share || null,
+    revenueGrowth: stock2Data.metrics?.revenue_growth ?? null,
+    grossMargin: stock2Data.metrics?.gross_margin ?? null,
   }
 
   // Safe number formatting helper - prevents toFixed errors on null/undefined/NaN
@@ -386,15 +391,20 @@ export default async function ComparePage({ params }: Props) {
     return num.toFixed(decimals)
   }
 
-  const formatMarketCap = (cap: number) => {
-    if (typeof cap !== 'number' || isNaN(cap)) return 'N/A'
+  const formatMarketCap = (cap: number | null) => {
+    if (cap === null || typeof cap !== 'number' || isNaN(cap) || cap === 0) return 'N/A'
     if (cap >= 1e12) return `$${(cap / 1e12).toFixed(2)}T`
     if (cap >= 1e9) return `$${(cap / 1e9).toFixed(2)}B`
     return `$${(cap / 1e6).toFixed(2)}M`
   }
 
-  const getWinner = (val1: number, val2: number, higherIsBetter = true) => {
-    if (val1 === 0 && val2 === 0) return 'tie'
+  const getWinner = (val1: number | null, val2: number | null, higherIsBetter = true) => {
+    // Handle null/undefined/zero as "no data"
+    const v1Valid = val1 !== null && val1 !== undefined && val1 !== 0
+    const v2Valid = val2 !== null && val2 !== undefined && val2 !== 0
+    if (!v1Valid && !v2Valid) return 'tie'
+    if (!v1Valid) return 'stock2'
+    if (!v2Valid) return 'stock1'
     if (higherIsBetter) return val1 > val2 ? 'stock1' : val1 < val2 ? 'stock2' : 'tie'
     return val1 < val2 ? 'stock1' : val1 > val2 ? 'stock2' : 'tie'
   }
@@ -507,12 +517,12 @@ export default async function ComparePage({ params }: Props) {
             <div className="bg-card p-6 rounded-xl border border-border text-center">
               <h2 className="text-2xl font-bold text-green-500 mb-2">{stock1.symbol}</h2>
               <p className="text-muted-foreground mb-4">{stock1.name}</p>
-              <p className="text-3xl font-bold">${typeof stock1.price === 'number' ? stock1.price.toFixed(2) : '—'}</p>
+              <p className="text-3xl font-bold">{stock1.price && stock1.price > 0 ? `$${stock1.price.toFixed(2)}` : '—'}</p>
             </div>
             <div className="bg-card p-6 rounded-xl border border-border text-center">
               <h2 className="text-2xl font-bold text-blue-500 mb-2">{stock2.symbol}</h2>
               <p className="text-muted-foreground mb-4">{stock2.name}</p>
-              <p className="text-3xl font-bold">${typeof stock2.price === 'number' ? stock2.price.toFixed(2) : '—'}</p>
+              <p className="text-3xl font-bold">{stock2.price && stock2.price > 0 ? `$${stock2.price.toFixed(2)}` : '—'}</p>
             </div>
           </div>
 

@@ -78,7 +78,7 @@ interface CommoditiesResponse {
 async function getCommodities(): Promise<CommoditiesResponse> {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/commodities?commodity=all`, {
-      cache: 'no-store',
+      next: { revalidate: 3600 }, // Revalidate every hour
     })
 
     if (!response.ok) {

@@ -1,6 +1,7 @@
 // Hot stocks sitemap - Database-driven from Supabase
 // Fetches from seo_stock_pages table via edge function
 import { NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 1800 // 30 minutes for hot stocks
@@ -59,7 +60,7 @@ ${uniqueUrls.join('\n')}
       })
     }
   } catch (error) {
-    console.error('Failed to fetch from edge function:', error)
+    logger.error('Failed to fetch hot sitemap from edge function', { error: error instanceof Error ? error.message : 'Unknown' })
   }
 
   // Fallback to hardcoded list if edge function fails

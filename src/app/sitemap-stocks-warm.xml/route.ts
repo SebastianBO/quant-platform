@@ -1,6 +1,7 @@
 // Warm stocks sitemap - Database-driven from Supabase
 // Fetches next 90K stocks after hot tier (paginated)
 import { NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 3600 // 1 hour for warm stocks
@@ -28,23 +29,22 @@ export async function GET(request: Request) {
       }
     )
 
-    console.log('Warm tier fetch response status:', response.status)
+    logger.debug('Warm tier fetch response', { status: response.status })
 
     if (response.ok) {
       let sitemap = await response.text()
-      console.log('Warm sitemap raw response length:', sitemap.length)
+      logger.debug('Warm sitemap raw response', { length: sitemap.length })
 
       // Transform URLs from portfoliocare format to quant-platform format (lowercase for canonical consistency)
       sitemap = sitemap.replace(/https:\/\/www\.lician\.com\/stocks\/([A-Z0-9.-]+)/gi, (_, ticker) =>
         `${baseUrl}/stock/${ticker.toLowerCase()}`
       )
-      console.log('Transformed sitemap:', sitemap.substring(0, 500))
+      logger.debug('Transformed sitemap', { preview: sitemap.substring(0, 200) })
 
       // Extract unique stock symbols (letters, numbers, dots, hyphens) and normalize to lowercase
       const stockMatches = sitemap.match(/\/stock\/([A-Za-z0-9._-]+)/g) || []
-      console.log('Stock matches count:', stockMatches.length)
       const uniqueStocks = [...new Set(stockMatches.map(m => m.replace('/stock/', '').toLowerCase()))]
-      console.log('Unique stocks count:', uniqueStocks.length)
+      logger.debug('Warm sitemap extracted stocks', { matchCount: stockMatches.length, uniqueCount: uniqueStocks.length })
 
       const urls = uniqueStocks.map(ticker => `
   <url>
@@ -71,7 +71,7 @@ export async function GET(request: Request) {
       })
     }
   } catch (error) {
-    console.error('Failed to fetch warm tier from edge function:', error)
+    logger.error('Failed to fetch warm sitemap from edge function', { error: error instanceof Error ? error.message : 'Unknown' })
   }
 
   // Fallback - empty sitemap if edge function fails

@@ -69,7 +69,7 @@ interface NewsArticle {
 async function getMarketNews(): Promise<NewsArticle[]> {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/market-news?limit=50`, {
-      cache: 'no-store',
+      next: { revalidate: 3600 }, // Match page-level revalidation
     })
 
     if (!res.ok) {

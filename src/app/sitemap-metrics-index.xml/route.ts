@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { ALL_STOCKS_FULL as ALL_STOCKS } from '@/lib/stocks-full'
 
 // Sitemap index for all metric page sitemaps
-const METRIC_COUNT = 80 // Approximate number of metric types
+const METRIC_COUNT = 107 // Updated: high-value financial metrics in sitemap
 
 export const revalidate = 86400 // Daily
 

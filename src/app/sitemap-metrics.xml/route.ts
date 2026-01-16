@@ -4,11 +4,13 @@ import { ALL_STOCKS_FULL as ALL_STOCKS } from '@/lib/stocks-full'
 // All metric page types from the app
 const METRIC_PAGES = [
   // Financial metrics
-  'pe-ratio', 'price-to-book', 'price-to-sales', 'ev-ebitda', 'price-to-fcf',
+  'pe-ratio', 'peg-ratio', 'price-to-book', 'price-to-sales', 'ev-ebitda', 'price-to-fcf',
   'profit-margin', 'gross-margin', 'operating-margin', 'net-margin', 'ebit-margin',
   'free-cash-flow', 'free-cash-flow-margin', 'operating-cash-flow', 'financing-cash-flow',
   'revenue', 'earnings', 'eps', 'dividend', 'buybacks', 'debt-to-equity',
   'roa', 'roe', 'roic', 'roce', 'beta', 'volatility',
+  // Additional high-value metrics
+  'book-value', 'enterprise-value', 'growth',
   // Technical indicators
   'rsi', 'macd', 'bollinger-bands', 'moving-average', 'vwap', 'momentum',
   'stochastic', 'ichimoku', 'fibonacci', 'support-resistance', 'trend',

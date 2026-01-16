@@ -90,8 +90,7 @@ async function getCryptoPrices(): Promise<CryptoPrice[]> {
       const response = await fetch(
         `${baseUrl}/api/v1/crypto/prices?symbol=${crypto.symbol}&limit=2`,
         {
-          cache: 'no-store',
-          next: { revalidate: 0 }
+          next: { revalidate: 300 } // Revalidate every 5 minutes for crypto
         }
       )
 

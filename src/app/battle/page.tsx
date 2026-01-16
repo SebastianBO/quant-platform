@@ -5,6 +5,9 @@ import { Footer } from '@/components/footer'
 import { getBreadcrumbSchema, getFAQSchema, SITE_URL } from '@/lib/seo'
 import StockBattleClient from './StockBattleClient'
 
+// Force dynamic rendering to avoid SSR issues with localStorage in client component
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Stock Battle - Which Stock Would You Buy? | Lician',
   description: 'Vote on which stock you would buy! Compare stocks head-to-head and see what other investors think. Fun, fast, and shareable stock comparison game.',

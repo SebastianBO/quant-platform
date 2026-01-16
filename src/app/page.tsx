@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { Suspense } from 'react'
 import ManusStyleHome from "@/components/ManusStyleHome"
-import { SITE_URL } from "@/lib/seo"
+import { SITE_URL, getDataCatalogSchema, getOrganizationSchema, getWebSiteSchema } from "@/lib/seo"
 
 export const metadata: Metadata = {
   title: 'Lician - AI-Powered Stock Analysis & Investment Research Platform',
@@ -46,9 +46,23 @@ function LoadingState() {
 }
 
 export default function Home() {
+  // Generate schema markup for homepage SEO
+  const organizationSchema = getOrganizationSchema()
+  const webSiteSchema = getWebSiteSchema()
+  const dataCatalogSchema = getDataCatalogSchema()
+
   return (
-    <Suspense fallback={<LoadingState />}>
-      <ManusStyleHome />
-    </Suspense>
+    <>
+      {/* JSON-LD Schema Markup for enhanced SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([organizationSchema, webSiteSchema, dataCatalogSchema])
+        }}
+      />
+      <Suspense fallback={<LoadingState />}>
+        <ManusStyleHome />
+      </Suspense>
+    </>
   )
 }
