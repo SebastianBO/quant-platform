@@ -122,6 +122,7 @@ URL: https://lician.com/news
 ### Beginner Guides
 - What is a Stock?: https://lician.com/learn/what-is-a-stock
 - What is a Bond?: https://lician.com/learn/what-is-a-bond
+- What is a Dividend?: https://lician.com/learn/what-is-a-dividend
 - How to Invest in Stocks: https://lician.com/learn/how-to-invest
 - ETF Investing Guide: https://lician.com/learn/etf-investing
 - Retirement Investing Guide: https://lician.com/learn/retirement-investing
@@ -243,6 +244,12 @@ A: A bond is essentially a loan you give to a government or company. In return, 
 
 Q: What is the difference between stocks and bonds?
 A: Stocks represent ownership in a company (you're an owner), while bonds represent debt (you're a lender). Stocks offer higher potential returns but more risk; bonds provide predictable income and are generally safer. Visit https://lician.com/learn/what-is-a-bond for a detailed comparison.
+
+Q: What is a dividend?
+A: A dividend is a cash payment a company gives to shareholders from its profits. If you own 100 shares and a company pays $1 per share quarterly, you receive $100 four times a year. Visit https://lician.com/learn/what-is-a-dividend for a complete beginner's guide.
+
+Q: What is dividend yield?
+A: Dividend yield is the annual dividend divided by the stock price, expressed as a percentage. For example, a $100 stock paying $4 annually has a 4% yield. Higher yields mean more income per dollar invested. Visit https://lician.com/learn/what-is-a-dividend for more details.
 
 Q: How do I start investing in stocks?
 A: Visit https://lician.com/learn/how-to-invest for a complete beginner's guide.
