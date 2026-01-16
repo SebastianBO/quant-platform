@@ -1,0 +1,863 @@
+{
+  "name": "SEO Weekly Executive Dashboard - Lician.com",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 7 * * 1"
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Weekly Monday 7 AM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "seo-dashboard",
+        "options": {},
+        "responseMode": "responseNode"
+      },
+      "id": "webhook-trigger",
+      "name": "Manual Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 500],
+      "webhookId": "seo-dashboard-lician"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Set date range for weekly report\nconst now = new Date();\nconst weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);\n\nreturn [{\n  json: {\n    weekStart: weekAgo.toISOString(),\n    weekEnd: now.toISOString(),\n    reportDate: now.toISOString().split('T')[0],\n    reportWeek: `${weekAgo.toISOString().split('T')[0]} to ${now.toISOString().split('T')[0]}`\n  }\n}];"
+      },
+      "id": "set-date-range",
+      "name": "Set Date Range",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 400]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=-- Backlinks acquired this week\nSELECT \n  COUNT(*) as total_backlinks,\n  COUNT(CASE WHEN status = 'verified' THEN 1 END) as verified_backlinks,\n  COUNT(CASE WHEN status = 'pending' THEN 1 END) as pending_backlinks,\n  COALESCE(AVG(domain_authority), 0) as avg_domain_authority,\n  COALESCE(SUM(CASE WHEN domain_authority >= 50 THEN 1 ELSE 0 END), 0) as high_da_backlinks\nFROM backlinks\nWHERE created_at >= '{{ $json.weekStart }}'\n  AND created_at < '{{ $json.weekEnd }}'",
+        "options": {}
+      },
+      "id": "query-backlinks",
+      "name": "Query Backlinks",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [750, 100],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=-- HARO opportunities this week\nSELECT \n  COUNT(*) as total_opportunities,\n  COUNT(CASE WHEN status = 'responded' THEN 1 END) as responses_sent,\n  COUNT(CASE WHEN status = 'accepted' THEN 1 END) as accepted,\n  COUNT(CASE WHEN status = 'new' THEN 1 END) as pending_review,\n  COALESCE(AVG(relevance_score), 0) as avg_relevance\nFROM haro_opportunities\nWHERE created_at >= '{{ $json.weekStart }}'\n  AND created_at < '{{ $json.weekEnd }}'",
+        "options": {}
+      },
+      "id": "query-haro",
+      "name": "Query HARO",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [750, 250],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=-- Social posts this week\nSELECT \n  COUNT(*) as total_posts,\n  COUNT(CASE WHEN platform = 'twitter' THEN 1 END) as twitter_posts,\n  COUNT(CASE WHEN platform = 'linkedin' THEN 1 END) as linkedin_posts,\n  COUNT(CASE WHEN platform = 'facebook' THEN 1 END) as facebook_posts,\n  COALESCE(SUM(likes), 0) as total_likes,\n  COALESCE(SUM(shares), 0) as total_shares,\n  COALESCE(SUM(comments), 0) as total_comments,\n  COALESCE(SUM(impressions), 0) as total_impressions\nFROM social_posts\nWHERE posted_at >= '{{ $json.weekStart }}'\n  AND posted_at < '{{ $json.weekEnd }}'",
+        "options": {}
+      },
+      "id": "query-social",
+      "name": "Query Social Posts",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [750, 400],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=-- Directory submissions this week\nSELECT \n  COUNT(*) as total_submissions,\n  COUNT(CASE WHEN status = 'approved' THEN 1 END) as approved,\n  COUNT(CASE WHEN status = 'pending' THEN 1 END) as pending,\n  COUNT(CASE WHEN status = 'rejected' THEN 1 END) as rejected,\n  COUNT(DISTINCT directory_name) as unique_directories\nFROM directory_submissions\nWHERE created_at >= '{{ $json.weekStart }}'\n  AND created_at < '{{ $json.weekEnd }}'",
+        "options": {}
+      },
+      "id": "query-directories",
+      "name": "Query Directories",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [750, 550],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=-- Reddit opportunities this week\nSELECT \n  COUNT(*) as total_opportunities,\n  COUNT(CASE WHEN status = 'responded' THEN 1 END) as responses_posted,\n  COUNT(CASE WHEN status = 'approved' THEN 1 END) as approved,\n  COALESCE(SUM(upvotes), 0) as total_upvotes,\n  COUNT(DISTINCT subreddit) as unique_subreddits\nFROM reddit_opportunities\nWHERE created_at >= '{{ $json.weekStart }}'\n  AND created_at < '{{ $json.weekEnd }}'",
+        "options": {}
+      },
+      "id": "query-reddit",
+      "name": "Query Reddit",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [750, 700],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=-- Quora opportunities this week\nSELECT \n  COUNT(*) as total_opportunities,\n  COUNT(CASE WHEN status = 'answered' THEN 1 END) as answers_posted,\n  COALESCE(SUM(views), 0) as total_views,\n  COALESCE(SUM(upvotes), 0) as total_upvotes,\n  COUNT(DISTINCT topic) as unique_topics\nFROM quora_opportunities\nWHERE created_at >= '{{ $json.weekStart }}'\n  AND created_at < '{{ $json.weekEnd }}'",
+        "options": {}
+      },
+      "id": "query-quora",
+      "name": "Query Quora",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [750, 850],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=-- Guest post pipeline this week\nSELECT \n  COUNT(*) as total_outreach,\n  COUNT(CASE WHEN status = 'pitched' THEN 1 END) as pitches_sent,\n  COUNT(CASE WHEN status = 'accepted' THEN 1 END) as accepted,\n  COUNT(CASE WHEN status = 'published' THEN 1 END) as published,\n  COUNT(CASE WHEN status = 'rejected' THEN 1 END) as rejected,\n  COUNT(CASE WHEN status = 'no_response' THEN 1 END) as no_response,\n  COALESCE(AVG(target_da), 0) as avg_target_da\nFROM guest_post_outreach\nWHERE created_at >= '{{ $json.weekStart }}'\n  AND created_at < '{{ $json.weekEnd }}'",
+        "options": {}
+      },
+      "id": "query-guest-posts",
+      "name": "Query Guest Posts",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [750, 1000],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=-- Podcast outreach pipeline this week\nSELECT \n  COUNT(*) as total_outreach,\n  COUNT(CASE WHEN status = 'pitched' THEN 1 END) as pitches_sent,\n  COUNT(CASE WHEN status = 'scheduled' THEN 1 END) as scheduled,\n  COUNT(CASE WHEN status = 'recorded' THEN 1 END) as recorded,\n  COUNT(CASE WHEN status = 'published' THEN 1 END) as published,\n  COUNT(CASE WHEN status = 'rejected' THEN 1 END) as rejected,\n  COALESCE(AVG(estimated_listeners), 0) as avg_listeners\nFROM podcast_outreach\nWHERE created_at >= '{{ $json.weekStart }}'\n  AND created_at < '{{ $json.weekEnd }}'",
+        "options": {}
+      },
+      "id": "query-podcasts",
+      "name": "Query Podcasts",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [750, 1150],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=-- Keyword ranking changes this week\nSELECT \n  COUNT(*) as total_keywords_tracked,\n  COUNT(CASE WHEN position_change > 0 THEN 1 END) as keywords_improved,\n  COUNT(CASE WHEN position_change < 0 THEN 1 END) as keywords_declined,\n  COUNT(CASE WHEN position_change = 0 THEN 1 END) as keywords_stable,\n  COUNT(CASE WHEN current_position <= 10 THEN 1 END) as page_one_keywords,\n  COUNT(CASE WHEN current_position <= 3 THEN 1 END) as top_3_keywords,\n  COALESCE(AVG(current_position), 0) as avg_position,\n  COALESCE(AVG(position_change), 0) as avg_position_change,\n  COALESCE(SUM(search_volume), 0) as total_search_volume\nFROM keyword_rankings\nWHERE updated_at >= '{{ $json.weekStart }}'\n  AND updated_at < '{{ $json.weekEnd }}'",
+        "options": {}
+      },
+      "id": "query-rankings",
+      "name": "Query Rankings",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [750, 1300],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=-- Press mentions this week\nSELECT \n  COUNT(*) as total_mentions,\n  COUNT(CASE WHEN sentiment = 'positive' THEN 1 END) as positive_mentions,\n  COUNT(CASE WHEN sentiment = 'neutral' THEN 1 END) as neutral_mentions,\n  COUNT(CASE WHEN sentiment = 'negative' THEN 1 END) as negative_mentions,\n  COUNT(DISTINCT source_domain) as unique_sources,\n  COALESCE(AVG(source_da), 0) as avg_source_da,\n  COALESCE(SUM(estimated_reach), 0) as total_estimated_reach\nFROM press_mentions\nWHERE discovered_at >= '{{ $json.weekStart }}'\n  AND discovered_at < '{{ $json.weekEnd }}'",
+        "options": {}
+      },
+      "id": "query-press",
+      "name": "Query Press",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [750, 1450],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=-- Influencer outreach this week\nSELECT \n  COUNT(*) as total_outreach,\n  COUNT(CASE WHEN status = 'contacted' THEN 1 END) as contacted,\n  COUNT(CASE WHEN status = 'responded' THEN 1 END) as responded,\n  COUNT(CASE WHEN status = 'collaboration_agreed' THEN 1 END) as collaborations,\n  COUNT(CASE WHEN status = 'content_published' THEN 1 END) as published,\n  COALESCE(SUM(follower_count), 0) as total_reach,\n  COALESCE(AVG(engagement_rate), 0) as avg_engagement_rate\nFROM influencer_outreach\nWHERE created_at >= '{{ $json.weekStart }}'\n  AND created_at < '{{ $json.weekEnd }}'",
+        "options": {}
+      },
+      "id": "query-influencers",
+      "name": "Query Influencers",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [750, 1600],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=-- Broken link opportunities this week\nSELECT \n  COUNT(*) as total_found,\n  COUNT(CASE WHEN status = 'outreach_sent' THEN 1 END) as outreach_sent,\n  COUNT(CASE WHEN status = 'link_acquired' THEN 1 END) as links_acquired,\n  COALESCE(AVG(source_da), 0) as avg_source_da\nFROM broken_link_opportunities\nWHERE discovered_at >= '{{ $json.weekStart }}'\n  AND discovered_at < '{{ $json.weekEnd }}'",
+        "options": {}
+      },
+      "id": "query-broken-links",
+      "name": "Query Broken Links",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [750, 1750],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=-- Content syndication this week\nSELECT \n  COUNT(*) as total_syndicated,\n  COUNT(DISTINCT platform) as platforms_used,\n  COUNT(CASE WHEN status = 'published' THEN 1 END) as published,\n  COALESCE(SUM(views), 0) as total_views,\n  COALESCE(SUM(clicks), 0) as total_clicks\nFROM content_syndication\nWHERE syndicated_at >= '{{ $json.weekStart }}'\n  AND syndicated_at < '{{ $json.weekEnd }}'",
+        "options": {}
+      },
+      "id": "query-syndication",
+      "name": "Query Syndication",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [750, 1900],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=-- Last week's dashboard for comparison\nSELECT \n  seo_health_score as prev_health_score,\n  total_backlinks as prev_backlinks,\n  page_one_keywords as prev_page_one,\n  total_social_engagement as prev_engagement\nFROM seo_weekly_dashboard\nWHERE report_date < '{{ $json.reportDate }}'\nORDER BY report_date DESC\nLIMIT 1",
+        "options": {}
+      },
+      "id": "query-previous-week",
+      "name": "Query Previous Week",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [750, 2050],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Merge all query results into a single dashboard object\nconst dateRange = $('Set Date Range').first().json;\nconst backlinks = $('Query Backlinks').first().json || {};\nconst haro = $('Query HARO').first().json || {};\nconst social = $('Query Social Posts').first().json || {};\nconst directories = $('Query Directories').first().json || {};\nconst reddit = $('Query Reddit').first().json || {};\nconst quora = $('Query Quora').first().json || {};\nconst guestPosts = $('Query Guest Posts').first().json || {};\nconst podcasts = $('Query Podcasts').first().json || {};\nconst rankings = $('Query Rankings').first().json || {};\nconst press = $('Query Press').first().json || {};\nconst influencers = $('Query Influencers').first().json || {};\nconst brokenLinks = $('Query Broken Links').first().json || {};\nconst syndication = $('Query Syndication').first().json || {};\nconst previousWeek = $('Query Previous Week').first()?.json || {};\n\n// Safely parse numbers\nconst safeNum = (val) => parseInt(val) || 0;\nconst safeFloat = (val) => parseFloat(val) || 0;\n\n// Build metrics object\nconst metrics = {\n  // Date info\n  reportDate: dateRange.reportDate,\n  reportWeek: dateRange.reportWeek,\n  weekStart: dateRange.weekStart,\n  weekEnd: dateRange.weekEnd,\n  \n  // Backlinks\n  backlinks: {\n    total: safeNum(backlinks.total_backlinks),\n    verified: safeNum(backlinks.verified_backlinks),\n    pending: safeNum(backlinks.pending_backlinks),\n    avgDA: safeFloat(backlinks.avg_domain_authority).toFixed(1),\n    highDA: safeNum(backlinks.high_da_backlinks)\n  },\n  \n  // HARO\n  haro: {\n    opportunities: safeNum(haro.total_opportunities),\n    responses: safeNum(haro.responses_sent),\n    accepted: safeNum(haro.accepted),\n    pending: safeNum(haro.pending_review),\n    avgRelevance: safeFloat(haro.avg_relevance).toFixed(1)\n  },\n  \n  // Social\n  social: {\n    posts: safeNum(social.total_posts),\n    twitter: safeNum(social.twitter_posts),\n    linkedin: safeNum(social.linkedin_posts),\n    facebook: safeNum(social.facebook_posts),\n    likes: safeNum(social.total_likes),\n    shares: safeNum(social.total_shares),\n    comments: safeNum(social.total_comments),\n    impressions: safeNum(social.total_impressions),\n    totalEngagement: safeNum(social.total_likes) + safeNum(social.total_shares) + safeNum(social.total_comments)\n  },\n  \n  // Directories\n  directories: {\n    submissions: safeNum(directories.total_submissions),\n    approved: safeNum(directories.approved),\n    pending: safeNum(directories.pending),\n    rejected: safeNum(directories.rejected),\n    uniqueDirectories: safeNum(directories.unique_directories)\n  },\n  \n  // Reddit\n  reddit: {\n    opportunities: safeNum(reddit.total_opportunities),\n    responses: safeNum(reddit.responses_posted),\n    approved: safeNum(reddit.approved),\n    upvotes: safeNum(reddit.total_upvotes),\n    subreddits: safeNum(reddit.unique_subreddits)\n  },\n  \n  // Quora\n  quora: {\n    opportunities: safeNum(quora.total_opportunities),\n    answers: safeNum(quora.answers_posted),\n    views: safeNum(quora.total_views),\n    upvotes: safeNum(quora.total_upvotes),\n    topics: safeNum(quora.unique_topics)\n  },\n  \n  // Guest Posts\n  guestPosts: {\n    outreach: safeNum(guestPosts.total_outreach),\n    pitches: safeNum(guestPosts.pitches_sent),\n    accepted: safeNum(guestPosts.accepted),\n    published: safeNum(guestPosts.published),\n    rejected: safeNum(guestPosts.rejected),\n    noResponse: safeNum(guestPosts.no_response),\n    avgTargetDA: safeFloat(guestPosts.avg_target_da).toFixed(1)\n  },\n  \n  // Podcasts\n  podcasts: {\n    outreach: safeNum(podcasts.total_outreach),\n    pitches: safeNum(podcasts.pitches_sent),\n    scheduled: safeNum(podcasts.scheduled),\n    recorded: safeNum(podcasts.recorded),\n    published: safeNum(podcasts.published),\n    rejected: safeNum(podcasts.rejected),\n    avgListeners: safeNum(podcasts.avg_listeners)\n  },\n  \n  // Rankings\n  rankings: {\n    tracked: safeNum(rankings.total_keywords_tracked),\n    improved: safeNum(rankings.keywords_improved),\n    declined: safeNum(rankings.keywords_declined),\n    stable: safeNum(rankings.keywords_stable),\n    pageOne: safeNum(rankings.page_one_keywords),\n    top3: safeNum(rankings.top_3_keywords),\n    avgPosition: safeFloat(rankings.avg_position).toFixed(1),\n    avgChange: safeFloat(rankings.avg_position_change).toFixed(2),\n    searchVolume: safeNum(rankings.total_search_volume)\n  },\n  \n  // Press\n  press: {\n    mentions: safeNum(press.total_mentions),\n    positive: safeNum(press.positive_mentions),\n    neutral: safeNum(press.neutral_mentions),\n    negative: safeNum(press.negative_mentions),\n    sources: safeNum(press.unique_sources),\n    avgSourceDA: safeFloat(press.avg_source_da).toFixed(1),\n    reach: safeNum(press.total_estimated_reach)\n  },\n  \n  // Influencers\n  influencers: {\n    outreach: safeNum(influencers.total_outreach),\n    contacted: safeNum(influencers.contacted),\n    responded: safeNum(influencers.responded),\n    collaborations: safeNum(influencers.collaborations),\n    published: safeNum(influencers.published),\n    totalReach: safeNum(influencers.total_reach),\n    avgEngagement: safeFloat(influencers.avg_engagement_rate).toFixed(2)\n  },\n  \n  // Broken Links\n  brokenLinks: {\n    found: safeNum(brokenLinks.total_found),\n    outreachSent: safeNum(brokenLinks.outreach_sent),\n    acquired: safeNum(brokenLinks.links_acquired),\n    avgDA: safeFloat(brokenLinks.avg_source_da).toFixed(1)\n  },\n  \n  // Content Syndication\n  syndication: {\n    total: safeNum(syndication.total_syndicated),\n    platforms: safeNum(syndication.platforms_used),\n    published: safeNum(syndication.published),\n    views: safeNum(syndication.total_views),\n    clicks: safeNum(syndication.total_clicks)\n  },\n  \n  // Previous week for comparison\n  previousWeek: {\n    healthScore: safeNum(previousWeek.prev_health_score),\n    backlinks: safeNum(previousWeek.prev_backlinks),\n    pageOne: safeNum(previousWeek.prev_page_one),\n    engagement: safeNum(previousWeek.prev_engagement)\n  }\n};\n\n// Calculate SEO Health Score (0-100)\nlet healthScore = 0;\n\n// Backlinks (25 points max)\nconst backlinkScore = Math.min(25, \n  (metrics.backlinks.verified * 2) + \n  (metrics.backlinks.highDA * 3) +\n  (metrics.backlinks.avgDA > 30 ? 5 : metrics.backlinks.avgDA > 20 ? 3 : 1)\n);\nhealthScore += backlinkScore;\n\n// Rankings (25 points max)\nconst rankingScore = Math.min(25,\n  (metrics.rankings.top3 * 3) +\n  (metrics.rankings.pageOne * 1) +\n  (metrics.rankings.improved > metrics.rankings.declined ? 5 : 0) +\n  (parseFloat(metrics.rankings.avgChange) > 0 ? 3 : 0)\n);\nhealthScore += rankingScore;\n\n// Content & Outreach (25 points max)\nconst outreachScore = Math.min(25,\n  (metrics.guestPosts.published * 5) +\n  (metrics.guestPosts.accepted * 2) +\n  (metrics.podcasts.published * 3) +\n  (metrics.podcasts.scheduled * 1) +\n  (metrics.haro.accepted * 3) +\n  (metrics.haro.responses * 1)\n);\nhealthScore += outreachScore;\n\n// Social & Engagement (15 points max)\nconst socialScore = Math.min(15,\n  Math.floor(metrics.social.totalEngagement / 100) +\n  Math.floor(metrics.social.impressions / 1000) +\n  (metrics.reddit.responses * 1) +\n  (metrics.quora.answers * 1)\n);\nhealthScore += socialScore;\n\n// PR & Mentions (10 points max)\nconst prScore = Math.min(10,\n  (metrics.press.positive * 3) +\n  (metrics.press.neutral * 1) -\n  (metrics.press.negative * 2) +\n  Math.floor(metrics.press.reach / 10000)\n);\nhealthScore += Math.max(0, prScore);\n\n// Ensure score is between 0-100\nhealthScore = Math.min(100, Math.max(0, healthScore));\n\n// Determine health status\nlet healthStatus, healthColor;\nif (healthScore >= 80) {\n  healthStatus = 'Excellent';\n  healthColor = '#27ae60';\n} else if (healthScore >= 60) {\n  healthStatus = 'Good';\n  healthColor = '#2ecc71';\n} else if (healthScore >= 40) {\n  healthStatus = 'Fair';\n  healthColor = '#f39c12';\n} else if (healthScore >= 20) {\n  healthStatus = 'Needs Improvement';\n  healthColor = '#e67e22';\n} else {\n  healthStatus = 'Critical';\n  healthColor = '#e74c3c';\n}\n\n// Calculate week-over-week changes\nconst healthChange = healthScore - metrics.previousWeek.healthScore;\nconst backlinkChange = metrics.backlinks.total - metrics.previousWeek.backlinks;\nconst pageOneChange = metrics.rankings.pageOne - metrics.previousWeek.pageOne;\nconst engagementChange = metrics.social.totalEngagement - metrics.previousWeek.engagement;\n\nmetrics.healthScore = healthScore;\nmetrics.healthStatus = healthStatus;\nmetrics.healthColor = healthColor;\nmetrics.breakdown = {\n  backlinkScore,\n  rankingScore,\n  outreachScore,\n  socialScore,\n  prScore: Math.max(0, prScore)\n};\nmetrics.weekOverWeek = {\n  healthChange,\n  backlinkChange,\n  pageOneChange,\n  engagementChange\n};\n\nreturn [{ json: metrics }];"
+      },
+      "id": "aggregate-metrics",
+      "name": "Aggregate All Metrics",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1100, 700]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Generate beautiful HTML email report\nconst m = $input.first().json;\n\n// Helper for trend arrows\nconst trend = (val) => {\n  if (val > 0) return `<span style=\"color:#27ae60;\">+${val} &#9650;</span>`;\n  if (val < 0) return `<span style=\"color:#e74c3c;\">${val} &#9660;</span>`;\n  return `<span style=\"color:#95a5a6;\">0 &#9644;</span>`;\n};\n\nconst formatNumber = (num) => {\n  if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';\n  if (num >= 1000) return (num / 1000).toFixed(1) + 'K';\n  return num.toString();\n};\n\nconst html = `\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>SEO Weekly Dashboard - Lician.com</title>\n</head>\n<body style=\"margin:0;padding:0;background-color:#f5f6fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,sans-serif;\">\n  <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:800px;margin:0 auto;background:#ffffff;\">\n    \n    <!-- Header -->\n    <tr>\n      <td style=\"background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:40px 30px;text-align:center;\">\n        <h1 style=\"margin:0;color:#ffffff;font-size:28px;font-weight:700;\">SEO Weekly Dashboard</h1>\n        <p style=\"margin:10px 0 0;color:rgba(255,255,255,0.9);font-size:16px;\">lician.com | ${m.reportWeek}</p>\n      </td>\n    </tr>\n    \n    <!-- Health Score -->\n    <tr>\n      <td style=\"padding:30px;\">\n        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:linear-gradient(135deg,${m.healthColor}22 0%,${m.healthColor}11 100%);border-radius:16px;border:2px solid ${m.healthColor};\">\n          <tr>\n            <td style=\"padding:30px;text-align:center;\">\n              <div style=\"font-size:64px;font-weight:800;color:${m.healthColor};line-height:1;\">${m.healthScore}</div>\n              <div style=\"font-size:18px;color:${m.healthColor};font-weight:600;margin-top:5px;\">${m.healthStatus}</div>\n              <div style=\"font-size:14px;color:#666;margin-top:10px;\">SEO Health Score ${trend(m.weekOverWeek.healthChange)} vs last week</div>\n            </td>\n            <td style=\"padding:30px;border-left:1px solid ${m.healthColor}44;\">\n              <div style=\"margin-bottom:15px;\">\n                <div style=\"font-size:12px;color:#666;text-transform:uppercase;letter-spacing:1px;\">Backlinks</div>\n                <div style=\"font-size:14px;color:#333;\"><strong>${m.breakdown.backlinkScore}</strong>/25 pts</div>\n              </div>\n              <div style=\"margin-bottom:15px;\">\n                <div style=\"font-size:12px;color:#666;text-transform:uppercase;letter-spacing:1px;\">Rankings</div>\n                <div style=\"font-size:14px;color:#333;\"><strong>${m.breakdown.rankingScore}</strong>/25 pts</div>\n              </div>\n              <div style=\"margin-bottom:15px;\">\n                <div style=\"font-size:12px;color:#666;text-transform:uppercase;letter-spacing:1px;\">Outreach</div>\n                <div style=\"font-size:14px;color:#333;\"><strong>${m.breakdown.outreachScore}</strong>/25 pts</div>\n              </div>\n              <div style=\"margin-bottom:15px;\">\n                <div style=\"font-size:12px;color:#666;text-transform:uppercase;letter-spacing:1px;\">Social</div>\n                <div style=\"font-size:14px;color:#333;\"><strong>${m.breakdown.socialScore}</strong>/15 pts</div>\n              </div>\n              <div>\n                <div style=\"font-size:12px;color:#666;text-transform:uppercase;letter-spacing:1px;\">PR</div>\n                <div style=\"font-size:14px;color:#333;\"><strong>${m.breakdown.prScore}</strong>/10 pts</div>\n              </div>\n            </td>\n          </tr>\n        </table>\n      </td>\n    </tr>\n    \n    <!-- Key Metrics Grid -->\n    <tr>\n      <td style=\"padding:0 30px 30px;\">\n        <h2 style=\"margin:0 0 20px;font-size:20px;color:#333;\">Key Metrics This Week</h2>\n        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"15\">\n          <tr>\n            <!-- Backlinks -->\n            <td width=\"25%\" style=\"background:#f8f9fa;border-radius:12px;padding:20px;vertical-align:top;\">\n              <div style=\"font-size:12px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;\">Backlinks</div>\n              <div style=\"font-size:32px;font-weight:700;color:#333;\">${m.backlinks.total}</div>\n              <div style=\"font-size:13px;color:#666;margin-top:5px;\">${trend(m.weekOverWeek.backlinkChange)}</div>\n              <div style=\"font-size:12px;color:#888;margin-top:10px;\">${m.backlinks.verified} verified | ${m.backlinks.highDA} DA50+</div>\n            </td>\n            \n            <!-- Page 1 Keywords -->\n            <td width=\"25%\" style=\"background:#f8f9fa;border-radius:12px;padding:20px;vertical-align:top;\">\n              <div style=\"font-size:12px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;\">Page 1 Keywords</div>\n              <div style=\"font-size:32px;font-weight:700;color:#333;\">${m.rankings.pageOne}</div>\n              <div style=\"font-size:13px;color:#666;margin-top:5px;\">${trend(m.weekOverWeek.pageOneChange)}</div>\n              <div style=\"font-size:12px;color:#888;margin-top:10px;\">${m.rankings.top3} in top 3 | ${m.rankings.improved} improved</div>\n            </td>\n            \n            <!-- Social Engagement -->\n            <td width=\"25%\" style=\"background:#f8f9fa;border-radius:12px;padding:20px;vertical-align:top;\">\n              <div style=\"font-size:12px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;\">Engagement</div>\n              <div style=\"font-size:32px;font-weight:700;color:#333;\">${formatNumber(m.social.totalEngagement)}</div>\n              <div style=\"font-size:13px;color:#666;margin-top:5px;\">${trend(m.weekOverWeek.engagementChange)}</div>\n              <div style=\"font-size:12px;color:#888;margin-top:10px;\">${formatNumber(m.social.impressions)} impressions</div>\n            </td>\n            \n            <!-- Press Mentions -->\n            <td width=\"25%\" style=\"background:#f8f9fa;border-radius:12px;padding:20px;vertical-align:top;\">\n              <div style=\"font-size:12px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;\">Press Mentions</div>\n              <div style=\"font-size:32px;font-weight:700;color:#333;\">${m.press.mentions}</div>\n              <div style=\"font-size:13px;color:#666;margin-top:5px;\">${m.press.positive} positive</div>\n              <div style=\"font-size:12px;color:#888;margin-top:10px;\">${formatNumber(m.press.reach)} est. reach</div>\n            </td>\n          </tr>\n        </table>\n      </td>\n    </tr>\n    \n    <!-- Detailed Sections -->\n    <tr>\n      <td style=\"padding:0 30px 30px;\">\n        \n        <!-- Link Building -->\n        <div style=\"background:#fff;border:1px solid #e1e8ed;border-radius:12px;margin-bottom:20px;overflow:hidden;\">\n          <div style=\"background:#3498db;padding:15px 20px;\">\n            <h3 style=\"margin:0;color:#fff;font-size:16px;\">Link Building Pipeline</h3>\n          </div>\n          <div style=\"padding:20px;\">\n            <table width=\"100%\" cellpadding=\"8\" cellspacing=\"0\" style=\"font-size:14px;\">\n              <tr style=\"border-bottom:1px solid #eee;\">\n                <td style=\"color:#666;\">HARO Opportunities</td>\n                <td style=\"text-align:right;\"><strong>${m.haro.opportunities}</strong> found | <strong>${m.haro.responses}</strong> pitched | <strong>${m.haro.accepted}</strong> accepted</td>\n              </tr>\n              <tr style=\"border-bottom:1px solid #eee;\">\n                <td style=\"color:#666;\">Guest Posts</td>\n                <td style=\"text-align:right;\"><strong>${m.guestPosts.pitches}</strong> pitched | <strong>${m.guestPosts.accepted}</strong> accepted | <strong>${m.guestPosts.published}</strong> live</td>\n              </tr>\n              <tr style=\"border-bottom:1px solid #eee;\">\n                <td style=\"color:#666;\">Broken Link Building</td>\n                <td style=\"text-align:right;\"><strong>${m.brokenLinks.found}</strong> found | <strong>${m.brokenLinks.outreachSent}</strong> outreach | <strong>${m.brokenLinks.acquired}</strong> acquired</td>\n              </tr>\n              <tr>\n                <td style=\"color:#666;\">Directory Submissions</td>\n                <td style=\"text-align:right;\"><strong>${m.directories.submissions}</strong> submitted | <strong>${m.directories.approved}</strong> approved | <strong>${m.directories.pending}</strong> pending</td>\n              </tr>\n            </table>\n          </div>\n        </div>\n        \n        <!-- Content & PR -->\n        <div style=\"background:#fff;border:1px solid #e1e8ed;border-radius:12px;margin-bottom:20px;overflow:hidden;\">\n          <div style=\"background:#9b59b6;padding:15px 20px;\">\n            <h3 style=\"margin:0;color:#fff;font-size:16px;\">Content & PR</h3>\n          </div>\n          <div style=\"padding:20px;\">\n            <table width=\"100%\" cellpadding=\"8\" cellspacing=\"0\" style=\"font-size:14px;\">\n              <tr style=\"border-bottom:1px solid #eee;\">\n                <td style=\"color:#666;\">Podcasts</td>\n                <td style=\"text-align:right;\"><strong>${m.podcasts.pitches}</strong> pitched | <strong>${m.podcasts.scheduled}</strong> scheduled | <strong>${m.podcasts.published}</strong> published</td>\n              </tr>\n              <tr style=\"border-bottom:1px solid #eee;\">\n                <td style=\"color:#666;\">Content Syndication</td>\n                <td style=\"text-align:right;\"><strong>${m.syndication.published}</strong> published | <strong>${formatNumber(m.syndication.views)}</strong> views | <strong>${formatNumber(m.syndication.clicks)}</strong> clicks</td>\n              </tr>\n              <tr>\n                <td style=\"color:#666;\">Influencer Outreach</td>\n                <td style=\"text-align:right;\"><strong>${m.influencers.contacted}</strong> contacted | <strong>${m.influencers.responded}</strong> responded | <strong>${m.influencers.collaborations}</strong> collaborations</td>\n              </tr>\n            </table>\n          </div>\n        </div>\n        \n        <!-- Community & Social -->\n        <div style=\"background:#fff;border:1px solid #e1e8ed;border-radius:12px;margin-bottom:20px;overflow:hidden;\">\n          <div style=\"background:#e67e22;padding:15px 20px;\">\n            <h3 style=\"margin:0;color:#fff;font-size:16px;\">Community & Social</h3>\n          </div>\n          <div style=\"padding:20px;\">\n            <table width=\"100%\" cellpadding=\"8\" cellspacing=\"0\" style=\"font-size:14px;\">\n              <tr style=\"border-bottom:1px solid #eee;\">\n                <td style=\"color:#666;\">Social Posts</td>\n                <td style=\"text-align:right;\">Twitter: <strong>${m.social.twitter}</strong> | LinkedIn: <strong>${m.social.linkedin}</strong> | Facebook: <strong>${m.social.facebook}</strong></td>\n              </tr>\n              <tr style=\"border-bottom:1px solid #eee;\">\n                <td style=\"color:#666;\">Reddit</td>\n                <td style=\"text-align:right;\"><strong>${m.reddit.opportunities}</strong> opportunities | <strong>${m.reddit.responses}</strong> responses | <strong>${formatNumber(m.reddit.upvotes)}</strong> upvotes</td>\n              </tr>\n              <tr>\n                <td style=\"color:#666;\">Quora</td>\n                <td style=\"text-align:right;\"><strong>${m.quora.opportunities}</strong> questions | <strong>${m.quora.answers}</strong> answers | <strong>${formatNumber(m.quora.views)}</strong> views</td>\n              </tr>\n            </table>\n          </div>\n        </div>\n        \n        <!-- Keyword Rankings -->\n        <div style=\"background:#fff;border:1px solid #e1e8ed;border-radius:12px;overflow:hidden;\">\n          <div style=\"background:#27ae60;padding:15px 20px;\">\n            <h3 style=\"margin:0;color:#fff;font-size:16px;\">Keyword Rankings</h3>\n          </div>\n          <div style=\"padding:20px;\">\n            <table width=\"100%\" cellpadding=\"8\" cellspacing=\"0\" style=\"font-size:14px;\">\n              <tr style=\"border-bottom:1px solid #eee;\">\n                <td style=\"color:#666;\">Keywords Tracked</td>\n                <td style=\"text-align:right;\"><strong>${m.rankings.tracked}</strong> keywords | Avg position: <strong>${m.rankings.avgPosition}</strong></td>\n              </tr>\n              <tr style=\"border-bottom:1px solid #eee;\">\n                <td style=\"color:#666;\">Movement</td>\n                <td style=\"text-align:right;\"><span style=\"color:#27ae60;\"><strong>${m.rankings.improved}</strong> improved</span> | <span style=\"color:#e74c3c;\"><strong>${m.rankings.declined}</strong> declined</span> | <strong>${m.rankings.stable}</strong> stable</td>\n              </tr>\n              <tr>\n                <td style=\"color:#666;\">Search Volume</td>\n                <td style=\"text-align:right;\"><strong>${formatNumber(m.rankings.searchVolume)}</strong> monthly searches for tracked keywords</td>\n              </tr>\n            </table>\n          </div>\n        </div>\n        \n      </td>\n    </tr>\n    \n    <!-- Footer -->\n    <tr>\n      <td style=\"background:#2c3e50;padding:30px;text-align:center;\">\n        <p style=\"margin:0 0 10px;color:#ecf0f1;font-size:14px;\">Generated automatically by n8n for lician.com</p>\n        <p style=\"margin:0;color:#95a5a6;font-size:12px;\">Report Date: ${m.reportDate} | ${new Date().toISOString()}</p>\n      </td>\n    </tr>\n    \n  </table>\n</body>\n</html>\n`;\n\nreturn [{ \n  json: {\n    ...m,\n    htmlReport: html\n  }\n}];"
+      },
+      "id": "generate-html",
+      "name": "Generate HTML Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1350, 700]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "seo_weekly_dashboard",
+          "mode": "list",
+          "cachedResultName": "seo_weekly_dashboard"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "report_date": "={{ $json.reportDate }}",
+            "week_start": "={{ $json.weekStart }}",
+            "week_end": "={{ $json.weekEnd }}",
+            "seo_health_score": "={{ $json.healthScore }}",
+            "health_status": "={{ $json.healthStatus }}",
+            "total_backlinks": "={{ $json.backlinks.total }}",
+            "verified_backlinks": "={{ $json.backlinks.verified }}",
+            "avg_backlink_da": "={{ $json.backlinks.avgDA }}",
+            "haro_opportunities": "={{ $json.haro.opportunities }}",
+            "haro_responses": "={{ $json.haro.responses }}",
+            "haro_accepted": "={{ $json.haro.accepted }}",
+            "social_posts": "={{ $json.social.posts }}",
+            "total_social_engagement": "={{ $json.social.totalEngagement }}",
+            "social_impressions": "={{ $json.social.impressions }}",
+            "directory_submissions": "={{ $json.directories.submissions }}",
+            "directory_approved": "={{ $json.directories.approved }}",
+            "reddit_opportunities": "={{ $json.reddit.opportunities }}",
+            "reddit_responses": "={{ $json.reddit.responses }}",
+            "quora_opportunities": "={{ $json.quora.opportunities }}",
+            "quora_answers": "={{ $json.quora.answers }}",
+            "guest_post_pitches": "={{ $json.guestPosts.pitches }}",
+            "guest_post_published": "={{ $json.guestPosts.published }}",
+            "podcast_pitches": "={{ $json.podcasts.pitches }}",
+            "podcast_published": "={{ $json.podcasts.published }}",
+            "keywords_tracked": "={{ $json.rankings.tracked }}",
+            "page_one_keywords": "={{ $json.rankings.pageOne }}",
+            "top_3_keywords": "={{ $json.rankings.top3 }}",
+            "keywords_improved": "={{ $json.rankings.improved }}",
+            "keywords_declined": "={{ $json.rankings.declined }}",
+            "avg_keyword_position": "={{ $json.rankings.avgPosition }}",
+            "press_mentions": "={{ $json.press.mentions }}",
+            "press_positive": "={{ $json.press.positive }}",
+            "press_reach": "={{ $json.press.reach }}",
+            "influencer_outreach": "={{ $json.influencers.outreach }}",
+            "influencer_collaborations": "={{ $json.influencers.collaborations }}",
+            "broken_link_opportunities": "={{ $json.brokenLinks.found }}",
+            "broken_links_acquired": "={{ $json.brokenLinks.acquired }}",
+            "syndication_published": "={{ $json.syndication.published }}",
+            "syndication_views": "={{ $json.syndication.views }}",
+            "score_breakdown": "={{ JSON.stringify($json.breakdown) }}",
+            "week_over_week": "={{ JSON.stringify($json.weekOverWeek) }}",
+            "full_metrics_json": "={{ JSON.stringify($json) }}"
+          },
+          "cachedResultName": ""
+        },
+        "options": {}
+      },
+      "id": "save-dashboard",
+      "name": "Save to Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1600, 550],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "channel": "#seo-reports",
+        "text": "=:bar_chart: *Weekly SEO Dashboard - lician.com*\n\n*SEO Health Score: {{ $json.healthScore }}/100* ({{ $json.healthStatus }})\n{{ $json.weekOverWeek.healthChange > 0 ? ':arrow_up:' : $json.weekOverWeek.healthChange < 0 ? ':arrow_down:' : ':arrow_right:' }} {{ $json.weekOverWeek.healthChange > 0 ? '+' : '' }}{{ $json.weekOverWeek.healthChange }} vs last week\n\n---\n\n*Key Metrics This Week:*\n\n:link: *Backlinks:* {{ $json.backlinks.total }} total ({{ $json.backlinks.verified }} verified, {{ $json.backlinks.highDA }} DA50+)\n:mag: *Page 1 Keywords:* {{ $json.rankings.pageOne }} ({{ $json.rankings.top3 }} in top 3)\n:chart_with_upwards_trend: *Rankings:* {{ $json.rankings.improved }} improved | {{ $json.rankings.declined }} declined\n:mega: *Social Engagement:* {{ $json.social.totalEngagement }} interactions | {{ $json.social.impressions }} impressions\n:newspaper: *Press Mentions:* {{ $json.press.mentions }} ({{ $json.press.positive }} positive)\n\n---\n\n*Pipeline Activity:*\n\n:email: *HARO:* {{ $json.haro.opportunities }} opps | {{ $json.haro.responses }} pitched | {{ $json.haro.accepted }} accepted\n:pencil: *Guest Posts:* {{ $json.guestPosts.pitches }} pitched | {{ $json.guestPosts.accepted }} accepted | {{ $json.guestPosts.published }} live\n:microphone: *Podcasts:* {{ $json.podcasts.pitches }} pitched | {{ $json.podcasts.scheduled }} scheduled | {{ $json.podcasts.published }} published\n:busts_in_silhouette: *Influencers:* {{ $json.influencers.contacted }} contacted | {{ $json.influencers.collaborations }} collaborations\n\n---\n\n*Community:*\n\n:reddit: *Reddit:* {{ $json.reddit.responses }} responses | {{ $json.reddit.upvotes }} upvotes\n:q: *Quora:* {{ $json.quora.answers }} answers | {{ $json.quora.views }} views\n\n---\n\n_Report: {{ $json.reportWeek }}_\n_Full report sent via email_",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "slack-summary",
+      "name": "Post to Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1600, 700],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Lician Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "seo-reports@lician.com",
+        "toEmail": "team@lician.com",
+        "subject": "=Weekly SEO Dashboard: Health Score {{ $json.healthScore }}/100 ({{ $json.healthStatus }}) - {{ $json.reportDate }}",
+        "emailType": "html",
+        "html": "={{ $json.htmlReport }}",
+        "options": {
+          "ccEmail": "seo@lician.com"
+        }
+      },
+      "id": "send-email",
+      "name": "Send Email Report",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [1600, 850],
+      "credentials": {
+        "smtp": {
+          "id": "CONFIGURE_SMTP_CREDENTIALS",
+          "name": "Lician SMTP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"healthScore\": $json.healthScore, \"healthStatus\": $json.healthStatus, \"reportDate\": $json.reportDate, \"message\": \"SEO Dashboard generated and sent\" } }}",
+        "options": {}
+      },
+      "id": "webhook-response",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1850, 700]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "trigger_source",
+              "value": "webhook"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-webhook-flag",
+      "name": "Set Webhook Flag",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [400, 500]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "trigger_source",
+              "value": "schedule"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-schedule-flag",
+      "name": "Set Schedule Flag",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [400, 300]
+    }
+  ],
+  "connections": {
+    "Weekly Monday 7 AM": {
+      "main": [
+        [
+          {
+            "node": "Set Schedule Flag",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set Webhook Flag",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Schedule Flag": {
+      "main": [
+        [
+          {
+            "node": "Set Date Range",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Webhook Flag": {
+      "main": [
+        [
+          {
+            "node": "Set Date Range",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Date Range": {
+      "main": [
+        [
+          {
+            "node": "Query Backlinks",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Query HARO",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Query Social Posts",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Query Directories",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Query Reddit",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Query Quora",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Query Guest Posts",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Query Podcasts",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Query Rankings",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Query Press",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Query Influencers",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Query Broken Links",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Query Syndication",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Query Previous Week",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Backlinks": {
+      "main": [
+        [
+          {
+            "node": "Aggregate All Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query HARO": {
+      "main": [
+        [
+          {
+            "node": "Aggregate All Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Social Posts": {
+      "main": [
+        [
+          {
+            "node": "Aggregate All Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Directories": {
+      "main": [
+        [
+          {
+            "node": "Aggregate All Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Reddit": {
+      "main": [
+        [
+          {
+            "node": "Aggregate All Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Quora": {
+      "main": [
+        [
+          {
+            "node": "Aggregate All Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Guest Posts": {
+      "main": [
+        [
+          {
+            "node": "Aggregate All Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Podcasts": {
+      "main": [
+        [
+          {
+            "node": "Aggregate All Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Rankings": {
+      "main": [
+        [
+          {
+            "node": "Aggregate All Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Press": {
+      "main": [
+        [
+          {
+            "node": "Aggregate All Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Influencers": {
+      "main": [
+        [
+          {
+            "node": "Aggregate All Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Broken Links": {
+      "main": [
+        [
+          {
+            "node": "Aggregate All Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Syndication": {
+      "main": [
+        [
+          {
+            "node": "Aggregate All Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Previous Week": {
+      "main": [
+        [
+          {
+            "node": "Aggregate All Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate All Metrics": {
+      "main": [
+        [
+          {
+            "node": "Generate HTML Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate HTML Report": {
+      "main": [
+        [
+          {
+            "node": "Save to Supabase",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Post to Slack",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Email Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to Supabase": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to Slack": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email Report": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "seo",
+      "createdAt": "2025-01-16T00:00:00.000Z",
+      "updatedAt": "2025-01-16T00:00:00.000Z"
+    },
+    {
+      "name": "dashboard",
+      "createdAt": "2025-01-16T00:00:00.000Z",
+      "updatedAt": "2025-01-16T00:00:00.000Z"
+    },
+    {
+      "name": "reporting",
+      "createdAt": "2025-01-16T00:00:00.000Z",
+      "updatedAt": "2025-01-16T00:00:00.000Z"
+    },
+    {
+      "name": "lician",
+      "createdAt": "2025-01-16T00:00:00.000Z",
+      "updatedAt": "2025-01-16T00:00:00.000Z"
+    }
+  ],
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "lician-n8n-instance"
+  }
+}

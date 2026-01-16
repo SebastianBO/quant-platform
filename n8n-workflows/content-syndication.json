@@ -1,0 +1,932 @@
+{
+  "name": "Content Syndication - Lician.com",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "syndicate-content",
+        "options": {
+          "rawBody": false
+        },
+        "responseMode": "responseNode"
+      },
+      "id": "webhook-trigger",
+      "name": "Content Published Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 400],
+      "webhookId": "syndicate-content-lician"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Validate and prepare content for syndication\nconst item = $input.first();\nconst body = item.json.body || item.json;\n\n// Required fields\nconst title = body.title;\nconst description = body.description || '';\nconst content = body.content || '';\nconst url = body.url;\nconst tags = body.tags || [];\n\n// Validation\nif (!title || !url) {\n  throw new Error('Missing required fields: title and url are required');\n}\n\nif (!content && !description) {\n  throw new Error('Either content or description must be provided');\n}\n\n// Generate canonical URL\nconst canonicalUrl = url.startsWith('https://lician.com') ? url : `https://lician.com${url.startsWith('/') ? url : '/' + url}`;\n\n// Create unique syndication ID\nconst syndicationId = `synd-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;\n\n// Prepare platform-specific content\nconst devtoContent = prepareDevtoContent(title, content, description, canonicalUrl, tags);\nconst mediumContent = prepareMediumContent(title, content, description, canonicalUrl, tags);\nconst hashnodeContent = prepareHashnodeContent(title, content, description, canonicalUrl, tags);\nconst linkedinContent = prepareLinkedInContent(title, description, canonicalUrl);\n\nfunction prepareDevtoContent(title, content, description, canonicalUrl, tags) {\n  // Dev.to uses markdown with front matter\n  const devtoTags = tags.slice(0, 4).map(t => t.toLowerCase().replace(/\\s+/g, ''));\n  \n  const body = content || description;\n  const article = `${body}\\n\\n---\\n\\n*Originally published at [Lician.com](${canonicalUrl}). Follow us for more financial insights and analysis.*`;\n  \n  return {\n    title: title,\n    body_markdown: article,\n    published: true,\n    canonical_url: canonicalUrl,\n    tags: devtoTags,\n    series: 'Financial Analysis'\n  };\n}\n\nfunction prepareMediumContent(title, content, description, canonicalUrl, tags) {\n  const body = content || description;\n  \n  // Medium uses HTML content\n  const htmlContent = `<p>${body.replace(/\\n\\n/g, '</p><p>').replace(/\\n/g, '<br>')}</p>\n    <hr>\n    <p><em>Originally published at <a href=\"${canonicalUrl}\">Lician.com</a>. Follow us for more financial insights and stock analysis.</em></p>`;\n  \n  return {\n    title: title,\n    contentFormat: 'html',\n    content: htmlContent,\n    canonicalUrl: canonicalUrl,\n    tags: tags.slice(0, 5),\n    publishStatus: 'public'\n  };\n}\n\nfunction prepareHashnodeContent(title, content, description, canonicalUrl, tags) {\n  const body = content || description;\n  \n  // Hashnode uses markdown\n  const markdown = `${body}\\n\\n---\\n\\n*This article was originally published on [Lician.com](${canonicalUrl})*`;\n  \n  return {\n    title: title,\n    contentMarkdown: markdown,\n    originalArticleURL: canonicalUrl,\n    tags: tags.map(t => ({ name: t, slug: t.toLowerCase().replace(/\\s+/g, '-') })),\n    isRepublished: true\n  };\n}\n\nfunction prepareLinkedInContent(title, description, canonicalUrl) {\n  // LinkedIn Article format\n  const intro = description.length > 200 ? description.substring(0, 197) + '...' : description;\n  \n  return {\n    title: title,\n    description: intro,\n    shareUrl: canonicalUrl,\n    visibility: 'PUBLIC'\n  };\n}\n\nreturn [{\n  json: {\n    syndicationId,\n    originalUrl: url,\n    canonicalUrl,\n    title,\n    description,\n    content,\n    tags,\n    platforms: {\n      devto: devtoContent,\n      medium: mediumContent,\n      hashnode: hashnodeContent,\n      linkedin: linkedinContent\n    },\n    createdAt: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "prepare-content",
+      "name": "Validate & Prepare Content",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [470, 400]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list"
+        },
+        "table": {
+          "__rl": true,
+          "value": "content_syndication",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "syndication_id": "={{ $json.syndicationId }}",
+            "original_url": "={{ $json.originalUrl }}",
+            "canonical_url": "={{ $json.canonicalUrl }}",
+            "title": "={{ $json.title }}",
+            "devto_status": "pending",
+            "medium_status": "pending",
+            "hashnode_status": "pending",
+            "linkedin_status": "pending",
+            "created_at": "={{ $json.createdAt }}"
+          }
+        },
+        "options": {
+          "returnData": true
+        }
+      },
+      "id": "init-tracking",
+      "name": "Initialize Tracking Record",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [690, 400],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "split-platforms",
+      "name": "Split to Platforms",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [910, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://dev.to/api/articles",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "api-key",
+              "value": "={{ $credentials.devtoApi.apiKey }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "article",
+              "value": "={{ JSON.stringify($('Validate & Prepare Content').item.json.platforms.devto) }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "post-devto",
+      "name": "Post to Dev.to",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1150, 100],
+      "continueOnFail": true,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_DEVTO_CREDENTIALS",
+          "name": "Dev.to API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.medium.com/v1/users/{{$credentials.mediumApi.userId}}/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $credentials.mediumApi.accessToken }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($('Validate & Prepare Content').item.json.platforms.medium) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "post-medium",
+      "name": "Post to Medium",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1150, 280],
+      "continueOnFail": true,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_MEDIUM_CREDENTIALS",
+          "name": "Medium API Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://gql.hashnode.com",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "{{ $credentials.hashnodeApi.apiKey }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"query\": \"mutation PublishPost($input: PublishPostInput!) { publishPost(input: $input) { post { id url title } } }\",\n  \"variables\": {\n    \"input\": {\n      \"title\": \"{{ $('Validate & Prepare Content').item.json.title }}\",\n      \"contentMarkdown\": {{ JSON.stringify($('Validate & Prepare Content').item.json.platforms.hashnode.contentMarkdown) }},\n      \"publicationId\": \"{{ $credentials.hashnodeApi.publicationId }}\",\n      \"originalArticleURL\": \"{{ $('Validate & Prepare Content').item.json.canonicalUrl }}\",\n      \"tags\": {{ JSON.stringify($('Validate & Prepare Content').item.json.tags.slice(0, 5).map(t => ({ name: t, slug: t.toLowerCase().replace(/\\\\s+/g, '-') }))) }}\n    }\n  }\n}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "post-hashnode",
+      "name": "Post to Hashnode",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1150, 460],
+      "continueOnFail": true,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_HASHNODE_CREDENTIALS",
+          "name": "Hashnode API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.linkedin.com/v2/ugcPosts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $credentials.linkedInApi.accessToken }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "X-Restli-Protocol-Version",
+              "value": "2.0.0"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"author\": \"urn:li:person:{{ $credentials.linkedInApi.personUrn }}\",\n  \"lifecycleState\": \"PUBLISHED\",\n  \"specificContent\": {\n    \"com.linkedin.ugc.ShareContent\": {\n      \"shareCommentary\": {\n        \"text\": \"{{ $('Validate & Prepare Content').item.json.title }}\\n\\n{{ $('Validate & Prepare Content').item.json.description }}\\n\\n#FinancialAnalysis #Investing #StockMarket\"\n      },\n      \"shareMediaCategory\": \"ARTICLE\",\n      \"media\": [{\n        \"status\": \"READY\",\n        \"originalUrl\": \"{{ $('Validate & Prepare Content').item.json.canonicalUrl }}\",\n        \"title\": {\n          \"text\": \"{{ $('Validate & Prepare Content').item.json.title }}\"\n        },\n        \"description\": {\n          \"text\": \"{{ $('Validate & Prepare Content').item.json.description.substring(0, 200) }}\"\n        }\n      }]\n    }\n  },\n  \"visibility\": {\n    \"com.linkedin.ugc.MemberNetworkVisibility\": \"PUBLIC\"\n  }\n}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "post-linkedin",
+      "name": "Post to LinkedIn",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1150, 640],
+      "continueOnFail": true,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_LINKEDIN_CREDENTIALS",
+          "name": "LinkedIn API Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Process Dev.to response\nconst response = $input.first().json;\nconst preparedContent = $('Validate & Prepare Content').first().json;\n\nlet status = 'failed';\nlet postUrl = null;\nlet postId = null;\nlet errorMessage = null;\n\nif (response && response.id) {\n  status = 'success';\n  postUrl = response.url;\n  postId = response.id.toString();\n} else if (response && response.error) {\n  errorMessage = response.error;\n} else {\n  errorMessage = 'Unknown error - no response received';\n}\n\nreturn [{\n  json: {\n    platform: 'devto',\n    syndicationId: preparedContent.syndicationId,\n    status,\n    postUrl,\n    postId,\n    errorMessage,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "process-devto",
+      "name": "Process Dev.to Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1370, 100]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Process Medium response\nconst response = $input.first().json;\nconst preparedContent = $('Validate & Prepare Content').first().json;\n\nlet status = 'failed';\nlet postUrl = null;\nlet postId = null;\nlet errorMessage = null;\n\nif (response && response.data && response.data.id) {\n  status = 'success';\n  postUrl = response.data.url;\n  postId = response.data.id;\n} else if (response && response.errors) {\n  errorMessage = response.errors.map(e => e.message).join(', ');\n} else {\n  errorMessage = 'Unknown error - no response received';\n}\n\nreturn [{\n  json: {\n    platform: 'medium',\n    syndicationId: preparedContent.syndicationId,\n    status,\n    postUrl,\n    postId,\n    errorMessage,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "process-medium",
+      "name": "Process Medium Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1370, 280]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Process Hashnode GraphQL response\nconst response = $input.first().json;\nconst preparedContent = $('Validate & Prepare Content').first().json;\n\nlet status = 'failed';\nlet postUrl = null;\nlet postId = null;\nlet errorMessage = null;\n\nif (response && response.data && response.data.publishPost && response.data.publishPost.post) {\n  const post = response.data.publishPost.post;\n  status = 'success';\n  postUrl = post.url;\n  postId = post.id;\n} else if (response && response.errors) {\n  errorMessage = response.errors.map(e => e.message).join(', ');\n} else {\n  errorMessage = 'Unknown error - no response received';\n}\n\nreturn [{\n  json: {\n    platform: 'hashnode',\n    syndicationId: preparedContent.syndicationId,\n    status,\n    postUrl,\n    postId,\n    errorMessage,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "process-hashnode",
+      "name": "Process Hashnode Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1370, 460]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Process LinkedIn response\nconst response = $input.first().json;\nconst preparedContent = $('Validate & Prepare Content').first().json;\n\nlet status = 'failed';\nlet postUrl = null;\nlet postId = null;\nlet errorMessage = null;\n\nif (response && response.id) {\n  status = 'success';\n  postId = response.id;\n  // LinkedIn doesn't return direct URL, construct it\n  postUrl = `https://www.linkedin.com/feed/update/${response.id}`;\n} else if (response && response.message) {\n  errorMessage = response.message;\n} else if (response && response.serviceErrorCode) {\n  errorMessage = `LinkedIn Error ${response.serviceErrorCode}: ${response.message}`;\n} else {\n  errorMessage = 'Unknown error - no response received';\n}\n\nreturn [{\n  json: {\n    platform: 'linkedin',\n    syndicationId: preparedContent.syndicationId,\n    status,\n    postUrl,\n    postId,\n    errorMessage,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "process-linkedin",
+      "name": "Process LinkedIn Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1370, 640]
+    },
+    {
+      "parameters": {
+        "mode": "passThrough",
+        "output": "wait"
+      },
+      "id": "merge-results",
+      "name": "Merge Platform Results",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [1590, 370]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Aggregate all platform results\nconst results = $input.all();\nconst preparedContent = $('Validate & Prepare Content').first().json;\n\nconst platformResults = {};\nlet successCount = 0;\nlet failureCount = 0;\nconst failures = [];\n\nfor (const result of results) {\n  const data = result.json;\n  platformResults[data.platform] = {\n    status: data.status,\n    postUrl: data.postUrl,\n    postId: data.postId,\n    error: data.errorMessage\n  };\n  \n  if (data.status === 'success') {\n    successCount++;\n  } else {\n    failureCount++;\n    failures.push({\n      platform: data.platform,\n      error: data.errorMessage\n    });\n  }\n}\n\nreturn [{\n  json: {\n    syndicationId: preparedContent.syndicationId,\n    title: preparedContent.title,\n    canonicalUrl: preparedContent.canonicalUrl,\n    platformResults,\n    summary: {\n      total: 4,\n      success: successCount,\n      failed: failureCount\n    },\n    failures,\n    completedAt: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "aggregate-results",
+      "name": "Aggregate Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1810, 370]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list"
+        },
+        "table": {
+          "__rl": true,
+          "value": "content_syndication",
+          "mode": "list"
+        },
+        "filterColumn": "syndication_id",
+        "filterValue": "={{ $json.syndicationId }}",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "devto_status": "={{ $json.platformResults.devto.status }}",
+            "devto_url": "={{ $json.platformResults.devto.postUrl }}",
+            "devto_post_id": "={{ $json.platformResults.devto.postId }}",
+            "devto_error": "={{ $json.platformResults.devto.error }}",
+            "medium_status": "={{ $json.platformResults.medium.status }}",
+            "medium_url": "={{ $json.platformResults.medium.postUrl }}",
+            "medium_post_id": "={{ $json.platformResults.medium.postId }}",
+            "medium_error": "={{ $json.platformResults.medium.error }}",
+            "hashnode_status": "={{ $json.platformResults.hashnode.status }}",
+            "hashnode_url": "={{ $json.platformResults.hashnode.postUrl }}",
+            "hashnode_post_id": "={{ $json.platformResults.hashnode.postId }}",
+            "hashnode_error": "={{ $json.platformResults.hashnode.error }}",
+            "linkedin_status": "={{ $json.platformResults.linkedin.status }}",
+            "linkedin_url": "={{ $json.platformResults.linkedin.postUrl }}",
+            "linkedin_post_id": "={{ $json.platformResults.linkedin.postId }}",
+            "linkedin_error": "={{ $json.platformResults.linkedin.error }}",
+            "completed_at": "={{ $json.completedAt }}",
+            "success_count": "={{ $json.summary.success }}",
+            "failure_count": "={{ $json.summary.failed }}"
+          }
+        }
+      },
+      "id": "update-tracking",
+      "name": "Update Tracking Status",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [2030, 370],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.summary.failed }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ]
+        }
+      },
+      "id": "check-failures",
+      "name": "Check for Failures",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2250, 370]
+    },
+    {
+      "parameters": {
+        "channel": "#content-syndication",
+        "text": "=:white_check_mark: *Content Syndication Complete*\n\n*Title:* {{ $json.title }}\n*Canonical URL:* {{ $json.canonicalUrl }}\n\n*Results:*\n:devto: Dev.to: {{ $json.platformResults.devto.status === 'success' ? ':white_check_mark: ' + $json.platformResults.devto.postUrl : ':x: Failed' }}\n:medium: Medium: {{ $json.platformResults.medium.status === 'success' ? ':white_check_mark: ' + $json.platformResults.medium.postUrl : ':x: Failed' }}\n:hashnode: Hashnode: {{ $json.platformResults.hashnode.status === 'success' ? ':white_check_mark: ' + $json.platformResults.hashnode.postUrl : ':x: Failed' }}\n:linkedin: LinkedIn: {{ $json.platformResults.linkedin.status === 'success' ? ':white_check_mark: ' + $json.platformResults.linkedin.postUrl : ':x: Failed' }}\n\n*Summary:* {{ $json.summary.success }}/4 platforms succeeded",
+        "otherOptions": {}
+      },
+      "id": "slack-success",
+      "name": "Slack - All Success",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [2500, 250],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Lician Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "channel": "#content-syndication",
+        "text": "=:warning: *Content Syndication Partial Failure*\n\n*Title:* {{ $json.title }}\n*Canonical URL:* {{ $json.canonicalUrl }}\n\n*Results:*\n:devto: Dev.to: {{ $json.platformResults.devto.status === 'success' ? ':white_check_mark: ' + $json.platformResults.devto.postUrl : ':x: ' + ($json.platformResults.devto.error || 'Failed') }}\n:medium: Medium: {{ $json.platformResults.medium.status === 'success' ? ':white_check_mark: ' + $json.platformResults.medium.postUrl : ':x: ' + ($json.platformResults.medium.error || 'Failed') }}\n:hashnode: Hashnode: {{ $json.platformResults.hashnode.status === 'success' ? ':white_check_mark: ' + $json.platformResults.hashnode.postUrl : ':x: ' + ($json.platformResults.hashnode.error || 'Failed') }}\n:linkedin: LinkedIn: {{ $json.platformResults.linkedin.status === 'success' ? ':white_check_mark: ' + $json.platformResults.linkedin.postUrl : ':x: ' + ($json.platformResults.linkedin.error || 'Failed') }}\n\n*Summary:* {{ $json.summary.success }}/4 platforms succeeded, {{ $json.summary.failed }} failed\n\n:arrow_right: <https://your-n8n-instance.com/workflow/syndication-retry|Click here to retry failed platforms>",
+        "otherOptions": {}
+      },
+      "id": "slack-partial-failure",
+      "name": "Slack - Partial Failure",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [2500, 490],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Lician Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Queue failed platforms for retry\nconst data = $input.first().json;\nconst failures = data.failures || [];\n\nif (failures.length === 0) {\n  return [];\n}\n\n// Create retry items for each failed platform\nreturn failures.map(failure => ({\n  json: {\n    syndicationId: data.syndicationId,\n    platform: failure.platform,\n    error: failure.error,\n    retryCount: 1,\n    maxRetries: 3,\n    originalData: {\n      title: data.title,\n      canonicalUrl: data.canonicalUrl\n    }\n  }\n}));"
+      },
+      "id": "queue-retries",
+      "name": "Queue Failed for Retry",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2720, 490]
+    },
+    {
+      "parameters": {
+        "amount": 300,
+        "unit": "seconds"
+      },
+      "id": "wait-for-retry",
+      "name": "Wait 5 Minutes",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [2940, 490]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.N8N_WEBHOOK_URL }}/webhook/syndication-retry",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "trigger-retry",
+      "name": "Trigger Retry Workflow",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3160, 490]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"syndicationId\": \"{{ $('Validate & Prepare Content').item.json.syndicationId }}\",\n  \"message\": \"Content syndication initiated\",\n  \"platforms\": [\"devto\", \"medium\", \"hashnode\", \"linkedin\"]\n}",
+        "options": {}
+      },
+      "id": "webhook-response",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [910, 600]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "syndication-retry",
+        "options": {
+          "rawBody": false
+        },
+        "responseMode": "lastNode"
+      },
+      "id": "retry-webhook",
+      "name": "Retry Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 800],
+      "webhookId": "syndication-retry-lician"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Retry handler for failed syndications\nconst item = $input.first();\nconst body = item.json.body || item.json;\n\nconst platform = body.platform;\nconst retryCount = body.retryCount || 1;\nconst maxRetries = body.maxRetries || 3;\nconst syndicationId = body.syndicationId;\n\nif (retryCount > maxRetries) {\n  throw new Error(`Max retries (${maxRetries}) exceeded for ${platform}`);\n}\n\n// Fetch original syndication data from Supabase\nreturn [{\n  json: {\n    platform,\n    syndicationId,\n    retryCount,\n    maxRetries,\n    nextRetryDelay: Math.pow(2, retryCount) * 60 // Exponential backoff in seconds\n  }\n}];"
+      },
+      "id": "process-retry",
+      "name": "Process Retry Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [470, 800]
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list"
+        },
+        "table": {
+          "__rl": true,
+          "value": "content_syndication",
+          "mode": "list"
+        },
+        "filterColumn": "syndication_id",
+        "filterValue": "={{ $json.syndicationId }}",
+        "options": {}
+      },
+      "id": "fetch-syndication-data",
+      "name": "Fetch Original Data",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [690, 800],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $('Process Retry Request').item.json.platform }}",
+              "rightValue": "devto",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ]
+        }
+      },
+      "id": "route-retry-devto",
+      "name": "Route Dev.to Retry",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [910, 700]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $('Process Retry Request').item.json.platform }}",
+              "rightValue": "medium",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ]
+        }
+      },
+      "id": "route-retry-medium",
+      "name": "Route Medium Retry",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [910, 850]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $('Process Retry Request').item.json.platform }}",
+              "rightValue": "hashnode",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ]
+        }
+      },
+      "id": "route-retry-hashnode",
+      "name": "Route Hashnode Retry",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [910, 1000]
+    },
+    {
+      "parameters": {
+        "channel": "#content-syndication",
+        "text": "=:arrows_counterclockwise: *Retry Initiated*\n\n*Platform:* {{ $('Process Retry Request').item.json.platform }}\n*Syndication ID:* {{ $('Process Retry Request').item.json.syndicationId }}\n*Retry Attempt:* {{ $('Process Retry Request').item.json.retryCount }}/{{ $('Process Retry Request').item.json.maxRetries }}",
+        "otherOptions": {}
+      },
+      "id": "slack-retry-notify",
+      "name": "Slack - Retry Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1130, 1150],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Lician Slack"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Content Published Webhook": {
+      "main": [
+        [
+          {
+            "node": "Validate & Prepare Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate & Prepare Content": {
+      "main": [
+        [
+          {
+            "node": "Initialize Tracking Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Tracking Record": {
+      "main": [
+        [
+          {
+            "node": "Split to Platforms",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split to Platforms": {
+      "main": [
+        [
+          {
+            "node": "Post to Dev.to",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Post to Medium",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Post to Hashnode",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Post to LinkedIn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to Dev.to": {
+      "main": [
+        [
+          {
+            "node": "Process Dev.to Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to Medium": {
+      "main": [
+        [
+          {
+            "node": "Process Medium Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to Hashnode": {
+      "main": [
+        [
+          {
+            "node": "Process Hashnode Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to LinkedIn": {
+      "main": [
+        [
+          {
+            "node": "Process LinkedIn Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Dev.to Response": {
+      "main": [
+        [
+          {
+            "node": "Merge Platform Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Medium Response": {
+      "main": [
+        [
+          {
+            "node": "Merge Platform Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Hashnode Response": {
+      "main": [
+        [
+          {
+            "node": "Merge Platform Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process LinkedIn Response": {
+      "main": [
+        [
+          {
+            "node": "Merge Platform Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Platform Results": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Results": {
+      "main": [
+        [
+          {
+            "node": "Update Tracking Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Tracking Status": {
+      "main": [
+        [
+          {
+            "node": "Check for Failures",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check for Failures": {
+      "main": [
+        [
+          {
+            "node": "Slack - All Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack - Partial Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack - Partial Failure": {
+      "main": [
+        [
+          {
+            "node": "Queue Failed for Retry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Queue Failed for Retry": {
+      "main": [
+        [
+          {
+            "node": "Wait 5 Minutes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 5 Minutes": {
+      "main": [
+        [
+          {
+            "node": "Trigger Retry Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retry Webhook": {
+      "main": [
+        [
+          {
+            "node": "Process Retry Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Retry Request": {
+      "main": [
+        [
+          {
+            "node": "Fetch Original Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Original Data": {
+      "main": [
+        [
+          {
+            "node": "Route Dev.to Retry",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Route Medium Retry",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Route Hashnode Retry",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Slack - Retry Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "lician-content-syndication"
+  },
+  "tags": [
+    {
+      "name": "content",
+      "createdAt": "2026-01-16T00:00:00.000Z",
+      "updatedAt": "2026-01-16T00:00:00.000Z"
+    },
+    {
+      "name": "syndication",
+      "createdAt": "2026-01-16T00:00:00.000Z",
+      "updatedAt": "2026-01-16T00:00:00.000Z"
+    },
+    {
+      "name": "lician",
+      "createdAt": "2026-01-16T00:00:00.000Z",
+      "updatedAt": "2026-01-16T00:00:00.000Z"
+    }
+  ],
+  "pinData": {},
+  "staticData": null,
+  "triggerCount": 0
+}

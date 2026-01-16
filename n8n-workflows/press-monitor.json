@@ -1,0 +1,1110 @@
+{
+  "name": "Press Release Monitor - Lician.com Link Building",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 */4 * * *"
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Every 4 Hours",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "url": "=https://news.google.com/rss/search?q={{ encodeURIComponent('\"stock analysis\" OR \"investing tools\" OR \"fintech\" OR \"stock market app\" OR \"investment platform\"') }}&hl=en-US&gl=US&ceid=US:en",
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "google-news-stock-analysis",
+      "name": "Google News: Stock Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [500, 100],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "url": "=https://news.google.com/rss/search?q={{ encodeURIComponent('\"best stock apps\" OR \"trading app review\" OR \"investment app\" OR \"portfolio tracker\"') }}&hl=en-US&gl=US&ceid=US:en",
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "google-news-best-apps",
+      "name": "Google News: Best Apps",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [500, 250],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "url": "https://www.prnewswire.com/rss/financial-services-latest-news/financial-services-latest-news-list.rss",
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "pr-newswire-finance",
+      "name": "PR Newswire: Finance",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [500, 400],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "url": "https://www.prnewswire.com/rss/technology-latest-news/technology-latest-news-list.rss",
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "pr-newswire-tech",
+      "name": "PR Newswire: Fintech",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [500, 550],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "url": "https://feed.businesswire.com/rss/home/?rss=G1QFDERJXkJeGVtXXg==",
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "business-wire-finance",
+      "name": "Business Wire: Finance",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [500, 700],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "url": "https://feed.businesswire.com/rss/home/?rss=G1QFDERJXkJeEVxR",
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "business-wire-tech",
+      "name": "Business Wire: Technology",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [500, 850],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Parse all RSS feeds and extract articles\nconst items = $input.all();\nconst articles = [];\nconst seenUrls = new Set();\n\n// RSS feed source mapping\nconst sourceMapping = {\n  0: { source: 'google_news', category: 'stock_analysis' },\n  1: { source: 'google_news', category: 'best_apps' },\n  2: { source: 'pr_newswire', category: 'finance' },\n  3: { source: 'pr_newswire', category: 'fintech' },\n  4: { source: 'business_wire', category: 'finance' },\n  5: { source: 'business_wire', category: 'technology' }\n};\n\nfor (let i = 0; i < items.length; i++) {\n  const xmlContent = items[i].json.body || items[i].json.data || '';\n  const mapping = sourceMapping[i] || { source: 'unknown', category: 'general' };\n  \n  if (!xmlContent) continue;\n  \n  // Extract items from RSS (simple regex parsing)\n  const itemMatches = xmlContent.match(/<item[\\s\\S]*?<\\/item>/gi) || [];\n  \n  for (const itemXml of itemMatches) {\n    // Extract title\n    const titleMatch = itemXml.match(/<title><!\\[CDATA\\[([^\\]]+)\\]\\]><\\/title>|<title>([^<]+)<\\/title>/i);\n    const title = titleMatch ? (titleMatch[1] || titleMatch[2] || '').trim() : '';\n    \n    // Extract link\n    const linkMatch = itemXml.match(/<link><!\\[CDATA\\[([^\\]]+)\\]\\]><\\/link>|<link>([^<]+)<\\/link>/i);\n    let link = linkMatch ? (linkMatch[1] || linkMatch[2] || '').trim() : '';\n    \n    // Handle Google News redirect URLs\n    if (link.includes('news.google.com')) {\n      const urlMatch = link.match(/url=([^&]+)/);\n      if (urlMatch) {\n        link = decodeURIComponent(urlMatch[1]);\n      }\n    }\n    \n    // Extract description\n    const descMatch = itemXml.match(/<description><!\\[CDATA\\[([\\s\\S]*?)\\]\\]><\\/description>|<description>([^<]*)<\\/description>/i);\n    const description = descMatch ? (descMatch[1] || descMatch[2] || '').trim().replace(/<[^>]+>/g, '').substring(0, 500) : '';\n    \n    // Extract publication date\n    const dateMatch = itemXml.match(/<pubDate>([^<]+)<\\/pubDate>/i);\n    const pubDate = dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString();\n    \n    // Extract source/author if available\n    const sourceMatch = itemXml.match(/<source[^>]*>([^<]+)<\\/source>/i);\n    const articleSource = sourceMatch ? sourceMatch[1].trim() : '';\n    \n    // Skip duplicates\n    if (seenUrls.has(link) || !title || !link) continue;\n    seenUrls.add(link);\n    \n    // Extract domain from link\n    let domain = '';\n    try {\n      domain = new URL(link).hostname.replace('www.', '');\n    } catch (e) {\n      domain = 'unknown';\n    }\n    \n    articles.push({\n      json: {\n        title,\n        url: link,\n        description,\n        pub_date: pubDate,\n        domain,\n        article_source: articleSource,\n        feed_source: mapping.source,\n        feed_category: mapping.category,\n        extracted_at: new Date().toISOString()\n      }\n    });\n  }\n}\n\nif (articles.length === 0) {\n  return [{ json: { no_articles: true, message: 'No articles found in this run' } }];\n}\n\nreturn articles;"
+      },
+      "id": "parse-rss-feeds",
+      "name": "Parse All RSS Feeds",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [800, 450]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "has-title",
+              "leftValue": "={{ $json.title }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            },
+            {
+              "id": "not-placeholder",
+              "leftValue": "={{ $json.no_articles }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-valid",
+      "name": "Filter Valid Articles",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [1020, 450]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Analyze article for link building opportunity type and relevance\nconst article = $input.item.json;\nconst title = (article.title || '').toLowerCase();\nconst description = (article.description || '').toLowerCase();\nconst combined = title + ' ' + description;\n\n// Opportunity type detection\nlet opportunityType = 'general_mention';\nlet pitchAngle = '';\n\n// Best of / Roundup articles (highest priority)\nconst bestOfPatterns = [\n  /best\\s+(\\d+|stock|investing|trading|finance|portfolio|app)/i,\n  /top\\s+(\\d+|stock|investing|trading|finance|portfolio|app)/i,\n  /(\\d+)\\s+best/i,\n  /roundup|round-up|round up/i,\n  /comparison|vs\\.?\\s|versus/i,\n  /alternatives? to/i,\n  /like\\s+(robinhood|acorns|stash|webull|fidelity)/i\n];\n\nfor (const pattern of bestOfPatterns) {\n  if (pattern.test(combined)) {\n    opportunityType = 'best_of_list';\n    pitchAngle = 'Request inclusion in list as comprehensive stock analysis platform with AI-powered insights';\n    break;\n  }\n}\n\n// Industry trend articles (expert quote opportunity)\nconst trendPatterns = [\n  /trend|forecast|prediction|outlook|future of/i,\n  /market (analysis|report|update)/i,\n  /investing in (\\d{4}|the new)/i,\n  /retail investor|individual investor/i,\n  /democratiz(e|ing|ation)/i,\n  /ai in (finance|investing|trading)/i\n];\n\nif (opportunityType === 'general_mention') {\n  for (const pattern of trendPatterns) {\n    if (pattern.test(combined)) {\n      opportunityType = 'trend_article';\n      pitchAngle = 'Offer expert commentary on market trends and AI-driven investment analysis';\n      break;\n    }\n  }\n}\n\n// Stock analysis tool mentions (pitch as alternative)\nconst toolPatterns = [\n  /stock (analysis|screener|scanner|research)/i,\n  /fundamental (analysis|data)/i,\n  /technical (analysis|indicators)/i,\n  /financial (data|statements|ratios)/i,\n  /portfolio (tracker|management|tool)/i,\n  /investment (platform|tool|app)/i\n];\n\nif (opportunityType === 'general_mention') {\n  for (const pattern of toolPatterns) {\n    if (pattern.test(combined)) {\n      opportunityType = 'tool_mention';\n      pitchAngle = 'Pitch Lician as alternative/addition with unique AI capabilities and comprehensive financial data';\n      break;\n    }\n  }\n}\n\n// Fintech news (company mention)\nconst fintechPatterns = [\n  /fintech (startup|company|firm|funding)/i,\n  /investment (app|platform) (launch|release|update)/i,\n  /trading (platform|app) (announce|release)/i,\n  /raises? \\$|funding|series [a-d]/i\n];\n\nif (opportunityType === 'general_mention') {\n  for (const pattern of fintechPatterns) {\n    if (pattern.test(combined)) {\n      opportunityType = 'fintech_news';\n      pitchAngle = 'Position Lician in competitive landscape or offer unique perspective on fintech trends';\n      break;\n    }\n  }\n}\n\n// Calculate relevance score (0-100)\nlet relevanceScore = 0;\n\n// Finance keywords\nconst financeKeywords = ['stock', 'invest', 'trading', 'portfolio', 'market', 'financial', 'finance', 'equity', 'dividend', 'etf', 'fund', 'wealth', 'asset', 'broker', 'analysis'];\nconst financeMatches = financeKeywords.filter(kw => combined.includes(kw));\nrelevanceScore += financeMatches.length * 5; // Up to 75 points\n\n// Opportunity type bonus\nconst typeBonus = {\n  'best_of_list': 25,\n  'trend_article': 15,\n  'tool_mention': 20,\n  'fintech_news': 10,\n  'general_mention': 0\n};\nrelevanceScore += typeBonus[opportunityType] || 0;\n\n// Cap at 100\nrelevanceScore = Math.min(100, relevanceScore);\n\n// Domain Authority estimates (simplified lookup)\nconst domainAuthority = {\n  // Tier 1: Major publications (DA 90+)\n  'forbes.com': 95, 'wsj.com': 95, 'bloomberg.com': 94, 'reuters.com': 94,\n  'nytimes.com': 95, 'washingtonpost.com': 94, 'cnn.com': 94, 'bbc.com': 95,\n  'cnbc.com': 92, 'marketwatch.com': 91, 'businessinsider.com': 92,\n  'fortune.com': 91, 'barrons.com': 90, 'ft.com': 93,\n  \n  // Tier 2: Quality business/finance sites (DA 70-89)\n  'investopedia.com': 88, 'fool.com': 85, 'seekingalpha.com': 84,\n  'thestreet.com': 82, 'kiplinger.com': 80, 'bankrate.com': 83,\n  'nasdaq.com': 87, 'morningstar.com': 85, 'benzinga.com': 78,\n  'techcrunch.com': 89, 'venturebeat.com': 85, 'wired.com': 90,\n  'theverge.com': 89, 'engadget.com': 88, 'zdnet.com': 88,\n  \n  // Tier 3: Niche finance/tech sites (DA 50-69)\n  'finance.yahoo.com': 82, 'moneycontrol.com': 72, 'investing.com': 78,\n  'tradingview.com': 75, 'stocktwits.com': 65, 'finviz.com': 68,\n  'zacks.com': 74, 'tipranks.com': 65, 'simplywall.st': 55\n};\n\nlet estimatedDA = domainAuthority[article.domain] || 40;\n\n// Priority calculation: relevance * (DA/100)\nconst priorityScore = Math.round(relevanceScore * (estimatedDA / 100));\n\n// Priority level\nlet priority = 'low';\nif (priorityScore >= 70) priority = 'high';\nelse if (priorityScore >= 40) priority = 'medium';\n\nreturn {\n  json: {\n    ...article,\n    opportunity_type: opportunityType,\n    pitch_angle: pitchAngle,\n    relevance_score: relevanceScore,\n    estimated_domain_authority: estimatedDA,\n    priority_score: priorityScore,\n    priority,\n    keywords_matched: financeMatches.join(', ')\n  }\n};"
+      },
+      "id": "analyze-opportunity",
+      "name": "Analyze Opportunity Type",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1240, 450]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "min-relevance",
+              "leftValue": "={{ $json.relevance_score }}",
+              "rightValue": 15,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-relevant",
+      "name": "Filter Relevant (Score >= 15)",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [1460, 450]
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "press_opportunities",
+          "mode": "list",
+          "cachedResultName": "press_opportunities"
+        },
+        "returnAll": false,
+        "limit": 1,
+        "filterType": "string",
+        "filters": "=url=eq.{{ encodeURIComponent($json.url) }}"
+      },
+      "id": "check-existing",
+      "name": "Check If Already Exists",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1680, 450],
+      "continueOnFail": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Check if this is a new opportunity (not in database)\nconst article = $('Analyze Opportunity Type').item.json;\nconst existingResult = $input.item.json;\n\n// If we got an array back, check if empty\nconst exists = Array.isArray(existingResult) ? existingResult.length > 0 : !!existingResult.id;\n\nreturn {\n  json: {\n    ...article,\n    is_new: !exists,\n    existing_id: exists ? (existingResult[0]?.id || existingResult.id) : null\n  }\n};"
+      },
+      "id": "merge-check-result",
+      "name": "Check If New",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1900, 450]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "is-new",
+              "leftValue": "={{ $json.is_new }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-new-only",
+      "name": "New Opportunities Only",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [2120, 450]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Generate pitch template based on opportunity type\nconst opp = $input.item.json;\n\nconst templates = {\n  'best_of_list': {\n    subject: `Inclusion Request: Lician.com for \"${opp.title.substring(0, 50)}...\"`,\n    body: `Hi,\n\nI noticed your excellent article \"${opp.title}\" and wanted to suggest Lician.com for inclusion.\n\nLician is a comprehensive stock analysis platform that offers:\n- AI-powered financial analysis across 100,000+ global companies\n- Real-time SEC filing analysis and earnings insights  \n- Free fundamental data and screening tools\n- Built specifically for individual investors\n\nWhat makes Lician unique:\n- EU market coverage (106K+ European companies)\n- Natural language querying of financial data\n- No complex subscription tiers - core features are free\n\nI'd be happy to provide a demo, screenshots, or any additional information you might need.\n\nBest regards,\n[Your Name]\nLician.com\nhttps://lician.com`,\n    tone: 'professional_request'\n  },\n  \n  'trend_article': {\n    subject: `Expert Comment Available: AI in Stock Analysis`,\n    body: `Hi,\n\nI read your piece on \"${opp.title}\" with great interest.\n\nAs the founder of Lician.com, an AI-powered stock analysis platform, I'd love to offer expert commentary on this trend if you're planning follow-up coverage.\n\nSome perspectives I can share:\n- How AI is changing individual investor research\n- The shift toward democratized financial data\n- Real examples of AI-driven investment insights\n\nOur platform analyzes 100K+ companies globally and I have hands-on experience with the practical applications of AI in finance.\n\nWould you be interested in a brief interview or quote for future articles?\n\nBest regards,\n[Your Name]\nFounder, Lician.com`,\n    tone: 'expert_outreach'\n  },\n  \n  'tool_mention': {\n    subject: `Alternative Suggestion: Lician.com Stock Analysis Platform`,\n    body: `Hi,\n\nGreat article on \"${opp.title}\" - I particularly appreciated your coverage of the tools available.\n\nI wanted to introduce Lician.com as another option your readers might find valuable:\n\n**Key Features:**\n- Free fundamental analysis for US (5,300+) and EU (106K+) stocks\n- AI-powered research assistant for financial questions\n- SEC filing summaries and earnings analysis\n- No subscription required for core features\n\n**Unique Angle:**\nWe focus on making institutional-grade data accessible to individual investors, with AI that can answer plain English questions about any company's financials.\n\nHappy to provide a complimentary premium trial for your review.\n\nBest,\n[Your Name]\nLician.com`,\n    tone: 'product_pitch'\n  },\n  \n  'fintech_news': {\n    subject: `Story Angle: Bootstrapped Fintech Alternative to Funded Competitors`,\n    body: `Hi,\n\nYour coverage of \"${opp.title}\" caught my attention.\n\nIf you're interested in a different angle in fintech, Lician.com might make for an interesting story:\n\n- Bootstrapped platform competing with well-funded alternatives\n- AI-first approach to stock analysis\n- Focus on underserved EU market data\n- Built by investors, for investors\n\nWe cover 100K+ companies globally with AI-powered analysis - a different approach than many VC-backed competitors chasing growth at all costs.\n\nWould this be relevant for any upcoming coverage?\n\nBest,\n[Your Name]\nLician.com`,\n    tone: 'story_pitch'\n  },\n  \n  'general_mention': {\n    subject: `Quick Introduction: Lician.com Stock Analysis Platform`,\n    body: `Hi,\n\nI came across \"${opp.title}\" and thought Lician.com might be relevant for your future coverage of finance/investing tools.\n\nQuick highlights:\n- AI-powered stock analysis platform\n- 100K+ companies (US + EU coverage)\n- Free fundamental data and research tools\n\nHappy to connect if this is ever relevant for your beat.\n\nBest,\n[Your Name]\nLician.com`,\n    tone: 'introduction'\n  }\n};\n\nconst template = templates[opp.opportunity_type] || templates['general_mention'];\n\nreturn {\n  json: {\n    ...opp,\n    pitch_subject: template.subject,\n    pitch_body: template.body,\n    pitch_tone: template.tone\n  }\n};"
+      },
+      "id": "generate-pitch",
+      "name": "Generate Pitch Template",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2340, 450]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "press_opportunities",
+          "mode": "list",
+          "cachedResultName": "press_opportunities"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "title": "={{ $json.title }}",
+            "url": "={{ $json.url }}",
+            "description": "={{ $json.description }}",
+            "domain": "={{ $json.domain }}",
+            "pub_date": "={{ $json.pub_date }}",
+            "article_source": "={{ $json.article_source }}",
+            "feed_source": "={{ $json.feed_source }}",
+            "feed_category": "={{ $json.feed_category }}",
+            "opportunity_type": "={{ $json.opportunity_type }}",
+            "pitch_angle": "={{ $json.pitch_angle }}",
+            "relevance_score": "={{ $json.relevance_score }}",
+            "estimated_domain_authority": "={{ $json.estimated_domain_authority }}",
+            "priority_score": "={{ $json.priority_score }}",
+            "priority": "={{ $json.priority }}",
+            "keywords_matched": "={{ $json.keywords_matched }}",
+            "pitch_subject": "={{ $json.pitch_subject }}",
+            "pitch_body": "={{ $json.pitch_body }}",
+            "pitch_tone": "={{ $json.pitch_tone }}",
+            "status": "new"
+          },
+          "cachedResultName": ""
+        },
+        "options": {}
+      },
+      "id": "save-to-supabase",
+      "name": "Save to Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [2560, 450],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "high-priority",
+              "leftValue": "={{ $json.priority }}",
+              "rightValue": "high",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "filter-high-priority",
+      "name": "High Priority Only",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [2780, 300]
+    },
+    {
+      "parameters": {
+        "channel": "#backlink-opportunities",
+        "text": "=:newspaper: *High-Priority Press Opportunity!*\n\n*Title:* {{ $json.title }}\n*Publication:* {{ $json.domain }}\n*Type:* {{ $json.opportunity_type.replace('_', ' ') }}\n*DA:* {{ $json.estimated_domain_authority }}\n*Priority Score:* {{ $json.priority_score }}/100\n\n*Pitch Angle:*\n{{ $json.pitch_angle }}\n\n*Article:* {{ $json.url }}\n\n---\n*Keywords:* {{ $json.keywords_matched }}\n_Discovered: {{ new Date().toLocaleString() }}_",
+        "otherOptions": {
+          "includeLinkToWorkflow": false,
+          "mrkdwn": true
+        }
+      },
+      "id": "slack-high-priority",
+      "name": "Slack: High Priority Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [3000, 300],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Lician Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "best-of-list",
+              "leftValue": "={{ $json.opportunity_type }}",
+              "rightValue": "best_of_list",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-best-of-lists",
+      "name": "Best-Of Lists Only",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [2780, 600]
+    },
+    {
+      "parameters": {
+        "fromEmail": "alerts@lician.com",
+        "toEmail": "seo@lician.com",
+        "subject": "=:trophy: BEST-OF LIST: {{ $json.title.substring(0, 60) }}",
+        "emailType": "html",
+        "html": "=<h2 style=\"color: #2563eb;\">Best-Of List Opportunity Detected!</h2>\n\n<div style=\"background: #f0fdf4; border: 1px solid #86efac; padding: 15px; border-radius: 8px; margin: 15px 0;\">\n  <strong style=\"color: #15803d;\">This is a high-value link building opportunity - Best-Of lists drive strong referral traffic!</strong>\n</div>\n\n<table style=\"border-collapse: collapse; width: 100%; margin: 20px 0;\">\n  <tr>\n    <td style=\"padding: 12px; border: 1px solid #e2e8f0; background: #f8fafc;\"><strong>Title</strong></td>\n    <td style=\"padding: 12px; border: 1px solid #e2e8f0;\">{{ $json.title }}</td>\n  </tr>\n  <tr>\n    <td style=\"padding: 12px; border: 1px solid #e2e8f0; background: #f8fafc;\"><strong>Publication</strong></td>\n    <td style=\"padding: 12px; border: 1px solid #e2e8f0;\">{{ $json.domain }}</td>\n  </tr>\n  <tr>\n    <td style=\"padding: 12px; border: 1px solid #e2e8f0; background: #f8fafc;\"><strong>Domain Authority</strong></td>\n    <td style=\"padding: 12px; border: 1px solid #e2e8f0;\">{{ $json.estimated_domain_authority }}</td>\n  </tr>\n  <tr>\n    <td style=\"padding: 12px; border: 1px solid #e2e8f0; background: #f8fafc;\"><strong>Priority Score</strong></td>\n    <td style=\"padding: 12px; border: 1px solid #e2e8f0;\">{{ $json.priority_score }}/100</td>\n  </tr>\n  <tr>\n    <td style=\"padding: 12px; border: 1px solid #e2e8f0; background: #f8fafc;\"><strong>Article URL</strong></td>\n    <td style=\"padding: 12px; border: 1px solid #e2e8f0;\"><a href=\"{{ $json.url }}\" style=\"color: #2563eb;\">View Article</a></td>\n  </tr>\n</table>\n\n<h3 style=\"color: #1e293b; margin-top: 20px;\">Suggested Pitch</h3>\n<div style=\"background: #fefce8; border-left: 4px solid #eab308; padding: 15px; margin: 10px 0;\">\n  <strong>Subject:</strong> {{ $json.pitch_subject }}\n</div>\n\n<pre style=\"background: #f1f5f9; padding: 15px; border-radius: 8px; white-space: pre-wrap; font-family: monospace; font-size: 13px;\">{{ $json.pitch_body }}</pre>\n\n<hr style=\"border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;\">\n\n<p style=\"color: #64748b; font-size: 12px;\">Published: {{ $json.pub_date }}<br>\nKeywords: {{ $json.keywords_matched }}<br>\nAutomated by n8n for lician.com</p>",
+        "options": {}
+      },
+      "id": "email-best-of",
+      "name": "Email: Best-Of Alert",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [3000, 600],
+      "credentials": {
+        "smtp": {
+          "id": "CONFIGURE_SMTP_CREDENTIALS",
+          "name": "Lician SMTP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Aggregate results for daily summary\nconst items = $input.all();\n\nconst summary = {\n  total_processed: items.length,\n  by_type: {},\n  by_priority: { high: 0, medium: 0, low: 0 },\n  by_source: {},\n  top_opportunities: [],\n  run_time: new Date().toISOString()\n};\n\nfor (const item of items) {\n  const opp = item.json;\n  \n  // Count by type\n  summary.by_type[opp.opportunity_type] = (summary.by_type[opp.opportunity_type] || 0) + 1;\n  \n  // Count by priority\n  if (opp.priority) {\n    summary.by_priority[opp.priority]++;\n  }\n  \n  // Count by source\n  summary.by_source[opp.feed_source] = (summary.by_source[opp.feed_source] || 0) + 1;\n  \n  // Track top opportunities (by priority score)\n  if (opp.priority_score >= 50) {\n    summary.top_opportunities.push({\n      title: opp.title?.substring(0, 80),\n      domain: opp.domain,\n      type: opp.opportunity_type,\n      score: opp.priority_score\n    });\n  }\n}\n\n// Sort top opportunities\nsummary.top_opportunities.sort((a, b) => b.score - a.score);\nsummary.top_opportunities = summary.top_opportunities.slice(0, 10);\n\nreturn [{ json: summary }];"
+      },
+      "id": "aggregate-summary",
+      "name": "Aggregate Run Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2780, 750]
+    },
+    {
+      "parameters": {
+        "channel": "#seo-reports",
+        "text": "=:chart_with_upwards_trend: *Press Monitor Run Complete*\n\n*Total Opportunities:* {{ $json.total_processed }}\n\n*By Priority:*\n:red_circle: High: {{ $json.by_priority.high }}\n:yellow_circle: Medium: {{ $json.by_priority.medium }}\n:white_circle: Low: {{ $json.by_priority.low }}\n\n*By Type:*\n{{ Object.entries($json.by_type).map(([k,v]) => `• ${k.replace('_', ' ')}: ${v}`).join('\\n') }}\n\n*By Source:*\n{{ Object.entries($json.by_source).map(([k,v]) => `• ${k.replace('_', ' ')}: ${v}`).join('\\n') }}\n\n{{ $json.top_opportunities.length > 0 ? '*Top Opportunities:*\\n' + $json.top_opportunities.slice(0,5).map((o, i) => `${i+1}. ${o.domain} (${o.score}): ${o.title}`).join('\\n') : '' }}\n\n_Run completed: {{ $json.run_time }}_",
+        "otherOptions": {
+          "includeLinkToWorkflow": false,
+          "mrkdwn": true
+        }
+      },
+      "id": "slack-summary",
+      "name": "Slack: Run Summary",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [3000, 750],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Lician Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "press-outreach-update",
+        "options": {},
+        "responseMode": "responseNode"
+      },
+      "id": "webhook-outreach",
+      "name": "Webhook: Update Outreach Status",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 1000],
+      "webhookId": "press-outreach-lician"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Validate and prepare outreach status update\nconst body = $input.item.json.body || $input.item.json;\n\n// Required fields\nconst opportunityId = body.opportunity_id || body.id;\nconst status = body.status; // 'contacted', 'replied', 'placed', 'rejected', 'no_response'\nconst notes = body.notes || '';\nconst contactName = body.contact_name || '';\nconst contactEmail = body.contact_email || '';\nconst placementUrl = body.placement_url || null;\n\nif (!opportunityId || !status) {\n  throw new Error('Missing required fields: opportunity_id and status');\n}\n\nconst validStatuses = ['new', 'contacted', 'replied', 'placed', 'rejected', 'no_response', 'pending'];\nif (!validStatuses.includes(status)) {\n  throw new Error(`Invalid status. Must be one of: ${validStatuses.join(', ')}`);\n}\n\nreturn {\n  json: {\n    opportunity_id: opportunityId,\n    status,\n    notes,\n    contact_name: contactName,\n    contact_email: contactEmail,\n    placement_url: placementUrl,\n    updated_at: new Date().toISOString()\n  }\n};"
+      },
+      "id": "validate-update",
+      "name": "Validate Update Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 1000]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "press_opportunities",
+          "mode": "list",
+          "cachedResultName": "press_opportunities"
+        },
+        "matchingColumns": ["id"],
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.opportunity_id }}",
+            "status": "={{ $json.status }}",
+            "outreach_notes": "={{ $json.notes }}",
+            "contact_name": "={{ $json.contact_name }}",
+            "contact_email": "={{ $json.contact_email }}",
+            "placement_url": "={{ $json.placement_url }}",
+            "last_contacted_at": "={{ $json.status === 'contacted' ? $json.updated_at : null }}",
+            "placed_at": "={{ $json.status === 'placed' ? $json.updated_at : null }}"
+          },
+          "cachedResultName": ""
+        },
+        "options": {}
+      },
+      "id": "update-status",
+      "name": "Update Opportunity Status",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [720, 1000],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "is-placed",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "placed",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-placements",
+      "name": "If Placement Achieved",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [940, 1000]
+    },
+    {
+      "parameters": {
+        "channel": "#wins",
+        "text": "=:tada: *New Press Placement!*\n\nA press opportunity has been successfully placed!\n\n*Opportunity ID:* {{ $json.opportunity_id }}\n*Contact:* {{ $json.contact_name }} ({{ $json.contact_email }})\n{{ $json.placement_url ? '*Link:* ' + $json.placement_url : '' }}\n\n*Notes:* {{ $json.notes || 'No notes' }}\n\n_Great work on the outreach!_",
+        "otherOptions": {
+          "includeLinkToWorkflow": false,
+          "mrkdwn": true
+        }
+      },
+      "id": "slack-placement-win",
+      "name": "Slack: Celebrate Placement",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1160, 1000],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Lician Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"message\": \"Outreach status updated\", \"opportunity_id\": $json.opportunity_id, \"new_status\": $json.status } }}",
+        "options": {}
+      },
+      "id": "webhook-response",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1380, 1000]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * 1"
+            }
+          ]
+        }
+      },
+      "id": "weekly-trigger",
+      "name": "Weekly Report (Monday 9AM)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 1300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \n  status,\n  opportunity_type,\n  priority,\n  COUNT(*) as count,\n  AVG(priority_score) as avg_score\nFROM press_opportunities\nWHERE created_at > NOW() - INTERVAL '7 days'\nGROUP BY status, opportunity_type, priority\nORDER BY count DESC"
+      },
+      "id": "weekly-stats",
+      "name": "Get Weekly Stats",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [500, 1300],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \n  id, title, domain, opportunity_type, priority_score, status,\n  contact_name, placement_url, created_at\nFROM press_opportunities\nWHERE status = 'placed'\nAND placed_at > NOW() - INTERVAL '7 days'\nORDER BY placed_at DESC"
+      },
+      "id": "weekly-placements",
+      "name": "Get Weekly Placements",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [500, 1450],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Compile weekly report from stats and placements\nconst allItems = $input.all();\n\n// Get stats from first connection (weekly-stats)\nconst statsItems = $('Get Weekly Stats').all();\nconst placementItems = $('Get Weekly Placements').all();\n\nconst report = {\n  period: 'Last 7 days',\n  generated_at: new Date().toISOString(),\n  \n  // Aggregate stats\n  total_opportunities: 0,\n  by_status: {},\n  by_type: {},\n  by_priority: {},\n  \n  // Placements\n  placements: [],\n  placement_count: 0\n};\n\n// Process stats\nfor (const item of statsItems) {\n  const stat = item.json;\n  report.total_opportunities += parseInt(stat.count) || 0;\n  \n  const status = stat.status || 'unknown';\n  report.by_status[status] = (report.by_status[status] || 0) + parseInt(stat.count);\n  \n  const type = stat.opportunity_type || 'unknown';\n  report.by_type[type] = (report.by_type[type] || 0) + parseInt(stat.count);\n  \n  const priority = stat.priority || 'unknown';\n  report.by_priority[priority] = (report.by_priority[priority] || 0) + parseInt(stat.count);\n}\n\n// Process placements\nfor (const item of placementItems) {\n  const placement = item.json;\n  report.placements.push({\n    title: placement.title?.substring(0, 60),\n    domain: placement.domain,\n    type: placement.opportunity_type,\n    score: placement.priority_score,\n    url: placement.placement_url\n  });\n}\nreport.placement_count = report.placements.length;\n\n// Calculate conversion rate\nconst contacted = report.by_status['contacted'] || 0;\nconst placed = report.by_status['placed'] || 0;\nreport.conversion_rate = contacted > 0 ? ((placed / contacted) * 100).toFixed(1) : '0';\n\nreturn [{ json: report }];"
+      },
+      "id": "compile-weekly-report",
+      "name": "Compile Weekly Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [800, 1375]
+    },
+    {
+      "parameters": {
+        "channel": "#seo-reports",
+        "text": "=:newspaper: *Weekly Press Monitor Report*\n_{{ $json.period }}_\n\n*Overview:*\n• Total opportunities found: {{ $json.total_opportunities }}\n• Placements this week: {{ $json.placement_count }}\n• Conversion rate: {{ $json.conversion_rate }}%\n\n*By Status:*\n{{ Object.entries($json.by_status).map(([k,v]) => `• ${k}: ${v}`).join('\\n') }}\n\n*By Type:*\n{{ Object.entries($json.by_type).map(([k,v]) => `• ${k.replace('_', ' ')}: ${v}`).join('\\n') }}\n\n*By Priority:*\n:red_circle: High: {{ $json.by_priority.high || 0 }}\n:yellow_circle: Medium: {{ $json.by_priority.medium || 0 }}\n:white_circle: Low: {{ $json.by_priority.low || 0 }}\n\n{{ $json.placements.length > 0 ? '*:trophy: Placements This Week:*\\n' + $json.placements.map(p => `• ${p.domain}: ${p.title}${p.url ? ' - ' + p.url : ''}`).join('\\n') : '_No placements this week_' }}\n\n---\n_Report generated: {{ new Date($json.generated_at).toLocaleString() }}_",
+        "otherOptions": {
+          "includeLinkToWorkflow": false,
+          "mrkdwn": true
+        }
+      },
+      "id": "slack-weekly-report",
+      "name": "Slack: Weekly Report",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1100, 1375],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Lician Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "reports@lician.com",
+        "toEmail": "seo@lician.com",
+        "subject": "=Weekly Press Monitor Report - {{ $json.placement_count }} Placements",
+        "emailType": "html",
+        "html": "=<h1 style=\"color: #1e293b;\">Weekly Press Monitor Report</h1>\n<p style=\"color: #64748b;\">{{ $json.period }}</p>\n\n<div style=\"display: flex; gap: 20px; margin: 20px 0;\">\n  <div style=\"background: #f0f9ff; padding: 20px; border-radius: 8px; flex: 1;\">\n    <h3 style=\"margin: 0; color: #0369a1;\">{{ $json.total_opportunities }}</h3>\n    <p style=\"margin: 5px 0 0; color: #64748b;\">Opportunities Found</p>\n  </div>\n  <div style=\"background: #f0fdf4; padding: 20px; border-radius: 8px; flex: 1;\">\n    <h3 style=\"margin: 0; color: #15803d;\">{{ $json.placement_count }}</h3>\n    <p style=\"margin: 5px 0 0; color: #64748b;\">Placements</p>\n  </div>\n  <div style=\"background: #fefce8; padding: 20px; border-radius: 8px; flex: 1;\">\n    <h3 style=\"margin: 0; color: #a16207;\">{{ $json.conversion_rate }}%</h3>\n    <p style=\"margin: 5px 0 0; color: #64748b;\">Conversion Rate</p>\n  </div>\n</div>\n\n<h2 style=\"color: #1e293b; margin-top: 30px;\">Breakdown by Status</h2>\n<table style=\"border-collapse: collapse; width: 100%;\">\n  {{ Object.entries($json.by_status).map(([k,v]) => `<tr><td style=\"padding: 8px; border: 1px solid #e2e8f0;\">${k}</td><td style=\"padding: 8px; border: 1px solid #e2e8f0; text-align: right;\">${v}</td></tr>`).join('') }}\n</table>\n\n<h2 style=\"color: #1e293b; margin-top: 30px;\">Breakdown by Type</h2>\n<table style=\"border-collapse: collapse; width: 100%;\">\n  {{ Object.entries($json.by_type).map(([k,v]) => `<tr><td style=\"padding: 8px; border: 1px solid #e2e8f0;\">${k.replace('_', ' ')}</td><td style=\"padding: 8px; border: 1px solid #e2e8f0; text-align: right;\">${v}</td></tr>`).join('') }}\n</table>\n\n{{ $json.placements.length > 0 ? `\n<h2 style=\"color: #15803d; margin-top: 30px;\">Placements This Week</h2>\n<ul>\n${$json.placements.map(p => `<li><strong>${p.domain}</strong>: ${p.title}${p.url ? ` - <a href=\"${p.url}\">${p.url}</a>` : ''}</li>`).join('')}\n</ul>\n` : '<p style=\"color: #64748b;\"><em>No placements this week</em></p>' }}\n\n<hr style=\"border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;\">\n<p style=\"color: #94a3b8; font-size: 12px;\">Generated: {{ new Date($json.generated_at).toLocaleString() }}<br>Automated by n8n for lician.com</p>",
+        "options": {}
+      },
+      "id": "email-weekly-report",
+      "name": "Email: Weekly Report",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [1100, 1550],
+      "credentials": {
+        "smtp": {
+          "id": "CONFIGURE_SMTP_CREDENTIALS",
+          "name": "Lician SMTP"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Every 4 Hours": {
+      "main": [
+        [
+          {
+            "node": "Google News: Stock Analysis",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Google News: Best Apps",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "PR Newswire: Finance",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "PR Newswire: Fintech",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Business Wire: Finance",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Business Wire: Technology",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google News: Stock Analysis": {
+      "main": [
+        [
+          {
+            "node": "Parse All RSS Feeds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google News: Best Apps": {
+      "main": [
+        [
+          {
+            "node": "Parse All RSS Feeds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PR Newswire: Finance": {
+      "main": [
+        [
+          {
+            "node": "Parse All RSS Feeds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PR Newswire: Fintech": {
+      "main": [
+        [
+          {
+            "node": "Parse All RSS Feeds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Business Wire: Finance": {
+      "main": [
+        [
+          {
+            "node": "Parse All RSS Feeds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Business Wire: Technology": {
+      "main": [
+        [
+          {
+            "node": "Parse All RSS Feeds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse All RSS Feeds": {
+      "main": [
+        [
+          {
+            "node": "Filter Valid Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Valid Articles": {
+      "main": [
+        [
+          {
+            "node": "Analyze Opportunity Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Opportunity Type": {
+      "main": [
+        [
+          {
+            "node": "Filter Relevant (Score >= 15)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Relevant (Score >= 15)": {
+      "main": [
+        [
+          {
+            "node": "Check If Already Exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check If Already Exists": {
+      "main": [
+        [
+          {
+            "node": "Check If New",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check If New": {
+      "main": [
+        [
+          {
+            "node": "New Opportunities Only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "New Opportunities Only": {
+      "main": [
+        [
+          {
+            "node": "Generate Pitch Template",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Pitch Template": {
+      "main": [
+        [
+          {
+            "node": "Save to Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to Supabase": {
+      "main": [
+        [
+          {
+            "node": "High Priority Only",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Best-Of Lists Only",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Aggregate Run Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "High Priority Only": {
+      "main": [
+        [
+          {
+            "node": "Slack: High Priority Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Best-Of Lists Only": {
+      "main": [
+        [
+          {
+            "node": "Email: Best-Of Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Run Summary": {
+      "main": [
+        [
+          {
+            "node": "Slack: Run Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook: Update Outreach Status": {
+      "main": [
+        [
+          {
+            "node": "Validate Update Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Update Request": {
+      "main": [
+        [
+          {
+            "node": "Update Opportunity Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Opportunity Status": {
+      "main": [
+        [
+          {
+            "node": "If Placement Achieved",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Placement Achieved": {
+      "main": [
+        [
+          {
+            "node": "Slack: Celebrate Placement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Weekly Report (Monday 9AM)": {
+      "main": [
+        [
+          {
+            "node": "Get Weekly Stats",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Weekly Placements",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Weekly Stats": {
+      "main": [
+        [
+          {
+            "node": "Compile Weekly Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Weekly Placements": {
+      "main": [
+        [
+          {
+            "node": "Compile Weekly Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compile Weekly Report": {
+      "main": [
+        [
+          {
+            "node": "Slack: Weekly Report",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Email: Weekly Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "backlinks",
+      "createdAt": "2025-01-16T00:00:00.000Z",
+      "updatedAt": "2025-01-16T00:00:00.000Z"
+    },
+    {
+      "name": "seo",
+      "createdAt": "2025-01-16T00:00:00.000Z",
+      "updatedAt": "2025-01-16T00:00:00.000Z"
+    },
+    {
+      "name": "press",
+      "createdAt": "2025-01-16T00:00:00.000Z",
+      "updatedAt": "2025-01-16T00:00:00.000Z"
+    },
+    {
+      "name": "lician",
+      "createdAt": "2025-01-16T00:00:00.000Z",
+      "updatedAt": "2025-01-16T00:00:00.000Z"
+    }
+  ],
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "lician-n8n-instance"
+  }
+}

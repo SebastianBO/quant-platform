@@ -1,0 +1,735 @@
+{
+  "name": "Backlink Monitor - Lician.com",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 6 * * *"
+            }
+          ]
+        }
+      },
+      "id": "daily-trigger",
+      "name": "Daily Check (6 AM)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * 1"
+            }
+          ]
+        }
+      },
+      "id": "weekly-trigger",
+      "name": "Weekly Report (Monday 9 AM)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 700]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "backlinks",
+          "mode": "list",
+          "cachedResultName": "backlinks"
+        },
+        "returnAll": true,
+        "filterType": "string",
+        "filters": "status=eq.active,status=eq.lost"
+      },
+      "id": "fetch-backlinks",
+      "name": "Fetch Active Backlinks",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [470, 300],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "batchSize": 10,
+        "options": {
+          "reset": false
+        }
+      },
+      "id": "batch-backlinks",
+      "name": "Batch (10 at a time)",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [690, 300]
+    },
+    {
+      "parameters": {
+        "amount": 2000,
+        "unit": "milliseconds"
+      },
+      "id": "rate-limit-wait",
+      "name": "Rate Limit (2s delay)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [910, 300]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Prepare HTTP request for each backlink\nconst backlink = $input.item.json;\n\nreturn {\n  json: {\n    ...backlink,\n    urlToCheck: backlink.source_url,\n    checkStartedAt: new Date().toISOString()\n  }\n};"
+      },
+      "id": "prepare-check",
+      "name": "Prepare Check",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1130, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.urlToCheck }}",
+        "options": {
+          "timeout": 15000,
+          "redirect": {
+            "redirect": {
+              "followRedirects": true,
+              "maxRedirects": 5
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "check-url",
+      "name": "Check URL Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1350, 300],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Analyze the HTTP response and check for backlink\nconst item = $input.item;\nconst backlink = item.json;\nconst httpResponse = backlink.statusCode || 0;\nconst httpBody = backlink.body || '';\nconst httpError = backlink.error || null;\n\n// Get original backlink data (from previous node's data)\nconst originalData = $('Prepare Check').item.json;\n\nlet newStatus = 'active';\nlet isLive = false;\nlet isDoFollow = true;\nlet linkFound = false;\nlet anchorText = originalData.anchor_text || '';\nlet errorMessage = null;\n\n// Check HTTP status\nif (httpError || httpResponse >= 400 || httpResponse === 0) {\n  newStatus = 'broken';\n  errorMessage = httpError ? httpError.message : `HTTP ${httpResponse}`;\n} else {\n  isLive = true;\n  \n  // Check if our link exists on the page\n  const targetUrl = originalData.target_url || 'lician.com';\n  const targetDomain = 'lician.com';\n  \n  // Search for link to lician.com\n  const linkRegex = new RegExp(`<a[^>]*href=[\"']([^\"']*${targetDomain}[^\"']*)[\"'][^>]*>([^<]*)<\\/a>`, 'gi');\n  const matches = httpBody.match(linkRegex);\n  \n  if (matches && matches.length > 0) {\n    linkFound = true;\n    \n    // Check for nofollow\n    const fullLinkRegex = new RegExp(`<a[^>]*href=[\"'][^\"']*${targetDomain}[^\"']*[\"'][^>]*>`, 'gi');\n    const linkTags = httpBody.match(fullLinkRegex);\n    \n    if (linkTags) {\n      for (const tag of linkTags) {\n        if (tag.toLowerCase().includes('nofollow') || \n            tag.toLowerCase().includes('ugc') || \n            tag.toLowerCase().includes('sponsored')) {\n          isDoFollow = false;\n          break;\n        }\n      }\n      \n      // Try to extract anchor text\n      const anchorMatch = httpBody.match(new RegExp(`<a[^>]*href=[\"'][^\"']*${targetDomain}[^\"']*[\"'][^>]*>([^<]*)<\\/a>`, 'i'));\n      if (anchorMatch && anchorMatch[1]) {\n        anchorText = anchorMatch[1].trim();\n      }\n    }\n    \n    newStatus = 'active';\n  } else {\n    // Page loads but link is gone\n    newStatus = 'lost';\n    errorMessage = 'Link to lician.com no longer found on page';\n  }\n}\n\n// Calculate if status changed\nconst statusChanged = originalData.status !== newStatus;\nconst wasActive = originalData.status === 'active';\nconst nowLost = newStatus === 'lost' || newStatus === 'broken';\nconst isNewlyLost = wasActive && nowLost;\n\nreturn {\n  json: {\n    // Original backlink data\n    id: originalData.id,\n    source_url: originalData.source_url,\n    source_domain: originalData.source_domain,\n    target_url: originalData.target_url,\n    source_type: originalData.source_type,\n    domain_authority: originalData.domain_authority,\n    first_seen_at: originalData.first_seen_at,\n    \n    // Previous status\n    previous_status: originalData.status,\n    previous_is_dofollow: originalData.is_dofollow,\n    previous_anchor_text: originalData.anchor_text,\n    \n    // New check results\n    new_status: newStatus,\n    is_live: isLive,\n    is_dofollow: isDoFollow,\n    link_found: linkFound,\n    anchor_text: anchorText,\n    error_message: errorMessage,\n    http_status: httpResponse,\n    \n    // Change detection\n    status_changed: statusChanged,\n    is_newly_lost: isNewlyLost,\n    dofollow_changed: originalData.is_dofollow !== isDoFollow,\n    \n    // Timestamps\n    last_verified_at: new Date().toISOString(),\n    checkStartedAt: originalData.checkStartedAt\n  }\n};"
+      },
+      "id": "analyze-response",
+      "name": "Analyze Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1570, 300]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "backlinks",
+          "mode": "list",
+          "cachedResultName": "backlinks"
+        },
+        "filtersUI": {
+          "filterValues": [
+            {
+              "fieldName": "id",
+              "condition": "equals",
+              "searchValue": "={{ $json.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "={{ $json.new_status }}",
+            "is_dofollow": "={{ $json.is_dofollow }}",
+            "is_verified": true,
+            "verified_at": "={{ $json.last_verified_at }}",
+            "last_verified_at": "={{ $json.last_verified_at }}",
+            "anchor_text": "={{ $json.anchor_text || $json.previous_anchor_text }}"
+          },
+          "cachedResultName": ""
+        },
+        "options": {}
+      },
+      "id": "update-backlink",
+      "name": "Update Backlink Status",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1790, 300],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "newly-lost-check",
+              "leftValue": "={{ $json.is_newly_lost }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-lost",
+      "name": "Filter Newly Lost",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [2010, 200]
+    },
+    {
+      "parameters": {
+        "channel": "#backlink-alerts",
+        "text": "=:rotating_light: *Backlink Lost Alert*\n\n*Source:* {{ $json.source_domain }}\n*Page URL:* {{ $json.source_url }}\n*Our Page:* {{ $json.target_url }}\n*Link Type:* {{ $json.source_type || 'Unknown' }}\n*Domain Authority:* {{ $json.domain_authority || 'N/A' }}\n\n*Reason:* {{ $json.error_message || 'Link removed' }}\n*HTTP Status:* {{ $json.http_status }}\n\n*Was DoFollow:* {{ $json.previous_is_dofollow ? 'Yes' : 'No' }}\n*First Seen:* {{ $json.first_seen_at }}\n*Lost At:* {{ $json.last_verified_at }}\n\n---\n_Investigate: {{ $json.source_url }}_",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "slack-alert-lost",
+      "name": "Alert Lost Backlink",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [2230, 200],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Lician Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "dofollow-changed",
+              "leftValue": "={{ $json.dofollow_changed }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "still-active",
+              "leftValue": "={{ $json.new_status }}",
+              "rightValue": "active",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-dofollow-change",
+      "name": "Filter DoFollow Changed",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [2010, 400]
+    },
+    {
+      "parameters": {
+        "channel": "#backlink-alerts",
+        "text": "=:warning: *Backlink DoFollow Status Changed*\n\n*Source:* {{ $json.source_domain }}\n*Page URL:* {{ $json.source_url }}\n*Our Page:* {{ $json.target_url }}\n\n*Previous:* {{ $json.previous_is_dofollow ? 'DoFollow' : 'NoFollow' }}\n*Now:* {{ $json.is_dofollow ? 'DoFollow' : 'NoFollow' }}\n\n---\n_Review: {{ $json.source_url }}_",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "slack-alert-dofollow",
+      "name": "Alert DoFollow Change",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [2230, 400],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Lician Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "backlinks",
+          "mode": "list",
+          "cachedResultName": "backlinks"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "id": "fetch-all-backlinks-report",
+      "name": "Fetch All Backlinks for Report",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [470, 700],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Generate weekly backlink report\nconst items = $input.all();\nconst backlinks = items.map(i => i.json);\n\n// Calculate statistics\nconst now = new Date();\nconst oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);\n\nconst stats = {\n  total: backlinks.length,\n  active: backlinks.filter(b => b.status === 'active').length,\n  lost: backlinks.filter(b => b.status === 'lost').length,\n  broken: backlinks.filter(b => b.status === 'broken').length,\n  dofollow: backlinks.filter(b => b.is_dofollow && b.status === 'active').length,\n  nofollow: backlinks.filter(b => !b.is_dofollow && b.status === 'active').length,\n  \n  // Recent changes (last 7 days)\n  lostThisWeek: backlinks.filter(b => \n    b.status === 'lost' && \n    new Date(b.last_verified_at) > oneWeekAgo\n  ).length,\n  newThisWeek: backlinks.filter(b => \n    new Date(b.first_seen_at) > oneWeekAgo\n  ).length\n};\n\n// Group by source type\nconst bySourceType = {};\nfor (const b of backlinks) {\n  const type = b.source_type || 'unknown';\n  if (!bySourceType[type]) {\n    bySourceType[type] = { total: 0, active: 0, lost: 0, dofollow: 0 };\n  }\n  bySourceType[type].total++;\n  if (b.status === 'active') bySourceType[type].active++;\n  if (b.status === 'lost') bySourceType[type].lost++;\n  if (b.is_dofollow && b.status === 'active') bySourceType[type].dofollow++;\n}\n\n// Group by domain (top 10)\nconst byDomain = {};\nfor (const b of backlinks) {\n  if (b.status !== 'active') continue;\n  const domain = b.source_domain || 'unknown';\n  if (!byDomain[domain]) {\n    byDomain[domain] = { count: 0, dofollow: 0, da: b.domain_authority || 0 };\n  }\n  byDomain[domain].count++;\n  if (b.is_dofollow) byDomain[domain].dofollow++;\n  if (b.domain_authority > byDomain[domain].da) {\n    byDomain[domain].da = b.domain_authority;\n  }\n}\n\nconst topDomains = Object.entries(byDomain)\n  .sort((a, b) => (b[1].da || 0) - (a[1].da || 0))\n  .slice(0, 10);\n\n// Recently lost (for attention)\nconst recentlyLost = backlinks\n  .filter(b => b.status === 'lost' || b.status === 'broken')\n  .filter(b => new Date(b.last_verified_at) > oneWeekAgo)\n  .map(b => ({\n    domain: b.source_domain,\n    url: b.source_url,\n    target: b.target_url,\n    da: b.domain_authority,\n    lostAt: b.last_verified_at\n  }));\n\nreturn [{\n  json: {\n    stats,\n    bySourceType,\n    topDomains,\n    recentlyLost,\n    reportGeneratedAt: now.toISOString(),\n    reportPeriod: `${oneWeekAgo.toISOString().split('T')[0]} to ${now.toISOString().split('T')[0]}`\n  }\n}];"
+      },
+      "id": "generate-report",
+      "name": "Generate Weekly Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [690, 700]
+    },
+    {
+      "parameters": {
+        "fromEmail": "seo@lician.com",
+        "toEmail": "team@lician.com",
+        "subject": "=Weekly Backlink Report - Lician.com ({{ $json.reportPeriod }})",
+        "emailType": "html",
+        "html": "=<html>\n<head>\n  <style>\n    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; color: #333; }\n    h1 { color: #1a1a2e; border-bottom: 2px solid #0f3460; padding-bottom: 10px; }\n    h2 { color: #16213e; margin-top: 30px; }\n    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 20px 0; }\n    .stat-box { background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center; }\n    .stat-box.success { background: #d4edda; }\n    .stat-box.warning { background: #fff3cd; }\n    .stat-box.danger { background: #f8d7da; }\n    .stat-number { font-size: 32px; font-weight: bold; color: #16213e; }\n    .stat-label { font-size: 12px; color: #666; text-transform: uppercase; }\n    table { width: 100%; border-collapse: collapse; margin: 15px 0; }\n    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }\n    th { background: #f8f9fa; font-weight: 600; }\n    .lost-row { background: #fff3cd; }\n    .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; font-size: 12px; }\n  </style>\n</head>\n<body>\n  <h1>Weekly Backlink Report</h1>\n  <p>Report period: <strong>{{ $json.reportPeriod }}</strong></p>\n  \n  <div class=\"stats-grid\">\n    <div class=\"stat-box success\">\n      <div class=\"stat-number\">{{ $json.stats.active }}</div>\n      <div class=\"stat-label\">Active Backlinks</div>\n    </div>\n    <div class=\"stat-box\">\n      <div class=\"stat-number\">{{ $json.stats.dofollow }}</div>\n      <div class=\"stat-label\">DoFollow Links</div>\n    </div>\n    <div class=\"stat-box warning\">\n      <div class=\"stat-number\">{{ $json.stats.lost }}</div>\n      <div class=\"stat-label\">Lost Links</div>\n    </div>\n    <div class=\"stat-box {{ $json.stats.lostThisWeek > 0 ? 'danger' : '' }}\">\n      <div class=\"stat-number\">{{ $json.stats.lostThisWeek }}</div>\n      <div class=\"stat-label\">Lost This Week</div>\n    </div>\n  </div>\n  \n  <h2>Summary Statistics</h2>\n  <table>\n    <tr><td>Total Backlinks Tracked</td><td><strong>{{ $json.stats.total }}</strong></td></tr>\n    <tr><td>Active Backlinks</td><td>{{ $json.stats.active }}</td></tr>\n    <tr><td>DoFollow / NoFollow</td><td>{{ $json.stats.dofollow }} / {{ $json.stats.nofollow }}</td></tr>\n    <tr><td>Lost Backlinks</td><td>{{ $json.stats.lost }}</td></tr>\n    <tr><td>Broken Links</td><td>{{ $json.stats.broken }}</td></tr>\n    <tr><td>New This Week</td><td style=\"color: green;\">+{{ $json.stats.newThisWeek }}</td></tr>\n    <tr><td>Lost This Week</td><td style=\"color: red;\">-{{ $json.stats.lostThisWeek }}</td></tr>\n  </table>\n  \n  <h2>Backlinks by Source Type</h2>\n  <table>\n    <tr>\n      <th>Source Type</th>\n      <th>Total</th>\n      <th>Active</th>\n      <th>DoFollow</th>\n      <th>Lost</th>\n    </tr>\n    {{ Object.entries($json.bySourceType).map(([type, data]) => \n      `<tr>\n        <td>${type}</td>\n        <td>${data.total}</td>\n        <td>${data.active}</td>\n        <td>${data.dofollow}</td>\n        <td>${data.lost}</td>\n      </tr>`\n    ).join('') }}\n  </table>\n  \n  <h2>Top Domains by Authority</h2>\n  <table>\n    <tr>\n      <th>Domain</th>\n      <th>Links</th>\n      <th>DoFollow</th>\n      <th>Domain Authority</th>\n    </tr>\n    {{ $json.topDomains.map(([domain, data]) => \n      `<tr>\n        <td>${domain}</td>\n        <td>${data.count}</td>\n        <td>${data.dofollow}</td>\n        <td>${data.da || 'N/A'}</td>\n      </tr>`\n    ).join('') }}\n  </table>\n  \n  {{ $json.recentlyLost.length > 0 ? `\n  <h2>Recently Lost Backlinks (Action Required)</h2>\n  <table>\n    <tr>\n      <th>Domain</th>\n      <th>Target Page</th>\n      <th>DA</th>\n      <th>Lost Date</th>\n    </tr>\n    ${$json.recentlyLost.map(link => \n      `<tr class=\"lost-row\">\n        <td><a href=\"${link.url}\">${link.domain}</a></td>\n        <td>${link.target}</td>\n        <td>${link.da || 'N/A'}</td>\n        <td>${new Date(link.lostAt).toLocaleDateString()}</td>\n      </tr>`\n    ).join('')}\n  </table>\n  ` : '<p style=\"color: green;\">No backlinks lost this week!</p>'}\n  \n  <div class=\"footer\">\n    <p>Generated by n8n Backlink Monitor for lician.com</p>\n    <p>{{ $json.reportGeneratedAt }}</p>\n  </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "id": "send-weekly-email",
+      "name": "Send Weekly Report Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [910, 700],
+      "credentials": {
+        "smtp": {
+          "id": "CONFIGURE_SMTP_CREDENTIALS",
+          "name": "Lician SMTP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "channel": "#backlink-alerts",
+        "text": "=:bar_chart: *Weekly Backlink Report*\n\n*Period:* {{ $json.reportPeriod }}\n\n*Overall Status:*\n- Active: {{ $json.stats.active }} backlinks\n- DoFollow: {{ $json.stats.dofollow }}\n- NoFollow: {{ $json.stats.nofollow }}\n\n*This Week:*\n- :heavy_plus_sign: New: {{ $json.stats.newThisWeek }}\n- :heavy_minus_sign: Lost: {{ $json.stats.lostThisWeek }}\n\n{{ $json.stats.lostThisWeek > 0 ? ':warning: *Action Required:* ' + $json.stats.lostThisWeek + ' backlinks lost - check email for details' : ':white_check_mark: No backlinks lost this week!' }}\n\n_Full report sent to team@lician.com_",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "slack-weekly-summary",
+      "name": "Slack Weekly Summary",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1130, 700],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Lician Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "backlink-check",
+        "options": {},
+        "responseMode": "responseNode"
+      },
+      "id": "manual-trigger",
+      "name": "Manual Check Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 500],
+      "webhookId": "backlink-check-lician"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Transform webhook payload for single backlink check\nconst item = $input.first();\nconst body = item.json.body || item.json;\n\n// Can pass a specific backlink ID or check all\nif (body.backlink_id) {\n  return [{ json: { specificId: body.backlink_id } }];\n}\n\n// Otherwise proceed to fetch all\nreturn [{ json: { checkAll: true } }];"
+      },
+      "id": "parse-webhook",
+      "name": "Parse Webhook",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [470, 500]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"message\": \"Backlink check initiated\", \"timestamp\": new Date().toISOString() } }}",
+        "options": {}
+      },
+      "id": "webhook-response",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2450, 200]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.moz.com/v2/url_metrics",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "targets",
+              "value": "={{ $json.source_domain }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "check-domain-authority",
+      "name": "Check Domain Authority (Moz)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2010, 600],
+      "disabled": true,
+      "notesInFlow": true,
+      "notes": "Enable this node and configure Moz API credentials to track DA changes. Alternatively use similar APIs like Ahrefs, SEMrush, or free alternatives.",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "CONFIGURE_MOZ_CREDENTIALS",
+          "name": "Moz API"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-more",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-batch-done",
+      "name": "More Batches?",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [2450, 300]
+    }
+  ],
+  "connections": {
+    "Daily Check (6 AM)": {
+      "main": [
+        [
+          {
+            "node": "Fetch Active Backlinks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Active Backlinks": {
+      "main": [
+        [
+          {
+            "node": "Batch (10 at a time)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Batch (10 at a time)": {
+      "main": [
+        [
+          {
+            "node": "Rate Limit (2s delay)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rate Limit (2s delay)": {
+      "main": [
+        [
+          {
+            "node": "Prepare Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Check": {
+      "main": [
+        [
+          {
+            "node": "Check URL Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check URL Status": {
+      "main": [
+        [
+          {
+            "node": "Analyze Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Response": {
+      "main": [
+        [
+          {
+            "node": "Update Backlink Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Backlink Status": {
+      "main": [
+        [
+          {
+            "node": "Filter Newly Lost",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Filter DoFollow Changed",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check Batch Done?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Newly Lost": {
+      "main": [
+        [
+          {
+            "node": "Alert Lost Backlink",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter DoFollow Changed": {
+      "main": [
+        [
+          {
+            "node": "Alert DoFollow Change",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Batch Done?": {
+      "main": [
+        [
+          {
+            "node": "Batch (10 at a time)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Weekly Report (Monday 9 AM)": {
+      "main": [
+        [
+          {
+            "node": "Fetch All Backlinks for Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch All Backlinks for Report": {
+      "main": [
+        [
+          {
+            "node": "Generate Weekly Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Weekly Report": {
+      "main": [
+        [
+          {
+            "node": "Send Weekly Report Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Weekly Report Email": {
+      "main": [
+        [
+          {
+            "node": "Slack Weekly Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Check Webhook": {
+      "main": [
+        [
+          {
+            "node": "Parse Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Webhook": {
+      "main": [
+        [
+          {
+            "node": "Fetch Active Backlinks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alert Lost Backlink": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "saveExecutionProgress": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "backlinks",
+      "createdAt": "2025-01-16T00:00:00.000Z",
+      "updatedAt": "2025-01-16T00:00:00.000Z"
+    },
+    {
+      "name": "seo",
+      "createdAt": "2025-01-16T00:00:00.000Z",
+      "updatedAt": "2025-01-16T00:00:00.000Z"
+    },
+    {
+      "name": "monitoring",
+      "createdAt": "2025-01-16T00:00:00.000Z",
+      "updatedAt": "2025-01-16T00:00:00.000Z"
+    },
+    {
+      "name": "lician",
+      "createdAt": "2025-01-16T00:00:00.000Z",
+      "updatedAt": "2025-01-16T00:00:00.000Z"
+    }
+  ],
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "lician-n8n-instance"
+  }
+}

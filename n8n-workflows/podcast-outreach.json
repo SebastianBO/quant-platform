@@ -1,0 +1,1247 @@
+{
+  "name": "Podcast Guest Outreach - Lician.com",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "podcast-target",
+        "responseMode": "responseNode",
+        "options": {
+          "responseData": "allEntries"
+        }
+      },
+      "id": "webhook-add-podcast",
+      "name": "Webhook: Add Podcast",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 200],
+      "webhookId": "podcast-target"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6
+            }
+          ]
+        }
+      },
+      "id": "schedule-process-followups",
+      "name": "Schedule: Process Follow-ups",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 600]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "podcast-response",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-track-response",
+      "name": "Webhook: Track Response",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 1000],
+      "webhookId": "podcast-response"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "podcast-booking",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-track-booking",
+      "name": "Webhook: Track Booking",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 1400],
+      "webhookId": "podcast-booking"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "podcast-episode-released",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-episode-released",
+      "name": "Webhook: Episode Released",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 1800],
+      "webhookId": "podcast-episode-released"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * 1"
+            }
+          ]
+        }
+      },
+      "id": "schedule-weekly-report",
+      "name": "Schedule: Weekly Pipeline Report",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 2200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/podcast_targets",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  name: $json.body.name,\n  host_name: $json.body.host_name,\n  host_email: $json.body.host_email,\n  category: $json.body.category || 'investing',\n  audience_size: $json.body.audience_size || 'unknown',\n  website_url: $json.body.website_url || '',\n  apple_podcasts_url: $json.body.apple_podcasts_url || '',\n  spotify_url: $json.body.spotify_url || '',\n  notes: $json.body.notes || '',\n  status: 'pending',\n  outreach_stage: 'initial',\n  emails_sent: 0,\n  last_email_at: null,\n  next_followup_at: new Date().toISOString(),\n  booking_date: null,\n  recording_date: null,\n  episode_release_date: null,\n  episode_url: null,\n  tags: $json.body.tags || [],\n  created_at: new Date().toISOString(),\n  updated_at: new Date().toISOString()\n}) }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "id": "supabase-insert-podcast",
+      "name": "Supabase: Insert Podcast",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [500, 200],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, message: 'Podcast added to outreach pipeline', podcast: $json.body } }}"
+      },
+      "id": "respond-add-success",
+      "name": "Respond: Podcast Added",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [720, 200]
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "CONFIGURE_SLACK_CHANNEL",
+          "mode": "id"
+        },
+        "text": "=:microphone: *New Podcast Target Added*\n\n*Podcast:* {{ $json.body.name }}\n*Host:* {{ $json.body.host_name }}\n*Category:* {{ $json.body.category || 'investing' }}\n*Audience:* {{ $json.body.audience_size || 'Unknown' }}\n\nOutreach will begin shortly.",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "slack-notify-new-podcast",
+      "name": "Slack: New Podcast Added",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [940, 200],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Slack Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/podcast_targets",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "select",
+              "value": "*"
+            },
+            {
+              "name": "status",
+              "value": "in.(pending,following_up)"
+            },
+            {
+              "name": "next_followup_at",
+              "value": "lte.{{ new Date().toISOString() }}"
+            },
+            {
+              "name": "order",
+              "value": "created_at.asc"
+            },
+            {
+              "name": "limit",
+              "value": "15"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "supabase-fetch-pending",
+      "name": "Supabase: Fetch Pending",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [500, 600],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-podcasts",
+              "leftValue": "={{ $json.length || 0 }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-has-podcasts",
+      "name": "Filter: Has Podcasts",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [720, 600]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "={{ Object.keys($json) }}",
+        "options": {}
+      },
+      "id": "split-podcasts",
+      "name": "Split Podcasts",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [940, 600]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Generate personalized pitch email based on podcast category and outreach stage\nconst podcast = $input.item.json;\nconst category = podcast.category || 'investing';\nconst stage = podcast.outreach_stage || 'initial';\nconst emailsSent = podcast.emails_sent || 0;\n\n// CEO/Founder info for lician.com\nconst founderInfo = {\n  name: 'Sebastian Benzian-Olsson',\n  title: 'Founder & CEO',\n  company: 'Lician.com',\n  bio: 'Building AI-powered financial analysis tools for retail investors',\n  linkedin: 'https://linkedin.com/in/sebastianbenzian',\n  twitter: 'https://twitter.com/lician_finance'\n};\n\n// Topic angles by category\nconst topicsByCategory = {\n  investing: [\n    'How AI is democratizing stock analysis for retail investors',\n    'The future of financial data accessibility',\n    'Building data-driven investment strategies without Wall Street resources',\n    'Why institutional-grade analytics should be available to everyone'\n  ],\n  personal_finance: [\n    'Using technology to make smarter investment decisions',\n    'How everyday investors can compete with hedge funds using AI',\n    'Demystifying financial statements for personal wealth building',\n    'The role of data in personal investment success'\n  ],\n  business: [\n    'Building a fintech startup in the AI era',\n    'The future of financial technology and retail investing',\n    'Lessons from building a platform with 5,000+ company profiles',\n    'How startups can leverage AI for financial analysis'\n  ]\n};\n\n// Email templates by category\nconst templates = {\n  initial: {\n    investing: {\n      subject: `Guest Pitch: AI and the Future of Retail Investing`,\n      body: `Hi ${podcast.host_name || 'there'},\n\nI'm ${founderInfo.name}, founder of Lician.com - a financial data platform that puts institutional-grade stock analysis in the hands of everyday investors.\n\nI've been a listener of ${podcast.name} and love how you break down investing concepts for your audience. I'd love to be a guest and discuss:\n\n${topicsByCategory.investing.map(t => '- ' + t).join('\\n')}\n\nA bit about my background:\n- Built Lician.com from the ground up, now covering 5,000+ US companies\n- Developed AI tools that analyze SEC filings and financial statements\n- Passionate about democratizing financial data access\n\nI think your audience would find value in learning how AI is changing the investing landscape and what tools are now available to level the playing field.\n\nWould you be open to a 15-minute call to discuss if this could be a fit?\n\nBest,\n${founderInfo.name}\nFounder, Lician.com\n${founderInfo.linkedin}`\n    },\n    personal_finance: {\n      subject: `Guest Pitch: Tech Tools for Smarter Personal Investing`,\n      body: `Hi ${podcast.host_name || 'there'},\n\nI'm ${founderInfo.name}, founder of Lician.com - a platform helping everyday people make more informed investment decisions using AI-powered analysis.\n\nI've been enjoying ${podcast.name} and appreciate how you make personal finance accessible. I'd love to share insights with your audience about:\n\n${topicsByCategory.personal_finance.map(t => '- ' + t).join('\\n')}\n\nMy background:\n- Built a financial data platform now used by thousands of retail investors\n- Developed tools that translate complex SEC filings into actionable insights\n- Former engineer turned fintech entrepreneur\n\nI believe your listeners would benefit from understanding how technology can enhance their investment research without needing a finance degree.\n\nWould a quick call make sense to explore this?\n\nBest,\n${founderInfo.name}\nFounder, Lician.com\n${founderInfo.linkedin}`\n    },\n    business: {\n      subject: `Guest Pitch: Building AI-Powered Fintech`,\n      body: `Hi ${podcast.host_name || 'there'},\n\nI'm ${founderInfo.name}, founder of Lician.com - an AI-powered financial analysis platform I've built from scratch.\n\nI follow ${podcast.name} and think your audience would enjoy hearing about:\n\n${topicsByCategory.business.map(t => '- ' + t).join('\\n')}\n\nThe Lician.com story:\n- Started as a side project, now serving thousands of investors\n- Covers 5,000+ US companies and 100,000+ EU companies\n- Built 25+ AI tools for financial analysis\n- Bootstrapped approach to fintech\n\nI can share practical insights on building a fintech product, leveraging AI, and the future of financial technology.\n\nWould you be interested in having me on?\n\nBest,\n${founderInfo.name}\nFounder, Lician.com\n${founderInfo.linkedin}`\n    }\n  },\n  followup_1: {\n    investing: {\n      subject: `Following up: AI in Retail Investing - ${podcast.name}`,\n      body: `Hi ${podcast.host_name || 'there'},\n\nI wanted to follow up on my pitch to join ${podcast.name}.\n\nSince my last email, we've shipped some interesting updates at Lician.com - including new AI agents that can analyze earnings reports in seconds. I'd love to demo these tools and discuss how AI is reshaping how retail investors research stocks.\n\nA few topics I could cover:\n- Live demo of AI-powered financial analysis\n- The psychology of data-driven investing\n- Common mistakes retail investors make (and how to avoid them)\n\nHappy to work around your schedule.\n\nBest,\n${founderInfo.name}\nhttps://lician.com`\n    },\n    personal_finance: {\n      subject: `Quick follow-up: ${podcast.name} guest opportunity`,\n      body: `Hi ${podcast.host_name || 'there'},\n\nJust circling back on my guest pitch for ${podcast.name}.\n\nI recently published a guide on how retail investors can use AI tools to analyze stocks like professionals - this might make for interesting discussion material for your audience.\n\nI'm flexible on topics and happy to tailor the conversation to what resonates most with your listeners.\n\nLet me know if you'd like to chat!\n\nBest,\n${founderInfo.name}\nhttps://lician.com`\n    },\n    business: {\n      subject: `Following up: Fintech founder story for ${podcast.name}`,\n      body: `Hi ${podcast.host_name || 'there'},\n\nWanted to follow up on my earlier email about being a guest on ${podcast.name}.\n\nSome recent milestones at Lician.com that might make for good discussion:\n- Hit 5,000+ US company coverage\n- Launched AI-powered earnings analysis\n- Growing user base without external funding\n\nI can share tactical insights on building fintech products, growth strategies, and navigating the AI landscape as a founder.\n\nOpen to a quick intro call if helpful.\n\nBest,\n${founderInfo.name}\nhttps://lician.com`\n    }\n  },\n  followup_2: {\n    investing: {\n      subject: `Last check-in: ${podcast.name} guest spot`,\n      body: `Hi ${podcast.host_name || 'there'},\n\nOne final follow-up on my pitch to discuss AI and retail investing on ${podcast.name}.\n\nI understand you're busy - if now isn't the right time, no worries. But if you're ever looking for a guest who can speak to the intersection of AI, financial data, and retail investing, I'd be happy to jump on.\n\nFeel free to reach out whenever.\n\nBest,\n${founderInfo.name}\nLician.com`\n    },\n    personal_finance: {\n      subject: `Final follow-up: ${podcast.name}`,\n      body: `Hi ${podcast.host_name || 'there'},\n\nLast email from me on this - I know you probably get a lot of guest pitches!\n\nIf you ever need a guest who can talk about using technology for smarter personal investing, I'm available. Just reply to this thread anytime.\n\nKeep up the great work with ${podcast.name}!\n\nBest,\n${founderInfo.name}\nLician.com`\n    },\n    business: {\n      subject: `Last note: ${podcast.name} guest opportunity`,\n      body: `Hi ${podcast.host_name || 'there'},\n\nFinal follow-up on my guest pitch for ${podcast.name}.\n\nIf you ever need a fintech founder to share insights on building AI products, scaling without funding, or the future of financial technology, I'm an email away.\n\nWishing you continued success with the show!\n\nBest,\n${founderInfo.name}\nLician.com`\n    }\n  }\n};\n\n// Determine template key\nlet templateKey = 'initial';\nif (emailsSent === 1) templateKey = 'followup_1';\nif (emailsSent >= 2) templateKey = 'followup_2';\n\n// Get template for this category and stage\nconst categoryTemplates = templates[templateKey];\nconst template = categoryTemplates[category] || categoryTemplates['investing'];\n\n// Calculate next followup (5 days for initial, 7 for followup_1, null for final)\nconst followupDays = { initial: 5, followup_1: 7, followup_2: null };\nlet nextFollowup = null;\nif (followupDays[templateKey]) {\n  const date = new Date();\n  date.setDate(date.getDate() + followupDays[templateKey]);\n  nextFollowup = date.toISOString();\n}\n\n// Determine next stage\nconst nextStage = {\n  initial: 'followup_1',\n  followup_1: 'followup_2',\n  followup_2: 'completed'\n};\n\n// Add tracking pixel\nconst trackingId = Buffer.from(`podcast-${podcast.id}-${Date.now()}`).toString('base64');\nconst trackingPixel = `<img src=\"https://lician.com/api/track/email-open?id=${trackingId}\" width=\"1\" height=\"1\" style=\"display:none\" />`;\n\nconst htmlBody = template.body.replace(/\\n/g, '<br>') + trackingPixel;\n\nreturn {\n  json: {\n    ...podcast,\n    email: {\n      to: podcast.host_email,\n      subject: template.subject,\n      text: template.body,\n      html: htmlBody,\n      trackingId\n    },\n    update: {\n      outreach_stage: nextStage[templateKey],\n      emails_sent: emailsSent + 1,\n      last_email_at: new Date().toISOString(),\n      next_followup_at: nextFollowup,\n      status: nextStage[templateKey] === 'completed' ? 'completed' : 'following_up',\n      updated_at: new Date().toISOString()\n    },\n    templateUsed: templateKey,\n    categoryUsed: category,\n    isFinalEmail: templateKey === 'followup_2'\n  }\n};"
+      },
+      "id": "generate-pitch-email",
+      "name": "Generate Pitch Email",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1160, 600]
+    },
+    {
+      "parameters": {
+        "fromEmail": "outreach@lician.com",
+        "toEmail": "={{ $json.email.to }}",
+        "subject": "={{ $json.email.subject }}",
+        "emailType": "html",
+        "html": "={{ $json.email.html }}",
+        "options": {
+          "replyTo": "hello@lician.com"
+        }
+      },
+      "id": "send-pitch-email",
+      "name": "Send Pitch Email (SMTP)",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [1380, 600],
+      "credentials": {
+        "smtp": {
+          "id": "CONFIGURE_SMTP_CREDENTIALS",
+          "name": "Outreach SMTP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/podcast_targets",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": "eq.{{ $('Generate Pitch Email').item.json.id }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($('Generate Pitch Email').item.json.update) }}",
+        "options": {}
+      },
+      "id": "supabase-update-podcast-status",
+      "name": "Supabase: Update Podcast Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1600, 600],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/podcast_email_log",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  podcast_id: $('Generate Pitch Email').item.json.id,\n  email_type: $('Generate Pitch Email').item.json.templateUsed,\n  category: $('Generate Pitch Email').item.json.categoryUsed,\n  subject: $('Generate Pitch Email').item.json.email.subject,\n  recipient: $('Generate Pitch Email').item.json.email.to,\n  tracking_id: $('Generate Pitch Email').item.json.email.trackingId,\n  sent_at: new Date().toISOString(),\n  opened_at: null,\n  replied_at: null\n}) }}",
+        "options": {}
+      },
+      "id": "supabase-log-pitch-email",
+      "name": "Supabase: Log Pitch Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1600, 780],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 10,
+        "unit": "seconds"
+      },
+      "id": "wait-rate-limit",
+      "name": "Wait (Rate Limit)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1820, 600]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Parse response webhook payload\nconst payload = $input.item.json.body || $input.item.json;\n\n// Response types: reply, interested, declined, open, bounce\nconst responseType = payload.type || 'reply';\nconst trackingId = payload.tracking_id || payload.trackingId;\nconst podcastId = payload.podcast_id || payload.podcastId;\nconst replyContent = payload.content || payload.message || '';\nconst fromEmail = payload.from_email || payload.fromEmail || '';\n\n// Determine new status based on response type\nconst statusMap = {\n  reply: 'responded',\n  open: null, // Don't change status on open\n  bounce: 'bounced',\n  interested: 'interested',\n  declined: 'declined',\n  booked: 'booked'\n};\n\nconst newStatus = statusMap[responseType];\n\nreturn {\n  json: {\n    responseType,\n    trackingId,\n    podcastId,\n    replyContent,\n    fromEmail,\n    newStatus,\n    timestamp: new Date().toISOString(),\n    shouldNotify: ['reply', 'interested', 'booked'].includes(responseType)\n  }\n};"
+      },
+      "id": "parse-response",
+      "name": "Parse Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 1000]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "has-id",
+              "leftValue": "={{ $json.trackingId || $json.podcastId }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-valid-response",
+      "name": "Filter: Valid Response",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [720, 1000]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "has-status",
+              "leftValue": "={{ $json.newStatus }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-should-update",
+      "name": "Filter: Should Update Status",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [940, 1000]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/podcast_targets",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": "eq.{{ $json.podcastId }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  status: $json.newStatus,\n  responded_at: new Date().toISOString(),\n  response_type: $json.responseType,\n  response_content: $json.replyContent?.substring(0, 2000) || '',\n  updated_at: new Date().toISOString()\n}) }}",
+        "options": {}
+      },
+      "id": "supabase-update-response",
+      "name": "Supabase: Update Response",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1160, 1000],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/podcast_email_log",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "tracking_id",
+              "value": "eq.{{ $('Parse Response').item.json.trackingId }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($('Parse Response').item.json.responseType === 'open' ? {\n  opened_at: new Date().toISOString()\n} : {\n  replied_at: new Date().toISOString()\n}) }}",
+        "options": {}
+      },
+      "id": "supabase-update-email-log",
+      "name": "Supabase: Update Email Log",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [940, 1180],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "should-notify",
+              "leftValue": "={{ $json.shouldNotify }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-should-notify",
+      "name": "Filter: Should Notify",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [1380, 1000]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/podcast_targets",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": "eq.{{ $('Parse Response').item.json.podcastId }}"
+            },
+            {
+              "name": "select",
+              "value": "*"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "supabase-get-podcast-details",
+      "name": "Supabase: Get Podcast Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1600, 1000],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "CONFIGURE_SLACK_CHANNEL",
+          "mode": "id"
+        },
+        "text": "=:studio_microphone: *Podcast Outreach Response!*\n\n*Podcast:* {{ $json[0]?.name || 'Unknown' }}\n*Host:* {{ $json[0]?.host_name || 'Unknown' }}\n*Category:* {{ $json[0]?.category || 'Unknown' }}\n*Response Type:* {{ $('Parse Response').item.json.responseType }}\n\n*Reply Content:*\n```\n{{ $('Parse Response').item.json.replyContent || 'No content' }}\n```\n\n{{ $('Parse Response').item.json.responseType === 'interested' ? ':tada: They are interested! Follow up to schedule.' : '' }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "slack-notify-response",
+      "name": "Slack: Notify Response",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1820, 1000],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Slack Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, message: 'Response recorded', type: $('Parse Response').item.json.responseType } }}"
+      },
+      "id": "respond-response-recorded",
+      "name": "Respond: Response Recorded",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2040, 1000]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Parse booking webhook payload\nconst payload = $input.item.json.body || $input.item.json;\n\nconst podcastId = payload.podcast_id || payload.podcastId;\nconst bookingDate = payload.booking_date || new Date().toISOString();\nconst recordingDate = payload.recording_date || payload.recordingDate;\nconst notes = payload.notes || '';\nconst calendarLink = payload.calendar_link || '';\n\nreturn {\n  json: {\n    podcastId,\n    bookingDate,\n    recordingDate,\n    notes,\n    calendarLink,\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "id": "parse-booking",
+      "name": "Parse Booking",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 1400]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/podcast_targets",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": "eq.{{ $json.podcastId }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  status: 'booked',\n  booking_date: $json.bookingDate,\n  recording_date: $json.recordingDate,\n  booking_notes: $json.notes,\n  calendar_link: $json.calendarLink,\n  updated_at: new Date().toISOString()\n}) }}",
+        "options": {}
+      },
+      "id": "supabase-update-booking",
+      "name": "Supabase: Update Booking",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [720, 1400],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/podcast_targets",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": "eq.{{ $('Parse Booking').item.json.podcastId }}"
+            },
+            {
+              "name": "select",
+              "value": "*"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "supabase-get-booked-podcast",
+      "name": "Supabase: Get Booked Podcast",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [940, 1400],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "CONFIGURE_SLACK_CHANNEL",
+          "mode": "id"
+        },
+        "text": "=:tada: *Podcast Booked!*\n\n*Podcast:* {{ $json[0]?.name || 'Unknown' }}\n*Host:* {{ $json[0]?.host_name || 'Unknown' }}\n*Category:* {{ $json[0]?.category || 'Unknown' }}\n*Audience:* {{ $json[0]?.audience_size || 'Unknown' }}\n\n*Recording Date:* {{ $('Parse Booking').item.json.recordingDate || 'TBD' }}\n*Notes:* {{ $('Parse Booking').item.json.notes || 'None' }}\n\n{{ $('Parse Booking').item.json.calendarLink ? '<' + $('Parse Booking').item.json.calendarLink + '|View Calendar Event>' : '' }}\n\nTime to prepare talking points!",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "slack-notify-booking",
+      "name": "Slack: Notify Booking",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1160, 1400],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Slack Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, message: 'Booking recorded', podcast: $('Supabase: Get Booked Podcast').item.json[0]?.name } }}"
+      },
+      "id": "respond-booking-recorded",
+      "name": "Respond: Booking Recorded",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1380, 1400]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Parse episode release webhook payload\nconst payload = $input.item.json.body || $input.item.json;\n\nconst podcastId = payload.podcast_id || payload.podcastId;\nconst episodeUrl = payload.episode_url || payload.episodeUrl;\nconst episodeTitle = payload.episode_title || payload.episodeTitle || '';\nconst releaseDate = payload.release_date || new Date().toISOString();\nconst appleUrl = payload.apple_url || '';\nconst spotifyUrl = payload.spotify_url || '';\nconst youtubeUrl = payload.youtube_url || '';\n\nreturn {\n  json: {\n    podcastId,\n    episodeUrl,\n    episodeTitle,\n    releaseDate,\n    appleUrl,\n    spotifyUrl,\n    youtubeUrl,\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "id": "parse-episode-release",
+      "name": "Parse Episode Release",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 1800]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/podcast_targets",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": "eq.{{ $json.podcastId }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  status: 'released',\n  episode_release_date: $json.releaseDate,\n  episode_url: $json.episodeUrl,\n  episode_title: $json.episodeTitle,\n  episode_apple_url: $json.appleUrl,\n  episode_spotify_url: $json.spotifyUrl,\n  episode_youtube_url: $json.youtubeUrl,\n  updated_at: new Date().toISOString()\n}) }}",
+        "options": {}
+      },
+      "id": "supabase-update-episode-release",
+      "name": "Supabase: Update Episode Release",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [720, 1800],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/podcast_targets",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": "eq.{{ $('Parse Episode Release').item.json.podcastId }}"
+            },
+            {
+              "name": "select",
+              "value": "*"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "supabase-get-released-podcast",
+      "name": "Supabase: Get Released Podcast",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [940, 1800],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "CONFIGURE_SLACK_CHANNEL",
+          "mode": "id"
+        },
+        "text": "=:rocket: *Podcast Episode Released!*\n\n*Podcast:* {{ $json[0]?.name || 'Unknown' }}\n*Host:* {{ $json[0]?.host_name || 'Unknown' }}\n*Episode:* {{ $('Parse Episode Release').item.json.episodeTitle || 'Guest Episode' }}\n\n*Listen:*\n{{ $('Parse Episode Release').item.json.episodeUrl ? '<' + $('Parse Episode Release').item.json.episodeUrl + '|Main Link>' : '' }}\n{{ $('Parse Episode Release').item.json.appleUrl ? '<' + $('Parse Episode Release').item.json.appleUrl + '|Apple Podcasts>' : '' }}\n{{ $('Parse Episode Release').item.json.spotifyUrl ? '<' + $('Parse Episode Release').item.json.spotifyUrl + '|Spotify>' : '' }}\n{{ $('Parse Episode Release').item.json.youtubeUrl ? '<' + $('Parse Episode Release').item.json.youtubeUrl + '|YouTube>' : '' }}\n\nTime to promote on social media!",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "slack-notify-release",
+      "name": "Slack: Notify Release",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1160, 1800],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Slack Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, message: 'Episode release recorded', episode_url: $('Parse Episode Release').item.json.episodeUrl } }}"
+      },
+      "id": "respond-release-recorded",
+      "name": "Respond: Release Recorded",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1380, 1800]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/rpc/podcast_pipeline_stats",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{}",
+        "options": {}
+      },
+      "id": "supabase-get-pipeline-stats",
+      "name": "Supabase: Get Pipeline Stats",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [500, 2200],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Generate weekly pipeline report from stats\nconst stats = $input.first().json || {};\n\n// Handle case where RPC doesn't exist yet - use default values\nconst report = {\n  // Pipeline overview\n  total_podcasts: stats.total_podcasts || 0,\n  pending: stats.pending || 0,\n  following_up: stats.following_up || 0,\n  responded: stats.responded || 0,\n  interested: stats.interested || 0,\n  booked: stats.booked || 0,\n  released: stats.released || 0,\n  declined: stats.declined || 0,\n  \n  // Email metrics\n  emails_sent_this_week: stats.emails_sent_this_week || 0,\n  opens_this_week: stats.opens_this_week || 0,\n  replies_this_week: stats.replies_this_week || 0,\n  open_rate: stats.open_rate || '0%',\n  reply_rate: stats.reply_rate || '0%',\n  \n  // Category breakdown\n  investing_count: stats.investing_count || 0,\n  personal_finance_count: stats.personal_finance_count || 0,\n  business_count: stats.business_count || 0,\n  \n  // Conversion funnel\n  pitch_to_response_rate: stats.pitch_to_response_rate || '0%',\n  response_to_booking_rate: stats.response_to_booking_rate || '0%',\n  \n  // Upcoming\n  upcoming_recordings: stats.upcoming_recordings || [],\n  \n  // Date range\n  week_start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],\n  week_end: new Date().toISOString().split('T')[0]\n};\n\nreturn {\n  json: report\n};"
+      },
+      "id": "generate-pipeline-report",
+      "name": "Generate Pipeline Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 2200]
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "CONFIGURE_SLACK_CHANNEL",
+          "mode": "id"
+        },
+        "text": "=:bar_chart: *Podcast Outreach Weekly Report*\n_{{ $json.week_start }} to {{ $json.week_end }}_\n\n*Pipeline Overview:*\n:hourglass_flowing_sand: Pending: {{ $json.pending }}\n:email: Following Up: {{ $json.following_up }}\n:speech_balloon: Responded: {{ $json.responded }}\n:star: Interested: {{ $json.interested }}\n:calendar: Booked: {{ $json.booked }}\n:rocket: Released: {{ $json.released }}\n:x: Declined: {{ $json.declined }}\n\n*This Week's Activity:*\n- Emails Sent: {{ $json.emails_sent_this_week }}\n- Opens: {{ $json.opens_this_week }} ({{ $json.open_rate }})\n- Replies: {{ $json.replies_this_week }} ({{ $json.reply_rate }})\n\n*Category Breakdown:*\n- Investing: {{ $json.investing_count }}\n- Personal Finance: {{ $json.personal_finance_count }}\n- Business: {{ $json.business_count }}\n\n*Conversion Rates:*\n- Pitch to Response: {{ $json.pitch_to_response_rate }}\n- Response to Booking: {{ $json.response_to_booking_rate }}\n\n*Total Podcasts in Pipeline:* {{ $json.total_podcasts }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "slack-weekly-pipeline-report",
+      "name": "Slack: Weekly Pipeline Report",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [940, 2200],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Slack Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "errorMessage": "={{ $json.error || 'Unknown error in podcast outreach workflow' }}"
+      },
+      "id": "error-handler",
+      "name": "Error Handler",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [2040, 200]
+    }
+  ],
+  "connections": {
+    "Webhook: Add Podcast": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Insert Podcast",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Insert Podcast": {
+      "main": [
+        [
+          {
+            "node": "Respond: Podcast Added",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Slack: New Podcast Added",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule: Process Follow-ups": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Fetch Pending",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Fetch Pending": {
+      "main": [
+        [
+          {
+            "node": "Filter: Has Podcasts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter: Has Podcasts": {
+      "main": [
+        [
+          {
+            "node": "Split Podcasts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Podcasts": {
+      "main": [
+        [
+          {
+            "node": "Generate Pitch Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Pitch Email": {
+      "main": [
+        [
+          {
+            "node": "Send Pitch Email (SMTP)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Pitch Email (SMTP)": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Update Podcast Status",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Supabase: Log Pitch Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Update Podcast Status": {
+      "main": [
+        [
+          {
+            "node": "Wait (Rate Limit)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook: Track Response": {
+      "main": [
+        [
+          {
+            "node": "Parse Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Response": {
+      "main": [
+        [
+          {
+            "node": "Filter: Valid Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter: Valid Response": {
+      "main": [
+        [
+          {
+            "node": "Filter: Should Update Status",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Supabase: Update Email Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter: Should Update Status": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Update Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Update Response": {
+      "main": [
+        [
+          {
+            "node": "Filter: Should Notify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter: Should Notify": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Get Podcast Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Get Podcast Details": {
+      "main": [
+        [
+          {
+            "node": "Slack: Notify Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack: Notify Response": {
+      "main": [
+        [
+          {
+            "node": "Respond: Response Recorded",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook: Track Booking": {
+      "main": [
+        [
+          {
+            "node": "Parse Booking",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Booking": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Update Booking",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Update Booking": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Get Booked Podcast",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Get Booked Podcast": {
+      "main": [
+        [
+          {
+            "node": "Slack: Notify Booking",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack: Notify Booking": {
+      "main": [
+        [
+          {
+            "node": "Respond: Booking Recorded",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook: Episode Released": {
+      "main": [
+        [
+          {
+            "node": "Parse Episode Release",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Episode Release": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Update Episode Release",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Update Episode Release": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Get Released Podcast",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Get Released Podcast": {
+      "main": [
+        [
+          {
+            "node": "Slack: Notify Release",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack: Notify Release": {
+      "main": [
+        [
+          {
+            "node": "Respond: Release Recorded",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule: Weekly Pipeline Report": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Get Pipeline Stats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Get Pipeline Stats": {
+      "main": [
+        [
+          {
+            "node": "Generate Pipeline Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Pipeline Report": {
+      "main": [
+        [
+          {
+            "node": "Slack: Weekly Pipeline Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "outreach",
+      "id": "outreach-tag"
+    },
+    {
+      "name": "lician",
+      "id": "lician-tag"
+    },
+    {
+      "name": "podcast",
+      "id": "podcast-tag"
+    },
+    {
+      "name": "marketing",
+      "id": "marketing-tag"
+    }
+  ],
+  "triggerCount": 5,
+  "updatedAt": "2026-01-16T00:00:00.000Z",
+  "versionId": "1"
+}

@@ -1,0 +1,933 @@
+{
+  "name": "Quora Opportunity Finder - Lician.com",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hour": 8
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Daily 8 AM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "object": [
+            {
+              "name": "searchQueries",
+              "value": "=[\"stock market basics\", \"how to invest in stocks\", \"P/E ratio explained\", \"what is a good P/E ratio\", \"dividend stocks for beginners\", \"compound interest calculator\", \"how compound interest works\", \"ETF vs mutual fund\", \"best ETF for beginners\", \"retirement investing strategy\", \"stock screener recommendation\", \"how to analyze stocks\", \"fundamental analysis stocks\", \"stock valuation methods\", \"ROE meaning stocks\", \"debt to equity ratio\", \"free cash flow analysis\", \"intrinsic value calculation\", \"compare two stocks\", \"best stock analysis website\"]"
+            },
+            {
+              "name": "responseTemplates",
+              "value": "={\n  \"stock_basics\": \"For understanding stock basics and fundamentals, I'd recommend checking out lician.com. It's a free financial analysis platform that explains metrics like P/E ratio, EPS, and other key fundamentals with real company data. The AI assistant can walk you through how to read financial statements.\",\n  \"pe_ratio\": \"P/E ratio varies significantly by industry. What's considered 'good' depends on the sector and growth expectations. You can use lician.com to compare P/E ratios across companies in the same sector - it pulls data for 5000+ US stocks and shows industry averages.\",\n  \"dividend_investing\": \"For dividend investing research, lician.com has a dividend screener where you can filter stocks by yield, payout ratio, dividend growth history, and years of consecutive increases. It's free and covers both US and EU markets.\",\n  \"compound_interest\": \"Lician.com has a compound interest calculator that visualizes growth over time. You can input different scenarios (principal, rate, time, contribution frequency) and see how your money grows with interactive charts.\",\n  \"etf_investing\": \"ETFs are great for diversification! For comparing different ETFs and understanding their holdings, you might find lician.com helpful - it has data on major ETFs and can compare expense ratios, holdings, and historical performance.\",\n  \"retirement\": \"For retirement planning and long-term investment analysis, I use lician.com to run different scenarios. Their compound interest calculator and stock screener help model portfolio growth over decades.\",\n  \"stock_screener\": \"I've been using lician.com as my go-to stock screener. It's free, has data on 5000+ US companies and 100K+ EU companies, and you can filter by fundamentals like P/E, revenue growth, margins, debt levels, etc. The AI assistant can also help explain what you're looking at.\",\n  \"stock_analysis\": \"For fundamental analysis, lician.com aggregates SEC filings and presents balance sheets, income statements, and cash flow statements in a clean format. You can compare multiple companies side-by-side and the AI assistant helps interpret the numbers.\",\n  \"valuation\": \"For stock valuation, there are several methods: DCF analysis, comparable company analysis, and ratio-based valuation. Lician.com has tools for each - including a DCF calculator and easy access to the ratios you need for comps.\",\n  \"comparison\": \"Comparing stocks is much easier with the right tools. Lician.com lets you compare multiple stocks side-by-side on key metrics like P/E, revenue growth, profit margins, and debt levels. Really helpful for making investment decisions.\",\n  \"general\": \"You might find lician.com useful for this kind of financial analysis. It's a free platform with data on thousands of stocks, and the AI assistant can help answer specific questions about companies or investment concepts.\"\n}"
+            }
+          ],
+          "number": [
+            {
+              "name": "minViews",
+              "value": 1000
+            },
+            {
+              "name": "maxAgeDays",
+              "value": 30
+            },
+            {
+              "name": "minRelevanceScore",
+              "value": 65
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-config",
+      "name": "Configuration",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Split search queries into individual items\nconst config = $input.first().json;\nconst searchQueries = config.searchQueries;\n\nconst items = searchQueries.map(query => ({\n  json: {\n    searchQuery: query,\n    minViews: config.minViews,\n    maxAgeDays: config.maxAgeDays,\n    minRelevanceScore: config.minRelevanceScore,\n    responseTemplates: config.responseTemplates\n  }\n}));\n\nreturn items;"
+      },
+      "id": "split-queries",
+      "name": "Split Search Queries",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {
+          "reset": false
+        }
+      },
+      "id": "batch-queries",
+      "name": "Process Each Query",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "amount": 3,
+        "unit": "seconds"
+      },
+      "id": "rate-limit",
+      "name": "Rate Limit (3s)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://www.googleapis.com/customsearch/v1",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "=site:quora.com {{ $json.searchQuery }}"
+            },
+            {
+              "name": "cx",
+              "value": "={{ $env.GOOGLE_CSE_ID }}"
+            },
+            {
+              "name": "num",
+              "value": "10"
+            },
+            {
+              "name": "dateRestrict",
+              "value": "m1"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "id": "google-search",
+      "name": "Search Google for Quora",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1340, 300],
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "GOOGLE_API_CREDENTIAL_ID",
+          "name": "Google API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract Quora question URLs from Google search results\nconst searchResults = $input.first().json;\nconst items = searchResults?.items || [];\nconst config = $('Process Each Query').first().json;\n\n// Filter for actual Quora question pages\nconst questionUrls = items\n  .filter(item => {\n    const url = item.link;\n    // Only include actual question pages (not profiles, spaces, etc.)\n    return url.includes('quora.com/') && \n           !url.includes('/profile/') && \n           !url.includes('/space/') &&\n           !url.includes('/answer/') &&\n           !url.includes('/search');\n  })\n  .map(item => ({\n    json: {\n      url: item.link,\n      title: item.title.replace(' - Quora', '').trim(),\n      snippet: item.snippet,\n      searchQuery: config.searchQuery,\n      minViews: config.minViews,\n      maxAgeDays: config.maxAgeDays,\n      responseTemplates: config.responseTemplates\n    }\n  }));\n\nreturn questionUrls.length > 0 ? questionUrls : [{ json: { skip: true, searchQuery: config.searchQuery } }];"
+      },
+      "id": "extract-urls",
+      "name": "Extract Quora URLs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "filter-skip",
+              "leftValue": "={{ $json.skip }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "notTrue"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-skip",
+      "name": "Filter Skipped",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [1780, 300]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {
+          "reset": false
+        }
+      },
+      "id": "batch-urls",
+      "name": "Process Each URL",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [2000, 300]
+    },
+    {
+      "parameters": {
+        "amount": 2,
+        "unit": "seconds"
+      },
+      "id": "scrape-rate-limit",
+      "name": "Scrape Rate Limit (2s)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [2220, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.firecrawl.dev/v1/scrape",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"url\": \"{{ $json.url }}\",\n  \"formats\": [\"markdown\", \"html\"],\n  \"onlyMainContent\": true,\n  \"waitFor\": 3000,\n  \"timeout\": 30000\n}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "id": "firecrawl-scrape",
+      "name": "Scrape Quora Page",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2440, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "FIRECRAWL_CREDENTIAL_ID",
+          "name": "Firecrawl API"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process scraped Quora page data\nconst urlData = $('Process Each URL').first().json;\nconst scrapeResult = $input.first().json;\nconst responseTemplates = urlData.responseTemplates;\n\n// Check if scrape was successful\nif (!scrapeResult?.data?.markdown && !scrapeResult?.data?.html) {\n  return [{ json: { skip: true, reason: 'scrape_failed', url: urlData.url } }];\n}\n\nconst markdown = scrapeResult.data.markdown || '';\nconst html = scrapeResult.data.html || '';\nconst metadata = scrapeResult.data.metadata || {};\n\n// Extract question details from scraped content\nconst questionTitle = urlData.title || metadata.title?.replace(' - Quora', '') || 'Unknown';\n\n// Try to extract view count (Quora shows views in various formats)\nlet viewCount = 0;\nconst viewPatterns = [\n  /(\\d+(?:,\\d+)*(?:\\.\\d+)?[KkMm]?)\\s*(?:views?|Views?)/i,\n  /Views?[:\\s]*(\\d+(?:,\\d+)*(?:\\.\\d+)?[KkMm]?)/i,\n  /(\\d+(?:,\\d+)*)\\s*people\\s*viewed/i\n];\n\nfor (const pattern of viewPatterns) {\n  const match = markdown.match(pattern) || html.match(pattern);\n  if (match) {\n    let viewStr = match[1].replace(/,/g, '');\n    if (viewStr.toLowerCase().endsWith('k')) {\n      viewCount = parseFloat(viewStr) * 1000;\n    } else if (viewStr.toLowerCase().endsWith('m')) {\n      viewCount = parseFloat(viewStr) * 1000000;\n    } else {\n      viewCount = parseInt(viewStr);\n    }\n    break;\n  }\n}\n\n// Count answers (look for answer indicators)\nlet answerCount = 0;\nconst answerPatterns = [\n  /(\\d+)\\s*(?:answers?|Answers?)/i,\n  /Answers?[:\\s]*(\\d+)/i\n];\n\nfor (const pattern of answerPatterns) {\n  const match = markdown.match(pattern) || html.match(pattern);\n  if (match) {\n    answerCount = parseInt(match[1]);\n    break;\n  }\n}\n\n// Try to extract date (Quora shows relative dates)\nlet postDate = null;\nlet ageInDays = null;\nconst datePatterns = [\n  /(\\d+)\\s*(?:hour|hr)s?\\s*ago/i,\n  /(\\d+)\\s*days?\\s*ago/i,\n  /(\\d+)\\s*weeks?\\s*ago/i,\n  /(\\d+)\\s*months?\\s*ago/i,\n  /Updated\\s+(\\w+\\s+\\d+,?\\s*\\d*)/i\n];\n\nfor (const pattern of datePatterns) {\n  const match = markdown.match(pattern) || html.match(pattern);\n  if (match) {\n    const value = parseInt(match[1]);\n    if (pattern.source.includes('hour')) {\n      ageInDays = value / 24;\n    } else if (pattern.source.includes('day')) {\n      ageInDays = value;\n    } else if (pattern.source.includes('week')) {\n      ageInDays = value * 7;\n    } else if (pattern.source.includes('month')) {\n      ageInDays = value * 30;\n    }\n    break;\n  }\n}\n\n// If no date found, assume it's recent (from search filter)\nif (ageInDays === null) {\n  ageInDays = 15; // Default assumption for filtered results\n}\n\n// Determine opportunity type based on content\nconst text = (questionTitle + ' ' + markdown).toLowerCase();\nlet opportunityType = 'general';\nlet relevanceScore = 50;\n\nconst categoryPatterns = [\n  { pattern: /p\\/e\\s*ratio|price.to.earnings|pe\\s*ratio/i, type: 'pe_ratio', score: 85 },\n  { pattern: /stock\\s*screener|screen\\s*stocks|find\\s*stocks/i, type: 'stock_screener', score: 90 },\n  { pattern: /compound\\s*interest|compounding/i, type: 'compound_interest', score: 90 },\n  { pattern: /dividend|yield|income\\s*invest/i, type: 'dividend_investing', score: 85 },\n  { pattern: /etf|exchange.traded|index\\s*fund/i, type: 'etf_investing', score: 80 },\n  { pattern: /retirement|401k|ira|roth|pension/i, type: 'retirement', score: 80 },\n  { pattern: /valuation|intrinsic\\s*value|dcf|fair\\s*value/i, type: 'valuation', score: 85 },\n  { pattern: /compare.*stock|stock.*comparison|versus|vs\\./i, type: 'comparison', score: 85 },\n  { pattern: /fundamental|financial\\s*statement|balance\\s*sheet|income\\s*statement/i, type: 'stock_analysis', score: 80 },\n  { pattern: /beginner|basics?|how\\s*(do|does|to)|what\\s*(is|are)|explain/i, type: 'stock_basics', score: 75 }\n];\n\nfor (const cp of categoryPatterns) {\n  if (cp.pattern.test(text)) {\n    opportunityType = cp.type;\n    relevanceScore = cp.score;\n    break;\n  }\n}\n\n// Adjust score based on engagement\nif (viewCount >= 10000) relevanceScore += 15;\nelse if (viewCount >= 5000) relevanceScore += 10;\nelse if (viewCount >= 1000) relevanceScore += 5;\n\n// Boost for questions with few answers (more opportunity)\nif (answerCount <= 2) relevanceScore += 10;\nelse if (answerCount <= 5) relevanceScore += 5;\n\n// Penalize old questions\nif (ageInDays > 60) relevanceScore -= 10;\nelse if (ageInDays > 30) relevanceScore -= 5;\n\n// Boost for direct questions\nif (questionTitle.includes('?')) relevanceScore += 5;\n\n// Check if meets minimum criteria\nconst meetsViewRequirement = viewCount >= urlData.minViews || viewCount === 0; // 0 means couldn't extract\nconst meetsAgeRequirement = ageInDays <= urlData.maxAgeDays;\n\nif (!meetsViewRequirement && viewCount > 0) {\n  return [{ json: { skip: true, reason: 'low_views', views: viewCount, url: urlData.url } }];\n}\n\nif (!meetsAgeRequirement) {\n  return [{ json: { skip: true, reason: 'too_old', age: ageInDays, url: urlData.url } }];\n}\n\n// Cap score at 100\nrelevanceScore = Math.min(relevanceScore, 100);\n\n// Extract a summary of the question\nlet questionSummary = '';\nconst summaryMatch = markdown.match(/^[^\\n]{50,500}/m);\nif (summaryMatch) {\n  questionSummary = summaryMatch[0].substring(0, 500);\n}\n\nreturn [{\n  json: {\n    quora_id: urlData.url.split('/').slice(-1)[0].split('?')[0],\n    url: urlData.url,\n    title: questionTitle,\n    question_summary: questionSummary || urlData.snippet || '',\n    search_query: urlData.searchQuery,\n    view_count: viewCount,\n    answer_count: answerCount,\n    age_days: Math.round(ageInDays),\n    opportunity_type: opportunityType,\n    relevance_score: relevanceScore,\n    suggested_response: responseTemplates[opportunityType] || responseTemplates.general,\n    discovered_at: new Date().toISOString(),\n    raw_metadata: {\n      firecrawl_status: scrapeResult.success,\n      content_length: markdown.length\n    }\n  }\n}];"
+      },
+      "id": "process-scraped",
+      "name": "Process Scraped Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2660, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "filter-processed",
+              "leftValue": "={{ $json.skip }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "notTrue"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-processed",
+      "name": "Filter Processed",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [2880, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO quora_opportunities (\n  quora_id,\n  url,\n  title,\n  question_summary,\n  search_query,\n  view_count,\n  answer_count,\n  age_days,\n  opportunity_type,\n  relevance_score,\n  suggested_response,\n  discovered_at,\n  status,\n  metadata\n) VALUES (\n  '{{ $json.quora_id }}',\n  '{{ $json.url }}',\n  '{{ $json.title.replace(/'/g, \"''\").substring(0, 500) }}',\n  '{{ $json.question_summary.replace(/'/g, \"''\").substring(0, 1000) }}',\n  '{{ $json.search_query }}',\n  {{ $json.view_count }},\n  {{ $json.answer_count }},\n  {{ $json.age_days }},\n  '{{ $json.opportunity_type }}',\n  {{ $json.relevance_score }},\n  '{{ $json.suggested_response.replace(/'/g, \"''\") }}',\n  '{{ $json.discovered_at }}',\n  'new',\n  '{{ JSON.stringify($json.raw_metadata).replace(/'/g, \"''\") }}'\n) ON CONFLICT (quora_id) DO UPDATE SET\n  view_count = GREATEST(quora_opportunities.view_count, EXCLUDED.view_count),\n  answer_count = EXCLUDED.answer_count,\n  relevance_score = GREATEST(quora_opportunities.relevance_score, EXCLUDED.relevance_score),\n  updated_at = NOW()\nRETURNING *;",
+        "options": {}
+      },
+      "id": "supabase-insert",
+      "name": "Store in Supabase",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [3100, 300],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIAL_ID",
+          "name": "Supabase Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Check if this is the last item in the batch\nconst batchNode = $('Process Each URL');\nreturn [{ json: { continue: true } }];"
+      },
+      "id": "continue-batch",
+      "name": "Continue URL Batch",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3320, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Get top opportunities from today's run\nSELECT \n  id,\n  quora_id,\n  url,\n  title,\n  question_summary,\n  search_query,\n  view_count,\n  answer_count,\n  age_days,\n  opportunity_type,\n  relevance_score,\n  suggested_response,\n  discovered_at,\n  status\nFROM quora_opportunities \nWHERE discovered_at > NOW() - INTERVAL '25 hours'\n  AND status = 'new'\n  AND relevance_score >= 65\nORDER BY relevance_score DESC, view_count DESC\nLIMIT 10;",
+        "options": {}
+      },
+      "id": "get-top-opportunities",
+      "name": "Get Top 10 Opportunities",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [3100, 520],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIAL_ID",
+          "name": "Supabase Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-results",
+              "leftValue": "={{ $json.quora_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "isNotEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-has-opportunities",
+      "name": "Has Opportunities?",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [3320, 520]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Format opportunities for Slack message\nconst opportunities = $input.all();\n\nif (opportunities.length === 0) {\n  return [{ json: { skip: true } }];\n}\n\n// Group by opportunity type\nconst grouped = {};\nopportunities.forEach(item => {\n  const type = item.json.opportunity_type;\n  if (!grouped[type]) grouped[type] = [];\n  grouped[type].push(item.json);\n});\n\n// Calculate stats\nconst totalViews = opportunities.reduce((sum, item) => sum + (item.json.view_count || 0), 0);\nconst avgScore = Math.round(opportunities.reduce((sum, item) => sum + item.json.relevance_score, 0) / opportunities.length);\n\n// Build Slack blocks\nconst blocks = [\n  {\n    type: 'header',\n    text: {\n      type: 'plain_text',\n      text: ':question: Quora Opportunities Found',\n      emoji: true\n    }\n  },\n  {\n    type: 'section',\n    text: {\n      type: 'mrkdwn',\n      text: `Found *${opportunities.length}* high-relevance Quora questions to answer for Lician.com\\n` +\n            `Total potential reach: *${totalViews.toLocaleString()}* views | Avg score: *${avgScore}*`\n    }\n  },\n  {\n    type: 'divider'\n  }\n];\n\n// Add each opportunity (top 5 for Slack)\nopportunities.slice(0, 5).forEach((item, index) => {\n  const opp = item.json;\n  const scoreEmoji = opp.relevance_score >= 85 ? ':fire:' : opp.relevance_score >= 70 ? ':star:' : ':white_check_mark:';\n  const viewsStr = opp.view_count > 0 ? `${opp.view_count.toLocaleString()} views` : 'Views N/A';\n  \n  blocks.push({\n    type: 'section',\n    text: {\n      type: 'mrkdwn',\n      text: `${scoreEmoji} *<${opp.url}|${opp.title.substring(0, 80)}${opp.title.length > 80 ? '...' : ''}>*\\n` +\n            `${viewsStr} | ${opp.answer_count} answers | ${opp.age_days}d old | Score: ${opp.relevance_score}\\n` +\n            `Type: \\`${opp.opportunity_type}\\` | Query: _${opp.search_query}_`\n    }\n  });\n  \n  // Add question summary if available\n  if (opp.question_summary && opp.question_summary.length > 10) {\n    blocks.push({\n      type: 'context',\n      elements: [\n        {\n          type: 'mrkdwn',\n          text: `_${opp.question_summary.substring(0, 150)}${opp.question_summary.length > 150 ? '...' : ''}_`\n        }\n      ]\n    });\n  }\n  \n  // Add suggested response preview\n  blocks.push({\n    type: 'context',\n    elements: [\n      {\n        type: 'mrkdwn',\n        text: `:bulb: *Suggested:* ${opp.suggested_response.substring(0, 180)}...`\n      }\n    ]\n  });\n  \n  if (index < 4) {\n    blocks.push({ type: 'divider' });\n  }\n});\n\n// Add summary by type\nconst typesSummary = Object.entries(grouped)\n  .sort((a, b) => b[1].length - a[1].length)\n  .map(([type, items]) => `${type.replace(/_/g, ' ')}: ${items.length}`)\n  .join(' | ');\n\nblocks.push(\n  { type: 'divider' },\n  {\n    type: 'context',\n    elements: [\n      {\n        type: 'mrkdwn',\n        text: `:bar_chart: *By category:* ${typesSummary}`\n      }\n    ]\n  },\n  {\n    type: 'section',\n    text: {\n      type: 'mrkdwn',\n      text: ':memo: *Tips for answering:*\\n' +\n            '\\u2022 Answer the question genuinely first, then mention lician.com naturally\\n' +\n            '\\u2022 Focus on being helpful - not promotional\\n' +\n            '\\u2022 Include specific examples from the platform\\n' +\n            '\\u2022 Upvote other good answers to build reputation'\n    }\n  },\n  {\n    type: 'actions',\n    elements: [\n      {\n        type: 'button',\n        text: {\n          type: 'plain_text',\n          text: 'View All in Dashboard',\n          emoji: true\n        },\n        url: 'https://lician.com/admin/quora-opportunities',\n        action_id: 'view_quora_dashboard'\n      },\n      {\n        type: 'button',\n        text: {\n          type: 'plain_text',\n          text: 'Mark as Answered',\n          emoji: true\n        },\n        url: 'https://lician.com/admin/quora-opportunities?action=mark-answered',\n        action_id: 'mark_answered'\n      }\n    ]\n  }\n);\n\nreturn [{\n  json: {\n    blocks: blocks,\n    text: `Found ${opportunities.length} Quora opportunities for Lician.com`,\n    opportunityCount: opportunities.length,\n    totalViews: totalViews,\n    avgScore: avgScore\n  }\n}];"
+      },
+      "id": "format-slack",
+      "name": "Format Slack Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3540, 520]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "skip-check",
+              "leftValue": "={{ $json.skip }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "notTrue"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "should-send",
+      "name": "Should Send?",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [3760, 520]
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "SLACK_CHANNEL_ID",
+          "mode": "id"
+        },
+        "text": "={{ $json.text }}",
+        "blocksUi": "={{ JSON.stringify($json.blocks) }}",
+        "otherOptions": {
+          "unfurl_links": false,
+          "unfurl_media": false
+        }
+      },
+      "id": "slack-send",
+      "name": "Send to Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [3980, 520],
+      "credentials": {
+        "slackApi": {
+          "id": "SLACK_CREDENTIAL_ID",
+          "name": "Slack API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Update statistics for reporting\nINSERT INTO workflow_runs (\n  workflow_name,\n  run_date,\n  opportunities_found,\n  total_views,\n  avg_score,\n  status\n) VALUES (\n  'quora_opportunity_finder',\n  NOW(),\n  {{ $json.opportunityCount || 0 }},\n  {{ $json.totalViews || 0 }},\n  {{ $json.avgScore || 0 }},\n  'completed'\n) ON CONFLICT (workflow_name, run_date::date) DO UPDATE SET\n  opportunities_found = EXCLUDED.opportunities_found,\n  total_views = EXCLUDED.total_views,\n  avg_score = EXCLUDED.avg_score,\n  status = EXCLUDED.status,\n  updated_at = NOW();",
+        "options": {}
+      },
+      "id": "log-run",
+      "name": "Log Workflow Run",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [4200, 520],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIAL_ID",
+          "name": "Supabase Postgres"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "status",
+              "value": "completed"
+            }
+          ],
+          "number": [
+            {
+              "name": "opportunities_found",
+              "value": "={{ $('Format Slack Message').first().json.opportunityCount || 0 }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "workflow-complete",
+      "name": "Workflow Complete",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [4420, 520]
+    },
+    {
+      "parameters": {},
+      "id": "no-op-empty",
+      "name": "No Opportunities",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [3760, 720]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://hooks.slack.com/services/{{ $env.SLACK_WEBHOOK_PATH }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"text\": \":warning: Quora Opportunity Finder encountered an error\",\n  \"blocks\": [\n    {\n      \"type\": \"section\",\n      \"text\": {\n        \"type\": \"mrkdwn\",\n        \"text\": \":warning: *Quora Opportunity Finder Error*\\n\\nThe workflow encountered an error during execution.\\nCheck n8n logs for details.\"\n      }\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "error-notification",
+      "name": "Error Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2440, 520]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Get answered questions to track results\nSELECT \n  q.*,\n  CASE \n    WHEN q.answer_url IS NOT NULL THEN 'answered'\n    WHEN q.answered_at IS NOT NULL THEN 'pending_verification'\n    ELSE 'new'\n  END as current_status,\n  EXTRACT(DAY FROM NOW() - q.answered_at) as days_since_answered\nFROM quora_opportunities q\nWHERE q.status = 'answered'\n  AND q.answered_at > NOW() - INTERVAL '30 days'\nORDER BY q.answered_at DESC\nLIMIT 20;",
+        "options": {}
+      },
+      "id": "get-answered",
+      "name": "Get Answered Questions",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [680, 520],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIAL_ID",
+          "name": "Supabase Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Check performance of answered questions\nconst answeredQuestions = $input.all();\n\nif (answeredQuestions.length === 0 || !answeredQuestions[0].json.quora_id) {\n  return [{ json: { hasAnswers: false } }];\n}\n\n// Return questions that need re-scraping to check answer performance\nconst questionsToCheck = answeredQuestions\n  .filter(q => q.json.days_since_answered >= 7) // Only check after 7 days\n  .slice(0, 5); // Limit to 5 per run\n\nif (questionsToCheck.length === 0) {\n  return [{ json: { hasAnswers: false, reason: 'no_old_enough_answers' } }];\n}\n\nreturn questionsToCheck;"
+      },
+      "id": "check-answered",
+      "name": "Filter Trackable",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 520]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-trackable",
+              "leftValue": "={{ $json.hasAnswers }}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "has-trackable",
+      "name": "Has Trackable?",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [1120, 520]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.firecrawl.dev/v1/scrape",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"url\": \"{{ $json.answer_url || $json.url }}\",\n  \"formats\": [\"markdown\"],\n  \"onlyMainContent\": true,\n  \"waitFor\": 3000\n}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "id": "track-answer",
+      "name": "Check Answer Performance",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1340, 520],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "FIRECRAWL_CREDENTIAL_ID",
+          "name": "Firecrawl API"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract answer metrics from scraped page\nconst originalData = $('Has Trackable?').first().json;\nconst scrapeResult = $input.first().json;\n\nif (!scrapeResult?.data?.markdown) {\n  return [{ json: { ...originalData, tracking_failed: true } }];\n}\n\nconst markdown = scrapeResult.data.markdown;\n\n// Try to find upvote count for our answer\nlet answerUpvotes = 0;\nconst upvotePatterns = [\n  /(\\d+(?:,\\d+)*)\\s*upvotes?/gi,\n  /Upvotes?[:\\s]*(\\d+(?:,\\d+)*)/gi\n];\n\nfor (const pattern of upvotePatterns) {\n  const matches = [...markdown.matchAll(pattern)];\n  if (matches.length > 0) {\n    // Take the first match (usually the featured answer)\n    answerUpvotes = parseInt(matches[0][1].replace(/,/g, ''));\n    break;\n  }\n}\n\n// Check if our answer is visible/featured\nconst isAnswerVisible = markdown.toLowerCase().includes('lician.com');\n\nreturn [{\n  json: {\n    quora_id: originalData.quora_id,\n    url: originalData.url,\n    answer_upvotes: answerUpvotes,\n    is_answer_visible: isAnswerVisible,\n    tracked_at: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "process-tracking",
+      "name": "Extract Metrics",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, 520]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE quora_opportunities SET\n  answer_upvotes = {{ $json.answer_upvotes || 0 }},\n  is_answer_visible = {{ $json.is_answer_visible || false }},\n  last_tracked_at = '{{ $json.tracked_at }}'\nWHERE quora_id = '{{ $json.quora_id }}';",
+        "options": {}
+      },
+      "id": "update-tracking",
+      "name": "Update Tracking",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1780, 520],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIAL_ID",
+          "name": "Supabase Postgres"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Daily 8 AM": {
+      "main": [
+        [
+          {
+            "node": "Configuration",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Answered Questions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configuration": {
+      "main": [
+        [
+          {
+            "node": "Split Search Queries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Search Queries": {
+      "main": [
+        [
+          {
+            "node": "Process Each Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Each Query": {
+      "main": [
+        [
+          {
+            "node": "Rate Limit (3s)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Top 10 Opportunities",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rate Limit (3s)": {
+      "main": [
+        [
+          {
+            "node": "Search Google for Quora",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Google for Quora": {
+      "main": [
+        [
+          {
+            "node": "Extract Quora URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Quora URLs": {
+      "main": [
+        [
+          {
+            "node": "Filter Skipped",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Skipped": {
+      "main": [
+        [
+          {
+            "node": "Process Each URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Each URL": {
+      "main": [
+        [
+          {
+            "node": "Scrape Rate Limit (2s)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Process Each Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape Rate Limit (2s)": {
+      "main": [
+        [
+          {
+            "node": "Scrape Quora Page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape Quora Page": {
+      "main": [
+        [
+          {
+            "node": "Process Scraped Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Scraped Data": {
+      "main": [
+        [
+          {
+            "node": "Filter Processed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Processed": {
+      "main": [
+        [
+          {
+            "node": "Store in Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store in Supabase": {
+      "main": [
+        [
+          {
+            "node": "Continue URL Batch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Continue URL Batch": {
+      "main": [
+        [
+          {
+            "node": "Process Each URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Top 10 Opportunities": {
+      "main": [
+        [
+          {
+            "node": "Has Opportunities?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Opportunities?": {
+      "main": [
+        [
+          {
+            "node": "Format Slack Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Slack Message": {
+      "main": [
+        [
+          {
+            "node": "Should Send?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Should Send?": {
+      "main": [
+        [
+          {
+            "node": "Send to Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send to Slack": {
+      "main": [
+        [
+          {
+            "node": "Log Workflow Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Workflow Run": {
+      "main": [
+        [
+          {
+            "node": "Workflow Complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Answered Questions": {
+      "main": [
+        [
+          {
+            "node": "Filter Trackable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Trackable": {
+      "main": [
+        [
+          {
+            "node": "Has Trackable?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Trackable?": {
+      "main": [
+        [
+          {
+            "node": "Check Answer Performance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Answer Performance": {
+      "main": [
+        [
+          {
+            "node": "Extract Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Metrics": {
+      "main": [
+        [
+          {
+            "node": "Update Tracking",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "marketing",
+      "id": "1"
+    },
+    {
+      "name": "quora",
+      "id": "4"
+    },
+    {
+      "name": "lician",
+      "id": "3"
+    },
+    {
+      "name": "seo",
+      "id": "5"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2026-01-16T00:00:00.000Z",
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "lician-n8n"
+  }
+}

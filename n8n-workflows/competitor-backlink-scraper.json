@@ -1,0 +1,626 @@
+{
+  "name": "Competitor Backlink Scraper - lician.com",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "weeksInterval": 1,
+              "triggerAtDay": 1,
+              "triggerAtHour": 6
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Weekly Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [100, 300]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "competitor-backlinks",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Manual Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [100, 500],
+      "webhookId": "competitor-backlinks-webhook"
+    },
+    {
+      "parameters": {},
+      "id": "merge-triggers",
+      "name": "Merge Triggers",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [300, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Define competitor domains to analyze\nconst competitors = [\n  {\n    name: 'Yahoo Finance',\n    domain: 'finance.yahoo.com',\n    priority: 1\n  },\n  {\n    name: 'MarketWatch',\n    domain: 'marketwatch.com',\n    priority: 1\n  },\n  {\n    name: 'Seeking Alpha',\n    domain: 'seekingalpha.com',\n    priority: 2\n  },\n  {\n    name: 'Motley Fool',\n    domain: 'fool.com',\n    priority: 2\n  },\n  {\n    name: 'Investopedia',\n    domain: 'investopedia.com',\n    priority: 1\n  },\n  {\n    name: 'Bloomberg',\n    domain: 'bloomberg.com',\n    priority: 3\n  },\n  {\n    name: 'CNBC',\n    domain: 'cnbc.com',\n    priority: 2\n  },\n  {\n    name: 'Benzinga',\n    domain: 'benzinga.com',\n    priority: 2\n  }\n];\n\n// Our domain to check against\nconst ourDomain = 'lician.com';\n\n// Return as items for iteration\nreturn competitors.map(c => ({\n  json: {\n    ...c,\n    ourDomain,\n    timestamp: new Date().toISOString()\n  }\n}));"
+      },
+      "id": "set-competitors",
+      "name": "Define Competitors",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 400]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {
+          "reset": false
+        }
+      },
+      "id": "split-batches",
+      "name": "Process One at a Time",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [700, 400]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://index.commoncrawl.org/CC-MAIN-2024-51-index?url=*.{{ $json.domain }}&output=json&limit=500",
+        "options": {
+          "timeout": 60000,
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "id": "commoncrawl-api",
+      "name": "CommonCrawl Index API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 300],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://web.archive.org/cdx/search/cdx?url=*.{{ $json.domain }}&output=json&fl=original,timestamp,mimetype&filter=mimetype:text/html&limit=200",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "wayback-api",
+      "name": "Wayback Machine API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 500],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse CommonCrawl response to extract referring domains\nconst competitor = $('Process One at a Time').first().json;\nconst commonCrawlData = $('CommonCrawl Index API').first();\nconst waybackData = $('Wayback Machine API').first();\n\nlet referringDomains = new Set();\nlet backlinks = [];\n\n// Parse CommonCrawl data (NDJSON format)\nif (commonCrawlData.json?.body) {\n  try {\n    const lines = commonCrawlData.json.body.split('\\n').filter(l => l.trim());\n    for (const line of lines) {\n      try {\n        const record = JSON.parse(line);\n        if (record.url) {\n          const url = new URL(record.url);\n          const domain = url.hostname.replace('www.', '');\n          \n          // Skip the competitor domain itself\n          if (!domain.includes(competitor.domain)) {\n            referringDomains.add(domain);\n            backlinks.push({\n              source: 'commoncrawl',\n              referringDomain: domain,\n              url: record.url,\n              timestamp: record.timestamp || null,\n              mimeType: record.mime || 'text/html'\n            });\n          }\n        }\n      } catch (e) {\n        // Skip malformed JSON lines\n      }\n    }\n  } catch (e) {\n    console.log('CommonCrawl parse error:', e.message);\n  }\n}\n\n// Parse Wayback data (JSON array format)\nif (waybackData.json && Array.isArray(waybackData.json)) {\n  // Skip header row\n  const rows = waybackData.json.slice(1);\n  for (const row of rows) {\n    if (row && row[0]) {\n      try {\n        const url = new URL(row[0]);\n        const domain = url.hostname.replace('www.', '');\n        \n        if (!domain.includes(competitor.domain)) {\n          referringDomains.add(domain);\n          backlinks.push({\n            source: 'wayback',\n            referringDomain: domain,\n            url: row[0],\n            timestamp: row[1] || null,\n            mimeType: row[2] || 'text/html'\n          });\n        }\n      } catch (e) {\n        // Skip invalid URLs\n      }\n    }\n  }\n}\n\n// Convert to array and prepare for next step\nconst uniqueDomains = Array.from(referringDomains);\n\nreturn [{\n  json: {\n    competitor: competitor.name,\n    competitorDomain: competitor.domain,\n    priority: competitor.priority,\n    ourDomain: competitor.ourDomain,\n    uniqueReferringDomains: uniqueDomains.length,\n    domains: uniqueDomains,\n    backlinks: backlinks.slice(0, 500), // Limit to 500 backlinks\n    processedAt: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "parse-backlinks",
+      "name": "Parse Backlink Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1100, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Expand domains for individual checking\nconst input = $input.first().json;\nconst domains = input.domains || [];\n\nreturn domains.map(domain => ({\n  json: {\n    referringDomain: domain,\n    competitor: input.competitor,\n    competitorDomain: input.competitorDomain,\n    priority: input.priority,\n    ourDomain: input.ourDomain\n  }\n}));"
+      },
+      "id": "expand-domains",
+      "name": "Expand Domains",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1300, 400]
+    },
+    {
+      "parameters": {
+        "batchSize": 10,
+        "options": {
+          "reset": false
+        }
+      },
+      "id": "batch-domains",
+      "name": "Batch Domain Checks",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [1500, 400]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://web.archive.org/cdx/search/cdx?url={{ $json.referringDomain }}/*lician.com*&output=json&limit=1",
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "check-our-backlinks",
+      "name": "Check if Links to Us",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1700, 400],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Filter for domains that DON'T already link to us\nconst items = $input.all();\n\nconst opportunities = [];\n\nfor (const item of items) {\n  const domain = item.json.referringDomain;\n  const checkResult = item.json; // Result from HTTP check\n  \n  // If no results from wayback for our domain, it's an opportunity\n  const linksToUs = Array.isArray(checkResult) && checkResult.length > 1;\n  \n  if (!linksToUs) {\n    opportunities.push({\n      json: {\n        referringDomain: domain,\n        competitor: item.json.competitor,\n        competitorDomain: item.json.competitorDomain,\n        priority: item.json.priority,\n        linksToCompetitor: true,\n        linksToUs: false,\n        isOpportunity: true\n      }\n    });\n  }\n}\n\nreturn opportunities;"
+      },
+      "id": "filter-opportunities",
+      "name": "Filter Opportunities",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1900, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Score domains by estimated authority and relevance\nconst items = $input.all();\n\n// Domain authority indicators (heuristic scoring)\nconst tldScores = {\n  '.edu': 30,\n  '.gov': 35,\n  '.org': 20,\n  '.com': 15,\n  '.net': 12,\n  '.io': 10,\n  '.co': 8\n};\n\n// Finance/investing keywords boost\nconst financeKeywords = [\n  'finance', 'invest', 'stock', 'market', 'trading', 'money',\n  'wealth', 'portfolio', 'fund', 'capital', 'dividend', 'equity',\n  'financial', 'economics', 'forex', 'crypto', 'bitcoin', 'etf'\n];\n\n// News/media boost\nconst mediaKeywords = [\n  'news', 'times', 'post', 'journal', 'tribune', 'herald',\n  'gazette', 'daily', 'magazine', 'media', 'report', 'wire'\n];\n\n// Tech/data boost\nconst techKeywords = [\n  'tech', 'data', 'analytics', 'ai', 'software', 'digital',\n  'api', 'platform', 'saas', 'app'\n];\n\nconst scoredItems = items.map(item => {\n  const domain = item.json.referringDomain.toLowerCase();\n  let score = 0;\n  let relevanceFactors = [];\n  \n  // TLD scoring\n  for (const [tld, tldScore] of Object.entries(tldScores)) {\n    if (domain.endsWith(tld)) {\n      score += tldScore;\n      break;\n    }\n  }\n  \n  // Finance relevance\n  for (const kw of financeKeywords) {\n    if (domain.includes(kw)) {\n      score += 25;\n      relevanceFactors.push(`finance:${kw}`);\n      break;\n    }\n  }\n  \n  // Media/news relevance\n  for (const kw of mediaKeywords) {\n    if (domain.includes(kw)) {\n      score += 15;\n      relevanceFactors.push(`media:${kw}`);\n      break;\n    }\n  }\n  \n  // Tech relevance\n  for (const kw of techKeywords) {\n    if (domain.includes(kw)) {\n      score += 10;\n      relevanceFactors.push(`tech:${kw}`);\n      break;\n    }\n  }\n  \n  // Competitor priority boost\n  score += (4 - item.json.priority) * 5;\n  \n  // Domain length penalty (shorter = more authoritative usually)\n  if (domain.length < 15) score += 10;\n  else if (domain.length < 25) score += 5;\n  \n  // Subdomain penalty\n  const subdomainCount = (domain.match(/\\./g) || []).length;\n  if (subdomainCount > 1) score -= 5 * (subdomainCount - 1);\n  \n  return {\n    json: {\n      ...item.json,\n      authorityScore: Math.max(0, Math.min(100, score)),\n      relevanceFactors: relevanceFactors,\n      scoredAt: new Date().toISOString()\n    }\n  };\n});\n\n// Sort by score descending\nscoredItems.sort((a, b) => b.json.authorityScore - a.json.authorityScore);\n\nreturn scoredItems;"
+      },
+      "id": "score-domains",
+      "name": "Score Domain Authority",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2100, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Deduplicate and aggregate all opportunities\nconst items = $input.all();\n\n// Deduplicate by referring domain, keeping highest score\nconst domainMap = new Map();\n\nfor (const item of items) {\n  const domain = item.json.referringDomain;\n  const existing = domainMap.get(domain);\n  \n  if (!existing || item.json.authorityScore > existing.authorityScore) {\n    domainMap.set(domain, {\n      referringDomain: domain,\n      authorityScore: item.json.authorityScore,\n      relevanceFactors: item.json.relevanceFactors || [],\n      competitors: [item.json.competitor],\n      linksToUs: false,\n      isOpportunity: true,\n      discoveredAt: new Date().toISOString()\n    });\n  } else {\n    // Add competitor to list\n    if (!existing.competitors.includes(item.json.competitor)) {\n      existing.competitors.push(item.json.competitor);\n    }\n  }\n}\n\n// Convert to array and sort by score\nconst results = Array.from(domainMap.values())\n  .sort((a, b) => b.authorityScore - a.authorityScore);\n\nreturn results.map(r => ({ json: r }));"
+      },
+      "id": "deduplicate",
+      "name": "Deduplicate & Aggregate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2300, 400]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Create table if not exists\nCREATE TABLE IF NOT EXISTS competitor_backlinks (\n  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,\n  referring_domain TEXT NOT NULL,\n  authority_score INTEGER DEFAULT 0,\n  relevance_factors JSONB DEFAULT '[]',\n  competitors JSONB DEFAULT '[]',\n  links_to_us BOOLEAN DEFAULT false,\n  is_opportunity BOOLEAN DEFAULT true,\n  outreach_status TEXT DEFAULT 'pending',\n  outreach_notes TEXT,\n  contacted_at TIMESTAMPTZ,\n  response_received BOOLEAN DEFAULT false,\n  backlink_acquired BOOLEAN DEFAULT false,\n  discovered_at TIMESTAMPTZ DEFAULT NOW(),\n  updated_at TIMESTAMPTZ DEFAULT NOW(),\n  UNIQUE(referring_domain)\n);\n\n-- Create index on authority score for fast sorting\nCREATE INDEX IF NOT EXISTS idx_competitor_backlinks_score \n  ON competitor_backlinks(authority_score DESC);\n\n-- Create index on outreach status\nCREATE INDEX IF NOT EXISTS idx_competitor_backlinks_status \n  ON competitor_backlinks(outreach_status);",
+        "options": {}
+      },
+      "id": "ensure-table",
+      "name": "Ensure Supabase Table",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [2500, 300],
+      "credentials": {
+        "postgres": {
+          "id": "supabase-postgres",
+          "name": "Supabase Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "table": "competitor_backlinks",
+        "columns": "referring_domain, authority_score, relevance_factors, competitors, links_to_us, is_opportunity, updated_at",
+        "conflictColumns": "referring_domain",
+        "updateColumns": "authority_score, relevance_factors, competitors, is_opportunity, updated_at",
+        "options": {}
+      },
+      "id": "upsert-backlinks",
+      "name": "Upsert to Supabase",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [2700, 400],
+      "credentials": {
+        "postgres": {
+          "id": "supabase-postgres",
+          "name": "Supabase Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT \n  referring_domain,\n  authority_score,\n  relevance_factors,\n  competitors,\n  outreach_status,\n  discovered_at\nFROM competitor_backlinks\nWHERE is_opportunity = true\n  AND outreach_status = 'pending'\n  AND links_to_us = false\nORDER BY authority_score DESC\nLIMIT 20;",
+        "options": {}
+      },
+      "id": "get-top-opportunities",
+      "name": "Get Top 20 Opportunities",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [2900, 400],
+      "credentials": {
+        "postgres": {
+          "id": "supabase-postgres",
+          "name": "Supabase Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generate outreach target list and Slack report\nconst opportunities = $input.all();\nconst totalProcessed = $('Deduplicate & Aggregate').all().length;\n\n// Format for Slack\nlet slackBlocks = [\n  {\n    type: 'header',\n    text: {\n      type: 'plain_text',\n      text: 'Competitor Backlink Analysis Report',\n      emoji: true\n    }\n  },\n  {\n    type: 'section',\n    text: {\n      type: 'mrkdwn',\n      text: `*Weekly Scan Complete*\\n:mag: Found *${totalProcessed}* unique domains linking to competitors\\n:dart: *${opportunities.length}* high-priority outreach opportunities`\n    }\n  },\n  {\n    type: 'divider'\n  },\n  {\n    type: 'section',\n    text: {\n      type: 'mrkdwn',\n      text: '*Top 20 Outreach Opportunities:*'\n    }\n  }\n];\n\n// Add top opportunities\nlet opportunityList = '';\nopportunities.forEach((opp, idx) => {\n  const data = opp.json;\n  const competitors = Array.isArray(data.competitors) \n    ? data.competitors.join(', ') \n    : data.competitors;\n  const relevance = Array.isArray(data.relevance_factors) && data.relevance_factors.length > 0\n    ? ` (${data.relevance_factors.join(', ')})`\n    : '';\n    \n  opportunityList += `${idx + 1}. *${data.referring_domain}* - Score: ${data.authority_score}${relevance}\\n   Links to: ${competitors}\\n`;\n});\n\nslackBlocks.push({\n  type: 'section',\n  text: {\n    type: 'mrkdwn',\n    text: opportunityList || 'No new opportunities found this week.'\n  }\n});\n\nslackBlocks.push({\n  type: 'divider'\n});\n\nslackBlocks.push({\n  type: 'section',\n  text: {\n    type: 'mrkdwn',\n    text: ':link: <https://supabase.com/dashboard|View all in Supabase> | :email: <https://lician.com/admin/outreach|Start Outreach>'\n  }\n});\n\nslackBlocks.push({\n  type: 'context',\n  elements: [\n    {\n      type: 'mrkdwn',\n      text: `Scan completed at ${new Date().toISOString()}`\n    }\n  ]\n});\n\n// Generate CSV-style outreach list\nconst outreachList = opportunities.map(opp => {\n  const data = opp.json;\n  return {\n    domain: data.referring_domain,\n    score: data.authority_score,\n    relevance: (data.relevance_factors || []).join('; '),\n    competitors: Array.isArray(data.competitors) ? data.competitors.join('; ') : data.competitors,\n    potentialEmail: `contact@${data.referring_domain}`,\n    suggestedSubject: `Partnership opportunity with lician.com`,\n    status: 'pending'\n  };\n});\n\nreturn [{\n  json: {\n    slackBlocks: slackBlocks,\n    slackText: `Competitor Backlink Report: ${opportunities.length} outreach opportunities found`,\n    outreachList: outreachList,\n    totalOpportunities: opportunities.length,\n    totalScanned: totalProcessed,\n    generatedAt: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "generate-report",
+      "name": "Generate Report & Outreach List",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3100, 400]
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "seo-backlinks",
+          "mode": "name"
+        },
+        "text": "={{ $json.slackText }}",
+        "blocksUi": "={{ JSON.stringify($json.slackBlocks) }}",
+        "otherOptions": {}
+      },
+      "id": "slack-report",
+      "name": "Send Slack Report",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [3300, 300],
+      "credentials": {
+        "slackApi": {
+          "id": "slack-bot",
+          "name": "Slack Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ success: true, opportunities: $json.totalOpportunities, scanned: $json.totalScanned, generatedAt: $json.generatedAt }) }}",
+        "options": {}
+      },
+      "id": "webhook-response",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [3300, 500]
+    },
+    {
+      "parameters": {
+        "amount": 2,
+        "unit": "seconds"
+      },
+      "id": "rate-limit",
+      "name": "Rate Limit Delay",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1700, 600]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Error handler - log and continue\nconst error = $input.first();\n\nconsole.error('Workflow error:', error);\n\nreturn [{\n  json: {\n    error: true,\n    message: error.message || 'Unknown error',\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "error-handler",
+      "name": "Error Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2500, 600]
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "seo-backlinks",
+          "mode": "name"
+        },
+        "text": ":warning: Competitor Backlink Scraper encountered an error: {{ $json.message }}",
+        "otherOptions": {}
+      },
+      "id": "slack-error",
+      "name": "Slack Error Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [2700, 600],
+      "credentials": {
+        "slackApi": {
+          "id": "slack-bot",
+          "name": "Slack Bot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Weekly Schedule": {
+      "main": [
+        [
+          {
+            "node": "Merge Triggers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Webhook": {
+      "main": [
+        [
+          {
+            "node": "Merge Triggers",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Triggers": {
+      "main": [
+        [
+          {
+            "node": "Define Competitors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Define Competitors": {
+      "main": [
+        [
+          {
+            "node": "Process One at a Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process One at a Time": {
+      "main": [
+        [
+          {
+            "node": "CommonCrawl Index API",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Wayback Machine API",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Deduplicate & Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CommonCrawl Index API": {
+      "main": [
+        [
+          {
+            "node": "Parse Backlink Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wayback Machine API": {
+      "main": [
+        [
+          {
+            "node": "Parse Backlink Data",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Parse Backlink Data": {
+      "main": [
+        [
+          {
+            "node": "Expand Domains",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Expand Domains": {
+      "main": [
+        [
+          {
+            "node": "Batch Domain Checks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Batch Domain Checks": {
+      "main": [
+        [
+          {
+            "node": "Check if Links to Us",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Score Domain Authority",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if Links to Us": {
+      "main": [
+        [
+          {
+            "node": "Filter Opportunities",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Rate Limit Delay",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rate Limit Delay": {
+      "main": [
+        [
+          {
+            "node": "Batch Domain Checks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Opportunities": {
+      "main": [
+        [
+          {
+            "node": "Score Domain Authority",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Score Domain Authority": {
+      "main": [
+        [
+          {
+            "node": "Process One at a Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deduplicate & Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Ensure Supabase Table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ensure Supabase Table": {
+      "main": [
+        [
+          {
+            "node": "Upsert to Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Error Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upsert to Supabase": {
+      "main": [
+        [
+          {
+            "node": "Get Top 20 Opportunities",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Error Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Top 20 Opportunities": {
+      "main": [
+        [
+          {
+            "node": "Generate Report & Outreach List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Report & Outreach List": {
+      "main": [
+        [
+          {
+            "node": "Send Slack Report",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Handler": {
+      "main": [
+        [
+          {
+            "node": "Slack Error Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "SEO",
+      "id": "seo-tag"
+    },
+    {
+      "name": "Backlinks",
+      "id": "backlinks-tag"
+    },
+    {
+      "name": "Competitor Analysis",
+      "id": "competitor-tag"
+    }
+  ],
+  "triggerCount": 2,
+  "pinData": {},
+  "versionId": "1.0.0",
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "lician-n8n"
+  }
+}

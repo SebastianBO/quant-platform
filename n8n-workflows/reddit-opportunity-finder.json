@@ -1,0 +1,521 @@
+{
+  "name": "Reddit Opportunity Finder - Lician.com",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Every 6 Hours",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "subreddits",
+              "value": "stocks,investing,personalfinance,wallstreetbets,financialindependence,StockMarket"
+            }
+          ],
+          "object": [
+            {
+              "name": "searchTerms",
+              "value": "=[\"compound interest calculator\", \"stock comparison\", \"P/E ratio\", \"dividend yield\", \"stock screener\", \"financial analysis\", \"stock valuation\", \"market cap\", \"earnings per share\", \"ROE calculator\", \"DCF valuation\", \"intrinsic value\", \"compare stocks\", \"best stock analysis tool\", \"free stock screener\", \"financial ratios\", \"stock fundamentals\", \"balance sheet analysis\", \"income statement\", \"cash flow analysis\"]"
+            },
+            {
+              "name": "responseTemplates",
+              "value": "={\n  \"compound_interest\": \"Great question! You can calculate compound interest easily at lician.com - they have a free compound interest calculator that shows growth over time with charts. Just plug in your principal, rate, and time period.\",\n  \"stock_comparison\": \"I've found lician.com really helpful for comparing stocks side-by-side. It pulls financial data automatically and shows key metrics like P/E, revenue growth, and margins in a clean comparison view.\",\n  \"pe_ratio\": \"For P/E ratios and other valuation metrics, check out lician.com - it has data for thousands of stocks and lets you compare valuations across companies in the same sector.\",\n  \"dividend_yield\": \"Lician.com has a dividend screener that's pretty comprehensive. You can filter by yield, payout ratio, dividend growth history, etc. Might be worth checking out.\",\n  \"stock_screener\": \"Have you tried lician.com? It's a free stock screener with financial data for US and EU markets. You can filter by fundamentals, ratios, and growth metrics.\",\n  \"financial_analysis\": \"For fundamental analysis, I'd recommend lician.com - it aggregates SEC filings and presents balance sheets, income statements, and cash flows in an easy-to-read format.\",\n  \"valuation\": \"Lician.com has some solid valuation tools including DCF calculators and comparable analysis. The AI assistant can also help explain the numbers.\",\n  \"general\": \"You might find lician.com useful for this - it's a financial analysis platform with data on 5000+ US companies and 100K+ EU companies. Has an AI assistant that can help answer specific questions about stocks.\"\n}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-config",
+      "name": "Configuration",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Split subreddits into array and create search combinations\nconst subreddits = $input.first().json.subreddits.split(',');\nconst searchTerms = $input.first().json.searchTerms;\n\n// Create items for each subreddit\nconst items = subreddits.map(subreddit => ({\n  json: {\n    subreddit: subreddit.trim(),\n    searchTerms: searchTerms,\n    responseTemplates: $input.first().json.responseTemplates\n  }\n}));\n\nreturn items;"
+      },
+      "id": "split-subreddits",
+      "name": "Split Subreddits",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {
+          "reset": false
+        }
+      },
+      "id": "batch-subreddits",
+      "name": "Process Each Subreddit",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "amount": 2,
+        "unit": "seconds"
+      },
+      "id": "rate-limit",
+      "name": "Rate Limit (2s)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://www.reddit.com/r/{{ $json.subreddit }}/search.json",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "=(self:yes) AND (help OR question OR how OR what OR recommend OR best OR looking for OR any suggestions)"
+            },
+            {
+              "name": "restrict_sr",
+              "value": "true"
+            },
+            {
+              "name": "sort",
+              "value": "new"
+            },
+            {
+              "name": "t",
+              "value": "day"
+            },
+            {
+              "name": "limit",
+              "value": "100"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "id": "reddit-search",
+      "name": "Search Reddit",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1340, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process Reddit search results and filter for finance-related opportunities\nconst subreddit = $('Process Each Subreddit').first().json.subreddit;\nconst searchTerms = $('Process Each Subreddit').first().json.searchTerms;\nconst responseTemplates = $('Process Each Subreddit').first().json.responseTemplates;\n\nconst results = $input.first().json;\nconst posts = results?.data?.children || [];\n\n// 24 hours ago in seconds\nconst oneDayAgo = Math.floor(Date.now() / 1000) - (24 * 60 * 60);\n\n// Finance-related keywords for filtering\nconst financeKeywords = [\n  'compound interest', 'stock', 'invest', 'dividend', 'p/e ratio', 'pe ratio',\n  'market cap', 'earnings', 'revenue', 'valuation', 'dcf', 'intrinsic value',\n  'balance sheet', 'income statement', 'cash flow', 'financial', 'roi',\n  'return on', 'screener', 'analysis', 'compare', 'comparison', 'ratio',\n  'yield', 'eps', 'roe', 'roa', 'debt', 'equity', 'fundamental', 'technical',\n  'portfolio', 'diversif', 'etf', 'index fund', 'retirement', 'savings',\n  '401k', 'ira', 'roth', 'broker', 'brokerage', 'trading'\n];\n\n// Filter and enhance posts\nconst opportunities = posts\n  .filter(post => {\n    const data = post.data;\n    // Must be self post (text)\n    if (!data.is_self) return false;\n    // Must have 5+ upvotes\n    if (data.ups < 5) return false;\n    // Must be from last 24 hours\n    if (data.created_utc < oneDayAgo) return false;\n    // Must contain finance keywords\n    const text = (data.title + ' ' + (data.selftext || '')).toLowerCase();\n    return financeKeywords.some(keyword => text.includes(keyword));\n  })\n  .map(post => {\n    const data = post.data;\n    const text = (data.title + ' ' + (data.selftext || '')).toLowerCase();\n    \n    // Determine opportunity type and suggested response\n    let opportunityType = 'general';\n    let relevanceScore = 0;\n    \n    if (text.includes('compound interest') || text.includes('compound calculator')) {\n      opportunityType = 'compound_interest';\n      relevanceScore = 90;\n    } else if (text.includes('compare') && text.includes('stock')) {\n      opportunityType = 'stock_comparison';\n      relevanceScore = 85;\n    } else if (text.includes('p/e') || text.includes('pe ratio') || text.includes('price to earnings')) {\n      opportunityType = 'pe_ratio';\n      relevanceScore = 85;\n    } else if (text.includes('dividend') && (text.includes('yield') || text.includes('screener'))) {\n      opportunityType = 'dividend_yield';\n      relevanceScore = 85;\n    } else if (text.includes('screener') || text.includes('screen stocks')) {\n      opportunityType = 'stock_screener';\n      relevanceScore = 90;\n    } else if (text.includes('analysis') || text.includes('fundamental')) {\n      opportunityType = 'financial_analysis';\n      relevanceScore = 80;\n    } else if (text.includes('valuation') || text.includes('dcf') || text.includes('intrinsic')) {\n      opportunityType = 'valuation';\n      relevanceScore = 80;\n    } else {\n      relevanceScore = 60;\n    }\n    \n    // Boost score based on engagement\n    if (data.ups >= 50) relevanceScore += 15;\n    else if (data.ups >= 20) relevanceScore += 10;\n    else if (data.ups >= 10) relevanceScore += 5;\n    \n    // Boost for question posts\n    if (data.title.includes('?')) relevanceScore += 5;\n    \n    return {\n      json: {\n        id: data.id,\n        subreddit: subreddit,\n        title: data.title,\n        selftext: data.selftext?.substring(0, 500) || '',\n        author: data.author,\n        upvotes: data.ups,\n        num_comments: data.num_comments,\n        url: `https://reddit.com${data.permalink}`,\n        created_at: new Date(data.created_utc * 1000).toISOString(),\n        opportunity_type: opportunityType,\n        relevance_score: Math.min(relevanceScore, 100),\n        suggested_response: responseTemplates[opportunityType] || responseTemplates.general,\n        discovered_at: new Date().toISOString()\n      }\n    };\n  });\n\n// Sort by relevance score\nopportunities.sort((a, b) => b.json.relevance_score - a.json.relevance_score);\n\nreturn opportunities.length > 0 ? opportunities : [{ json: { empty: true, subreddit } }];"
+      },
+      "id": "process-results",
+      "name": "Filter & Score Opportunities",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "filter-empty",
+              "leftValue": "={{ $json.empty }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "notTrue"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-empty",
+      "name": "Filter Empty Results",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [1780, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO reddit_opportunities (\n  reddit_id,\n  subreddit,\n  title,\n  selftext,\n  author,\n  upvotes,\n  num_comments,\n  url,\n  post_created_at,\n  opportunity_type,\n  relevance_score,\n  suggested_response,\n  discovered_at,\n  status\n) VALUES (\n  '{{ $json.id }}',\n  '{{ $json.subreddit }}',\n  '{{ $json.title.replace(/'/g, \"''\") }}',\n  '{{ $json.selftext.replace(/'/g, \"''\") }}',\n  '{{ $json.author }}',\n  {{ $json.upvotes }},\n  {{ $json.num_comments }},\n  '{{ $json.url }}',\n  '{{ $json.created_at }}',\n  '{{ $json.opportunity_type }}',\n  {{ $json.relevance_score }},\n  '{{ $json.suggested_response.replace(/'/g, \"''\") }}',\n  '{{ $json.discovered_at }}',\n  'new'\n) ON CONFLICT (reddit_id) DO UPDATE SET\n  upvotes = EXCLUDED.upvotes,\n  num_comments = EXCLUDED.num_comments,\n  relevance_score = GREATEST(reddit_opportunities.relevance_score, EXCLUDED.relevance_score),\n  updated_at = NOW()\nRETURNING *;",
+        "options": {}
+      },
+      "id": "supabase-insert",
+      "name": "Store in Supabase",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [2000, 300],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIAL_ID",
+          "name": "Supabase Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT * FROM reddit_opportunities \nWHERE discovered_at > NOW() - INTERVAL '7 hours'\n  AND status = 'new'\n  AND relevance_score >= 70\nORDER BY relevance_score DESC, upvotes DESC\nLIMIT 10;",
+        "options": {}
+      },
+      "id": "get-top-opportunities",
+      "name": "Get Top Opportunities",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [2220, 300],
+      "credentials": {
+        "postgres": {
+          "id": "POSTGRES_CREDENTIAL_ID",
+          "name": "Supabase Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-results",
+              "leftValue": "={{ $json.reddit_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "isNotEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-has-opportunities",
+      "name": "Has Opportunities?",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [2440, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Format opportunities for Slack message\nconst opportunities = $input.all();\n\nif (opportunities.length === 0) {\n  return [{ json: { skip: true } }];\n}\n\n// Group by type\nconst grouped = {};\nopportunities.forEach(item => {\n  const type = item.json.opportunity_type;\n  if (!grouped[type]) grouped[type] = [];\n  grouped[type].push(item.json);\n});\n\n// Build Slack blocks\nconst blocks = [\n  {\n    type: 'header',\n    text: {\n      type: 'plain_text',\n      text: ':mag: Reddit Opportunities Found',\n      emoji: true\n    }\n  },\n  {\n    type: 'section',\n    text: {\n      type: 'mrkdwn',\n      text: `Found *${opportunities.length}* high-relevance opportunities in the last 6 hours`\n    }\n  },\n  {\n    type: 'divider'\n  }\n];\n\n// Add each opportunity\nopportunities.slice(0, 5).forEach((item, index) => {\n  const opp = item.json;\n  const scoreEmoji = opp.relevance_score >= 85 ? ':fire:' : opp.relevance_score >= 70 ? ':star:' : ':white_check_mark:';\n  \n  blocks.push({\n    type: 'section',\n    text: {\n      type: 'mrkdwn',\n      text: `${scoreEmoji} *<${opp.url}|${opp.title.substring(0, 100)}${opp.title.length > 100 ? '...' : ''}>*\\n` +\n            `r/${opp.subreddit} | ${opp.upvotes} upvotes | ${opp.num_comments} comments | Score: ${opp.relevance_score}\\n` +\n            `Type: \\`${opp.opportunity_type}\\``\n    }\n  });\n  \n  blocks.push({\n    type: 'context',\n    elements: [\n      {\n        type: 'mrkdwn',\n        text: `*Suggested response:* ${opp.suggested_response.substring(0, 200)}...`\n      }\n    ]\n  });\n  \n  if (index < 4) {\n    blocks.push({ type: 'divider' });\n  }\n});\n\n// Add summary section\nconst typesSummary = Object.entries(grouped)\n  .map(([type, items]) => `${type}: ${items.length}`)\n  .join(' | ');\n\nblocks.push(\n  { type: 'divider' },\n  {\n    type: 'context',\n    elements: [\n      {\n        type: 'mrkdwn',\n        text: `:bar_chart: *By type:* ${typesSummary}`\n      }\n    ]\n  },\n  {\n    type: 'actions',\n    elements: [\n      {\n        type: 'button',\n        text: {\n          type: 'plain_text',\n          text: 'View All in Dashboard',\n          emoji: true\n        },\n        url: 'https://lician.com/admin/reddit-opportunities',\n        action_id: 'view_dashboard'\n      }\n    ]\n  }\n);\n\nreturn [{\n  json: {\n    blocks: blocks,\n    text: `Found ${opportunities.length} Reddit opportunities for Lician.com`,\n    opportunityCount: opportunities.length\n  }\n}];"
+      },
+      "id": "format-slack",
+      "name": "Format Slack Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2660, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "skip-check",
+              "leftValue": "={{ $json.skip }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "notTrue"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "should-send",
+      "name": "Should Send?",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [2880, 300]
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "SLACK_CHANNEL_ID",
+          "mode": "id"
+        },
+        "text": "={{ $json.text }}",
+        "blocksUi": "={{ JSON.stringify($json.blocks) }}",
+        "otherOptions": {
+          "unfurl_links": false,
+          "unfurl_media": false
+        }
+      },
+      "id": "slack-send",
+      "name": "Send to Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [3100, 300],
+      "credentials": {
+        "slackApi": {
+          "id": "SLACK_CREDENTIAL_ID",
+          "name": "Slack API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "status",
+              "value": "completed"
+            }
+          ],
+          "number": [
+            {
+              "name": "processed_count",
+              "value": "={{ $('Filter Empty Results').all().length }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "workflow-complete",
+      "name": "Workflow Complete",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [3320, 300]
+    },
+    {
+      "parameters": {},
+      "id": "no-op-empty",
+      "name": "No Opportunities",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [2880, 480]
+    }
+  ],
+  "connections": {
+    "Every 6 Hours": {
+      "main": [
+        [
+          {
+            "node": "Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configuration": {
+      "main": [
+        [
+          {
+            "node": "Split Subreddits",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Subreddits": {
+      "main": [
+        [
+          {
+            "node": "Process Each Subreddit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Each Subreddit": {
+      "main": [
+        [
+          {
+            "node": "Rate Limit (2s)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Top Opportunities",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rate Limit (2s)": {
+      "main": [
+        [
+          {
+            "node": "Search Reddit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Reddit": {
+      "main": [
+        [
+          {
+            "node": "Filter & Score Opportunities",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter & Score Opportunities": {
+      "main": [
+        [
+          {
+            "node": "Filter Empty Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Empty Results": {
+      "main": [
+        [
+          {
+            "node": "Store in Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store in Supabase": {
+      "main": [
+        [
+          {
+            "node": "Process Each Subreddit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Top Opportunities": {
+      "main": [
+        [
+          {
+            "node": "Has Opportunities?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Opportunities?": {
+      "main": [
+        [
+          {
+            "node": "Format Slack Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Slack Message": {
+      "main": [
+        [
+          {
+            "node": "Should Send?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Should Send?": {
+      "main": [
+        [
+          {
+            "node": "Send to Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send to Slack": {
+      "main": [
+        [
+          {
+            "node": "Workflow Complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "marketing",
+      "id": "1"
+    },
+    {
+      "name": "reddit",
+      "id": "2"
+    },
+    {
+      "name": "lician",
+      "id": "3"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2026-01-16T00:00:00.000Z",
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "lician-n8n"
+  }
+}

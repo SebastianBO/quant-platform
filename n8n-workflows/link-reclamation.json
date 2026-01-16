@@ -1,0 +1,1303 @@
+{
+  "name": "Link Reclamation - Lician.com",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 7 * * *"
+            }
+          ]
+        }
+      },
+      "id": "daily-trigger",
+      "name": "Daily Search (7 AM)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "link-reclamation",
+        "options": {},
+        "responseMode": "responseNode"
+      },
+      "id": "manual-trigger",
+      "name": "Manual Trigger Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 500],
+      "webhookId": "link-reclamation-lician"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Define search queries for brand mentions\nconst searchQueries = [\n  // Direct brand mentions\n  '\"lician\" finance stock analysis -site:lician.com',\n  '\"lician.com\" -site:lician.com',\n  '\"lician\" financial data -site:lician.com',\n  '\"lician\" stock screener -site:lician.com',\n  '\"lician\" quant platform -site:lician.com',\n  '\"lician\" stock analysis tool -site:lician.com',\n  \n  // Product-specific mentions\n  '\"lician AI\" stock -site:lician.com',\n  '\"lician financial\" -site:lician.com',\n  \n  // Related finance context\n  'stock analysis tool lician -site:lician.com',\n  'financial data platform lician -site:lician.com'\n];\n\n// Generate search tasks\nconst searchTasks = searchQueries.map((query, index) => ({\n  json: {\n    query,\n    searchIndex: index,\n    searchType: 'web',\n    timestamp: new Date().toISOString()\n  }\n}));\n\nreturn searchTasks;"
+      },
+      "id": "generate-search-queries",
+      "name": "Generate Search Queries",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [470, 400]
+    },
+    {
+      "parameters": {
+        "batchSize": 2,
+        "options": {
+          "reset": false
+        }
+      },
+      "id": "batch-queries",
+      "name": "Batch Queries (2 at a time)",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [690, 400]
+    },
+    {
+      "parameters": {
+        "amount": 3000,
+        "unit": "milliseconds"
+      },
+      "id": "rate-limit-search",
+      "name": "Rate Limit (3s)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [910, 400]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://serpapi.com/search",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "serpApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ $json.query }}"
+            },
+            {
+              "name": "engine",
+              "value": "google"
+            },
+            {
+              "name": "num",
+              "value": "50"
+            },
+            {
+              "name": "tbs",
+              "value": "qdr:w"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "serpapi-web-search",
+      "name": "SerpAPI Web Search",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1130, 300],
+      "credentials": {
+        "serpApi": {
+          "id": "CONFIGURE_SERPAPI_CREDENTIALS",
+          "name": "SerpAPI"
+        }
+      },
+      "continueOnFail": true,
+      "notesInFlow": true,
+      "notes": "Uses SerpAPI for reliable Google search. Configure API key at serpapi.com. Alternative: Use Google Custom Search API or Bing Search API."
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://serpapi.com/search",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "serpApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ $json.query }}"
+            },
+            {
+              "name": "engine",
+              "value": "google_news"
+            },
+            {
+              "name": "num",
+              "value": "30"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "serpapi-news-search",
+      "name": "SerpAPI News Search",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1130, 500],
+      "credentials": {
+        "serpApi": {
+          "id": "CONFIGURE_SERPAPI_CREDENTIALS",
+          "name": "SerpAPI"
+        }
+      },
+      "continueOnFail": true,
+      "notesInFlow": true,
+      "notes": "Searches Google News for brand mentions in recent articles."
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Process web search results\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const searchData = item.json;\n  const organicResults = searchData.organic_results || [];\n  const newsResults = searchData.news_results || [];\n  const allResults = [...organicResults, ...newsResults];\n  \n  for (const result of allResults) {\n    // Skip if no valid URL\n    if (!result.link) continue;\n    \n    // Skip if it's our own site\n    if (result.link.includes('lician.com')) continue;\n    \n    // Extract domain from URL\n    let domain = '';\n    try {\n      const url = new URL(result.link);\n      domain = url.hostname.replace('www.', '');\n    } catch (e) {\n      continue;\n    }\n    \n    results.push({\n      json: {\n        url: result.link,\n        domain: domain,\n        title: result.title || '',\n        snippet: result.snippet || '',\n        position: result.position || 0,\n        source: result.source || domain,\n        date: result.date || null,\n        searchQuery: $('Generate Search Queries').first().json.query,\n        foundAt: new Date().toISOString(),\n        needsVerification: true\n      }\n    });\n  }\n}\n\n// Remove duplicates by URL\nconst uniqueResults = [];\nconst seenUrls = new Set();\n\nfor (const r of results) {\n  if (!seenUrls.has(r.json.url)) {\n    seenUrls.add(r.json.url);\n    uniqueResults.push(r);\n  }\n}\n\nif (uniqueResults.length === 0) {\n  return [{ json: { noResults: true, message: 'No mentions found in this batch' } }];\n}\n\nreturn uniqueResults;"
+      },
+      "id": "parse-search-results",
+      "name": "Parse Search Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1350, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-results",
+              "leftValue": "={{ $json.noResults }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-has-results",
+      "name": "Has Results?",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [1570, 400]
+    },
+    {
+      "parameters": {
+        "batchSize": 5,
+        "options": {
+          "reset": false
+        }
+      },
+      "id": "batch-verification",
+      "name": "Batch for Verification",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [1790, 400]
+    },
+    {
+      "parameters": {
+        "amount": 2000,
+        "unit": "milliseconds"
+      },
+      "id": "rate-limit-verify",
+      "name": "Rate Limit (2s)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [2010, 400]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.url }}",
+        "options": {
+          "timeout": 20000,
+          "redirect": {
+            "redirect": {
+              "followRedirects": true,
+              "maxRedirects": 5
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "fetch-page",
+      "name": "Fetch Page Content",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2230, 400],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Check if page mentions lician but doesn't link to lician.com\nconst item = $input.item;\nconst response = item.json;\nconst originalData = $('Batch for Verification').item.json;\n\nconst pageContent = response.body || '';\nconst httpStatus = response.statusCode || 0;\nconst httpError = response.error || null;\n\nlet result = {\n  ...originalData,\n  httpStatus,\n  pageLoaded: httpStatus >= 200 && httpStatus < 400,\n  errorMessage: httpError ? httpError.message : null\n};\n\nif (!result.pageLoaded) {\n  result.isMention = false;\n  result.hasLink = false;\n  result.skipReason = 'Page failed to load';\n  return { json: result };\n}\n\n// Convert to lowercase for case-insensitive search\nconst lowerContent = pageContent.toLowerCase();\n\n// Check if page mentions \"lician\" (brand name)\nconst mentionsLician = lowerContent.includes('lician');\n\nif (!mentionsLician) {\n  result.isMention = false;\n  result.hasLink = false;\n  result.skipReason = 'No brand mention found on page';\n  return { json: result };\n}\n\nresult.isMention = true;\n\n// Count mentions\nconst mentionCount = (lowerContent.match(/lician/g) || []).length;\nresult.mentionCount = mentionCount;\n\n// Check if there's a link to lician.com\nconst linkPatterns = [\n  /href=[\"']https?:\\/\\/(www\\.)?lician\\.com[^\"|']*/gi,\n  /href=[\"'][^\"']*lician\\.com[^\"']*/gi\n];\n\nlet hasLink = false;\nlet linkDetails = [];\n\nfor (const pattern of linkPatterns) {\n  const matches = pageContent.match(pattern);\n  if (matches && matches.length > 0) {\n    hasLink = true;\n    linkDetails = matches;\n    break;\n  }\n}\n\nresult.hasLink = hasLink;\nresult.linkDetails = linkDetails;\n\n// Extract context around the mention (first occurrence)\nconst licianIndex = lowerContent.indexOf('lician');\nconst contextStart = Math.max(0, licianIndex - 150);\nconst contextEnd = Math.min(pageContent.length, licianIndex + 200);\nresult.mentionContext = pageContent.substring(contextStart, contextEnd).replace(/[\\r\\n]+/g, ' ').trim();\n\n// Determine if this is an unlinked mention (valuable for outreach)\nresult.isUnlinkedMention = result.isMention && !result.hasLink;\n\n// Check mention quality (is it positive/neutral context?)\nconst negativeTerms = ['scam', 'fraud', 'fake', 'avoid', 'warning', 'bad', 'terrible', 'worst'];\nlet isNegative = false;\nfor (const term of negativeTerms) {\n  if (result.mentionContext.toLowerCase().includes(term)) {\n    isNegative = true;\n    break;\n  }\n}\nresult.isNegativeMention = isNegative;\n\n// Extract author/contact info if visible\nconst authorPatterns = [\n  /<meta[^>]*name=[\"']author[\"'][^>]*content=[\"']([^\"']+)[\"']/i,\n  /by\\s+([A-Z][a-z]+\\s+[A-Z][a-z]+)/,\n  /author[\"']?:\\s*[\"']?([^\"',<>]+)/i\n];\n\nlet author = null;\nfor (const pattern of authorPatterns) {\n  const match = pageContent.match(pattern);\n  if (match && match[1]) {\n    author = match[1].trim();\n    break;\n  }\n}\nresult.author = author;\n\n// Try to find contact email\nconst emailPattern = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g;\nconst emails = pageContent.match(emailPattern) || [];\nconst filteredEmails = emails.filter(e => \n  !e.includes('example.com') && \n  !e.includes('lician.com') &&\n  !e.includes('placeholder')\n).slice(0, 3);\nresult.contactEmails = filteredEmails;\n\nreturn { json: result };"
+      },
+      "id": "analyze-page",
+      "name": "Analyze Page for Links",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2450, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "is-unlinked",
+              "leftValue": "={{ $json.isUnlinkedMention }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "not-negative",
+              "leftValue": "={{ $json.isNegativeMention }}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-unlinked-mentions",
+      "name": "Filter Unlinked Mentions",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [2670, 400]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "unlinked_mentions",
+          "mode": "list",
+          "cachedResultName": "unlinked_mentions"
+        },
+        "returnAll": true,
+        "filterType": "string",
+        "filters": "=url=eq.{{ encodeURIComponent($json.url) }}"
+      },
+      "id": "check-existing",
+      "name": "Check If Already Tracked",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [2890, 400],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Check if mention already exists in database\nconst item = $input.item;\nconst existingRecords = item.json;\nconst originalData = $('Filter Unlinked Mentions').item.json;\n\n// If we got records back, it already exists\nconst alreadyTracked = Array.isArray(existingRecords) && existingRecords.length > 0;\n\nreturn {\n  json: {\n    ...originalData,\n    alreadyTracked,\n    existingId: alreadyTracked ? existingRecords[0].id : null\n  }\n};"
+      },
+      "id": "process-existing-check",
+      "name": "Process Existing Check",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3110, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "not-tracked",
+              "leftValue": "={{ $json.alreadyTracked }}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-new-mentions",
+      "name": "Filter New Mentions",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [3330, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.moz.com/v2/url_metrics",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"targets\": [\"{{ $json.domain }}\"]\n}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "get-domain-authority",
+      "name": "Get Domain Authority (Moz)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3550, 300],
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "CONFIGURE_MOZ_CREDENTIALS",
+          "name": "Moz API"
+        }
+      },
+      "continueOnFail": true,
+      "notesInFlow": true,
+      "notes": "Optional: Configure Moz API for DA scores. Alternatives: Ahrefs, SEMrush, or use a fallback estimation."
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Fallback domain authority estimation if Moz API fails\nconst item = $input.item;\nconst mozResponse = item.json;\nconst originalData = $('Filter New Mentions').item.json;\n\nlet domainAuthority = 0;\nlet authoritySource = 'estimated';\n\n// Check if Moz returned valid data\nif (mozResponse.results && mozResponse.results[0]) {\n  domainAuthority = mozResponse.results[0].domain_authority || 0;\n  authoritySource = 'moz';\n} else {\n  // Fallback: Estimate based on domain reputation\n  const domain = originalData.domain.toLowerCase();\n  \n  // High authority domains\n  const highAuthority = [\n    'forbes.com', 'bloomberg.com', 'reuters.com', 'wsj.com', 'nytimes.com',\n    'cnbc.com', 'marketwatch.com', 'seekingalpha.com', 'investopedia.com',\n    'yahoo.com', 'finance.yahoo.com', 'businessinsider.com', 'techcrunch.com',\n    'wired.com', 'theverge.com', 'medium.com', 'hackernoon.com',\n    'github.com', 'reddit.com', 'quora.com', 'linkedin.com'\n  ];\n  \n  // Medium authority domains\n  const mediumAuthority = [\n    'benzinga.com', 'fool.com', 'barrons.com', 'thestreet.com',\n    'zacks.com', 'morningstar.com', 'kiplinger.com'\n  ];\n  \n  if (highAuthority.some(d => domain.includes(d))) {\n    domainAuthority = 80 + Math.floor(Math.random() * 15);\n  } else if (mediumAuthority.some(d => domain.includes(d))) {\n    domainAuthority = 50 + Math.floor(Math.random() * 25);\n  } else if (domain.endsWith('.edu') || domain.endsWith('.gov')) {\n    domainAuthority = 70 + Math.floor(Math.random() * 20);\n  } else if (domain.endsWith('.org')) {\n    domainAuthority = 40 + Math.floor(Math.random() * 30);\n  } else {\n    // Unknown domain - estimate low-medium\n    domainAuthority = 15 + Math.floor(Math.random() * 30);\n  }\n}\n\n// Calculate priority score (higher is better)\nconst priorityScore = Math.round(\n  (domainAuthority * 0.6) + \n  (originalData.mentionCount * 5) + \n  (originalData.contactEmails.length > 0 ? 15 : 0)\n);\n\n// Determine tier\nlet tier = 'low';\nif (domainAuthority >= 70) tier = 'high';\nelse if (domainAuthority >= 40) tier = 'medium';\n\nreturn {\n  json: {\n    ...originalData,\n    domainAuthority,\n    authoritySource,\n    priorityScore,\n    tier,\n    processedAt: new Date().toISOString()\n  }\n};"
+      },
+      "id": "calculate-authority",
+      "name": "Calculate Authority Score",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3770, 400]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Generate personalized outreach email\nconst mention = $json;\n\nconst templates = {\n  high: {\n    subject: `Quick fix for your ${mention.title ? mention.title.substring(0, 50) : 'article'} article`,\n    body: `Hi${mention.author ? ' ' + mention.author.split(' ')[0] : ''},\n\nI came across your excellent article on ${mention.domain} where you mentioned Lician.\n\nI noticed the brand mention doesn't include a link to our site (lician.com). Would you consider adding one? It would:\n\n- Provide value to your readers who want to explore the platform\n- Improve the article's helpfulness with a direct resource link\n- Take just a few seconds to add\n\nThe relevant URL would be: https://lician.com\n\nHappy to return the favor or provide any additional information about our financial analysis tools that might enhance your content.\n\nBest regards,\nSebastian\nLician.com`\n  },\n  medium: {\n    subject: `Adding a helpful link to your ${mention.domain} article`,\n    body: `Hi${mention.author ? ' ' + mention.author.split(' ')[0] : ' there'},\n\nI found your article that mentions Lician - thank you for the mention!\n\nI noticed there's no direct link to lician.com for readers who want to check it out. Would you be open to adding a quick link?\n\nThe URL is: https://lician.com\n\nIt would help readers find exactly what you're referencing.\n\nThanks for considering,\nSebastian\nLician.com`\n  },\n  low: {\n    subject: `Link request for your article mentioning Lician`,\n    body: `Hello,\n\nI noticed your page mentions Lician but doesn't link to us.\n\nWould you consider adding a link to lician.com? It would help your readers find the platform you're referencing.\n\nThanks,\nSebastian\nLician.com`\n  }\n};\n\nconst template = templates[mention.tier] || templates.low;\n\nreturn {\n  json: {\n    ...mention,\n    outreachEmail: {\n      subject: template.subject,\n      body: template.body,\n      suggestedSendDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]\n    }\n  }\n};"
+      },
+      "id": "generate-outreach-email",
+      "name": "Generate Outreach Email",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3990, 400]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "unlinked_mentions",
+          "mode": "list",
+          "cachedResultName": "unlinked_mentions"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "url": "={{ $json.url }}",
+            "domain": "={{ $json.domain }}",
+            "title": "={{ $json.title }}",
+            "snippet": "={{ $json.snippet }}",
+            "mention_context": "={{ $json.mentionContext }}",
+            "mention_count": "={{ $json.mentionCount }}",
+            "domain_authority": "={{ $json.domainAuthority }}",
+            "authority_source": "={{ $json.authoritySource }}",
+            "priority_score": "={{ $json.priorityScore }}",
+            "tier": "={{ $json.tier }}",
+            "author": "={{ $json.author }}",
+            "contact_emails": "={{ JSON.stringify($json.contactEmails) }}",
+            "outreach_subject": "={{ $json.outreachEmail.subject }}",
+            "outreach_body": "={{ $json.outreachEmail.body }}",
+            "status": "new",
+            "found_at": "={{ $json.foundAt }}",
+            "search_query": "={{ $json.searchQuery }}"
+          },
+          "cachedResultName": ""
+        },
+        "options": {}
+      },
+      "id": "save-to-supabase",
+      "name": "Save to Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [4210, 400],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "is-high-da",
+              "leftValue": "={{ $json.tier }}",
+              "rightValue": "high",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-high-da",
+      "name": "Filter High DA",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [4430, 300]
+    },
+    {
+      "parameters": {
+        "channel": "#seo-alerts",
+        "text": "=:star: *High-Value Unlinked Mention Found!*\n\n*Domain:* {{ $json.domain }}\n*Domain Authority:* {{ $json.domainAuthority }} ({{ $json.authoritySource }})\n*Priority Score:* {{ $json.priorityScore }}\n\n*Page:* <{{ $json.url }}|{{ $json.title || 'View Page' }}>\n\n*Mention Context:*\n> {{ $json.mentionContext.substring(0, 300) }}...\n\n*Mentions Found:* {{ $json.mentionCount }}\n*Author:* {{ $json.author || 'Unknown' }}\n*Contact Emails:* {{ $json.contactEmails.length > 0 ? $json.contactEmails.join(', ') : 'None found' }}\n\n---\n*Outreach Ready:*\nSubject: {{ $json.outreachEmail.subject }}\n\n_This is a high-priority opportunity - consider reaching out today!_",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "slack-high-da-alert",
+      "name": "Slack High-DA Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [4650, 300],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Lician Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-more-batches",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-more-verification-batches",
+      "name": "More Verification Batches?",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [4430, 500]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-more-queries",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-more-query-batches",
+      "name": "More Query Batches?",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [4650, 500]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 10 * * 1"
+            }
+          ]
+        }
+      },
+      "id": "weekly-summary-trigger",
+      "name": "Weekly Summary (Monday 10 AM)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 800]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "unlinked_mentions",
+          "mode": "list",
+          "cachedResultName": "unlinked_mentions"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "id": "fetch-all-mentions",
+      "name": "Fetch All Mentions",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [470, 800],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Generate weekly link reclamation summary\nconst items = $input.all();\nconst mentions = items.map(i => i.json);\n\nconst now = new Date();\nconst oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);\n\n// Calculate statistics\nconst stats = {\n  total: mentions.length,\n  new: mentions.filter(m => m.status === 'new').length,\n  contacted: mentions.filter(m => m.status === 'contacted').length,\n  converted: mentions.filter(m => m.status === 'converted').length,\n  declined: mentions.filter(m => m.status === 'declined').length,\n  noResponse: mentions.filter(m => m.status === 'no_response').length,\n  \n  // By tier\n  highTier: mentions.filter(m => m.tier === 'high').length,\n  mediumTier: mentions.filter(m => m.tier === 'medium').length,\n  lowTier: mentions.filter(m => m.tier === 'low').length,\n  \n  // This week\n  newThisWeek: mentions.filter(m => \n    new Date(m.found_at) > oneWeekAgo\n  ).length,\n  convertedThisWeek: mentions.filter(m => \n    m.status === 'converted' && \n    new Date(m.converted_at) > oneWeekAgo\n  ).length\n};\n\n// Conversion rate\nconst totalOutreached = stats.contacted + stats.converted + stats.declined + stats.noResponse;\nstats.conversionRate = totalOutreached > 0 \n  ? Math.round((stats.converted / totalOutreached) * 100) \n  : 0;\n\n// Top opportunities (high DA, not yet contacted)\nconst topOpportunities = mentions\n  .filter(m => m.status === 'new' && m.tier === 'high')\n  .sort((a, b) => (b.priority_score || 0) - (a.priority_score || 0))\n  .slice(0, 5);\n\n// Pending follow-ups (contacted but no response after 7 days)\nconst pendingFollowups = mentions\n  .filter(m => m.status === 'contacted')\n  .filter(m => new Date(m.contacted_at) < oneWeekAgo);\n\n// Recent conversions\nconst recentConversions = mentions\n  .filter(m => m.status === 'converted')\n  .filter(m => new Date(m.converted_at) > oneWeekAgo);\n\nreturn [{\n  json: {\n    stats,\n    topOpportunities,\n    pendingFollowups,\n    recentConversions,\n    reportGeneratedAt: now.toISOString(),\n    reportPeriod: `${oneWeekAgo.toISOString().split('T')[0]} to ${now.toISOString().split('T')[0]}`\n  }\n}];"
+      },
+      "id": "generate-weekly-summary",
+      "name": "Generate Weekly Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [690, 800]
+    },
+    {
+      "parameters": {
+        "channel": "#seo-alerts",
+        "text": "=:chart_with_upwards_trend: *Weekly Link Reclamation Report*\n\n*Period:* {{ $json.reportPeriod }}\n\n*Overall Status:*\n- Total Unlinked Mentions: {{ $json.stats.total }}\n- New (pending outreach): {{ $json.stats.new }}\n- Contacted: {{ $json.stats.contacted }}\n- Converted: {{ $json.stats.converted }} :white_check_mark:\n- Declined: {{ $json.stats.declined }}\n- No Response: {{ $json.stats.noResponse }}\n\n*Conversion Rate:* {{ $json.stats.conversionRate }}%\n\n*By Authority Tier:*\n- High DA (70+): {{ $json.stats.highTier }}\n- Medium DA (40-69): {{ $json.stats.mediumTier }}\n- Low DA (<40): {{ $json.stats.lowTier }}\n\n*This Week:*\n- :heavy_plus_sign: New mentions found: {{ $json.stats.newThisWeek }}\n- :link: Links reclaimed: {{ $json.stats.convertedThisWeek }}\n\n{{ $json.topOpportunities.length > 0 ? '*Top Opportunities (High DA - Action Needed):*\\n' + $json.topOpportunities.map(o => `- ${o.domain} (DA: ${o.domain_authority})`).join('\\n') : '' }}\n\n{{ $json.pendingFollowups.length > 0 ? ':alarm_clock: *' + $json.pendingFollowups.length + ' pending follow-ups* (contacted >7 days ago)' : '' }}\n\n_Dashboard: Check Supabase unlinked_mentions table for full details_",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "slack-weekly-summary",
+      "name": "Slack Weekly Summary",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [910, 800],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Lician Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "seo@lician.com",
+        "toEmail": "team@lician.com",
+        "subject": "=Weekly Link Reclamation Report - Lician.com ({{ $json.reportPeriod }})",
+        "emailType": "html",
+        "html": "=<html>\n<head>\n  <style>\n    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; color: #333; }\n    h1 { color: #1a1a2e; border-bottom: 2px solid #0f3460; padding-bottom: 10px; }\n    h2 { color: #16213e; margin-top: 30px; }\n    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 20px 0; }\n    .stat-box { background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center; }\n    .stat-box.success { background: #d4edda; }\n    .stat-box.warning { background: #fff3cd; }\n    .stat-box.info { background: #d1ecf1; }\n    .stat-number { font-size: 32px; font-weight: bold; color: #16213e; }\n    .stat-label { font-size: 12px; color: #666; text-transform: uppercase; }\n    table { width: 100%; border-collapse: collapse; margin: 15px 0; }\n    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }\n    th { background: #f8f9fa; font-weight: 600; }\n    .high-tier { background: #d4edda; }\n    .medium-tier { background: #fff3cd; }\n    .priority { color: #dc3545; font-weight: bold; }\n    .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; font-size: 12px; }\n  </style>\n</head>\n<body>\n  <h1>Weekly Link Reclamation Report</h1>\n  <p>Report period: <strong>{{ $json.reportPeriod }}</strong></p>\n  \n  <div class=\"stats-grid\">\n    <div class=\"stat-box info\">\n      <div class=\"stat-number\">{{ $json.stats.total }}</div>\n      <div class=\"stat-label\">Total Mentions</div>\n    </div>\n    <div class=\"stat-box warning\">\n      <div class=\"stat-number\">{{ $json.stats.new }}</div>\n      <div class=\"stat-label\">Pending Outreach</div>\n    </div>\n    <div class=\"stat-box success\">\n      <div class=\"stat-number\">{{ $json.stats.converted }}</div>\n      <div class=\"stat-label\">Links Reclaimed</div>\n    </div>\n    <div class=\"stat-box\">\n      <div class=\"stat-number\">{{ $json.stats.conversionRate }}%</div>\n      <div class=\"stat-label\">Conversion Rate</div>\n    </div>\n  </div>\n  \n  <h2>Pipeline Status</h2>\n  <table>\n    <tr><td>New (not contacted)</td><td><strong>{{ $json.stats.new }}</strong></td></tr>\n    <tr><td>Contacted (awaiting response)</td><td>{{ $json.stats.contacted }}</td></tr>\n    <tr><td>Converted (link added)</td><td style=\"color: green;\">{{ $json.stats.converted }}</td></tr>\n    <tr><td>Declined</td><td>{{ $json.stats.declined }}</td></tr>\n    <tr><td>No Response</td><td>{{ $json.stats.noResponse }}</td></tr>\n  </table>\n  \n  <h2>By Domain Authority Tier</h2>\n  <table>\n    <tr>\n      <th>Tier</th>\n      <th>Count</th>\n      <th>Priority</th>\n    </tr>\n    <tr class=\"high-tier\">\n      <td>High (DA 70+)</td>\n      <td>{{ $json.stats.highTier }}</td>\n      <td class=\"priority\">High Priority</td>\n    </tr>\n    <tr class=\"medium-tier\">\n      <td>Medium (DA 40-69)</td>\n      <td>{{ $json.stats.mediumTier }}</td>\n      <td>Medium Priority</td>\n    </tr>\n    <tr>\n      <td>Low (DA <40)</td>\n      <td>{{ $json.stats.lowTier }}</td>\n      <td>Low Priority</td>\n    </tr>\n  </table>\n  \n  {{ $json.topOpportunities.length > 0 ? `\n  <h2>Top Opportunities (Action Required)</h2>\n  <table>\n    <tr>\n      <th>Domain</th>\n      <th>DA</th>\n      <th>Priority Score</th>\n      <th>Contact</th>\n    </tr>\n    ${$json.topOpportunities.map(o => `\n      <tr class=\"high-tier\">\n        <td><a href=\"${o.url}\">${o.domain}</a></td>\n        <td>${o.domain_authority}</td>\n        <td>${o.priority_score}</td>\n        <td>${o.contact_emails ? JSON.parse(o.contact_emails || '[]').join(', ') : 'Find contact'}</td>\n      </tr>\n    `).join('')}\n  </table>\n  ` : ''}\n  \n  {{ $json.pendingFollowups.length > 0 ? `\n  <h2>Pending Follow-ups (>7 days)</h2>\n  <p>${$json.pendingFollowups.length} contacts need follow-up emails.</p>\n  ` : ''}\n  \n  {{ $json.recentConversions.length > 0 ? `\n  <h2>Recent Wins</h2>\n  <ul>\n    ${$json.recentConversions.map(c => `<li>${c.domain} - Link added!</li>`).join('')}\n  </ul>\n  ` : ''}\n  \n  <div class=\"footer\">\n    <p>Generated by n8n Link Reclamation Workflow for lician.com</p>\n    <p>{{ $json.reportGeneratedAt }}</p>\n  </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "id": "send-weekly-email",
+      "name": "Send Weekly Report Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [1130, 800],
+      "credentials": {
+        "smtp": {
+          "id": "CONFIGURE_SMTP_CREDENTIALS",
+          "name": "Lician SMTP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "link-reclamation-status",
+        "options": {},
+        "responseMode": "responseNode"
+      },
+      "id": "status-update-webhook",
+      "name": "Status Update Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 1100],
+      "webhookId": "link-reclamation-status-lician"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Parse status update request\nconst item = $input.first();\nconst body = item.json.body || item.json;\n\n// Expected payload:\n// { id: uuid, status: 'contacted'|'converted'|'declined'|'no_response', notes: string }\n\nif (!body.id || !body.status) {\n  return [{ json: { error: true, message: 'Missing id or status' } }];\n}\n\nconst validStatuses = ['new', 'contacted', 'converted', 'declined', 'no_response'];\nif (!validStatuses.includes(body.status)) {\n  return [{ json: { error: true, message: 'Invalid status. Use: ' + validStatuses.join(', ') } }];\n}\n\nconst updateData = {\n  id: body.id,\n  status: body.status,\n  notes: body.notes || null,\n  updatedAt: new Date().toISOString()\n};\n\n// Add timestamp based on status\nif (body.status === 'contacted') {\n  updateData.contacted_at = new Date().toISOString();\n} else if (body.status === 'converted') {\n  updateData.converted_at = new Date().toISOString();\n}\n\nreturn [{ json: updateData }];"
+      },
+      "id": "parse-status-update",
+      "name": "Parse Status Update",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [470, 1100]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "no-error",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-valid-update",
+      "name": "Valid Update?",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [690, 1100]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "unlinked_mentions",
+          "mode": "list",
+          "cachedResultName": "unlinked_mentions"
+        },
+        "filtersUI": {
+          "filterValues": [
+            {
+              "fieldName": "id",
+              "condition": "equals",
+              "searchValue": "={{ $json.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "={{ $json.status }}",
+            "notes": "={{ $json.notes }}",
+            "contacted_at": "={{ $json.contacted_at || null }}",
+            "converted_at": "={{ $json.converted_at || null }}",
+            "updated_at": "={{ $json.updatedAt }}"
+          },
+          "cachedResultName": ""
+        },
+        "options": {}
+      },
+      "id": "update-mention-status",
+      "name": "Update Mention Status",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [910, 1100],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "is-converted",
+              "leftValue": "={{ $('Parse Status Update').item.json.status }}",
+              "rightValue": "converted",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-conversions",
+      "name": "Is Conversion?",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [1130, 1000]
+    },
+    {
+      "parameters": {
+        "channel": "#seo-alerts",
+        "text": "=:tada: *Link Reclaimed!*\n\nA site has added a link to lician.com!\n\n*Mention ID:* {{ $('Parse Status Update').item.json.id }}\n*Notes:* {{ $('Parse Status Update').item.json.notes || 'No notes' }}\n\n_Conversion tracked at {{ $('Parse Status Update').item.json.updatedAt }}_",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "slack-conversion-alert",
+      "name": "Slack Conversion Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1350, 1000],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Lician Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"message\": \"Status updated\", \"id\": $json.id, \"status\": $('Parse Status Update').item.json.status } }}",
+        "options": {}
+      },
+      "id": "status-update-response",
+      "name": "Status Update Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1350, 1100]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": false, \"error\": $json.message } }}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "error-response",
+      "name": "Error Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [690, 1200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"message\": \"Link reclamation search initiated\", \"timestamp\": new Date().toISOString() } }}",
+        "options": {}
+      },
+      "id": "manual-trigger-response",
+      "name": "Manual Trigger Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [4870, 400]
+    }
+  ],
+  "connections": {
+    "Daily Search (7 AM)": {
+      "main": [
+        [
+          {
+            "node": "Generate Search Queries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Trigger Webhook": {
+      "main": [
+        [
+          {
+            "node": "Generate Search Queries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Search Queries": {
+      "main": [
+        [
+          {
+            "node": "Batch Queries (2 at a time)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Batch Queries (2 at a time)": {
+      "main": [
+        [
+          {
+            "node": "Rate Limit (3s)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Manual Trigger Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rate Limit (3s)": {
+      "main": [
+        [
+          {
+            "node": "SerpAPI Web Search",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "SerpAPI News Search",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI Web Search": {
+      "main": [
+        [
+          {
+            "node": "Parse Search Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI News Search": {
+      "main": [
+        [
+          {
+            "node": "Parse Search Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Search Results": {
+      "main": [
+        [
+          {
+            "node": "Has Results?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Results?": {
+      "main": [
+        [
+          {
+            "node": "Batch for Verification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Batch for Verification": {
+      "main": [
+        [
+          {
+            "node": "Rate Limit (2s)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "More Query Batches?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rate Limit (2s)": {
+      "main": [
+        [
+          {
+            "node": "Fetch Page Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Page Content": {
+      "main": [
+        [
+          {
+            "node": "Analyze Page for Links",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Page for Links": {
+      "main": [
+        [
+          {
+            "node": "Filter Unlinked Mentions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Unlinked Mentions": {
+      "main": [
+        [
+          {
+            "node": "Check If Already Tracked",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check If Already Tracked": {
+      "main": [
+        [
+          {
+            "node": "Process Existing Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Existing Check": {
+      "main": [
+        [
+          {
+            "node": "Filter New Mentions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter New Mentions": {
+      "main": [
+        [
+          {
+            "node": "Get Domain Authority (Moz)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Domain Authority (Moz)": {
+      "main": [
+        [
+          {
+            "node": "Calculate Authority Score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Authority Score": {
+      "main": [
+        [
+          {
+            "node": "Generate Outreach Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Outreach Email": {
+      "main": [
+        [
+          {
+            "node": "Save to Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to Supabase": {
+      "main": [
+        [
+          {
+            "node": "Filter High DA",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "More Verification Batches?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter High DA": {
+      "main": [
+        [
+          {
+            "node": "Slack High-DA Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "More Verification Batches?": {
+      "main": [
+        [
+          {
+            "node": "Batch for Verification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "More Query Batches?": {
+      "main": [
+        [
+          {
+            "node": "Batch Queries (2 at a time)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Weekly Summary (Monday 10 AM)": {
+      "main": [
+        [
+          {
+            "node": "Fetch All Mentions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch All Mentions": {
+      "main": [
+        [
+          {
+            "node": "Generate Weekly Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Weekly Summary": {
+      "main": [
+        [
+          {
+            "node": "Slack Weekly Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Weekly Summary": {
+      "main": [
+        [
+          {
+            "node": "Send Weekly Report Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Status Update Webhook": {
+      "main": [
+        [
+          {
+            "node": "Parse Status Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Status Update": {
+      "main": [
+        [
+          {
+            "node": "Valid Update?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Valid Update?": {
+      "main": [
+        [
+          {
+            "node": "Update Mention Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Mention Status": {
+      "main": [
+        [
+          {
+            "node": "Is Conversion?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Status Update Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Conversion?": {
+      "main": [
+        [
+          {
+            "node": "Slack Conversion Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "saveExecutionProgress": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "link-building",
+      "createdAt": "2025-01-16T00:00:00.000Z",
+      "updatedAt": "2025-01-16T00:00:00.000Z"
+    },
+    {
+      "name": "seo",
+      "createdAt": "2025-01-16T00:00:00.000Z",
+      "updatedAt": "2025-01-16T00:00:00.000Z"
+    },
+    {
+      "name": "outreach",
+      "createdAt": "2025-01-16T00:00:00.000Z",
+      "updatedAt": "2025-01-16T00:00:00.000Z"
+    },
+    {
+      "name": "lician",
+      "createdAt": "2025-01-16T00:00:00.000Z",
+      "updatedAt": "2025-01-16T00:00:00.000Z"
+    }
+  ],
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "lician-n8n-instance"
+  }
+}

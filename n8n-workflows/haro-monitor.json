@@ -1,0 +1,358 @@
+{
+  "name": "HARO Email Monitor - Lician.com Backlinks",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute",
+              "minute": 5
+            }
+          ]
+        },
+        "mailbox": "INBOX",
+        "options": {
+          "customEmailConfig": ""
+        }
+      },
+      "id": "imap-trigger",
+      "name": "Check HARO Emails",
+      "type": "n8n-nodes-base.imapEmail",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "credentials": {
+        "imap": {
+          "id": "CONFIGURE_IMAP_CREDENTIALS",
+          "name": "HARO Email Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "finance-keyword",
+              "leftValue": "={{ $json.text || $json.html || '' }}",
+              "rightValue": "finance|investing|stock|market|trading|portfolio|wealth|financial|investment|equity|dividend|ETF|mutual fund|hedge fund|fintech|crypto|bitcoin|blockchain",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "filter-finance",
+      "name": "Filter Finance Keywords",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [470, 300]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Extract journalist details from HARO email\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const emailText = item.json.text || item.json.html || '';\n  const subject = item.json.subject || '';\n  const from = item.json.from || '';\n  const receivedDate = item.json.date || new Date().toISOString();\n  \n  // Parse HARO email format\n  // HARO emails typically have sections like:\n  // [Query ID] Category\n  // Summary: ...\n  // Name: Journalist Name\n  // Media Outlet: ...\n  // Deadline: ...\n  // Query: ...\n  \n  // Extract queries (HARO sends multiple per email)\n  const queryBlocks = emailText.split(/\\[\\d+\\]|---/).filter(block => block.trim().length > 50);\n  \n  for (const block of queryBlocks) {\n    // Extract journalist name\n    const nameMatch = block.match(/Name:\\s*([^\\n]+)/i) || \n                      block.match(/Journalist:\\s*([^\\n]+)/i) ||\n                      block.match(/Reporter:\\s*([^\\n]+)/i);\n    const journalistName = nameMatch ? nameMatch[1].trim() : 'Unknown';\n    \n    // Extract media outlet\n    const outletMatch = block.match(/Media Outlet:\\s*([^\\n]+)/i) ||\n                        block.match(/Publication:\\s*([^\\n]+)/i) ||\n                        block.match(/Outlet:\\s*([^\\n]+)/i);\n    const outlet = outletMatch ? outletMatch[1].trim() : 'Unknown Outlet';\n    \n    // Extract deadline\n    const deadlineMatch = block.match(/Deadline:\\s*([^\\n]+)/i) ||\n                          block.match(/Due:\\s*([^\\n]+)/i);\n    const deadline = deadlineMatch ? deadlineMatch[1].trim() : 'Check email for deadline';\n    \n    // Extract query/summary\n    const queryMatch = block.match(/Query:\\s*([\\s\\S]*?)(?=Requirements:|Deadline:|Name:|$)/i) ||\n                       block.match(/Summary:\\s*([^\\n]+)/i);\n    const query = queryMatch ? queryMatch[1].trim().substring(0, 500) : block.substring(0, 500);\n    \n    // Extract requirements if any\n    const reqMatch = block.match(/Requirements:\\s*([\\s\\S]*?)(?=Deadline:|$)/i);\n    const requirements = reqMatch ? reqMatch[1].trim() : '';\n    \n    // Finance relevance score (simple keyword counting)\n    const financeKeywords = ['finance', 'investing', 'stock', 'market', 'trading', \n                              'portfolio', 'wealth', 'investment', 'equity', 'dividend',\n                              'ETF', 'hedge fund', 'fintech', 'crypto', 'bitcoin'];\n    const lowerBlock = block.toLowerCase();\n    const relevanceScore = financeKeywords.filter(kw => lowerBlock.includes(kw.toLowerCase())).length;\n    \n    if (relevanceScore > 0) {\n      results.push({\n        json: {\n          journalistName,\n          outlet,\n          query,\n          deadline,\n          requirements,\n          relevanceScore,\n          emailSubject: subject,\n          emailFrom: from,\n          receivedAt: receivedDate,\n          rawBlock: block.substring(0, 1000),\n          processedAt: new Date().toISOString(),\n          status: 'new',\n          platform: 'haro'\n        }\n      });\n    }\n  }\n}\n\n// If no queries extracted, still pass the email for manual review\nif (results.length === 0 && items.length > 0) {\n  results.push({\n    json: {\n      journalistName: 'Manual Review Required',\n      outlet: 'Unknown',\n      query: items[0].json.text?.substring(0, 500) || items[0].json.subject || 'See email',\n      deadline: 'Check email',\n      requirements: '',\n      relevanceScore: 1,\n      emailSubject: items[0].json.subject || '',\n      emailFrom: items[0].json.from || '',\n      receivedAt: items[0].json.date || new Date().toISOString(),\n      rawBlock: items[0].json.text?.substring(0, 1000) || '',\n      processedAt: new Date().toISOString(),\n      status: 'manual_review',\n      platform: 'haro'\n    }\n  });\n}\n\nreturn results;"
+      },
+      "id": "extract-details",
+      "name": "Extract Journalist Details",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [690, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "relevance-check",
+              "leftValue": "={{ $json.relevanceScore }}",
+              "rightValue": 1,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-relevant",
+      "name": "Filter High Relevance",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [910, 300]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "haro_opportunities",
+          "mode": "list",
+          "cachedResultName": "haro_opportunities"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "journalist_name": "={{ $json.journalistName }}",
+            "outlet": "={{ $json.outlet }}",
+            "query": "={{ $json.query }}",
+            "deadline": "={{ $json.deadline }}",
+            "requirements": "={{ $json.requirements }}",
+            "relevance_score": "={{ $json.relevanceScore }}",
+            "email_subject": "={{ $json.emailSubject }}",
+            "email_from": "={{ $json.emailFrom }}",
+            "received_at": "={{ $json.receivedAt }}",
+            "raw_content": "={{ $json.rawBlock }}",
+            "status": "={{ $json.status }}",
+            "platform": "={{ $json.platform }}"
+          },
+          "cachedResultName": ""
+        },
+        "options": {}
+      },
+      "id": "save-to-supabase",
+      "name": "Save to Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1130, 300],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "channel": "#backlink-opportunities",
+        "text": "=:newspaper: *New HARO Opportunity for Lician.com*\n\n*Journalist:* {{ $json.journalistName }}\n*Outlet:* {{ $json.outlet }}\n*Deadline:* {{ $json.deadline }}\n*Relevance Score:* {{ $json.relevanceScore }}/15\n\n*Query:*\n{{ $json.query }}\n\n{{ $json.requirements ? '*Requirements:* ' + $json.requirements : '' }}\n\n---\n_Received: {{ $json.receivedAt }}_",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "slack-alert",
+      "name": "Send Slack Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1350, 200],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Lician Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "alerts@lician.com",
+        "toEmail": "seo@lician.com",
+        "subject": "=HARO Opportunity: {{ $json.outlet }} - {{ $json.journalistName }}",
+        "emailType": "html",
+        "html": "=<h2>New HARO Opportunity</h2>\n\n<table style=\"border-collapse: collapse; width: 100%;\">\n  <tr>\n    <td style=\"padding: 8px; border: 1px solid #ddd;\"><strong>Journalist</strong></td>\n    <td style=\"padding: 8px; border: 1px solid #ddd;\">{{ $json.journalistName }}</td>\n  </tr>\n  <tr>\n    <td style=\"padding: 8px; border: 1px solid #ddd;\"><strong>Outlet</strong></td>\n    <td style=\"padding: 8px; border: 1px solid #ddd;\">{{ $json.outlet }}</td>\n  </tr>\n  <tr>\n    <td style=\"padding: 8px; border: 1px solid #ddd;\"><strong>Deadline</strong></td>\n    <td style=\"padding: 8px; border: 1px solid #ddd; color: #c0392b;\">{{ $json.deadline }}</td>\n  </tr>\n  <tr>\n    <td style=\"padding: 8px; border: 1px solid #ddd;\"><strong>Relevance</strong></td>\n    <td style=\"padding: 8px; border: 1px solid #ddd;\">{{ $json.relevanceScore }}/15 keywords matched</td>\n  </tr>\n</table>\n\n<h3>Query</h3>\n<p style=\"background: #f9f9f9; padding: 15px; border-left: 4px solid #3498db;\">{{ $json.query }}</p>\n\n{{ $json.requirements ? '<h3>Requirements</h3><p>' + $json.requirements + '</p>' : '' }}\n\n<hr>\n<p style=\"color: #666; font-size: 12px;\">Received: {{ $json.receivedAt }}<br>Automated by n8n for lician.com</p>",
+        "options": {}
+      },
+      "id": "email-alert",
+      "name": "Send Email Alert",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [1350, 400],
+      "credentials": {
+        "smtp": {
+          "id": "CONFIGURE_SMTP_CREDENTIALS",
+          "name": "Lician SMTP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "haro-webhook",
+        "options": {},
+        "responseMode": "responseNode"
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger (Alternative)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 500],
+      "webhookId": "haro-webhook-lician"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Transform webhook payload to match email format\nconst item = $input.first();\nconst body = item.json.body || item.json;\n\nreturn [{\n  json: {\n    text: body.content || body.text || body.query || '',\n    subject: body.subject || 'HARO Query via Webhook',\n    from: body.from || body.journalist_email || 'webhook@haro.com',\n    date: body.date || new Date().toISOString()\n  }\n}];"
+      },
+      "id": "transform-webhook",
+      "name": "Transform Webhook Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [470, 500]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"message\": \"HARO opportunity processed\", \"timestamp\": new Date().toISOString() } }}",
+        "options": {}
+      },
+      "id": "webhook-response",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1570, 300]
+    }
+  ],
+  "connections": {
+    "Check HARO Emails": {
+      "main": [
+        [
+          {
+            "node": "Filter Finance Keywords",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Finance Keywords": {
+      "main": [
+        [
+          {
+            "node": "Extract Journalist Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Journalist Details": {
+      "main": [
+        [
+          {
+            "node": "Filter High Relevance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter High Relevance": {
+      "main": [
+        [
+          {
+            "node": "Save to Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to Supabase": {
+      "main": [
+        [
+          {
+            "node": "Send Slack Alert",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Email Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Slack Alert": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email Alert": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Trigger (Alternative)": {
+      "main": [
+        [
+          {
+            "node": "Transform Webhook Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform Webhook Data": {
+      "main": [
+        [
+          {
+            "node": "Filter Finance Keywords",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "backlinks",
+      "createdAt": "2025-01-16T00:00:00.000Z",
+      "updatedAt": "2025-01-16T00:00:00.000Z"
+    },
+    {
+      "name": "seo",
+      "createdAt": "2025-01-16T00:00:00.000Z",
+      "updatedAt": "2025-01-16T00:00:00.000Z"
+    },
+    {
+      "name": "lician",
+      "createdAt": "2025-01-16T00:00:00.000Z",
+      "updatedAt": "2025-01-16T00:00:00.000Z"
+    }
+  ],
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "lician-n8n-instance"
+  }
+}

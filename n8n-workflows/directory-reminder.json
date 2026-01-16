@@ -1,0 +1,530 @@
+{
+  "name": "Directory Submission Reminder - Lician.com Backlinks",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [1],
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "id": "weekly-schedule",
+      "name": "Weekly Monday 9 AM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list"
+        },
+        "table": {
+          "__rl": true,
+          "value": "directory_submissions",
+          "mode": "list"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "status",
+              "condition": "in",
+              "keyValue": "pending,submitted,needs_followup"
+            }
+          ]
+        },
+        "options": {
+          "returnAll": true
+        }
+      },
+      "id": "fetch-pending",
+      "name": "Fetch Pending Directories",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [470, 300],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Categorize submissions by urgency and generate report\nconst items = $input.all();\nconst now = new Date();\n\nconst categorized = {\n  overdue: [],\n  needsFollowup: [],\n  pending: [],\n  submitted: []\n};\n\nfor (const item of items) {\n  const data = item.json;\n  const submittedDate = data.submitted_at ? new Date(data.submitted_at) : null;\n  const createdDate = new Date(data.created_at || now);\n  const daysSinceCreated = Math.floor((now - createdDate) / (1000 * 60 * 60 * 24));\n  const daysSinceSubmitted = submittedDate \n    ? Math.floor((now - submittedDate) / (1000 * 60 * 60 * 24))\n    : null;\n  \n  const entry = {\n    ...data,\n    daysSinceCreated,\n    daysSinceSubmitted,\n    urgency: 'normal'\n  };\n  \n  // Categorize based on status and age\n  if (data.status === 'needs_followup' || (daysSinceSubmitted && daysSinceSubmitted > 14)) {\n    entry.urgency = 'high';\n    categorized.needsFollowup.push(entry);\n  } else if (data.status === 'pending' && daysSinceCreated > 7) {\n    entry.urgency = 'high';\n    categorized.overdue.push(entry);\n  } else if (data.status === 'pending') {\n    categorized.pending.push(entry);\n  } else if (data.status === 'submitted') {\n    categorized.submitted.push(entry);\n  }\n}\n\n// Generate summary stats\nconst stats = {\n  total: items.length,\n  overdue: categorized.overdue.length,\n  needsFollowup: categorized.needsFollowup.length,\n  pending: categorized.pending.length,\n  submitted: categorized.submitted.length\n};\n\n// Generate Slack message blocks\nfunction generateSlackBlocks() {\n  const blocks = [\n    {\n      type: 'header',\n      text: {\n        type: 'plain_text',\n        text: 'Weekly Directory Submission Report',\n        emoji: true\n      }\n    },\n    {\n      type: 'section',\n      text: {\n        type: 'mrkdwn',\n        text: `*Summary*\\n:red_circle: Overdue: ${stats.overdue}\\n:warning: Needs Follow-up: ${stats.needsFollowup}\\n:hourglass: Pending: ${stats.pending}\\n:white_check_mark: Awaiting Approval: ${stats.submitted}`\n      }\n    },\n    { type: 'divider' }\n  ];\n  \n  // Add overdue section\n  if (categorized.overdue.length > 0) {\n    blocks.push({\n      type: 'section',\n      text: {\n        type: 'mrkdwn',\n        text: '*:red_circle: OVERDUE - Submit ASAP:*\\n' + \n          categorized.overdue.slice(0, 5).map(d => \n            `- *${d.directory_name}* (${d.daysSinceCreated} days old) - ${d.url || 'No URL'}`\n          ).join('\\n')\n      }\n    });\n  }\n  \n  // Add needs followup section\n  if (categorized.needsFollowup.length > 0) {\n    blocks.push({\n      type: 'section',\n      text: {\n        type: 'mrkdwn',\n        text: '*:warning: NEEDS FOLLOW-UP:*\\n' + \n          categorized.needsFollowup.slice(0, 5).map(d => \n            `- *${d.directory_name}* (submitted ${d.daysSinceSubmitted} days ago) - ${d.url || 'No URL'}`\n          ).join('\\n')\n      }\n    });\n  }\n  \n  // Add pending section\n  if (categorized.pending.length > 0) {\n    blocks.push({\n      type: 'section',\n      text: {\n        type: 'mrkdwn',\n        text: '*:hourglass: Pending Submissions:*\\n' + \n          categorized.pending.slice(0, 5).map(d => \n            `- ${d.directory_name} - Priority: ${d.priority || 'normal'}`\n          ).join('\\n')\n      }\n    });\n  }\n  \n  return blocks;\n}\n\n// Generate email HTML\nfunction generateEmailHtml() {\n  let html = `\n    <h1 style=\"color: #2c3e50;\">Weekly Directory Submission Report</h1>\n    <p style=\"font-size: 14px; color: #666;\">Generated: ${now.toLocaleDateString()}</p>\n    \n    <div style=\"background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;\">\n      <h2 style=\"margin-top: 0;\">Summary</h2>\n      <table style=\"width: 100%; border-collapse: collapse;\">\n        <tr>\n          <td style=\"padding: 8px; border-bottom: 1px solid #ddd;\">Overdue</td>\n          <td style=\"padding: 8px; border-bottom: 1px solid #ddd; color: #e74c3c; font-weight: bold;\">${stats.overdue}</td>\n        </tr>\n        <tr>\n          <td style=\"padding: 8px; border-bottom: 1px solid #ddd;\">Needs Follow-up</td>\n          <td style=\"padding: 8px; border-bottom: 1px solid #ddd; color: #f39c12; font-weight: bold;\">${stats.needsFollowup}</td>\n        </tr>\n        <tr>\n          <td style=\"padding: 8px; border-bottom: 1px solid #ddd;\">Pending</td>\n          <td style=\"padding: 8px; border-bottom: 1px solid #ddd;\">${stats.pending}</td>\n        </tr>\n        <tr>\n          <td style=\"padding: 8px;\">Awaiting Approval</td>\n          <td style=\"padding: 8px;\">${stats.submitted}</td>\n        </tr>\n      </table>\n    </div>\n  `;\n  \n  if (categorized.overdue.length > 0) {\n    html += `\n      <h2 style=\"color: #e74c3c;\">OVERDUE - Submit ASAP</h2>\n      <table style=\"width: 100%; border-collapse: collapse;\">\n        <tr style=\"background: #e74c3c; color: white;\">\n          <th style=\"padding: 10px; text-align: left;\">Directory</th>\n          <th style=\"padding: 10px; text-align: left;\">Days Overdue</th>\n          <th style=\"padding: 10px; text-align: left;\">URL</th>\n        </tr>\n        ${categorized.overdue.map(d => `\n          <tr style=\"border-bottom: 1px solid #ddd;\">\n            <td style=\"padding: 10px;\">${d.directory_name}</td>\n            <td style=\"padding: 10px;\">${d.daysSinceCreated} days</td>\n            <td style=\"padding: 10px;\"><a href=\"${d.url}\">${d.url ? 'Visit' : 'N/A'}</a></td>\n          </tr>\n        `).join('')}\n      </table>\n    `;\n  }\n  \n  if (categorized.needsFollowup.length > 0) {\n    html += `\n      <h2 style=\"color: #f39c12;\">Needs Follow-up</h2>\n      <table style=\"width: 100%; border-collapse: collapse;\">\n        <tr style=\"background: #f39c12; color: white;\">\n          <th style=\"padding: 10px; text-align: left;\">Directory</th>\n          <th style=\"padding: 10px; text-align: left;\">Submitted</th>\n          <th style=\"padding: 10px; text-align: left;\">URL</th>\n        </tr>\n        ${categorized.needsFollowup.map(d => `\n          <tr style=\"border-bottom: 1px solid #ddd;\">\n            <td style=\"padding: 10px;\">${d.directory_name}</td>\n            <td style=\"padding: 10px;\">${d.daysSinceSubmitted} days ago</td>\n            <td style=\"padding: 10px;\"><a href=\"${d.url}\">${d.url ? 'Visit' : 'N/A'}</a></td>\n          </tr>\n        `).join('')}\n      </table>\n    `;\n  }\n  \n  html += `\n    <hr style=\"margin: 30px 0;\">\n    <p style=\"color: #666; font-size: 12px;\">Automated report by n8n for lician.com</p>\n  `;\n  \n  return html;\n}\n\nreturn [{\n  json: {\n    stats,\n    categorized,\n    slackBlocks: generateSlackBlocks(),\n    emailHtml: generateEmailHtml(),\n    generatedAt: now.toISOString()\n  }\n}];"
+      },
+      "id": "categorize-submissions",
+      "name": "Categorize & Generate Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [690, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-items",
+              "leftValue": "={{ $json.stats.total }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-has-items",
+      "name": "Has Pending Items?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [910, 300]
+    },
+    {
+      "parameters": {
+        "channel": "#backlink-ops",
+        "text": "",
+        "blocksUi": "={{ $json.slackBlocks }}",
+        "otherOptions": {}
+      },
+      "id": "send-slack-report",
+      "name": "Send Slack Report",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1130, 200],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Lician Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "seo@lician.com",
+        "toEmail": "team@lician.com",
+        "subject": "=Weekly Directory Submission Report - {{ $json.stats.overdue > 0 ? $json.stats.overdue + ' OVERDUE' : 'All on track' }}",
+        "emailType": "html",
+        "html": "={{ $json.emailHtml }}",
+        "options": {}
+      },
+      "id": "send-email-report",
+      "name": "Send Email Report",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [1130, 400],
+      "credentials": {
+        "smtp": {
+          "id": "CONFIGURE_SMTP_CREDENTIALS",
+          "name": "Lician SMTP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-overdue",
+              "leftValue": "={{ $json.stats.overdue }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-urgent",
+      "name": "Has Urgent Items?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1350, 200]
+    },
+    {
+      "parameters": {
+        "channel": "#backlink-ops",
+        "text": "=:rotating_light: *URGENT: {{ $('Categorize & Generate Report').item.json.stats.overdue }} overdue directory submissions!*\n\nPlease prioritize these submissions today. Check the full report above.",
+        "otherOptions": {
+          "mrkdwn": true
+        }
+      },
+      "id": "urgent-slack-alert",
+      "name": "Urgent Slack Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1570, 100],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Lician Slack"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "no-urgent",
+      "name": "No Urgent Items",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [1570, 300]
+    },
+    {
+      "parameters": {},
+      "id": "no-items",
+      "name": "No Pending Items",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [1130, 550]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "-- Update status for submissions that need follow-up\nUPDATE directory_submissions\nSET \n  status = 'needs_followup',\n  updated_at = NOW()\nWHERE \n  status = 'submitted'\n  AND submitted_at < NOW() - INTERVAL '14 days'\n  AND status != 'needs_followup'\nRETURNING id, directory_name;",
+        "options": {}
+      },
+      "id": "auto-mark-followup",
+      "name": "Auto-Mark for Follow-up",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1790, 200],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "directory-status-update",
+        "options": {},
+        "responseMode": "responseNode"
+      },
+      "id": "manual-update-webhook",
+      "name": "Manual Status Update",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 550],
+      "webhookId": "directory-status-lician"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list"
+        },
+        "table": {
+          "__rl": true,
+          "value": "directory_submissions",
+          "mode": "list"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "keyValue": "={{ $json.body.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "={{ $json.body.status }}",
+            "notes": "={{ $json.body.notes || '' }}",
+            "updated_at": "={{ new Date().toISOString() }}",
+            "submitted_at": "={{ $json.body.status === 'submitted' ? new Date().toISOString() : undefined }}",
+            "approved_at": "={{ $json.body.status === 'approved' ? new Date().toISOString() : undefined }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "update-status",
+      "name": "Update Submission Status",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [470, 550],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"updated\": $json.id } }}",
+        "options": {}
+      },
+      "id": "update-response",
+      "name": "Respond to Update",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [690, 550]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "add-directory",
+        "options": {},
+        "responseMode": "responseNode"
+      },
+      "id": "add-directory-webhook",
+      "name": "Add New Directory",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 750],
+      "webhookId": "add-directory-lician"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list"
+        },
+        "table": {
+          "__rl": true,
+          "value": "directory_submissions",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "directory_name": "={{ $json.body.name }}",
+            "url": "={{ $json.body.url }}",
+            "category": "={{ $json.body.category || 'finance' }}",
+            "priority": "={{ $json.body.priority || 'normal' }}",
+            "status": "pending",
+            "notes": "={{ $json.body.notes || '' }}",
+            "created_at": "={{ new Date().toISOString() }}"
+          }
+        },
+        "options": {
+          "returnData": true
+        }
+      },
+      "id": "insert-directory",
+      "name": "Insert New Directory",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [470, 750],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"created\": $json } }}",
+        "options": {}
+      },
+      "id": "add-response",
+      "name": "Respond to Add",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [690, 750]
+    }
+  ],
+  "connections": {
+    "Weekly Monday 9 AM": {
+      "main": [
+        [
+          {
+            "node": "Fetch Pending Directories",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Pending Directories": {
+      "main": [
+        [
+          {
+            "node": "Categorize & Generate Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Categorize & Generate Report": {
+      "main": [
+        [
+          {
+            "node": "Has Pending Items?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Pending Items?": {
+      "main": [
+        [
+          {
+            "node": "Send Slack Report",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Email Report",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Pending Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Slack Report": {
+      "main": [
+        [
+          {
+            "node": "Has Urgent Items?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email Report": {
+      "main": [
+        [
+          {
+            "node": "Auto-Mark for Follow-up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Urgent Items?": {
+      "main": [
+        [
+          {
+            "node": "Urgent Slack Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Urgent Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Status Update": {
+      "main": [
+        [
+          {
+            "node": "Update Submission Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Submission Status": {
+      "main": [
+        [
+          {
+            "node": "Respond to Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add New Directory": {
+      "main": [
+        [
+          {
+            "node": "Insert New Directory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert New Directory": {
+      "main": [
+        [
+          {
+            "node": "Respond to Add",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "backlinks",
+      "createdAt": "2025-01-16T00:00:00.000Z",
+      "updatedAt": "2025-01-16T00:00:00.000Z"
+    },
+    {
+      "name": "directory",
+      "createdAt": "2025-01-16T00:00:00.000Z",
+      "updatedAt": "2025-01-16T00:00:00.000Z"
+    },
+    {
+      "name": "lician",
+      "createdAt": "2025-01-16T00:00:00.000Z",
+      "updatedAt": "2025-01-16T00:00:00.000Z"
+    }
+  ],
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "lician-n8n-instance"
+  }
+}

@@ -1,0 +1,808 @@
+{
+  "name": "Guest Post Outreach - Lician.com",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "guest-post-target",
+        "responseMode": "responseNode",
+        "options": {
+          "responseData": "allEntries"
+        }
+      },
+      "id": "webhook-add-target",
+      "name": "Webhook: Add Target",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 200],
+      "webhookId": "guest-post-target"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 4
+            }
+          ]
+        }
+      },
+      "id": "schedule-process",
+      "name": "Schedule: Process Queue",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 500]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "guest-post-response",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-track-response",
+      "name": "Webhook: Track Response",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 800],
+      "webhookId": "guest-post-response"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/outreach_targets",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  site: $json.body.site,\n  site_name: $json.body.site_name || $json.body.site.replace(/https?:\\/\\//, '').split('/')[0],\n  contact_email: $json.body.contact_email,\n  contact_name: $json.body.contact_name || '',\n  domain_authority: $json.body.da || $json.body.domain_authority || 0,\n  status: 'pending',\n  outreach_stage: 'initial',\n  emails_sent: 0,\n  last_email_at: null,\n  next_followup_at: new Date().toISOString(),\n  notes: $json.body.notes || '',\n  tags: $json.body.tags || [],\n  created_at: new Date().toISOString(),\n  updated_at: new Date().toISOString()\n}) }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "id": "supabase-insert-target",
+      "name": "Supabase: Insert Target",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [500, 200],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, message: 'Target added to outreach queue', target: $json.body } }}"
+      },
+      "id": "respond-webhook-success",
+      "name": "Respond: Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [720, 200]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/outreach_targets",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "select",
+              "value": "*"
+            },
+            {
+              "name": "status",
+              "value": "in.(pending,following_up)"
+            },
+            {
+              "name": "next_followup_at",
+              "value": "lte.{{ new Date().toISOString() }}"
+            },
+            {
+              "name": "order",
+              "value": "domain_authority.desc,created_at.asc"
+            },
+            {
+              "name": "limit",
+              "value": "20"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "supabase-fetch-pending",
+      "name": "Supabase: Fetch Pending",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [500, 500],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-targets",
+              "leftValue": "={{ $json.length || 0 }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-has-targets",
+      "name": "Filter: Has Targets",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [720, 500]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "={{ Object.keys($json) }}",
+        "options": {}
+      },
+      "id": "split-targets",
+      "name": "Split Targets",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [940, 500]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Generate personalized email based on outreach stage\nconst target = $input.item.json;\nconst stage = target.outreach_stage || 'initial';\nconst emailsSent = target.emails_sent || 0;\n\n// Email templates for lician.com (finance/stock platform)\nconst templates = {\n  initial: {\n    subject: `Guest Post Opportunity: Expert Financial Analysis for ${target.site_name || 'Your Site'}`,\n    body: `Hi ${target.contact_name || 'there'},\n\nI'm reaching out from Lician.com, a financial data and stock analysis platform trusted by investors for in-depth market insights.\n\nI noticed ${target.site_name || 'your site'} covers financial topics and thought our expertise could benefit your readers. We'd love to contribute a guest post on topics like:\n\n- How to analyze financial statements for better investment decisions\n- Understanding market trends using data-driven approaches\n- Portfolio diversification strategies backed by quantitative analysis\n- The role of AI in modern stock analysis\n\nOur articles are:\n- Well-researched with real data and citations\n- Written by financial analysts with industry experience\n- Optimized for reader engagement\n- 100% original content\n\nWould you be interested in a guest contribution? I'd be happy to send over some topic ideas or writing samples.\n\nBest regards,\nThe Lician.com Team\n\nhttps://lician.com`\n  },\n  followup_1: {\n    subject: `Following up: Guest Post for ${target.site_name || 'Your Site'}`,\n    body: `Hi ${target.contact_name || 'there'},\n\nI wanted to follow up on my previous email about contributing a guest post to ${target.site_name || 'your site'}.\n\nAt Lician.com, we specialize in making complex financial data accessible. Our recent articles have covered:\n\n- Q4 earnings analysis methodologies\n- Sector rotation strategies using fundamental data\n- How retail investors can leverage institutional-grade analytics\n\nI'd be happy to tailor content specifically for your audience. What topics resonate most with your readers?\n\nLooking forward to your thoughts.\n\nBest,\nThe Lician.com Team\n\nhttps://lician.com`\n  },\n  followup_2: {\n    subject: `Last check-in: Collaboration opportunity`,\n    body: `Hi ${target.contact_name || 'there'},\n\nI wanted to send one final follow-up regarding a potential guest post collaboration.\n\nIf now isn't the right time, no worries at all. But if you're open to high-quality financial content for ${target.site_name || 'your site'}, I'd love to connect.\n\nFeel free to reach out whenever works for you.\n\nBest regards,\nThe Lician.com Team\n\nhttps://lician.com`\n  }\n};\n\n// Determine which template to use\nlet templateKey = 'initial';\nif (emailsSent === 1) templateKey = 'followup_1';\nif (emailsSent >= 2) templateKey = 'followup_2';\n\nconst template = templates[templateKey];\n\n// Calculate next followup date\nconst followupDays = { initial: 3, followup_1: 4, followup_2: null };\nlet nextFollowup = null;\nif (followupDays[templateKey]) {\n  const date = new Date();\n  date.setDate(date.getDate() + followupDays[templateKey]);\n  nextFollowup = date.toISOString();\n}\n\n// Determine next stage\nconst nextStage = {\n  initial: 'followup_1',\n  followup_1: 'followup_2',\n  followup_2: 'completed'\n};\n\n// Add tracking pixel (1x1 transparent gif hosted on your server)\nconst trackingId = Buffer.from(`${target.id}-${Date.now()}`).toString('base64');\nconst trackingPixel = `<img src=\"https://lician.com/api/track/email-open?id=${trackingId}\" width=\"1\" height=\"1\" style=\"display:none\" />`;\n\nconst htmlBody = template.body.replace(/\\n/g, '<br>') + trackingPixel;\n\nreturn {\n  json: {\n    ...target,\n    email: {\n      to: target.contact_email,\n      subject: template.subject,\n      text: template.body,\n      html: htmlBody,\n      trackingId\n    },\n    update: {\n      outreach_stage: nextStage[templateKey],\n      emails_sent: emailsSent + 1,\n      last_email_at: new Date().toISOString(),\n      next_followup_at: nextFollowup,\n      status: nextStage[templateKey] === 'completed' ? 'completed' : 'following_up',\n      updated_at: new Date().toISOString()\n    },\n    templateUsed: templateKey,\n    isFinalEmail: templateKey === 'followup_2'\n  }\n};"
+      },
+      "id": "generate-email",
+      "name": "Generate Personalized Email",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1160, 500]
+    },
+    {
+      "parameters": {
+        "fromEmail": "outreach@lician.com",
+        "toEmail": "={{ $json.email.to }}",
+        "subject": "={{ $json.email.subject }}",
+        "emailType": "html",
+        "html": "={{ $json.email.html }}",
+        "options": {
+          "replyTo": "hello@lician.com"
+        }
+      },
+      "id": "send-email",
+      "name": "Send Email (SMTP)",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [1380, 500],
+      "credentials": {
+        "smtp": {
+          "id": "CONFIGURE_SMTP_CREDENTIALS",
+          "name": "Outreach SMTP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/outreach_targets",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": "eq.{{ $('Generate Personalized Email').item.json.id }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($('Generate Personalized Email').item.json.update) }}",
+        "options": {}
+      },
+      "id": "supabase-update-status",
+      "name": "Supabase: Update Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1600, 500],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/outreach_email_log",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  target_id: $('Generate Personalized Email').item.json.id,\n  email_type: $('Generate Personalized Email').item.json.templateUsed,\n  subject: $('Generate Personalized Email').item.json.email.subject,\n  recipient: $('Generate Personalized Email').item.json.email.to,\n  tracking_id: $('Generate Personalized Email').item.json.email.trackingId,\n  sent_at: new Date().toISOString(),\n  opened_at: null,\n  replied_at: null\n}) }}",
+        "options": {}
+      },
+      "id": "supabase-log-email",
+      "name": "Supabase: Log Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1600, 680],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "seconds"
+      },
+      "id": "wait-rate-limit",
+      "name": "Wait (Rate Limit)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1820, 500]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Parse response webhook payload\nconst payload = $input.item.json.body || $input.item.json;\n\n// Response types: reply, open, bounce, unsubscribe\nconst responseType = payload.type || 'reply';\nconst trackingId = payload.tracking_id || payload.trackingId;\nconst targetId = payload.target_id || payload.targetId;\nconst replyContent = payload.content || payload.message || '';\nconst fromEmail = payload.from_email || payload.fromEmail || '';\n\n// Determine new status based on response type\nconst statusMap = {\n  reply: 'responded',\n  open: null, // Don't change status on open\n  bounce: 'bounced',\n  unsubscribe: 'unsubscribed',\n  interested: 'interested',\n  not_interested: 'declined'\n};\n\nconst newStatus = statusMap[responseType];\n\nreturn {\n  json: {\n    responseType,\n    trackingId,\n    targetId,\n    replyContent,\n    fromEmail,\n    newStatus,\n    timestamp: new Date().toISOString(),\n    shouldNotify: ['reply', 'interested'].includes(responseType)\n  }\n};"
+      },
+      "id": "parse-response",
+      "name": "Parse Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 800]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "has-tracking-id",
+              "leftValue": "={{ $json.trackingId || $json.targetId }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-valid-response",
+      "name": "Filter: Valid Response",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [720, 800]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/outreach_targets",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": "eq.{{ $json.targetId }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  status: $json.newStatus || 'responded',\n  responded_at: new Date().toISOString(),\n  response_type: $json.responseType,\n  response_content: $json.replyContent?.substring(0, 1000) || '',\n  updated_at: new Date().toISOString()\n}) }}",
+        "options": {}
+      },
+      "id": "supabase-update-response",
+      "name": "Supabase: Update Response",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [940, 800],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/outreach_email_log",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "tracking_id",
+              "value": "eq.{{ $json.trackingId }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.responseType === 'open' ? {\n  opened_at: new Date().toISOString()\n} : {\n  replied_at: new Date().toISOString()\n}) }}",
+        "options": {}
+      },
+      "id": "supabase-update-email-log",
+      "name": "Supabase: Update Email Log",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [940, 980],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "should-notify",
+              "leftValue": "={{ $json.shouldNotify }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-notify",
+      "name": "Filter: Should Notify",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [1160, 800]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/outreach_targets",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": "eq.{{ $('Parse Response').item.json.targetId }}"
+            },
+            {
+              "name": "select",
+              "value": "*"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "supabase-get-target-details",
+      "name": "Supabase: Get Target Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1380, 800],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "CONFIGURE_SLACK_CHANNEL",
+          "mode": "id"
+        },
+        "text": "=:mega: *Guest Post Outreach Response!*\n\n*Site:* {{ $json[0]?.site || 'Unknown' }}\n*Contact:* {{ $json[0]?.contact_name || 'Unknown' }} ({{ $json[0]?.contact_email || 'Unknown' }})\n*Domain Authority:* {{ $json[0]?.domain_authority || 'N/A' }}\n*Response Type:* {{ $('Parse Response').item.json.responseType }}\n\n*Reply Content:*\n```\n{{ $('Parse Response').item.json.replyContent || 'No content' }}\n```\n\n<https://lician.com/admin/outreach/{{ $json[0]?.id }}|View in Dashboard>",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "slack-notify",
+      "name": "Slack: Notify Reply",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1600, 800],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Slack Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, message: 'Response recorded', type: $('Parse Response').item.json.responseType } }}"
+      },
+      "id": "respond-response-webhook",
+      "name": "Respond: Recorded",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1820, 800]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * 1"
+            }
+          ]
+        }
+      },
+      "id": "schedule-weekly-report",
+      "name": "Schedule: Weekly Report",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 1100]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/rpc/outreach_weekly_stats",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "supabase-get-stats",
+      "name": "Supabase: Get Weekly Stats",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [500, 1100],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Generate weekly report from stats\nconst stats = $input.first().json;\n\n// Default stats if RPC doesn't exist yet\nconst report = {\n  emails_sent: stats.emails_sent || 0,\n  opens: stats.opens || 0,\n  open_rate: stats.open_rate || '0%',\n  replies: stats.replies || 0,\n  reply_rate: stats.reply_rate || '0%',\n  interested: stats.interested || 0,\n  declined: stats.declined || 0,\n  pending: stats.pending || 0,\n  conversion_rate: stats.conversion_rate || '0%',\n  top_performing_sites: stats.top_sites || [],\n  week_start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],\n  week_end: new Date().toISOString().split('T')[0]\n};\n\nreturn {\n  json: report\n};"
+      },
+      "id": "generate-report",
+      "name": "Generate Weekly Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 1100]
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "CONFIGURE_SLACK_CHANNEL",
+          "mode": "id"
+        },
+        "text": "=:bar_chart: *Guest Post Outreach Weekly Report*\n_{{ $json.week_start }} to {{ $json.week_end }}_\n\n*Emails Sent:* {{ $json.emails_sent }}\n*Opens:* {{ $json.opens }} ({{ $json.open_rate }})\n*Replies:* {{ $json.replies }} ({{ $json.reply_rate }})\n\n*Outcomes:*\n:white_check_mark: Interested: {{ $json.interested }}\n:x: Declined: {{ $json.declined }}\n:hourglass_flowing_sand: Pending: {{ $json.pending }}\n\n*Conversion Rate:* {{ $json.conversion_rate }}\n\n<https://lician.com/admin/outreach|View Full Dashboard>",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "slack-weekly-report",
+      "name": "Slack: Weekly Report",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [940, 1100],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Slack Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "errorMessage": "={{ $json.error || 'Unknown error in guest post outreach workflow' }}"
+      },
+      "id": "error-handler",
+      "name": "Error Handler",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [1820, 300]
+    }
+  ],
+  "connections": {
+    "Webhook: Add Target": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Insert Target",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Insert Target": {
+      "main": [
+        [
+          {
+            "node": "Respond: Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule: Process Queue": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Fetch Pending",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Fetch Pending": {
+      "main": [
+        [
+          {
+            "node": "Filter: Has Targets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter: Has Targets": {
+      "main": [
+        [
+          {
+            "node": "Split Targets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Targets": {
+      "main": [
+        [
+          {
+            "node": "Generate Personalized Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Personalized Email": {
+      "main": [
+        [
+          {
+            "node": "Send Email (SMTP)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email (SMTP)": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Update Status",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Supabase: Log Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Update Status": {
+      "main": [
+        [
+          {
+            "node": "Wait (Rate Limit)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook: Track Response": {
+      "main": [
+        [
+          {
+            "node": "Parse Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Response": {
+      "main": [
+        [
+          {
+            "node": "Filter: Valid Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter: Valid Response": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Update Response",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Supabase: Update Email Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Update Response": {
+      "main": [
+        [
+          {
+            "node": "Filter: Should Notify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter: Should Notify": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Get Target Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Get Target Details": {
+      "main": [
+        [
+          {
+            "node": "Slack: Notify Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack: Notify Reply": {
+      "main": [
+        [
+          {
+            "node": "Respond: Recorded",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule: Weekly Report": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Get Weekly Stats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Get Weekly Stats": {
+      "main": [
+        [
+          {
+            "node": "Generate Weekly Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Weekly Report": {
+      "main": [
+        [
+          {
+            "node": "Slack: Weekly Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "outreach",
+      "id": "outreach-tag"
+    },
+    {
+      "name": "lician",
+      "id": "lician-tag"
+    },
+    {
+      "name": "seo",
+      "id": "seo-tag"
+    }
+  ],
+  "triggerCount": 4,
+  "updatedAt": "2026-01-16T00:00:00.000Z",
+  "versionId": "1"
+}

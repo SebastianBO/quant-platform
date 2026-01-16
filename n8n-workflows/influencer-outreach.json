@@ -1,0 +1,990 @@
+{
+  "name": "Finance Influencer Outreach - Lician.com",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "influencer-add",
+        "responseMode": "responseNode",
+        "options": {
+          "responseData": "allEntries"
+        }
+      },
+      "id": "webhook-add-influencer",
+      "name": "Webhook: Add Influencer",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 200],
+      "webhookId": "influencer-add"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6
+            }
+          ]
+        }
+      },
+      "id": "schedule-followups",
+      "name": "Schedule: Process Follow-ups",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 600]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "influencer-response",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-track-response",
+      "name": "Webhook: Track Response",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 1000],
+      "webhookId": "influencer-response"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * 1"
+            }
+          ]
+        }
+      },
+      "id": "schedule-weekly-report",
+      "name": "Schedule: Weekly Pipeline Report",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 1400]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Validate and enrich influencer data before insert\nconst payload = $input.item.json.body || $input.item.json;\n\n// Required fields validation\nconst requiredFields = ['name', 'platform', 'handle'];\nconst missing = requiredFields.filter(f => !payload[f]);\nif (missing.length > 0) {\n  throw new Error(`Missing required fields: ${missing.join(', ')}`);\n}\n\n// Normalize platform\nconst platformMap = {\n  'twitter': 'twitter',\n  'x': 'twitter',\n  'youtube': 'youtube',\n  'yt': 'youtube',\n  'tiktok': 'tiktok',\n  'tt': 'tiktok',\n  'instagram': 'instagram',\n  'ig': 'instagram',\n  'insta': 'instagram',\n  'linkedin': 'linkedin'\n};\n\nconst platform = platformMap[payload.platform?.toLowerCase()] || payload.platform?.toLowerCase();\n\n// Calculate influencer tier based on followers\nconst followers = parseInt(payload.followers) || 0;\nlet tier = 'nano'; // < 10K\nif (followers >= 1000000) tier = 'mega';\nelse if (followers >= 100000) tier = 'macro';\nelse if (followers >= 10000) tier = 'micro';\n\n// Determine outreach method based on platform and available contact\nconst hasEmail = !!payload.email;\nconst outreachMethod = hasEmail ? 'email' : 'dm';\n\n// Calculate priority score (higher followers + email = higher priority)\nlet priorityScore = Math.min(followers / 10000, 100);\nif (hasEmail) priorityScore += 20;\nif (['finance', 'investing', 'stocks', 'crypto', 'trading'].includes(payload.niche?.toLowerCase())) {\n  priorityScore += 30;\n}\n\nreturn {\n  json: {\n    name: payload.name,\n    platform,\n    handle: payload.handle.replace(/^@/, ''), // Remove @ prefix if present\n    followers,\n    tier,\n    niche: payload.niche || 'finance',\n    email: payload.email || null,\n    outreach_method: outreachMethod,\n    priority_score: Math.round(priorityScore),\n    status: 'pending',\n    outreach_stage: 'initial',\n    messages_sent: 0,\n    profile_url: payload.profile_url || generateProfileUrl(platform, payload.handle),\n    notes: payload.notes || '',\n    tags: payload.tags || [],\n    offer_type: payload.offer_type || 'premium_access',\n    created_at: new Date().toISOString(),\n    updated_at: new Date().toISOString(),\n    next_outreach_at: new Date().toISOString()\n  }\n};\n\nfunction generateProfileUrl(platform, handle) {\n  const urls = {\n    twitter: `https://twitter.com/${handle}`,\n    youtube: `https://youtube.com/@${handle}`,\n    tiktok: `https://tiktok.com/@${handle}`,\n    instagram: `https://instagram.com/${handle}`,\n    linkedin: `https://linkedin.com/in/${handle}`\n  };\n  return urls[platform] || '';\n}"
+      },
+      "id": "validate-influencer",
+      "name": "Validate & Enrich Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/influencer_contacts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "id": "supabase-insert-influencer",
+      "name": "Supabase: Insert Influencer",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [720, 200],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, message: 'Influencer added to outreach pipeline', influencer: { name: $('Validate & Enrich Data').item.json.name, platform: $('Validate & Enrich Data').item.json.platform, tier: $('Validate & Enrich Data').item.json.tier, priority: $('Validate & Enrich Data').item.json.priority_score } } }}"
+      },
+      "id": "respond-add-success",
+      "name": "Respond: Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [940, 200]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/influencer_contacts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "select",
+              "value": "*"
+            },
+            {
+              "name": "status",
+              "value": "in.(pending,following_up)"
+            },
+            {
+              "name": "next_outreach_at",
+              "value": "lte.{{ new Date().toISOString() }}"
+            },
+            {
+              "name": "order",
+              "value": "priority_score.desc,created_at.asc"
+            },
+            {
+              "name": "limit",
+              "value": "25"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "supabase-fetch-pending",
+      "name": "Supabase: Fetch Due Outreach",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [500, 600],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-influencers",
+              "leftValue": "={{ $json.length || 0 }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-has-pending",
+      "name": "Filter: Has Pending",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [720, 600]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "={{ Object.keys($json) }}",
+        "options": {}
+      },
+      "id": "split-influencers",
+      "name": "Split Influencers",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [940, 600]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Generate platform-specific outreach message\nconst influencer = $input.item.json;\nconst stage = influencer.outreach_stage || 'initial';\nconst messagesSent = influencer.messages_sent || 0;\nconst platform = influencer.platform;\nconst offerType = influencer.offer_type || 'premium_access';\n\n// Offer descriptions\nconst offers = {\n  premium_access: {\n    short: '3 months free Premium access to Lician.com',\n    long: `3 months of complimentary Premium access to Lician.com, giving you unlimited access to our AI-powered stock analysis, real-time financial data, and institutional-grade investment tools.`\n  },\n  affiliate: {\n    short: '25% revenue share affiliate partnership',\n    long: `a 25% revenue share affiliate partnership. You'd get a custom referral link and earn 25% of every subscription from your audience - that's up to $50/month per referral.`\n  },\n  collaboration: {\n    short: 'Sponsored content collaboration',\n    long: `a sponsored content collaboration. We'd love to work with you on creating valuable financial education content for your audience, with full creative freedom and competitive compensation.`\n  }\n};\n\nconst offer = offers[offerType] || offers.premium_access;\n\n// Platform-specific templates\nconst templates = {\n  twitter: {\n    initial: {\n      subject: null,\n      message: `Hey ${influencer.name}! I've been following your finance content and it's really solid.\n\nI'm from Lician.com - we're building AI-powered stock analysis tools that I think could genuinely help your audience make better investment decisions.\n\nWould love to offer you ${offer.short} to try it out. No strings attached.\n\nInterested? Happy to DM you the details.`\n    },\n    followup_1: {\n      subject: null,\n      message: `Hey ${influencer.name}, just bumping this! We'd love to have you try Lician.com.\n\nOur users are seeing real results with our AI analysis tools - might make for some great content for your audience too.\n\nLet me know if you're interested in the free Premium access!`\n    },\n    followup_2: {\n      subject: null,\n      message: `Last one, promise! Just wanted to leave the door open if you ever want to check out Lician.com.\n\nThe offer for ${offer.short} stands whenever you're ready.\n\nEither way, keep up the great content!`\n    }\n  },\n  youtube: {\n    initial: {\n      subject: `Collaboration opportunity - ${influencer.name}`,\n      message: `Hi ${influencer.name},\n\nI've been watching your finance videos and really appreciate the quality of your analysis.\n\nI'm reaching out from Lician.com - we've built an AI-powered platform that helps investors analyze stocks with institutional-grade tools and real-time financial data.\n\nI'd love to offer you ${offer.long}\n\nI think your audience would genuinely benefit from tools like:\n- AI-powered earnings analysis\n- Real-time stock screening with 50+ filters\n- Portfolio risk analytics\n- SEC filing summaries\n\nWould you be open to trying it out? No commitment required - just want your honest feedback.\n\nBest,\nThe Lician.com Team\n\nhttps://lician.com`\n    },\n    followup_1: {\n      subject: `Following up - Partnership with ${influencer.name}`,\n      message: `Hi ${influencer.name},\n\nJust wanted to follow up on my previous message about Lician.com.\n\nWe've recently launched some new features I think your audience would love:\n- AI market sentiment analysis\n- Automated portfolio rebalancing suggestions  \n- Earnings prediction models\n\nThe offer for ${offer.short} still stands. Would love to hear your thoughts!\n\nBest,\nThe Lician.com Team`\n    },\n    followup_2: {\n      subject: `Quick check-in - Lician.com`,\n      message: `Hi ${influencer.name},\n\nOne final follow-up! The offer for ${offer.short} remains open.\n\nIf timing isn't right now, totally understand. Feel free to reach out whenever - we'd love to work together.\n\nKeep creating great content!\n\nBest,\nThe Lician.com Team`\n    }\n  },\n  tiktok: {\n    initial: {\n      subject: null,\n      message: `Hey ${influencer.name}! Love your finance content.\n\nI'm from Lician.com - we make AI stock analysis tools that could be perfect for your audience.\n\nWant to try ${offer.short}? Could make for some fire content!\n\nDM me if interested!`\n    },\n    followup_1: {\n      subject: null,\n      message: `Hey again! Still down to hook you up with ${offer.short} on Lician.com.\n\nOur AI tools are getting crazy engagement from finance creators. Let me know!`\n    },\n    followup_2: {\n      subject: null,\n      message: `Last msg! Offer's still open for Lician.com Premium.\n\nHit me up whenever if you want to check it out. Keep killing it with the content!`\n    }\n  },\n  instagram: {\n    initial: {\n      subject: null,\n      message: `Hey ${influencer.name}!\n\nBeen following your finance content and it really resonates. Love how you break down complex topics.\n\nI'm with Lician.com - we've built AI-powered investment tools that I think could genuinely help your community.\n\nWould love to offer you ${offer.short} to check it out. Our platform includes:\n- AI stock analysis\n- Real-time market data\n- Portfolio analytics\n\nInterested in trying it? No strings attached!\n\nBest,\nLician.com Team`\n    },\n    followup_1: {\n      subject: null,\n      message: `Hey ${influencer.name}, just following up!\n\nThe ${offer.short} offer is still available. A lot of finance creators are using our tools for content ideas and analysis.\n\nLet me know if you'd like to try it out!`\n    },\n    followup_2: {\n      subject: null,\n      message: `Final check-in! The Lician.com offer stands whenever you're interested.\n\nEither way, keep up the amazing content!\n\nBest,\nLician.com Team`\n    }\n  },\n  linkedin: {\n    initial: {\n      subject: `Partnership Opportunity - Lician.com x ${influencer.name}`,\n      message: `Hi ${influencer.name},\n\nI've been following your financial insights on LinkedIn and am impressed by the depth of your analysis.\n\nI'm reaching out from Lician.com, a financial data and AI-powered stock analysis platform trusted by serious investors.\n\nI'd like to offer you ${offer.long}\n\nOur platform provides:\n- Institutional-grade financial data on 5,000+ US and 100,000+ EU companies\n- AI-powered earnings analysis and stock screening\n- Real-time SEC filing summaries\n- Portfolio risk analytics\n\nWould you be interested in exploring a partnership? I believe there's strong synergy between your expertise and our tools.\n\nLooking forward to your thoughts.\n\nBest regards,\nThe Lician.com Team\n\nhttps://lician.com`\n    },\n    followup_1: {\n      subject: `Following up - Lician.com Partnership`,\n      message: `Hi ${influencer.name},\n\nI wanted to follow up on my previous message regarding a potential partnership with Lician.com.\n\nWe've recently expanded our coverage to include comprehensive EU market data and enhanced our AI analysis capabilities.\n\nThe offer for ${offer.short} remains open. I'd welcome the opportunity to discuss how we might collaborate.\n\nBest regards,\nThe Lician.com Team`\n    },\n    followup_2: {\n      subject: `Lician.com - Open Invitation`,\n      message: `Hi ${influencer.name},\n\nI wanted to send one final note regarding our partnership opportunity.\n\nIf timing isn't ideal now, I completely understand. The offer for ${offer.short} remains open whenever you'd like to explore it.\n\nWishing you continued success with your content.\n\nBest regards,\nThe Lician.com Team`\n    }\n  }\n};\n\n// Get templates for platform (fallback to twitter style if not found)\nconst platformTemplates = templates[platform] || templates.twitter;\n\n// Determine which template stage to use\nlet templateKey = 'initial';\nif (messagesSent === 1) templateKey = 'followup_1';\nif (messagesSent >= 2) templateKey = 'followup_2';\n\nconst template = platformTemplates[templateKey];\n\n// Calculate next outreach date (5 days for first follow-up, 10 days for second)\nconst followupDays = { initial: 5, followup_1: 5, followup_2: null };\nlet nextOutreach = null;\nif (followupDays[templateKey]) {\n  const date = new Date();\n  date.setDate(date.getDate() + followupDays[templateKey]);\n  nextOutreach = date.toISOString();\n}\n\n// Next stage mapping\nconst nextStage = {\n  initial: 'followup_1',\n  followup_1: 'followup_2',\n  followup_2: 'completed'\n};\n\n// Tracking ID for analytics\nconst trackingId = Buffer.from(`${influencer.id}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`).toString('base64');\n\n// Determine if this should be sent via email or DM\nconst sendViaEmail = influencer.email && (platform === 'youtube' || platform === 'linkedin');\n\nreturn {\n  json: {\n    ...influencer,\n    outreach: {\n      method: sendViaEmail ? 'email' : 'dm',\n      to: sendViaEmail ? influencer.email : influencer.handle,\n      subject: template.subject,\n      message: template.message,\n      trackingId\n    },\n    update: {\n      outreach_stage: nextStage[templateKey],\n      messages_sent: messagesSent + 1,\n      last_outreach_at: new Date().toISOString(),\n      next_outreach_at: nextOutreach,\n      status: nextStage[templateKey] === 'completed' ? 'completed' : 'following_up',\n      updated_at: new Date().toISOString()\n    },\n    templateUsed: templateKey,\n    isFinalMessage: templateKey === 'followup_2',\n    sendViaEmail\n  }\n};"
+      },
+      "id": "generate-outreach",
+      "name": "Generate Platform Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1160, 600]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "is-email",
+              "leftValue": "={{ $json.sendViaEmail }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "route-by-method",
+      "name": "Route: Email or DM",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1380, 600]
+    },
+    {
+      "parameters": {
+        "fromEmail": "partnerships@lician.com",
+        "toEmail": "={{ $json.outreach.to }}",
+        "subject": "={{ $json.outreach.subject }}",
+        "emailType": "text",
+        "message": "={{ $json.outreach.message }}",
+        "options": {
+          "replyTo": "hello@lician.com"
+        }
+      },
+      "id": "send-email",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [1600, 500],
+      "credentials": {
+        "smtp": {
+          "id": "CONFIGURE_SMTP_CREDENTIALS",
+          "name": "Outreach SMTP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "CONFIGURE_DM_QUEUE_CHANNEL",
+          "mode": "id"
+        },
+        "text": "=:outbox_tray: *Manual DM Required*\n\n*Influencer:* {{ $json.name }}\n*Platform:* {{ $json.platform }} (@{{ $json.handle }})\n*Followers:* {{ $json.followers?.toLocaleString() || 'Unknown' }}\n*Tier:* {{ $json.tier }}\n*Profile:* <{{ $json.profile_url }}|View Profile>\n\n*Message to Send:*\n```\n{{ $json.outreach.message }}\n```\n\n*Stage:* {{ $json.templateUsed }} ({{ $json.messages_sent + 1 }} of 3)\n\nReact with :white_check_mark: when sent, :x: if skipped.",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "slack-dm-queue",
+      "name": "Slack: DM Queue",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1600, 700],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Slack Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch",
+        "output": "wait"
+      },
+      "id": "merge-after-send",
+      "name": "Merge After Send",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [1820, 600]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/influencer_contacts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": "eq.{{ $('Generate Platform Message').item.json.id }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($('Generate Platform Message').item.json.update) }}",
+        "options": {}
+      },
+      "id": "supabase-update-status",
+      "name": "Supabase: Update Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2040, 600],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/influencer_outreach_log",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  contact_id: $('Generate Platform Message').item.json.id,\n  platform: $('Generate Platform Message').item.json.platform,\n  outreach_stage: $('Generate Platform Message').item.json.templateUsed,\n  method: $('Generate Platform Message').item.json.outreach.method,\n  message: $('Generate Platform Message').item.json.outreach.message.substring(0, 2000),\n  tracking_id: $('Generate Platform Message').item.json.outreach.trackingId,\n  sent_at: new Date().toISOString(),\n  sent_via: $('Generate Platform Message').item.json.sendViaEmail ? 'email' : 'slack_queue'\n}) }}",
+        "options": {}
+      },
+      "id": "supabase-log-outreach",
+      "name": "Supabase: Log Outreach",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2040, 780],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 3,
+        "unit": "seconds"
+      },
+      "id": "wait-rate-limit",
+      "name": "Wait (Rate Limit)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [2260, 600]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Parse response webhook payload\nconst payload = $input.item.json.body || $input.item.json;\n\n// Response types: replied, interested, not_interested, converted, no_response\nconst responseType = payload.type || payload.response_type || 'replied';\nconst contactId = payload.contact_id || payload.contactId;\nconst trackingId = payload.tracking_id || payload.trackingId;\nconst responseContent = payload.content || payload.message || '';\nconst conversionType = payload.conversion_type || null; // premium_signup, affiliate_joined, collaboration_agreed\n\n// Status mapping based on response\nconst statusMap = {\n  replied: 'responded',\n  interested: 'interested',\n  not_interested: 'declined',\n  converted: 'converted',\n  no_response: 'no_response',\n  bounced: 'bounced'\n};\n\nconst newStatus = statusMap[responseType] || 'responded';\n\nreturn {\n  json: {\n    responseType,\n    contactId,\n    trackingId,\n    responseContent,\n    newStatus,\n    conversionType,\n    timestamp: new Date().toISOString(),\n    shouldNotify: ['replied', 'interested', 'converted'].includes(responseType)\n  }\n};"
+      },
+      "id": "parse-response",
+      "name": "Parse Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 1000]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "has-id",
+              "leftValue": "={{ $json.contactId || $json.trackingId }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-valid-response",
+      "name": "Filter: Valid Response",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [720, 1000]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/influencer_contacts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": "eq.{{ $json.contactId }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  status: $json.newStatus,\n  responded_at: new Date().toISOString(),\n  response_type: $json.responseType,\n  response_content: $json.responseContent?.substring(0, 2000) || '',\n  conversion_type: $json.conversionType,\n  converted_at: $json.newStatus === 'converted' ? new Date().toISOString() : null,\n  updated_at: new Date().toISOString()\n}) }}",
+        "options": {}
+      },
+      "id": "supabase-update-response",
+      "name": "Supabase: Update Response",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [940, 1000],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "should-notify",
+              "leftValue": "={{ $('Parse Response').item.json.shouldNotify }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-notify",
+      "name": "Filter: Should Notify",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [1160, 1000]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/influencer_contacts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": "eq.{{ $('Parse Response').item.json.contactId }}"
+            },
+            {
+              "name": "select",
+              "value": "*"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "supabase-get-contact",
+      "name": "Supabase: Get Contact Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1380, 1000],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "CONFIGURE_NOTIFICATIONS_CHANNEL",
+          "mode": "id"
+        },
+        "text": "=:mega: *Influencer Response!*\n\n*Name:* {{ $json[0]?.name || 'Unknown' }}\n*Platform:* {{ $json[0]?.platform }} (@{{ $json[0]?.handle }})\n*Followers:* {{ $json[0]?.followers?.toLocaleString() || 'Unknown' }}\n*Tier:* {{ $json[0]?.tier || 'Unknown' }}\n*Response Type:* {{ $('Parse Response').item.json.responseType }}\n\n*Their Response:*\n```\n{{ $('Parse Response').item.json.responseContent || 'No content provided' }}\n```\n\n{{ $('Parse Response').item.json.newStatus === 'converted' ? ':tada: *CONVERTED!* Type: ' + ($('Parse Response').item.json.conversionType || 'Unknown') : '' }}\n\n<{{ $json[0]?.profile_url }}|View Profile>",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "slack-notify-response",
+      "name": "Slack: Notify Response",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1600, 1000],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Slack Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, message: 'Response recorded', type: $('Parse Response').item.json.responseType, status: $('Parse Response').item.json.newStatus } }}"
+      },
+      "id": "respond-response-webhook",
+      "name": "Respond: Recorded",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1820, 1000]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/rpc/influencer_pipeline_stats",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "supabase-get-pipeline-stats",
+      "name": "Supabase: Get Pipeline Stats",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [500, 1400],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Generate weekly pipeline report\nconst stats = $input.first().json || {};\n\n// Provide defaults if RPC doesn't exist\nconst report = {\n  // Pipeline counts\n  total_contacts: stats.total_contacts || 0,\n  pending: stats.pending || 0,\n  following_up: stats.following_up || 0,\n  responded: stats.responded || 0,\n  interested: stats.interested || 0,\n  converted: stats.converted || 0,\n  declined: stats.declined || 0,\n  \n  // Week metrics\n  messages_sent_week: stats.messages_sent_week || 0,\n  responses_week: stats.responses_week || 0,\n  conversions_week: stats.conversions_week || 0,\n  \n  // Rates\n  response_rate: stats.response_rate || '0%',\n  conversion_rate: stats.conversion_rate || '0%',\n  \n  // By platform breakdown\n  by_platform: stats.by_platform || {\n    twitter: { total: 0, converted: 0 },\n    youtube: { total: 0, converted: 0 },\n    tiktok: { total: 0, converted: 0 },\n    instagram: { total: 0, converted: 0 },\n    linkedin: { total: 0, converted: 0 }\n  },\n  \n  // By tier breakdown\n  by_tier: stats.by_tier || {\n    mega: { total: 0, converted: 0 },\n    macro: { total: 0, converted: 0 },\n    micro: { total: 0, converted: 0 },\n    nano: { total: 0, converted: 0 }\n  },\n  \n  // Top performing\n  top_conversions: stats.top_conversions || [],\n  hot_leads: stats.hot_leads || [],\n  \n  // Report metadata\n  week_start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],\n  week_end: new Date().toISOString().split('T')[0]\n};\n\nreturn { json: report };"
+      },
+      "id": "generate-pipeline-report",
+      "name": "Generate Pipeline Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 1400]
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "CONFIGURE_NOTIFICATIONS_CHANNEL",
+          "mode": "id"
+        },
+        "text": "=:chart_with_upwards_trend: *Weekly Influencer Pipeline Report*\n_{{ $json.week_start }} to {{ $json.week_end }}_\n\n*Pipeline Overview:*\n:hourglass_flowing_sand: Pending: {{ $json.pending }}\n:arrows_counterclockwise: Following Up: {{ $json.following_up }}\n:speech_balloon: Responded: {{ $json.responded }}\n:star: Interested: {{ $json.interested }}\n:white_check_mark: Converted: {{ $json.converted }}\n:x: Declined: {{ $json.declined }}\n\n*This Week's Activity:*\n- Messages Sent: {{ $json.messages_sent_week }}\n- Responses: {{ $json.responses_week }}\n- New Conversions: {{ $json.conversions_week }}\n\n*Performance:*\n- Response Rate: {{ $json.response_rate }}\n- Conversion Rate: {{ $json.conversion_rate }}\n\n*Platform Breakdown:*\n:bird: Twitter: {{ $json.by_platform?.twitter?.total || 0 }} contacts ({{ $json.by_platform?.twitter?.converted || 0 }} converted)\n:movie_camera: YouTube: {{ $json.by_platform?.youtube?.total || 0 }} contacts ({{ $json.by_platform?.youtube?.converted || 0 }} converted)\n:tv: TikTok: {{ $json.by_platform?.tiktok?.total || 0 }} contacts ({{ $json.by_platform?.tiktok?.converted || 0 }} converted)\n:camera: Instagram: {{ $json.by_platform?.instagram?.total || 0 }} contacts ({{ $json.by_platform?.instagram?.converted || 0 }} converted)\n:briefcase: LinkedIn: {{ $json.by_platform?.linkedin?.total || 0 }} contacts ({{ $json.by_platform?.linkedin?.converted || 0 }} converted)\n\n*Total Pipeline:* {{ $json.total_contacts }} influencers\n\n<https://lician.com/admin/influencers|View Full Dashboard>",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "slack-weekly-report",
+      "name": "Slack: Weekly Pipeline Report",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [940, 1400],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Slack Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "influencer-bulk-import",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-bulk-import",
+      "name": "Webhook: Bulk Import",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 400],
+      "webhookId": "influencer-bulk-import"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Process bulk import of influencers (CSV or JSON array)\nconst payload = $input.first().json.body || $input.first().json;\n\nlet influencers = [];\n\n// Handle array input\nif (Array.isArray(payload)) {\n  influencers = payload;\n} else if (payload.influencers && Array.isArray(payload.influencers)) {\n  influencers = payload.influencers;\n} else if (payload.data && Array.isArray(payload.data)) {\n  influencers = payload.data;\n}\n\nif (influencers.length === 0) {\n  throw new Error('No influencers provided. Expected array of influencer objects.');\n}\n\n// Validate and transform each influencer\nconst platformMap = {\n  'twitter': 'twitter', 'x': 'twitter',\n  'youtube': 'youtube', 'yt': 'youtube',\n  'tiktok': 'tiktok', 'tt': 'tiktok',\n  'instagram': 'instagram', 'ig': 'instagram', 'insta': 'instagram',\n  'linkedin': 'linkedin'\n};\n\nconst results = influencers.map((inf, idx) => {\n  if (!inf.name || !inf.platform || !inf.handle) {\n    return { error: true, index: idx, message: 'Missing required fields: name, platform, handle' };\n  }\n  \n  const platform = platformMap[inf.platform?.toLowerCase()] || inf.platform?.toLowerCase();\n  const followers = parseInt(inf.followers) || 0;\n  \n  let tier = 'nano';\n  if (followers >= 1000000) tier = 'mega';\n  else if (followers >= 100000) tier = 'macro';\n  else if (followers >= 10000) tier = 'micro';\n  \n  const hasEmail = !!inf.email;\n  let priorityScore = Math.min(followers / 10000, 100);\n  if (hasEmail) priorityScore += 20;\n  if (['finance', 'investing', 'stocks', 'crypto', 'trading'].includes(inf.niche?.toLowerCase())) {\n    priorityScore += 30;\n  }\n  \n  const urls = {\n    twitter: `https://twitter.com/${inf.handle}`,\n    youtube: `https://youtube.com/@${inf.handle}`,\n    tiktok: `https://tiktok.com/@${inf.handle}`,\n    instagram: `https://instagram.com/${inf.handle}`,\n    linkedin: `https://linkedin.com/in/${inf.handle}`\n  };\n  \n  return {\n    name: inf.name,\n    platform,\n    handle: inf.handle.replace(/^@/, ''),\n    followers,\n    tier,\n    niche: inf.niche || 'finance',\n    email: inf.email || null,\n    outreach_method: hasEmail ? 'email' : 'dm',\n    priority_score: Math.round(priorityScore),\n    status: 'pending',\n    outreach_stage: 'initial',\n    messages_sent: 0,\n    profile_url: inf.profile_url || urls[platform] || '',\n    notes: inf.notes || '',\n    tags: inf.tags || [],\n    offer_type: inf.offer_type || 'premium_access',\n    created_at: new Date().toISOString(),\n    updated_at: new Date().toISOString(),\n    next_outreach_at: new Date().toISOString()\n  };\n});\n\nconst valid = results.filter(r => !r.error);\nconst errors = results.filter(r => r.error);\n\nreturn {\n  json: {\n    influencers: valid,\n    errorCount: errors.length,\n    errors: errors,\n    totalProcessed: influencers.length\n  }\n};"
+      },
+      "id": "process-bulk-import",
+      "name": "Process Bulk Import",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/influencer_contacts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.influencers) }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "id": "supabase-bulk-insert",
+      "name": "Supabase: Bulk Insert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [720, 400],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURE_SUPABASE_AUTH",
+          "name": "Supabase Service Role"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, message: 'Bulk import completed', imported: $('Process Bulk Import').item.json.influencers.length, errors: $('Process Bulk Import').item.json.errorCount, errorDetails: $('Process Bulk Import').item.json.errors } }}"
+      },
+      "id": "respond-bulk-success",
+      "name": "Respond: Bulk Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [940, 400]
+    }
+  ],
+  "connections": {
+    "Webhook: Add Influencer": {
+      "main": [
+        [
+          {
+            "node": "Validate & Enrich Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate & Enrich Data": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Insert Influencer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Insert Influencer": {
+      "main": [
+        [
+          {
+            "node": "Respond: Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule: Process Follow-ups": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Fetch Due Outreach",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Fetch Due Outreach": {
+      "main": [
+        [
+          {
+            "node": "Filter: Has Pending",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter: Has Pending": {
+      "main": [
+        [
+          {
+            "node": "Split Influencers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Influencers": {
+      "main": [
+        [
+          {
+            "node": "Generate Platform Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Platform Message": {
+      "main": [
+        [
+          {
+            "node": "Route: Email or DM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route: Email or DM": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack: DM Queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "main": [
+        [
+          {
+            "node": "Merge After Send",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack: DM Queue": {
+      "main": [
+        [
+          {
+            "node": "Merge After Send",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge After Send": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Update Status",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Supabase: Log Outreach",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Update Status": {
+      "main": [
+        [
+          {
+            "node": "Wait (Rate Limit)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook: Track Response": {
+      "main": [
+        [
+          {
+            "node": "Parse Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Response": {
+      "main": [
+        [
+          {
+            "node": "Filter: Valid Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter: Valid Response": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Update Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Update Response": {
+      "main": [
+        [
+          {
+            "node": "Filter: Should Notify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter: Should Notify": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Get Contact Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Get Contact Details": {
+      "main": [
+        [
+          {
+            "node": "Slack: Notify Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack: Notify Response": {
+      "main": [
+        [
+          {
+            "node": "Respond: Recorded",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule: Weekly Pipeline Report": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Get Pipeline Stats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Get Pipeline Stats": {
+      "main": [
+        [
+          {
+            "node": "Generate Pipeline Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Pipeline Report": {
+      "main": [
+        [
+          {
+            "node": "Slack: Weekly Pipeline Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook: Bulk Import": {
+      "main": [
+        [
+          {
+            "node": "Process Bulk Import",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Bulk Import": {
+      "main": [
+        [
+          {
+            "node": "Supabase: Bulk Insert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase: Bulk Insert": {
+      "main": [
+        [
+          {
+            "node": "Respond: Bulk Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "influencer",
+      "id": "influencer-tag"
+    },
+    {
+      "name": "outreach",
+      "id": "outreach-tag"
+    },
+    {
+      "name": "lician",
+      "id": "lician-tag"
+    },
+    {
+      "name": "marketing",
+      "id": "marketing-tag"
+    }
+  ],
+  "triggerCount": 5,
+  "updatedAt": "2026-01-16T00:00:00.000Z",
+  "versionId": "1"
+}

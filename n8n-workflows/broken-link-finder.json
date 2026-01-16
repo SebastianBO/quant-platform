@@ -1,0 +1,783 @@
+{
+  "name": "Broken Link Finder - Lician.com",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 3 * * 0"
+            }
+          ]
+        }
+      },
+      "id": "weekly-trigger",
+      "name": "Weekly Schedule (Sunday 3 AM)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 300],
+      "notes": "Runs every Sunday at 3 AM to find broken link opportunities"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $vars.n8n_webhook_base }}/broken-link-manual",
+        "options": {}
+      },
+      "id": "manual-trigger",
+      "name": "Manual Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 500],
+      "webhookId": "broken-link-manual",
+      "notes": "POST to trigger manual scan"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// High-authority finance sites with links/resources pages to check\n// Organized by category with priority scores\n\nconst targetSites = [\n  // Government & Educational Finance Resources (Highest Authority)\n  {\n    domain: 'investor.gov',\n    resourcePages: [\n      '/additional-resources',\n      '/additional-resources/free-financial-planning-tools',\n      '/additional-resources/specialized-resources'\n    ],\n    category: 'government',\n    baseDomainAuthority: 85,\n    priority: 'high'\n  },\n  {\n    domain: 'usa.gov',\n    resourcePages: [\n      '/money',\n      '/financial-assistance',\n      '/credit-and-debt'\n    ],\n    category: 'government',\n    baseDomainAuthority: 92,\n    priority: 'high'\n  },\n  {\n    domain: 'consumerfinance.gov',\n    resourcePages: [\n      '/consumer-tools',\n      '/data-research/resources'\n    ],\n    category: 'government',\n    baseDomainAuthority: 88,\n    priority: 'high'\n  },\n  \n  // University Finance Departments\n  {\n    domain: 'stern.nyu.edu',\n    resourcePages: [\n      '/experience-stern/about/resources',\n      '/faculty-research/research-centers'\n    ],\n    category: 'education',\n    baseDomainAuthority: 82,\n    priority: 'high'\n  },\n  {\n    domain: 'gsb.stanford.edu',\n    resourcePages: [\n      '/faculty-research/centers-initiatives'\n    ],\n    category: 'education',\n    baseDomainAuthority: 90,\n    priority: 'high'\n  },\n  {\n    domain: 'hbs.edu',\n    resourcePages: [\n      '/faculty/research',\n      '/research-tools'\n    ],\n    category: 'education',\n    baseDomainAuthority: 91,\n    priority: 'high'\n  },\n  {\n    domain: 'wharton.upenn.edu',\n    resourcePages: [\n      '/faculty-research/research-tools'\n    ],\n    category: 'education',\n    baseDomainAuthority: 89,\n    priority: 'high'\n  },\n  {\n    domain: 'business.columbia.edu',\n    resourcePages: [\n      '/faculty-research/research-resources'\n    ],\n    category: 'education',\n    baseDomainAuthority: 88,\n    priority: 'high'\n  },\n  {\n    domain: 'chicagobooth.edu',\n    resourcePages: [\n      '/research/databases'\n    ],\n    category: 'education',\n    baseDomainAuthority: 87,\n    priority: 'high'\n  },\n  {\n    domain: 'mba.yale.edu',\n    resourcePages: [\n      '/faculty-research'\n    ],\n    category: 'education',\n    baseDomainAuthority: 90,\n    priority: 'high'\n  },\n  {\n    domain: 'sloan.mit.edu',\n    resourcePages: [\n      '/faculty/research-centers'\n    ],\n    category: 'education',\n    baseDomainAuthority: 92,\n    priority: 'high'\n  },\n  \n  // Finance Blogs & Publications (High Traffic)\n  {\n    domain: 'investopedia.com',\n    resourcePages: [\n      '/articles/tools/top-stock-analysis-resources',\n      '/best-stock-screeners'\n    ],\n    category: 'finance_blog',\n    baseDomainAuthority: 86,\n    priority: 'high'\n  },\n  {\n    domain: 'nerdwallet.com',\n    resourcePages: [\n      '/investing/resources',\n      '/best-investment-research'\n    ],\n    category: 'finance_blog',\n    baseDomainAuthority: 84,\n    priority: 'high'\n  },\n  {\n    domain: 'thebalancemoney.com',\n    resourcePages: [\n      '/investing-resources',\n      '/financial-tools'\n    ],\n    category: 'finance_blog',\n    baseDomainAuthority: 80,\n    priority: 'medium'\n  },\n  {\n    domain: 'fool.com',\n    resourcePages: [\n      '/investing-resources',\n      '/stock-research-tools'\n    ],\n    category: 'finance_blog',\n    baseDomainAuthority: 82,\n    priority: 'high'\n  },\n  {\n    domain: 'seekingalpha.com',\n    resourcePages: [\n      '/resources'\n    ],\n    category: 'finance_blog',\n    baseDomainAuthority: 79,\n    priority: 'medium'\n  },\n  {\n    domain: 'bankrate.com',\n    resourcePages: [\n      '/investing/stock-research-sites',\n      '/investing/resources'\n    ],\n    category: 'finance_blog',\n    baseDomainAuthority: 83,\n    priority: 'high'\n  },\n  {\n    domain: 'kiplinger.com',\n    resourcePages: [\n      '/investing/resources'\n    ],\n    category: 'finance_blog',\n    baseDomainAuthority: 78,\n    priority: 'medium'\n  },\n  \n  // Personal Finance Education\n  {\n    domain: 'mrmoneymustache.com',\n    resourcePages: [\n      '/start-here',\n      '/recommended-reading'\n    ],\n    category: 'personal_finance',\n    baseDomainAuthority: 72,\n    priority: 'medium'\n  },\n  {\n    domain: 'financialsamurai.com',\n    resourcePages: [\n      '/resources'\n    ],\n    category: 'personal_finance',\n    baseDomainAuthority: 68,\n    priority: 'medium'\n  },\n  {\n    domain: 'bogleheads.org',\n    resourcePages: [\n      '/wiki/Resources',\n      '/wiki/Stock_screening_tools'\n    ],\n    category: 'personal_finance',\n    baseDomainAuthority: 65,\n    priority: 'medium'\n  },\n  {\n    domain: 'earlyretirementnow.com',\n    resourcePages: [\n      '/resources'\n    ],\n    category: 'personal_finance',\n    baseDomainAuthority: 60,\n    priority: 'low'\n  },\n  \n  // Financial Research & Data Sites\n  {\n    domain: 'cfa.institute',\n    resourcePages: [\n      '/research/foundation/publications'\n    ],\n    category: 'research',\n    baseDomainAuthority: 75,\n    priority: 'high'\n  },\n  {\n    domain: 'ssrn.com',\n    resourcePages: [\n      '/index.cfm/en/finance-resources'\n    ],\n    category: 'research',\n    baseDomainAuthority: 85,\n    priority: 'high'\n  },\n  {\n    domain: 'nasdaq.com',\n    resourcePages: [\n      '/education-resources'\n    ],\n    category: 'exchange',\n    baseDomainAuthority: 91,\n    priority: 'high'\n  },\n  {\n    domain: 'nyse.com',\n    resourcePages: [\n      '/education'\n    ],\n    category: 'exchange',\n    baseDomainAuthority: 90,\n    priority: 'high'\n  },\n  \n  // FinTech Blogs\n  {\n    domain: 'finextra.com',\n    resourcePages: [\n      '/resources',\n      '/blogposting'\n    ],\n    category: 'fintech',\n    baseDomainAuthority: 70,\n    priority: 'medium'\n  },\n  {\n    domain: 'pymnts.com',\n    resourcePages: [\n      '/resources'\n    ],\n    category: 'fintech',\n    baseDomainAuthority: 72,\n    priority: 'medium'\n  }\n];\n\n// Flatten into individual page objects for processing\nconst pages = [];\nfor (const site of targetSites) {\n  for (const resourcePage of site.resourcePages) {\n    pages.push({\n      domain: site.domain,\n      url: `https://${site.domain}${resourcePage}`,\n      resourcePage: resourcePage,\n      category: site.category,\n      baseDomainAuthority: site.baseDomainAuthority,\n      priority: site.priority,\n      scannedAt: new Date().toISOString()\n    });\n  }\n}\n\nreturn pages.map(page => ({ json: page }));"
+      },
+      "id": "define-target-sites",
+      "name": "Define Target Finance Sites",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 400],
+      "notes": "List of high-authority finance sites with resource pages to check for broken links"
+    },
+    {
+      "parameters": {
+        "batchSize": 5,
+        "options": {
+          "reset": false
+        }
+      },
+      "id": "batch-sites",
+      "name": "Batch Sites (5 at a time)",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [720, 400]
+    },
+    {
+      "parameters": {
+        "amount": 3000,
+        "unit": "milliseconds"
+      },
+      "id": "rate-limit-pages",
+      "name": "Rate Limit (3s delay)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [940, 400]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.url }}",
+        "options": {
+          "timeout": 20000,
+          "redirect": {
+            "redirect": {
+              "followRedirects": true,
+              "maxRedirects": 5
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "fetch-resource-page",
+      "name": "Fetch Resource Page",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1160, 400],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Extract all outbound links from the fetched page\nconst item = $input.item.json;\nconst pageData = $('Fetch Resource Page').item.json;\nconst siteData = $('Rate Limit (3s delay)').item.json;\n\n// Handle fetch failures\nif (!pageData.body || pageData.statusCode >= 400) {\n  return {\n    json: {\n      ...siteData,\n      fetchSuccess: false,\n      error: pageData.error || `HTTP ${pageData.statusCode}`,\n      outboundLinks: []\n    }\n  };\n}\n\nconst html = pageData.body;\nconst sourceDomain = siteData.domain;\n\n// Extract all links using regex\nconst linkRegex = /<a[^>]*href=[\"']([^\"'#]+)[\"'][^>]*>/gi;\nconst allLinks = [];\nlet match;\n\nwhile ((match = linkRegex.exec(html)) !== null) {\n  const href = match[0];\n  const url = match[1];\n  \n  // Skip internal links, anchors, javascript, mailto, tel\n  if (url.startsWith('/') || \n      url.startsWith('#') || \n      url.startsWith('javascript:') ||\n      url.startsWith('mailto:') ||\n      url.startsWith('tel:') ||\n      url.includes(sourceDomain)) {\n    continue;\n  }\n  \n  // Only process http/https links\n  if (url.startsWith('http://') || url.startsWith('https://')) {\n    // Extract anchor text if present\n    const anchorMatch = href.match(/>([^<]*)</i);\n    const anchorText = anchorMatch ? anchorMatch[1].trim() : '';\n    \n    // Check if nofollow\n    const isNoFollow = href.toLowerCase().includes('nofollow') ||\n                       href.toLowerCase().includes('ugc') ||\n                       href.toLowerCase().includes('sponsored');\n    \n    // Extract target domain\n    let targetDomain = '';\n    try {\n      targetDomain = new URL(url).hostname.replace('www.', '');\n    } catch (e) {\n      continue;\n    }\n    \n    allLinks.push({\n      url: url,\n      anchorText: anchorText,\n      targetDomain: targetDomain,\n      isNoFollow: isNoFollow\n    });\n  }\n}\n\n// Deduplicate links\nconst uniqueLinks = Array.from(new Map(allLinks.map(l => [l.url, l])).values());\n\nreturn {\n  json: {\n    ...siteData,\n    fetchSuccess: true,\n    pageTitle: html.match(/<title>([^<]*)<\\/title>/i)?.[1] || '',\n    outboundLinks: uniqueLinks,\n    linkCount: uniqueLinks.length\n  }\n};"
+      },
+      "id": "extract-outbound-links",
+      "name": "Extract Outbound Links",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1380, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-links",
+              "leftValue": "={{ $json.linkCount }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-pages-with-links",
+      "name": "Has Outbound Links?",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [1600, 400]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Flatten outbound links into individual items for checking\nconst pageData = $input.item.json;\nconst links = pageData.outboundLinks || [];\n\nreturn links.map(link => ({\n  json: {\n    // Source page info\n    sourceUrl: pageData.url,\n    sourceDomain: pageData.domain,\n    sourceCategory: pageData.category,\n    sourceDomainAuthority: pageData.baseDomainAuthority,\n    sourcePriority: pageData.priority,\n    sourcePageTitle: pageData.pageTitle,\n    \n    // Link info\n    targetUrl: link.url,\n    targetDomain: link.targetDomain,\n    anchorText: link.anchorText,\n    isNoFollow: link.isNoFollow,\n    \n    // Timestamps\n    scannedAt: pageData.scannedAt\n  }\n}));"
+      },
+      "id": "flatten-links",
+      "name": "Flatten Links for Checking",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1820, 400]
+    },
+    {
+      "parameters": {
+        "batchSize": 20,
+        "options": {
+          "reset": false
+        }
+      },
+      "id": "batch-links",
+      "name": "Batch Links (20 at a time)",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [2040, 400]
+    },
+    {
+      "parameters": {
+        "amount": 1500,
+        "unit": "milliseconds"
+      },
+      "id": "rate-limit-links",
+      "name": "Rate Limit (1.5s delay)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [2260, 400]
+    },
+    {
+      "parameters": {
+        "method": "HEAD",
+        "url": "={{ $json.targetUrl }}",
+        "options": {
+          "timeout": 10000,
+          "redirect": {
+            "redirect": {
+              "followRedirects": true,
+              "maxRedirects": 5
+            }
+          },
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "id": "check-link-status",
+      "name": "Check Link Status (HEAD)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2480, 400],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Analyze link status and determine if it's broken\nconst httpResponse = $input.item.json;\nconst linkData = $('Rate Limit (1.5s delay)').item.json;\n\nconst statusCode = httpResponse.statusCode || 0;\nconst error = httpResponse.error || null;\n\n// Determine if link is broken\nlet isBroken = false;\nlet statusCategory = 'unknown';\nlet errorMessage = null;\n\nif (error) {\n  isBroken = true;\n  statusCategory = 'error';\n  errorMessage = error.message || 'Connection failed';\n} else if (statusCode === 0) {\n  isBroken = true;\n  statusCategory = 'error';\n  errorMessage = 'No response received';\n} else if (statusCode >= 400 && statusCode < 500) {\n  isBroken = true;\n  statusCategory = '4xx';\n  errorMessage = `Client error: HTTP ${statusCode}`;\n  if (statusCode === 404) {\n    statusCategory = '404';\n    errorMessage = 'Page not found (404)';\n  } else if (statusCode === 403) {\n    statusCategory = '403';\n    errorMessage = 'Access forbidden (403)';\n  } else if (statusCode === 410) {\n    statusCategory = '410';\n    errorMessage = 'Page permanently gone (410)';\n  }\n} else if (statusCode >= 500) {\n  // Server errors might be temporary, mark with lower confidence\n  isBroken = true;\n  statusCategory = '5xx';\n  errorMessage = `Server error: HTTP ${statusCode}`;\n} else if (statusCode >= 200 && statusCode < 400) {\n  isBroken = false;\n  statusCategory = 'ok';\n}\n\nreturn {\n  json: {\n    ...linkData,\n    httpStatusCode: statusCode,\n    isBroken: isBroken,\n    statusCategory: statusCategory,\n    errorMessage: errorMessage,\n    checkedAt: new Date().toISOString()\n  }\n};"
+      },
+      "id": "analyze-link-status",
+      "name": "Analyze Link Status",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2700, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "is-broken",
+              "leftValue": "={{ $json.isBroken }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-broken-links",
+      "name": "Is Broken Link?",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [2920, 400]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Match broken links to lician.com content that could replace them\n// Based on anchor text, target domain topic, and source page context\n\nconst brokenLink = $input.item.json;\n\n// Lician.com content library - key pages that can replace broken links\nconst licianContent = [\n  {\n    url: 'https://lician.com/',\n    title: 'Lician - Free Stock Analysis & Financial Data Platform',\n    keywords: ['stock analysis', 'financial data', 'stock screener', 'market data', 'investing tools', 'stock research'],\n    category: 'general',\n    contentType: 'homepage'\n  },\n  {\n    url: 'https://lician.com/stocks',\n    title: 'Stock Screener - Filter 110K+ US & EU Stocks',\n    keywords: ['stock screener', 'stock filter', 'find stocks', 'screen stocks', 'stock finder', 'stock search'],\n    category: 'screener',\n    contentType: 'tool'\n  },\n  {\n    url: 'https://lician.com/financials',\n    title: 'Company Financials & Financial Statements',\n    keywords: ['financial statements', 'balance sheet', 'income statement', 'cash flow', 'company financials', '10-K', '10-Q', 'SEC filings'],\n    category: 'financials',\n    contentType: 'data'\n  },\n  {\n    url: 'https://lician.com/chat',\n    title: 'AI Financial Assistant - Ask About Any Stock',\n    keywords: ['AI assistant', 'stock AI', 'financial AI', 'ask about stocks', 'investment AI', 'stock chatbot'],\n    category: 'ai',\n    contentType: 'tool'\n  },\n  {\n    url: 'https://lician.com/api',\n    title: 'Financial Data API - Stock & Company Data',\n    keywords: ['stock API', 'financial API', 'market data API', 'company data API', 'stock data', 'financial data'],\n    category: 'api',\n    contentType: 'developer'\n  },\n  {\n    url: 'https://lician.com/market-cap-ranking',\n    title: 'Market Cap Rankings - Largest Companies by Market Value',\n    keywords: ['market cap', 'largest companies', 'company rankings', 'market capitalization', 'top stocks', 'biggest companies'],\n    category: 'rankings',\n    contentType: 'data'\n  },\n  {\n    url: 'https://lician.com/pe-ratio-ranking',\n    title: 'P/E Ratio Rankings - Value Stock Discovery',\n    keywords: ['P/E ratio', 'price to earnings', 'value stocks', 'PE ranking', 'valuation', 'undervalued stocks'],\n    category: 'rankings',\n    contentType: 'data'\n  },\n  {\n    url: 'https://lician.com/dividend-yield-ranking',\n    title: 'Dividend Yield Rankings - High Dividend Stocks',\n    keywords: ['dividend yield', 'dividend stocks', 'high dividend', 'income investing', 'dividend ranking'],\n    category: 'rankings',\n    contentType: 'data'\n  },\n  {\n    url: 'https://lician.com/revenue-growth-ranking',\n    title: 'Revenue Growth Rankings - Fastest Growing Companies',\n    keywords: ['revenue growth', 'growth stocks', 'fastest growing', 'high growth', 'growth ranking'],\n    category: 'rankings',\n    contentType: 'data'\n  },\n  {\n    url: 'https://lician.com/net-income-ranking',\n    title: 'Net Income Rankings - Most Profitable Companies',\n    keywords: ['net income', 'profit', 'most profitable', 'earnings', 'profitability ranking'],\n    category: 'rankings',\n    contentType: 'data'\n  },\n  {\n    url: 'https://lician.com/eu-stocks',\n    title: 'European Stock Data - 100K+ EU Companies',\n    keywords: ['European stocks', 'EU stocks', 'European markets', 'EU companies', 'Europe investing'],\n    category: 'regional',\n    contentType: 'data'\n  }\n];\n\n// Keywords to match from anchor text and broken link context\nconst anchorText = (brokenLink.anchorText || '').toLowerCase();\nconst targetDomain = (brokenLink.targetDomain || '').toLowerCase();\nconst sourceCategory = (brokenLink.sourceCategory || '').toLowerCase();\n\n// Score each lician page for relevance\nlet bestMatch = null;\nlet highestScore = 0;\n\nfor (const page of licianContent) {\n  let score = 0;\n  \n  // Check keyword matches in anchor text\n  for (const keyword of page.keywords) {\n    if (anchorText.includes(keyword)) {\n      score += 20;\n    }\n    // Partial matches\n    const keywordParts = keyword.split(' ');\n    for (const part of keywordParts) {\n      if (part.length > 3 && anchorText.includes(part)) {\n        score += 5;\n      }\n    }\n  }\n  \n  // Check target domain hints\n  if (targetDomain.includes('stock') || targetDomain.includes('finance') || \n      targetDomain.includes('invest') || targetDomain.includes('market')) {\n    if (page.category === 'general' || page.category === 'screener') {\n      score += 10;\n    }\n  }\n  \n  // Boost for API/data sites\n  if ((targetDomain.includes('api') || targetDomain.includes('data')) && page.category === 'api') {\n    score += 15;\n  }\n  \n  // Context matching based on source category\n  if (sourceCategory === 'education' || sourceCategory === 'research') {\n    if (page.contentType === 'data' || page.contentType === 'tool') {\n      score += 10;\n    }\n  }\n  \n  if (sourceCategory === 'government' && page.category === 'general') {\n    score += 5;\n  }\n  \n  // If anchor text is generic, prefer homepage\n  if (anchorText.length < 5 && page.category === 'general') {\n    score += 5;\n  }\n  \n  if (score > highestScore) {\n    highestScore = score;\n    bestMatch = page;\n  }\n}\n\n// Default to homepage if no good match\nif (!bestMatch || highestScore < 10) {\n  bestMatch = licianContent[0];\n  highestScore = 5;\n}\n\n// Calculate priority score (0-100)\nconst priorityScore = Math.min(100, Math.round(\n  (brokenLink.sourceDomainAuthority || 50) * 0.5 +  // DA weight: 50%\n  highestScore * 0.3 +                               // Content match: 30%\n  (brokenLink.isNoFollow ? 0 : 20)                   // DoFollow bonus: 20%\n));\n\n// Determine priority tier\nlet priorityTier = 'low';\nif (priorityScore >= 70) priorityTier = 'high';\nelse if (priorityScore >= 50) priorityTier = 'medium';\n\nreturn {\n  json: {\n    ...brokenLink,\n    \n    // Match results\n    suggestedReplacementUrl: bestMatch.url,\n    suggestedReplacementTitle: bestMatch.title,\n    contentMatchScore: highestScore,\n    contentMatchCategory: bestMatch.category,\n    \n    // Priority scoring\n    priorityScore: priorityScore,\n    priorityTier: priorityTier,\n    \n    // Unique ID for deduplication\n    opportunityId: `${brokenLink.sourceDomain}_${brokenLink.targetUrl}`.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 100)\n  }\n};"
+      },
+      "id": "match-lician-content",
+      "name": "Match Lician.com Content",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3140, 400]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Generate outreach email templates for broken link opportunities\n\nconst opportunity = $input.item.json;\n\n// Email templates based on source category\nconst templates = {\n  government: {\n    subject: 'Broken Resource Link on {sourceDomain} - Suggested Replacement',\n    body: `Hello,\n\nI noticed a broken link on your valuable resources page at {sourceUrl}.\n\nThe broken link:\n{targetUrl}\n\nCurrently returns: {errorMessage}\n\nI'd like to suggest Lician.com as a potential replacement. We offer:\n- Free access to financial data for 110,000+ US and EU companies\n- SEC filing analysis and company financials\n- Educational tools for financial research\n\nSpecifically, this page might be helpful:\n{suggestedReplacementUrl}\n\nWe believe this would be a valuable resource for your visitors seeking reliable financial information.\n\nThank you for maintaining such helpful resources.\n\nBest regards`\n  },\n  education: {\n    subject: 'Resource Update Suggestion - {sourceDomain} Finance Links',\n    body: `Dear {sourceDomain} Team,\n\nWhile researching financial education resources, I came across your helpful page:\n{sourceUrl}\n\nI noticed one of the external links appears to be broken:\n{targetUrl}\n(Returns: {errorMessage})\n\nAs someone who values quality educational resources, I wanted to bring this to your attention and suggest a potential replacement.\n\nLician.com provides free access to:\n- Financial statements for 5,000+ US public companies\n- 100,000+ European company profiles\n- AI-powered financial analysis tools\n- Real SEC filing data for academic research\n\nThis specific page may align with the broken link's intent:\n{suggestedReplacementUrl}\n\nOur data is used by researchers and students for financial analysis and could be a valuable addition to your resources.\n\nThank you for your dedication to financial education.\n\nBest regards`\n  },\n  finance_blog: {\n    subject: 'Quick Fix: Broken Link Found on {sourcePageTitle}',\n    body: `Hi there,\n\nJust wanted to give you a heads up - I found a broken link on your article:\n{sourceUrl}\n\nThis link isn't working:\n{targetUrl}\n({errorMessage})\n\nIf you're looking for a replacement resource, Lician.com might be a good fit. We provide free stock analysis tools and financial data that your readers would find useful.\n\nRelevant page: {suggestedReplacementUrl}\n\nEither way, wanted to let you know about the broken link. Keep up the great content!\n\nCheers`\n  },\n  personal_finance: {\n    subject: 'Found a broken link on your site - quick heads up',\n    body: `Hey,\n\nLove your content on {sourceDomain}! Quick note - found a broken link on:\n{sourceUrl}\n\nThis one's returning a 404:\n{targetUrl}\n\nThought you might want to know. If you're looking for a replacement, check out Lician.com - we have free stock screening tools and financial data that could be useful for your readers.\n\n{suggestedReplacementUrl}\n\nNo pressure either way, just wanted to help!\n\nBest`\n  },\n  default: {\n    subject: 'Broken Link Report - {sourceDomain}',\n    body: `Hello,\n\nI came across your page at {sourceUrl} and noticed a broken external link:\n\n{targetUrl}\nStatus: {errorMessage}\n\nAs a suggestion for replacement, Lician.com offers free financial data and stock analysis tools that might serve your readers well:\n{suggestedReplacementUrl}\n\nThank you for your time.\n\nBest regards`\n  }\n};\n\nconst template = templates[opportunity.sourceCategory] || templates.default;\n\n// Replace placeholders\nconst replacements = {\n  '{sourceDomain}': opportunity.sourceDomain,\n  '{sourceUrl}': opportunity.sourceUrl,\n  '{targetUrl}': opportunity.targetUrl,\n  '{errorMessage}': opportunity.errorMessage || 'Page not found',\n  '{suggestedReplacementUrl}': opportunity.suggestedReplacementUrl,\n  '{suggestedReplacementTitle}': opportunity.suggestedReplacementTitle,\n  '{sourcePageTitle}': opportunity.sourcePageTitle || opportunity.sourceDomain,\n  '{anchorText}': opportunity.anchorText || 'the resource'\n};\n\nlet emailSubject = template.subject;\nlet emailBody = template.body;\n\nfor (const [placeholder, value] of Object.entries(replacements)) {\n  emailSubject = emailSubject.split(placeholder).join(value);\n  emailBody = emailBody.split(placeholder).join(value);\n}\n\nreturn {\n  json: {\n    ...opportunity,\n    outreachEmailSubject: emailSubject,\n    outreachEmailBody: emailBody,\n    emailTemplate: opportunity.sourceCategory || 'default'\n  }\n};"
+      },
+      "id": "generate-outreach-email",
+      "name": "Generate Outreach Email",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3360, 400]
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "broken_link_opportunities",
+          "mode": "list",
+          "cachedResultName": "broken_link_opportunities"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "opportunity_id": "={{ $json.opportunityId }}",
+            "source_url": "={{ $json.sourceUrl }}",
+            "source_domain": "={{ $json.sourceDomain }}",
+            "source_category": "={{ $json.sourceCategory }}",
+            "source_domain_authority": "={{ $json.sourceDomainAuthority }}",
+            "source_page_title": "={{ $json.sourcePageTitle }}",
+            "broken_url": "={{ $json.targetUrl }}",
+            "broken_domain": "={{ $json.targetDomain }}",
+            "http_status_code": "={{ $json.httpStatusCode }}",
+            "error_message": "={{ $json.errorMessage }}",
+            "status_category": "={{ $json.statusCategory }}",
+            "anchor_text": "={{ $json.anchorText }}",
+            "is_nofollow": "={{ $json.isNoFollow }}",
+            "suggested_replacement_url": "={{ $json.suggestedReplacementUrl }}",
+            "suggested_replacement_title": "={{ $json.suggestedReplacementTitle }}",
+            "content_match_score": "={{ $json.contentMatchScore }}",
+            "priority_score": "={{ $json.priorityScore }}",
+            "priority_tier": "={{ $json.priorityTier }}",
+            "outreach_email_subject": "={{ $json.outreachEmailSubject }}",
+            "outreach_email_body": "={{ $json.outreachEmailBody }}",
+            "outreach_status": "pending",
+            "discovered_at": "={{ $json.scannedAt }}",
+            "last_checked_at": "={{ $json.checkedAt }}"
+          },
+          "matchingColumns": ["opportunity_id"]
+        },
+        "options": {}
+      },
+      "id": "store-opportunity",
+      "name": "Store in Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [3580, 400],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "broken_link_opportunities",
+          "mode": "list",
+          "cachedResultName": "broken_link_opportunities"
+        },
+        "returnAll": false,
+        "limit": 100,
+        "filterType": "string",
+        "filters": "outreach_status=eq.pending&priority_tier=in.(high,medium)&discovered_at=gte.{{ $now.minus({days: 7}).toISO() }}"
+      },
+      "id": "fetch-weekly-opportunities",
+      "name": "Fetch Week's Opportunities",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [3800, 300],
+      "credentials": {
+        "supabaseApi": {
+          "id": "CONFIGURE_SUPABASE_CREDENTIALS",
+          "name": "Lician Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Generate weekly summary report for Slack\n\nconst opportunities = $input.all().map(item => item.json);\n\nif (opportunities.length === 0) {\n  return [{\n    json: {\n      hasOpportunities: false,\n      slackMessage: ':mag: *Broken Link Finder - Weekly Report*\\n\\nNo new broken link opportunities found this week.\\n\\nTry expanding the target site list or check the workflow logs for any fetch errors.'\n    }\n  }];\n}\n\n// Group by priority\nconst high = opportunities.filter(o => o.priority_tier === 'high');\nconst medium = opportunities.filter(o => o.priority_tier === 'medium');\nconst low = opportunities.filter(o => o.priority_tier === 'low');\n\n// Group by source category\nconst byCategory = {};\nfor (const opp of opportunities) {\n  const cat = opp.source_category || 'other';\n  if (!byCategory[cat]) byCategory[cat] = [];\n  byCategory[cat].push(opp);\n}\n\n// Calculate stats\nconst avgDA = Math.round(opportunities.reduce((sum, o) => sum + (o.source_domain_authority || 0), 0) / opportunities.length);\nconst doFollowCount = opportunities.filter(o => !o.is_nofollow).length;\n\n// Build Slack message with blocks\nlet message = `:link: *Broken Link Finder - Weekly Report*\\n`;\nmessage += `_${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}_\\n\\n`;\n\nmessage += `:bar_chart: *Summary*\\n`;\nmessage += `Total Opportunities: *${opportunities.length}*\\n`;\nmessage += `High Priority: *${high.length}* | Medium: *${medium.length}* | Low: *${low.length}*\\n`;\nmessage += `Average DA: *${avgDA}* | DoFollow: *${doFollowCount}*\\n\\n`;\n\nmessage += `:dart: *Top 5 High-Priority Opportunities*\\n`;\nconst topOpps = [...high, ...medium].slice(0, 5);\nfor (let i = 0; i < topOpps.length; i++) {\n  const opp = topOpps[i];\n  message += `${i + 1}. *${opp.source_domain}* (DA: ${opp.source_domain_authority})\\n`;\n  message += `   Broken: \\`${opp.broken_url.substring(0, 60)}${opp.broken_url.length > 60 ? '...' : ''}\\`\\n`;\n  message += `   Suggest: ${opp.suggested_replacement_url}\\n`;\n  message += `   Score: ${opp.priority_score}/100 | ${opp.is_nofollow ? 'NoFollow' : 'DoFollow'}\\n\\n`;\n}\n\nmessage += `:clipboard: *By Category*\\n`;\nfor (const [cat, opps] of Object.entries(byCategory)) {\n  const catEmoji = {\n    'government': ':classical_building:',\n    'education': ':mortar_board:',\n    'finance_blog': ':newspaper:',\n    'personal_finance': ':money_with_wings:',\n    'research': ':microscope:',\n    'exchange': ':chart_with_upwards_trend:',\n    'fintech': ':robot_face:'\n  }[cat] || ':file_folder:';\n  message += `${catEmoji} ${cat}: ${opps.length} opportunities\\n`;\n}\n\nmessage += `\\n:rocket: *Next Steps*\\n`;\nmessage += `1. Review high-priority opportunities in Supabase\\n`;\nmessage += `2. Customize outreach emails for top targets\\n`;\nmessage += `3. Track outreach status after sending\\n`;\nmessage += `\\n_View all opportunities: <https://supabase.com/dashboard/project/YOUR_PROJECT/editor/table/broken_link_opportunities|Supabase Dashboard>_`;\n\nreturn [{\n  json: {\n    hasOpportunities: true,\n    totalOpportunities: opportunities.length,\n    highPriority: high.length,\n    mediumPriority: medium.length,\n    lowPriority: low.length,\n    averageDA: avgDA,\n    doFollowCount: doFollowCount,\n    slackMessage: message,\n    topOpportunities: topOpps\n  }\n}];"
+      },
+      "id": "generate-slack-report",
+      "name": "Generate Slack Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [4020, 300]
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "CONFIGURE_CHANNEL_ID",
+          "mode": "id"
+        },
+        "text": "={{ $json.slackMessage }}",
+        "otherOptions": {
+          "mrkdwn": true,
+          "unfurl_links": false,
+          "unfurl_media": false
+        }
+      },
+      "id": "send-slack-report",
+      "name": "Send Slack Report",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [4240, 300],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Lician Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Handle errors from the main flow and log them\n\nconst items = $input.all();\nconst errors = [];\nconst successes = [];\n\nfor (const item of items) {\n  if (item.json.error || item.json.fetchSuccess === false) {\n    errors.push({\n      url: item.json.url || item.json.sourceUrl || 'unknown',\n      error: item.json.error || item.json.errorMessage || 'Unknown error',\n      domain: item.json.domain || item.json.sourceDomain || 'unknown'\n    });\n  } else {\n    successes.push(item.json);\n  }\n}\n\nif (errors.length > 0) {\n  console.log(`Broken Link Finder: ${errors.length} errors encountered`);\n  for (const err of errors.slice(0, 10)) {\n    console.log(`  - ${err.domain}: ${err.error}`);\n  }\n}\n\nreturn [{\n  json: {\n    totalProcessed: items.length,\n    successCount: successes.length,\n    errorCount: errors.length,\n    errors: errors.slice(0, 20),\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "error-handler",
+      "name": "Error Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3580, 600]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "has-errors",
+              "leftValue": "={{ $json.errorCount }}",
+              "rightValue": 5,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-error-threshold",
+      "name": "Many Errors?",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [3800, 600]
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "CONFIGURE_CHANNEL_ID",
+          "mode": "id"
+        },
+        "text": "=:warning: *Broken Link Finder - Error Alert*\n\nEncountered {{ $json.errorCount }} errors during scan.\n\nSample errors:\n{{ $json.errors.slice(0, 5).map(e => `- ${e.domain}: ${e.error}`).join('\\n') }}\n\nCheck workflow execution logs for details.",
+        "otherOptions": {
+          "mrkdwn": true
+        }
+      },
+      "id": "send-error-alert",
+      "name": "Send Error Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [4020, 600],
+      "credentials": {
+        "slackApi": {
+          "id": "CONFIGURE_SLACK_CREDENTIALS",
+          "name": "Lician Slack"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "merge-triggers",
+      "name": "Merge Triggers",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [500, 300],
+      "notes": "Combines weekly schedule and manual triggers"
+    },
+    {
+      "parameters": {},
+      "id": "no-op-end",
+      "name": "Done",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [4460, 400]
+    }
+  ],
+  "connections": {
+    "Weekly Schedule (Sunday 3 AM)": {
+      "main": [
+        [
+          {
+            "node": "Merge Triggers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Merge Triggers",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Triggers": {
+      "main": [
+        [
+          {
+            "node": "Define Target Finance Sites",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Define Target Finance Sites": {
+      "main": [
+        [
+          {
+            "node": "Batch Sites (5 at a time)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Batch Sites (5 at a time)": {
+      "main": [
+        [
+          {
+            "node": "Rate Limit (3s delay)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fetch Week's Opportunities",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rate Limit (3s delay)": {
+      "main": [
+        [
+          {
+            "node": "Fetch Resource Page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Resource Page": {
+      "main": [
+        [
+          {
+            "node": "Extract Outbound Links",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Outbound Links": {
+      "main": [
+        [
+          {
+            "node": "Has Outbound Links?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Outbound Links?": {
+      "main": [
+        [
+          {
+            "node": "Flatten Links for Checking",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flatten Links for Checking": {
+      "main": [
+        [
+          {
+            "node": "Batch Links (20 at a time)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Batch Links (20 at a time)": {
+      "main": [
+        [
+          {
+            "node": "Rate Limit (1.5s delay)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rate Limit (1.5s delay)": {
+      "main": [
+        [
+          {
+            "node": "Check Link Status (HEAD)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Link Status (HEAD)": {
+      "main": [
+        [
+          {
+            "node": "Analyze Link Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Link Status": {
+      "main": [
+        [
+          {
+            "node": "Is Broken Link?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Broken Link?": {
+      "main": [
+        [
+          {
+            "node": "Match Lician.com Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Match Lician.com Content": {
+      "main": [
+        [
+          {
+            "node": "Generate Outreach Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Outreach Email": {
+      "main": [
+        [
+          {
+            "node": "Store in Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store in Supabase": {
+      "main": [
+        [
+          {
+            "node": "Batch Links (20 at a time)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Week's Opportunities": {
+      "main": [
+        [
+          {
+            "node": "Generate Slack Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Slack Report": {
+      "main": [
+        [
+          {
+            "node": "Send Slack Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Slack Report": {
+      "main": [
+        [
+          {
+            "node": "Done",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Handler": {
+      "main": [
+        [
+          {
+            "node": "Many Errors?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Many Errors?": {
+      "main": [
+        [
+          {
+            "node": "Send Error Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Error Alert": {
+      "main": [
+        [
+          {
+            "node": "Done",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "SEO",
+      "id": "seo-tag"
+    },
+    {
+      "name": "Link Building",
+      "id": "link-building-tag"
+    },
+    {
+      "name": "Lician.com",
+      "id": "lician-tag"
+    }
+  ],
+  "triggerCount": 2,
+  "updatedAt": "2026-01-16T00:00:00.000Z",
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "lician-n8n-instance"
+  },
+  "id": "broken-link-finder"
+}
