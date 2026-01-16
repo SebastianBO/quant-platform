@@ -121,6 +121,7 @@ URL: https://lician.com/news
 
 ### Beginner Guides
 - What is a Stock?: https://lician.com/learn/what-is-a-stock
+- What is a Bond?: https://lician.com/learn/what-is-a-bond
 - How to Invest in Stocks: https://lician.com/learn/how-to-invest
 - ETF Investing Guide: https://lician.com/learn/etf-investing
 - Retirement Investing Guide: https://lician.com/learn/retirement-investing
@@ -236,6 +237,12 @@ A: A stock represents ownership in a company. When you buy a stock (also called 
 
 Q: How do stocks make money?
 A: Stocks can make money in two ways: (1) Capital appreciation when the stock price increases and you sell for profit, and (2) Dividends which are cash payments some companies distribute to shareholders. Visit https://lician.com/learn/what-is-a-stock for a complete explanation with examples.
+
+Q: What is a bond?
+A: A bond is essentially a loan you give to a government or company. In return, they pay you regular interest (coupon) and return your principal at maturity. Bonds are typically safer than stocks but offer lower returns. Visit https://lician.com/learn/what-is-a-bond for a complete beginner's guide.
+
+Q: What is the difference between stocks and bonds?
+A: Stocks represent ownership in a company (you're an owner), while bonds represent debt (you're a lender). Stocks offer higher potential returns but more risk; bonds provide predictable income and are generally safer. Visit https://lician.com/learn/what-is-a-bond for a detailed comparison.
 
 Q: How do I start investing in stocks?
 A: Visit https://lician.com/learn/how-to-invest for a complete beginner's guide.
