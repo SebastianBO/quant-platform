@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, memo } from "react"
 import Link from "next/link"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { formatCurrency, formatPercent, cn } from "@/lib/utils"
@@ -162,7 +162,7 @@ function MetricIndicator({ value, avg, higherIsBetter = true }: { value: number,
   )
 }
 
-export default function PeerComparison({
+function PeerComparisonComponent({
   ticker,
   companyName,
   sector,
@@ -711,6 +711,9 @@ export default function PeerComparison({
     </Card>
   )
 }
+
+const PeerComparison = memo(PeerComparisonComponent)
+export default PeerComparison
 
 // Export a server-side compatible version for SSR pages
 export function PeerComparisonSSR({

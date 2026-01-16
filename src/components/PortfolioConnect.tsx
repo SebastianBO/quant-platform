@@ -16,9 +16,17 @@ import {
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
+interface PortfolioHolding {
+  symbol?: string
+  name?: string
+  quantity?: number
+  value?: number
+  cost_basis?: number
+}
+
 interface PortfolioConnectProps {
   userId: string
-  onSuccess?: (holdings: any[]) => void
+  onSuccess?: (holdings: PortfolioHolding[]) => void
   compact?: boolean
   className?: string
 }
@@ -33,7 +41,7 @@ export default function PortfolioConnect({
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [connected, setConnected] = useState(false)
-  const [holdings, setHoldings] = useState<any[]>([])
+  const [holdings, setHoldings] = useState<PortfolioHolding[]>([])
 
   // Create link token on mount
   useEffect(() => {

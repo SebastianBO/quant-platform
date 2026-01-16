@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import Stripe from "stripe"
+import { logger } from '@/lib/logger'
 
 // API Access checkout - Basic ($29) and Pro ($99) plans
 
@@ -71,7 +72,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.redirect(new URL("/developers", request.url))
   } catch (error) {
-    console.error("API checkout error:", error)
+    logger.error('API checkout error', { error: error instanceof Error ? error.message : 'Unknown' })
     const errorMsg = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.redirect(new URL(`/developers?error=checkout_failed&details=${encodeURIComponent(errorMsg)}`, request.url))
   }

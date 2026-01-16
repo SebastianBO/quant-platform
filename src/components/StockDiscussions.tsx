@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { createClient } from "@/lib/supabase-browser"
+import type { User } from "@supabase/supabase-js"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { MessageSquare, ThumbsUp, Send, TrendingUp, TrendingDown, Minus, MoreHorizontal } from "lucide-react"
@@ -67,11 +68,23 @@ interface StockDiscussionsProps {
   ticker: string
 }
 
+interface PostQueryResult {
+  id: string
+  content: string
+  ticker_symbol: string
+  sentiment: 'bullish' | 'bearish' | 'neutral' | null
+  created_at: string
+  user_id: string
+  profile: Post['profile']
+  likes_count: Array<{ count: number }>
+  comments_count: Array<{ count: number }>
+}
+
 export default function StockDiscussions({ ticker }: StockDiscussionsProps) {
   const supabase = createClient()
   const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
   const [newPost, setNewPost] = useState("")
   const [sentiment, setSentiment] = useState<'bullish' | 'bearish' | 'neutral' | null>(null)
   const [posting, setPosting] = useState(false)
@@ -102,7 +115,7 @@ export default function StockDiscussions({ ticker }: StockDiscussionsProps) {
         .limit(20)
 
       if (!error && data) {
-        setPosts(data.map((post: any) => ({
+        setPosts(data.map((post: PostQueryResult) => ({
           ...post,
           likes_count: post.likes_count?.[0]?.count || 0,
           comments_count: post.comments_count?.[0]?.count || 0,

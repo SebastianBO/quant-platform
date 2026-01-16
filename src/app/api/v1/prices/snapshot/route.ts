@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Financial Datasets API Compatible Endpoint
 // Matches: https://api.financialdatasets.ai/prices/snapshot
@@ -34,7 +35,7 @@ export async function GET(request: NextRequest) {
       .single()
 
     if (error && error.code !== 'PGRST116') {
-      console.error('Price snapshot query error:', error)
+      logger.error('Price snapshot query error', { error: error.message })
       return NextResponse.json({ error: 'Database error' }, { status: 500 })
     }
 
@@ -56,7 +57,7 @@ export async function GET(request: NextRequest) {
       }
     })
   } catch (error) {
-    console.error('Price snapshot API error:', error)
+    logger.error('Price snapshot API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

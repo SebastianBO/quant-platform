@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 /**
  * Authentication utilities for API routes
@@ -105,7 +106,7 @@ export async function getAuthenticatedUser(request: NextRequest): Promise<{
 
     return null
   } catch (error) {
-    console.error('Auth error:', error)
+    logger.error('Auth error', { error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }
@@ -170,7 +171,7 @@ export function verifyAdminPassword(request: NextRequest): boolean {
 
   // CRITICAL: Require admin password to be set - no fallback
   if (!adminPassword) {
-    console.error('CRITICAL: ADMIN_PASSWORD environment variable is not set')
+    logger.error('CRITICAL: ADMIN_PASSWORD environment variable is not set')
     return false
   }
 
@@ -219,7 +220,7 @@ export function verifyCronSecret(request: NextRequest): boolean {
     if (process.env.NODE_ENV === 'development') {
       return true
     }
-    console.error('CRON_SECRET environment variable is not set')
+    logger.error('CRON_SECRET environment variable is not set')
     return false
   }
 

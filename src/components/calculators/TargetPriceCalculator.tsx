@@ -23,6 +23,14 @@ interface TargetPriceCalculatorProps {
   lowTargetPrice?: number
 }
 
+interface TooltipFormatterPayload {
+  target: number
+}
+
+interface TooltipFormatterProps {
+  payload?: TooltipFormatterPayload
+}
+
 // Format large numbers with B/M/K
 function formatCurrency(num: number): string {
   if (num >= 1e9) return `$${(num / 1e9).toFixed(2)}B`
@@ -367,9 +375,9 @@ export default function TargetPriceCalculator({
                   border: '1px solid hsl(var(--border))',
                   borderRadius: '8px',
                 }}
-                formatter={(value: number, name: string, props: any) => [
+                formatter={(value: number, _name: string, props: TooltipFormatterProps) => [
                   formatCurrency(value),
-                  `At $${props.payload.target.toFixed(2)}`,
+                  `At $${props.payload?.target.toFixed(2) || ''}`,
                 ]}
               />
               <ReferenceLine

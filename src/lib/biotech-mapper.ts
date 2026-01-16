@@ -9,6 +9,7 @@
  */
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Common biotech/pharma suffixes and variations to normalize
 const COMPANY_SUFFIXES = [
@@ -118,7 +119,7 @@ export async function fetchCompanyFromSEC(ticker: string): Promise<{
 
     return null
   } catch (error) {
-    console.error('SEC EDGAR lookup failed:', error)
+    logger.error('SEC EDGAR lookup failed', { error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }
@@ -143,7 +144,7 @@ export async function fetchManufacturerFromFDA(companyName: string): Promise<str
 
     return Array.from(manufacturers)
   } catch (error) {
-    console.error('openFDA lookup failed:', error)
+    logger.error('openFDA lookup failed', { error: error instanceof Error ? error.message : 'Unknown' })
     return []
   }
 }
@@ -175,7 +176,7 @@ export async function fetchSponsorVariations(companyName: string): Promise<strin
 
     return Array.from(sponsors)
   } catch (error) {
-    console.error('ClinicalTrials.gov lookup failed:', error)
+    logger.error('ClinicalTrials.gov lookup failed', { error: error instanceof Error ? error.message : 'Unknown' })
     return []
   }
 }
@@ -288,7 +289,7 @@ export async function batchDiscoverBiotechCompanies(
     const mapping = await autoMapBiotechCompany(ticker, supabase)
     results.set(ticker, mapping)
 
-    console.log(`Mapped ${ticker}: ${mapping.companyName} (confidence: ${mapping.confidence})`)
+    logger.info('Mapped biotech company', { ticker, companyName: mapping.companyName, confidence: mapping.confidence })
   }
 
   return results

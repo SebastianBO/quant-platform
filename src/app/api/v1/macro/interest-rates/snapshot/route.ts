@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Financial Datasets API Compatible Endpoint
 // Matches: https://api.financialdatasets.ai/macro/interest-rates/snapshot
@@ -48,7 +49,7 @@ export async function GET() {
 
     return NextResponse.json({ snapshot })
   } catch (error) {
-    console.error('Interest rates snapshot API error:', error)
+    logger.error('Interest rates snapshot API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

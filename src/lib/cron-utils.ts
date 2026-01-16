@@ -2,6 +2,7 @@
 // Used by all sync-* cron jobs for reliability
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // ============================================================================
 // Supabase Client
@@ -59,7 +60,7 @@ export async function withRetry<T>(
       }
 
       if (attempt < opts.maxRetries) {
-        console.log(`[Retry ${attempt + 1}/${opts.maxRetries}] ${lastError.message} - waiting ${delay}ms`)
+        logger.info('Retry attempt', { attempt: attempt + 1, maxRetries: opts.maxRetries, error: lastError.message, delay })
         await sleep(delay)
         delay = Math.min(delay * opts.backoffMultiplier, opts.maxDelay)
       }
@@ -118,7 +119,7 @@ export async function logCronEvent(entry: CronLogEntry): Promise<void> {
     })
   } catch (err) {
     // Don't let logging failures break the cron job
-    console.error('[CronLog] Failed to log:', err)
+    logger.error('CronLog failed to log', { error: err instanceof Error ? err.message : 'Unknown' })
   }
 }
 

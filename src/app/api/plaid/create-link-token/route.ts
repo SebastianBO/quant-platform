@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Configuration, PlaidApi, PlaidEnvironments, Products, CountryCode } from 'plaid'
+import { logger } from '@/lib/logger'
 
 // Lazy initialization of Plaid client
 function getPlaidClient() {
@@ -71,7 +72,7 @@ export async function POST(request: NextRequest) {
       expiration: linkTokenResponse.data.expiration,
     })
   } catch (error: any) {
-    console.error('Error creating Plaid link token:', error?.response?.data || error.message)
+    logger.error('Error creating Plaid link token', { error: error?.response?.data || error.message })
     return NextResponse.json(
       {
         error: 'Failed to create link token',

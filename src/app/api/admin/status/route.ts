@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() || ''
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim() || ''
@@ -227,7 +228,7 @@ interface SystemStatus {
 export async function GET(request: NextRequest) {
   // Check auth - ADMIN_PASSWORD must be configured
   if (!ADMIN_PASSWORD) {
-    console.error('CRITICAL: ADMIN_PASSWORD environment variable is not set')
+    logger.error('CRITICAL: ADMIN_PASSWORD environment variable is not set')
     return NextResponse.json({ error: 'Server misconfigured' }, { status: 500 })
   }
 

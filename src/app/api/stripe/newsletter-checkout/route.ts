@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import Stripe from "stripe"
+import { logger } from '@/lib/logger'
 
 // Premium Newsletter checkout - Insider Trade Alerts subscription
 
@@ -67,7 +68,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.redirect(new URL("/newsletter", request.url))
   } catch (error) {
-    console.error("Newsletter checkout error:", error)
+    logger.error('Newsletter checkout error', { error: error instanceof Error ? error.message : 'Unknown' })
     const errorMsg = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.redirect(new URL(`/newsletter?error=checkout_failed&details=${encodeURIComponent(errorMsg)}`, request.url))
   }

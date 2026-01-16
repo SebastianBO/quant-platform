@@ -1,12 +1,20 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, memo } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import dynamic from "next/dynamic"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import type {
+  IncomeStatement,
+  BalanceSheet,
+  CashFlow,
+  InsiderTrade,
+  AnalystEstimate,
+  StockInfo,
+} from "@/types/financial"
 // Light components - load immediately
 import StockScreener from "@/components/StockScreener"
 import EarningsCalendar from "@/components/EarningsCalendar"
@@ -91,7 +99,7 @@ interface StockData {
     bid?: number
     ask?: number
   }
-  companyFacts: any
+  companyFacts: StockInfo | null
   metrics: {
     price_to_earnings_ratio: number
     return_on_invested_capital: number
@@ -105,15 +113,15 @@ interface StockData {
     earnings_per_share: number
     free_cash_flow_per_share: number
   }
-  metricsHistory: any[]
-  incomeStatements: any[]
-  balanceSheets: any[]
-  cashFlows: any[]
-  quarterlyIncome: any[]
-  quarterlyBalance: any[]
-  quarterlyCashFlow: any[]
-  insiderTrades: any[]
-  analystEstimates: any[]
+  metricsHistory: Record<string, number | null>[]
+  incomeStatements: IncomeStatement[]
+  balanceSheets: BalanceSheet[]
+  cashFlows: CashFlow[]
+  quarterlyIncome: IncomeStatement[]
+  quarterlyBalance: BalanceSheet[]
+  quarterlyCashFlow: CashFlow[]
+  insiderTrades: InsiderTrade[]
+  analystEstimates: AnalystEstimate[]
   segments: { name: string; revenue: number }[]
   productSegments: { name: string; revenue: number }[]
   geoSegments: { name: string; revenue: number }[]
@@ -125,7 +133,7 @@ interface DashboardContentProps {
   initialTab?: string
 }
 
-export default function DashboardContent({ initialTicker, initialTab }: DashboardContentProps) {
+function DashboardContentComponent({ initialTicker, initialTab }: DashboardContentProps) {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [ticker, setTicker] = useState(initialTicker || "AAPL")
@@ -188,8 +196,8 @@ export default function DashboardContent({ initialTicker, initialTab }: Dashboar
     router.push(`/stock/${newTicker}`)
   }
 
-  const insiderBuys = stockData?.insiderTrades?.filter(t => t.transaction_shares > 0)?.length || 0
-  const insiderSells = stockData?.insiderTrades?.filter(t => t.transaction_shares < 0)?.length || 0
+  const insiderBuys = stockData?.insiderTrades?.filter(t => (t.transaction_shares ?? t.shares ?? 0) > 0)?.length || 0
+  const insiderSells = stockData?.insiderTrades?.filter(t => (t.transaction_shares ?? t.shares ?? 0) < 0)?.length || 0
 
   // Check if we're viewing a stock (not on top-level navigation tabs)
   const isViewingStock = !["myportfolios", "earnings", "screener", "market", "watchlist", "advisor"].includes(activeTab)
@@ -849,3 +857,5 @@ function LoadingState() {
     </div>
   )
 }
+
+export default memo(DashboardContentComponent)

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo, memo } from "react"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { formatCurrency } from "@/lib/utils"
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid, Cell, LineChart, Line, Area, AreaChart } from "recharts"
@@ -20,7 +20,23 @@ interface InsiderTrade {
   transaction_type?: string
 }
 
-export default function InsiderTrading({ ticker }: InsiderTradingProps) {
+interface MonthlyData {
+  month: string
+  buys: number
+  sells: number
+  buyCount: number
+  sellCount: number
+}
+
+interface InsiderActivity {
+  name: string
+  title: string
+  buys: number
+  sells: number
+  totalShares: number
+}
+
+function InsiderTradingComponent({ ticker }: InsiderTradingProps) {
   const [trades, setTrades] = useState<InsiderTrade[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -50,65 +66,79 @@ export default function InsiderTrading({ ticker }: InsiderTradingProps) {
     )
   }
 
-  // Calculate statistics
-  const buys = trades.filter(t => t.transaction_shares > 0)
-  const sells = trades.filter(t => t.transaction_shares < 0)
-  const totalBuyShares = buys.reduce((sum, t) => sum + t.transaction_shares, 0)
-  const totalSellShares = Math.abs(sells.reduce((sum, t) => sum + t.transaction_shares, 0))
-  const totalBuyValue = buys.reduce((sum, t) => sum + (t.transaction_shares * (t.transaction_price_per_share || 0)), 0)
-  const totalSellValue = Math.abs(sells.reduce((sum, t) => sum + (t.transaction_shares * (t.transaction_price_per_share || 0)), 0))
+  // Calculate statistics - memoized for performance
+  const { buys, sells, totalBuyShares, totalSellShares, totalBuyValue, totalSellValue } = useMemo(() => {
+    const buysFiltered = trades.filter(t => t.transaction_shares > 0)
+    const sellsFiltered = trades.filter(t => t.transaction_shares < 0)
+    return {
+      buys: buysFiltered,
+      sells: sellsFiltered,
+      totalBuyShares: buysFiltered.reduce((sum, t) => sum + t.transaction_shares, 0),
+      totalSellShares: Math.abs(sellsFiltered.reduce((sum, t) => sum + t.transaction_shares, 0)),
+      totalBuyValue: buysFiltered.reduce((sum, t) => sum + (t.transaction_shares * (t.transaction_price_per_share || 0)), 0),
+      totalSellValue: Math.abs(sellsFiltered.reduce((sum, t) => sum + (t.transaction_shares * (t.transaction_price_per_share || 0)), 0)),
+    }
+  }, [trades])
 
-  // Net sentiment
-  const netShares = totalBuyShares - totalSellShares
-  const sentiment = buys.length > sells.length ? 'BULLISH' : buys.length < sells.length ? 'BEARISH' : 'NEUTRAL'
-  const sentimentColor = sentiment === 'BULLISH' ? 'text-emerald-500' : sentiment === 'BEARISH' ? 'text-red-500' : 'text-yellow-500'
+  // Net sentiment - memoized
+  const { netShares, sentiment, sentimentColor, uniqueInsiders } = useMemo(() => {
+    const net = totalBuyShares - totalSellShares
+    const sent = buys.length > sells.length ? 'BULLISH' : buys.length < sells.length ? 'BEARISH' : 'NEUTRAL'
+    return {
+      netShares: net,
+      sentiment: sent,
+      sentimentColor: sent === 'BULLISH' ? 'text-emerald-500' : sent === 'BEARISH' ? 'text-red-500' : 'text-yellow-500',
+      uniqueInsiders: new Set(trades.map(t => t.name)).size,
+    }
+  }, [buys.length, sells.length, totalBuyShares, totalSellShares, trades])
 
-  // Unique insiders
-  const uniqueInsiders = new Set(trades.map(t => t.name)).size
+  // Monthly breakdown for chart - memoized
+  const monthlyData = useMemo(() => {
+    return trades.reduce((acc: MonthlyData[], trade) => {
+      const date = new Date(trade.transaction_date)
+      const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
+      const existing = acc.find(d => d.month === monthKey)
 
-  // Monthly breakdown for chart
-  const monthlyData = trades.reduce((acc: any[], trade) => {
-    const date = new Date(trade.transaction_date)
-    const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
-    const existing = acc.find(d => d.month === monthKey)
-
-    if (existing) {
-      if (trade.transaction_shares > 0) {
-        existing.buys += trade.transaction_shares
-        existing.buyCount++
+      if (existing) {
+        if (trade.transaction_shares > 0) {
+          existing.buys += trade.transaction_shares
+          existing.buyCount++
+        } else {
+          existing.sells += Math.abs(trade.transaction_shares)
+          existing.sellCount++
+        }
       } else {
-        existing.sells += Math.abs(trade.transaction_shares)
-        existing.sellCount++
+        acc.push({
+          month: monthKey,
+          buys: trade.transaction_shares > 0 ? trade.transaction_shares : 0,
+          sells: trade.transaction_shares < 0 ? Math.abs(trade.transaction_shares) : 0,
+          buyCount: trade.transaction_shares > 0 ? 1 : 0,
+          sellCount: trade.transaction_shares < 0 ? 1 : 0,
+        })
       }
-    } else {
-      acc.push({
-        month: monthKey,
-        buys: trade.transaction_shares > 0 ? trade.transaction_shares : 0,
-        sells: trade.transaction_shares < 0 ? Math.abs(trade.transaction_shares) : 0,
-        buyCount: trade.transaction_shares > 0 ? 1 : 0,
-        sellCount: trade.transaction_shares < 0 ? 1 : 0,
-      })
-    }
-    return acc
-  }, []).sort((a, b) => a.month.localeCompare(b.month)).slice(-6)
+      return acc
+    }, []).sort((a, b) => a.month.localeCompare(b.month)).slice(-6)
+  }, [trades])
 
-  // Top insiders by activity
-  const insiderActivity = trades.reduce((acc: any, trade) => {
-    if (!acc[trade.name]) {
-      acc[trade.name] = { name: trade.name, title: trade.title, buys: 0, sells: 0, totalShares: 0 }
-    }
-    if (trade.transaction_shares > 0) {
-      acc[trade.name].buys += trade.transaction_shares
-    } else {
-      acc[trade.name].sells += Math.abs(trade.transaction_shares)
-    }
-    acc[trade.name].totalShares += Math.abs(trade.transaction_shares)
-    return acc
-  }, {})
+  // Top insiders by activity - memoized
+  const topInsiders = useMemo(() => {
+    const insiderActivity = trades.reduce((acc: Record<string, InsiderActivity>, trade) => {
+      if (!acc[trade.name]) {
+        acc[trade.name] = { name: trade.name, title: trade.title, buys: 0, sells: 0, totalShares: 0 }
+      }
+      if (trade.transaction_shares > 0) {
+        acc[trade.name].buys += trade.transaction_shares
+      } else {
+        acc[trade.name].sells += Math.abs(trade.transaction_shares)
+      }
+      acc[trade.name].totalShares += Math.abs(trade.transaction_shares)
+      return acc
+    }, {})
 
-  const topInsiders = Object.values(insiderActivity)
-    .sort((a: any, b: any) => b.totalShares - a.totalShares)
-    .slice(0, 5) as any[]
+    return Object.values(insiderActivity)
+      .sort((a, b) => b.totalShares - a.totalShares)
+      .slice(0, 5)
+  }, [trades])
 
   return (
     <div className="space-y-6">
@@ -362,3 +392,6 @@ export default function InsiderTrading({ ticker }: InsiderTradingProps) {
     </div>
   )
 }
+
+// Memoize to prevent unnecessary re-renders when parent components update
+export default memo(InsiderTradingComponent)

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, memo } from "react"
 import { cn } from "@/lib/utils"
 import { ScoreBreakdown, type ScoreDimensions } from "./ScoreBreakdown"
 
@@ -349,7 +349,7 @@ export default function ScoreBadge({
 /**
  * Inline score display for tables and lists
  */
-export function InlineScore({
+export const InlineScore = memo(function InlineScore({
   score,
   className
 }: {
@@ -372,12 +372,12 @@ export function InlineScore({
       <span className="text-zinc-500 text-sm">/10</span>
     </span>
   )
-}
+})
 
 /**
  * Score change indicator
  */
-export function ScoreChange({
+export const ScoreChange = memo(function ScoreChange({
   current,
   previous,
   className
@@ -419,4 +419,4 @@ export function ScoreChange({
       )}
     </span>
   )
-}
+})

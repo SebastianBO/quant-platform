@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 const EODHD_API_KEY = process.env.EODHD_API_KEY || ""
 
@@ -49,7 +50,7 @@ async function fetchQuote(symbol: string): Promise<any> {
     if (!response.ok) return null
     return response.json()
   } catch (error) {
-    console.error(`Error fetching ${symbol}:`, error)
+    logger.error('Error fetching market quote', { symbol, error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }
@@ -157,7 +158,7 @@ export async function GET(request: NextRequest) {
       indices: quotes
     })
   } catch (error) {
-    console.error('Market overview API error:', error)
+    logger.error('Market overview API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({ error: 'Failed to fetch market data' }, { status: 500 })
   }
 }

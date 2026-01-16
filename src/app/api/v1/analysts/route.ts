@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Analysts Leaderboard API - TipRanks-style analyst rankings
 // Based on our own tracked performance data
@@ -46,7 +47,7 @@ export async function GET(request: NextRequest) {
     const { data, error } = await query
 
     if (error) {
-      console.error('Analysts query error:', error)
+      logger.error('Analysts query error', { error: error.message })
       return NextResponse.json({ error: 'Database error' }, { status: 500 })
     }
 
@@ -90,7 +91,7 @@ export async function GET(request: NextRequest) {
       }
     })
   } catch (error) {
-    console.error('Analysts API error:', error)
+    logger.error('Analysts API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

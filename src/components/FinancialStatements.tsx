@@ -1,10 +1,16 @@
 "use client"
 
-import { useState } from "react"
+import { useState, memo } from "react"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { formatCurrency, formatPercent } from "@/lib/utils"
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis } from "recharts"
 import { DynamicSourceBadge } from "@/components/DataSourceBadge"
+import type {
+  IncomeStatement,
+  BalanceSheet,
+  CashFlow,
+  StockInfo,
+} from "@/types/financial"
 
 interface DataSources {
   incomeStatements?: string
@@ -18,16 +24,32 @@ interface DataSources {
 
 type SourceOverride = 'auto' | 'eodhd' | 'financialdatasets'
 
+interface RowConfig {
+  key: string
+  label: string
+  highlight?: boolean
+  isPerShare?: boolean
+  isPercent?: boolean
+  isRatio?: boolean
+  isCurrency?: boolean
+}
+
+interface MetricsHistoryRecord {
+  fiscal_period?: string
+  report_period?: string
+  [key: string]: number | string | null | undefined
+}
+
 interface FinancialStatementsProps {
   ticker: string
-  companyFacts: any
-  incomeStatements: any[]
-  balanceSheets: any[]
-  cashFlows: any[]
-  quarterlyIncome: any[]
-  quarterlyBalance: any[]
-  quarterlyCashFlow: any[]
-  metricsHistory: any[]
+  companyFacts: StockInfo | null
+  incomeStatements: IncomeStatement[]
+  balanceSheets: BalanceSheet[]
+  cashFlows: CashFlow[]
+  quarterlyIncome: IncomeStatement[]
+  quarterlyBalance: BalanceSheet[]
+  quarterlyCashFlow: CashFlow[]
+  metricsHistory: MetricsHistoryRecord[]
   productSegments: { name: string; revenue: number }[]
   geoSegments: { name: string; revenue: number }[]
   dataSources?: DataSources
@@ -40,7 +62,7 @@ type PeriodType = 'annual' | 'quarterly'
 
 const COLORS = ['#10b981', '#6366f1', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899', '#84cc16']
 
-export default function FinancialStatements({
+function FinancialStatementsComponent({
   ticker,
   companyFacts,
   incomeStatements,
@@ -215,13 +237,15 @@ export default function FinancialStatements({
   const exportToCSV = () => {
     if (!data || data.length === 0) return
 
-    const headers = ['Metric', ...data.map((d: any) => d.fiscal_period || d.report_period || 'Period')]
+    // Cast data to array of records for dynamic key access
+    const dataRecords = data as Array<Record<string, unknown>>
+    const headers = ['Metric', ...dataRecords.map((d) => String(d.fiscal_period || d.report_period || 'Period'))]
     const csvRows = [headers.join(',')]
 
-    rows.forEach((row: any) => {
+    rows.forEach((row: RowConfig) => {
       const values = [
         row.label,
-        ...data.map((d: any) => {
+        ...dataRecords.map((d) => {
           const val = d[row.key]
           return typeof val === 'number' ? val : ''
         })
@@ -239,13 +263,13 @@ export default function FinancialStatements({
     window.URL.revokeObjectURL(url)
   }
 
-  const formatValue = (value: any, row: any): string => {
+  const formatValue = (value: unknown, row: RowConfig): string => {
     if (value === null || value === undefined) return '-'
-    if (row.isPerShare) return `$${value.toFixed(2)}`
-    if (row.isPercent) return `${(value * 100).toFixed(1)}%`
-    if (row.isRatio) return value.toFixed(2)
-    if (row.isCurrency) return formatCurrency(value)
     if (typeof value === 'number') {
+      if (row.isPerShare) return `$${value.toFixed(2)}`
+      if (row.isPercent) return `${(value * 100).toFixed(1)}%`
+      if (row.isRatio) return value.toFixed(2)
+      if (row.isCurrency) return formatCurrency(value)
       if (Math.abs(value) >= 1e9) return formatCurrency(value)
       if (Math.abs(value) >= 1e6) return `${(value / 1e6).toFixed(1)}M`
       return value.toLocaleString()
@@ -464,24 +488,25 @@ export default function FinancialStatements({
                 <thead>
                   <tr className="border-b border-border">
                     <th className="p-2 sm:p-3 text-left sticky left-0 bg-card min-w-36 sm:min-w-56 z-10">{title}</th>
-                    {data?.map((period: any, i: number) => (
+                    {(data as Array<Record<string, unknown>>)?.map((period, i: number) => (
                       <th key={i} className="p-2 sm:p-3 text-right min-w-24 sm:min-w-28 whitespace-nowrap">
-                        {period.fiscal_period || period.report_period || `Period ${i + 1}`}
+                        {String(period.fiscal_period || period.report_period || `Period ${i + 1}`)}
                       </th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {rows.map((row: any, i: number) => {
+                  {rows.map((row: RowConfig, i: number) => {
+                    const dataRecords = data as Array<Record<string, unknown>>
                     return (
                       <tr key={i} className={`border-b border-border/50 ${row.highlight ? 'bg-secondary/30' : ''}`}>
                         <td className={`p-2 sm:p-3 sticky left-0 bg-card z-10 ${row.highlight ? 'font-bold text-emerald-500' : ''}`}>
                           {row.label}
                         </td>
-                        {data?.map((period: any, j: number) => {
-                          const value = period[row.key]
-                          const prevValue = data[j + 1]?.[row.key]
-                          const yoy = j < data.length - 1 && !row.isRatio && !row.isPercent ? getYoYChange(value, prevValue) : null
+                        {dataRecords?.map((period, j: number) => {
+                          const value = period[row.key] as number | undefined
+                          const prevValue = dataRecords[j + 1]?.[row.key] as number | undefined
+                          const yoy = j < dataRecords.length - 1 && !row.isRatio && !row.isPercent && value !== undefined && prevValue !== undefined ? getYoYChange(value, prevValue) : null
 
                           return (
                             <td key={j} className={`p-2 sm:p-3 text-right ${row.highlight ? 'font-bold' : ''}`}>
@@ -522,3 +547,6 @@ export default function FinancialStatements({
     </Card>
   )
 }
+
+// Memoize to prevent unnecessary re-renders when parent components update
+export default memo(FinancialStatementsComponent)

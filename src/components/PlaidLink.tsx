@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useCallback, useEffect } from 'react'
-import { usePlaidLink } from 'react-plaid-link'
+import { usePlaidLink, PlaidLinkOnSuccessMetadata } from 'react-plaid-link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Building2, Link2, CheckCircle, Loader2, AlertCircle, RefreshCw } from 'lucide-react'
@@ -48,7 +48,7 @@ export default function PlaidLink({ userId, onSuccess, onError }: PlaidLinkProps
     }
   }, [userId])
 
-  const handleOnSuccess = useCallback(async (publicToken: string, metadata: any) => {
+  const handleOnSuccess = useCallback(async (publicToken: string, metadata: PlaidLinkOnSuccessMetadata) => {
     setLoading(true)
     setError(null)
 
@@ -93,9 +93,10 @@ export default function PlaidLink({ userId, onSuccess, onError }: PlaidLinkProps
       }
 
       onSuccess?.(exchangeData.itemId)
-    } catch (err: any) {
-      setError(err.message || 'Failed to connect account')
-      onError?.(err.message)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to connect account'
+      setError(message)
+      onError?.(message)
     } finally {
       setLoading(false)
     }
@@ -130,8 +131,9 @@ export default function PlaidLink({ userId, onSuccess, onError }: PlaidLinkProps
       }
 
       // Success - investments are synced
-    } catch (err: any) {
-      setError(err.message || 'Failed to sync investments')
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to sync investments'
+      setError(message)
     } finally {
       setSyncing(false)
     }

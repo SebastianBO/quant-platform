@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, memo } from "react"
 import { TrendingUp, TrendingDown, Flame, Activity, Zap } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -134,7 +134,7 @@ export default function TrendingTickers({ onSelectTicker }: TrendingTickersProps
   )
 }
 
-function MoverCard({
+const MoverCard = memo(function MoverCard({
   mover,
   rank,
   isGainer,
@@ -220,4 +220,4 @@ function MoverCard({
       )}
     </button>
   )
-}
+})

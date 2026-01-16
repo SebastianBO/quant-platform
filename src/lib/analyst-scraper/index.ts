@@ -2,6 +2,7 @@
 // Our own TipRanks-style data collection
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // RSS feed sources for analyst ratings news - comprehensive coverage
 export const NEWS_SOURCES = [
@@ -546,7 +547,7 @@ export async function fetchRSSFeed(source: typeof NEWS_SOURCES[0]): Promise<News
     })
 
     if (!response.ok) {
-      console.error(`Failed to fetch ${source.name}: ${response.status}`)
+      logger.error('Failed to fetch RSS feed', { source: source.name, status: response.status })
       return []
     }
 
@@ -559,7 +560,7 @@ export async function fetchRSSFeed(source: typeof NEWS_SOURCES[0]): Promise<News
       sourceType: source.type
     }))
   } catch (error) {
-    console.error(`Error fetching ${source.name}:`, error)
+    logger.error('Error fetching RSS feed', { source: source.name, error: error instanceof Error ? error.message : 'Unknown' })
     return []
   }
 }
@@ -634,13 +635,13 @@ export async function storeRating(
       })
 
     if (error) {
-      console.error('Error storing rating:', error)
+      logger.error('Error storing rating', { error })
       return false
     }
 
     return true
   } catch (error) {
-    console.error('Error in storeRating:', error)
+    logger.error('Error in storeRating', { error: error instanceof Error ? error.message : 'Unknown' })
     return false
   }
 }

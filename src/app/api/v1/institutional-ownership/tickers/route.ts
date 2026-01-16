@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Financial Datasets API Compatible Endpoint
 // Matches: https://api.financialdatasets.ai/institutional-ownership/tickers/
@@ -62,7 +63,7 @@ export async function GET(request: NextRequest) {
       tickers: data.map(d => d.ticker)
     })
   } catch (error) {
-    console.error('Tickers list API error:', error)
+    logger.error('Tickers list API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       tickers: getDefaultTickers(search, limit)
     })

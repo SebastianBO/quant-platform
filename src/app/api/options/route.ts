@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 const EODHD_API_KEY = process.env.EODHD_API_KEY || ""
 
@@ -213,7 +214,7 @@ export async function GET(request: NextRequest) {
       }
     })
   } catch (error) {
-    console.error('Options API error:', error)
+    logger.error('Options API error', { error: error instanceof Error ? error.message : 'Unknown' })
 
     // Return appropriate error format based on requested format
     if (format === 'full' || !format) {

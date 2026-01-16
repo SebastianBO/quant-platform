@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 const SEC_USER_AGENT = 'Lician contact@lician.com'
 
@@ -291,7 +292,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(response)
 
   } catch (error) {
-    console.error('Institutional flow error:', error)
+    logger.error('Institutional flow error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({ error: 'Failed to fetch flow data' }, { status: 500 })
   }
 }

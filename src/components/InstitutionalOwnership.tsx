@@ -27,6 +27,16 @@ interface Holder {
   reportDate: string
 }
 
+interface RawHoldingResponse {
+  ticker?: string
+  cusip?: string
+  issuer?: string
+  class?: string
+  shares: number
+  value: number
+  portfolioPercent?: number
+}
+
 interface ConcentrationData {
   hhi: number
   hhiNormalized: number
@@ -172,7 +182,7 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
               newPositions: 0,
               reportDate: result.filing?.reportDate || ''
             },
-            holdings: result.holdings.map((h: any) => ({
+            holdings: result.holdings.map((h: RawHoldingResponse) => ({
               ticker: h.ticker || h.cusip,
               cusip: h.cusip,
               issuer: h.issuer,

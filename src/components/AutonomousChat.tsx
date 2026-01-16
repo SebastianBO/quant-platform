@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect, useCallback } from "react"
+import { useState, useRef, useEffect, useCallback, memo } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -257,11 +257,12 @@ function ChatMessage({
             size="sm"
             className="h-8 px-2 text-muted-foreground hover:text-foreground"
             onClick={copyToClipboard}
+            aria-label={copied ? "Copied to clipboard" : "Copy message"}
           >
             {copied ? (
-              <Check className="w-4 h-4" />
+              <Check className="w-4 h-4" aria-hidden="true" />
             ) : (
-              <Copy className="w-4 h-4" />
+              <Copy className="w-4 h-4" aria-hidden="true" />
             )}
           </Button>
         </div>
@@ -379,8 +380,9 @@ function EmptyState({
                 <button
                   onClick={onFileRemove}
                   className="p-0.5 hover:bg-secondary rounded transition-colors"
+                  aria-label="Remove attached file"
                 >
-                  <X className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground" />
+                  <X className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground" aria-hidden="true" />
                 </button>
               </div>
             </div>
@@ -411,15 +413,16 @@ function EmptyState({
               <button
                 onClick={() => fileInputRef.current?.click()}
                 className="p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors"
-                title="Attach PDF or document"
+                aria-label="Attach PDF or document"
               >
-                <Paperclip className="w-5 h-5" />
+                <Paperclip className="w-5 h-5" aria-hidden="true" />
               </button>
             </div>
 
             <button
               onClick={onSubmit}
               disabled={isLoading || (!inputValue.trim() && !attachedFile)}
+              aria-label={isLoading ? "Sending message..." : "Send message"}
               className={cn(
                 "w-9 h-9 rounded-xl flex items-center justify-center transition-colors",
                 inputValue.trim() || attachedFile
@@ -428,9 +431,9 @@ function EmptyState({
               )}
             >
               {isLoading ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
+                <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
               ) : (
-                <Sparkles className="w-5 h-5" />
+                <Sparkles className="w-5 h-5" aria-hidden="true" />
               )}
             </button>
           </div>
@@ -471,7 +474,7 @@ function EmptyState({
   )
 }
 
-export default function AutonomousChat() {
+function AutonomousChatComponent() {
   const router = useRouter()
   const [messages, setMessages] = useState<Message[]>([])
   const [inputValue, setInputValue] = useState("")
@@ -786,8 +789,9 @@ export default function AutonomousChat() {
                   <button
                     onClick={() => setAttachedFile(null)}
                     className="p-0.5 hover:bg-secondary rounded transition-colors"
+                    aria-label="Remove attached file"
                   >
-                    <X className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground" />
+                    <X className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground" aria-hidden="true" />
                   </button>
                 </div>
               </div>
@@ -808,21 +812,22 @@ export default function AutonomousChat() {
               <button
                 onClick={() => fileInputRef.current?.click()}
                 className="absolute left-3 bottom-3 p-1.5 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors"
-                title="Attach PDF or document"
+                aria-label="Attach PDF or document"
               >
-                <Paperclip className="w-5 h-5" />
+                <Paperclip className="w-5 h-5" aria-hidden="true" />
               </button>
               <Button
                 type="button"
                 size="icon"
                 disabled={isLoading || (!inputValue.trim() && !attachedFile)}
                 onClick={() => handleSubmit()}
+                aria-label={isLoading ? "Sending message..." : "Send message"}
                 className="absolute right-2 bottom-2 h-9 w-9 rounded-lg bg-green-600 hover:bg-green-500"
               >
                 {isLoading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                 ) : (
-                  <Sparkles className="h-4 w-4" />
+                  <Sparkles className="h-4 w-4" aria-hidden="true" />
                 )}
               </Button>
             </div>
@@ -871,3 +876,5 @@ export default function AutonomousChat() {
     </div>
   )
 }
+
+export default memo(AutonomousChatComponent)

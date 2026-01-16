@@ -30,6 +30,11 @@ interface ChartDataPoint {
   spyNormalized: number
 }
 
+interface SpyHistoryDay {
+  date: string
+  close: number
+}
+
 const TIME_PERIODS = [
   { label: '1M', days: 30 },
   { label: '3M', days: 90 },
@@ -95,7 +100,7 @@ export default function PortfolioPerformanceChart({
         const spyEndPrice = spyHistory[spyHistory.length - 1]?.close || spyStartPrice
 
         // Normalize both to start at 100
-        const data: ChartDataPoint[] = spyHistory.map((day: any, index: number) => {
+        const data: ChartDataPoint[] = spyHistory.map((day: SpyHistoryDay, index: number) => {
           const spyNormalized = (day.close / spyStartPrice) * 100
 
           // Interpolate portfolio value (simplified - in production use real history)

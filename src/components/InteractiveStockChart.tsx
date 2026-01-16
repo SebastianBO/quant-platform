@@ -48,6 +48,21 @@ interface ChartData {
   analystRatings: AnalystRating[]
 }
 
+interface RatingPointData extends AnalystRating {
+  x: number
+  y: number
+}
+
+interface ChartTooltipPayload {
+  payload: ChartDataPoint & { index: number; displayDate: string }
+}
+
+interface ChartTooltipProps {
+  active?: boolean
+  payload?: ChartTooltipPayload[]
+  label?: string
+}
+
 const TIME_PERIODS = [
   { id: '1D', label: '1D' },
   { id: '5D', label: '5D' },
@@ -73,7 +88,7 @@ export default function InteractiveStockChart({
   const [period, setPeriod] = useState(initialPeriod)
   const [showKeyEvents, setShowKeyEvents] = useState(true)
   const [showVolume, setShowVolume] = useState(true)
-  const [hoveredPoint, setHoveredPoint] = useState<any>(null)
+  const [hoveredPoint, setHoveredPoint] = useState<ChartDataPoint | null>(null)
 
   useEffect(() => {
     fetchChartData()
@@ -118,7 +133,7 @@ export default function InteractiveStockChart({
           y: chartPoint.close
         }
       })
-      .filter(Boolean)
+      .filter((point): point is NonNullable<typeof point> => point !== null)
   }, [data, chartData, showKeyEvents])
 
   function formatDate(dateStr: string, period: string): string {
@@ -132,7 +147,7 @@ export default function InteractiveStockChart({
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' })
   }
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload }: ChartTooltipProps) => {
     if (!active || !payload?.[0]) return null
 
     const point = payload[0].payload
@@ -277,7 +292,7 @@ export default function InteractiveStockChart({
                 />
 
                 {/* Analyst Rating Points */}
-                {showKeyEvents && ratingPoints.map((point: any, i) => (
+                {showKeyEvents && ratingPoints.map((point, i) => (
                   <ReferenceDot
                     key={i}
                     x={point.x}

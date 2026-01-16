@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 const EODHD_API_KEY = process.env.EODHD_API_KEY || ""
 
@@ -20,7 +21,7 @@ export async function GET(request: NextRequest) {
     const data = await response.json()
     return NextResponse.json(data)
   } catch (error) {
-    console.error('Earnings API error:', error)
+    logger.error('Earnings API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({ error: 'Failed to fetch earnings data' }, { status: 500 })
   }
 }

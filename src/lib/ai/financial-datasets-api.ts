@@ -4,12 +4,14 @@
  * Used as fallback when Supabase data is not available
  */
 
+import { logger } from '@/lib/logger'
+
 const BASE_URL = 'https://api.financialdatasets.ai'
 
 async function fetchFromAPI<T>(endpoint: string, params: Record<string, string | number | undefined> = {}): Promise<T | null> {
   const apiKey = process.env.FINANCIAL_DATASETS_API_KEY
   if (!apiKey) {
-    console.warn('FINANCIAL_DATASETS_API_KEY not configured')
+    logger.warn('FINANCIAL_DATASETS_API_KEY not configured')
     return null
   }
 
@@ -31,13 +33,13 @@ async function fetchFromAPI<T>(endpoint: string, params: Record<string, string |
     })
 
     if (!response.ok) {
-      console.error(`API error: ${response.status} ${response.statusText}`)
+      logger.error('Financial Datasets API error', { status: response.status, statusText: response.statusText })
       return null
     }
 
     return response.json()
   } catch (error) {
-    console.error('Financial Datasets API error:', error)
+    logger.error('Financial Datasets API fetch error', { error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }

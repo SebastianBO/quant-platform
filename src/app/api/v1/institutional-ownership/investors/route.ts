@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Financial Datasets API Compatible Endpoint
 // Matches: https://api.financialdatasets.ai/institutional-ownership/investors/
@@ -51,7 +52,7 @@ export async function GET(request: NextRequest) {
       investors: data?.map(d => d.normalized_name) || []
     })
   } catch (error) {
-    console.error('Investors list API error:', error)
+    logger.error('Investors list API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       investors: getDefaultInvestors(search, limit)
     })

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, memo } from "react"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
@@ -46,7 +46,22 @@ export interface CatalystEvent {
   importance: 'high' | 'medium' | 'low'
   source?: string
   sourceUrl?: string
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
+}
+
+// API response type for biotech catalysts
+interface BiotechCatalystApiResponse {
+  id?: string
+  catalystType?: string
+  expectedDate?: string
+  title?: string
+  drugName?: string
+  indication?: string
+  description?: string
+  datePrecision?: 'EXACT' | 'MONTH' | 'QUARTER'
+  importance?: 'HIGH' | 'MEDIUM' | 'LOW'
+  sourceType?: string
+  sourceId?: string
 }
 
 interface UpcomingCatalystsProps {
@@ -414,9 +429,9 @@ export function UpcomingCatalysts({
         const data = await response.json()
         if (data.catalysts && data.catalysts.length > 0) {
           const biotechCatalystEvents: CatalystEvent[] = data.catalysts
-            .filter((c: any) => c.expectedDate)
-            .map((c: any) => ({
-              id: c.id || generateEventId(c.catalystType?.toLowerCase() || 'regulatory', c.expectedDate, c.title),
+            .filter((c: BiotechCatalystApiResponse) => c.expectedDate)
+            .map((c: BiotechCatalystApiResponse) => ({
+              id: c.id || generateEventId(c.catalystType?.toLowerCase() || 'regulatory', c.expectedDate!, c.title || 'catalyst'),
               type: c.catalystType === 'FDA_DECISION' || c.catalystType === 'PDUFA_DATE'
                 ? 'fda_decision'
                 : c.catalystType === 'TRIAL_RESULT' || c.catalystType === 'DATA_READOUT'
@@ -426,7 +441,7 @@ export function UpcomingCatalysts({
               description: c.drugName
                 ? `${c.drugName}${c.indication ? ` for ${c.indication}` : ''}`
                 : c.description,
-              date: c.expectedDate,
+              date: c.expectedDate!,
               dateLabel: c.datePrecision === 'MONTH' ? 'Estimated Month' :
                         c.datePrecision === 'QUARTER' ? 'Estimated Quarter' : undefined,
               isConfirmed: c.datePrecision === 'EXACT',
@@ -626,4 +641,4 @@ export function generateEventSchemas(
     }))
 }
 
-export default UpcomingCatalysts
+export default memo(UpcomingCatalysts)

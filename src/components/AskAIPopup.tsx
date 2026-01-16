@@ -14,11 +14,18 @@ import {
 import { MessageCircle, Send, X, Sparkles, History, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { createClient } from "@/lib/supabase-browser"
+import type { User } from "@supabase/supabase-js"
 
 interface Message {
   role: "user" | "assistant"
   content: string
   timestamp: Date
+}
+
+interface StoredMessage {
+  role: "user" | "assistant"
+  content: string
+  timestamp: string
 }
 
 interface AskAIPopupProps {
@@ -34,7 +41,7 @@ export function AskAIPopup({ ticker, companyName }: AskAIPopupProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [queryCount, setQueryCount] = useState(0)
   const [showAuthPrompt, setShowAuthPrompt] = useState(false)
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
   const supabase = createClient()
@@ -58,7 +65,7 @@ export function AskAIPopup({ ticker, companyName }: AskAIPopupProps) {
     if (storedHistory) {
       try {
         const history = JSON.parse(storedHistory)
-        setMessages(history.map((m: any) => ({
+        setMessages(history.map((m: StoredMessage) => ({
           ...m,
           timestamp: new Date(m.timestamp)
         })))
@@ -324,6 +331,7 @@ export function AskAIPopup({ ticker, companyName }: AskAIPopupProps) {
                 onClick={handleSubmit}
                 disabled={!input.trim() || isLoading}
                 className="bg-green-600 hover:bg-green-500 h-11 w-11 shrink-0"
+                aria-label="Send message"
               >
                 <Send className="w-4 h-4" />
               </Button>

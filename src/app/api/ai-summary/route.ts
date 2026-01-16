@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth'
+import { logger } from '@/lib/logger'
 import type {
   IncomeStatement,
   BalanceSheet,
@@ -393,7 +394,7 @@ export async function POST(request: NextRequest) {
 
     if (!response.ok) {
       const error = await response.text()
-      console.error('AI API error:', error)
+      logger.error('AI API error', { error })
       throw new Error('AI API request failed')
     }
 
@@ -406,7 +407,7 @@ export async function POST(request: NextRequest) {
       model: config.model
     })
   } catch (error) {
-    console.error('AI Summary error:', error)
+    logger.error('AI Summary error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       summary: 'Error generating AI analysis. Please check API configuration and try again.',
       analysisType: 'error'

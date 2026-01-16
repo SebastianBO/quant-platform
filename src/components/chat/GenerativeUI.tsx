@@ -1,9 +1,10 @@
 "use client"
 
-import React from "react"
+import React, { memo } from "react"
 import Link from "next/link"
 import { TrendingUp, TrendingDown, ExternalLink, Building2, BarChart3, LineChart, ArrowRight, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { formatLargeNumber, formatCompactNumber } from "@/lib/formatNumber"
 import StockLogo from "@/components/StockLogo"
 
 // Tool result types from AI agent
@@ -26,16 +27,8 @@ interface StockQuoteProps {
   volume?: number
 }
 
-export function StockQuoteCard({ symbol, name, price, change, changePercent, marketCap, volume }: StockQuoteProps) {
+export const StockQuoteCard = memo(function StockQuoteCard({ symbol, name, price, change, changePercent, marketCap, volume }: StockQuoteProps) {
   const isPositive = changePercent >= 0
-
-  const formatNumber = (num: number | undefined) => {
-    if (!num) return "N/A"
-    if (num >= 1e12) return `$${(num / 1e12).toFixed(2)}T`
-    if (num >= 1e9) return `$${(num / 1e9).toFixed(2)}B`
-    if (num >= 1e6) return `$${(num / 1e6).toFixed(2)}M`
-    return `$${num.toLocaleString()}`
-  }
 
   return (
     <Link href={`/stock/${symbol}`} className="block">
@@ -58,13 +51,13 @@ export function StockQuoteCard({ symbol, name, price, change, changePercent, mar
           </div>
         </div>
         <div className="text-right text-xs text-muted-foreground">
-          {marketCap && <div>MCap: {formatNumber(marketCap)}</div>}
+          {marketCap && <div>MCap: {formatLargeNumber(marketCap)}</div>}
           <ArrowRight className="w-4 h-4 ml-auto mt-1 opacity-50" />
         </div>
       </div>
     </Link>
   )
-}
+})
 
 // Stock Comparison Card
 interface StockComparisonProps {
@@ -79,15 +72,7 @@ interface StockComparisonProps {
   }>
 }
 
-export function StockComparisonCard({ stocks }: StockComparisonProps) {
-  const formatNumber = (num: number | undefined) => {
-    if (!num) return "N/A"
-    if (num >= 1e12) return `${(num / 1e12).toFixed(1)}T`
-    if (num >= 1e9) return `${(num / 1e9).toFixed(1)}B`
-    if (num >= 1e6) return `${(num / 1e6).toFixed(1)}M`
-    return num.toLocaleString()
-  }
-
+export const StockComparisonCard = memo(function StockComparisonCard({ stocks }: StockComparisonProps) {
   return (
     <div className="overflow-x-auto my-3">
       <table className="w-full text-sm border border-border/50 rounded-xl overflow-hidden">
@@ -117,14 +102,14 @@ export function StockComparisonCard({ stocks }: StockComparisonProps) {
                 {stock.changePercent >= 0 ? "+" : ""}{stock.changePercent.toFixed(2)}%
               </td>
               <td className="text-right p-2">{stock.pe?.toFixed(1) || "N/A"}</td>
-              <td className="text-right p-2">{formatNumber(stock.marketCap)}</td>
+              <td className="text-right p-2">{formatCompactNumber(stock.marketCap)}</td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
   )
-}
+})
 
 // Financials Summary Card
 interface FinancialsSummaryProps {
@@ -137,15 +122,7 @@ interface FinancialsSummaryProps {
   profitMargin?: number
 }
 
-export function FinancialsSummaryCard({ symbol, revenue, netIncome, eps, pe, debtToEquity, profitMargin }: FinancialsSummaryProps) {
-  const formatNumber = (num: number | undefined) => {
-    if (!num) return "N/A"
-    if (num >= 1e12) return `$${(num / 1e12).toFixed(2)}T`
-    if (num >= 1e9) return `$${(num / 1e9).toFixed(2)}B`
-    if (num >= 1e6) return `$${(num / 1e6).toFixed(2)}M`
-    return `$${num.toLocaleString()}`
-  }
-
+export const FinancialsSummaryCard = memo(function FinancialsSummaryCard({ symbol, revenue, netIncome, eps, pe, debtToEquity, profitMargin }: FinancialsSummaryProps) {
   return (
     <div className="p-4 bg-secondary/30 rounded-xl border border-border/50 my-3">
       <div className="flex items-center justify-between mb-3">
@@ -160,11 +137,11 @@ export function FinancialsSummaryCard({ symbol, revenue, netIncome, eps, pe, deb
       <div className="grid grid-cols-3 gap-3 text-sm">
         <div>
           <div className="text-muted-foreground text-xs">Revenue</div>
-          <div className="font-semibold">{formatNumber(revenue)}</div>
+          <div className="font-semibold">{formatLargeNumber(revenue)}</div>
         </div>
         <div>
           <div className="text-muted-foreground text-xs">Net Income</div>
-          <div className="font-semibold">{formatNumber(netIncome)}</div>
+          <div className="font-semibold">{formatLargeNumber(netIncome)}</div>
         </div>
         <div>
           <div className="text-muted-foreground text-xs">EPS</div>
@@ -185,7 +162,7 @@ export function FinancialsSummaryCard({ symbol, revenue, netIncome, eps, pe, deb
       </div>
     </div>
   )
-}
+})
 
 // Market Movers Card
 interface MarketMoversProps {
@@ -198,18 +175,18 @@ interface MarketMoversProps {
   }>
 }
 
-export function MarketMoversCard({ type, stocks }: MarketMoversProps) {
-  const titles = {
-    gainers: "Top Gainers",
-    losers: "Top Losers",
-    active: "Most Active"
-  }
+const MOVER_TITLES = {
+  gainers: "Top Gainers",
+  losers: "Top Losers",
+  active: "Most Active"
+} as const
 
+export const MarketMoversCard = memo(function MarketMoversCard({ type, stocks }: MarketMoversProps) {
   return (
     <div className="p-3 bg-secondary/30 rounded-xl border border-border/50 my-3">
       <div className="flex items-center gap-2 mb-2">
         <LineChart className="w-4 h-4 text-green-500" />
-        <span className="font-semibold text-sm">{titles[type]}</span>
+        <span className="font-semibold text-sm">{MOVER_TITLES[type]}</span>
       </div>
       <div className="space-y-1">
         {stocks.slice(0, 5).map((stock) => (
@@ -234,7 +211,7 @@ export function MarketMoversCard({ type, stocks }: MarketMoversProps) {
       </div>
     </div>
   )
-}
+})
 
 // Sector Breakdown Card
 interface SectorBreakdownProps {
@@ -245,7 +222,7 @@ interface SectorBreakdownProps {
   headquarters?: string
 }
 
-export function SectorBreakdownCard({ symbol, sector, industry, employees, headquarters }: SectorBreakdownProps) {
+export const SectorBreakdownCard = memo(function SectorBreakdownCard({ symbol, sector, industry, employees, headquarters }: SectorBreakdownProps) {
   return (
     <div className="p-3 bg-secondary/30 rounded-xl border border-border/50 my-2 inline-flex flex-wrap gap-2">
       {sector && (
@@ -271,28 +248,28 @@ export function SectorBreakdownCard({ symbol, sector, industry, employees, headq
       </Link>
     </div>
   )
+})
+
+// Tool Loading Indicator - labels hoisted to module level
+const TOOL_LABELS: Record<string, string> = {
+  getStockQuote: "Fetching stock quote",
+  getCompanyFundamentals: "Loading fundamentals",
+  getFinancialStatements: "Retrieving financials",
+  compareStocks: "Comparing stocks",
+  getMarketMovers: "Getting market movers",
+  searchStocks: "Searching stocks",
+  getInsiderTrades: "Loading insider trades",
+  getSECFilings: "Fetching SEC filings",
 }
 
-// Tool Loading Indicator
-export function ToolLoadingCard({ toolName }: { toolName: string }) {
-  const toolLabels: Record<string, string> = {
-    getStockQuote: "Fetching stock quote",
-    getCompanyFundamentals: "Loading fundamentals",
-    getFinancialStatements: "Retrieving financials",
-    compareStocks: "Comparing stocks",
-    getMarketMovers: "Getting market movers",
-    searchStocks: "Searching stocks",
-    getInsiderTrades: "Loading insider trades",
-    getSECFilings: "Fetching SEC filings",
-  }
-
+export const ToolLoadingCard = memo(function ToolLoadingCard({ toolName }: { toolName: string }) {
   return (
     <div className="flex items-center gap-2 p-2 bg-secondary/30 rounded-lg text-sm text-muted-foreground my-1">
       <Loader2 className="w-4 h-4 animate-spin" />
-      <span>{toolLabels[toolName] || `Running ${toolName}`}...</span>
+      <span>{TOOL_LABELS[toolName] || `Running ${toolName}`}...</span>
     </div>
   )
-}
+})
 
 // Helper to extract data from tool result (handles nested { success, data } structure)
 function extractToolData<T>(result: unknown): T | null {

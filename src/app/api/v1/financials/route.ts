@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Financial Datasets API Compatible Endpoint
 // Matches: https://api.financialdatasets.ai/financials
@@ -60,10 +61,10 @@ export async function GET(request: NextRequest) {
     ])
 
     if (incomeResult.error || balanceResult.error || cashFlowResult.error) {
-      console.error('Financials query error:', {
-        income: incomeResult.error,
-        balance: balanceResult.error,
-        cashFlow: cashFlowResult.error,
+      logger.error('Financials query error', {
+        income: incomeResult.error?.message,
+        balance: balanceResult.error?.message,
+        cashFlow: cashFlowResult.error?.message,
       })
       return NextResponse.json({ error: 'Database error' }, { status: 500 })
     }
@@ -127,7 +128,7 @@ export async function GET(request: NextRequest) {
       cash_flow_statements: cashFlowStatements,
     })
   } catch (error) {
-    console.error('Financials API error:', error)
+    logger.error('Financials API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

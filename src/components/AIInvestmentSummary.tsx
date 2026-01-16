@@ -3,6 +3,15 @@
 import { useState, ReactNode } from "react"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { formatCurrency, formatPercent } from "@/lib/utils"
+import type {
+  IncomeStatement,
+  BalanceSheet,
+  CashFlow,
+  InsiderTrade,
+  AnalystEstimate,
+  BusinessSegment,
+  StockInfo,
+} from "@/types/financial"
 
 interface AIInvestmentSummaryProps {
   ticker: string
@@ -22,13 +31,13 @@ interface AIInvestmentSummaryProps {
       debt_to_equity?: number
       free_cash_flow_yield?: number
     }
-    incomeStatements: any[]
-    balanceSheets: any[]
-    cashFlows: any[]
-    insiderTrades: any[]
-    analystEstimates: any[]
-    segments: any[]
-    companyFacts?: any
+    incomeStatements: IncomeStatement[]
+    balanceSheets: BalanceSheet[]
+    cashFlows: CashFlow[]
+    insiderTrades: InsiderTrade[]
+    analystEstimates: AnalystEstimate[]
+    segments: BusinessSegment[]
+    companyFacts?: StockInfo | null
   }
 }
 

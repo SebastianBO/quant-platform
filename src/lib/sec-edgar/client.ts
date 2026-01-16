@@ -9,6 +9,7 @@ import {
   Form4Filing,
   Form4Transaction,
 } from './types'
+import { logger } from '@/lib/logger'
 
 const SEC_BASE_URL = 'https://data.sec.gov'
 const SEC_ARCHIVES_URL = 'https://www.sec.gov/Archives/edgar/data'
@@ -168,7 +169,7 @@ export async function parse13FFiling(
 
     return parseInfoTableXML(xmlText, cik, accessionNumber)
   } catch (error) {
-    console.error(`Error parsing 13F filing ${accessionNumber}:`, error)
+    logger.error('Error parsing 13F filing', { accessionNumber, error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }
@@ -263,7 +264,7 @@ export async function parseForm4Filing(
 
     return parseForm4XML(xmlText, accessionNumber)
   } catch (error) {
-    console.error(`Error parsing Form 4 filing ${accessionNumber}:`, error)
+    logger.error('Error parsing Form 4 filing', { accessionNumber, error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }

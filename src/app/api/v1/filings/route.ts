@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Financial Datasets API Compatible Endpoint
 // Matches: https://api.financialdatasets.ai/filings
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest) {
     const { data, error } = await query
 
     if (error) {
-      console.error('Filings query error:', error)
+      logger.error('Filings query error', { error: error.message })
       return NextResponse.json({ error: 'Database error' }, { status: 500 })
     }
 
@@ -65,7 +66,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ filings })
   } catch (error) {
-    console.error('Filings API error:', error)
+    logger.error('Filings API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

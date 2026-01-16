@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import Stripe from "stripe"
 import { createClient } from "@supabase/supabase-js"
 import { requireAuth } from "@/lib/auth"
+import { logger } from '@/lib/logger'
 
 function getStripe() {
   const stripeKey = process.env.STRIPE_SECRET_KEY
@@ -53,7 +54,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ url: portalSession.url })
   } catch (error) {
-    console.error("Error creating portal session:", error)
+    logger.error('Error creating portal session', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to create portal session" },
       { status: 500 }

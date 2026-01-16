@@ -1,5 +1,6 @@
 "use client"
 
+import { memo } from "react"
 import { cn } from "@/lib/utils"
 import { ExternalLink, Clock, TrendingUp, TrendingDown, Minus } from "lucide-react"
 import { SourceBadge, SourceType } from "./source-badge"
@@ -22,7 +23,7 @@ interface NewsCardProps {
   className?: string
 }
 
-export function NewsCard({ news, compact, className }: NewsCardProps) {
+export const NewsCard = memo(function NewsCard({ news, compact, className }: NewsCardProps) {
   const SentimentIcon = news.sentiment === "bullish"
     ? TrendingUp
     : news.sentiment === "bearish"
@@ -113,7 +114,7 @@ export function NewsCard({ news, compact, className }: NewsCardProps) {
       </div>
     </div>
   )
-}
+})
 
 interface NewsListProps {
   news: NewsItem[]

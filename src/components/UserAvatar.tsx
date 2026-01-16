@@ -6,7 +6,7 @@ import Link from "next/link"
 import { createClient } from "@/lib/supabase-browser"
 import { LogOut, Settings, User, Briefcase, CreditCard } from "lucide-react"
 import { cn } from "@/lib/utils"
-import type { User as SupabaseUser } from "@supabase/supabase-js"
+import type { User as SupabaseUser, AuthChangeEvent, Session } from "@supabase/supabase-js"
 
 // Cute default avatars (same as portfoliocare-expo)
 const DEFAULT_AVATARS = [
@@ -78,7 +78,7 @@ export default function UserAvatar() {
 
     fetchUser()
 
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
       setUser(session?.user ?? null)
       if (!session?.user) {
         setProfile(null)

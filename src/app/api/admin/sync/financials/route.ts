@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { syncCompanyFinancials, sync13FHoldings, syncInsiderTrades, syncTicker } from '@/lib/sec-edgar'
+import { logger } from '@/lib/logger'
 
 // Admin endpoint to trigger data sync from SEC EDGAR
 // Protected by admin auth in production
@@ -65,7 +66,7 @@ export async function POST(request: NextRequest) {
       result,
     })
   } catch (error) {
-    console.error('Sync API error:', error)
+    logger.error('Sync API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: error instanceof Error ? error.message : 'Sync failed',
     }, { status: 500 })

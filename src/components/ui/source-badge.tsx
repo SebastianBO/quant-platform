@@ -1,5 +1,6 @@
 "use client"
 
+import { memo } from "react"
 import { cn } from "@/lib/utils"
 import { Database, Globe, FileText, Building2, BarChart3, Brain, Sparkles } from "lucide-react"
 
@@ -49,7 +50,7 @@ const SOURCE_CONFIG = {
   },
 }
 
-export function SourceBadge({ type, label, className }: SourceBadgeProps) {
+export const SourceBadge = memo(function SourceBadge({ type, label, className }: SourceBadgeProps) {
   const config = SOURCE_CONFIG[type]
   const Icon = config.icon
 
@@ -65,7 +66,7 @@ export function SourceBadge({ type, label, className }: SourceBadgeProps) {
       {label || config.label}
     </span>
   )
-}
+})
 
 interface SourceCitationProps {
   sources: Array<{

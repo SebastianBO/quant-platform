@@ -1,6 +1,7 @@
 import { Resend } from 'resend'
 import * as brevo from '@getbrevo/brevo'
 import * as ElasticEmail from '@elasticemail/elasticemail-client'
+import { logger } from '@/lib/logger'
 
 // Email provider type
 type EmailProvider = 'elastic' | 'brevo' | 'resend'
@@ -141,7 +142,7 @@ async function sendBatchEmails(
       const batch = emails.slice(i, i + 100)
       const { data, error } = await resend.batch.send(batch)
       if (error) {
-        console.error('Batch send error:', error)
+        logger.error('Batch send error', { error })
       }
       results.push(data)
     }
@@ -345,7 +346,7 @@ export async function sendWelcomeEmail(email: string, confirmationToken: string)
     const result = await sendEmail(template)
     return result
   } catch (error) {
-    console.error('Failed to send welcome email:', error)
+    logger.error('Failed to send welcome email', { error: error instanceof Error ? error.message : 'Unknown' })
     throw error
   }
 }
@@ -357,7 +358,7 @@ export async function sendWeeklyDigest(email: string, data: WeeklyDigestData) {
     const result = await sendEmail(template)
     return result
   } catch (error) {
-    console.error('Failed to send weekly digest:', error)
+    logger.error('Failed to send weekly digest', { error: error instanceof Error ? error.message : 'Unknown' })
     throw error
   }
 }
@@ -369,7 +370,7 @@ export async function sendMarketAlert(email: string, alert: MarketAlertData) {
     const result = await sendEmail(template)
     return result
   } catch (error) {
-    console.error('Failed to send market alert:', error)
+    logger.error('Failed to send market alert', { error: error instanceof Error ? error.message : 'Unknown' })
     throw error
   }
 }

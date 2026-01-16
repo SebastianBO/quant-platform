@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 const ALPHA_VANTAGE_API_KEY = process.env.ALPHA_VANTAGE_API_KEY || ""
 const ALPHA_VANTAGE_BASE_URL = "https://www.alphavantage.co/query"
@@ -167,7 +168,7 @@ export async function GET(request: NextRequest) {
       lastUpdated: new Date().toISOString()
     })
   } catch (error) {
-    console.error('Commodities API error:', error)
+    logger.error('Commodities API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json(
       { error: 'Failed to fetch commodities data' },
       { status: 500 }

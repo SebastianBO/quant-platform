@@ -8,7 +8,7 @@ import { Menu, X, ChevronDown, LogOut, User, TrendingUp, BarChart3, Calendar, Bo
 import { StockSearchCommand } from "@/components/StockSearchCommand"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { createClient } from "@/lib/supabase-browser"
-import type { User as SupabaseUser } from "@supabase/supabase-js"
+import type { User as SupabaseUser, AuthChangeEvent, Session } from "@supabase/supabase-js"
 
 const navMenus = {
   Stocks: {
@@ -125,7 +125,7 @@ export function Header() {
     }
     getUser()
 
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
       setUser(session?.user ?? null)
     })
 
@@ -252,6 +252,7 @@ export function Header() {
                 size="icon"
                 onClick={handleLogout}
                 className="text-muted-foreground hover:text-foreground min-h-[44px] min-w-[44px]"
+                aria-label="Sign out"
               >
                 <LogOut className="w-4 h-4" />
               </Button>
@@ -273,6 +274,8 @@ export function Header() {
         <button
           className="lg:hidden p-2 hover:bg-secondary rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={mobileMenuOpen}
         >
           {mobileMenuOpen ? <X className="w-6 h-6 text-foreground" /> : <Menu className="w-6 h-6 text-foreground" />}
         </button>

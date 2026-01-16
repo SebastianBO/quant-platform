@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { syncCompanyFinancials } from '@/lib/sec-edgar'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Cron endpoint for automated financial data sync
 // Can be called by Vercel Cron or external scheduler
@@ -192,7 +193,7 @@ export async function GET(request: NextRequest) {
       results,
     })
   } catch (error) {
-    console.error('Cron sync error:', error)
+    logger.error('Cron sync error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: error instanceof Error ? error.message : 'Sync failed',
     }, { status: 500 })
@@ -251,7 +252,7 @@ export async function POST(request: NextRequest) {
       }
     })
   } catch (error) {
-    console.error('Manual sync error:', error)
+    logger.error('Manual sync error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: error instanceof Error ? error.message : 'Sync failed',
     }, { status: 500 })

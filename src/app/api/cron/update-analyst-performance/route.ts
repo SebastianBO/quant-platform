@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Update analyst performance metrics
 // Runs daily to calculate returns on past ratings and update analyst rankings
@@ -36,7 +37,7 @@ export async function GET(request: NextRequest) {
   const authHeader = request.headers.get('authorization')
   const cronSecret = process.env.CRON_SECRET
   if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-    console.log('Analyst performance update called without valid CRON_SECRET')
+    logger.warn('Analyst performance update called without valid CRON_SECRET')
   }
 
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
@@ -244,7 +245,7 @@ export async function GET(request: NextRequest) {
       }
     })
   } catch (error) {
-    console.error('Analyst performance update error:', error)
+    logger.error('Analyst performance update error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Update failed',
       details: error instanceof Error ? error.message : 'Unknown error'

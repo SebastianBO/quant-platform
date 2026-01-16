@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo, memo } from "react"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from "recharts"
 import { AlertTriangle, Calendar, TrendingUp, TrendingDown, Activity, Target } from "lucide-react"
@@ -63,7 +63,15 @@ interface OptionContract {
   type: 'call' | 'put'
 }
 
-export default function OptionsFlow({ ticker }: OptionsFlowProps) {
+interface StrikeData {
+  strike: number
+  callVolume: number
+  putVolume: number
+  callOI: number
+  putOI: number
+}
+
+function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
   const [data, setData] = useState<OptionsData | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -111,39 +119,45 @@ export default function OptionsFlow({ ticker }: OptionsFlowProps) {
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
   }
 
-  // Prepare volume by strike data - ensure arrays exist before spreading
-  const safeCalls = data?.calls && Array.isArray(data.calls) ? data.calls : []
-  const safePuts = data?.puts && Array.isArray(data.puts) ? data.puts : []
-  const strikeData = data ? [...safeCalls, ...safePuts]
-    .reduce((acc: any[], opt) => {
-      const existing = acc.find(a => a.strike === opt.strike)
-      if (existing) {
-        if (opt.type === 'call') {
-          existing.callVolume = opt.volume
-          existing.callOI = opt.openInterest
+  // Prepare volume by strike data - memoized for performance
+  const strikeData = useMemo(() => {
+    if (!data) return []
+    const safeCalls = data.calls && Array.isArray(data.calls) ? data.calls : []
+    const safePuts = data.puts && Array.isArray(data.puts) ? data.puts : []
+    return [...safeCalls, ...safePuts]
+      .reduce((acc: StrikeData[], opt) => {
+        const existing = acc.find(a => a.strike === opt.strike)
+        if (existing) {
+          if (opt.type === 'call') {
+            existing.callVolume = opt.volume
+            existing.callOI = opt.openInterest
+          } else {
+            existing.putVolume = opt.volume
+            existing.putOI = opt.openInterest
+          }
         } else {
-          existing.putVolume = opt.volume
-          existing.putOI = opt.openInterest
+          acc.push({
+            strike: opt.strike,
+            callVolume: opt.type === 'call' ? opt.volume : 0,
+            putVolume: opt.type === 'put' ? opt.volume : 0,
+            callOI: opt.type === 'call' ? opt.openInterest : 0,
+            putOI: opt.type === 'put' ? opt.openInterest : 0,
+          })
         }
-      } else {
-        acc.push({
-          strike: opt.strike,
-          callVolume: opt.type === 'call' ? opt.volume : 0,
-          putVolume: opt.type === 'put' ? opt.volume : 0,
-          callOI: opt.type === 'call' ? opt.openInterest : 0,
-          putOI: opt.type === 'put' ? opt.openInterest : 0,
-        })
-      }
-      return acc
-    }, [])
-    .sort((a, b) => a.strike - b.strike)
-    .slice(-15) : []
+        return acc
+      }, [])
+      .sort((a, b) => a.strike - b.strike)
+      .slice(-15)
+  }, [data])
 
-  // Pie chart data for put/call ratio
-  const pieData = data?.summary ? [
-    { name: 'Calls', value: data.summary.totalCallVolume || 0, color: '#10b981' },
-    { name: 'Puts', value: data.summary.totalPutVolume || 0, color: '#ef4444' },
-  ] : []
+  // Pie chart data for put/call ratio - memoized
+  const pieData = useMemo(() => {
+    if (!data?.summary) return []
+    return [
+      { name: 'Calls', value: data.summary.totalCallVolume || 0, color: '#10b981' },
+      { name: 'Puts', value: data.summary.totalPutVolume || 0, color: '#ef4444' },
+    ]
+  }, [data?.summary])
 
   const daysUntilExp = data?.summary?.expirationDate ? getDaysUntilExpiration(data.summary.expirationDate) : 0
 
@@ -505,3 +519,6 @@ export default function OptionsFlow({ ticker }: OptionsFlowProps) {
     </Card>
   )
 }
+
+// Memoize to prevent unnecessary re-renders when parent components update
+export default memo(OptionsFlowComponent)

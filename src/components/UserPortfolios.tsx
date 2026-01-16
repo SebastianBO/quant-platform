@@ -55,6 +55,59 @@ interface UserProfile {
   avatar_url: string | null
 }
 
+// RPC/API response types for portfolio data
+interface RpcPortfolioResponse {
+  id: string
+  name: string
+  description?: string | null
+  currency: string
+  created_at?: string
+  plaid_item_id?: string | null
+  tink_connected?: boolean
+  last_synced?: string | null
+  holdings?: RpcHoldingResponse[]
+  investments?: RpcHoldingResponse[]
+}
+
+interface RpcHoldingResponse {
+  id: string
+  ticker?: string
+  asset_identifier?: string
+  quantity?: number
+  purchase_price?: number | null
+  current_price?: number | null
+  current_value?: number | null
+  total_cost_basis?: number | null
+  currency?: string
+}
+
+interface MembershipRecord {
+  portfolio_id: string
+}
+
+interface SupabaseInvestmentRecord {
+  id: string
+  asset_identifier?: string
+  quantity?: number
+  purchase_price?: number | null
+  total_cost_basis?: number | null
+  current_price?: number | null
+  current_value?: number | null
+  currency?: string
+}
+
+interface SupabasePortfolioRecord {
+  id: string
+  name: string
+  description?: string | null
+  currency: string
+  created_at?: string
+  plaid_item_id?: string | null
+  tink_connected?: boolean
+  last_synced?: string | null
+  investments?: SupabaseInvestmentRecord[]
+}
+
 // Stock logo component with EODHD → Clearbit → fallback
 function HoldingLogo({ symbol, size = 32 }: { symbol: string; size?: number }) {
   const [logoState, setLogoState] = useState<'eodhd' | 'clearbit' | 'fallback'>('eodhd')
@@ -253,9 +306,9 @@ export default function UserPortfolios() {
             portfolios = portfolios ? [portfolios] : []
           }
 
-          const mappedPortfolios = portfolios.map((p: any) => ({
+          const mappedPortfolios = portfolios.map((p: RpcPortfolioResponse) => ({
             ...p,
-            investments: (p.holdings || p.investments || []).map((inv: any) => ({
+            investments: (p.holdings || p.investments || []).map((inv: RpcHoldingResponse) => ({
               id: inv.id,
               ticker: inv.ticker || inv.asset_identifier,
               asset_identifier: inv.asset_identifier,
@@ -265,7 +318,7 @@ export default function UserPortfolios() {
               purchase_price: inv.purchase_price,
               current_price: inv.current_price,
               current_value: inv.current_value,
-              market_value: inv.current_value || (inv.quantity * (inv.current_price || inv.purchase_price || 0)),
+              market_value: inv.current_value || ((inv.quantity || 0) * (inv.current_price || inv.purchase_price || 0)),
               total_cost_basis: inv.total_cost_basis,
               currency: inv.currency
             }))
@@ -309,10 +362,10 @@ export default function UserPortfolios() {
         }
 
         // Map to consistent format
-        const mappedPortfolios = (ownedPortfolios || []).map((p: any) => ({
+        const mappedPortfolios = (ownedPortfolios || []).map((p: SupabasePortfolioRecord) => ({
           ...p,
-          access_type: 'owner',
-          investments: (p.investments || []).map((inv: any) => ({
+          access_type: 'owner' as const,
+          investments: (p.investments || []).map((inv: SupabaseInvestmentRecord) => ({
             id: inv.id,
             ticker: inv.asset_identifier,
             asset_identifier: inv.asset_identifier,
@@ -322,7 +375,7 @@ export default function UserPortfolios() {
             purchase_price: inv.purchase_price,
             current_price: inv.current_price,
             current_value: inv.current_value,
-            market_value: inv.current_value || (inv.quantity * (inv.current_price || inv.purchase_price || 0)),
+            market_value: inv.current_value || ((inv.quantity || 0) * (inv.current_price || inv.purchase_price || 0)),
             total_cost_basis: inv.total_cost_basis,
             currency: inv.currency // Include stored currency for proper conversion
           }))
@@ -336,9 +389,9 @@ export default function UserPortfolios() {
 
         console.log('[UserPortfolios] Membership data:', membershipData?.length || 0)
 
-        let memberPortfolios: any[] = []
+        let memberPortfolios: Portfolio[] = []
         if (membershipData && membershipData.length > 0) {
-          const memberPortfolioIds = membershipData.map((m: any) => m.portfolio_id)
+          const memberPortfolioIds = membershipData.map((m: MembershipRecord) => m.portfolio_id)
           const { data: memberPortfoliosData } = await supabase
             .from('portfolios')
             .select(`
@@ -356,10 +409,10 @@ export default function UserPortfolios() {
             `)
             .in('id', memberPortfolioIds)
 
-          memberPortfolios = (memberPortfoliosData || []).map((p: any) => ({
+          memberPortfolios = (memberPortfoliosData || []).map((p: SupabasePortfolioRecord) => ({
             ...p,
-            access_type: 'member',
-            investments: (p.investments || []).map((inv: any) => ({
+            access_type: 'member' as const,
+            investments: (p.investments || []).map((inv: SupabaseInvestmentRecord) => ({
               id: inv.id,
               ticker: inv.asset_identifier,
               asset_identifier: inv.asset_identifier,
@@ -369,7 +422,7 @@ export default function UserPortfolios() {
               purchase_price: inv.purchase_price,
               current_price: inv.current_price,
               current_value: inv.current_value,
-              market_value: inv.current_value || (inv.quantity * (inv.current_price || inv.purchase_price || 0)),
+              market_value: inv.current_value || ((inv.quantity || 0) * (inv.current_price || inv.purchase_price || 0)),
               total_cost_basis: inv.total_cost_basis,
               currency: inv.currency
             }))

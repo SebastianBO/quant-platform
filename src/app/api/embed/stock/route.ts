@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Embeddable Stock Widget API
 // Returns stock data with full CORS support for embedding anywhere
@@ -95,7 +96,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(response, { headers: corsHeaders })
   } catch (error) {
-    console.error('Embed API error:', error)
+    logger.error('Embed API error', { error: error instanceof Error ? error.message : 'Unknown' })
     const response = { error: 'Internal server error' }
     if (callback) {
       return new NextResponse(`${callback}(${JSON.stringify(response)})`, {

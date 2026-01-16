@@ -65,9 +65,10 @@ export default function TinkLink({ userId, onSuccess, onError }: TinkLinkProps) 
 
       // Open Tink Link in a new window
       window.open(data.linkUrl, '_blank', 'width=500,height=700')
-    } catch (err: any) {
-      setError(err.message || 'Failed to connect')
-      onError?.(err.message)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to connect'
+      setError(message)
+      onError?.(message)
     } finally {
       setLoading(false)
     }
@@ -92,8 +93,9 @@ export default function TinkLink({ userId, onSuccess, onError }: TinkLinkProps) 
 
       setConnected(true)
       onSuccess?.()
-    } catch (err: any) {
-      setError(err.message || 'Failed to sync investments')
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to sync investments'
+      setError(message)
     } finally {
       setSyncing(false)
     }

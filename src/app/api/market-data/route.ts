@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 const EODHD_API_KEY = process.env.EODHD_API_KEY || ""
 
@@ -304,7 +305,7 @@ export async function GET(request: NextRequest) {
       lastUpdated: new Date().toISOString()
     })
   } catch (error) {
-    console.error('Market data API error:', error)
+    logger.error('Market data API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({ error: 'Failed to fetch market data' }, { status: 500 })
   }
 }

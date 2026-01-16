@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Financial Datasets API Compatible Endpoint
 // Matches: https://api.financialdatasets.ai/prices
@@ -36,7 +37,7 @@ export async function GET(request: NextRequest) {
       .limit(limit)
 
     if (error) {
-      console.error('Prices query error:', error)
+      logger.error('Prices query error', { error: error.message })
       return NextResponse.json({ error: 'Database error' }, { status: 500 })
     }
 
@@ -54,7 +55,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ prices })
   } catch (error) {
-    console.error('Prices API error:', error)
+    logger.error('Prices API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

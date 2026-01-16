@@ -10,9 +10,45 @@ interface OwnershipBreakdownProps {
   ticker: string
 }
 
+interface SharesStats {
+  percentInsiders?: number
+  percentInstitutions?: number
+  shortPercentOutstanding?: number
+  sharesOutstanding?: number
+  sharesFloat?: number
+  sharesShort?: number
+  shortRatio?: number
+}
+
+interface InstitutionalHolder {
+  investor_name?: string
+  name?: string
+  investor_type?: string
+  shares?: number
+  shares_held?: number
+  ownership_percent?: number
+  value?: number
+}
+
+interface InstitutionalOwnership {
+  topHolders?: InstitutionalHolder[]
+}
+
+interface FundamentalsData {
+  sharesStats?: SharesStats
+  institutionalOwnership?: InstitutionalOwnership
+}
+
+interface InstitutionalApiData {
+  holders?: InstitutionalHolder[]
+  increased?: InstitutionalHolder[]
+  decreased?: InstitutionalHolder[]
+  newPositions?: InstitutionalHolder[]
+}
+
 export default function OwnershipBreakdown({ ticker }: OwnershipBreakdownProps) {
-  const [data, setData] = useState<any>(null)
-  const [institutionalData, setInstitutionalData] = useState<any>(null)
+  const [data, setData] = useState<FundamentalsData | null>(null)
+  const [institutionalData, setInstitutionalData] = useState<InstitutionalApiData | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -273,7 +309,7 @@ export default function OwnershipBreakdown({ ticker }: OwnershipBreakdownProps) 
         <CardContent>
           {topHolders.length > 0 ? (
             <div className="space-y-3">
-              {topHolders.map((holder: any, i: number) => (
+              {topHolders.map((holder: InstitutionalHolder, i: number) => (
                 <div key={i} className="flex items-center justify-between p-3 bg-secondary/30 rounded-lg hover:bg-secondary/50 transition-colors">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-sm font-bold">

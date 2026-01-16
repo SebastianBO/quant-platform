@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { withCronLogging, RateLimiter } from '@/lib/cron-utils'
+import { logger } from '@/lib/logger'
 
 // Sync UK Financial Statements from Companies House
 // Uses Filing History API to get accounts filings
@@ -76,7 +77,7 @@ async function apiRequest(endpoint: string): Promise<any | null> {
 
     return await response.json()
   } catch (error) {
-    console.error(`API request failed:`, error)
+    logger.error('UK Companies House API request failed', { error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }

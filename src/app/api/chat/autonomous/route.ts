@@ -13,6 +13,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createGateway } from 'ai'
 import { Agent } from '@/lib/ai/agent'
+import { logger } from '@/lib/logger'
 
 export const maxDuration = 120 // Longer timeout for autonomous research
 
@@ -146,7 +147,7 @@ export async function POST(req: NextRequest) {
       })
     }
   } catch (error) {
-    console.error('Autonomous agent error:', error)
+    logger.error('Autonomous agent error', { error: error instanceof Error ? error.message : 'Unknown' })
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.json(
       { error: 'Research failed', details: errorMessage },

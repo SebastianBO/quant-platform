@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 interface BorrowRecord {
   date: string
@@ -82,7 +83,7 @@ export async function GET(request: NextRequest) {
       disclaimer: 'Borrow rates and availability are from Interactive Brokers. Rates may vary between brokers.'
     })
   } catch (error) {
-    console.error('Borrow data API error:', error)
+    logger.error('Borrow data API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       ticker: ticker.toUpperCase(),
       available: false,

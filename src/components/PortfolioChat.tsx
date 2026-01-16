@@ -96,6 +96,7 @@ export default function PortfolioChat({ portfolioContext }: PortfolioChatProps) 
         onClick={() => setIsOpen(true)}
         className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-green-600 hover:bg-green-500 shadow-lg z-50 hidden md:flex"
         size="icon"
+        aria-label="Open AI chat assistant"
       >
         <MessageCircle className="h-6 w-6" />
       </Button>
@@ -118,6 +119,7 @@ export default function PortfolioChat({ portfolioContext }: PortfolioChatProps) 
             size="icon"
             className="h-8 w-8"
             onClick={() => setIsOpen(false)}
+            aria-label="Close"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -172,6 +174,7 @@ export default function PortfolioChat({ portfolioContext }: PortfolioChatProps) 
             size="icon"
             className="h-8 w-8"
             onClick={() => setIsMinimized(!isMinimized)}
+            aria-label={isMinimized ? "Expand chat" : "Minimize chat"}
           >
             {isMinimized ? (
               <Maximize2 className="h-4 w-4" />
@@ -184,6 +187,7 @@ export default function PortfolioChat({ portfolioContext }: PortfolioChatProps) 
             size="icon"
             className="h-8 w-8"
             onClick={() => setIsOpen(false)}
+            aria-label="Close chat"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -256,6 +260,7 @@ export default function PortfolioChat({ portfolioContext }: PortfolioChatProps) 
                 size="icon"
                 disabled={isLoading || !input.trim()}
                 className="bg-green-600 hover:bg-green-500"
+                aria-label="Send message"
               >
                 <Send className="h-4 w-4" />
               </Button>

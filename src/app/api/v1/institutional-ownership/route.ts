@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Financial Datasets API Compatible Endpoint
 // Matches: https://api.financialdatasets.ai/institutional-ownership/
@@ -448,7 +449,7 @@ export async function GET(request: NextRequest) {
       }))
     })
   } catch (error) {
-    console.error('Institutional ownership API error:', error)
+    logger.error('Institutional ownership API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Internal server error'
     }, { status: 500 })

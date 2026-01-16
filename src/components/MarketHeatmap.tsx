@@ -8,7 +8,7 @@
  * Size = market cap weight
  */
 
-import { useMemo, useState } from "react"
+import { useMemo, useState, memo } from "react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 
@@ -510,4 +510,4 @@ export function SectorBars({
   )
 }
 
-export default MarketHeatmap
+export default memo(MarketHeatmap)

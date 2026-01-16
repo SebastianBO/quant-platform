@@ -1,5 +1,6 @@
 import { ImageResponse } from 'next/og'
 import { NextRequest } from 'next/server'
+import { logger } from '@/lib/logger'
 
 export const runtime = 'edge'
 
@@ -39,7 +40,7 @@ async function getStockData(ticker: string): Promise<StockData> {
       licianScore: undefined, // Would need to fetch from score API
     }
   } catch (error) {
-    console.error('Error fetching stock data for OG:', error)
+    logger.error('Error fetching stock data for OG', { error: error instanceof Error ? error.message : 'Unknown' })
     return {}
   }
 }

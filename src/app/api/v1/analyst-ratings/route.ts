@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Analyst Ratings API - Our own data from press release scraping
 // No external API costs - all data collected from news sources
@@ -62,7 +63,7 @@ export async function GET(request: NextRequest) {
     const { data, error } = await query
 
     if (error) {
-      console.error('Analyst ratings query error:', error)
+      logger.error('Analyst ratings query error', { error: error.message })
       return NextResponse.json({ error: 'Database error' }, { status: 500 })
     }
 
@@ -112,7 +113,7 @@ export async function GET(request: NextRequest) {
       }
     })
   } catch (error) {
-    console.error('Analyst ratings API error:', error)
+    logger.error('Analyst ratings API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

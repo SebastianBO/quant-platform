@@ -7,6 +7,7 @@ import { TrendingUp, TrendingDown, ChevronLeft, ChevronRight, LogIn, Briefcase, 
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { createClient } from "@/lib/supabase-browser"
+import type { AuthChangeEvent, Session } from "@supabase/supabase-js"
 
 interface MarketIndex {
   symbol: string
@@ -42,6 +43,44 @@ interface UserPortfolio {
   totalValue: number
   changePercent: number
   holdingsCount: number
+}
+
+// Types for RPC and Supabase responses
+interface RpcPortfolioHolding {
+  current_value?: number
+  market_value?: number
+  quantity?: number
+  current_price?: number
+  purchase_price?: number
+  total_cost_basis?: number
+}
+
+interface RpcPortfolio {
+  id: string
+  name: string
+  currency?: string
+  holdings?: RpcPortfolioHolding[]
+  investments?: RpcPortfolioHolding[]
+}
+
+interface SupabasePortfolioInvestment {
+  id: string
+  quantity?: number
+  purchase_price?: number
+  current_price?: number
+  current_value?: number
+}
+
+interface SupabasePortfolio {
+  id: string
+  name: string
+  currency?: string
+  investments?: SupabasePortfolioInvestment[]
+}
+
+interface AuthUser {
+  id: string
+  email?: string
 }
 
 // Mini sparkline component
@@ -180,7 +219,7 @@ export default function MarketSidebar({ onSelectTicker, currentTicker }: MarketS
   const [recentlyViewed, setRecentlyViewed] = useState<RecentStock[]>([])
   const [marketPage, setMarketPage] = useState(0)
   const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<AuthUser | null>(null)
   const [portfolios, setPortfolios] = useState<UserPortfolio[]>([])
   const [portfolioLoading, setPortfolioLoading] = useState(true)
 
@@ -219,13 +258,13 @@ export default function MarketSidebar({ onSelectTicker, currentTicker }: MarketS
                 portfolioData = portfolioData ? [portfolioData] : []
               }
 
-              const mapped: UserPortfolio[] = portfolioData.map((p: any) => {
+              const mapped: UserPortfolio[] = portfolioData.map((p: RpcPortfolio) => {
                 const holdings = p.holdings || p.investments || []
-                const totalValue = holdings.reduce((sum: number, h: any) => {
-                  return sum + (h.current_value || h.market_value || (h.quantity * (h.current_price || h.purchase_price || 0)))
+                const totalValue = holdings.reduce((sum: number, h: RpcPortfolioHolding) => {
+                  return sum + (h.current_value || h.market_value || ((h.quantity || 0) * (h.current_price || h.purchase_price || 0)))
                 }, 0)
-                const totalCost = holdings.reduce((sum: number, h: any) => {
-                  return sum + (h.total_cost_basis || (h.quantity * (h.purchase_price || 0)))
+                const totalCost = holdings.reduce((sum: number, h: RpcPortfolioHolding) => {
+                  return sum + (h.total_cost_basis || ((h.quantity || 0) * (h.purchase_price || 0)))
                 }, 0)
                 const changePercent = totalCost > 0 ? ((totalValue - totalCost) / totalCost) * 100 : 0
 
@@ -249,13 +288,13 @@ export default function MarketSidebar({ onSelectTicker, currentTicker }: MarketS
               .eq('user_id', authUser.id)
 
             if (portfolioData) {
-              const mapped: UserPortfolio[] = portfolioData.map((p: any) => {
+              const mapped: UserPortfolio[] = portfolioData.map((p: SupabasePortfolio) => {
                 const holdings = p.investments || []
-                const totalValue = holdings.reduce((sum: number, h: any) => {
-                  return sum + (h.current_value || (h.quantity * (h.current_price || h.purchase_price || 0)))
+                const totalValue = holdings.reduce((sum: number, h: SupabasePortfolioInvestment) => {
+                  return sum + (h.current_value || ((h.quantity || 0) * (h.current_price || h.purchase_price || 0)))
                 }, 0)
-                const totalCost = holdings.reduce((sum: number, h: any) => {
-                  return sum + (h.quantity * (h.purchase_price || 0))
+                const totalCost = holdings.reduce((sum: number, h: SupabasePortfolioInvestment) => {
+                  return sum + ((h.quantity || 0) * (h.purchase_price || 0))
                 }, 0)
                 const changePercent = totalCost > 0 ? ((totalValue - totalCost) / totalCost) * 100 : 0
 
@@ -282,7 +321,7 @@ export default function MarketSidebar({ onSelectTicker, currentTicker }: MarketS
     fetchUserAndPortfolios()
 
     // Listen for auth changes
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
       setUser(session?.user ?? null)
       if (!session?.user) {
         setPortfolios([])

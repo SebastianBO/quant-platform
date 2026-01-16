@@ -5,13 +5,66 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { formatCurrency, formatPercent } from "@/lib/utils"
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine, BarChart, Bar, Cell, PieChart, Pie } from "recharts"
 
+interface InstitutionalHolder {
+  investor?: string
+  shares: number
+  market_value: number
+  report_period?: string
+}
+
+interface InstitutionalOwnership {
+  topHolders: InstitutionalHolder[]
+  totalValue?: number
+  totalShares?: number
+}
+
+interface TechnicalAnalysisData {
+  technicals?: {
+    beta?: number
+    fiftyTwoWeekHigh?: number
+    fiftyTwoWeekLow?: number
+    fiftyDayMA?: number
+    twoHundredDayMA?: number
+    shortPercent?: number
+    sharesShort?: number
+    shortPercentOfFloat?: number
+    daysTocover?: number
+    shortRatio?: number
+    sharesShortPriorMonth?: number
+    [key: string]: number | undefined
+  }
+  valuation?: Record<string, number>
+  highlights?: Record<string, number | string>
+  analystRatings?: {
+    strongBuy?: number
+    buy?: number
+    hold?: number
+    sell?: number
+    strongSell?: number
+    targetPrice?: number
+    totalAnalysts?: number
+    rating?: number
+    [key: string]: number | undefined
+  }
+  riskMetrics?: Record<string, number>
+  qualityScores?: {
+    piotroskiFScore?: number
+    piotroskiInterpretation?: string
+    altmanZScore?: number
+    altmanInterpretation?: string
+    [key: string]: number | string | undefined
+  }
+  priceHistory?: Array<{ date: string; close: number }>
+  institutionalOwnership?: InstitutionalOwnership
+}
+
 interface TechnicalAnalysisProps {
   ticker: string
   currentPrice: number
 }
 
 export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAnalysisProps) {
-  const [data, setData] = useState<any>(null)
+  const [data, setData] = useState<TechnicalAnalysisData | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -53,8 +106,10 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
   const { technicals, valuation, highlights, analystRatings, riskMetrics, qualityScores, priceHistory, institutionalOwnership } = data
 
   // Calculate price position in 52-week range
-  const fiftyTwoWeekRange = technicals?.fiftyTwoWeekHigh - technicals?.fiftyTwoWeekLow || 1
-  const pricePositionPct = ((currentPrice - technicals?.fiftyTwoWeekLow) / fiftyTwoWeekRange) * 100
+  const fiftyTwoWeekHigh = technicals?.fiftyTwoWeekHigh || 0
+  const fiftyTwoWeekLow = technicals?.fiftyTwoWeekLow || 0
+  const fiftyTwoWeekRange = fiftyTwoWeekHigh - fiftyTwoWeekLow || 1
+  const pricePositionPct = ((currentPrice - fiftyTwoWeekLow) / fiftyTwoWeekRange) * 100
 
   // MA signals
   const aboveFiftyMA = currentPrice > (technicals?.fiftyDayMA || 0)
@@ -68,7 +123,7 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
     { name: 'Hold', value: analystRatings.hold, color: '#fbbf24' },
     { name: 'Sell', value: analystRatings.sell, color: '#f97316' },
     { name: 'Strong Sell', value: analystRatings.strongSell, color: '#ef4444' },
-  ].filter(d => d.value > 0) : []
+  ].filter(d => (d.value || 0) > 0) : []
 
   // Price upside/downside
   const targetPrice = analystRatings?.targetPrice || currentPrice
@@ -87,7 +142,7 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
         <CardContent>
           {/* Key Metrics Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 mb-6">
-            <MetricCard label="Beta" value={technicals?.beta?.toFixed(2)} highlight={technicals?.beta > 1.2 || technicals?.beta < 0.8} />
+            <MetricCard label="Beta" value={technicals?.beta?.toFixed(2)} highlight={(technicals?.beta || 0) > 1.2 || (technicals?.beta || 0) < 0.8} />
             <MetricCard label="52W High" value={`$${technicals?.fiftyTwoWeekHigh?.toFixed(2)}`} />
             <MetricCard label="52W Low" value={`$${technicals?.fiftyTwoWeekLow?.toFixed(2)}`} />
             <MetricCard label="50D MA" value={`$${technicals?.fiftyDayMA?.toFixed(2)}`} highlight={aboveFiftyMA} positive={aboveFiftyMA} />
@@ -158,8 +213,8 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
                 </div>
                 <div>
                   <p className="text-muted-foreground">MoM Change</p>
-                  <p className={`font-bold ${technicals.sharesShort < technicals.sharesShortPriorMonth ? 'text-emerald-500' : 'text-red-500'}`}>
-                    {technicals.sharesShort < technicals.sharesShortPriorMonth ? 'Decreasing' : 'Increasing'}
+                  <p className={`font-bold ${(technicals.sharesShort || 0) < (technicals.sharesShortPriorMonth || 0) ? 'text-emerald-500' : 'text-red-500'}`}>
+                    {(technicals.sharesShort || 0) < (technicals.sharesShortPriorMonth || 0) ? 'Decreasing' : 'Increasing'}
                   </p>
                 </div>
               </div>
@@ -255,26 +310,26 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
               <RiskMetric
                 label="Annualized Volatility"
                 value={riskMetrics?.volatility ? formatPercent(riskMetrics.volatility) : 'N/A'}
-                interpretation={riskMetrics?.volatility > 0.4 ? 'High Risk' : riskMetrics?.volatility > 0.2 ? 'Moderate' : 'Low Risk'}
-                color={riskMetrics?.volatility > 0.4 ? 'text-red-400' : riskMetrics?.volatility > 0.2 ? 'text-yellow-400' : 'text-emerald-400'}
+                interpretation={(riskMetrics?.volatility || 0) > 0.4 ? 'High Risk' : (riskMetrics?.volatility || 0) > 0.2 ? 'Moderate' : 'Low Risk'}
+                color={(riskMetrics?.volatility || 0) > 0.4 ? 'text-red-400' : (riskMetrics?.volatility || 0) > 0.2 ? 'text-yellow-400' : 'text-emerald-400'}
               />
               <RiskMetric
                 label="Sharpe Ratio"
                 value={riskMetrics?.sharpeRatio?.toFixed(2) || 'N/A'}
-                interpretation={riskMetrics?.sharpeRatio > 1 ? 'Good Risk-Adjusted Returns' : riskMetrics?.sharpeRatio > 0 ? 'Positive' : 'Negative'}
-                color={riskMetrics?.sharpeRatio > 1 ? 'text-emerald-400' : riskMetrics?.sharpeRatio > 0 ? 'text-yellow-400' : 'text-red-400'}
+                interpretation={(riskMetrics?.sharpeRatio || 0) > 1 ? 'Good Risk-Adjusted Returns' : (riskMetrics?.sharpeRatio || 0) > 0 ? 'Positive' : 'Negative'}
+                color={(riskMetrics?.sharpeRatio || 0) > 1 ? 'text-emerald-400' : (riskMetrics?.sharpeRatio || 0) > 0 ? 'text-yellow-400' : 'text-red-400'}
               />
               <RiskMetric
                 label="Max Drawdown"
                 value={riskMetrics?.maxDrawdown ? formatPercent(riskMetrics.maxDrawdown) : 'N/A'}
-                interpretation={riskMetrics?.maxDrawdown > 0.3 ? 'Significant Drawdown' : riskMetrics?.maxDrawdown > 0.15 ? 'Moderate' : 'Low Drawdown'}
-                color={riskMetrics?.maxDrawdown > 0.3 ? 'text-red-400' : riskMetrics?.maxDrawdown > 0.15 ? 'text-yellow-400' : 'text-emerald-400'}
+                interpretation={(riskMetrics?.maxDrawdown || 0) > 0.3 ? 'Significant Drawdown' : (riskMetrics?.maxDrawdown || 0) > 0.15 ? 'Moderate' : 'Low Drawdown'}
+                color={(riskMetrics?.maxDrawdown || 0) > 0.3 ? 'text-red-400' : (riskMetrics?.maxDrawdown || 0) > 0.15 ? 'text-yellow-400' : 'text-emerald-400'}
               />
               <RiskMetric
                 label="Beta"
                 value={technicals?.beta?.toFixed(2) || 'N/A'}
-                interpretation={technicals?.beta > 1.2 ? 'High Market Sensitivity' : technicals?.beta > 0.8 ? 'Market Correlated' : 'Defensive'}
-                color={technicals?.beta > 1.2 ? 'text-yellow-400' : technicals?.beta < 0.8 ? 'text-blue-400' : 'text-zinc-400'}
+                interpretation={(technicals?.beta || 0) > 1.2 ? 'High Market Sensitivity' : (technicals?.beta || 0) > 0.8 ? 'Market Correlated' : 'Defensive'}
+                color={(technicals?.beta || 0) > 1.2 ? 'text-yellow-400' : (technicals?.beta || 0) < 0.8 ? 'text-blue-400' : 'text-zinc-400'}
               />
             </div>
           </CardContent>
@@ -295,8 +350,8 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
                 <div className="flex items-center justify-between mb-2">
                   <p className="font-medium text-sm sm:text-base">Piotroski F-Score</p>
                   <p className={`text-xl sm:text-2xl font-bold ${
-                    qualityScores?.piotroskiFScore >= 7 ? 'text-emerald-500' :
-                    qualityScores?.piotroskiFScore >= 4 ? 'text-yellow-500' : 'text-red-500'
+                    (qualityScores?.piotroskiFScore || 0) >= 7 ? 'text-emerald-500' :
+                    (qualityScores?.piotroskiFScore || 0) >= 4 ? 'text-yellow-500' : 'text-red-500'
                   }`}>
                     {qualityScores?.piotroskiFScore || 0}/9
                   </p>
@@ -304,8 +359,8 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
                 <div className="h-3 bg-secondary rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full ${
-                      qualityScores?.piotroskiFScore >= 7 ? 'bg-emerald-500' :
-                      qualityScores?.piotroskiFScore >= 4 ? 'bg-yellow-500' : 'bg-red-500'
+                      (qualityScores?.piotroskiFScore || 0) >= 7 ? 'bg-emerald-500' :
+                      (qualityScores?.piotroskiFScore || 0) >= 4 ? 'bg-yellow-500' : 'bg-red-500'
                     }`}
                     style={{ width: `${((qualityScores?.piotroskiFScore || 0) / 9) * 100}%` }}
                   />
@@ -336,9 +391,9 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
               {/* Interpretation */}
               <div className="p-3 sm:p-4 bg-secondary/30 rounded-lg">
                 <p className="text-xs sm:text-sm text-muted-foreground">
-                  {qualityScores?.piotroskiFScore >= 7 && qualityScores?.altmanInterpretation === 'Safe'
+                  {(qualityScores?.piotroskiFScore || 0) >= 7 && qualityScores?.altmanInterpretation === 'Safe'
                     ? `${ticker} shows strong fundamental quality with low financial distress risk.`
-                    : qualityScores?.piotroskiFScore >= 4
+                    : (qualityScores?.piotroskiFScore || 0) >= 4
                     ? `${ticker} has average financial quality. Monitor key metrics closely.`
                     : `${ticker} shows some financial weakness. Exercise caution.`
                   }
@@ -350,7 +405,7 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
       </div>
 
       {/* Institutional Ownership */}
-      {institutionalOwnership?.topHolders?.length > 0 && (
+      {(institutionalOwnership?.topHolders?.length || 0) > 0 && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
@@ -362,19 +417,19 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6">
               <div className="p-3 bg-secondary/50 rounded-lg text-center">
                 <p className="text-muted-foreground text-xs">Total Institutional Value</p>
-                <p className="font-bold text-emerald-500 text-sm sm:text-base">{formatCurrency(institutionalOwnership.totalValue)}</p>
+                <p className="font-bold text-emerald-500 text-sm sm:text-base">{formatCurrency(institutionalOwnership?.totalValue || 0)}</p>
               </div>
               <div className="p-3 bg-secondary/50 rounded-lg text-center">
                 <p className="text-muted-foreground text-xs">Total Shares Held</p>
-                <p className="font-bold text-sm sm:text-base">{(institutionalOwnership.totalShares / 1e6).toFixed(2)}M</p>
+                <p className="font-bold text-sm sm:text-base">{((institutionalOwnership?.totalShares || 0) / 1e6).toFixed(2)}M</p>
               </div>
               <div className="p-3 bg-secondary/50 rounded-lg text-center">
                 <p className="text-muted-foreground text-xs">Number of Holders</p>
-                <p className="font-bold text-sm sm:text-base">{institutionalOwnership.topHolders.length}+</p>
+                <p className="font-bold text-sm sm:text-base">{institutionalOwnership?.topHolders?.length || 0}+</p>
               </div>
               <div className="p-3 bg-secondary/50 rounded-lg text-center">
                 <p className="text-muted-foreground text-xs">Avg Position</p>
-                <p className="font-bold text-sm sm:text-base">{formatCurrency(institutionalOwnership.totalValue / institutionalOwnership.topHolders.length)}</p>
+                <p className="font-bold text-sm sm:text-base">{formatCurrency((institutionalOwnership?.totalValue || 0) / (institutionalOwnership?.topHolders?.length || 1))}</p>
               </div>
             </div>
 
@@ -389,7 +444,7 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
                   </tr>
                 </thead>
                 <tbody>
-                  {institutionalOwnership.topHolders.slice(0, 10).map((holder: any, i: number) => (
+                  {(institutionalOwnership?.topHolders || []).slice(0, 10).map((holder: InstitutionalHolder, i: number) => (
                     <tr key={i} className="border-b border-border/50">
                       <td className="p-2 font-medium">{holder.investor?.replace(/_/g, ' ')}</td>
                       <td className="p-2 text-right">{(holder.shares / 1e6).toFixed(2)}M</td>

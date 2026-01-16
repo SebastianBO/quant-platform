@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 const EODHD_API_KEY = process.env.EODHD_API_KEY
 
@@ -93,7 +94,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ results: [], error: 'No results found' })
   } catch (error) {
-    console.error('Search error:', error)
+    logger.error('Search error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({ results: [], error: 'Search failed' })
   }
 }

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 // Tink configuration
 const TINK_CLIENT_ID = process.env.TINK_CLIENT_ID || ''
@@ -89,7 +90,7 @@ export async function POST(request: NextRequest) {
       supportedMarkets: EUROPEAN_MARKETS,
     })
   } catch (error: any) {
-    console.error('Error creating Tink link:', error.message)
+    logger.error('Error creating Tink link', { error: error.message })
     return NextResponse.json(
       { error: 'Failed to create Tink link', details: error.message },
       { status: 500 }

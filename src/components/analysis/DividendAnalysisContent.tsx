@@ -32,10 +32,51 @@ import {
 import { AnalysisNavigation } from './AnalysisNavigation'
 import { AnalysisRelatedLinks } from './AnalysisRelatedLinks'
 
+// Types for component data
+interface CompanyFacts {
+  name?: string
+}
+
+interface StockSnapshot {
+  price?: number
+  dividendYield?: number
+  dividendShare?: number
+  exDividendDate?: string
+  forwardDividendYield?: number
+}
+
+interface StockData {
+  companyFacts?: CompanyFacts
+  snapshot?: StockSnapshot
+}
+
+interface Highlights {
+  eps?: number
+  profitMargin?: number
+}
+
+interface FundamentalsData {
+  highlights?: Highlights
+}
+
+interface DividendHistoryEntry {
+  year: string
+  dividend: number
+}
+
+interface PeerComparisonEntry {
+  ticker: string
+  name: string
+  yield: number
+  payoutRatio: number
+  growth: number
+  rating: string
+}
+
 interface DividendAnalysisProps {
   ticker: string
-  stockData: any
-  fundamentalsData: any
+  stockData: StockData | null
+  fundamentalsData: FundamentalsData | null
 }
 
 export default function DividendAnalysisContent({
@@ -43,7 +84,7 @@ export default function DividendAnalysisContent({
   stockData,
   fundamentalsData,
 }: DividendAnalysisProps) {
-  const [peerData, setPeerData] = useState<any[]>([])
+  const [peerData, setPeerData] = useState<PeerComparisonEntry[]>([])
 
   const companyName = stockData?.companyFacts?.name || ticker
   const price = stockData?.snapshot?.price || 0
@@ -227,7 +268,7 @@ export default function DividendAnalysisContent({
                     <YAxis className="text-xs" tick={{ fill: 'hsl(var(--muted-foreground))' }} tickFormatter={(value) => `$${value.toFixed(2)}`} />
                     <Tooltip
                       contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px' }}
-                      formatter={(value: any) => [`$${value.toFixed(2)}`, 'Dividend']}
+                      formatter={(value: number) => [`$${value.toFixed(2)}`, 'Dividend']}
                     />
                     <Line type="monotone" dataKey="dividend" stroke="#22c55e" strokeWidth={3} dot={{ fill: '#22c55e', r: 4 }} />
                   </LineChart>
@@ -322,7 +363,7 @@ export default function DividendAnalysisContent({
                     <YAxis className="text-xs" tick={{ fill: 'hsl(var(--muted-foreground))' }} tickFormatter={(value) => `${(value * 100).toFixed(1)}%`} />
                     <Tooltip
                       contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px' }}
-                      formatter={(value: any) => [`${(value * 100).toFixed(2)}%`, 'Yield']}
+                      formatter={(value: number) => [`${(value * 100).toFixed(2)}%`, 'Yield']}
                     />
                     <Bar dataKey="yield" radius={[8, 8, 0, 0]}>
                       {peerData.map((entry, index) => (
@@ -411,11 +452,11 @@ export default function DividendAnalysisContent({
 
 // Helper Functions
 
-function generateDividendHistory(currentDividend: number, yield_: number): any[] {
+function generateDividendHistory(currentDividend: number, yield_: number): DividendHistoryEntry[] {
   if (!currentDividend || currentDividend === 0) return []
 
   const currentYear = new Date().getFullYear()
-  const history = []
+  const history: DividendHistoryEntry[] = []
   const growthRate = Math.random() * 0.08 + 0.02
 
   for (let i = 9; i >= 0; i--) {
@@ -427,7 +468,7 @@ function generateDividendHistory(currentDividend: number, yield_: number): any[]
   return history
 }
 
-function calculateDividendGrowth(history: any[]): number {
+function calculateDividendGrowth(history: DividendHistoryEntry[]): number {
   if (history.length < 2) return 0
 
   const recent5Years = history.slice(-5)
@@ -465,8 +506,8 @@ function assessDividendReliability(
   return Math.max(0, Math.min(10, score))
 }
 
-function generatePeerComparison(ticker: string, yield_: number, payoutRatio: number, growth: number): any[] {
-  const peers = [{ ticker, name: 'Current Company', yield: yield_, payoutRatio, growth, rating: 'A' }]
+function generatePeerComparison(ticker: string, yield_: number, payoutRatio: number, growth: number): PeerComparisonEntry[] {
+  const peers: PeerComparisonEntry[] = [{ ticker, name: 'Current Company', yield: yield_, payoutRatio, growth, rating: 'A' }]
 
   const peerTickers = ['COMP1', 'COMP2', 'COMP3', 'COMP4']
 

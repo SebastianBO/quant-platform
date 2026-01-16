@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // openFDA DrugsFDA API Integration
 // Free API, no key required (but recommended for higher rate limits)
@@ -302,7 +303,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('FDA approvals API error:', error)
+    logger.error('FDA approvals API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Failed to fetch FDA approvals',
       details: error instanceof Error ? error.message : 'Unknown error'

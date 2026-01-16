@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, memo } from "react"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { formatCurrency, formatPercent } from "@/lib/utils"
 
@@ -95,7 +95,7 @@ const SAMPLE_STOCKS: StockResult[] = [
   { ticker: "HD", name: "Home Depot", price: 425.60, marketCap: 420e9, pe: 26.8, roic: 0.45, revenueGrowth: 0.04, grossMargin: 0.34, debtToEquity: 15.2, freeCashFlowYield: 0.038 },
 ]
 
-export default function StockScreener() {
+function StockScreenerComponent() {
   const [criteria, setCriteria] = useState<ScreenerCriteria[]>([])
   const [results, setResults] = useState<StockResult[]>([])
   const [sortBy, setSortBy] = useState<string>("marketCap")
@@ -137,7 +137,7 @@ export default function StockScreener() {
     setCriteria(criteria.filter((_, i) => i !== index))
   }
 
-  const updateCriteria = (index: number, field: string, value: any) => {
+  const updateCriteria = (index: number, field: string, value: string | number) => {
     const updated = [...criteria]
     updated[index] = { ...updated[index], [field]: value }
     setCriteria(updated)
@@ -304,3 +304,5 @@ export default function StockScreener() {
     </Card>
   )
 }
+
+export default memo(StockScreenerComponent)

@@ -4,6 +4,10 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip } from "recharts"
 import { useTheme } from "next-themes"
 
+interface TooltipFormatterProps {
+  payload?: { actual: string }
+}
+
 interface FinancialSnowflakeProps {
   ticker: string
   metrics: {
@@ -124,8 +128,8 @@ export default function FinancialSnowflake({ ticker, metrics }: FinancialSnowfla
                   border: isDark ? '1px solid hsl(0 0% 20%)' : '1px solid hsl(0 0% 85%)',
                   borderRadius: '8px'
                 }}
-                formatter={(value: number, name: string, props: any) => [
-                  `${value.toFixed(0)}/100 - ${props.payload.actual}`,
+                formatter={(value: number, _name: string, props: TooltipFormatterProps) => [
+                  `${value.toFixed(0)}/100 - ${props.payload?.actual || ''}`,
                   'Score'
                 ]}
               />

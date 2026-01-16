@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, memo } from "react"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import {
   HISTORICAL_PREDICTIONS,
@@ -534,7 +534,7 @@ function PredictionDashboard() {
 /**
  * Main component that shows either stock-specific or full dashboard view
  */
-export default function PredictionAccuracy({
+function PredictionAccuracyComponent({
   ticker,
   companyName,
   currentPrice,
@@ -588,3 +588,5 @@ export default function PredictionAccuracy({
  * Export sub-components for flexible usage
  */
 export { AccuracyGauge, PredictionCard, PredictionDashboard, StockPredictionAccuracy }
+
+export default memo(PredictionAccuracyComponent)

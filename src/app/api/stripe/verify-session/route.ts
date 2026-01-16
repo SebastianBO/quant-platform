@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import Stripe from "stripe"
+import { logger } from '@/lib/logger'
 
 function getStripe() {
   return new Stripe(process.env.STRIPE_SECRET_KEY || "")
@@ -31,7 +32,7 @@ export async function GET(request: NextRequest) {
       subscriptionId: session.subscription
     })
   } catch (error) {
-    console.error("Error verifying session:", error)
+    logger.error('Error verifying session', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to verify session" },
       { status: 500 }

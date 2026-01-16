@@ -34,12 +34,46 @@ interface PortfolioMemberChatProps {
   portfolioName: string
 }
 
+// Types for Supabase responses
+interface ChatMessageRecord {
+  id: string
+  content: string
+  user_id: string
+  created_at: string
+  portfolio_id: string
+}
+
+interface ProfileRecord {
+  id: string
+  name?: string
+  username?: string
+  avatar_url?: string
+}
+
+interface MemberRecord {
+  user_id: string
+  status: string
+  profiles?: ProfileRecord
+}
+
+interface AuthUser {
+  id: string
+  email?: string
+  user_metadata?: {
+    full_name?: string
+  }
+}
+
+interface RealtimePayload {
+  new: ChatMessageRecord
+}
+
 export default function PortfolioMemberChat({ portfolioId, portfolioName }: PortfolioMemberChatProps) {
   const supabase = createClient()
   const [messages, setMessages] = useState<Message[]>([])
   const [newMessage, setNewMessage] = useState("")
   const [members, setMembers] = useState<Member[]>([])
-  const [currentUser, setCurrentUser] = useState<any>(null)
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null)
   const [loading, setLoading] = useState(true)
   const [sending, setSending] = useState(false)
   const [showMembers, setShowMembers] = useState(false)
@@ -71,20 +105,20 @@ export default function PortfolioMemberChat({ portfolioId, portfolioName }: Port
 
       // Fetch profiles for message senders
       if (data && data.length > 0) {
-        const userIds = [...new Set(data.map((msg: any) => msg.user_id))]
+        const userIds = [...new Set(data.map((msg: ChatMessageRecord) => msg.user_id))]
         const { data: profiles } = await supabase
           .from('profiles')
           .select('id, name, username, avatar_url')
           .in('id', userIds)
 
         if (profiles) {
-          const profileMap: Record<string, any> = {}
-          profiles.forEach((profile: any) => {
+          const profileMap: Record<string, ProfileRecord> = {}
+          profiles.forEach((profile: ProfileRecord) => {
             profileMap[profile.id] = profile
           })
 
-          data.forEach((msg: any) => {
-            msg.profile = profileMap[msg.user_id] || null
+          data.forEach((msg: ChatMessageRecord & { profile?: ProfileRecord }) => {
+            msg.profile = profileMap[msg.user_id] || undefined
           })
         }
       }
@@ -106,20 +140,20 @@ export default function PortfolioMemberChat({ portfolioId, portfolioName }: Port
         .eq('status', 'accepted')
 
       if (memberData && memberData.length > 0) {
-        const memberIds = memberData.map((m: any) => m.user_id)
+        const memberIds = memberData.map((m: MemberRecord) => m.user_id)
         const { data: profiles } = await supabase
           .from('profiles')
           .select('id, name, username, avatar_url')
           .in('id', memberIds)
 
         if (profiles) {
-          const profileMap: Record<string, any> = {}
-          profiles.forEach((profile: any) => {
+          const profileMap: Record<string, ProfileRecord> = {}
+          profiles.forEach((profile: ProfileRecord) => {
             profileMap[profile.id] = profile
           })
 
-          memberData.forEach((member: any) => {
-            member.profiles = profileMap[member.user_id] || null
+          memberData.forEach((member: MemberRecord) => {
+            member.profiles = profileMap[member.user_id] || undefined
           })
         }
 
@@ -145,7 +179,7 @@ export default function PortfolioMemberChat({ portfolioId, portfolioName }: Port
           table: 'portfolio_chat_messages',
           filter: `portfolio_id=eq.${portfolioId}`
         },
-        async (payload: any) => {
+        async (payload: RealtimePayload) => {
           // Don't add if it's our own message (we already added it optimistically)
           if (payload.new.user_id === currentUser?.id) return
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { sendBatchWeeklyDigest } from '@/lib/email'
+import { logger } from '@/lib/logger'
 
 function getSupabase() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -45,7 +46,7 @@ export async function GET(request: NextRequest) {
       .eq('subscribed_weekly_digest', true)
 
     if (subError) {
-      console.error('Error fetching subscribers:', subError)
+      logger.error('Error fetching subscribers', { error: subError.message })
       throw subError
     }
 
@@ -121,7 +122,7 @@ export async function GET(request: NextRequest) {
       dateRange: digestData.dateRange,
     })
   } catch (error) {
-    console.error('Weekly digest error:', error)
+    logger.error('Weekly digest error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to send digest' },
       { status: 500 }
