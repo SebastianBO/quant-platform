@@ -97,7 +97,7 @@ Sitemap: https://lician.com/sitemap-compare-years-index.xml
 # Sitemaps - Quarterly Earnings (167K+ pages)
 Sitemap: https://lician.com/sitemap-earnings-index.xml
 
-# Sitemaps - Metric Pages (80+ metrics × 6960 stocks = 556K+ pages)
+# Sitemaps - Metric Pages (107 metrics × 5000+ stocks = 535K+ pages)
 Sitemap: https://lician.com/sitemap-metrics-index.xml
 
 # Sitemaps - Quarterly Comparisons (581M+ pages)

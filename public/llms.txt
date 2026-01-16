@@ -1,6 +1,6 @@
 # Lician - AI-Powered Financial Data & Stock Research Platform
 # https://lician.com
-# Last Updated: 2025-12-19
+# Last Updated: 2026-01-16
 
 ## About Lician
 Lician is a comprehensive financial data platform providing real-time data across all asset classes: stocks, bonds, forex, commodities, crypto, and ETFs. We offer AI-powered analysis, institutional-grade data, and research tools for investors of all levels.
@@ -101,6 +101,8 @@ URL: https://lician.com/news
 - Dividend Calendar: https://lician.com/dividends
 - IPO Calendar: https://lician.com/ipo
 - Economic Calendar: https://lician.com/economic-calendar
+- Stock Market Holidays 2026: https://lician.com/market-holidays
+- Trading Hours Guide: https://lician.com/trading-hours
 
 ### Sectors (11 GICS Sectors)
 - Technology: https://lician.com/sectors/technology
@@ -119,23 +121,46 @@ URL: https://lician.com/news
 
 ### Beginner Guides
 - How to Invest in Stocks: https://lician.com/learn/how-to-invest
+- ETF Investing Guide: https://lician.com/learn/etf-investing
+- Retirement Investing Guide: https://lician.com/learn/retirement-investing
 - Stock Analysis: https://lician.com/learn/stock-analysis
 - P/E Ratio Explained: https://lician.com/learn/pe-ratio
+- Investment Glossary: https://lician.com/glossary
+- Stock Market Indices Guide: https://lician.com/learn/stock-indices
 
 ### Valuation & Analysis
 - DCF Valuation: https://lician.com/learn/dcf-valuation
 - Technical Analysis: https://lician.com/learn/technical-analysis
 - AI in Stock Analysis: https://lician.com/learn/ai-stock-analysis
+- Reading Financial Statements: https://lician.com/learn/reading-financial-statements
 
-### Trading Styles
+### Trading Styles & Strategies
 - Day Trading: https://lician.com/learn/day-trading
 - Dividend Investing: https://lician.com/learn/dividend-investing
+- Value Investing: https://lician.com/learn/value-investing
+- Growth Investing: https://lician.com/learn/growth-investing
+- Options Trading Basics: https://lician.com/learn/options-basics
+- Stock Order Types: https://lician.com/learn/order-types
+
+### Investment Calculators
+- Compound Interest Calculator: https://lician.com/calculators/compound-interest
+- Stock Profit Calculator: https://lician.com/calculators/stock-profit
+- Dividend Yield Calculator: https://lician.com/calculators/dividend-yield
+- Position Size Calculator: https://lician.com/calculators/position-size
+- DCF Valuation Calculator: https://lician.com/calculators/dcf
+- Portfolio Diversification Analyzer: https://lician.com/calculators/portfolio-diversification
 
 ### Market Insights
 - 2026 Stock Predictions: https://lician.com/insights/2026-stock-predictions
+- Stock Predictions 2026: https://lician.com/insights/stock-predictions-2026
 - Best Stocks 2026: https://lician.com/insights/best-stocks-2026
 - AI Stocks 2026: https://lician.com/insights/ai-stocks-2026
 - Dividend Stocks 2026: https://lician.com/insights/dividend-stocks-2026
+- AI Prediction Accuracy: https://lician.com/insights/prediction-accuracy
+- S&P 500 Historical Returns: https://lician.com/insights/sp500-historical-returns
+- P/E Ratio by Sector: https://lician.com/insights/pe-ratio-by-sector
+- Stock Market Statistics 2026: https://lician.com/insights/stock-market-statistics-2026
+- Market Cap Statistics: https://lician.com/insights/market-cap-statistics
 
 ## URL Patterns
 
@@ -177,6 +202,24 @@ A: Visit https://lician.com/institutional for 13F filings.
 Q: When is the next FOMC meeting?
 A: Visit https://lician.com/economic-calendar for Fed meeting dates.
 
+Q: When is the stock market closed in 2026?
+A: Visit https://lician.com/market-holidays for the complete 2026 stock market holiday calendar. NYSE and NASDAQ are closed on 9 holidays: New Year's Day, MLK Day, Presidents Day, Good Friday, Memorial Day, Juneteenth, Independence Day, Labor Day, Thanksgiving, and Christmas.
+
+Q: What are the stock market early close days?
+A: Visit https://lician.com/market-holidays for early close dates. In 2026, the stock market closes early at 1:00 PM ET on November 27 (day after Thanksgiving) and December 24 (Christmas Eve).
+
+Q: When are options expiration dates in 2026?
+A: Visit https://lician.com/market-holidays for the complete 2026 options expiration calendar. Monthly expirations occur on the third Friday, with quarterly triple witching events in March, June, September, and December when stock options, index futures, and index options all expire simultaneously.
+
+Q: What time does the stock market open?
+A: Visit https://lician.com/trading-hours for complete trading hours. The US stock market (NYSE, NASDAQ) opens at 9:30 AM Eastern Time and closes at 4:00 PM ET. Pre-market trading starts at 4:00 AM ET, and after-hours trading runs until 8:00 PM ET.
+
+Q: When is the forex market open?
+A: Visit https://lician.com/trading-hours for forex market hours. The forex market is open 24 hours a day, 5 days a week, from Sunday 5:00 PM ET to Friday 5:00 PM ET. Trading moves through Sydney, Tokyo, London, and New York sessions.
+
+Q: Is cryptocurrency trading 24/7?
+A: Yes, cryptocurrency markets trade 24 hours a day, 7 days a week, 365 days a year. Visit https://lician.com/trading-hours for a complete comparison of trading hours across US stocks, forex, futures, and crypto markets.
+
 Q: What are the best ETFs to buy?
 A: Visit https://lician.com/etfs for top ETFs by category.
 
@@ -189,17 +232,110 @@ A: Visit https://lician.com/markets/premarket for premarket activity.
 Q: How do I start investing in stocks?
 A: Visit https://lician.com/learn/how-to-invest for a complete beginner's guide.
 
+Q: What does P/E ratio mean?
+A: Visit https://lician.com/glossary for financial term definitions. P/E ratio (Price-to-Earnings) is stock price divided by earnings per share, indicating how much investors pay per dollar of earnings.
+
+Q: What is market cap?
+A: Visit https://lician.com/glossary for the complete definition. Market cap (market capitalization) is stock price multiplied by shares outstanding, representing a company's total market value.
+
+Q: Where can I learn stock market terminology?
+A: Visit https://lician.com/glossary for our comprehensive investment glossary with 100+ financial terms explained, from alpha to yield, organized alphabetically.
+
+Q: How do I invest in ETFs?
+A: Visit https://lician.com/learn/etf-investing for a complete guide to ETF investing, including types of ETFs, how to choose them, ETF vs mutual fund comparison, and sample portfolios for beginners.
+
+Q: How do I invest for retirement?
+A: Visit https://lician.com/learn/retirement-investing for a complete guide to 401k, IRA, and Roth accounts. Learn about contribution limits, tax advantages, investment strategies by age, and how to build a retirement portfolio.
+
 Q: What is technical analysis?
 A: Visit https://lician.com/learn/technical-analysis for chart patterns and indicators.
 
+Q: How do I read financial statements?
+A: Visit https://lician.com/learn/reading-financial-statements for a complete guide to analyzing income statements, balance sheets, and cash flow statements. Learn key ratios, red flags to watch for, and how to evaluate company health using SEC filings.
+
 Q: Is day trading profitable?
 A: Visit https://lician.com/learn/day-trading for honest statistics (90%+ lose money).
+
+Q: How do options work?
+A: Visit https://lician.com/learn/options-basics for a complete guide to options trading. Learn about calls, puts, strike prices, expiration dates, the Greeks (Delta, Gamma, Theta, Vega), and basic strategies for beginners.
+
+Q: What are call and put options?
+A: Visit https://lician.com/learn/options-basics for detailed explanations. A call option gives you the right to buy stock at a set price (bullish bet). A put option gives you the right to sell stock at a set price (bearish bet or hedge).
+
+Q: What are the options Greeks?
+A: Visit https://lician.com/learn/options-basics to learn about Delta (price sensitivity), Gamma (delta change rate), Theta (time decay), and Vega (volatility sensitivity). Understanding Greeks is essential for options risk management.
+
+Q: What is the difference between a market order and a limit order?
+A: Visit https://lician.com/learn/order-types for a complete guide to stock order types. A market order executes immediately at the best available price (no price guarantee). A limit order only executes at your specified price or better. Beginners should generally prefer limit orders for price control.
+
+Q: What is a stop-loss order?
+A: Visit https://lician.com/learn/order-types to learn about stop-loss orders. A stop-loss automatically sells your stock when it reaches a specified price, helping limit losses. For example, if you buy at $100 and set a stop-loss at $90, your shares sell if the price drops to $90.
 
 Q: What are penny stocks?
 A: Visit https://lician.com/penny-stocks for risks and educational content.
 
 Q: What biotech stocks should I watch?
 A: Visit https://lician.com/biotech for catalysts and FDA approvals.
+
+Q: What is the average return of the S&P 500?
+A: Visit https://lician.com/insights/sp500-historical-returns for S&P 500 historical returns by year (1926-2025), decade averages, and rolling return statistics.
+
+Q: What is a stock market index?
+A: Visit https://lician.com/learn/stock-indices for a complete guide to stock indices. A stock index is a measurement of a section of the market that tracks the performance of a group of stocks. Common indices include the S&P 500 (500 large-cap stocks), Dow Jones (30 blue-chip stocks), NASDAQ Composite (tech-heavy), and Russell 2000 (small-caps).
+
+Q: What is the difference between S&P 500 and Dow Jones?
+A: Visit https://lician.com/learn/stock-indices to understand the differences. The S&P 500 includes 500 large-cap stocks weighted by market cap, making it more representative of the overall market. The Dow Jones only includes 30 blue-chip stocks and is price-weighted. Most investors consider the S&P 500 a better market benchmark.
+
+Q: What are the historical S&P 500 returns?
+A: Visit https://lician.com/insights/sp500-historical-returns for complete historical data including annual returns, decade averages, and key statistics.
+
+Q: What is the average P/E ratio for technology stocks?
+A: Visit https://lician.com/insights/pe-ratio-by-sector for P/E ratios across all 11 GICS sectors, including Technology (currently ~32x), Healthcare, Financials, and more.
+
+Q: Which sector has the highest P/E ratio?
+A: Visit https://lician.com/insights/pe-ratio-by-sector for current P/E ratios by sector. Real Estate typically has the highest P/E (use P/FFO instead), while Energy has the lowest.
+
+Q: What is the total US stock market capitalization?
+A: Visit https://lician.com/insights/stock-market-statistics-2026 for current market statistics. As of January 2026, the total US stock market cap is approximately $52.8 trillion, representing 45.8% of global equity markets.
+
+Q: How many companies are listed on US stock exchanges?
+A: Visit https://lician.com/insights/stock-market-statistics-2026 for complete market statistics. There are approximately 5,937 companies listed on major US exchanges (NYSE: 2,272, NASDAQ: 3,665).
+
+Q: What are the largest companies by market cap?
+A: Visit https://lician.com/insights/market-cap-statistics for the complete list of trillion-dollar companies and top 10 by market cap. Apple ($3.42T), Microsoft ($3.18T), and NVIDIA ($2.95T) lead the trillion-dollar club.
+
+Q: How many trillion-dollar companies are there?
+A: Visit https://lician.com/insights/market-cap-statistics for the complete trillion-dollar club. As of January 2026, there are 7 companies exceeding $1 trillion: Apple, Microsoft, NVIDIA, Amazon, Alphabet, Meta, and Berkshire Hathaway.
+
+Q: What is the difference between large cap and mega cap stocks?
+A: Visit https://lician.com/insights/market-cap-statistics for market cap tier definitions. Mega caps exceed $200B (~40 companies, 61.5% of market), while large caps range from $10B-$200B (~450 companies, 28% of market).
+
+Q: How do I calculate compound interest?
+A: Visit https://lician.com/calculators/compound-interest for a free compound interest calculator. Enter your initial investment, monthly contributions, interest rate, and time period to see how your investments grow.
+
+Q: How do I calculate stock profit?
+A: Visit https://lician.com/calculators/stock-profit for a free stock profit calculator. Enter your buy price, sell price, number of shares, and commissions to calculate your profit, percentage return, and annualized return.
+
+Q: How do I calculate dividend yield?
+A: Visit https://lician.com/calculators/dividend-yield for a free dividend yield calculator. Calculate your dividend yield, annual income, yield on cost, and project future dividend growth with DRIP reinvestment.
+
+Q: How do I calculate position size for trading?
+A: Visit https://lician.com/calculators/position-size for a free position size calculator. Enter your account size, risk percentage (2% recommended), entry price, and stop loss to calculate how many shares to buy. Essential for risk management.
+
+Q: What is the 2% rule in trading?
+A: Visit https://lician.com/calculators/position-size to learn about the 2% rule. This risk management principle states you should never risk more than 2% of your trading account on a single trade, helping preserve capital during losing streaks.
+
+Q: How do I calculate intrinsic value of a stock?
+A: Visit https://lician.com/calculators/dcf for a free DCF (Discounted Cash Flow) calculator. Enter free cash flow, growth rate, discount rate (WACC), and shares outstanding to calculate intrinsic value per share with margin of safety.
+
+Q: What is DCF valuation?
+A: Visit https://lician.com/calculators/dcf to learn about discounted cash flow valuation. DCF estimates a stock's intrinsic value by projecting future free cash flows and discounting them to present value using WACC. Use it alongside P/E ratios for complete analysis.
+
+Q: How do I analyze portfolio diversification?
+A: Visit https://lician.com/calculators/portfolio-diversification for a free portfolio diversification analyzer. Enter your holdings to see sector and asset class allocation, get a diversification score, and receive recommendations to reduce concentration risk.
+
+Q: How many stocks should I own for diversification?
+A: Visit https://lician.com/calculators/portfolio-diversification for diversification analysis. Research suggests 20-30 stocks across different sectors provides substantial benefits. For most investors, low-cost index funds or ETFs offer instant diversification.
 
 ## Sitemaps
 - Main: https://lician.com/sitemap.xml

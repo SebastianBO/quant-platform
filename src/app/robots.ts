@@ -86,9 +86,30 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: [
-      `${baseUrl}/sitemap-index.xml`,  // Main index with all sub-sitemaps
-      `${baseUrl}/sitemap.xml`,         // Core pages
-      `${baseUrl}/sitemap-seo.xml`,     // SEO landing pages
+      // Primary sitemaps
+      `${baseUrl}/sitemap.xml`,
+      `${baseUrl}/sitemap-index.xml`,
+      `${baseUrl}/sitemap-seo.xml`,
+      // Tiered stock pages
+      `${baseUrl}/sitemap-stocks-hot.xml`,
+      `${baseUrl}/sitemap-stocks-warm.xml?page=1`,
+      `${baseUrl}/sitemap-stocks-warm.xml?page=2`,
+      `${baseUrl}/sitemap-stocks-warm.xml?page=3`,
+      `${baseUrl}/sitemap-stocks-cold.xml?page=1`,
+      // Comparison pages
+      `${baseUrl}/sitemap-compare-index.xml`,
+      `${baseUrl}/sitemap-compare-years-index.xml`,
+      `${baseUrl}/sitemap-compare-quarters-index.xml`,
+      // Metric pages (107 metrics × stocks)
+      `${baseUrl}/sitemap-metrics-index.xml`,
+      // Earnings pages
+      `${baseUrl}/sitemap-earnings-index.xml`,
+      // Sector & industry pages
+      `${baseUrl}/sitemap-sectors.xml`,
+      // Per-stock data pages
+      `${baseUrl}/sitemap-institutional-index.xml`,
+      `${baseUrl}/sitemap-insider-index.xml`,
+      `${baseUrl}/sitemap-short-interest-index.xml`,
     ],
     // Note: Next.js will automatically serve this at /robots.txt
   }

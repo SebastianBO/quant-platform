@@ -254,6 +254,49 @@ export function getDatasetSchema({
   }
 }
 
+// DataCatalog Schema (for the overall financial data platform)
+export function getDataCatalogSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'DataCatalog',
+    '@id': `${SITE_URL}/#datacatalog`,
+    name: 'Lician Financial Data',
+    description: 'Real-time stock data, financial statements, valuations, and AI-powered analysis for 100,000+ companies across US and European markets.',
+    url: SITE_URL,
+    provider: {
+      '@type': 'Organization',
+      '@id': `${SITE_URL}/#organization`,
+      name: SITE_NAME,
+    },
+    dataset: [
+      {
+        '@type': 'Dataset',
+        name: 'US Stock Market Data',
+        description: 'Real-time prices, financial statements, and analytics for 5,000+ US companies including SEC filings and insider trading data.',
+        variableMeasured: ['stock price', 'market cap', 'revenue', 'earnings', 'P/E ratio'],
+      },
+      {
+        '@type': 'Dataset',
+        name: 'European Stock Market Data',
+        description: 'Financial data and market metrics for 100,000+ European companies across EU markets.',
+        variableMeasured: ['stock price', 'market cap', 'revenue', 'IFRS financials'],
+      },
+    ],
+    license: 'https://creativecommons.org/licenses/by/4.0/',
+    isAccessibleForFree: true,
+    keywords: [
+      'stock data',
+      'financial data',
+      'stock market',
+      'company financials',
+      'SEC filings',
+      'earnings data',
+      'stock valuations',
+      'AI stock analysis',
+    ].join(', '),
+  }
+}
+
 // AggregateRating Schema for analyst ratings
 export function getAggregateRatingSchema({
   ticker,
