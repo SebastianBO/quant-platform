@@ -1,0 +1,694 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "L Lician" [ref=e5] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e7]: L
+          - generic [ref=e8]: Lician
+        - generic [ref=e9]:
+          - button "Stocks" [ref=e11]:
+            - img [ref=e12]
+            - text: Stocks
+            - img [ref=e15]
+          - button "Markets" [ref=e18]:
+            - img [ref=e19]
+            - text: Markets
+            - img [ref=e21]
+          - button "Assets" [ref=e24]:
+            - img [ref=e25]
+            - text: Assets
+            - img [ref=e28]
+          - button "Tools" [ref=e31]:
+            - img [ref=e32]
+            - text: Tools
+            - img [ref=e34]
+          - link "Pricing" [ref=e36] [cursor=pointer]:
+            - /url: /premium
+      - generic [ref=e37]:
+        - button "Search stocks... Cmd K" [ref=e38]:
+          - img [ref=e39]
+          - generic [ref=e42]: Search stocks...
+          - generic [ref=e43]:
+            - generic [ref=e44]: Cmd
+            - text: K
+        - generic [ref=e45]:
+          - heading "Command Palette" [level=2] [ref=e46]
+          - paragraph [ref=e47]: Search for a command to run...
+        - link "Connect Portfolio" [ref=e48] [cursor=pointer]:
+          - /url: /dashboard/portfolios
+          - button "Connect Portfolio" [ref=e49]:
+            - img
+            - text: Connect Portfolio
+        - button "Toggle theme" [ref=e50]:
+          - img
+          - generic [ref=e51]: Toggle theme
+        - link "Sign in" [ref=e52] [cursor=pointer]:
+          - /url: /login
+          - button "Sign in" [ref=e53]
+        - link "Get started free" [ref=e54] [cursor=pointer]:
+          - /url: /login
+          - button "Get started free" [ref=e55]
+  - main [ref=e56]:
+    - generic [ref=e58]:
+      - complementary [ref=e59]:
+        - navigation [ref=e60]:
+          - generic [ref=e61]:
+            - heading "Markets" [level=3] [ref=e62]
+            - generic [ref=e63]:
+              - link "Overview" [ref=e64] [cursor=pointer]:
+                - /url: /markets
+                - img [ref=e65]
+                - generic [ref=e67]: Overview
+              - link "Premarket" [ref=e68] [cursor=pointer]:
+                - /url: /markets/premarket
+                - img [ref=e69]
+                - generic [ref=e72]: Premarket
+              - link "After Hours" [ref=e73] [cursor=pointer]:
+                - /url: /markets/after-hours
+                - img [ref=e74]
+                - generic [ref=e77]: After Hours
+              - link "Top Gainers" [ref=e78] [cursor=pointer]:
+                - /url: /markets/top-gainers
+                - img [ref=e79]
+                - generic [ref=e82]: Top Gainers
+              - link "Top Losers" [ref=e83] [cursor=pointer]:
+                - /url: /markets/top-losers
+                - img [ref=e84]
+                - generic [ref=e87]: Top Losers
+              - link "Most Active" [ref=e88] [cursor=pointer]:
+                - /url: /markets/most-active
+                - img [ref=e89]
+                - generic [ref=e92]: Most Active
+          - generic [ref=e93]:
+            - heading "Research" [level=3] [ref=e94]
+            - generic [ref=e95]:
+              - link "Stock Screener" [ref=e96] [cursor=pointer]:
+                - /url: /screener
+                - img [ref=e97]
+                - generic [ref=e101]: Stock Screener
+              - link "Analyst Ratings" [ref=e102] [cursor=pointer]:
+                - /url: /analyst-ratings
+                - img [ref=e103]
+                - generic [ref=e107]: Analyst Ratings
+              - link "Insider Trading" [ref=e108] [cursor=pointer]:
+                - /url: /insider-trading
+                - img [ref=e109]
+                - generic [ref=e114]: Insider Trading
+              - link "Institutional" [ref=e115] [cursor=pointer]:
+                - /url: /institutional
+                - img [ref=e116]
+                - generic [ref=e120]: Institutional
+              - link "Short Interest" [ref=e121] [cursor=pointer]:
+                - /url: /short-interest
+                - img [ref=e122]
+                - generic [ref=e124]: Short Interest
+              - link "Market News" [ref=e125] [cursor=pointer]:
+                - /url: /news
+                - img [ref=e126]
+                - generic [ref=e129]: Market News
+          - generic [ref=e130]:
+            - heading "Calendars" [level=3] [ref=e131]
+            - generic [ref=e132]:
+              - link "Earnings" [ref=e133] [cursor=pointer]:
+                - /url: /earnings
+                - img [ref=e134]
+                - generic [ref=e136]: Earnings
+              - link "Dividends" [ref=e137] [cursor=pointer]:
+                - /url: /dividends
+                - img [ref=e138]
+                - generic [ref=e140]: Dividends
+              - link "IPO Calendar" [ref=e141] [cursor=pointer]:
+                - /url: /ipo
+                - img [ref=e142]
+                - generic [ref=e145]: IPO Calendar
+              - link "Economic" [ref=e146] [cursor=pointer]:
+                - /url: /economic-calendar
+                - img [ref=e147]
+                - generic [ref=e149]: Economic
+              - link "Stock Splits" [ref=e150] [cursor=pointer]:
+                - /url: /stock-splits
+                - img [ref=e151]
+                - generic [ref=e154]: Stock Splits
+          - generic [ref=e155]:
+            - heading "Asset Classes" [level=3] [ref=e156]
+            - generic [ref=e157]:
+              - link "Treasury Yields" [ref=e158] [cursor=pointer]:
+                - /url: /bonds
+                - img [ref=e159]
+                - generic [ref=e161]: Treasury Yields
+              - link "Forex" [ref=e162] [cursor=pointer]:
+                - /url: /forex
+                - img [ref=e163]
+                - generic [ref=e166]: Forex
+              - link "Commodities" [ref=e167] [cursor=pointer]:
+                - /url: /commodities
+                - img [ref=e168]
+                - generic [ref=e173]: Commodities
+              - link "Crypto" [ref=e174] [cursor=pointer]:
+                - /url: /crypto
+                - img [ref=e175]
+                - generic [ref=e177]: Crypto
+              - link "ETFs" [ref=e178] [cursor=pointer]:
+                - /url: /etfs
+                - img [ref=e179]
+                - generic [ref=e182]: ETFs
+              - link "Options" [ref=e183] [cursor=pointer]:
+                - /url: /options
+                - img [ref=e184]
+                - generic [ref=e187]: Options
+          - generic [ref=e188]:
+            - heading "Learn" [level=3] [ref=e189]
+            - generic [ref=e190]:
+              - link "Education Hub" [ref=e191] [cursor=pointer]:
+                - /url: /learn
+                - img [ref=e192]
+                - generic [ref=e195]: Education Hub
+              - link "How to Invest" [ref=e196] [cursor=pointer]:
+                - /url: /learn/how-to-invest
+                - img [ref=e197]
+                - generic [ref=e199]: How to Invest
+              - link "Technical Analysis" [ref=e200] [cursor=pointer]:
+                - /url: /learn/technical-analysis
+                - img [ref=e201]
+                - generic [ref=e204]: Technical Analysis
+              - link "Value Investing" [ref=e205] [cursor=pointer]:
+                - /url: /learn/value-investing
+                - img [ref=e206]
+                - generic [ref=e210]: Value Investing
+              - link "Blue Chips" [ref=e211] [cursor=pointer]:
+                - /url: /blue-chip-stocks
+                - img [ref=e212]
+                - generic [ref=e216]: Blue Chips
+              - link "Penny Stocks" [ref=e217] [cursor=pointer]:
+                - /url: /penny-stocks
+                - img [ref=e218]
+                - generic [ref=e220]: Penny Stocks
+          - generic [ref=e221]:
+            - heading "Get Full Analysis" [level=4] [ref=e222]
+            - paragraph [ref=e223]: Access AI-powered stock analysis, DCF valuations, and institutional data.
+            - link "Open Dashboard" [ref=e224] [cursor=pointer]:
+              - /url: /dashboard
+      - generic [ref=e225]:
+        - navigation [ref=e226]:
+          - link "Home" [ref=e227] [cursor=pointer]:
+            - /url: /
+          - text: /
+          - link "Stocks" [ref=e228] [cursor=pointer]:
+            - /url: /dashboard
+          - text: /
+          - generic [ref=e229]: AAPL vs MSFT
+        - 'heading "AAPL vs MSFT: Which Stock is Better?" [level=1] [ref=e230]'
+        - paragraph [ref=e231]: Side-by-side comparison of AAPL and Microsoft Corp in 2026
+        - generic [ref=e232]:
+          - img [ref=e233]
+          - generic [ref=e236]:
+            - text: "Comparison Updated:"
+            - time [ref=e237]: January 16, 2026 at 4:32 AM EST
+        - generic [ref=e238]:
+          - generic [ref=e239]:
+            - heading "AAPL" [level=2] [ref=e240]
+            - paragraph [ref=e241]: AAPL
+            - paragraph [ref=e242]: $0.00
+          - generic [ref=e243]:
+            - heading "MSFT" [level=2] [ref=e244]
+            - paragraph [ref=e245]: Microsoft Corp
+            - paragraph [ref=e246]: $456.66
+        - generic [ref=e247]:
+          - heading "Key Metrics Comparison" [level=2] [ref=e248]
+          - table [ref=e250]:
+            - rowgroup [ref=e251]:
+              - row "Metric AAPL MSFT Winner" [ref=e252]:
+                - columnheader "Metric" [ref=e253]
+                - columnheader "AAPL" [ref=e254]
+                - columnheader "MSFT" [ref=e255]
+                - columnheader "Winner" [ref=e256]
+            - rowgroup [ref=e257]:
+              - row "Market Cap $0.00M $3.39T MSFT" [ref=e258]:
+                - cell "Market Cap" [ref=e259]
+                - cell "$0.00M" [ref=e260]
+                - cell "$3.39T" [ref=e261]
+                - cell "MSFT" [ref=e262]
+              - row "P/E Ratio N/A 36.30 AAPL" [ref=e263]:
+                - cell "P/E Ratio" [ref=e264]
+                - cell "N/A" [ref=e265]
+                - cell "36.30" [ref=e266]
+                - cell "AAPL" [ref=e267]
+              - row "EPS (TTM) $N/A $13.70 MSFT" [ref=e268]:
+                - cell "EPS (TTM)" [ref=e269]
+                - cell "$N/A" [ref=e270]
+                - cell "$13.70" [ref=e271]
+                - cell "MSFT" [ref=e272]
+              - row "Revenue Growth 0.0% 14.9% MSFT" [ref=e273]:
+                - cell "Revenue Growth" [ref=e274]
+                - cell "0.0%" [ref=e275]
+                - cell "14.9%" [ref=e276]
+                - cell "MSFT" [ref=e277]
+              - row "Gross Margin 0.0% 68.8% MSFT" [ref=e278]:
+                - cell "Gross Margin" [ref=e279]
+                - cell "0.0%" [ref=e280]
+                - cell "68.8%" [ref=e281]
+                - cell "MSFT" [ref=e282]
+        - generic [ref=e283]:
+          - link "Analyze AAPL Full quant analysis" [ref=e284] [cursor=pointer]:
+            - /url: /dashboard?ticker=AAPL&tab=quant
+            - paragraph [ref=e285]: Analyze AAPL
+            - paragraph [ref=e286]: Full quant analysis
+          - link "Analyze MSFT Full quant analysis" [ref=e287] [cursor=pointer]:
+            - /url: /dashboard?ticker=MSFT&tab=quant
+            - paragraph [ref=e288]: Analyze MSFT
+            - paragraph [ref=e289]: Full quant analysis
+        - generic [ref=e290]:
+          - heading "Analyze Each Stock" [level=3] [ref=e291]
+          - generic [ref=e292]:
+            - generic [ref=e293]:
+              - heading "AAPL" [level=4] [ref=e294]
+              - generic [ref=e295]:
+                - link "Should I Buy AAPL?" [ref=e296] [cursor=pointer]:
+                  - /url: /should-i-buy/aapl
+                - link "AAPL Prediction" [ref=e297] [cursor=pointer]:
+                  - /url: /prediction/aapl
+            - generic [ref=e298]:
+              - heading "MSFT" [level=4] [ref=e299]
+              - generic [ref=e300]:
+                - link "Should I Buy MSFT?" [ref=e301] [cursor=pointer]:
+                  - /url: /should-i-buy/msft
+                - link "MSFT Prediction" [ref=e302] [cursor=pointer]:
+                  - /url: /prediction/msft
+        - generic [ref=e303]:
+          - heading "Frequently Asked Questions" [level=2] [ref=e304]
+          - generic [ref=e305]:
+            - generic [ref=e306]:
+              - heading "Is AAPL or MSFT a better investment?" [level=3] [ref=e307]
+              - paragraph [ref=e308]: "Comparing AAPL and MSFT: AAPL has a market cap of $0.00M while Microsoft Corp has $3.39T. Both companies have their strengths - use our detailed metrics comparison to make an informed decision."
+            - generic [ref=e309]:
+              - heading "What is the difference between AAPL and MSFT?" [level=3] [ref=e310]
+              - paragraph [ref=e311]: AAPL (AAPL) and MSFT (Microsoft Corp) differ in valuation, growth rates, and profitability metrics. Our comparison shows which company leads in each category.
+            - generic [ref=e312]:
+              - 'heading "Which stock has better value: AAPL or MSFT?" [level=3] [ref=e313]'
+              - paragraph [ref=e314]: Based on P/E ratios, compare detailed valuation metrics on our dashboard.
+            - generic [ref=e315]:
+              - 'heading "Which is growing faster: AAPL or MSFT?" [level=3] [ref=e316]'
+              - paragraph [ref=e317]: MSFT has higher revenue growth at 14.9% vs 0.0% for AAPL.
+            - generic [ref=e318]:
+              - 'heading "Which company is more profitable: AAPL or MSFT?" [level=3] [ref=e319]'
+              - paragraph [ref=e320]: Microsoft Corp (MSFT) has higher gross margins at 68.8% compared to 0.0% for AAPL.
+            - generic [ref=e321]:
+              - 'heading "Which is the larger company: AAPL or MSFT?" [level=3] [ref=e322]'
+              - paragraph [ref=e323]: Microsoft Corp (MSFT) is larger with a market cap of $3.39T compared to $0.00M for AAPL.
+            - generic [ref=e324]:
+              - heading "Should I buy AAPL or MSFT in 2026?" [level=3] [ref=e325]
+              - paragraph [ref=e326]: Both AAPL and MSFT have investment merit. AAPL trades at $0.00 while MSFT trades at $456.66. Consider your investment goals, risk tolerance, and portfolio diversification before deciding. Our AI analysis tools can provide personalized insights.
+            - generic [ref=e327]:
+              - heading "What are the key differences between AAPL and MSFT stock?" [level=3] [ref=e328]
+              - paragraph [ref=e329]: "Key differences: Market Cap ($0.00M vs $3.39T), P/E Ratio (N/A vs 36.3x), Revenue Growth (0.0% vs 14.9%), Gross Margin (0.0% vs 68.8%)."
+        - generic [ref=e330]:
+          - generic [ref=e331]:
+            - heading "Analyze Each Stock" [level=3] [ref=e332]
+            - generic [ref=e333]:
+              - generic [ref=e334]:
+                - heading "AAPL Analysis" [level=4] [ref=e335]
+                - generic [ref=e336]:
+                  - link "AAPL Overview" [ref=e337] [cursor=pointer]:
+                    - /url: /stock/aapl
+                  - link "AAPL Prediction" [ref=e338] [cursor=pointer]:
+                    - /url: /prediction/aapl
+                  - link "Should I Buy AAPL?" [ref=e339] [cursor=pointer]:
+                    - /url: /should-i-buy/aapl
+                  - link "AAPL Earnings" [ref=e340] [cursor=pointer]:
+                    - /url: /earnings/aapl
+              - generic [ref=e341]:
+                - heading "MSFT Analysis" [level=4] [ref=e342]
+                - generic [ref=e343]:
+                  - link "MSFT Overview" [ref=e344] [cursor=pointer]:
+                    - /url: /stock/msft
+                  - link "MSFT Prediction" [ref=e345] [cursor=pointer]:
+                    - /url: /prediction/msft
+                  - link "Should I Buy MSFT?" [ref=e346] [cursor=pointer]:
+                    - /url: /should-i-buy/msft
+                  - link "MSFT Earnings" [ref=e347] [cursor=pointer]:
+                    - /url: /earnings/msft
+          - generic [ref=e348]:
+            - heading "More Comparisons" [level=3] [ref=e349]
+            - generic [ref=e350]:
+              - link "AAPL vs GOOGL" [ref=e351] [cursor=pointer]:
+                - /url: /compare/aapl-vs-googl
+              - link "AAPL vs AMZN" [ref=e352] [cursor=pointer]:
+                - /url: /compare/aapl-vs-amzn
+              - link "AAPL vs META" [ref=e353] [cursor=pointer]:
+                - /url: /compare/aapl-vs-meta
+              - link "MSFT vs GOOGL" [ref=e354] [cursor=pointer]:
+                - /url: /compare/msft-vs-googl
+              - link "MSFT vs AMZN" [ref=e355] [cursor=pointer]:
+                - /url: /compare/msft-vs-amzn
+              - link "MSFT vs CRM" [ref=e356] [cursor=pointer]:
+                - /url: /compare/msft-vs-crm
+          - heading "Popular Stock Comparisons" [level=3] [ref=e357]
+          - generic [ref=e358]:
+            - link "NVDA vs AMD" [ref=e359] [cursor=pointer]:
+              - /url: /compare/nvda-vs-amd
+            - link "GOOGL vs META" [ref=e360] [cursor=pointer]:
+              - /url: /compare/googl-vs-meta
+            - link "TSLA vs RIVN" [ref=e361] [cursor=pointer]:
+              - /url: /compare/tsla-vs-rivn
+            - link "JPM vs BAC" [ref=e362] [cursor=pointer]:
+              - /url: /compare/jpm-vs-bac
+            - link "AMZN vs WMT" [ref=e363] [cursor=pointer]:
+              - /url: /compare/amzn-vs-wmt
+            - link "SPY vs QQQ" [ref=e364] [cursor=pointer]:
+              - /url: /compare/spy-vs-qqq
+            - link "KO vs PEP" [ref=e365] [cursor=pointer]:
+              - /url: /compare/ko-vs-pep
+          - generic [ref=e366]:
+            - heading "Price Predictions" [level=4] [ref=e367]
+            - generic [ref=e368]:
+              - link "AAPL Prediction" [ref=e369] [cursor=pointer]:
+                - /url: /prediction/aapl
+              - link "MSFT Prediction" [ref=e370] [cursor=pointer]:
+                - /url: /prediction/msft
+              - link "GOOGL Prediction" [ref=e371] [cursor=pointer]:
+                - /url: /prediction/googl
+              - link "AMZN Prediction" [ref=e372] [cursor=pointer]:
+                - /url: /prediction/amzn
+              - link "NVDA Prediction" [ref=e373] [cursor=pointer]:
+                - /url: /prediction/nvda
+              - link "META Prediction" [ref=e374] [cursor=pointer]:
+                - /url: /prediction/meta
+              - link "TSLA Prediction" [ref=e375] [cursor=pointer]:
+                - /url: /prediction/tsla
+              - link "AVGO Prediction" [ref=e376] [cursor=pointer]:
+                - /url: /prediction/avgo
+  - contentinfo [ref=e377]:
+    - generic [ref=e378]:
+      - generic [ref=e379]:
+        - heading "Popular Stocks" [level=3] [ref=e380]
+        - generic [ref=e381]:
+          - link "AAPL" [ref=e382] [cursor=pointer]:
+            - /url: /stock/AAPL
+          - link "MSFT" [ref=e383] [cursor=pointer]:
+            - /url: /stock/MSFT
+          - link "GOOGL" [ref=e384] [cursor=pointer]:
+            - /url: /stock/GOOGL
+          - link "AMZN" [ref=e385] [cursor=pointer]:
+            - /url: /stock/AMZN
+          - link "NVDA" [ref=e386] [cursor=pointer]:
+            - /url: /stock/NVDA
+          - link "META" [ref=e387] [cursor=pointer]:
+            - /url: /stock/META
+          - link "TSLA" [ref=e388] [cursor=pointer]:
+            - /url: /stock/TSLA
+          - link "AVGO" [ref=e389] [cursor=pointer]:
+            - /url: /stock/AVGO
+          - link "AMD" [ref=e390] [cursor=pointer]:
+            - /url: /stock/AMD
+          - link "CRM" [ref=e391] [cursor=pointer]:
+            - /url: /stock/CRM
+          - link "ADBE" [ref=e392] [cursor=pointer]:
+            - /url: /stock/ADBE
+          - link "ORCL" [ref=e393] [cursor=pointer]:
+            - /url: /stock/ORCL
+      - generic [ref=e394]:
+        - heading "Stock Predictions 2026" [level=3] [ref=e395]
+        - generic [ref=e396]:
+          - link "AAPL Prediction" [ref=e397] [cursor=pointer]:
+            - /url: /prediction/aapl
+          - link "MSFT Prediction" [ref=e398] [cursor=pointer]:
+            - /url: /prediction/msft
+          - link "GOOGL Prediction" [ref=e399] [cursor=pointer]:
+            - /url: /prediction/googl
+          - link "AMZN Prediction" [ref=e400] [cursor=pointer]:
+            - /url: /prediction/amzn
+          - link "NVDA Prediction" [ref=e401] [cursor=pointer]:
+            - /url: /prediction/nvda
+          - link "META Prediction" [ref=e402] [cursor=pointer]:
+            - /url: /prediction/meta
+          - link "TSLA Prediction" [ref=e403] [cursor=pointer]:
+            - /url: /prediction/tsla
+          - link "AVGO Prediction" [ref=e404] [cursor=pointer]:
+            - /url: /prediction/avgo
+      - generic [ref=e405]:
+        - heading "Investment Decisions" [level=3] [ref=e406]
+        - generic [ref=e407]:
+          - link "Buy AAPL?" [ref=e408] [cursor=pointer]:
+            - /url: /should-i-buy/aapl
+          - link "Buy MSFT?" [ref=e409] [cursor=pointer]:
+            - /url: /should-i-buy/msft
+          - link "Buy GOOGL?" [ref=e410] [cursor=pointer]:
+            - /url: /should-i-buy/googl
+          - link "Buy AMZN?" [ref=e411] [cursor=pointer]:
+            - /url: /should-i-buy/amzn
+          - link "Buy NVDA?" [ref=e412] [cursor=pointer]:
+            - /url: /should-i-buy/nvda
+          - link "Buy META?" [ref=e413] [cursor=pointer]:
+            - /url: /should-i-buy/meta
+          - link "Buy TSLA?" [ref=e414] [cursor=pointer]:
+            - /url: /should-i-buy/tsla
+          - link "Buy AVGO?" [ref=e415] [cursor=pointer]:
+            - /url: /should-i-buy/avgo
+      - generic [ref=e416]:
+        - heading "Popular Stock Comparisons" [level=3] [ref=e417]
+        - generic [ref=e418]:
+          - link "AAPL vs MSFT" [ref=e419] [cursor=pointer]:
+            - /url: /compare/aapl-vs-msft
+          - link "NVDA vs AMD" [ref=e420] [cursor=pointer]:
+            - /url: /compare/nvda-vs-amd
+          - link "GOOGL vs META" [ref=e421] [cursor=pointer]:
+            - /url: /compare/googl-vs-meta
+          - link "TSLA vs RIVN" [ref=e422] [cursor=pointer]:
+            - /url: /compare/tsla-vs-rivn
+          - link "JPM vs BAC" [ref=e423] [cursor=pointer]:
+            - /url: /compare/jpm-vs-bac
+          - link "AMZN vs WMT" [ref=e424] [cursor=pointer]:
+            - /url: /compare/amzn-vs-wmt
+          - link "KO vs PEP" [ref=e425] [cursor=pointer]:
+            - /url: /compare/ko-vs-pep
+          - link "SPY vs QQQ" [ref=e426] [cursor=pointer]:
+            - /url: /compare/spy-vs-qqq
+      - generic [ref=e427]:
+        - heading "Sector Predictions 2026" [level=3] [ref=e428]
+        - generic [ref=e429]:
+          - link "Technology Predictions" [ref=e430] [cursor=pointer]:
+            - /url: /predictions/technology
+          - link "Healthcare Predictions" [ref=e431] [cursor=pointer]:
+            - /url: /predictions/healthcare
+          - link "Financials Predictions" [ref=e432] [cursor=pointer]:
+            - /url: /predictions/financials
+          - link "Energy Predictions" [ref=e433] [cursor=pointer]:
+            - /url: /predictions/energy
+          - link "Consumer Predictions" [ref=e434] [cursor=pointer]:
+            - /url: /predictions/consumer-discretionary
+          - link "Industrials Predictions" [ref=e435] [cursor=pointer]:
+            - /url: /predictions/industrials
+          - link "Materials Predictions" [ref=e436] [cursor=pointer]:
+            - /url: /predictions/materials
+          - link "Utilities Predictions" [ref=e437] [cursor=pointer]:
+            - /url: /predictions/utilities
+          - link "Real Estate Predictions" [ref=e438] [cursor=pointer]:
+            - /url: /predictions/real-estate
+      - generic [ref=e439]:
+        - heading "Best Stocks by Category" [level=3] [ref=e440]
+        - generic [ref=e441]:
+          - link "Best Dividend Stocks" [ref=e442] [cursor=pointer]:
+            - /url: /best-stocks/dividend
+          - link "Best Growth Stocks" [ref=e443] [cursor=pointer]:
+            - /url: /best-stocks/growth
+          - link "Best Value Stocks" [ref=e444] [cursor=pointer]:
+            - /url: /best-stocks/value
+          - link "Best Tech Stocks" [ref=e445] [cursor=pointer]:
+            - /url: /best-stocks/tech
+          - link "Best AI Stocks" [ref=e446] [cursor=pointer]:
+            - /url: /best-stocks/ai
+          - link "Best ETFs" [ref=e447] [cursor=pointer]:
+            - /url: /best-stocks/etf
+          - link "Best Blue Chip" [ref=e448] [cursor=pointer]:
+            - /url: /best-stocks/blue-chip
+          - link "Best REITs" [ref=e449] [cursor=pointer]:
+            - /url: /best-stocks/reit
+          - link "Best Small Cap" [ref=e450] [cursor=pointer]:
+            - /url: /best-stocks/small-cap
+          - link "Best Large Cap" [ref=e451] [cursor=pointer]:
+            - /url: /best-stocks/large-cap
+      - generic [ref=e452]:
+        - generic [ref=e453]:
+          - link "L Lician" [ref=e454] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e456]: L
+            - generic [ref=e457]: Lician
+          - paragraph [ref=e458]: AI-powered stock analysis and predictions for smarter investment decisions.
+          - link "Get Premium" [ref=e460] [cursor=pointer]:
+            - /url: /api/stripe/quick-checkout?plan=annual
+        - generic [ref=e461]:
+          - heading "Research" [level=3] [ref=e462]
+          - list [ref=e463]:
+            - listitem [ref=e464]:
+              - link "Stock Screener" [ref=e465] [cursor=pointer]:
+                - /url: /screener
+            - listitem [ref=e466]:
+              - link "Stock Battle" [ref=e467] [cursor=pointer]:
+                - /url: /battle
+            - listitem [ref=e468]:
+              - link "Portfolio Tracker" [ref=e469] [cursor=pointer]:
+                - /url: /portfolio
+            - listitem [ref=e470]:
+              - link "DCF Calculator" [ref=e471] [cursor=pointer]:
+                - /url: /tools/dcf
+            - listitem [ref=e472]:
+              - link "Stock Comparisons" [ref=e473] [cursor=pointer]:
+                - /url: /compare
+            - listitem [ref=e474]:
+              - link "Analyst Ratings" [ref=e475] [cursor=pointer]:
+                - /url: /analyst-ratings
+        - generic [ref=e476]:
+          - heading "Markets" [level=3] [ref=e477]
+          - list [ref=e478]:
+            - listitem [ref=e479]:
+              - link "Market Pulse" [ref=e480] [cursor=pointer]:
+                - /url: /markets
+            - listitem [ref=e481]:
+              - link "Biotech Catalysts" [ref=e482] [cursor=pointer]:
+                - /url: /biotech
+            - listitem [ref=e483]:
+              - link "Top Gainers" [ref=e484] [cursor=pointer]:
+                - /url: /markets/top-gainers
+            - listitem [ref=e485]:
+              - link "Top Losers" [ref=e486] [cursor=pointer]:
+                - /url: /markets/top-losers
+            - listitem [ref=e487]:
+              - link "Most Active" [ref=e488] [cursor=pointer]:
+                - /url: /markets/most-active
+            - listitem [ref=e489]:
+              - link "Market News" [ref=e490] [cursor=pointer]:
+                - /url: /news
+        - generic [ref=e491]:
+          - heading "Asset Classes" [level=3] [ref=e492]
+          - list [ref=e493]:
+            - listitem [ref=e494]:
+              - link "ETFs" [ref=e495] [cursor=pointer]:
+                - /url: /etfs
+            - listitem [ref=e496]:
+              - link "Bonds & Treasury" [ref=e497] [cursor=pointer]:
+                - /url: /bonds
+            - listitem [ref=e498]:
+              - link "Commodities" [ref=e499] [cursor=pointer]:
+                - /url: /commodities
+            - listitem [ref=e500]:
+              - link "Forex" [ref=e501] [cursor=pointer]:
+                - /url: /forex
+            - listitem [ref=e502]:
+              - link "Crypto" [ref=e503] [cursor=pointer]:
+                - /url: /crypto
+            - listitem [ref=e504]:
+              - link "Options" [ref=e505] [cursor=pointer]:
+                - /url: /options
+        - generic [ref=e506]:
+          - heading "Calendars" [level=3] [ref=e507]
+          - list [ref=e508]:
+            - listitem [ref=e509]:
+              - link "Earnings Calendar" [ref=e510] [cursor=pointer]:
+                - /url: /earnings
+            - listitem [ref=e511]:
+              - link "FDA Calendar" [ref=e512] [cursor=pointer]:
+                - /url: /biotech/fda-calendar
+            - listitem [ref=e513]:
+              - link "Dividends Calendar" [ref=e514] [cursor=pointer]:
+                - /url: /dividends
+            - listitem [ref=e515]:
+              - link "Economic Calendar" [ref=e516] [cursor=pointer]:
+                - /url: /economic-calendar
+            - listitem [ref=e517]:
+              - link "IPO Calendar" [ref=e518] [cursor=pointer]:
+                - /url: /ipo
+            - listitem [ref=e519]:
+              - link "Ex-Dividend Dates" [ref=e520] [cursor=pointer]:
+                - /url: /ex-dividend
+        - generic [ref=e521]:
+          - heading "Tools" [level=3] [ref=e522]
+          - list [ref=e523]:
+            - listitem [ref=e524]:
+              - link "Newsletter" [ref=e525] [cursor=pointer]:
+                - /url: /newsletter
+            - listitem [ref=e526]:
+              - link "Biotech Screener" [ref=e527] [cursor=pointer]:
+                - /url: /screener/biotech-catalysts
+            - listitem [ref=e528]:
+              - link "Stock Analysis" [ref=e529] [cursor=pointer]:
+                - /url: /learn/stock-analysis
+            - listitem [ref=e530]:
+              - link "DCF Valuation" [ref=e531] [cursor=pointer]:
+                - /url: /learn/dcf-valuation
+            - listitem [ref=e532]:
+              - link "Dividend Investing" [ref=e533] [cursor=pointer]:
+                - /url: /learn/dividend-investing
+            - listitem [ref=e534]:
+              - link "Investment Strategies" [ref=e535] [cursor=pointer]:
+                - /url: /learn/strategies
+        - generic [ref=e536]:
+          - heading "Sectors" [level=3] [ref=e537]
+          - list [ref=e538]:
+            - listitem [ref=e539]:
+              - link "Technology" [ref=e540] [cursor=pointer]:
+                - /url: /sectors/technology
+            - listitem [ref=e541]:
+              - link "Healthcare" [ref=e542] [cursor=pointer]:
+                - /url: /sectors/healthcare
+            - listitem [ref=e543]:
+              - link "Financials" [ref=e544] [cursor=pointer]:
+                - /url: /sectors/financials
+            - listitem [ref=e545]:
+              - link "Energy" [ref=e546] [cursor=pointer]:
+                - /url: /sectors/energy
+            - listitem [ref=e547]:
+              - link "Industrials" [ref=e548] [cursor=pointer]:
+                - /url: /sectors/industrials
+            - listitem [ref=e549]:
+              - link "All Sectors" [ref=e550] [cursor=pointer]:
+                - /url: /sectors
+      - group [ref=e552]:
+        - generic "More Stock Pages" [ref=e553] [cursor=pointer]:
+          - generic [ref=e554]: More Stock Pages
+          - img [ref=e555]
+      - generic [ref=e558]:
+        - generic [ref=e559]:
+          - img [ref=e560]
+          - heading "Lician Daily Newsletter" [level=3] [ref=e563]
+        - paragraph [ref=e564]: Get market insights, stock picks, and AI analysis delivered to your inbox every morning.
+        - generic [ref=e565]:
+          - textbox "your@email.com" [ref=e566]
+          - button "Subscribe Free" [ref=e567]
+      - generic [ref=e568]:
+        - generic [ref=e569]:
+          - generic [ref=e571]: L
+          - generic [ref=e572]:
+            - paragraph [ref=e573]: Get Lician on Mobile
+            - paragraph [ref=e574]: Track portfolios on the go
+        - generic [ref=e575]:
+          - generic [ref=e576]: "Get the app:"
+          - link "iOS" [ref=e577] [cursor=pointer]:
+            - /url: https://apps.apple.com/app/lician/id6748368400
+            - img [ref=e578]
+            - generic [ref=e581]: iOS
+          - link "Android" [ref=e582] [cursor=pointer]:
+            - /url: https://play.google.com/store/apps/details?id=com.lician
+            - img [ref=e583]
+            - generic [ref=e585]: Android
+      - generic [ref=e586]:
+        - paragraph [ref=e587]: © 2026 Lician. All rights reserved.
+        - generic [ref=e588]:
+          - link "Sitemap" [ref=e589] [cursor=pointer]:
+            - /url: /sitemap.xml
+          - link "Dashboard" [ref=e590] [cursor=pointer]:
+            - /url: /dashboard
+          - link "Privacy Policy" [ref=e591] [cursor=pointer]:
+            - /url: /privacy
+          - link "Terms of Service" [ref=e592] [cursor=pointer]:
+            - /url: /terms
+          - link "Disclaimer" [ref=e593] [cursor=pointer]:
+            - /url: /disclaimer
+      - paragraph [ref=e595]: Stock predictions and analysis provided by Lician are for informational purposes only and should not be considered financial advice. Past performance does not guarantee future results. Always conduct your own research and consider consulting a qualified financial advisor before making investment decisions.
+  - button [ref=e596]:
+    - img
+  - alert [ref=e597]
+```

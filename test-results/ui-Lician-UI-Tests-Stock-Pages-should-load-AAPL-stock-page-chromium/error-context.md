@@ -1,0 +1,853 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e5]:
+      - link "L Dashboard" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e8]: L
+        - generic [ref=e9]: Dashboard
+      - navigation [ref=e10]:
+        - button "Market" [ref=e11]
+        - button "Watchlist" [ref=e12]
+        - button "Portfolio" [ref=e13]
+        - button "Advisor" [ref=e14]
+        - button "Earnings" [ref=e15]
+      - generic [ref=e18]:
+        - img [ref=e19]
+        - textbox "Search for news, tickers or companies" [ref=e22]
+      - generic [ref=e23]:
+        - button "Toggle theme" [ref=e24]:
+          - img
+          - generic [ref=e25]: Toggle theme
+        - link "Sign in" [ref=e26] [cursor=pointer]:
+          - /url: /login
+          - button "Sign in" [ref=e27]:
+            - img [ref=e28]
+            - text: Sign in
+    - generic [ref=e33]:
+      - generic [ref=e34]:
+        - button "Top Gainers" [ref=e35]:
+          - img [ref=e36]
+          - generic [ref=e38]: Top Gainers
+        - button "Top Losers" [ref=e39]:
+          - img [ref=e40]
+          - generic [ref=e43]: Top Losers
+        - button "Most Active" [ref=e44]:
+          - img [ref=e45]
+          - generic [ref=e47]: Most Active
+      - generic [ref=e49]:
+        - button "#1 PEN Penumbra, Inc. $350.49 +11.82% Big move >10% Vol 🔥19.0x" [ref=e50]:
+          - generic [ref=e51]:
+            - generic [ref=e52]: "#1"
+            - generic [ref=e53]:
+              - generic [ref=e54]:
+                - generic [ref=e55]: PEN
+                - img [ref=e56]
+              - paragraph [ref=e58]: Penumbra, Inc.
+            - generic [ref=e59]:
+              - paragraph [ref=e60]: $350.49
+              - paragraph [ref=e61]:
+                - img [ref=e62]
+                - text: +11.82%
+          - generic [ref=e65]:
+            - generic [ref=e66]: Big move >10%
+            - generic [ref=e67]: Vol 🔥19.0x
+        - button "#2 ERAS Erasca, Inc. $9.56 +15.04% Big move >10% High vol 4.3x" [ref=e68]:
+          - generic [ref=e69]:
+            - generic [ref=e70]: "#2"
+            - generic [ref=e71]:
+              - generic [ref=e73]: ERAS
+              - paragraph [ref=e74]: Erasca, Inc.
+            - generic [ref=e75]:
+              - paragraph [ref=e76]: $9.56
+              - paragraph [ref=e77]:
+                - img [ref=e78]
+                - text: +15.04%
+          - generic [ref=e81]:
+            - generic [ref=e82]: Big move >10%
+            - generic [ref=e83]: High vol 4.3x
+        - button "#3 FIGR Figure Technology Solutions, In $64.96 +16.37% Big move >10% Above avg vol" [ref=e84]:
+          - generic [ref=e85]:
+            - generic [ref=e86]: "#3"
+            - generic [ref=e87]:
+              - generic [ref=e89]: FIGR
+              - paragraph [ref=e90]: Figure Technology Solutions, In
+            - generic [ref=e91]:
+              - paragraph [ref=e92]: $64.96
+              - paragraph [ref=e93]:
+                - img [ref=e94]
+                - text: +16.37%
+          - generic [ref=e97]:
+            - generic [ref=e98]: Big move >10%
+            - generic [ref=e99]: Above avg vol
+        - button "CMPO CompoSecure, Inc. $25.25 +7.86% Strong >5% Vol 🔥8.5x" [ref=e100]:
+          - generic [ref=e101]:
+            - generic [ref=e102]:
+              - generic [ref=e103]:
+                - generic [ref=e104]: CMPO
+                - img [ref=e105]
+              - paragraph [ref=e107]: CompoSecure, Inc.
+            - generic [ref=e108]:
+              - paragraph [ref=e109]: $25.25
+              - paragraph [ref=e110]:
+                - img [ref=e111]
+                - text: +7.86%
+          - generic [ref=e114]:
+            - generic [ref=e115]: Strong >5%
+            - generic [ref=e116]: Vol 🔥8.5x
+        - button "AEIS Advanced Energy Industries, Inc $257.29 +8.15% Strong >5% Above avg vol" [ref=e117]:
+          - generic [ref=e118]:
+            - generic [ref=e119]:
+              - generic [ref=e121]: AEIS
+              - paragraph [ref=e122]: Advanced Energy Industries, Inc
+            - generic [ref=e123]:
+              - paragraph [ref=e124]: $257.29
+              - paragraph [ref=e125]:
+                - img [ref=e126]
+                - text: +8.15%
+          - generic [ref=e129]:
+            - generic [ref=e130]: Strong >5%
+            - generic [ref=e131]: Above avg vol
+        - button "GLXY Galaxy Digital Inc. $31.99 +13.48% Big move >10% Above avg vol" [ref=e132]:
+          - generic [ref=e133]:
+            - generic [ref=e134]:
+              - generic [ref=e136]: GLXY
+              - paragraph [ref=e137]: Galaxy Digital Inc.
+            - generic [ref=e138]:
+              - paragraph [ref=e139]: $31.99
+              - paragraph [ref=e140]:
+                - img [ref=e141]
+                - text: +13.48%
+          - generic [ref=e144]:
+            - generic [ref=e145]: Big move >10%
+            - generic [ref=e146]: Above avg vol
+        - button "MS Morgan Stanley $191.23 +5.78% Strong >5% Above avg vol" [ref=e147]:
+          - generic [ref=e148]:
+            - generic [ref=e149]:
+              - generic [ref=e151]: MS
+              - paragraph [ref=e152]: Morgan Stanley
+            - generic [ref=e153]:
+              - paragraph [ref=e154]: $191.23
+              - paragraph [ref=e155]:
+                - img [ref=e156]
+                - text: +5.78%
+          - generic [ref=e159]:
+            - generic [ref=e160]: Strong >5%
+            - generic [ref=e161]: Above avg vol
+        - button "TLN Talen Energy Corporation $419.07 +11.80% Big move >10% Above avg vol" [ref=e162]:
+          - generic [ref=e163]:
+            - generic [ref=e164]:
+              - generic [ref=e166]: TLN
+              - paragraph [ref=e167]: Talen Energy Corporation
+            - generic [ref=e168]:
+              - paragraph [ref=e169]: $419.07
+              - paragraph [ref=e170]:
+                - img [ref=e171]
+                - text: +11.80%
+          - generic [ref=e174]:
+            - generic [ref=e175]: Big move >10%
+            - generic [ref=e176]: Above avg vol
+        - button "STUB StubHub Holdings, Inc. $15.20 +11.36% Big move >10% Above avg vol" [ref=e177]:
+          - generic [ref=e178]:
+            - generic [ref=e179]:
+              - generic [ref=e181]: STUB
+              - paragraph [ref=e182]: StubHub Holdings, Inc.
+            - generic [ref=e183]:
+              - paragraph [ref=e184]: $15.20
+              - paragraph [ref=e185]:
+                - img [ref=e186]
+                - text: +11.36%
+          - generic [ref=e189]:
+            - generic [ref=e190]: Big move >10%
+            - generic [ref=e191]: Above avg vol
+        - button "ATEC Alphatec Holdings, Inc. $17.46 +9.47% Strong >5% Above avg vol" [ref=e192]:
+          - generic [ref=e193]:
+            - generic [ref=e194]:
+              - generic [ref=e196]: ATEC
+              - paragraph [ref=e197]: Alphatec Holdings, Inc.
+            - generic [ref=e198]:
+              - paragraph [ref=e199]: $17.46
+              - paragraph [ref=e200]:
+                - img [ref=e201]
+                - text: +9.47%
+          - generic [ref=e204]:
+            - generic [ref=e205]: Strong >5%
+            - generic [ref=e206]: Above avg vol
+        - button "KLAC KLA Corporation $1544.96 +7.70% Strong >5% 52wk high" [ref=e207]:
+          - generic [ref=e208]:
+            - generic [ref=e209]:
+              - generic [ref=e211]: KLAC
+              - paragraph [ref=e212]: KLA Corporation
+            - generic [ref=e213]:
+              - paragraph [ref=e214]: $1544.96
+              - paragraph [ref=e215]:
+                - img [ref=e216]
+                - text: +7.70%
+          - generic [ref=e219]:
+            - generic [ref=e220]: Strong >5%
+            - generic [ref=e221]: 52wk high
+        - button "ENTG Entegris, Inc. $113.54 +9.08% Strong >5% Above avg vol" [ref=e222]:
+          - generic [ref=e223]:
+            - generic [ref=e224]:
+              - generic [ref=e226]: ENTG
+              - paragraph [ref=e227]: Entegris, Inc.
+            - generic [ref=e228]:
+              - paragraph [ref=e229]: $113.54
+              - paragraph [ref=e230]:
+                - img [ref=e231]
+                - text: +9.08%
+          - generic [ref=e234]:
+            - generic [ref=e235]: Strong >5%
+            - generic [ref=e236]: Above avg vol
+    - generic [ref=e237]:
+      - generic [ref=e238]:
+        - generic [ref=e239]:
+          - generic [ref=e240]: NasdaqGS
+          - generic [ref=e241]: "-"
+          - generic [ref=e242]: Nasdaq Real Time Price
+          - generic [ref=e243]: •
+          - generic [ref=e244]: USD
+        - generic [ref=e245]:
+          - generic [ref=e246]:
+            - generic [ref=e247]: A
+            - generic [ref=e248]:
+              - generic [ref=e249]:
+                - heading "AAPL" [level=1] [ref=e250]
+                - generic [ref=e251]: (AAPL)
+                - button "Follow" [ref=e252]:
+                  - img
+                  - generic [ref=e253]: Follow
+              - generic [ref=e254]:
+                - generic [ref=e255]: "0.00"
+                - generic [ref=e256]:
+                  - img [ref=e257]
+                  - generic [ref=e260]: "+0.00"
+                  - generic [ref=e261]: (+0.00%)
+              - paragraph [ref=e262]: "At close: 10:32 AM EST"
+          - button "Share" [ref=e264]:
+            - img
+            - text: Share
+        - generic [ref=e265]:
+          - generic [ref=e266]:
+            - paragraph [ref=e267]: Previous Close
+            - paragraph [ref=e268]: "0.00"
+          - generic [ref=e269]:
+            - paragraph [ref=e270]: Day's Range
+            - paragraph [ref=e271]: "-"
+          - generic [ref=e272]:
+            - paragraph [ref=e273]: Market Cap
+            - paragraph [ref=e274]: "-"
+          - generic [ref=e275]:
+            - paragraph [ref=e276]: Earnings Date
+            - paragraph [ref=e277]: "-"
+          - generic [ref=e278]:
+            - paragraph [ref=e279]: Open
+            - paragraph [ref=e280]: "-"
+          - generic [ref=e281]:
+            - paragraph [ref=e282]: 52 Week Range
+            - paragraph [ref=e283]: "-"
+          - generic [ref=e284]:
+            - paragraph [ref=e285]: Beta (5Y)
+            - paragraph [ref=e286]: "-"
+          - generic [ref=e287]:
+            - paragraph [ref=e288]: Dividend Yield
+            - paragraph [ref=e289]: "-"
+          - generic [ref=e290]:
+            - paragraph [ref=e291]: Bid
+            - paragraph [ref=e292]: "-"
+          - generic [ref=e293]:
+            - paragraph [ref=e294]: Volume
+            - paragraph [ref=e295]: "0"
+          - generic [ref=e296]:
+            - paragraph [ref=e297]: PE Ratio
+            - paragraph [ref=e298]: "-"
+          - generic [ref=e299]:
+            - paragraph [ref=e300]: Ex-Div Date
+            - paragraph [ref=e301]: "-"
+          - generic [ref=e302]:
+            - paragraph [ref=e303]: Ask
+            - paragraph [ref=e304]: "-"
+          - generic [ref=e305]:
+            - paragraph [ref=e306]: Avg. Volume
+            - paragraph [ref=e307]: "0"
+          - generic [ref=e308]:
+            - paragraph [ref=e309]: EPS (TTM)
+            - paragraph [ref=e310]: "-"
+          - generic [ref=e311]:
+            - paragraph [ref=e312]: 1y Target
+            - paragraph [ref=e313]: "-"
+      - generic [ref=e314]:
+        - complementary [ref=e316]:
+          - navigation [ref=e317]:
+            - button "Overview" [ref=e318]:
+              - img [ref=e319]
+              - generic [ref=e324]: Overview
+              - img [ref=e325]
+            - button "Quant" [ref=e327]:
+              - img [ref=e328]
+              - generic [ref=e331]: Quant
+            - button "Snowflake" [ref=e332]:
+              - img [ref=e333]
+              - generic [ref=e338]: Snowflake
+            - button "IP Valuation" [ref=e339]:
+              - img [ref=e340]
+              - generic [ref=e342]: IP Valuation
+            - button "DCF" [ref=e343]:
+              - img [ref=e344]
+              - generic [ref=e346]: DCF
+            - button "AI Analysis" [ref=e347]:
+              - img [ref=e348]
+              - generic [ref=e358]: AI Analysis
+            - button "Analysts" [ref=e359]:
+              - img [ref=e360]
+              - generic [ref=e364]: Analysts
+            - button "Technical" [ref=e365]:
+              - img [ref=e366]
+              - generic [ref=e368]: Technical
+            - button "Short Volume" [ref=e369]:
+              - img [ref=e370]
+              - generic [ref=e372]: Short Volume
+            - button "Borrow Cost" [ref=e373]:
+              - img [ref=e374]
+              - generic [ref=e377]: Borrow Cost
+            - button "Options" [ref=e378]:
+              - img [ref=e379]
+              - generic [ref=e381]: Options
+            - button "Insiders" [ref=e382]:
+              - img [ref=e383]
+              - generic [ref=e387]: Insiders
+            - button "Institutional" [ref=e388]:
+              - img [ref=e389]
+              - generic [ref=e393]: Institutional
+            - button "Ownership" [ref=e394]:
+              - img [ref=e395]
+              - generic [ref=e398]: Ownership
+            - button "SEC Filings" [ref=e399]:
+              - img [ref=e400]
+              - generic [ref=e403]: SEC Filings
+            - button "Yields" [ref=e404]:
+              - img [ref=e405]
+              - generic [ref=e409]: Yields
+            - button "Bonds Corr" [ref=e410]:
+              - img [ref=e411]
+              - generic [ref=e413]: Bonds Corr
+            - button "Debt" [ref=e414]:
+              - img [ref=e415]
+              - generic [ref=e418]: Debt
+            - button "News" [ref=e419]:
+              - img [ref=e420]
+              - generic [ref=e423]: News
+            - button "Financials" [ref=e424]:
+              - img [ref=e425]
+              - generic [ref=e428]: Financials
+            - button "Peers" [ref=e429]:
+              - img [ref=e430]
+              - generic [ref=e435]: Peers
+        - tabpanel [ref=e438]:
+          - generic [ref=e439]:
+            - generic [ref=e440]:
+              - generic [ref=e442]:
+                - heading "Price Chart" [level=3] [ref=e443]
+                - generic [ref=e444]:
+                  - button "Simple" [ref=e445]:
+                    - img
+                    - text: Simple
+                  - button "Advanced" [ref=e446]:
+                    - img
+                    - text: Advanced
+              - generic [ref=e450]:
+                - generic [ref=e451]:
+                  - generic [ref=e454]: +0.00%
+                  - generic [ref=e455]:
+                    - button "Key Events" [ref=e456]
+                    - button "Volume" [ref=e457]
+                - generic [ref=e458]:
+                  - button "1D" [ref=e459]
+                  - button "5D" [ref=e460]
+                  - button "1M" [ref=e461]
+                  - button "6M" [ref=e462]
+                  - button "YTD" [ref=e463]
+                  - button "1Y" [ref=e464]
+                  - button "5Y" [ref=e465]
+                  - button "All" [ref=e466]
+                - img [ref=e470]
+                - generic [ref=e471]:
+                  - generic [ref=e472]:
+                    - generic [ref=e473]: $0.00
+                    - generic [ref=e474]:
+                      - img [ref=e475]
+                      - generic [ref=e478]: +0.00 (+0.00%) today
+                  - generic [ref=e479]:
+                    - paragraph [ref=e480]: "52W High: $0.00"
+                    - paragraph [ref=e481]: "52W Low: $0.00"
+            - generic [ref=e482]:
+              - generic [ref=e483]:
+                - heading "If You Invested in AAPL... Share Results" [level=3] [ref=e484]:
+                  - generic [ref=e485]: If You Invested in AAPL...
+                  - button "Share Results" [ref=e486]
+                - paragraph [ref=e487]: Calculate what your investment in AAPL would be worth today
+              - generic [ref=e488]:
+                - generic [ref=e489]:
+                  - generic [ref=e490]:
+                    - generic [ref=e491]: Investment Amount
+                    - generic [ref=e492]:
+                      - slider [ref=e493]: "10000"
+                      - generic [ref=e495]: $10,000
+                      - generic [ref=e496]:
+                        - button "$1K" [ref=e497]
+                        - button "$5K" [ref=e498]
+                        - button "$10K" [ref=e499]
+                        - button "$25K" [ref=e500]
+                        - button "$50K" [ref=e501]
+                  - generic [ref=e502]:
+                    - generic [ref=e503]: Years Ago
+                    - generic [ref=e504]:
+                      - slider [ref=e505]: "5"
+                      - generic [ref=e507]: 5 Years
+                      - generic [ref=e508]:
+                        - button "1Y" [ref=e509]
+                        - button "3Y" [ref=e510]
+                        - button "5Y" [ref=e511]
+                        - button "10Y" [ref=e512]
+                        - button "15Y" [ref=e513]
+                - generic [ref=e514]:
+                  - generic [ref=e515]:
+                    - paragraph [ref=e516]: Initial Investment
+                    - paragraph [ref=e517]: $10,000
+                  - generic [ref=e518]:
+                    - paragraph [ref=e519]: Shares Bought
+                    - paragraph [ref=e520]: "Infinity"
+                  - generic [ref=e521]:
+                    - paragraph [ref=e522]: Value Today
+                    - paragraph [ref=e523]: $NaN
+                  - generic [ref=e524]:
+                    - paragraph [ref=e525]: Total Gain
+                    - paragraph [ref=e526]: $NaN
+                - generic [ref=e527]:
+                  - generic [ref=e528]:
+                    - paragraph [ref=e529]: Total Return
+                    - paragraph [ref=e530]: NaN%
+                  - generic [ref=e531]:
+                    - paragraph [ref=e532]: Annualized Return
+                    - paragraph [ref=e533]: NaN%
+                    - paragraph [ref=e534]: per year
+                - generic [ref=e535]:
+                  - paragraph [ref=e536]: Investment Growth Over Time
+                  - img [ref=e539]:
+                    - generic [ref=e541]:
+                      - generic [ref=e543]: "2021"
+                      - generic [ref=e545]: "2022"
+                      - generic [ref=e547]: "2023"
+                      - generic [ref=e549]: "2024"
+                      - generic [ref=e551]: "2025"
+                      - generic [ref=e553]: "2026"
+                    - generic [ref=e555]:
+                      - generic [ref=e557]: $0.00
+                      - generic [ref=e559]: $4.5K
+                      - generic [ref=e561]: $9.0K
+                      - generic [ref=e563]: $13.5K
+                      - generic [ref=e565]: $18.0K
+                    - generic [ref=e567]: Initial
+                - paragraph [ref=e575]: Negative return. The investment would have declined from $10,000 to $NaN (NaN% ).
+                - paragraph [ref=e576]: Estimated using 12% average annual return assumption. Past performance does not guarantee future results.
+            - generic [ref=e577]:
+              - heading "Community Discussion" [level=3] [ref=e579]:
+                - img [ref=e580]
+                - text: Community Discussion
+              - generic [ref=e582]:
+                - generic [ref=e583]:
+                  - paragraph [ref=e584]: Sign in to join the discussion
+                  - link "Sign in" [ref=e585] [cursor=pointer]:
+                    - /url: /login
+                    - button "Sign in" [ref=e586]
+                - generic [ref=e588]:
+                  - img [ref=e589]
+                  - paragraph [ref=e591]: No discussions yet for AAPL
+                  - paragraph [ref=e592]: Be the first to share your thoughts!
+            - generic [ref=e593]:
+              - generic [ref=e594]:
+                - heading "Analysis for AAPL" [level=3] [ref=e596]:
+                  - img [ref=e597]
+                  - text: Analysis for AAPL
+                - generic [ref=e600]:
+                  - link "Is AAPL Undervalued? DCF valuation analysis" [ref=e601] [cursor=pointer]:
+                    - /url: /analysis/aapl/valuation
+                    - generic [ref=e602]:
+                      - img [ref=e603]
+                      - generic [ref=e605]:
+                        - paragraph [ref=e606]: Is AAPL Undervalued?
+                        - paragraph [ref=e607]: DCF valuation analysis
+                    - img [ref=e608]
+                  - link "AAPL Dividend Analysis Yield, payout ratio & history" [ref=e610] [cursor=pointer]:
+                    - /url: /analysis/aapl/dividend
+                    - generic [ref=e611]:
+                      - img [ref=e612]
+                      - generic [ref=e615]:
+                        - paragraph [ref=e616]: AAPL Dividend Analysis
+                        - paragraph [ref=e617]: Yield, payout ratio & history
+                    - img [ref=e618]
+                  - link "AAPL Growth Analysis Revenue & earnings growth" [ref=e620] [cursor=pointer]:
+                    - /url: /analysis/aapl/growth
+                    - generic [ref=e621]:
+                      - img [ref=e622]
+                      - generic [ref=e626]:
+                        - paragraph [ref=e627]: AAPL Growth Analysis
+                        - paragraph [ref=e628]: Revenue & earnings growth
+                    - img [ref=e629]
+                  - link "AAPL Financial Health Debt, liquidity & solvency" [ref=e631] [cursor=pointer]:
+                    - /url: /analysis/aapl/health
+                    - generic [ref=e632]:
+                      - img [ref=e633]
+                      - generic [ref=e635]:
+                        - paragraph [ref=e636]: AAPL Financial Health
+                        - paragraph [ref=e637]: Debt, liquidity & solvency
+                    - img [ref=e638]
+              - generic [ref=e640]:
+                - heading "Related Pages" [level=3] [ref=e642]:
+                  - img [ref=e643]
+                  - text: Related Pages
+                - generic [ref=e647]:
+                  - link "Should I Buy AAPL? AI-powered investment decision guide" [ref=e648] [cursor=pointer]:
+                    - /url: /should-i-buy/aapl
+                    - generic [ref=e649]:
+                      - paragraph [ref=e650]: Should I Buy AAPL?
+                      - paragraph [ref=e651]: AI-powered investment decision guide
+                    - img [ref=e652]
+                  - link "AAPL Price Prediction Technical & fundamental forecasts" [ref=e654] [cursor=pointer]:
+                    - /url: /prediction/aapl
+                    - generic [ref=e655]:
+                      - paragraph [ref=e656]: AAPL Price Prediction
+                      - paragraph [ref=e657]: Technical & fundamental forecasts
+                    - img [ref=e658]
+                  - link "AAPL Stock Overview Complete stock analysis dashboard" [ref=e660] [cursor=pointer]:
+                    - /url: /stock/aapl
+                    - generic [ref=e661]:
+                      - paragraph [ref=e662]: AAPL Stock Overview
+                      - paragraph [ref=e663]: Complete stock analysis dashboard
+                    - img [ref=e664]
+              - generic [ref=e666]:
+                - heading "Compare AAPL" [level=3] [ref=e668]:
+                  - img [ref=e669]
+                  - text: Compare AAPL
+                - generic [ref=e673]:
+                  - link "vs MSFT Compare" [ref=e674] [cursor=pointer]:
+                    - /url: /compare/aapl-vs-msft
+                    - paragraph [ref=e675]: vs MSFT
+                    - paragraph [ref=e676]: Compare
+                  - link "vs GOOGL Compare" [ref=e677] [cursor=pointer]:
+                    - /url: /compare/aapl-vs-googl
+                    - paragraph [ref=e678]: vs GOOGL
+                    - paragraph [ref=e679]: Compare
+                  - link "vs META Compare" [ref=e680] [cursor=pointer]:
+                    - /url: /compare/aapl-vs-meta
+                    - paragraph [ref=e681]: vs META
+                    - paragraph [ref=e682]: Compare
+                  - link "vs NVDA Compare" [ref=e683] [cursor=pointer]:
+                    - /url: /compare/aapl-vs-nvda
+                    - paragraph [ref=e684]: vs NVDA
+                    - paragraph [ref=e685]: Compare
+              - generic [ref=e686]:
+                - heading "Similar Stocks in Technology" [level=3] [ref=e688]:
+                  - img [ref=e689]
+                  - text: Similar Stocks in Technology
+                - generic [ref=e692]:
+                  - link "MSFT Microsoft" [ref=e693] [cursor=pointer]:
+                    - /url: /stock/msft
+                    - paragraph [ref=e694]: MSFT
+                    - paragraph [ref=e695]: Microsoft
+                  - link "GOOGL Alphabet" [ref=e696] [cursor=pointer]:
+                    - /url: /stock/googl
+                    - paragraph [ref=e697]: GOOGL
+                    - paragraph [ref=e698]: Alphabet
+                  - link "META Meta" [ref=e699] [cursor=pointer]:
+                    - /url: /stock/meta
+                    - paragraph [ref=e700]: META
+                    - paragraph [ref=e701]: Meta
+                  - link "NVDA NVIDIA" [ref=e702] [cursor=pointer]:
+                    - /url: /stock/nvda
+                    - paragraph [ref=e703]: NVDA
+                    - paragraph [ref=e704]: NVIDIA
+                  - link "TSLA Tesla" [ref=e705] [cursor=pointer]:
+                    - /url: /stock/tsla
+                    - paragraph [ref=e706]: TSLA
+                    - paragraph [ref=e707]: Tesla
+        - complementary [ref=e709]:
+          - generic [ref=e710]:
+            - generic [ref=e711]:
+              - heading "Markets" [level=3] [ref=e713]
+              - generic [ref=e714]:
+                - generic [ref=e715] [cursor=pointer]:
+                  - generic [ref=e716]:
+                    - generic [ref=e717]: S&P 500
+                    - img [ref=e718]
+                  - generic [ref=e720]:
+                    - generic [ref=e721]: 6,000.00
+                    - generic [ref=e722]: +0.00%
+                - generic [ref=e723] [cursor=pointer]:
+                  - generic [ref=e724]:
+                    - generic [ref=e725]: Nasdaq
+                    - img [ref=e726]
+                  - generic [ref=e728]:
+                    - generic [ref=e729]: 19,000.00
+                    - generic [ref=e730]: +0.00%
+                - generic [ref=e731] [cursor=pointer]:
+                  - generic [ref=e732]:
+                    - generic [ref=e733]: Russell 2000
+                    - img [ref=e734]
+                  - generic [ref=e736]:
+                    - generic [ref=e737]: 2,500.00
+                    - generic [ref=e738]: +0.00%
+                - generic [ref=e739] [cursor=pointer]:
+                  - generic [ref=e740]:
+                    - generic [ref=e741]: VIX
+                    - img [ref=e742]
+                  - generic [ref=e744]:
+                    - generic [ref=e745]: "15.00"
+                    - generic [ref=e746]: +0.00%
+                - generic [ref=e747] [cursor=pointer]:
+                  - generic [ref=e748]:
+                    - generic [ref=e749]: Gold
+                    - img [ref=e750]
+                  - generic [ref=e752]:
+                    - generic [ref=e753]: 2,600.00
+                    - generic [ref=e754]: +0.00%
+                - generic [ref=e755] [cursor=pointer]:
+                  - generic [ref=e756]:
+                    - generic [ref=e757]: Bitcoin USD
+                    - img [ref=e758]
+                  - generic [ref=e760]:
+                    - generic [ref=e761]: 100,000.00
+                    - generic [ref=e762]: +0.00%
+            - generic [ref=e763]:
+              - heading "Trending" [level=3] [ref=e764]
+              - generic [ref=e765]:
+                - button "NVDA NVIDIA Corporation 187.05 +2.13% Liquid" [ref=e766]:
+                  - generic [ref=e767]:
+                    - generic [ref=e768]:
+                      - paragraph [ref=e769]: NVDA
+                      - paragraph [ref=e770]: NVIDIA Corporation
+                    - generic [ref=e771]:
+                      - paragraph [ref=e772]: "187.05"
+                      - paragraph [ref=e773]: +2.13%
+                  - generic [ref=e775]: Liquid
+                - button "INTC Intel Corporation 48.32 -0.82% Liquid" [ref=e776]:
+                  - generic [ref=e777]:
+                    - generic [ref=e778]:
+                      - paragraph [ref=e779]: INTC
+                      - paragraph [ref=e780]: Intel Corporation
+                    - generic [ref=e781]:
+                      - paragraph [ref=e782]: "48.32"
+                      - paragraph [ref=e783]: "-0.82%"
+                  - generic [ref=e785]: Liquid
+                - button "BBAI BigBear.ai, Inc. 6.17 -1.44% Liquid" [ref=e786]:
+                  - generic [ref=e787]:
+                    - generic [ref=e788]:
+                      - paragraph [ref=e789]: BBAI
+                      - paragraph [ref=e790]: BigBear.ai, Inc.
+                    - generic [ref=e791]:
+                      - paragraph [ref=e792]: "6.17"
+                      - paragraph [ref=e793]: "-1.44%"
+                  - generic [ref=e795]: Liquid
+                - button "GRAB Grab Holdings Limited 4.39 -5.18% Strong >5% Above avg vol Liquid" [ref=e796]:
+                  - generic [ref=e797]:
+                    - generic [ref=e798]:
+                      - paragraph [ref=e799]: GRAB
+                      - paragraph [ref=e800]: Grab Holdings Limited
+                    - generic [ref=e801]:
+                      - paragraph [ref=e802]: "4.39"
+                      - paragraph [ref=e803]: "-5.18%"
+                  - generic [ref=e804]:
+                    - generic [ref=e805]: Strong >5%
+                    - generic [ref=e806]: Above avg vol
+                    - generic [ref=e807]: Liquid
+                - button "ONDS Ondas Holdings Inc. 12.82 -5.46% Strong >5% Liquid" [ref=e808]:
+                  - generic [ref=e809]:
+                    - generic [ref=e810]:
+                      - paragraph [ref=e811]: ONDS
+                      - paragraph [ref=e812]: Ondas Holdings Inc.
+                    - generic [ref=e813]:
+                      - paragraph [ref=e814]: "12.82"
+                      - paragraph [ref=e815]: "-5.46%"
+                  - generic [ref=e816]:
+                    - generic [ref=e817]: Strong >5%
+                    - generic [ref=e818]: Liquid
+                - button "DNN Denison Mines Corp 3.55 +1.72% Liquid" [ref=e819]:
+                  - generic [ref=e820]:
+                    - generic [ref=e821]:
+                      - paragraph [ref=e822]: DNN
+                      - paragraph [ref=e823]: Denison Mines Corp
+                    - generic [ref=e824]:
+                      - paragraph [ref=e825]: "3.55"
+                      - paragraph [ref=e826]: +1.72%
+                  - generic [ref=e828]: Liquid
+                - button "PLUG Plug Power, Inc. 2.26 -3.83% Liquid" [ref=e829]:
+                  - generic [ref=e830]:
+                    - generic [ref=e831]:
+                      - paragraph [ref=e832]: PLUG
+                      - paragraph [ref=e833]: Plug Power, Inc.
+                    - generic [ref=e834]:
+                      - paragraph [ref=e835]: "2.26"
+                      - paragraph [ref=e836]: "-3.83%"
+                  - generic [ref=e838]: Liquid
+                - button "IBRX ImmunityBio, Inc. 3.95 +30.79% Big move >10% Vol 🔥5.8x Liquid" [ref=e839]:
+                  - generic [ref=e840]:
+                    - generic [ref=e841]:
+                      - paragraph [ref=e842]: IBRX
+                      - paragraph [ref=e843]: ImmunityBio, Inc.
+                    - generic [ref=e844]:
+                      - paragraph [ref=e845]: "3.95"
+                      - paragraph [ref=e846]: +30.79%
+                  - generic [ref=e847]:
+                    - generic [ref=e848]: Big move >10%
+                    - generic [ref=e849]: Vol 🔥5.8x
+                    - generic [ref=e850]: Liquid
+            - generic [ref=e851]:
+              - heading "Portfolio" [level=3] [ref=e852]
+              - generic [ref=e853]:
+                - paragraph [ref=e854]: Sign in to access your portfolio
+                - link "Sign in" [ref=e855] [cursor=pointer]:
+                  - /url: /login
+                  - button "Sign in" [ref=e856]:
+                    - img
+                    - text: Sign in
+            - generic [ref=e857]:
+              - heading "Recently viewed" [level=3] [ref=e858]
+              - button "AAPL AAPL 0.00 +0.00%" [ref=e860]:
+                - generic [ref=e861]:
+                  - paragraph [ref=e862]: AAPL
+                  - paragraph [ref=e863]: AAPL
+                - generic [ref=e864]:
+                  - paragraph [ref=e865]: "0.00"
+                  - paragraph [ref=e866]: +0.00%
+            - generic [ref=e867]:
+              - heading "Top gainers" [level=3] [ref=e868]
+              - generic [ref=e869]:
+                - button "PEN Penumbra, Inc. 350.49 +11.82% Big move >10% Vol 🔥19.0x 52wk high" [ref=e870]:
+                  - generic [ref=e871]:
+                    - generic [ref=e872]:
+                      - paragraph [ref=e873]: PEN
+                      - paragraph [ref=e874]: Penumbra, Inc.
+                    - generic [ref=e875]:
+                      - paragraph [ref=e876]: "350.49"
+                      - paragraph [ref=e877]: +11.82%
+                  - generic [ref=e878]:
+                    - generic [ref=e879]: Big move >10%
+                    - generic [ref=e880]: Vol 🔥19.0x
+                    - generic [ref=e881]: 52wk high
+                - button "ERAS Erasca, Inc. 9.56 +15.04% Big move >10% High vol 4.3x 52wk high" [ref=e882]:
+                  - generic [ref=e883]:
+                    - generic [ref=e884]:
+                      - paragraph [ref=e885]: ERAS
+                      - paragraph [ref=e886]: Erasca, Inc.
+                    - generic [ref=e887]:
+                      - paragraph [ref=e888]: "9.56"
+                      - paragraph [ref=e889]: +15.04%
+                  - generic [ref=e890]:
+                    - generic [ref=e891]: Big move >10%
+                    - generic [ref=e892]: High vol 4.3x
+                    - generic [ref=e893]: 52wk high
+                - button "FIGR Figure Technology Solutions, In 64.96 +16.37% Big move >10% Above avg vol 52wk high" [ref=e894]:
+                  - generic [ref=e895]:
+                    - generic [ref=e896]:
+                      - paragraph [ref=e897]: FIGR
+                      - paragraph [ref=e898]: Figure Technology Solutions, In
+                    - generic [ref=e899]:
+                      - paragraph [ref=e900]: "64.96"
+                      - paragraph [ref=e901]: +16.37%
+                  - generic [ref=e902]:
+                    - generic [ref=e903]: Big move >10%
+                    - generic [ref=e904]: Above avg vol
+                    - generic [ref=e905]: 52wk high
+                - button "CMPO CompoSecure, Inc. 25.25 +7.86% Strong >5% Vol 🔥8.5x" [ref=e906]:
+                  - generic [ref=e907]:
+                    - generic [ref=e908]:
+                      - paragraph [ref=e909]: CMPO
+                      - paragraph [ref=e910]: CompoSecure, Inc.
+                    - generic [ref=e911]:
+                      - paragraph [ref=e912]: "25.25"
+                      - paragraph [ref=e913]: +7.86%
+                  - generic [ref=e914]:
+                    - generic [ref=e915]: Strong >5%
+                    - generic [ref=e916]: Vol 🔥8.5x
+                - button "AEIS Advanced Energy Industries, Inc 257.29 +8.15% Strong >5% Above avg vol 52wk high" [ref=e917]:
+                  - generic [ref=e918]:
+                    - generic [ref=e919]:
+                      - paragraph [ref=e920]: AEIS
+                      - paragraph [ref=e921]: Advanced Energy Industries, Inc
+                    - generic [ref=e922]:
+                      - paragraph [ref=e923]: "257.29"
+                      - paragraph [ref=e924]: +8.15%
+                  - generic [ref=e925]:
+                    - generic [ref=e926]: Strong >5%
+                    - generic [ref=e927]: Above avg vol
+                    - generic [ref=e928]: 52wk high
+            - generic [ref=e929]:
+              - heading "Top losers" [level=3] [ref=e930]
+              - generic [ref=e931]:
+                - button "RDDT Reddit, Inc. 228.75 -9.36% Strong >5% Above avg vol Liquid" [ref=e932]:
+                  - generic [ref=e933]:
+                    - generic [ref=e934]:
+                      - paragraph [ref=e935]: RDDT
+                      - paragraph [ref=e936]: Reddit, Inc.
+                    - generic [ref=e937]:
+                      - paragraph [ref=e938]: "228.75"
+                      - paragraph [ref=e939]: "-9.36%"
+                  - generic [ref=e940]:
+                    - generic [ref=e941]: Strong >5%
+                    - generic [ref=e942]: Above avg vol
+                    - generic [ref=e943]: Liquid
+                - button "IRON Disc Medicine, Inc. 71.04 -7.84% Strong >5% Above avg vol" [ref=e944]:
+                  - generic [ref=e945]:
+                    - generic [ref=e946]:
+                      - paragraph [ref=e947]: IRON
+                      - paragraph [ref=e948]: Disc Medicine, Inc.
+                    - generic [ref=e949]:
+                      - paragraph [ref=e950]: "71.04"
+                      - paragraph [ref=e951]: "-7.84%"
+                  - generic [ref=e952]:
+                    - generic [ref=e953]: Strong >5%
+                    - generic [ref=e954]: Above avg vol
+                - button "LCID Lucid Group, Inc. 10.05 -7.29% Strong >5% 52wk low Liquid" [ref=e955]:
+                  - generic [ref=e956]:
+                    - generic [ref=e957]:
+                      - paragraph [ref=e958]: LCID
+                      - paragraph [ref=e959]: Lucid Group, Inc.
+                    - generic [ref=e960]:
+                      - paragraph [ref=e961]: "10.05"
+                      - paragraph [ref=e962]: "-7.29%"
+                  - generic [ref=e963]:
+                    - generic [ref=e964]: Strong >5%
+                    - generic [ref=e965]: 52wk low
+                    - generic [ref=e966]: Liquid
+                - button "NEU NewMarket Corp 650.00 -8.36% Strong >5% Above avg vol" [ref=e967]:
+                  - generic [ref=e968]:
+                    - generic [ref=e969]:
+                      - paragraph [ref=e970]: NEU
+                      - paragraph [ref=e971]: NewMarket Corp
+                    - generic [ref=e972]:
+                      - paragraph [ref=e973]: "650.00"
+                      - paragraph [ref=e974]: "-8.36%"
+                  - generic [ref=e975]:
+                    - generic [ref=e976]: Strong >5%
+                    - generic [ref=e977]: Above avg vol
+                - button "BRZE Braze, Inc. 25.48 -6.46% Strong >5% Above avg vol" [ref=e978]:
+                  - generic [ref=e979]:
+                    - generic [ref=e980]:
+                      - paragraph [ref=e981]: BRZE
+                      - paragraph [ref=e982]: Braze, Inc.
+                    - generic [ref=e983]:
+                      - paragraph [ref=e984]: "25.48"
+                      - paragraph [ref=e985]: "-6.46%"
+                  - generic [ref=e986]:
+                    - generic [ref=e987]: Strong >5%
+                    - generic [ref=e988]: Above avg vol
+  - button "Ask AI about AAPL" [ref=e989]:
+    - img [ref=e990]
+    - generic [ref=e992]: Ask AI about AAPL
+  - button [ref=e993]:
+    - img
+  - alert [ref=e994]
+  - generic [ref=e995]: $0.00
+```

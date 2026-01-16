@@ -1,0 +1,233 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "L" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e6]: L
+      - navigation [ref=e7]:
+        - button "New chat" [ref=e8]:
+          - img [ref=e9]
+        - button "Search" [ref=e12]:
+          - img [ref=e13]
+        - button "Markets" [ref=e16]:
+          - img [ref=e17]
+        - button "History" [ref=e20]:
+          - img [ref=e21]
+      - navigation [ref=e26]:
+        - link "Portfolio" [ref=e27] [cursor=pointer]:
+          - /url: /dashboard/portfolios
+          - img [ref=e28]
+        - link "Watchlist" [ref=e31] [cursor=pointer]:
+          - /url: /portfolio
+          - img [ref=e32]
+        - link "Screener" [ref=e34] [cursor=pointer]:
+          - /url: /screener
+          - img [ref=e35]
+        - link "Alerts" [ref=e37] [cursor=pointer]:
+          - /url: /dashboard
+          - img [ref=e38]
+        - link "Settings" [ref=e41] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e42]
+    - main [ref=e45]:
+      - generic [ref=e46]:
+        - generic [ref=e47]:
+          - generic [ref=e48]: Lician AI
+          - img [ref=e49]
+        - generic [ref=e51]:
+          - button "Search stocks... Cmd K" [ref=e52]:
+            - img [ref=e53]
+            - generic [ref=e56]: Search stocks...
+            - generic [ref=e57]:
+              - generic [ref=e58]: Cmd
+              - text: K
+          - generic [ref=e59]:
+            - heading "Command Palette" [level=2] [ref=e60]
+            - paragraph [ref=e61]: Search for a command to run...
+          - generic [ref=e62]:
+            - generic [ref=e63]: Free plan
+            - generic [ref=e64]: "|"
+            - link "Start free trial" [ref=e65] [cursor=pointer]:
+              - /url: /api/stripe/quick-checkout?plan=annual
+          - generic [ref=e66]:
+            - img [ref=e67]
+            - generic [ref=e69]: "300"
+          - button "Invite friends for free credits" [ref=e70]:
+            - img [ref=e71]
+          - button [ref=e75]:
+            - img [ref=e76]
+          - generic [ref=e79]:
+            - link "Sign in" [ref=e80] [cursor=pointer]:
+              - /url: /login
+              - button "Sign in" [ref=e81]
+            - link "Sign up" [ref=e82] [cursor=pointer]:
+              - /url: /login
+              - button "Sign up" [ref=e83]
+      - generic [ref=e85]:
+        - heading "What can I do for you?" [level=1] [ref=e86]
+        - generic [ref=e87]:
+          - generic [ref=e90]:
+            - textbox "Ask about any stock, market trends, or financial analysis..." [active] [ref=e92]
+            - generic [ref=e93]:
+              - button "Attach file" [ref=e95]:
+                - img [ref=e96]
+              - generic [ref=e97]:
+                - button "Gemini Flash" [ref=e99]:
+                  - img [ref=e100]
+                  - generic [ref=e102]: Gemini Flash
+                  - img [ref=e103]
+                - button "Send message" [disabled] [ref=e105]:
+                  - img [ref=e106]
+          - generic [ref=e108]:
+            - button "Connect Portfolio" [ref=e110]:
+              - img [ref=e111]
+              - text: Connect Portfolio
+            - button "Stock Screener" [ref=e115]:
+              - img [ref=e116]
+              - text: Stock Screener
+            - button "Compare Stocks" [ref=e119]:
+              - img [ref=e120]
+              - text: Compare Stocks
+            - button "DCF Valuation" [ref=e124]:
+              - img [ref=e125]
+              - text: DCF Valuation
+            - button "More" [ref=e128]:
+              - img [ref=e129]
+              - text: More
+          - generic [ref=e133]:
+            - generic [ref=e134]:
+              - img [ref=e135]
+              - generic [ref=e138]: Connect your portfolio for personalized insights
+            - generic [ref=e139]:
+              - link "P" [ref=e140] [cursor=pointer]:
+                - /url: /stock/PEN
+                - generic [ref=e141]: P
+              - link "E" [ref=e142] [cursor=pointer]:
+                - /url: /stock/ERAS
+                - generic [ref=e143]: E
+              - link "F" [ref=e144] [cursor=pointer]:
+                - /url: /stock/FIGR
+                - generic [ref=e145]: F
+              - link "C" [ref=e146] [cursor=pointer]:
+                - /url: /stock/CMPO
+                - generic [ref=e147]: C
+          - generic [ref=e149]:
+            - generic [ref=e150] [cursor=pointer]:
+              - generic [ref=e151]:
+                - generic [ref=e152]:
+                  - generic [ref=e153]:
+                    - heading "Powerful Financial Data" [level=2] [ref=e154]
+                    - img [ref=e155]
+                  - paragraph [ref=e157]: Access comprehensive market intelligence
+                  - generic [ref=e158]:
+                    - button "SEC EDGAR" [ref=e159]
+                    - button "Norway Data" [ref=e160]
+                    - button "UK Companies" [ref=e161]
+                    - button "EU Markets" [ref=e162]
+                    - button "Insider Trading" [ref=e163]
+                    - button "Real-time Prices" [ref=e164]
+                - generic [ref=e166]:
+                  - img [ref=e167]
+                  - img [ref=e170]
+              - button "Dismiss carousel" [ref=e175]:
+                - img [ref=e176]
+            - tablist "Carousel navigation" [ref=e179]:
+              - 'tab "Go to slide 1: Powerful Financial Data" [selected] [ref=e180]'
+              - 'tab "Go to slide 2: Share your research and get credits" [ref=e181]'
+              - 'tab "Go to slide 3: 100,000+ Companies Analyzed" [ref=e182]'
+          - button "Discover more" [ref=e184] [cursor=pointer]:
+            - generic [ref=e185]: Discover more
+            - generic [ref=e186]:
+              - img [ref=e188]
+              - img [ref=e191]
+          - generic [ref=e194]:
+            - generic [ref=e195]:
+              - heading "Popular Stock Analysis" [level=2] [ref=e196]
+              - generic [ref=e197]:
+                - link "AAPL" [ref=e198] [cursor=pointer]:
+                  - /url: /stock/aapl
+                - link "MSFT" [ref=e199] [cursor=pointer]:
+                  - /url: /stock/msft
+                - link "NVDA" [ref=e200] [cursor=pointer]:
+                  - /url: /stock/nvda
+                - link "TSLA" [ref=e201] [cursor=pointer]:
+                  - /url: /stock/tsla
+                - link "GOOGL" [ref=e202] [cursor=pointer]:
+                  - /url: /stock/googl
+                - link "META" [ref=e203] [cursor=pointer]:
+                  - /url: /stock/meta
+                - link "AMZN" [ref=e204] [cursor=pointer]:
+                  - /url: /stock/amzn
+                - link "AMD" [ref=e205] [cursor=pointer]:
+                  - /url: /stock/amd
+            - generic [ref=e206]:
+              - heading "Stock Price Predictions 2026" [level=2] [ref=e207]
+              - generic [ref=e208]:
+                - link "AAPL Prediction" [ref=e209] [cursor=pointer]:
+                  - /url: /prediction/aapl
+                - link "MSFT Prediction" [ref=e210] [cursor=pointer]:
+                  - /url: /prediction/msft
+                - link "NVDA Prediction" [ref=e211] [cursor=pointer]:
+                  - /url: /prediction/nvda
+                - link "TSLA Prediction" [ref=e212] [cursor=pointer]:
+                  - /url: /prediction/tsla
+                - link "GOOGL Prediction" [ref=e213] [cursor=pointer]:
+                  - /url: /prediction/googl
+                - link "META Prediction" [ref=e214] [cursor=pointer]:
+                  - /url: /prediction/meta
+                - link "AMZN Prediction" [ref=e215] [cursor=pointer]:
+                  - /url: /prediction/amzn
+                - link "AMD Prediction" [ref=e216] [cursor=pointer]:
+                  - /url: /prediction/amd
+            - generic [ref=e217]:
+              - heading "Compare Stocks" [level=2] [ref=e218]
+              - generic [ref=e219]:
+                - link "AAPL vs MSFT" [ref=e220] [cursor=pointer]:
+                  - /url: /compare/aapl-vs-msft
+                - link "NVDA vs AMD" [ref=e221] [cursor=pointer]:
+                  - /url: /compare/nvda-vs-amd
+                - link "GOOGL vs META" [ref=e222] [cursor=pointer]:
+                  - /url: /compare/googl-vs-meta
+                - link "TSLA vs RIVN" [ref=e223] [cursor=pointer]:
+                  - /url: /compare/tsla-vs-rivn
+                - link "AMZN vs WMT" [ref=e224] [cursor=pointer]:
+                  - /url: /compare/amzn-vs-wmt
+                - link "JPM vs BAC" [ref=e225] [cursor=pointer]:
+                  - /url: /compare/jpm-vs-bac
+            - generic [ref=e226]:
+              - heading "Investment Decisions" [level=2] [ref=e227]
+              - generic [ref=e228]:
+                - link "Should I Buy AAPL?" [ref=e229] [cursor=pointer]:
+                  - /url: /should-i-buy/aapl
+                - link "Should I Buy MSFT?" [ref=e230] [cursor=pointer]:
+                  - /url: /should-i-buy/msft
+                - link "Should I Buy NVDA?" [ref=e231] [cursor=pointer]:
+                  - /url: /should-i-buy/nvda
+                - link "Should I Buy TSLA?" [ref=e232] [cursor=pointer]:
+                  - /url: /should-i-buy/tsla
+                - link "Should I Buy GOOGL?" [ref=e233] [cursor=pointer]:
+                  - /url: /should-i-buy/googl
+                - link "Should I Buy META?" [ref=e234] [cursor=pointer]:
+                  - /url: /should-i-buy/meta
+            - generic [ref=e235]:
+              - heading "Browse by Sector" [level=2] [ref=e236]
+              - generic [ref=e237]:
+                - link "Technology" [ref=e238] [cursor=pointer]:
+                  - /url: /sectors/technology
+                - link "Healthcare" [ref=e239] [cursor=pointer]:
+                  - /url: /sectors/healthcare
+                - link "Financials" [ref=e240] [cursor=pointer]:
+                  - /url: /sectors/financials
+                - link "Energy" [ref=e241] [cursor=pointer]:
+                  - /url: /sectors/energy
+                - link "Consumer" [ref=e242] [cursor=pointer]:
+                  - /url: /sectors/consumer-discretionary
+                - link "Industrials" [ref=e243] [cursor=pointer]:
+                  - /url: /sectors/industrials
+  - button [ref=e244]:
+    - img
+  - alert [ref=e245]
+```

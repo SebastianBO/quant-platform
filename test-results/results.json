@@ -126,7 +126,7 @@
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-14T21:33:33.089Z",
+                          "startTime": "2026-01-16T09:32:47.806Z",
                           "annotations": [
                             {
                               "type": "skip",
@@ -178,7 +178,7 @@
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-14T21:33:33.090Z",
+                          "startTime": "2026-01-16T09:32:47.806Z",
                           "annotations": [
                             {
                               "type": "skip",
@@ -196,6 +196,110 @@
                     }
                   ],
                   "id": "1f1ef7bcd9eb87d7ff46-c1c523796abd19a3312c",
+                  "file": "ai-chat.spec.ts",
+                  "line": 62,
+                  "column": 10
+                },
+                {
+                  "title": "should get NVDA stock quote with correct data",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                            "line": 25,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "mobile",
+                      "projectName": "mobile",
+                      "results": [
+                        {
+                          "workerIndex": -1,
+                          "parallelIndex": -1,
+                          "status": "skipped",
+                          "duration": 0,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:02.841Z",
+                          "annotations": [
+                            {
+                              "type": "skip",
+                              "location": {
+                                "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                                "line": 25,
+                                "column": 10
+                              }
+                            }
+                          ],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "1f1ef7bcd9eb87d7ff46-87607f90251c38c942f2",
+                  "file": "ai-chat.spec.ts",
+                  "line": 25,
+                  "column": 10
+                },
+                {
+                  "title": "should get AAPL fundamentals from Supabase",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                            "line": 62,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "mobile",
+                      "projectName": "mobile",
+                      "results": [
+                        {
+                          "workerIndex": -1,
+                          "parallelIndex": -1,
+                          "status": "skipped",
+                          "duration": 0,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:02.841Z",
+                          "annotations": [
+                            {
+                              "type": "skip",
+                              "location": {
+                                "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                                "line": 62,
+                                "column": 10
+                              }
+                            }
+                          ],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "1f1ef7bcd9eb87d7ff46-4df159d2b6c2e3cdb15e",
                   "file": "ai-chat.spec.ts",
                   "line": 62,
                   "column": 10
@@ -238,7 +342,7 @@
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-14T21:33:33.090Z",
+                          "startTime": "2026-01-16T09:32:47.806Z",
                           "annotations": [
                             {
                               "type": "skip",
@@ -256,6 +360,58 @@
                     }
                   ],
                   "id": "1f1ef7bcd9eb87d7ff46-872f5d04287f53c41910",
+                  "file": "ai-chat.spec.ts",
+                  "line": 87,
+                  "column": 10
+                },
+                {
+                  "title": "should get income statement data",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                            "line": 87,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "mobile",
+                      "projectName": "mobile",
+                      "results": [
+                        {
+                          "workerIndex": -1,
+                          "parallelIndex": -1,
+                          "status": "skipped",
+                          "duration": 0,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:02.841Z",
+                          "annotations": [
+                            {
+                              "type": "skip",
+                              "location": {
+                                "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                                "line": 87,
+                                "column": 10
+                              }
+                            }
+                          ],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "1f1ef7bcd9eb87d7ff46-8b044f0d54f1bcc41871",
                   "file": "ai-chat.spec.ts",
                   "line": 87,
                   "column": 10
@@ -298,7 +454,7 @@
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-14T21:33:33.090Z",
+                          "startTime": "2026-01-16T09:32:47.806Z",
                           "annotations": [
                             {
                               "type": "skip",
@@ -316,6 +472,58 @@
                     }
                   ],
                   "id": "1f1ef7bcd9eb87d7ff46-9b8c32022fdaa470fd5a",
+                  "file": "ai-chat.spec.ts",
+                  "line": 111,
+                  "column": 10
+                },
+                {
+                  "title": "should search for technology stocks",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                            "line": 111,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "mobile",
+                      "projectName": "mobile",
+                      "results": [
+                        {
+                          "workerIndex": -1,
+                          "parallelIndex": -1,
+                          "status": "skipped",
+                          "duration": 0,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:02.841Z",
+                          "annotations": [
+                            {
+                              "type": "skip",
+                              "location": {
+                                "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                                "line": 111,
+                                "column": 10
+                              }
+                            }
+                          ],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "1f1ef7bcd9eb87d7ff46-01875feb2a92d73a9bbc",
                   "file": "ai-chat.spec.ts",
                   "line": 111,
                   "column": 10
@@ -358,7 +566,7 @@
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-14T21:33:33.090Z",
+                          "startTime": "2026-01-16T09:32:47.806Z",
                           "annotations": [
                             {
                               "type": "skip",
@@ -376,6 +584,58 @@
                     }
                   ],
                   "id": "1f1ef7bcd9eb87d7ff46-24769fa06cb746cb4842",
+                  "file": "ai-chat.spec.ts",
+                  "line": 135,
+                  "column": 10
+                },
+                {
+                  "title": "should stream phases correctly (Dexter-style)",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                            "line": 135,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "mobile",
+                      "projectName": "mobile",
+                      "results": [
+                        {
+                          "workerIndex": -1,
+                          "parallelIndex": -1,
+                          "status": "skipped",
+                          "duration": 0,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:02.841Z",
+                          "annotations": [
+                            {
+                              "type": "skip",
+                              "location": {
+                                "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                                "line": 135,
+                                "column": 10
+                              }
+                            }
+                          ],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "1f1ef7bcd9eb87d7ff46-132ba0f43ea24e30b23d",
                   "file": "ai-chat.spec.ts",
                   "line": 135,
                   "column": 10
@@ -418,7 +678,7 @@
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-14T21:33:33.090Z",
+                          "startTime": "2026-01-16T09:32:47.806Z",
                           "annotations": [
                             {
                               "type": "skip",
@@ -470,7 +730,7 @@
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-14T21:33:33.090Z",
+                          "startTime": "2026-01-16T09:32:47.806Z",
                           "annotations": [
                             {
                               "type": "skip",
@@ -488,6 +748,110 @@
                     }
                   ],
                   "id": "1f1ef7bcd9eb87d7ff46-67982a0d256fcdabd897",
+                  "file": "ai-chat.spec.ts",
+                  "line": 195,
+                  "column": 10
+                },
+                {
+                  "title": "should execute getCompanyFundamentals tool correctly",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                            "line": 171,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "mobile",
+                      "projectName": "mobile",
+                      "results": [
+                        {
+                          "workerIndex": -1,
+                          "parallelIndex": -1,
+                          "status": "skipped",
+                          "duration": 0,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:02.841Z",
+                          "annotations": [
+                            {
+                              "type": "skip",
+                              "location": {
+                                "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                                "line": 171,
+                                "column": 10
+                              }
+                            }
+                          ],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "1f1ef7bcd9eb87d7ff46-3eaa791d6000d3b54380",
+                  "file": "ai-chat.spec.ts",
+                  "line": 171,
+                  "column": 10
+                },
+                {
+                  "title": "should auto-populate ticker args when missing",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                            "line": 195,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
+                      "projectId": "mobile",
+                      "projectName": "mobile",
+                      "results": [
+                        {
+                          "workerIndex": -1,
+                          "parallelIndex": -1,
+                          "status": "skipped",
+                          "duration": 0,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:02.841Z",
+                          "annotations": [
+                            {
+                              "type": "skip",
+                              "location": {
+                                "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ai-chat.spec.ts",
+                                "line": 195,
+                                "column": 10
+                              }
+                            }
+                          ],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "1f1ef7bcd9eb87d7ff46-5d1794e0b5bea48d47df",
                   "file": "ai-chat.spec.ts",
                   "line": 195,
                   "column": 10
@@ -516,12 +880,12 @@
                           "workerIndex": 0,
                           "parallelIndex": 2,
                           "status": "passed",
-                          "duration": 8211,
+                          "duration": 12032,
                           "errors": [],
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-14T21:33:33.772Z",
+                          "startTime": "2026-01-16T09:32:48.234Z",
                           "annotations": [],
                           "attachments": []
                         }
@@ -550,12 +914,12 @@
                           "workerIndex": 1,
                           "parallelIndex": 3,
                           "status": "passed",
-                          "duration": 19201,
+                          "duration": 5945,
                           "errors": [],
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-14T21:33:33.780Z",
+                          "startTime": "2026-01-16T09:32:48.205Z",
                           "annotations": [],
                           "attachments": []
                         }
@@ -564,6 +928,74 @@
                     }
                   ],
                   "id": "1f1ef7bcd9eb87d7ff46-1270286ef167c1658dfb",
+                  "file": "ai-chat.spec.ts",
+                  "line": 230,
+                  "column": 9
+                },
+                {
+                  "title": "should handle rate limits gracefully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile",
+                      "projectName": "mobile",
+                      "results": [
+                        {
+                          "workerIndex": 8,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 6968,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:03.415Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "1f1ef7bcd9eb87d7ff46-5b82f2ae9b5f67e0588e",
+                  "file": "ai-chat.spec.ts",
+                  "line": 216,
+                  "column": 9
+                },
+                {
+                  "title": "should return remaining requests count",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile",
+                      "projectName": "mobile",
+                      "results": [
+                        {
+                          "workerIndex": 9,
+                          "parallelIndex": 3,
+                          "status": "passed",
+                          "duration": 6186,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:03.581Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "1f1ef7bcd9eb87d7ff46-a0870f4c23067588d02d",
                   "file": "ai-chat.spec.ts",
                   "line": 230,
                   "column": 9
@@ -592,12 +1024,12 @@
                           "workerIndex": 2,
                           "parallelIndex": 4,
                           "status": "passed",
-                          "duration": 782,
+                          "duration": 1372,
                           "errors": [],
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-14T21:33:33.813Z",
+                          "startTime": "2026-01-16T09:32:48.234Z",
                           "annotations": [],
                           "attachments": []
                         }
@@ -606,6 +1038,40 @@
                     }
                   ],
                   "id": "1f1ef7bcd9eb87d7ff46-73ebc6712371b781061c",
+                  "file": "ai-chat.spec.ts",
+                  "line": 249,
+                  "column": 9
+                },
+                {
+                  "title": "should return available models",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile",
+                      "projectName": "mobile",
+                      "results": [
+                        {
+                          "workerIndex": 10,
+                          "parallelIndex": 4,
+                          "status": "passed",
+                          "duration": 304,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:03.971Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "1f1ef7bcd9eb87d7ff46-c4ffa72c72b68e667471",
                   "file": "ai-chat.spec.ts",
                   "line": 249,
                   "column": 9
@@ -636,12 +1102,12 @@
                       "workerIndex": 3,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5949,
+                      "duration": 6579,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-01-14T21:33:33.805Z",
+                      "startTime": "2026-01-16T09:32:48.220Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -676,12 +1142,12 @@
                       "workerIndex": 4,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 869,
+                      "duration": 1485,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-01-14T21:33:33.808Z",
+                      "startTime": "2026-01-16T09:32:48.228Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -696,6 +1162,90 @@
                 }
               ],
               "id": "1f1ef7bcd9eb87d7ff46-d8186f21bca44ed54547",
+              "file": "ai-chat.spec.ts",
+              "line": 284,
+              "column": 7
+            },
+            {
+              "title": "should submit query through UI and get response",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 10,
+                      "parallelIndex": 4,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-16T09:33:04.286Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1f1ef7bcd9eb87d7ff46-954611057489356c810b",
+              "file": "ai-chat.spec.ts",
+              "line": 263,
+              "column": 7
+            },
+            {
+              "title": "should show model selector",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 11,
+                      "parallelIndex": 4,
+                      "status": "failed",
+                      "duration": 1,
+                      "error": {
+                        "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                        "stack": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-16T09:33:04.728Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1f1ef7bcd9eb87d7ff46-445e42faf09678ecb80e",
               "file": "ai-chat.spec.ts",
               "line": 284,
               "column": 7
@@ -724,12 +1274,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 1688,
+                      "duration": 1445,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-01-14T21:33:34.610Z",
+                      "startTime": "2026-01-16T09:32:49.619Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -758,12 +1308,12 @@
                       "workerIndex": 4,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1182,
+                      "duration": 1069,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-01-14T21:33:35.186Z",
+                      "startTime": "2026-01-16T09:32:50.100Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -772,6 +1322,74 @@
                 }
               ],
               "id": "1f1ef7bcd9eb87d7ff46-a00f771a3d4ce98abdf8",
+              "file": "ai-chat.spec.ts",
+              "line": 312,
+              "column": 7
+            },
+            {
+              "title": "should search using Supabase company_fundamentals",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 743,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-16T09:33:05.146Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f1ef7bcd9eb87d7ff46-263666f3adfb49bd35b4",
+              "file": "ai-chat.spec.ts",
+              "line": 296,
+              "column": 7
+            },
+            {
+              "title": "should return company details with search",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 550,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-16T09:33:05.901Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f1ef7bcd9eb87d7ff46-53385aa9a8490ec053de",
               "file": "ai-chat.spec.ts",
               "line": 312,
               "column": 7
@@ -800,12 +1418,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 650,
+                      "duration": 672,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-01-14T21:33:36.305Z",
+                      "startTime": "2026-01-16T09:32:51.071Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -817,6 +1435,1428 @@
               "file": "ai-chat.spec.ts",
               "line": 331,
               "column": 7
+            },
+            {
+              "title": "should return financial metrics for AAPL",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "mobile",
+                  "projectName": "mobile",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 325,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-16T09:33:06.458Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1f1ef7bcd9eb87d7ff46-b2a8530e023240c22df9",
+              "file": "ai-chat.spec.ts",
+              "line": 331,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "ui.spec.ts",
+      "file": "ui.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Lician UI Tests",
+          "file": "ui.spec.ts",
+          "line": 13,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "Homepage",
+              "file": "ui.spec.ts",
+              "line": 14,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should load homepage successfully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 4,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 825,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:32:51.180Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Users/sebastianbenzianolsson/Developer/quant-platform/test-results/ui-Lician-UI-Tests-Homepag-bed87--load-homepage-successfully-chromium/test-finished-1.png"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-8aac04b5d49cd79ee97a",
+                  "file": "ui.spec.ts",
+                  "line": 15,
+                  "column": 9
+                },
+                {
+                  "title": "should have working AI chat input",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 4,
+                          "status": "passed",
+                          "duration": 1005,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:32:51.752Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Users/sebastianbenzianolsson/Developer/quant-platform/test-results/ui-Lician-UI-Tests-Homepag-db2e8--have-working-AI-chat-input-chromium/test-finished-1.png"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-8e99b389faad2d6e5c61",
+                  "file": "ui.spec.ts",
+                  "line": 24,
+                  "column": 9
+                },
+                {
+                  "title": "should have visible navigation",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 4,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 1027,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:32:52.011Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Users/sebastianbenzianolsson/Developer/quant-platform/test-results/ui-Lician-UI-Tests-Homepage-should-have-visible-navigation-chromium/test-finished-1.png"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-129c49d6f3c7c4624ca7",
+                  "file": "ui.spec.ts",
+                  "line": 37,
+                  "column": 9
+                },
+                {
+                  "title": "should have mobile app promo in footer",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 4,
+                          "status": "failed",
+                          "duration": 6166,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Get Lician on Mobile')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Get Lician on Mobile')\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Get Lician on Mobile')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Get Lician on Mobile')\u001b[22m\n\n    at /Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts:58:30",
+                            "location": {
+                              "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts",
+                              "column": 30,
+                              "line": 58
+                            },
+                            "snippet": "  56 |       // Check for app promo\n  57 |       const appPromo = page.getByText('Get Lician on Mobile')\n> 58 |       await expect(appPromo).toBeVisible()\n     |                              ^\n  59 |\n  60 |       // Check App Store links\n  61 |       const iosLink = page.locator('a[href*=\"apps.apple.com\"]').first()"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts",
+                                "column": 30,
+                                "line": 58
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Get Lician on Mobile')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Get Lician on Mobile')\u001b[22m\n\n\n  56 |       // Check for app promo\n  57 |       const appPromo = page.getByText('Get Lician on Mobile')\n> 58 |       await expect(appPromo).toBeVisible()\n     |                              ^\n  59 |\n  60 |       // Check App Store links\n  61 |       const iosLink = page.locator('a[href*=\"apps.apple.com\"]').first()\n    at /Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts:58:30"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:32:52.888Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Users/sebastianbenzianolsson/Developer/quant-platform/test-results/ui-Lician-UI-Tests-Homepag-c8747--mobile-app-promo-in-footer-chromium/test-failed-1.png"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/Users/sebastianbenzianolsson/Developer/quant-platform/test-results/ui-Lician-UI-Tests-Homepag-c8747--mobile-app-promo-in-footer-chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts",
+                            "column": 30,
+                            "line": 58
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-5b6e5bdcee91a532947a",
+                  "file": "ui.spec.ts",
+                  "line": 49,
+                  "column": 9
+                },
+                {
+                  "title": "should have newsletter signup",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 4,
+                          "parallelIndex": 1,
+                          "status": "failed",
+                          "duration": 6375,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('input[type=\"email\"]').first()\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"email\"]').first()\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('input[type=\"email\"]').first()\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"email\"]').first()\u001b[22m\n\n    at /Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts:74:32",
+                            "location": {
+                              "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts",
+                              "column": 32,
+                              "line": 74
+                            },
+                            "snippet": "  72 |       // Check newsletter form\n  73 |       const emailInput = page.locator('input[type=\"email\"]').first()\n> 74 |       await expect(emailInput).toBeVisible()\n     |                                ^\n  75 |     })\n  76 |   })\n  77 |"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts",
+                                "column": 32,
+                                "line": 74
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('input[type=\"email\"]').first()\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('input[type=\"email\"]').first()\u001b[22m\n\n\n  72 |       // Check newsletter form\n  73 |       const emailInput = page.locator('input[type=\"email\"]').first()\n> 74 |       await expect(emailInput).toBeVisible()\n     |                                ^\n  75 |     })\n  76 |   })\n  77 |\n    at /Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts:74:32"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:32:53.045Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Users/sebastianbenzianolsson/Developer/quant-platform/test-results/ui-Lician-UI-Tests-Homepage-should-have-newsletter-signup-chromium/test-failed-1.png"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/Users/sebastianbenzianolsson/Developer/quant-platform/test-results/ui-Lician-UI-Tests-Homepage-should-have-newsletter-signup-chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts",
+                            "column": 32,
+                            "line": 74
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-2e5e2f3a46456760027a",
+                  "file": "ui.spec.ts",
+                  "line": 65,
+                  "column": 9
+                },
+                {
+                  "title": "should load homepage successfully",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile",
+                      "projectName": "mobile",
+                      "results": [
+                        {
+                          "workerIndex": 13,
+                          "parallelIndex": 1,
+                          "status": "failed",
+                          "duration": 2,
+                          "error": {
+                            "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                            "stack": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                          },
+                          "errors": [
+                            {
+                              "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:06.879Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-c1463d4fa25b3d0fb0ac",
+                  "file": "ui.spec.ts",
+                  "line": 15,
+                  "column": 9
+                },
+                {
+                  "title": "should have working AI chat input",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile",
+                      "projectName": "mobile",
+                      "results": [
+                        {
+                          "workerIndex": 12,
+                          "parallelIndex": 4,
+                          "status": "failed",
+                          "duration": 0,
+                          "error": {
+                            "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                            "stack": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                          },
+                          "errors": [
+                            {
+                              "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:06.791Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-0b23070abcc050de04e9",
+                  "file": "ui.spec.ts",
+                  "line": 24,
+                  "column": 9
+                },
+                {
+                  "title": "should have visible navigation",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile",
+                      "projectName": "mobile",
+                      "results": [
+                        {
+                          "workerIndex": 14,
+                          "parallelIndex": 4,
+                          "status": "failed",
+                          "duration": 2,
+                          "error": {
+                            "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                            "stack": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                          },
+                          "errors": [
+                            {
+                              "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:07.184Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-fa0bff4484b049e68e89",
+                  "file": "ui.spec.ts",
+                  "line": 37,
+                  "column": 9
+                },
+                {
+                  "title": "should have mobile app promo in footer",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile",
+                      "projectName": "mobile",
+                      "results": [
+                        {
+                          "workerIndex": 15,
+                          "parallelIndex": 1,
+                          "status": "failed",
+                          "duration": 1,
+                          "error": {
+                            "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                            "stack": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                          },
+                          "errors": [
+                            {
+                              "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:07.284Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-264f0b4d32ef3b2cebb0",
+                  "file": "ui.spec.ts",
+                  "line": 49,
+                  "column": 9
+                },
+                {
+                  "title": "should have newsletter signup",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile",
+                      "projectName": "mobile",
+                      "results": [
+                        {
+                          "workerIndex": 16,
+                          "parallelIndex": 4,
+                          "status": "failed",
+                          "duration": 1,
+                          "error": {
+                            "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                            "stack": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                          },
+                          "errors": [
+                            {
+                              "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:07.586Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-072af9046d69f9511f64",
+                  "file": "ui.spec.ts",
+                  "line": 65,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Stock Pages",
+              "file": "ui.spec.ts",
+              "line": 78,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should load AAPL stock page",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 1,
+                          "parallelIndex": 3,
+                          "status": "failed",
+                          "duration": 8652,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByText('AAPL').first()\nExpected: visible\nReceived: hidden\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('AAPL').first()\u001b[22m\n\u001b[2m    9 × locator resolved to <h1 class=\"text-3xl sm:text-4xl font-bold text-foreground\">…</h1>\u001b[22m\n\u001b[2m      - unexpected value \"hidden\"\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByText('AAPL').first()\nExpected: visible\nReceived: hidden\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('AAPL').first()\u001b[22m\n\u001b[2m    9 × locator resolved to <h1 class=\"text-3xl sm:text-4xl font-bold text-foreground\">…</h1>\u001b[22m\n\u001b[2m      - unexpected value \"hidden\"\u001b[22m\n\n    at /Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts:87:28",
+                            "location": {
+                              "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts",
+                              "column": 28,
+                              "line": 87
+                            },
+                            "snippet": "  85 |       // Check ticker is visible\n  86 |       const ticker = page.getByText('AAPL').first()\n> 87 |       await expect(ticker).toBeVisible()\n     |                            ^\n  88 |\n  89 |       // Screenshot for visual inspection\n  90 |       await page.screenshot({ path: 'tests/screenshots/stock-aapl.png', fullPage: true })"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts",
+                                "column": 28,
+                                "line": 87
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByText('AAPL').first()\nExpected: visible\nReceived: hidden\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('AAPL').first()\u001b[22m\n\u001b[2m    9 × locator resolved to <h1 class=\"text-3xl sm:text-4xl font-bold text-foreground\">…</h1>\u001b[22m\n\u001b[2m      - unexpected value \"hidden\"\u001b[22m\n\n\n  85 |       // Check ticker is visible\n  86 |       const ticker = page.getByText('AAPL').first()\n> 87 |       await expect(ticker).toBeVisible()\n     |                            ^\n  88 |\n  89 |       // Screenshot for visual inspection\n  90 |       await page.screenshot({ path: 'tests/screenshots/stock-aapl.png', fullPage: true })\n    at /Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts:87:28"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:32:54.166Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Users/sebastianbenzianolsson/Developer/quant-platform/test-results/ui-Lician-UI-Tests-Stock-Pages-should-load-AAPL-stock-page-chromium/test-failed-1.png"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/Users/sebastianbenzianolsson/Developer/quant-platform/test-results/ui-Lician-UI-Tests-Stock-Pages-should-load-AAPL-stock-page-chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts",
+                            "column": 28,
+                            "line": 87
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-76f6a11d3a552aeebb97",
+                  "file": "ui.spec.ts",
+                  "line": 79,
+                  "column": 9
+                },
+                {
+                  "title": "should load stock comparison page",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 3,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 7610,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('AAPL')\nExpected: visible\nError: strict mode violation: getByText('AAPL') resolved to 38 elements:\n    1) <span>…</span> aka getByRole('main').getByText('AAPL vs MSFT', { exact: true })\n    2) <h1 class=\"text-4xl font-bold mb-4\">…</h1> aka getByRole('heading', { name: 'AAPL vs MSFT: Which Stock is' })\n    3) <p class=\"text-xl text-muted-foreground mb-4\">…</p> aka getByText('Side-by-side comparison of')\n    4) <h2 class=\"text-2xl font-bold text-green-500 mb-2\">AAPL</h2> aka locator('h2').filter({ hasText: 'AAPL' })\n    5) <p class=\"text-muted-foreground mb-4\">AAPL</p> aka getByRole('paragraph').filter({ hasText: /^AAPL$/ })\n    6) <th class=\"text-center p-4 text-green-500\">AAPL</th> aka getByRole('columnheader', { name: 'AAPL' })\n    7) <span class=\"text-green-500\">AAPL</span> aka locator('tbody').getByText('AAPL', { exact: true })\n    8) <p class=\"font-bold text-green-500 mb-2\">…</p> aka getByRole('link', { name: 'Analyze AAPL Full quant' })\n    9) <h4 class=\"font-medium text-green-500\">AAPL</h4> aka locator('h4').filter({ hasText: /^AAPL$/ })\n    10) <a href=\"/should-i-buy/aapl\" class=\"text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('link', { name: 'Should I Buy AAPL?' }).first()\n    ...\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('AAPL')\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('AAPL')\nExpected: visible\nError: strict mode violation: getByText('AAPL') resolved to 38 elements:\n    1) <span>…</span> aka getByRole('main').getByText('AAPL vs MSFT', { exact: true })\n    2) <h1 class=\"text-4xl font-bold mb-4\">…</h1> aka getByRole('heading', { name: 'AAPL vs MSFT: Which Stock is' })\n    3) <p class=\"text-xl text-muted-foreground mb-4\">…</p> aka getByText('Side-by-side comparison of')\n    4) <h2 class=\"text-2xl font-bold text-green-500 mb-2\">AAPL</h2> aka locator('h2').filter({ hasText: 'AAPL' })\n    5) <p class=\"text-muted-foreground mb-4\">AAPL</p> aka getByRole('paragraph').filter({ hasText: /^AAPL$/ })\n    6) <th class=\"text-center p-4 text-green-500\">AAPL</th> aka getByRole('columnheader', { name: 'AAPL' })\n    7) <span class=\"text-green-500\">AAPL</span> aka locator('tbody').getByText('AAPL', { exact: true })\n    8) <p class=\"font-bold text-green-500 mb-2\">…</p> aka getByRole('link', { name: 'Analyze AAPL Full quant' })\n    9) <h4 class=\"font-medium text-green-500\">AAPL</h4> aka locator('h4').filter({ hasText: /^AAPL$/ })\n    10) <a href=\"/should-i-buy/aapl\" class=\"text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('link', { name: 'Should I Buy AAPL?' }).first()\n    ...\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('AAPL')\u001b[22m\n\n    at /Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts:98:44",
+                            "location": {
+                              "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts",
+                              "column": 44,
+                              "line": 98
+                            },
+                            "snippet": "   96 |\n   97 |       // Both tickers should be visible\n>  98 |       await expect(page.getByText('AAPL')).toBeVisible()\n      |                                            ^\n   99 |\n  100 |       await page.screenshot({ path: 'tests/screenshots/compare-aapl-msft.png', fullPage: true })\n  101 |     })"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts",
+                                "column": 44,
+                                "line": 98
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('AAPL')\nExpected: visible\nError: strict mode violation: getByText('AAPL') resolved to 38 elements:\n    1) <span>…</span> aka getByRole('main').getByText('AAPL vs MSFT', { exact: true })\n    2) <h1 class=\"text-4xl font-bold mb-4\">…</h1> aka getByRole('heading', { name: 'AAPL vs MSFT: Which Stock is' })\n    3) <p class=\"text-xl text-muted-foreground mb-4\">…</p> aka getByText('Side-by-side comparison of')\n    4) <h2 class=\"text-2xl font-bold text-green-500 mb-2\">AAPL</h2> aka locator('h2').filter({ hasText: 'AAPL' })\n    5) <p class=\"text-muted-foreground mb-4\">AAPL</p> aka getByRole('paragraph').filter({ hasText: /^AAPL$/ })\n    6) <th class=\"text-center p-4 text-green-500\">AAPL</th> aka getByRole('columnheader', { name: 'AAPL' })\n    7) <span class=\"text-green-500\">AAPL</span> aka locator('tbody').getByText('AAPL', { exact: true })\n    8) <p class=\"font-bold text-green-500 mb-2\">…</p> aka getByRole('link', { name: 'Analyze AAPL Full quant' })\n    9) <h4 class=\"font-medium text-green-500\">AAPL</h4> aka locator('h4').filter({ hasText: /^AAPL$/ })\n    10) <a href=\"/should-i-buy/aapl\" class=\"text-sm text-muted-foreground hover:text-foreground\">…</a> aka getByRole('link', { name: 'Should I Buy AAPL?' }).first()\n    ...\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('AAPL')\u001b[22m\n\n\n   96 |\n   97 |       // Both tickers should be visible\n>  98 |       await expect(page.getByText('AAPL')).toBeVisible()\n      |                                            ^\n   99 |\n  100 |       await page.screenshot({ path: 'tests/screenshots/compare-aapl-msft.png', fullPage: true })\n  101 |     })\n    at /Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts:98:44"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:32:55.197Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Users/sebastianbenzianolsson/Developer/quant-platform/test-results/ui-Lician-UI-Tests-Stock-P-eb3be--load-stock-comparison-page-chromium/test-failed-1.png"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/Users/sebastianbenzianolsson/Developer/quant-platform/test-results/ui-Lician-UI-Tests-Stock-P-eb3be--load-stock-comparison-page-chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts",
+                            "column": 44,
+                            "line": 98
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-3685de234761ece07fe9",
+                  "file": "ui.spec.ts",
+                  "line": 93,
+                  "column": 9
+                },
+                {
+                  "title": "should load AAPL stock page",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile",
+                      "projectName": "mobile",
+                      "results": [
+                        {
+                          "workerIndex": 17,
+                          "parallelIndex": 1,
+                          "status": "failed",
+                          "duration": 1,
+                          "error": {
+                            "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                            "stack": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                          },
+                          "errors": [
+                            {
+                              "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:07.688Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-e3b410cab8494951a74d",
+                  "file": "ui.spec.ts",
+                  "line": 79,
+                  "column": 9
+                },
+                {
+                  "title": "should load stock comparison page",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile",
+                      "projectName": "mobile",
+                      "results": [
+                        {
+                          "workerIndex": 18,
+                          "parallelIndex": 4,
+                          "status": "failed",
+                          "duration": 1,
+                          "error": {
+                            "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                            "stack": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                          },
+                          "errors": [
+                            {
+                              "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:08.003Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-47e4be53445b652e1e71",
+                  "file": "ui.spec.ts",
+                  "line": 93,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Performance",
+              "file": "ui.spec.ts",
+              "line": 104,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "homepage should load within 5 seconds",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 5,
+                          "parallelIndex": 4,
+                          "status": "passed",
+                          "duration": 777,
+                          "errors": [],
+                          "stdout": [
+                            {
+                              "text": "Homepage load time: 642ms\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:32:59.467Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Users/sebastianbenzianolsson/Developer/quant-platform/test-results/ui-Lician-UI-Tests-Perform-d3b7b-hould-load-within-5-seconds-chromium/test-finished-1.png"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-80ceecb4a70eb425d3e2",
+                  "file": "ui.spec.ts",
+                  "line": 105,
+                  "column": 9
+                },
+                {
+                  "title": "should not have console errors",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 1,
+                          "status": "failed",
+                          "duration": 2665,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m3\u001b[39m\nReceived:   \u001b[31m6\u001b[39m",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m3\u001b[39m\nReceived:   \u001b[31m6\u001b[39m\n    at /Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts:137:37",
+                            "location": {
+                              "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts",
+                              "column": 37,
+                              "line": 137
+                            },
+                            "snippet": "  135 |       }\n  136 |\n> 137 |       expect(criticalErrors.length).toBeLessThan(3)\n      |                                     ^\n  138 |     })\n  139 |   })\n  140 |"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts",
+                                "column": 37,
+                                "line": 137
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m3\u001b[39m\nReceived:   \u001b[31m6\u001b[39m\n\n  135 |       }\n  136 |\n> 137 |       expect(criticalErrors.length).toBeLessThan(3)\n      |                                     ^\n  138 |     })\n  139 |   })\n  140 |\n    at /Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts:137:37"
+                            }
+                          ],
+                          "stdout": [
+                            {
+                              "text": "Console errors found: [\n  \u001b[32m'Failed to load resource: the server responded with a status of 404 ()'\u001b[39m,\n  \u001b[32m\"Access to fetch at 'https://eodhd.com/img/logos/US/FIGR.png' (redirected from 'https://eodhistoricaldata.com/img/logos/US/FIGR.png') from origin 'https://lician.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.\"\u001b[39m,\n  \u001b[32m'Failed to load resource: net::ERR_FAILED'\u001b[39m,\n  \u001b[32m'Failed to load resource: the server responded with a status of 400 ()'\u001b[39m,\n  \u001b[32m'Failed to load resource: the server responded with a status of 400 ()'\u001b[39m,\n  \u001b[32m'Failed to load resource: the server responded with a status of 400 ()'\u001b[39m\n]\n"
+                            }
+                          ],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:32:59.857Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Users/sebastianbenzianolsson/Developer/quant-platform/test-results/ui-Lician-UI-Tests-Perform-a0391-uld-not-have-console-errors-chromium/test-failed-1.png"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/Users/sebastianbenzianolsson/Developer/quant-platform/test-results/ui-Lician-UI-Tests-Perform-a0391-uld-not-have-console-errors-chromium/error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts",
+                            "column": 37,
+                            "line": 137
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-0bdd21b4c67ab5e02d20",
+                  "file": "ui.spec.ts",
+                  "line": 115,
+                  "column": 9
+                },
+                {
+                  "title": "homepage should load within 5 seconds",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile",
+                      "projectName": "mobile",
+                      "results": [
+                        {
+                          "workerIndex": 19,
+                          "parallelIndex": 1,
+                          "status": "failed",
+                          "duration": 2,
+                          "error": {
+                            "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                            "stack": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                          },
+                          "errors": [
+                            {
+                              "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:08.107Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-c9b4e0985c32348e6c1d",
+                  "file": "ui.spec.ts",
+                  "line": 105,
+                  "column": 9
+                },
+                {
+                  "title": "should not have console errors",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile",
+                      "projectName": "mobile",
+                      "results": [
+                        {
+                          "workerIndex": 20,
+                          "parallelIndex": 4,
+                          "status": "failed",
+                          "duration": 1,
+                          "error": {
+                            "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                            "stack": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                          },
+                          "errors": [
+                            {
+                              "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:08.413Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-efec13d139c2b6de0f3a",
+                  "file": "ui.spec.ts",
+                  "line": 115,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Mobile Responsiveness",
+              "file": "ui.spec.ts",
+              "line": 141,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "homepage should be mobile friendly",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 880,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:00.287Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Users/sebastianbenzianolsson/Developer/quant-platform/test-results/ui-Lician-UI-Tests-Mobile--bfbc7-e-should-be-mobile-friendly-chromium/test-finished-1.png"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-09a790ce147135cd964d",
+                  "file": "ui.spec.ts",
+                  "line": 142,
+                  "column": 9
+                },
+                {
+                  "title": "navigation should work on mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 5,
+                          "parallelIndex": 4,
+                          "status": "passed",
+                          "duration": 1069,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:00.385Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Users/sebastianbenzianolsson/Developer/quant-platform/test-results/ui-Lician-UI-Tests-Mobile--35067-ation-should-work-on-mobile-chromium/test-finished-1.png"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-652ed000d4250143563f",
+                  "file": "ui.spec.ts",
+                  "line": 156,
+                  "column": 9
+                },
+                {
+                  "title": "homepage should be mobile friendly",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile",
+                      "projectName": "mobile",
+                      "results": [
+                        {
+                          "workerIndex": 21,
+                          "parallelIndex": 1,
+                          "status": "failed",
+                          "duration": 1,
+                          "error": {
+                            "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                            "stack": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                          },
+                          "errors": [
+                            {
+                              "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:08.511Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-0058953d03e164b6a967",
+                  "file": "ui.spec.ts",
+                  "line": 142,
+                  "column": 9
+                },
+                {
+                  "title": "navigation should work on mobile",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile",
+                      "projectName": "mobile",
+                      "results": [
+                        {
+                          "workerIndex": 22,
+                          "parallelIndex": 4,
+                          "status": "failed",
+                          "duration": 1,
+                          "error": {
+                            "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                            "stack": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                          },
+                          "errors": [
+                            {
+                              "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:08.822Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-b3d13afc8961722a9380",
+                  "file": "ui.spec.ts",
+                  "line": 156,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Critical User Flows",
+              "file": "ui.spec.ts",
+              "line": 167,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should be able to search for stocks",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 2,
+                          "status": "timedOut",
+                          "duration": 30059,
+                          "error": {
+                            "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                            "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                          },
+                          "errors": [
+                            {
+                              "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                            },
+                            {
+                              "location": {
+                                "file": "/Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts",
+                                "column": 25,
+                                "line": 173
+                              },
+                              "message": "Error: locator.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input').first()\u001b[22m\n\u001b[2m    - locator resolved to <input multiple type=\"file\" class=\"hidden\" accept=\".pdf,.txt,.csv,.doc,.docx,image/*\"/>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    56 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not visible\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n\n  171 |       // Find search/input\n  172 |       const searchInput = page.locator('input').first()\n> 173 |       await searchInput.click()\n      |                         ^\n  174 |       await searchInput.fill('NVDA')\n  175 |\n  176 |       await page.screenshot({ path: 'tests/screenshots/search-flow.png' })\n    at /Users/sebastianbenzianolsson/Developer/quant-platform/tests/ui.spec.ts:173:25"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:01.297Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Users/sebastianbenzianolsson/Developer/quant-platform/test-results/ui-Lician-UI-Tests-Critica-b1329-e-able-to-search-for-stocks-chromium/test-failed-1.png"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "/Users/sebastianbenzianolsson/Developer/quant-platform/test-results/ui-Lician-UI-Tests-Critica-b1329-e-able-to-search-for-stocks-chromium/error-context.md"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-1f790dab01c267951d7e",
+                  "file": "ui.spec.ts",
+                  "line": 168,
+                  "column": 9
+                },
+                {
+                  "title": "footer links should work",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 5,
+                          "parallelIndex": 4,
+                          "status": "passed",
+                          "duration": 2077,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:01.461Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Users/sebastianbenzianolsson/Developer/quant-platform/test-results/ui-Lician-UI-Tests-Critica-680cc-ws-footer-links-should-work-chromium/test-finished-1.png"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-dd0c6a27d34afbec917e",
+                  "file": "ui.spec.ts",
+                  "line": 179,
+                  "column": 9
+                },
+                {
+                  "title": "should be able to search for stocks",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile",
+                      "projectName": "mobile",
+                      "results": [
+                        {
+                          "workerIndex": 23,
+                          "parallelIndex": 1,
+                          "status": "failed",
+                          "duration": 1,
+                          "error": {
+                            "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                            "stack": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                          },
+                          "errors": [
+                            {
+                              "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:08.910Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-9fbf09826175504a4767",
+                  "file": "ui.spec.ts",
+                  "line": 168,
+                  "column": 9
+                },
+                {
+                  "title": "footer links should work",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile",
+                      "projectName": "mobile",
+                      "results": [
+                        {
+                          "workerIndex": 24,
+                          "parallelIndex": 4,
+                          "status": "failed",
+                          "duration": 1,
+                          "error": {
+                            "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                            "stack": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                          },
+                          "errors": [
+                            {
+                              "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:09.211Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-80fecf71303be20622ca",
+                  "file": "ui.spec.ts",
+                  "line": 179,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Visual Regression",
+              "file": "ui.spec.ts",
+              "line": 196,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "capture homepage screenshots for comparison",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 7,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 3036,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:03.280Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "/Users/sebastianbenzianolsson/Developer/quant-platform/test-results/ui-Lician-UI-Tests-Visual--4851b--screenshots-for-comparison-chromium/test-finished-1.png"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-d1883ac832cf85450cac",
+                  "file": "ui.spec.ts",
+                  "line": 197,
+                  "column": 9
+                },
+                {
+                  "title": "capture homepage screenshots for comparison",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "mobile",
+                      "projectName": "mobile",
+                      "results": [
+                        {
+                          "workerIndex": 25,
+                          "parallelIndex": 1,
+                          "status": "failed",
+                          "duration": 1,
+                          "error": {
+                            "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝",
+                            "stack": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                          },
+                          "errors": [
+                            {
+                              "message": "Error: browserType.launch: Executable doesn't exist at /Users/sebastianbenzianolsson/Library/Caches/ms-playwright/webkit-2227/pw_run.sh\n╔═════════════════════════════════════════════════════════════════════════╗\n║ Looks like Playwright Test or Playwright was just installed or updated. ║\n║ Please run the following command to download new browsers:              ║\n║                                                                         ║\n║     npx playwright install                                              ║\n║                                                                         ║\n║ <3 Playwright Team                                                      ║\n╚═════════════════════════════════════════════════════════════════════════╝"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-01-16T09:33:09.300Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "d425444c687fa36b5882-1d82ef104720e3bdc750",
+                  "file": "ui.spec.ts",
+                  "line": 197,
+                  "column": 9
+                }
+              ]
             }
           ]
         }
@@ -825,11 +2865,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-01-14T21:33:33.067Z",
-    "duration": 19983.505,
-    "expected": 8,
-    "skipped": 7,
-    "unexpected": 0,
+    "startTime": "2026-01-16T09:32:47.732Z",
+    "duration": 43656.848,
+    "expected": 22,
+    "skipped": 14,
+    "unexpected": 22,
     "flaky": 0
   }
 }
