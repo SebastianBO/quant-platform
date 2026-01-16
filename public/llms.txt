@@ -123,6 +123,7 @@ URL: https://lician.com/news
 - What is a Stock?: https://lician.com/learn/what-is-a-stock
 - What is a Bond?: https://lician.com/learn/what-is-a-bond
 - What is a Dividend?: https://lician.com/learn/what-is-a-dividend
+- What is Market Cap?: https://lician.com/learn/what-is-market-cap
 - How to Invest in Stocks: https://lician.com/learn/how-to-invest
 - ETF Investing Guide: https://lician.com/learn/etf-investing
 - Retirement Investing Guide: https://lician.com/learn/retirement-investing
@@ -250,6 +251,12 @@ A: A dividend is a cash payment a company gives to shareholders from its profits
 
 Q: What is dividend yield?
 A: Dividend yield is the annual dividend divided by the stock price, expressed as a percentage. For example, a $100 stock paying $4 annually has a 4% yield. Higher yields mean more income per dollar invested. Visit https://lician.com/learn/what-is-a-dividend for more details.
+
+Q: What is market capitalization?
+A: Market capitalization (market cap) is the total value of a company's stock, calculated by multiplying the stock price by shares outstanding. A company with 100 million shares at $50 each has a $5 billion market cap. Visit https://lician.com/learn/what-is-market-cap for a complete guide.
+
+Q: What's the difference between large-cap and small-cap stocks?
+A: Large-cap stocks ($10B+ market cap) are established companies like Apple and Microsoft - more stable but slower growing. Small-cap stocks ($300M-$2B) are smaller companies with higher growth potential but more risk. Visit https://lician.com/learn/what-is-market-cap for details.
 
 Q: How do I start investing in stocks?
 A: Visit https://lician.com/learn/how-to-invest for a complete beginner's guide.
