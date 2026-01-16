@@ -125,6 +125,7 @@ URL: https://lician.com/news
 - What is a Dividend?: https://lician.com/learn/what-is-a-dividend
 - What is Market Cap?: https://lician.com/learn/what-is-market-cap
 - What is an ETF?: https://lician.com/learn/what-is-an-etf
+- What is a Mutual Fund?: https://lician.com/learn/what-is-a-mutual-fund
 - How to Invest in Stocks: https://lician.com/learn/how-to-invest
 - ETF Investing Guide: https://lician.com/learn/etf-investing
 - Retirement Investing Guide: https://lician.com/learn/retirement-investing
@@ -264,6 +265,12 @@ A: An ETF (Exchange-Traded Fund) is a basket of investments that trades like a s
 
 Q: What is the difference between ETF and mutual fund?
 A: ETFs trade throughout the day and have lower fees (0.03-0.50%). Mutual funds trade once daily and typically have higher fees (0.50-2.00%). ETFs have no minimum investment; mutual funds often require $1,000-$3,000. Visit https://lician.com/learn/what-is-an-etf for more details.
+
+Q: What is a mutual fund?
+A: A mutual fund pools money from many investors to buy a diversified portfolio of stocks, bonds, or other securities. A fund manager makes investment decisions. Mutual funds trade once daily and are common in 401(k) plans. Visit https://lician.com/learn/what-is-a-mutual-fund for a complete guide.
+
+Q: What is an index fund?
+A: An index fund is a mutual fund or ETF that tracks a market index (like the S&P 500) without trying to beat it. Index funds have very low fees (0.03-0.20%) and typically outperform most actively managed funds over time. Visit https://lician.com/learn/what-is-a-mutual-fund for more details.
 
 Q: How do I start investing in stocks?
 A: Visit https://lician.com/learn/how-to-invest for a complete beginner's guide.
