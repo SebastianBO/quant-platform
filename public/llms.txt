@@ -124,6 +124,7 @@ URL: https://lician.com/news
 - What is a Bond?: https://lician.com/learn/what-is-a-bond
 - What is a Dividend?: https://lician.com/learn/what-is-a-dividend
 - What is Market Cap?: https://lician.com/learn/what-is-market-cap
+- What is an ETF?: https://lician.com/learn/what-is-an-etf
 - How to Invest in Stocks: https://lician.com/learn/how-to-invest
 - ETF Investing Guide: https://lician.com/learn/etf-investing
 - Retirement Investing Guide: https://lician.com/learn/retirement-investing
@@ -257,6 +258,12 @@ A: Market capitalization (market cap) is the total value of a company's stock, c
 
 Q: What's the difference between large-cap and small-cap stocks?
 A: Large-cap stocks ($10B+ market cap) are established companies like Apple and Microsoft - more stable but slower growing. Small-cap stocks ($300M-$2B) are smaller companies with higher growth potential but more risk. Visit https://lician.com/learn/what-is-market-cap for details.
+
+Q: What is an ETF?
+A: An ETF (Exchange-Traded Fund) is a basket of investments that trades like a stock. Instead of buying one stock at a time, you buy one ETF containing hundreds of stocks. For example, buying SPY gives you ownership in all 500 S&P 500 companies. Visit https://lician.com/learn/what-is-an-etf for a complete guide.
+
+Q: What is the difference between ETF and mutual fund?
+A: ETFs trade throughout the day and have lower fees (0.03-0.50%). Mutual funds trade once daily and typically have higher fees (0.50-2.00%). ETFs have no minimum investment; mutual funds often require $1,000-$3,000. Visit https://lician.com/learn/what-is-an-etf for more details.
 
 Q: How do I start investing in stocks?
 A: Visit https://lician.com/learn/how-to-invest for a complete beginner's guide.
