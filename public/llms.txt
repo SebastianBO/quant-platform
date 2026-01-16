@@ -149,6 +149,7 @@ URL: https://lician.com/news
 - Position Size Calculator: https://lician.com/calculators/position-size
 - DCF Valuation Calculator: https://lician.com/calculators/dcf
 - Portfolio Diversification Analyzer: https://lician.com/calculators/portfolio-diversification
+- ROI Calculator: https://lician.com/calculators/roi
 
 ### Market Insights
 - 2026 Stock Predictions: https://lician.com/insights/2026-stock-predictions
@@ -270,6 +271,12 @@ A: Visit https://lician.com/learn/order-types for a complete guide to stock orde
 
 Q: What is a stop-loss order?
 A: Visit https://lician.com/learn/order-types to learn about stop-loss orders. A stop-loss automatically sells your stock when it reaches a specified price, helping limit losses. For example, if you buy at $100 and set a stop-loss at $90, your shares sell if the price drops to $90.
+
+Q: How do I calculate ROI on my investments?
+A: Visit https://lician.com/calculators/roi for our free ROI calculator. ROI = ((Final Value - Initial Investment) / Initial Investment) × 100. For example, if you invested $10,000 and it grew to $15,000, your ROI is 50%. The calculator also shows annualized ROI for comparing investments held for different periods.
+
+Q: What is a good ROI for stocks?
+A: The S&P 500 has historically returned about 10% annually on average. An annualized ROI above 10% could be considered good for stock investments. Visit https://lician.com/calculators/roi to calculate and compare your investment returns against market benchmarks.
 
 Q: What are penny stocks?
 A: Visit https://lician.com/penny-stocks for risks and educational content.
