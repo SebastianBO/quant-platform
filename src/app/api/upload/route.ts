@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { logger } from "@/lib/logger"
 
 export const runtime = "nodejs"
 export const maxDuration = 60
@@ -35,7 +36,7 @@ async function parsePDF(buffer: Buffer): Promise<{ text: string; pages: number }
       pages: result.numpages || 1
     }
   } catch (error) {
-    console.error("PDF parsing error:", error)
+    logger.error("PDF parsing error", { error: error instanceof Error ? error.message : "Unknown" })
     // Fallback if pdf-parse fails
     return {
       text: `[PDF document uploaded - ${Math.round(buffer.length / 1024)}KB]\n\nNote: Could not extract text from this PDF. The document may be scanned or image-based. Please describe what you'd like to know about this document.`,
@@ -133,7 +134,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(result)
   } catch (error) {
-    console.error("Upload error:", error)
+    logger.error("Upload error", { error: error instanceof Error ? error.message : "Unknown" })
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to process file" },
       { status: 500 }

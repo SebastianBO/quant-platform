@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { withCronLogging, RateLimiter } from '@/lib/cron-utils'
+import { logger } from '@/lib/logger'
 
 // Sync Financial Metrics from EODHD (has free tier, your API key works)
 // Fetches: PE ratio, market cap, margins, ROE, debt ratios, analyst ratings, etc.
@@ -102,7 +103,7 @@ async function fetchEODHDFundamentals(ticker: string): Promise<EODHDFundamentals
     })
 
     if (!response.ok) {
-      console.log(`EODHD returned ${response.status} for ${ticker}`)
+      logger.warn('EODHD returned error', { status: response.status, ticker })
       return null
     }
 
@@ -115,7 +116,7 @@ async function fetchEODHDFundamentals(ticker: string): Promise<EODHDFundamentals
 
     return data as EODHDFundamentals
   } catch (error) {
-    console.error(`Error fetching EODHD fundamentals for ${ticker}:`, error)
+    logger.error('Error fetching EODHD fundamentals', { ticker, error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }
@@ -133,7 +134,7 @@ async function getTickersNeedingMetrics(limit: number, offset: number): Promise<
     .order('ticker')
 
   if (incomeError || !incomeData) {
-    console.error('Failed to get tickers from income_statements:', incomeError)
+    logger.error('Failed to get tickers from income_statements', { error: incomeError?.message })
     return []
   }
 
@@ -151,7 +152,7 @@ async function getTickersNeedingMetrics(limit: number, offset: number): Promise<
   // Filter to tickers needing metrics
   const tickersNeedingMetrics = allTickers.filter(t => !tickersWithMetrics.has(t))
 
-  console.log(`Found ${tickersNeedingMetrics.length} tickers needing metrics (of ${allTickers.length} total)`)
+  logger.info('Found tickers needing metrics', { needingMetrics: tickersNeedingMetrics.length, total: allTickers.length })
 
   return tickersNeedingMetrics.slice(offset, offset + limit)
 }
@@ -224,7 +225,7 @@ async function saveMetrics(ticker: string, data: EODHDFundamentals): Promise<boo
     })
 
   if (error) {
-    console.error(`Failed to save metrics for ${ticker}:`, error.message)
+    logger.error('Failed to save metrics', { ticker, error: error.message })
     return false
   }
 
@@ -268,7 +269,7 @@ async function saveAnalystRatings(ticker: string, data: EODHDFundamentals): Prom
   if (error) {
     // Table might not exist, that's ok
     if (!error.message.includes('does not exist')) {
-      console.error(`Failed to save analyst ratings for ${ticker}:`, error.message)
+      logger.error('Failed to save analyst ratings', { ticker, error: error.message })
     }
   }
 
@@ -341,7 +342,7 @@ async function saveAnalystEstimates(ticker: string, data: EODHDFundamentals): Pr
     })
 
   if (error) {
-    console.error(`Failed to save analyst estimates for ${ticker}:`, error.message)
+    logger.error('Failed to save analyst estimates', { ticker, error: error.message })
     return false
   }
 
@@ -377,7 +378,7 @@ async function saveCompanyFundamentals(ticker: string, data: EODHDFundamentals):
   if (error) {
     // Table might have different schema, log but don't fail
     if (!error.message.includes('does not exist')) {
-      console.error(`Failed to save company fundamentals for ${ticker}:`, error.message)
+      logger.error('Failed to save company fundamentals', { ticker, error: error.message })
     }
   }
 

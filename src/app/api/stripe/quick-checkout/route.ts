@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import Stripe from "stripe"
+import { logger } from "@/lib/logger"
 
 // Direct checkout without requiring login
 // User creates account after payment or during Stripe checkout
@@ -64,10 +65,12 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.redirect(new URL("/premium", request.url))
   } catch (error) {
-    console.error("Quick checkout error:", error)
-    console.error("STRIPE_SECRET_KEY set:", !!process.env.STRIPE_SECRET_KEY)
-    console.error("STRIPE_ANNUAL_PRICE_ID:", process.env.STRIPE_ANNUAL_PRICE_ID)
-    console.error("STRIPE_MONTHLY_PRICE_ID:", process.env.STRIPE_MONTHLY_PRICE_ID)
+    logger.error("Quick checkout error", {
+      error: error instanceof Error ? error.message : "Unknown",
+      stripeKeySet: !!process.env.STRIPE_SECRET_KEY,
+      annualPriceId: process.env.STRIPE_ANNUAL_PRICE_ID,
+      monthlyPriceId: process.env.STRIPE_MONTHLY_PRICE_ID
+    })
     // On error, redirect to premium page with error details
     const errorMsg = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.redirect(new URL(`/premium?error=checkout_failed&details=${encodeURIComponent(errorMsg)}`, request.url))

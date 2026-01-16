@@ -6,6 +6,7 @@ import {
   findTickerForSponsor,
   BIOTECH_TICKERS
 } from '@/lib/biotech-mapper'
+import { logger } from '@/lib/logger'
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || ""
@@ -119,7 +120,7 @@ export async function GET(request: NextRequest) {
     }, { status: 400 })
 
   } catch (error) {
-    console.error('Biotech mapper error:', error)
+    logger.error('Biotech mapper error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Mapping failed',
       details: error instanceof Error ? error.message : 'Unknown error'
@@ -162,7 +163,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Bulk mapping error:', error)
+    logger.error('Bulk mapping error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Bulk mapping failed',
       details: error instanceof Error ? error.message : 'Unknown error'

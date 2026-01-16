@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { scrapeAnalystRatings, NEWS_SOURCES } from '@/lib/analyst-scraper'
+import { logger } from '@/lib/logger'
 
 // Autonomous analyst ratings scraper
 // Runs every 2 hours to collect new analyst ratings from press releases and news
@@ -13,7 +14,7 @@ export async function GET(request: NextRequest) {
   const authHeader = request.headers.get('authorization')
   const cronSecret = process.env.CRON_SECRET
   if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-    console.log('Analyst ratings scraper called without valid CRON_SECRET')
+    logger.warn('Analyst ratings scraper called without valid CRON_SECRET')
   }
 
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
@@ -53,7 +54,7 @@ export async function GET(request: NextRequest) {
       errors: results.errors
     })
   } catch (error) {
-    console.error('Analyst ratings scraper error:', error)
+    logger.error('Analyst ratings scraper error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Scraper failed',
       details: error instanceof Error ? error.message : 'Unknown error'
@@ -114,7 +115,7 @@ export async function POST(request: NextRequest) {
       }))
     })
   } catch (error) {
-    console.error('Manual extraction error:', error)
+    logger.error('Manual extraction error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Extraction failed',
       details: error instanceof Error ? error.message : 'Unknown error'

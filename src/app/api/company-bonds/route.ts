@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 // OpenFIGI API - Free, no key required (but rate limited without key)
 // Returns bond listings for a company with coupon and maturity info parsed from ticker
@@ -166,7 +167,7 @@ export async function GET(request: NextRequest) {
     })
 
     if (!response.ok) {
-      console.error('OpenFIGI API error:', response.status)
+      logger.error('OpenFIGI API error', { status: response.status })
       return NextResponse.json({
         error: 'Failed to fetch bond data',
         ticker: upperTicker,
@@ -257,7 +258,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Company bonds API error:', error)
+    logger.error('Company bonds API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Internal server error',
       ticker: upperTicker,

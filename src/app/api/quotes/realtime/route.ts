@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 // Real-time quotes API - aggregates from multiple free sources
 // Sources: IEX Cloud, Yahoo Finance, Alpha Vantage, Finnhub
@@ -58,7 +59,7 @@ async function fetchYahooQuote(symbol: string): Promise<Quote | null> {
       source: 'yahoo',
     }
   } catch (error) {
-    console.error(`Yahoo quote error for ${symbol}:`, error)
+    logger.error('Yahoo quote error', { symbol, error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }
@@ -96,7 +97,7 @@ async function fetchIEXQuote(symbol: string): Promise<Quote | null> {
       week52Low: data.week52Low,
     }
   } catch (error) {
-    console.error(`IEX quote error for ${symbol}:`, error)
+    logger.error('IEX quote error', { symbol, error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }
@@ -135,7 +136,7 @@ async function fetchAlphaVantageQuote(symbol: string): Promise<Quote | null> {
       source: 'alphavantage',
     }
   } catch (error) {
-    console.error(`Alpha Vantage quote error for ${symbol}:`, error)
+    logger.error('Alpha Vantage quote error', { symbol, error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }

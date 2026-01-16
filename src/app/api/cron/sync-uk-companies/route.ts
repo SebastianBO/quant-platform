@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { withCronLogging, RateLimiter } from '@/lib/cron-utils'
+import { logger } from '@/lib/logger'
 
 // Sync UK Companies from Companies House (FREE Official API)
 // UK has ~4.5 million registered companies
@@ -60,7 +61,7 @@ interface UKAccounts {
 // Make authenticated request to Companies House API
 async function apiRequest(endpoint: string): Promise<any | null> {
   if (!COMPANIES_HOUSE_API_KEY) {
-    console.error('Companies House API key not configured')
+    logger.error('Companies House API key not configured')
     return null
   }
 
@@ -77,18 +78,18 @@ async function apiRequest(endpoint: string): Promise<any | null> {
 
     if (response.status === 429) {
       // Rate limited - wait and signal to caller
-      console.log('Companies House rate limited')
+      logger.warn('Companies House rate limited')
       return { rateLimited: true }
     }
 
     if (!response.ok) {
-      console.log(`Companies House API returned ${response.status} for ${endpoint}`)
+      logger.info('Companies House API error', { status: response.status, endpoint })
       return null
     }
 
     return await response.json()
   } catch (error) {
-    console.error(`API request failed for ${endpoint}:`, error)
+    logger.error('Companies House API request failed', { endpoint, error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }
@@ -177,7 +178,7 @@ async function saveUKCompany(company: UKCompany): Promise<boolean> {
     })
 
   if (error) {
-    console.error(`Failed to save UK company ${company.companyNumber}:`, error)
+    logger.error('Failed to save UK company', { companyNumber: company.companyNumber, error: error.message })
     return false
   }
 

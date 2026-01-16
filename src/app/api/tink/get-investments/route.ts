@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 const TINK_API_URL = 'https://api.tink.com'
 
@@ -83,7 +84,7 @@ export async function POST(request: NextRequest) {
         )
         allHoldings = [...allHoldings, ...(holdingsData.holdings || [])]
       } catch (err) {
-        console.error(`Error fetching holdings for account ${account.id}:`, err)
+        logger.error('Error fetching holdings', { accountId: account.id, error: err instanceof Error ? err.message : 'Unknown' })
       }
     }
 
@@ -113,7 +114,7 @@ export async function POST(request: NextRequest) {
         .single()
 
       if (portfolioError) {
-        console.error('Error creating portfolio:', portfolioError)
+        logger.error('Error creating portfolio', { error: portfolioError.message })
         return NextResponse.json(
           { error: 'Failed to create portfolio' },
           { status: 500 }
@@ -157,7 +158,7 @@ export async function POST(request: NextRequest) {
         })
 
       if (upsertError) {
-        console.error('Error upserting investments:', upsertError)
+        logger.error('Error upserting investments', { error: upsertError.message })
       }
     }
 
@@ -174,7 +175,7 @@ export async function POST(request: NextRequest) {
       holdingsCount: allHoldings.length,
     })
   } catch (error: any) {
-    console.error('Error fetching Tink investments:', error.message)
+    logger.error('Error fetching Tink investments', { error: error.message })
     return NextResponse.json(
       { error: 'Failed to fetch investments', details: error.message },
       { status: 500 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { sendWelcomeEmail } from '@/lib/email'
+import { logger } from '@/lib/logger'
 
 function getSupabase() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -80,7 +81,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (error) {
-      console.error('Error inserting subscriber:', error)
+      logger.error('Error inserting subscriber', { error: error.message })
       throw error
     }
 
@@ -88,7 +89,7 @@ export async function POST(request: NextRequest) {
     try {
       await sendWelcomeEmail(email, confirmationToken)
     } catch (emailError) {
-      console.error('Failed to send welcome email:', emailError)
+      logger.error('Failed to send welcome email', { error: emailError instanceof Error ? emailError.message : 'Unknown' })
       // Don't fail the subscription even if email fails
     }
 
@@ -98,7 +99,7 @@ export async function POST(request: NextRequest) {
       id: subscriber.id,
     })
   } catch (error) {
-    console.error('Subscription error:', error)
+    logger.error('Subscription error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json(
       { error: 'Failed to subscribe. Please try again.' },
       { status: 500 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { syncInsiderTrades } from '@/lib/sec-edgar'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Sync insider trades (Form 4) from SEC EDGAR
 // Runs daily on weekdays at 3:00 PM UTC
@@ -83,7 +84,7 @@ export async function GET(request: NextRequest) {
   const cronSecret = process.env.CRON_SECRET
 
   if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-    console.log('Insider trades sync called without CRON_SECRET')
+    logger.warn('Insider trades sync called without CRON_SECRET')
   }
 
   const searchParams = request.nextUrl.searchParams
@@ -204,7 +205,7 @@ export async function GET(request: NextRequest) {
       results,
     })
   } catch (error) {
-    console.error('Insider trades sync error:', error)
+    logger.error('Insider trades sync error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Sync failed',
       details: error instanceof Error ? error.message : 'Unknown error',

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Sync short volume data from FINRA to Supabase
 // Runs daily after market close
@@ -72,7 +73,7 @@ async function fetchFinraDailyFile(date: Date): Promise<ShortVolumeRecord[]> {
       return parseFinraFile(content, formattedDate)
     }
   } catch (error) {
-    console.error(`Error fetching FINRA file for ${dateStr}:`, error)
+    logger.error('Error fetching FINRA file', { dateStr, error: error instanceof Error ? error.message : 'Unknown' })
   }
 
   return []
@@ -98,7 +99,7 @@ export async function GET(request: NextRequest) {
 
   if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
     // Allow without auth for testing, but log it
-    console.log('Short volume sync called without CRON_SECRET')
+    logger.warn('Short volume sync called without CRON_SECRET')
   }
 
   const searchParams = request.nextUrl.searchParams
@@ -127,7 +128,7 @@ export async function GET(request: NextRequest) {
       if (dayOfWeek === 0 || dayOfWeek === 6) continue
 
       const dateStr = date.toISOString().split('T')[0]
-      console.log(`Fetching FINRA data for ${dateStr}...`)
+      logger.info('Fetching FINRA data', { dateStr })
 
       const records = await fetchFinraDailyFile(date)
 
@@ -148,7 +149,7 @@ export async function GET(request: NextRequest) {
         filteredRecords = filteredRecords.slice(0, limit)
       }
 
-      console.log(`Processing ${filteredRecords.length} records for ${dateStr}...`)
+      logger.info('Processing records', { count: filteredRecords.length, dateStr })
 
       // Upsert in batches
       const batchSize = 500
@@ -166,7 +167,7 @@ export async function GET(request: NextRequest) {
           })
 
         if (error) {
-          console.error(`Batch error:`, error)
+          logger.error('Batch upsert error', { error: error.message })
           errors.push(error.message)
         } else {
           inserted += batch.length
@@ -190,7 +191,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Short volume sync error:', error)
+    logger.error('Short volume sync error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Sync failed',
       details: error instanceof Error ? error.message : 'Unknown error'

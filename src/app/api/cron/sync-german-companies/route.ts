@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { withCronLogging, RateLimiter } from '@/lib/cron-utils'
+import { logger } from '@/lib/logger'
 
 // Sync German Companies from OffeneRegister.de (FREE - No API key!)
 // Source: Open data from German trade registers
@@ -24,6 +25,52 @@ function getSupabase(): SupabaseClient {
   return supabase
 }
 
+/**
+ * Sanitize string for SQL LIKE queries in external Datasette API
+ * Escapes SQL special characters to prevent injection
+ *
+ * SECURITY NOTE: This external API (Datasette) doesn't support parameterized queries,
+ * so we use comprehensive sanitization as the best available protection.
+ */
+function sanitizeForSql(input: string): string {
+  if (!input || typeof input !== 'string') return ''
+
+  // Remove or escape dangerous characters
+  return input
+    .replace(/'/g, "''")        // Escape single quotes
+    .replace(/\\/g, '\\\\')     // Escape backslashes
+    .replace(/\x00/g, '')       // Remove null bytes
+    .replace(/\n/g, ' ')        // Replace newlines
+    .replace(/\r/g, ' ')        // Replace carriage returns
+    .replace(/;/g, '')          // Remove semicolons (prevent query termination)
+    .replace(/--/g, '')         // Remove SQL comments
+    .replace(/\/\*/g, '')       // Remove block comment start
+    .replace(/\*\//g, '')       // Remove block comment end
+    .replace(/UNION/gi, '')     // Remove UNION keyword
+    .replace(/SELECT/gi, '')    // Remove SELECT keyword (except in our query)
+    .replace(/INSERT/gi, '')    // Remove INSERT keyword
+    .replace(/UPDATE/gi, '')    // Remove UPDATE keyword
+    .replace(/DELETE/gi, '')    // Remove DELETE keyword
+    .replace(/DROP/gi, '')      // Remove DROP keyword
+    .replace(/EXEC/gi, '')      // Remove EXEC keyword
+    .trim()
+    .slice(0, 200)              // Limit length to prevent abuse
+}
+
+/**
+ * Sanitize company number - alphanumeric and spaces only
+ * German company numbers follow pattern like "HRB 12345 B"
+ */
+function sanitizeCompanyNumber(input: string): string {
+  if (!input || typeof input !== 'string') return ''
+  // Only allow alphanumeric characters, spaces, and hyphens (common in German HRB numbers)
+  return input.replace(/[^a-zA-Z0-9\s\-]/g, '').trim().slice(0, 50)
+}
+
+// Database row types from Datasette API (returns arrays of values)
+type CompanyRow = [string, string, string, string, string, string] // [company_number, name, status, address, jurisdiction, type]
+type OfficerRow = [string, string, string] // [name, position, start_date]
+
 interface GermanCompany {
   companyNumber: string // Handelsregister number (e.g., HRB 12345)
   name: string
@@ -40,7 +87,8 @@ interface GermanCompany {
 }
 
 // Query OffeneRegister Datasette API
-async function queryOffeneRegister(sql: string): Promise<any[]> {
+// Returns array of row tuples - callers should type the rows appropriately
+async function queryOffeneRegister(sql: string): Promise<unknown[]> {
   try {
     const url = `${OFFENEREGISTER_API}?sql=${encodeURIComponent(sql)}`
 
@@ -51,20 +99,23 @@ async function queryOffeneRegister(sql: string): Promise<any[]> {
     })
 
     if (!response.ok) {
-      console.log(`OffeneRegister returned ${response.status}`)
+      logger.warn('OffeneRegister returned error status', { status: response.status })
       return []
     }
 
     const data = await response.json()
     return data.rows || []
   } catch (error) {
-    console.error('OffeneRegister query error:', error)
+    logger.error('OffeneRegister query error', { error: error instanceof Error ? error.message : 'Unknown' })
     return []
   }
 }
 
 // Search companies by name
 async function searchCompanies(name: string, limit: number = 20): Promise<GermanCompany[]> {
+  const sanitizedName = sanitizeForSql(name)
+  const sanitizedLimit = Math.min(Math.max(1, Math.floor(limit)), 100) // Clamp to 1-100
+
   const sql = `
     SELECT
       company_number,
@@ -74,13 +125,13 @@ async function searchCompanies(name: string, limit: number = 20): Promise<German
       jurisdiction_code,
       company_type
     FROM company
-    WHERE name LIKE '%${name.replace(/'/g, "''")}%'
-    LIMIT ${limit}
+    WHERE name LIKE '%${sanitizedName}%'
+    LIMIT ${sanitizedLimit}
   `
 
-  const rows = await queryOffeneRegister(sql)
+  const rows = await queryOffeneRegister(sql) as CompanyRow[]
 
-  return rows.map((row: any[]) => ({
+  return rows.map((row) => ({
     companyNumber: row[0],
     name: row[1],
     currentStatus: row[2],
@@ -107,9 +158,9 @@ async function getCompaniesBatch(limit: number = 100, offset: number = 0): Promi
     OFFSET ${offset}
   `
 
-  const rows = await queryOffeneRegister(sql)
+  const rows = await queryOffeneRegister(sql) as CompanyRow[]
 
-  return rows.map((row: any[]) => ({
+  return rows.map((row) => ({
     companyNumber: row[0],
     name: row[1],
     currentStatus: row[2],
@@ -121,19 +172,22 @@ async function getCompaniesBatch(limit: number = 100, offset: number = 0): Promi
 
 // Get company officers
 async function getCompanyOfficers(companyNumber: string): Promise<Array<{ name: string; position: string; startDate?: string }>> {
+  // Use stricter whitelist sanitization for company numbers
+  const sanitizedCompanyNumber = sanitizeCompanyNumber(companyNumber)
+
   const sql = `
     SELECT
       name,
       position,
       start_date
     FROM officer
-    WHERE company_number = '${companyNumber.replace(/'/g, "''")}'
+    WHERE company_number = '${sanitizedCompanyNumber}'
     LIMIT 10
   `
 
-  const rows = await queryOffeneRegister(sql)
+  const rows = await queryOffeneRegister(sql) as OfficerRow[]
 
-  return rows.map((row: any[]) => ({
+  return rows.map((row) => ({
     name: row[0],
     position: row[1],
     startDate: row[2],
@@ -192,7 +246,7 @@ async function saveCompany(company: GermanCompany): Promise<boolean> {
     })
 
   if (error) {
-    console.error(`Failed to save German company ${company.companyNumber}:`, error)
+    logger.error('Failed to save German company', { companyNumber: company.companyNumber, error: error.message })
     return false
   }
 

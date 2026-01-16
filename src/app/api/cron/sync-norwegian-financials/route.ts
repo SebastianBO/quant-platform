@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { withCronLogging, RateLimiter } from '@/lib/cron-utils'
+import { logger } from '@/lib/logger'
 
 // Sync Norwegian Financial Statements from Regnskapsregisteret (FREE!)
 // API: https://data.brreg.no/regnskapsregisteret/regnskap/
@@ -67,12 +68,12 @@ async function fetchFinancials(orgNumber: string): Promise<NorwegianFinancials |
     }
 
     if (response.status === 429) {
-      console.log('Regnskapsregisteret rate limited')
+      logger.warn('Regnskapsregisteret rate limited')
       return null
     }
 
     if (!response.ok) {
-      console.log(`Regnskapsregisteret returned ${response.status} for ${orgNumber}`)
+      logger.info('Regnskapsregisteret returned error', { status: response.status, orgNumber })
       return null
     }
 
@@ -116,7 +117,7 @@ async function fetchFinancials(orgNumber: string): Promise<NorwegianFinancials |
       accountingStandard: regnskap.regnskapstype,
     }
   } catch (error) {
-    console.error(`Error fetching financials for ${orgNumber}:`, error)
+    logger.error('Error fetching financials', { orgNumber, error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }
@@ -182,8 +183,8 @@ async function saveFinancials(financials: NorwegianFinancials): Promise<{ income
       ignoreDuplicates: false
     })
 
-  if (incomeError) console.error(`Income save error for ${financials.orgNumber}:`, incomeError)
-  if (balanceError) console.error(`Balance save error for ${financials.orgNumber}:`, balanceError)
+  if (incomeError) logger.error('Income save error', { orgNumber: financials.orgNumber, error: incomeError.message })
+  if (balanceError) logger.error('Balance save error', { orgNumber: financials.orgNumber, error: balanceError.message })
 
   return {
     income: !incomeError,
@@ -202,7 +203,7 @@ async function getCompaniesNeedingFinancials(limit: number, offset: number): Pro
     .range(offset, offset + limit - 1)
 
   if (error || !companies) {
-    console.error('Failed to get companies:', error)
+    logger.error('Failed to get companies', { error: error?.message })
     return []
   }
 

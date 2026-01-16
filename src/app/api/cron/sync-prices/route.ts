@@ -5,6 +5,7 @@ import {
   RateLimiter,
   isRetryableError,
 } from '@/lib/cron-utils'
+import { logger } from '@/lib/logger'
 
 // SMART PRICE SYNC - Uses BOTH EODHD (batch) + Yahoo Finance (backup)
 // EODHD for efficiency (20+ stocks per request)
@@ -127,7 +128,7 @@ async function fetchEODHDBatch(tickers: string[]): Promise<Map<string, PriceData
       }
     }
   } catch (err) {
-    console.error('EODHD batch error:', err)
+    logger.error('EODHD batch error', { error: err instanceof Error ? err.message : 'Unknown' })
   }
 
   return results
@@ -206,7 +207,7 @@ async function savePrices(prices: PriceData[]): Promise<number> {
     .select()
 
   if (error) {
-    console.error('Failed to save prices:', error.message, error.details, error.hint)
+    logger.error('Failed to save prices', { error: error.message, details: error.details, hint: error.hint })
     // Return error info for debugging
     throw new Error(`Upsert failed: ${error.message} - ${error.details || ''} - ${error.hint || ''}`)
   }

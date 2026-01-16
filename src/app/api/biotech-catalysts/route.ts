@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Biotech Catalysts API
 // Aggregates clinical trial milestones into investable catalyst events
@@ -168,7 +169,7 @@ async function fetchTrialCatalystsForTicker(
       if (catalysts.length > 0) break
 
     } catch (error) {
-      console.error(`Error fetching trials for ${sponsor}:`, error)
+      logger.error('Error fetching trials', { sponsor, error: error instanceof Error ? error.message : 'Unknown' })
     }
   }
 
@@ -363,7 +364,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Biotech catalysts API error:', error)
+    logger.error('Biotech catalysts API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Failed to fetch biotech catalysts',
       details: error instanceof Error ? error.message : 'Unknown error'

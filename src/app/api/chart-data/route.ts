@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 const EODHD_API_KEY = process.env.EODHD_API_KEY || ""
 const FINANCIAL_DATASETS_API_KEY = process.env.FINANCIAL_DATASETS_API_KEY || ""
@@ -84,7 +85,7 @@ async function fetchHistoricalData(ticker: string, from: string, to: string): Pr
       volume: d.volume
     }))
   } catch (error) {
-    console.error('Error fetching historical data:', error)
+    logger.error('Error fetching historical data', { error: error instanceof Error ? error.message : 'Unknown' })
     return []
   }
 }
@@ -119,7 +120,7 @@ async function fetchAnalystRatings(ticker: string): Promise<AnalystRating[]> {
 
     return ratings
   } catch (error) {
-    console.error('Error fetching analyst ratings:', error)
+    logger.error('Error fetching analyst ratings', { error: error instanceof Error ? error.message : 'Unknown' })
     return []
   }
 }
@@ -150,7 +151,7 @@ async function fetchIntradayData(ticker: string): Promise<ChartDataPoint[]> {
         volume: d.volume
       }))
   } catch (error) {
-    console.error('Error fetching intraday data:', error)
+    logger.error('Error fetching intraday data', { error: error instanceof Error ? error.message : 'Unknown' })
     return []
   }
 }
@@ -215,7 +216,7 @@ export async function GET(request: NextRequest) {
       lastUpdated: new Date().toISOString()
     })
   } catch (error) {
-    console.error('Chart data API error:', error)
+    logger.error('Chart data API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({ error: 'Failed to fetch chart data' }, { status: 500 })
   }
 }

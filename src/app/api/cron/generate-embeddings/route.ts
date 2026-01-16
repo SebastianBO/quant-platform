@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { embedMany } from 'ai'
 import { openai } from '@ai-sdk/openai'
+import { logger } from '@/lib/logger'
 
 // =============================================================================
 // EMBEDDING GENERATION CRON JOB
@@ -100,7 +101,7 @@ async function generateAndStoreEmbeddings(documents: DocumentToEmbed[]): Promise
     .insert(records)
 
   if (error) {
-    console.error('Error inserting embeddings:', error)
+    logger.error('Error inserting embeddings', { error: error.message })
     throw error
   }
 
@@ -119,7 +120,7 @@ async function processCompanyFundamentals(limit: number): Promise<number> {
     .limit(limit)
 
   if (error || !companies) {
-    console.error('Error fetching companies:', error)
+    logger.error('Error fetching companies', { error: error?.message })
     return 0
   }
 
@@ -166,7 +167,7 @@ async function processSECFilings(limit: number): Promise<number> {
     .limit(limit)
 
   if (error || !filings) {
-    console.error('Error fetching SEC filings:', error)
+    logger.error('Error fetching SEC filings', { error: error?.message })
     return 0
   }
 
@@ -213,7 +214,7 @@ async function processFinancialInsights(limit: number): Promise<number> {
     .limit(limit)
 
   if (error || !statements) {
-    console.error('Error fetching income statements:', error)
+    logger.error('Error fetching income statements', { error: error?.message })
     return 0
   }
 
@@ -300,7 +301,7 @@ export async function GET(request: NextRequest) {
       timestamp: new Date().toISOString(),
     })
   } catch (error) {
-    console.error('Embedding generation error:', error)
+    logger.error('Embedding generation error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',

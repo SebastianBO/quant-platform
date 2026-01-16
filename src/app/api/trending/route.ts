@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 /**
  * PROPRIETARY MOVER DETECTION SYSTEM
@@ -101,14 +102,14 @@ async function fetchYahooMovers(type: 'day_gainers' | 'day_losers'): Promise<Yah
     )
 
     if (!response.ok) {
-      console.error(`Yahoo ${type} failed:`, response.status)
+      logger.error('Yahoo screener failed', { type, status: response.status })
       return []
     }
 
     const data = await response.json()
     return data.finance?.result?.[0]?.quotes || []
   } catch (error) {
-    console.error(`Error fetching ${type}:`, error)
+    logger.error('Error fetching screener', { type, error: error instanceof Error ? error.message : 'Unknown' })
     return []
   }
 }
@@ -129,7 +130,7 @@ async function fetchYahooTrending(): Promise<YahooQuote[]> {
     const data = await response.json()
     return data.finance?.result?.[0]?.quotes || []
   } catch (error) {
-    console.error('Error fetching trending:', error)
+    logger.error('Error fetching trending', { error: error instanceof Error ? error.message : 'Unknown' })
     return []
   }
 }
@@ -213,7 +214,7 @@ export async function GET() {
       }
     })
   } catch (error) {
-    console.error('Trending error:', error)
+    logger.error('Trending error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       trending: [],
       gainers: [],

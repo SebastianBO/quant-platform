@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 const EODHD_API_KEY = process.env.EODHD_API_KEY
 
@@ -64,10 +65,10 @@ export async function GET(request: NextRequest) {
             timestamp: now
           })
         } else {
-          console.log(`EODHD price fetch failed for ${ticker}: ${response.status}`)
+          logger.info('EODHD price fetch failed', { ticker, status: response.status })
         }
       } catch (error) {
-        console.error(`Error fetching price for ${ticker}:`, error)
+        logger.error('Error fetching price', { ticker, error: error instanceof Error ? error.message : 'Unknown' })
       }
     })
   )
@@ -104,14 +105,14 @@ export async function POST(request: NextRequest) {
             prices[ticker] = parseFloat(data.close || data.price || 0)
           }
         } catch (error) {
-          console.error(`Error fetching price for ${ticker}:`, error)
+          logger.error('Error fetching price in POST', { ticker, error: error instanceof Error ? error.message : 'Unknown' })
         }
       })
     )
 
     return NextResponse.json({ prices })
   } catch (error) {
-    console.error('Prices POST error:', error)
+    logger.error('Prices POST error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({ error: 'Failed to fetch prices' }, { status: 500 })
   }
 }

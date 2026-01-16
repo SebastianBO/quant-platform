@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 /**
  * Biotech Company Auto-Discovery System
@@ -72,7 +73,7 @@ async function fetchSECCompanyTickers(): Promise<Map<string, { cik: string; name
 
     return tickerMap
   } catch (error) {
-    console.error('SEC ticker fetch failed:', error)
+    logger.error('SEC ticker fetch failed', { error: error instanceof Error ? error.message : 'Unknown' })
     return new Map()
   }
 }
@@ -162,7 +163,7 @@ async function fetchEODHDBiotechStocks(): Promise<DiscoveredCompany[]> {
       source: 'eodhd-screener'
     }))
   } catch (error) {
-    console.error('EODHD fetch failed:', error)
+    logger.error('EODHD fetch failed', { error: error instanceof Error ? error.message : 'Unknown' })
     return []
   }
 }
@@ -245,13 +246,13 @@ export async function GET(request: NextRequest) {
     const existingTickers = await fetchExistingBiotechFromDB(supabase)
     const allDiscovered: DiscoveredCompany[] = []
 
-    console.log(`Starting biotech discovery. Existing companies: ${existingTickers.size}`)
+    logger.info('Starting biotech discovery', { existingCompanies: existingTickers.size })
 
     // Source 1: SEC EDGAR with SIC codes
     if (source === 'all' || source === 'sec') {
-      console.log('Fetching SEC company tickers...')
+      logger.info('Fetching SEC company tickers')
       const secTickers = await fetchSECCompanyTickers()
-      console.log(`Found ${secTickers.size} SEC tickers`)
+      logger.info('Found SEC tickers', { count: secTickers.size })
 
       // Get SIC codes for a sample (rate limited)
       const tickersToCheck = Array.from(secTickers.entries())
@@ -260,7 +261,7 @@ export async function GET(request: NextRequest) {
 
       if (tickersToCheck.length > 0) {
         const ciks = tickersToCheck.map(([, data]) => data.cik)
-        console.log(`Checking SIC codes for ${ciks.length} companies...`)
+        logger.info('Checking SIC codes', { companies: ciks.length })
 
         const sicCodes = await fetchSICCodesForCIKs(ciks.slice(0, 100)) // Limit to avoid timeout
 
@@ -282,9 +283,9 @@ export async function GET(request: NextRequest) {
 
     // Source 2: EODHD Healthcare sector
     if (source === 'all' || source === 'eodhd') {
-      console.log('Fetching EODHD biotech stocks...')
+      logger.info('Fetching EODHD biotech stocks')
       const eodhd = await fetchEODHDBiotechStocks()
-      console.log(`Found ${eodhd.length} from EODHD`)
+      logger.info('Found EODHD biotech stocks', { count: eodhd.length })
 
       for (const company of eodhd) {
         if (!existingTickers.has(company.ticker) &&
@@ -296,9 +297,9 @@ export async function GET(request: NextRequest) {
 
     // Source 3: Our own financial_instruments table
     if (source === 'all' || source === 'db') {
-      console.log('Checking financial_instruments...')
+      logger.info('Checking financial_instruments')
       const fromDB = await fetchFromFinancialInstruments(supabase)
-      console.log(`Found ${fromDB.length} from DB`)
+      logger.info('Found from DB', { count: fromDB.length })
 
       for (const company of fromDB) {
         if (!existingTickers.has(company.ticker) &&
@@ -367,7 +368,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Biotech discovery error:', error)
+    logger.error('Biotech discovery error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Discovery failed',
       details: error instanceof Error ? error.message : 'Unknown error'
@@ -451,7 +452,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
 
   } catch (error) {
-    console.error('Biotech POST error:', error)
+    logger.error('Biotech POST error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Failed',
       details: error instanceof Error ? error.message : 'Unknown error'

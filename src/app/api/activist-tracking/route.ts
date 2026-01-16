@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 const SEC_USER_AGENT = 'Lician contact@lician.com'
 
@@ -105,7 +106,7 @@ async function fetchRecent13DGFilings(days: number = 7): Promise<ActivistFiling[
     }
 
   } catch (error) {
-    console.error('Error fetching 13D/G filings:', error)
+    logger.error('Error fetching 13D/G filings', { error: error instanceof Error ? error.message : 'Unknown' })
   }
 
   return filings
@@ -175,7 +176,7 @@ async function fetchFromRSS(): Promise<ActivistFiling[]> {
     }
 
   } catch (error) {
-    console.error('RSS fetch error:', error)
+    logger.error('RSS fetch error', { error: error instanceof Error ? error.message : 'Unknown' })
   }
 
   return filings
@@ -249,7 +250,7 @@ async function getFilingsForTicker(ticker: string): Promise<ActivistFiling[]> {
     }
 
   } catch (error) {
-    console.error('Error fetching ticker filings:', error)
+    logger.error('Error fetching ticker filings', { error: error instanceof Error ? error.message : 'Unknown' })
   }
 
   return filings
@@ -301,7 +302,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(response)
 
   } catch (error) {
-    console.error('Activist tracking error:', error)
+    logger.error('Activist tracking error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({ error: 'Failed to fetch activist data' }, { status: 500 })
   }
 }

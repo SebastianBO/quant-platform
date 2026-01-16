@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 // Increase timeout to 60 seconds for heavy API aggregation
 export const maxDuration = 60
@@ -50,7 +51,7 @@ async function fetchInternal(endpoint: string, params: Record<string, string>) {
 
     return response.json()
   } catch (error) {
-    console.error(`Internal API error for ${endpoint}:`, error)
+    logger.error('Internal API error', { endpoint, error: error instanceof Error ? error.message : 'Unknown' })
     return { data: null, _meta: { source: 'error' } }
   }
 }
@@ -533,7 +534,7 @@ export async function GET(request: NextRequest) {
     response.headers.set('Cache-Control', 'public, max-age=3600, s-maxage=7200, stale-while-revalidate=3600')
     return response
   } catch (error) {
-    console.error('Stock API error:', error)
+    logger.error('Stock API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({ error: 'Failed to fetch stock data' }, { status: 500 })
   }
 }

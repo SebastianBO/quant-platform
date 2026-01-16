@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 // SEC EDGAR API - Free, no key required
 // Returns debt maturity schedule and other debt metrics from XBRL filings
@@ -127,7 +128,7 @@ async function getCIKForTicker(ticker: string): Promise<string | null> {
       }
     }
   } catch (error) {
-    console.error('Error looking up CIK:', error)
+    logger.error('Error looking up CIK', { error: error instanceof Error ? error.message : 'Unknown' })
   }
 
   return null
@@ -385,7 +386,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Company debt API error:', error)
+    logger.error('Company debt API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Internal server error',
       ticker: ticker.toUpperCase(),

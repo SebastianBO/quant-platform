@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 // Free forex rates from multiple sources
 // Primary: EODHD (we have API key), Fallback: Exchange Rate API
@@ -54,7 +55,7 @@ async function fetchEODHDForex(pairs: string[]): Promise<ForexRate[]> {
           source: 'eodhd',
         })
       } catch (error) {
-        console.error(`EODHD forex error for ${pair}:`, error)
+        logger.error('EODHD forex error', { pair, error: error instanceof Error ? error.message : 'Unknown' })
       }
     })
   )
@@ -104,7 +105,7 @@ async function fetchExchangeRateAPI(pairs: string[]): Promise<ForexRate[]> {
           }
         }
       } catch (error) {
-        console.error(`Exchange Rate API error for ${base}:`, error)
+        logger.error('Exchange Rate API error', { base, error: error instanceof Error ? error.message : 'Unknown' })
       }
     })
   )
@@ -148,7 +149,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Forex API error:', error)
+    logger.error('Forex API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Failed to fetch forex rates',
       details: error instanceof Error ? error.message : 'Unknown error',

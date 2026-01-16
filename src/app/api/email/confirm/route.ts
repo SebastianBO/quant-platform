@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 function getSupabase() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -46,14 +47,14 @@ export async function GET(request: NextRequest) {
       .eq('id', subscriber.id)
 
     if (updateError) {
-      console.error('Error confirming subscription:', updateError)
+      logger.error('Error confirming subscription', { error: updateError.message })
       return NextResponse.redirect(new URL('/?error=confirmation_failed', request.url))
     }
 
     // Redirect to success page
     return NextResponse.redirect(new URL('/?confirmed=true', request.url))
   } catch (error) {
-    console.error('Confirmation error:', error)
+    logger.error('Confirmation error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.redirect(new URL('/?error=confirmation_failed', request.url))
   }
 }

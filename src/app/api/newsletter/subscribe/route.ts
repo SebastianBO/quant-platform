@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
@@ -25,7 +26,7 @@ export async function POST(request: NextRequest) {
     // Check if Supabase is configured
     if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
       // In development, just log and return success
-      console.log('Newsletter signup (no DB):', { email: emailLower, source, interests })
+      logger.info('Newsletter signup (no DB)', { email: emailLower, source, interests })
       return NextResponse.json({
         success: true,
         message: 'Thanks for subscribing! Check your inbox for confirmation.',
@@ -79,7 +80,7 @@ export async function POST(request: NextRequest) {
       })
 
     if (insertError) {
-      console.error('Newsletter insert error:', insertError)
+      logger.error('Newsletter insert error', { error: insertError.message })
       return NextResponse.json({ error: 'Failed to subscribe' }, { status: 500 })
     }
 
@@ -89,7 +90,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Newsletter API error:', error)
+    logger.error('Newsletter API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Failed to process subscription',
       details: error instanceof Error ? error.message : 'Unknown error',

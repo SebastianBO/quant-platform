@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { autoMapBiotechCompany } from '@/lib/biotech-mapper'
+import { logger } from '@/lib/logger'
 
 // Comprehensive Biotech Stock API
 // Returns all biotech-relevant data for a single ticker:
@@ -161,7 +162,7 @@ async function fetchTrialsForCompany(sponsor: string, aliases: string[]) {
       // Rate limiting
       await new Promise(resolve => setTimeout(resolve, 200))
     } catch (error) {
-      console.error(`Error fetching trials for ${searchTerm}:`, error)
+      logger.error('Error fetching trials', { searchTerm, error: error instanceof Error ? error.message : 'Unknown' })
     }
   }
 
@@ -446,7 +447,7 @@ export async function GET(
     return NextResponse.json(result)
 
   } catch (error) {
-    console.error('Biotech stock API error:', error)
+    logger.error('Biotech stock API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Failed to fetch biotech data',
       details: error instanceof Error ? error.message : 'Unknown error'

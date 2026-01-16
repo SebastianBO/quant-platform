@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { syncCompanyFinancials, sync13FHoldings, syncTopInstitutions } from '@/lib/sec-edgar'
+import { logger } from '@/lib/logger'
 
 // Admin endpoint for batch data sync operations
 // Used for initial data population and scheduled updates
@@ -81,7 +82,7 @@ export async function POST(request: NextRequest) {
       case 'financials':
         // Sync financial statements for top tickers
         for (const company of TOP_TICKERS.slice(0, limit)) {
-          console.log(`Syncing financials for ${company.ticker}...`)
+          logger.info('Syncing financials', { ticker: company.ticker })
           const result = await syncCompanyFinancials(company.cik, company.ticker)
           results.push({ target: company.ticker, result })
           if (result.success) successCount++
@@ -95,7 +96,7 @@ export async function POST(request: NextRequest) {
       case '13f':
         // Sync 13F holdings for top investors
         for (const investor of TOP_INVESTORS.slice(0, limit)) {
-          console.log(`Syncing 13F for ${investor.name}...`)
+          logger.info('Syncing 13F', { investor: investor.name })
           const result = await sync13FHoldings(investor.cik)
           results.push({ target: investor.name, result })
           if (result.success) successCount++
@@ -135,7 +136,7 @@ export async function POST(request: NextRequest) {
       results,
     })
   } catch (error) {
-    console.error('Batch sync error:', error)
+    logger.error('Batch sync error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: error instanceof Error ? error.message : 'Batch sync failed',
     }, { status: 500 })

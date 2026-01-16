@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // SEC 13F Data Ingestion API
 // Fetches and stores institutional ownership data from SEC EDGAR
@@ -127,7 +128,7 @@ async function getInvestorFilings(cik: string): Promise<{ name: string; filings:
 
     return { name: data.name, filings }
   } catch (error) {
-    console.error(`Error fetching filings for CIK ${cik}:`, error)
+    logger.error('Error fetching filings', { cik, error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }
@@ -169,7 +170,7 @@ async function getFilingHoldings(cik: string, accessionNumber: string): Promise<
       }
     }
   } catch (error) {
-    console.error(`Error fetching holdings for ${accessionNumber}:`, error)
+    logger.error('Error fetching holdings', { accessionNumber, error: error instanceof Error ? error.message : 'Unknown' })
   }
 
   return []
@@ -293,7 +294,7 @@ async function ingestInvestor(
       .single()
 
     if (filingError || !filingRecord) {
-      console.error(`Filing insert error: ${filingError?.message}`)
+      logger.error('Filing insert error', { accessionNumber: filing.accessionNumber, error: filingError?.message })
       continue
     }
 
@@ -333,7 +334,7 @@ async function ingestInvestor(
       .insert(holdingsToInsert)
 
     if (holdingsError) {
-      console.error(`Holdings insert error: ${holdingsError.message}`)
+      logger.error('Holdings insert error', { filingId: filingRecord.id, error: holdingsError.message })
       await getSupabase()
         .from('institutional_filings')
         .update({ error_message: holdingsError.message })
@@ -459,7 +460,7 @@ async function calculateChanges(cik: string): Promise<number> {
       .upsert(changes, { onConflict: 'investor_cik,ticker,report_date' })
 
     if (error) {
-      console.error('Changes upsert error:', error.message)
+      logger.error('Changes upsert error', { cik, error: error.message })
     }
   }
 
@@ -469,7 +470,7 @@ async function calculateChanges(cik: string): Promise<number> {
 export async function POST(request: NextRequest) {
   // Auth check - ADMIN_PASSWORD must be configured
   if (!ADMIN_PASSWORD) {
-    console.error('CRITICAL: ADMIN_PASSWORD environment variable is not set')
+    logger.error('ADMIN_PASSWORD environment variable is not set')
     return NextResponse.json({ error: 'Server misconfigured' }, { status: 500 })
   }
 
@@ -576,7 +577,7 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   // Auth check - ADMIN_PASSWORD must be configured
   if (!ADMIN_PASSWORD) {
-    console.error('CRITICAL: ADMIN_PASSWORD environment variable is not set')
+    logger.error('ADMIN_PASSWORD environment variable is not set')
     return NextResponse.json({ error: 'Server misconfigured' }, { status: 500 })
   }
 

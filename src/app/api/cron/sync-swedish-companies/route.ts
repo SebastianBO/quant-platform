@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { withCronLogging, RateLimiter } from '@/lib/cron-utils'
+import { logger } from '@/lib/logger'
 
 // Sync Swedish Companies from Allabolag.se (FREE scraping)
 // Sweden has ~1.2 million registered companies
@@ -73,7 +74,7 @@ async function scrapeAllabolagCompany(orgNumber: string): Promise<SwedishCompany
     })
 
     if (!response.ok) {
-      console.log(`Allabolag returned ${response.status} for ${orgNumber}`)
+      logger.info('Allabolag returned error', { status: response.status, orgNumber })
       return null
     }
 
@@ -133,7 +134,7 @@ async function scrapeAllabolagCompany(orgNumber: string): Promise<SwedishCompany
 
     return company
   } catch (error) {
-    console.error(`Error scraping ${orgNumber}:`, error)
+    logger.error('Error scraping company', { orgNumber, error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }
@@ -174,7 +175,7 @@ async function searchAllabolag(query: string, page: number = 1): Promise<string[
 
     return orgNumbers
   } catch (error) {
-    console.error('Search error:', error)
+    logger.error('Allabolag search error', { error: error instanceof Error ? error.message : 'Unknown' })
     return []
   }
 }
@@ -210,7 +211,7 @@ async function getTopSwedishCompanies(limit: number, offset: number): Promise<st
 
     return orgNumbers.slice(0, limit)
   } catch (error) {
-    console.error('Failed to get top companies:', error)
+    logger.error('Failed to get top Swedish companies', { error: error instanceof Error ? error.message : 'Unknown' })
     return []
   }
 }
@@ -251,7 +252,7 @@ async function saveCompany(company: SwedishCompany): Promise<boolean> {
     })
 
   if (error) {
-    console.error(`Failed to save ${company.orgNumber}:`, error)
+    logger.error('Failed to save Swedish company', { orgNumber: company.orgNumber, error: error.message })
     return false
   }
 

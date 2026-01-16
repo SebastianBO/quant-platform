@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // DAILY SCRAPER STATUS DASHBOARD
 // Shows health of all data pipelines at a glance
@@ -76,7 +77,7 @@ export async function GET(request: NextRequest) {
       recommendations: generateRecommendations(tableStats, cronJobs),
     })
   } catch (error) {
-    console.error('Monitoring error:', error)
+    logger.error('Monitoring error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       status: 'error',
       error: error instanceof Error ? error.message : 'Unknown error',
@@ -234,7 +235,7 @@ async function getCronJobStatus(): Promise<CronJobStatus[]> {
       }
     }
   } catch (err) {
-    console.error('Error fetching cron logs:', err)
+    logger.error('Error fetching cron logs', { error: err instanceof Error ? err.message : 'Unknown' })
   }
 
   return jobs.sort((a, b) => a.jobName.localeCompare(b.jobName))

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { withCronLogging, RateLimiter } from '@/lib/cron-utils'
+import { logger } from '@/lib/logger'
 
 // Sync Finnish Companies from PRH (Patent and Registration Office) - COMPLETELY FREE!
 // NO API KEY REQUIRED - Just make requests!
@@ -75,12 +76,12 @@ async function fetchCompany(businessId: string): Promise<FinnishCompany | null> 
     )
 
     if (response.status === 429) {
-      console.log('PRH rate limited (300/min global)')
+      logger.warn('PRH rate limited (300/min global)')
       return null
     }
 
     if (!response.ok) {
-      console.log(`PRH API returned ${response.status} for ${businessId}`)
+      logger.info('PRH API returned error', { status: response.status, businessId })
       return null
     }
 
@@ -136,7 +137,7 @@ async function fetchCompany(businessId: string): Promise<FinnishCompany | null> 
       tradeRegisterStatus: company.tradeRegisterStatus?.toString(),
     }
   } catch (error) {
-    console.error(`Error fetching Finnish company ${businessId}:`, error)
+    logger.error('Error fetching Finnish company', { businessId, error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }
@@ -170,7 +171,7 @@ async function searchCompanies(params: {
     const data = await response.json()
     return data.companies?.map((c: any) => c.businessId?.identifier).filter(Boolean) || []
   } catch (error) {
-    console.error('Error searching Finnish companies:', error)
+    logger.error('Error searching Finnish companies', { error: error instanceof Error ? error.message : 'Unknown' })
     return []
   }
 }
@@ -250,8 +251,7 @@ async function saveCompany(company: FinnishCompany): Promise<boolean> {
 
   if (error) {
     lastSaveError = { error, record }
-    console.error(`Failed to save Finnish company ${company.businessId}:`, JSON.stringify(error, null, 2))
-    console.error('Record attempted:', JSON.stringify(record, null, 2))
+    logger.error('Failed to save Finnish company', { businessId: company.businessId, error: error.message })
     return false
   }
 

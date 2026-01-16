@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Configuration, PlaidApi, PlaidEnvironments } from 'plaid'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Lazy initialization of Plaid client
 function getPlaidClient() {
@@ -91,7 +92,7 @@ export async function POST(request: NextRequest) {
       }, { onConflict: 'item_id' })
 
     if (dbError) {
-      console.error('Error storing Plaid item:', dbError)
+      logger.error('Error storing Plaid item', { error: dbError.message })
       return NextResponse.json({
         message: 'Token exchanged but failed to store in database',
         itemId,
@@ -105,7 +106,7 @@ export async function POST(request: NextRequest) {
       itemId,
     })
   } catch (error: any) {
-    console.error('Error exchanging Plaid token:', error?.response?.data || error.message)
+    logger.error('Error exchanging Plaid token', { error: error?.response?.data || error.message })
     return NextResponse.json(
       {
         error: 'Failed to exchange token',

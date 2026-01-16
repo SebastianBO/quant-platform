@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 const EODHD_API_KEY = process.env.EODHD_API_KEY
 
@@ -48,15 +49,15 @@ export async function GET(request: NextRequest) {
             rates[currency] = parseFloat(data.close)
           }
         } else {
-          console.log(`FX API: ${currency}.FOREX returned ${response.status}`)
+          logger.info('FX API response', { currency, status: response.status })
         }
       } catch (error) {
-        console.error(`Error fetching ${currency} rate:`, error)
+        logger.error('Error fetching currency rate', { currency, error: error instanceof Error ? error.message : 'Unknown' })
       }
     })
 
     await Promise.all(promises)
-    console.log('FX rates fetched:', Object.keys(rates).length, 'currencies')
+    logger.info('FX rates fetched', { count: Object.keys(rates).length })
 
     // Update cache
     fxCache = { rates, timestamp: Date.now() }
@@ -68,7 +69,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ rates, cached: false })
   } catch (error) {
-    console.error('FX API error:', error)
+    logger.error('FX API error', { error: error instanceof Error ? error.message : 'Unknown' })
     // Return fallback rates on error
     return NextResponse.json({
       rates: getFallbackRates(),

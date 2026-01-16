@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { syncCompanyFinancials, syncInsiderTrades } from '@/lib/sec-edgar'
+import { logger } from '@/lib/logger'
 
 // Watch SEC EDGAR for ALL new filings (10-K, 10-Q, 8-K, Form 4)
 // Automatically syncs data when new filings appear
@@ -64,7 +65,7 @@ async function fetchLatestFilings(formType: string, count: number = 100): Promis
   })
 
   if (!response.ok) {
-    console.error(`Failed to fetch ${formType} RSS:`, response.status)
+    logger.error('Failed to fetch RSS', { formType, status: response.status })
     return []
   }
 
@@ -107,7 +108,7 @@ async function fetchLatestFilings(formType: string, count: number = 100): Promis
         companyName: nameMatch?.[1]?.trim() || tickerInfo?.name || ''
       })
     } catch (e) {
-      console.error('Error parsing filing entry:', e)
+      logger.error('Error parsing filing entry', { error: e instanceof Error ? e.message : 'Unknown' })
     }
   }
 
@@ -131,7 +132,7 @@ export async function GET(request: NextRequest) {
   const cronSecret = process.env.CRON_SECRET
   if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
     // Allow without auth but log
-    console.log('Watch filings called without CRON_SECRET')
+    logger.warn('Watch filings called without CRON_SECRET')
   }
 
   try {
@@ -266,7 +267,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Watch filings error:', error)
+    logger.error('Watch filings error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: error instanceof Error ? error.message : 'Watch failed'
     }, { status: 500 })

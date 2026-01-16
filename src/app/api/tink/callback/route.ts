@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { createLogger } from '@/lib/logger'
+
+const log = createLogger({ service: 'tink-callback' })
 
 const TINK_CLIENT_ID = process.env.TINK_CLIENT_ID || ''
 const TINK_CLIENT_SECRET = process.env.TINK_CLIENT_SECRET || ''
@@ -116,7 +119,7 @@ async function handleCallback(
   errorDescription: string | null,
   credentialsId: string | null
 ) {
-  console.log('Tink callback processing:', {
+  log.info('Tink callback processing:', {
     code: code ? 'present' : 'missing',
     state,
     error,
@@ -127,7 +130,7 @@ async function handleCallback(
   // If we have no code but have credentialsId and state, Tink Products flow was used
   // We need to get a user access token using the server-side flow
   if (!code && credentialsId && state) {
-    console.log('Tink Products flow detected (credentialsId only), getting user token via server flow')
+    log.info('Tink Products flow detected (credentialsId only), getting user token via server flow')
 
     try {
       const supabaseAdmin = getSupabaseAdmin()
@@ -147,21 +150,21 @@ async function handleCallback(
       }
 
       // Step 1: Get a client access token
-      console.log('Getting client access token...')
+      log.info('Getting client access token...')
       const clientTokenData = await getClientAccessToken()
-      console.log('Got client token')
+      log.info('Got client token')
 
       // Step 2: Get a user authorization code
       // Note: For Tink, the user_id here is the TINK user id, not our app user id
       // We need to first create or get a Tink user. For now, use our userId as external_user_id
-      console.log('Getting user authorization code for userId:', userId)
+      log.info('Getting user authorization code', { userId })
       const authGrantData = await getUserAuthorizationCode(clientTokenData.access_token, userId)
-      console.log('Got auth grant code')
+      log.info('Got auth grant code')
 
       // Step 3: Exchange for user access token
-      console.log('Exchanging for user access token...')
+      log.info('Exchanging for user access token...')
       const tokenData = await getUserAccessToken(authGrantData.code)
-      console.log('Got user access token, scopes:', tokenData.scope)
+      log.info('Got user access token', { scopes: tokenData.scope })
 
       // Store the connection in Supabase
       const { data: upsertData, error: dbError } = await supabaseAdmin
@@ -179,18 +182,18 @@ async function handleCallback(
         .select()
 
       if (dbError) {
-        console.error('Error storing Tink connection:', dbError.message, dbError.code, dbError.details)
+        log.error('Error storing Tink connection', { message: dbError.message, code: dbError.code, details: dbError.details })
         return NextResponse.redirect(
           new URL(`/dashboard?error=tink_db_error&message=${encodeURIComponent(dbError.message)}`, request.url)
         )
       }
 
-      console.log('Tink connection stored successfully for user:', userId)
+      log.info('Tink connection stored successfully', { userId })
       return NextResponse.redirect(
         new URL('/dashboard?success=tink_connected', request.url)
       )
     } catch (err: any) {
-      console.error('Error in Products flow token acquisition:', err.message)
+      log.error('Error in Products flow token acquisition', { message: err.message })
       return NextResponse.redirect(
         new URL(`/dashboard?error=tink_token_error&message=${encodeURIComponent(err.message)}`, request.url)
       )
@@ -199,7 +202,7 @@ async function handleCallback(
 
   // If we have credentialsId but no state, we can't get the user token
   if (!code && credentialsId && !state) {
-    console.log('Tink Products flow with credentialsId but no state - cannot get token')
+    log.info('Tink Products flow with credentialsId but no state - cannot get token')
     return NextResponse.redirect(
       new URL('/dashboard?error=tink_missing_state&credentials_id=' + credentialsId, request.url)
     )
@@ -210,14 +213,14 @@ async function handleCallback(
 
     // Handle errors from Tink
     if (error) {
-      console.error('Tink callback error:', error, errorDescription)
+      log.error('Tink callback error', { error, errorDescription })
       return NextResponse.redirect(
         new URL(`/dashboard?error=tink_${error}&message=${encodeURIComponent(errorDescription || 'Connection failed')}`, request.url)
       )
     }
 
     if (!code || !state) {
-      console.log('Missing code or state, returning HTML page to extract hash params')
+      log.info('Missing code or state, returning HTML page to extract hash params')
       // Return an HTML page that can read hash fragments and redirect properly
       const html = `<!DOCTYPE html>
 <html>
@@ -276,15 +279,17 @@ async function handleCallback(
     const redirectUri = process.env.TINK_REDIRECT_URI || `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/tink/callback`
 
     // Exchange code for access token
-    console.log('Exchanging code for token with redirectUri:', redirectUri)
+    log.info('Exchanging code for token', { redirectUri })
     const tokenData = await exchangeCodeForToken(code, redirectUri)
-    console.log('Token exchange successful, got scopes:', tokenData.scope)
+    log.info('Token exchange successful', { scopes: tokenData.scope })
 
     // Store the connection in Supabase
-    console.log('Storing connection for userId:', userId)
-    console.log('Token data keys:', Object.keys(tokenData))
-    console.log('Access token present:', !!tokenData.access_token)
-    console.log('Refresh token present:', !!tokenData.refresh_token)
+    log.info('Storing connection', {
+      userId,
+      tokenDataKeys: Object.keys(tokenData),
+      hasAccessToken: !!tokenData.access_token,
+      hasRefreshToken: !!tokenData.refresh_token
+    })
 
     const { data: upsertData, error: dbError } = await supabaseAdmin
       .from('tink_connections')
@@ -300,21 +305,21 @@ async function handleCallback(
       .select()
 
     if (dbError) {
-      console.error('Error storing Tink connection:', dbError.message, dbError.code, dbError.details)
+      log.error('Error storing Tink connection', { message: dbError.message, code: dbError.code, details: dbError.details })
       return NextResponse.redirect(
         new URL(`/dashboard?error=tink_db_error&message=${encodeURIComponent(dbError.message)}`, request.url)
       )
     }
 
-    console.log('Tink connection stored successfully for user:', userId)
-    console.log('Upsert result:', upsertData)
+    log.info('Tink connection stored successfully', { userId })
+    log.info('Upsert result', { data: upsertData })
 
     // Redirect back to dashboard with success
     return NextResponse.redirect(
       new URL('/dashboard?success=tink_connected', request.url)
     )
   } catch (error: any) {
-    console.error('Error in Tink callback:', error.message)
+    log.error('Error in Tink callback', { message: error.message })
     return NextResponse.redirect(
       new URL(`/dashboard?error=tink_exchange_failed&message=${encodeURIComponent(error.message)}`, request.url)
     )
@@ -323,7 +328,7 @@ async function handleCallback(
 
 // Handle GET requests (standard OAuth flow)
 export async function GET(request: NextRequest) {
-  console.log('Tink callback GET:', request.url)
+  log.info('Tink callback GET', { url: request.url })
 
   const searchParams = request.nextUrl.searchParams
   const code = searchParams.get('code')
@@ -337,11 +342,11 @@ export async function GET(request: NextRequest) {
 
 // Handle POST requests (some Tink flows use POST)
 export async function POST(request: NextRequest) {
-  console.log('Tink callback POST:', request.url)
+  log.info('Tink callback POST', { url: request.url })
 
   try {
     const body = await request.json()
-    console.log('Tink callback POST body:', JSON.stringify(body))
+    log.info('Tink callback POST body', { body })
 
     const code = body.code || null
     const state = body.state || null
@@ -354,7 +359,7 @@ export async function POST(request: NextRequest) {
     // If body isn't JSON, try form data
     try {
       const formData = await request.formData()
-      console.log('Tink callback POST form data')
+      log.info('Tink callback POST form data')
 
       const code = formData.get('code') as string | null
       const state = formData.get('state') as string | null
@@ -364,7 +369,7 @@ export async function POST(request: NextRequest) {
 
       return handleCallback(request, code, state, error, errorDescription, credentialsId)
     } catch (e2) {
-      console.error('Failed to parse POST body:', e2)
+      log.error('Failed to parse POST body', { error: e2 })
       return NextResponse.redirect(
         new URL('/dashboard?error=tink_invalid_request', request.url)
       )

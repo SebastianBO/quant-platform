@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server"
 import Stripe from "stripe"
 import { createClient } from "@supabase/supabase-js"
+import { createLogger } from "@/lib/logger"
+
+const log = createLogger({ service: 'stripe-webhook' })
 
 function getStripe() {
   return new Stripe(process.env.STRIPE_SECRET_KEY || "")
@@ -24,7 +27,7 @@ export async function POST(request: NextRequest) {
   try {
     event = getStripe().webhooks.constructEvent(body, signature, webhookSecret)
   } catch (err) {
-    console.error("Webhook signature verification failed:", err)
+    log.error("Webhook signature verification failed", { error: err })
     return NextResponse.json(
       { error: "Webhook signature verification failed" },
       { status: 400 }
@@ -207,12 +210,12 @@ export async function POST(request: NextRequest) {
       }
 
       default:
-        console.log(`Unhandled event type: ${event.type}`)
+        log.info("Unhandled event type", { eventType: event.type })
     }
 
     return NextResponse.json({ received: true })
   } catch (error) {
-    console.error("Error processing webhook:", error)
+    log.error("Error processing webhook", { error })
     return NextResponse.json(
       { error: "Webhook handler failed" },
       { status: 500 }
@@ -225,7 +228,7 @@ async function syncToRevenueCat(userId: string, subscriptionId: string, productI
   const REVENUECAT_API_KEY = process.env.REVENUECAT_SECRET_KEY
 
   if (!REVENUECAT_API_KEY) {
-    console.warn("RevenueCat API key not configured, skipping sync")
+    log.warn("RevenueCat API key not configured, skipping sync")
     return
   }
 
@@ -246,11 +249,12 @@ async function syncToRevenueCat(userId: string, subscriptionId: string, productI
     )
 
     if (!response.ok) {
-      console.error("Failed to sync to RevenueCat:", await response.text())
+      const errorText = await response.text()
+      log.error("Failed to sync to RevenueCat", { error: errorText, userId })
     } else {
-      console.log("Successfully synced subscription to RevenueCat")
+      log.info("Successfully synced subscription to RevenueCat", { userId, subscriptionId })
     }
   } catch (error) {
-    console.error("Error syncing to RevenueCat:", error)
+    log.error("Error syncing to RevenueCat", { error, userId })
   }
 }

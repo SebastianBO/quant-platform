@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Financial Datasets API Compatible Endpoint
 // Matches: https://api.financialdatasets.ai/financials/income-statements
@@ -37,13 +38,13 @@ async function fetchFromFinancialDatasets(ticker: string, period: string, limit:
     // Auto-cache: Store fetched data in Supabase for future requests
     if (statements.length > 0) {
       cacheIncomeStatements(statements, ticker).catch(err =>
-        console.error('Failed to cache income statements:', err)
+        logger.error('Failed to cache income statements', { error: err instanceof Error ? err.message : 'Unknown' })
       )
     }
 
     return statements
   } catch (error) {
-    console.error('Financial Datasets API error:', error)
+    logger.error('Financial Datasets API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }
@@ -148,7 +149,7 @@ export async function GET(request: NextRequest) {
     const { data, error } = await query
 
     if (error) {
-      console.error('Income statements query error:', error)
+      logger.error('Income statements query error', { error: error.message })
       return NextResponse.json({ error: 'Database error' }, { status: 500 })
     }
 
@@ -207,7 +208,7 @@ export async function GET(request: NextRequest) {
       }
     })
   } catch (error) {
-    console.error('Income statements API error:', error)
+    logger.error('Income statements API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { withCronLogging, RateLimiter } from '@/lib/cron-utils'
+import { logger } from '@/lib/logger'
 
 // Sync Swedish Companies from Bolagsverket (Official Government API)
 // Uses the "Värdefulla datamängder" (High Value Datasets) API
@@ -39,7 +40,7 @@ interface SwedishCompany {
 // Fetch company from Bolagsverket API
 async function fetchFromBolagsverket(orgNumber: string): Promise<SwedishCompany | null> {
   if (!BOLAGSVERKET_API_KEY) {
-    console.log('Bolagsverket API key not configured')
+    logger.warn('Bolagsverket API key not configured')
     return null
   }
 
@@ -59,7 +60,7 @@ async function fetchFromBolagsverket(orgNumber: string): Promise<SwedishCompany 
     )
 
     if (!response.ok) {
-      console.log(`Bolagsverket API returned ${response.status} for ${orgNumber}`)
+      logger.info('Bolagsverket API error', { status: response.status, orgNumber })
       return null
     }
 
@@ -78,7 +79,7 @@ async function fetchFromBolagsverket(orgNumber: string): Promise<SwedishCompany 
       isActive: data.aktiv !== false,
     }
   } catch (error) {
-    console.error(`Error fetching from Bolagsverket:`, error)
+    logger.error('Error fetching from Bolagsverket', { orgNumber, error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }
@@ -178,7 +179,7 @@ async function saveCompany(company: SwedishCompany): Promise<boolean> {
     })
 
   if (error) {
-    console.error(`Failed to save ${company.orgNumber}:`, error)
+    logger.error('Failed to save Swedish company', { orgNumber: company.orgNumber, error: error.message })
     return false
   }
 

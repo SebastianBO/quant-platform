@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Sync clinical trials data from ClinicalTrials.gov to Supabase
 // Runs daily to keep trial data fresh
@@ -38,14 +39,14 @@ async function fetchTrialsForSponsor(sponsor: string, pageSize: number = 100): P
     })
 
     if (!response.ok) {
-      console.error(`ClinicalTrials.gov API error for ${sponsor}: ${response.status}`)
+      logger.error('ClinicalTrials.gov API error', { sponsor, status: response.status })
       return []
     }
 
     const data = await response.json()
     return data.studies || []
   } catch (error) {
-    console.error(`Error fetching trials for ${sponsor}:`, error)
+    logger.error('Error fetching trials', { sponsor, error: error instanceof Error ? error.message : 'Unknown' })
     return []
   }
 }
@@ -188,7 +189,7 @@ async function syncTrialsForCompany(
         .upsert(trial, { onConflict: 'nct_id' })
 
       if (trialError) {
-        console.error(`Error upserting trial ${trial.nct_id}:`, trialError.message)
+        logger.error('Error upserting trial', { nctId: trial.nct_id, error: trialError.message })
       } else {
         result.trialsInserted++
       }
@@ -213,7 +214,7 @@ async function syncTrialsForCompany(
           .insert(catalyst)
 
         if (catalystError) {
-          console.error(`Error inserting catalyst:`, catalystError.message)
+          logger.error('Error inserting catalyst', { sourceId: catalyst!.source_id, error: catalystError.message })
         } else {
           result.catalystsCreated++
         }
@@ -233,7 +234,7 @@ export async function GET(request: NextRequest) {
   const cronSecret = process.env.CRON_SECRET
 
   if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-    console.log('Clinical trials sync called without CRON_SECRET')
+    logger.warn('Clinical trials sync called without CRON_SECRET')
   }
 
   const searchParams = request.nextUrl.searchParams
@@ -281,7 +282,7 @@ export async function GET(request: NextRequest) {
       companies = data || []
     }
 
-    console.log(`Syncing clinical trials for ${companies.length} companies...`)
+    logger.info('Syncing clinical trials', { companiesCount: companies.length })
 
     for (let i = 0; i < companies.length; i++) {
       const company = companies[i]
@@ -291,7 +292,7 @@ export async function GET(request: NextRequest) {
         await new Promise(resolve => setTimeout(resolve, 2000))
       }
 
-      console.log(`Syncing ${company.ticker} (${company.company_name})...`)
+      logger.info('Syncing company', { ticker: company.ticker, companyName: company.company_name })
 
       const result = await syncTrialsForCompany(
         supabase,
@@ -301,7 +302,7 @@ export async function GET(request: NextRequest) {
       )
 
       results.push(result)
-      console.log(`  Found ${result.trialsFound} trials, inserted ${result.trialsInserted}, created ${result.catalystsCreated} catalysts`)
+      logger.info('Sync result', { ticker: company.ticker, trialsFound: result.trialsFound, trialsInserted: result.trialsInserted, catalystsCreated: result.catalystsCreated })
     }
 
     const totalTrials = results.reduce((sum, r) => sum + r.trialsInserted, 0)
@@ -320,7 +321,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Clinical trials sync error:', error)
+    logger.error('Clinical trials sync error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Sync failed',
       details: error instanceof Error ? error.message : 'Unknown error'

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Sync analyst estimates by SCRAPING Yahoo Finance (FREE)
 // No paid API needed - we scrape public data just like FinancialDatasets.ai does
@@ -64,7 +65,7 @@ async function withRetry<T>(
 
       if (attempt < retries) {
         const waitTime = delay * Math.pow(2, attempt) // Exponential backoff
-        console.log(`Retry ${attempt + 1}/${retries} after ${waitTime}ms: ${lastError.message}`)
+        logger.info('Retry attempt', { attempt: attempt + 1, maxRetries: retries, waitTime, error: lastError.message })
         await new Promise(resolve => setTimeout(resolve, waitTime))
       }
     }
@@ -87,7 +88,7 @@ async function logToSupabase(
       created_at: new Date().toISOString()
     })
   } catch (err) {
-    console.error('Failed to log to Supabase:', err)
+    logger.error('Failed to log to Supabase', { error: err instanceof Error ? err.message : 'Unknown' })
   }
 }
 
@@ -194,7 +195,7 @@ async function scrapeYahooAnalystEstimates(ticker: string): Promise<YahooAnalyst
       }
 
     } catch (parseError) {
-      console.error(`Failed to parse Yahoo JSON for ${ticker}:`, parseError)
+      logger.error('Failed to parse Yahoo JSON', { ticker, error: parseError instanceof Error ? parseError.message : 'Unknown' })
     }
   }
 
@@ -336,7 +337,7 @@ export async function GET(request: NextRequest) {
       } catch (err) {
         failCount++
         const errorMsg = err instanceof Error ? err.message : 'Unknown error'
-        console.error(`Failed to sync ${t}:`, errorMsg)
+        logger.error('Failed to sync ticker', { ticker: t, error: errorMsg })
         results.push({ ticker: t, estimatesCreated: 0, error: errorMsg })
 
         // Continue to next ticker, don't fail entire job
@@ -373,7 +374,7 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : 'Unknown error'
-    console.error('Analyst estimates sync error:', errorMsg)
+    logger.error('Analyst estimates sync error', { error: errorMsg })
 
     await logToSupabase('sync-analyst-estimates', 'failed', {
       error: errorMsg,

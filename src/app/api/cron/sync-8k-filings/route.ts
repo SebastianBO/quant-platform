@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Sync 8-K filings from SEC EDGAR
 // 8-Ks are material event reports (earnings, executive changes, M&A, etc.)
@@ -99,7 +100,7 @@ async function fetch8KFilings(count: number = 100): Promise<Filing8K[]> {
   })
 
   if (!response.ok) {
-    console.error(`Failed to fetch 8-K RSS:`, response.status)
+    logger.error('Failed to fetch 8-K RSS', { status: response.status })
     return []
   }
 
@@ -160,7 +161,7 @@ async function fetch8KFilings(count: number = 100): Promise<Filing8K[]> {
         description: items.map(i => ITEM_DESCRIPTIONS[i] || i).join('; '),
       })
     } catch (e) {
-      console.error('Error parsing 8-K entry:', e)
+      logger.error('Error parsing 8-K entry', { error: e instanceof Error ? e.message : 'Unknown' })
     }
   }
 
@@ -173,7 +174,7 @@ export async function GET(request: NextRequest) {
   const cronSecret = process.env.CRON_SECRET
 
   if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-    console.log('8-K sync called without CRON_SECRET')
+    logger.warn('8-K sync called without CRON_SECRET')
   }
 
   const searchParams = request.nextUrl.searchParams
@@ -269,7 +270,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('8-K sync error:', error)
+    logger.error('8-K sync error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Sync failed',
       details: error instanceof Error ? error.message : 'Unknown error',

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 /**
  * BONDS CORRELATION API
@@ -35,7 +36,7 @@ async function fetchYahooHistory(symbol: string, range: string = '1y'): Promise<
     )
 
     if (!response.ok) {
-      console.error(`Yahoo chart failed for ${symbol}:`, response.status)
+      logger.error('Yahoo chart failed', { symbol, status: response.status })
       return null
     }
 
@@ -58,7 +59,7 @@ async function fetchYahooHistory(symbol: string, range: string = '1y'): Promise<
 
     return validData
   } catch (error) {
-    console.error(`Error fetching Yahoo history for ${symbol}:`, error)
+    logger.error('Error fetching Yahoo history', { symbol, error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }
@@ -289,7 +290,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Bonds correlation API error:', error)
+    logger.error('Bonds correlation API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json(generateMockData(ticker))
   }
 }

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getCompanySubmissions } from '@/lib/sec-edgar/client'
+import { logger } from '@/lib/logger'
 
 // CIK cache to avoid repeated lookups
 const cikCache: Record<string, string> = {}
@@ -76,7 +77,7 @@ async function getCikForTicker(ticker: string): Promise<string | null> {
 
     return null
   } catch (error) {
-    console.error('Error fetching CIK for ticker:', error)
+    logger.error('Error fetching CIK for ticker', { error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }
@@ -96,7 +97,7 @@ export async function GET(request: NextRequest) {
     const cik = await getCikForTicker(ticker.toUpperCase())
 
     if (!cik) {
-      console.log(`No CIK found for ticker: ${ticker}`)
+      logger.warn('No CIK found for ticker', { ticker })
       return NextResponse.json({
         ticker: ticker.toUpperCase(),
         totalFilings: 0,
@@ -172,7 +173,7 @@ export async function GET(request: NextRequest) {
       filings: processedFilings
     })
   } catch (error) {
-    console.error('SEC Filings API error:', error)
+    logger.error('SEC Filings API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       ticker: ticker.toUpperCase(),
       totalFilings: 0,

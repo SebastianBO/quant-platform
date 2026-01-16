@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { withCronLogging, RateLimiter } from '@/lib/cron-utils'
+import { logger } from '@/lib/logger'
 
 // Sync Swedish Listed Companies (Stockholm Exchange - ST)
 // Primary: Yahoo Finance (FREE) - works well for Swedish stocks
@@ -55,13 +56,13 @@ async function getYahooCrumb(): Promise<{ crumb: string; cookies: string } | nul
     })
 
     if (!crumbRes.ok) {
-      console.log('Failed to get Yahoo crumb:', crumbRes.status)
+      logger.warn('Failed to get Yahoo crumb', { status: crumbRes.status })
       return null
     }
 
     const crumb = await crumbRes.text()
     if (!crumb || crumb.includes('error')) {
-      console.log('Invalid crumb response:', crumb)
+      logger.warn('Invalid crumb response', { crumb })
       return null
     }
 
@@ -70,10 +71,10 @@ async function getYahooCrumb(): Promise<{ crumb: string; cookies: string } | nul
     yahooCookies = cookies
     crumbTimestamp = Date.now()
 
-    console.log('Got Yahoo crumb successfully')
+    logger.info('Got Yahoo crumb successfully')
     return { crumb, cookies }
   } catch (error) {
-    console.error('Error getting Yahoo crumb:', error)
+    logger.error('Error getting Yahoo crumb', { error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }
@@ -224,7 +225,7 @@ async function fetchFromYahoo(ticker: string): Promise<EODHDFundamentals | null>
     })
 
     if (!chartRes.ok) {
-      console.log(`Yahoo v8 returned ${chartRes.status} for ${ticker}`)
+      logger.warn('Yahoo v8 returned error', { status: chartRes.status, ticker })
       return null
     }
 
@@ -275,7 +276,7 @@ async function fetchFromYahoo(ticker: string): Promise<EODHDFundamentals | null>
 
     return fundamentals
   } catch (error) {
-    console.error(`Error fetching ${ticker} from Yahoo:`, error)
+    logger.error('Error fetching from Yahoo', { ticker, error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }
@@ -293,14 +294,14 @@ async function fetchFromEODHD(ticker: string): Promise<EODHDFundamentals | null>
     )
 
     if (!response.ok) {
-      console.log(`EODHD returned ${response.status} for ${ticker}`)
+      logger.warn('EODHD returned error', { status: response.status, ticker })
       return null
     }
 
     const data = await response.json()
     return data
   } catch (error) {
-    console.error(`Error fetching ${ticker} from EODHD:`, error)
+    logger.error('Error fetching from EODHD', { ticker, error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }
@@ -358,7 +359,7 @@ async function saveCompany(ticker: string, data: EODHDFundamentals, source: stri
     })
 
   if (error) {
-    console.error(`Failed to save company ${ticker}:`, error)
+    logger.error('Failed to save company', { ticker, error: error.message })
     return false
   }
 

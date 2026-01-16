@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 const EODHD_API_KEY = process.env.EODHD_API_KEY || ""
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
@@ -46,7 +47,7 @@ async function fetchFromSupabase(ticker: string, days: number): Promise<ShortVol
       })
 
     if (error) {
-      console.log('Supabase RPC error, trying direct query:', error.message)
+      logger.info('Supabase RPC error, trying direct query', { error: error.message })
 
       // Fallback to direct query if RPC doesn't exist
       const { data: directData, error: directError } = await supabase
@@ -57,7 +58,7 @@ async function fetchFromSupabase(ticker: string, days: number): Promise<ShortVol
         .limit(days)
 
       if (directError || !directData) {
-        console.log('Direct query also failed:', directError?.message)
+        logger.info('Direct query also failed', { error: directError?.message })
         return []
       }
 
@@ -82,7 +83,7 @@ async function fetchFromSupabase(ticker: string, days: number): Promise<ShortVol
       shortPercent: parseFloat(row.short_percent) || 0
     }))
   } catch (err) {
-    console.error('Supabase fetch error:', err)
+    logger.error('Supabase fetch error', { ticker, error: err instanceof Error ? err.message : 'Unknown' })
     return []
   }
 }
@@ -159,7 +160,7 @@ async function fetchFinraDailyFile(date: Date): Promise<Map<string, ShortVolumeD
       return data
     }
   } catch (error) {
-    console.error(`Error fetching FINRA file for ${dateStr}:`, error)
+    logger.error('Error fetching FINRA file', { dateStr, error: error instanceof Error ? error.message : 'Unknown' })
   }
 
   return new Map()
@@ -249,7 +250,7 @@ export async function GET(request: NextRequest) {
 
     // If Supabase has no data, try direct FINRA fetch
     if (dailyData.length === 0) {
-      console.log(`No Supabase data for ${ticker}, trying direct FINRA fetch...`)
+      logger.info('No Supabase data, trying direct FINRA fetch', { ticker })
       dailyData = await fetchFinraShortVolume(ticker, Math.min(days, 60)) // Limit direct fetch to 60 days
       dataSource = 'FINRA (Direct)'
     }
@@ -354,7 +355,7 @@ export async function GET(request: NextRequest) {
         : 'Daily short volume is estimated based on historical averages.'
     })
   } catch (error) {
-    console.error('Short Volume API error:', error)
+    logger.error('Short Volume API error', { ticker, error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({ error: 'Failed to fetch short volume data' }, { status: 500 })
   }
 }

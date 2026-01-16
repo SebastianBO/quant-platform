@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Configuration, PlaidApi, PlaidEnvironments } from 'plaid'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 /**
  * Cron Job: Sync all connected portfolios
@@ -23,7 +24,7 @@ const TINK_API_URL = 'https://api.tink.com'
 function verifyCronSecret(request: NextRequest): boolean {
   const cronSecret = process.env.CRON_SECRET
   if (!cronSecret) {
-    console.warn('[Cron] No CRON_SECRET configured')
+    logger.warn('No CRON_SECRET configured')
     return process.env.NODE_ENV === 'development'
   }
 
@@ -143,7 +144,7 @@ async function syncPlaidItem(item: any, supabaseAdmin: any, plaidClient: PlaidAp
 
     return { success: true, holdings: holdings.length }
   } catch (error: any) {
-    console.error(`[Cron] Error syncing Plaid item ${item.item_id}:`, error.message)
+    logger.error('Error syncing Plaid item', { itemId: item.item_id, error: error.message })
     return { success: false, error: error.message }
   }
 }
@@ -220,7 +221,7 @@ async function syncTinkConnection(connection: any, supabaseAdmin: any) {
 
     return { success: true, holdings: allHoldings.length }
   } catch (error: any) {
-    console.error(`[Cron] Error syncing Tink connection for user ${connection.user_id}:`, error.message)
+    logger.error('Error syncing Tink connection', { userId: connection.user_id, error: error.message })
     return { success: false, error: error.message }
   }
 }
@@ -253,7 +254,7 @@ export async function GET(request: NextRequest) {
       .limit(50) // Process up to 50 items per run
 
     if (plaidItems && plaidItems.length > 0) {
-      console.log(`[Cron] Syncing ${plaidItems.length} Plaid items...`)
+      logger.info('Syncing Plaid items', { count: plaidItems.length })
 
       for (const item of plaidItems) {
         const result = await syncPlaidItem(item, supabaseAdmin, plaidClient)
@@ -277,7 +278,7 @@ export async function GET(request: NextRequest) {
       .limit(50)
 
     if (tinkConnections && tinkConnections.length > 0) {
-      console.log(`[Cron] Syncing ${tinkConnections.length} Tink connections...`)
+      logger.info('Syncing Tink connections', { count: tinkConnections.length })
 
       for (const connection of tinkConnections) {
         const result = await syncTinkConnection(connection, supabaseAdmin)
@@ -295,7 +296,7 @@ export async function GET(request: NextRequest) {
 
     const duration = Date.now() - startTime
 
-    console.log(`[Cron] Sync completed in ${duration}ms:`, results)
+    logger.info('Portfolio sync completed', { durationMs: duration, plaidSynced: results.plaid.synced, tinkSynced: results.tink.synced })
 
     return NextResponse.json({
       success: true,
@@ -304,7 +305,7 @@ export async function GET(request: NextRequest) {
       timestamp: new Date().toISOString(),
     })
   } catch (error: any) {
-    console.error('[Cron] Error running sync:', error.message)
+    logger.error('Portfolio sync failed', { error: error.message })
     return NextResponse.json(
       { error: 'Sync failed', details: error.message },
       { status: 500 }

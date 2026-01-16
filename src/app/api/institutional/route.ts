@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 const FINANCIAL_DATASETS_API_KEY = process.env.FINANCIAL_DATASETS_API_KEY || ""
 const EODHD_API_KEY = process.env.EODHD_API_KEY || ""
@@ -89,7 +90,7 @@ export async function GET(request: NextRequest) {
 
       return NextResponse.json({ investors: matches })
     } catch (error) {
-      console.error('Institution search error:', error)
+      logger.error('Institution search error', { error: error instanceof Error ? error.message : 'Unknown' })
       return NextResponse.json({ investors: [] })
     }
   }
@@ -189,7 +190,7 @@ export async function GET(request: NextRequest) {
         holdings: []
       })
     } catch (error) {
-      console.error('Investor holdings error:', error)
+      logger.error('Investor holdings error', { error: error instanceof Error ? error.message : 'Unknown' })
       return NextResponse.json({
         investor,
         summary: { totalAUM: 0, totalPositions: 0 },
@@ -362,7 +363,7 @@ export async function GET(request: NextRequest) {
       topHolders: mergedHolders.slice(0, 20)
     })
   } catch (error) {
-    console.error('Institutional API error:', error)
+    logger.error('Institutional API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       ticker,
       summary: {

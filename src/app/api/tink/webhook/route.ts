@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
+import { createLogger } from '@/lib/logger'
+
+const log = createLogger({ service: 'tink-webhook' })
 
 const TINK_API_URL = 'https://api.tink.com'
 const TINK_WEBHOOK_SECRET = process.env.TINK_WEBHOOK_SECRET || ''
@@ -20,12 +23,12 @@ function getSupabaseAdmin() {
 // Verify Tink webhook signature
 function verifyTinkWebhook(body: string, signature: string | null): boolean {
   if (!TINK_WEBHOOK_SECRET) {
-    console.warn('[Tink Webhook] No webhook secret configured')
+    log.warn('No webhook secret configured')
     return process.env.TINK_ENV === 'sandbox' // Allow in sandbox
   }
 
   if (!signature) {
-    console.warn('[Tink Webhook] No signature present')
+    log.warn('No signature present')
     return false
   }
 
@@ -60,7 +63,7 @@ async function fetchFromTink(endpoint: string, accessToken: string) {
 
 // Sync holdings for a specific Tink user
 async function syncHoldingsForUser(userId: string, supabaseAdmin: any) {
-  console.log(`[Tink Webhook] Syncing holdings for user: ${userId}`)
+  log.info('Syncing holdings for user', { userId })
 
   // Get the Tink connection
   const { data: connection, error: connectionError } = await supabaseAdmin
@@ -70,7 +73,7 @@ async function syncHoldingsForUser(userId: string, supabaseAdmin: any) {
     .single()
 
   if (connectionError || !connection) {
-    console.error(`[Tink Webhook] Connection not found for user: ${userId}`)
+    log.error('Connection not found for user', { userId })
     return { success: false, error: 'Connection not found' }
   }
 
@@ -93,7 +96,7 @@ async function syncHoldingsForUser(userId: string, supabaseAdmin: any) {
         )
         allHoldings = [...allHoldings, ...(holdingsData.holdings || [])]
       } catch (err) {
-        console.error(`[Tink Webhook] Error fetching holdings for account ${account.id}:`, err)
+        log.error('Error fetching holdings for account', { accountId: account.id, error: err })
       }
     }
 
@@ -106,7 +109,7 @@ async function syncHoldingsForUser(userId: string, supabaseAdmin: any) {
       .single()
 
     if (!portfolio) {
-      console.error(`[Tink Webhook] Portfolio not found for user: ${userId}`)
+      log.error('Portfolio not found for user', { userId })
       return { success: false, error: 'Portfolio not found' }
     }
 
@@ -145,7 +148,7 @@ async function syncHoldingsForUser(userId: string, supabaseAdmin: any) {
         })
 
       if (upsertError) {
-        console.error('[Tink Webhook] Error upserting investments:', upsertError)
+        log.error('Error upserting investments', { error: upsertError })
         return { success: false, error: upsertError.message }
       }
     }
@@ -156,10 +159,10 @@ async function syncHoldingsForUser(userId: string, supabaseAdmin: any) {
       .update({ last_updated: new Date().toISOString() })
       .eq('user_id', userId)
 
-    console.log(`[Tink Webhook] Successfully synced ${allHoldings.length} holdings for user: ${userId}`)
+    log.info('Successfully synced holdings for user', { userId, holdingsCount: allHoldings.length })
     return { success: true, holdingsCount: allHoldings.length }
   } catch (error: any) {
-    console.error('[Tink Webhook] Error syncing holdings:', error.message)
+    log.error('Error syncing holdings', { error: error.message })
     return { success: false, error: error.message }
   }
 }
@@ -171,14 +174,14 @@ export async function POST(request: NextRequest) {
 
     // Verify webhook authenticity
     if (!verifyTinkWebhook(body, signature)) {
-      console.error('[Tink Webhook] Verification failed')
+      log.error('Verification failed')
       return NextResponse.json({ error: 'Verification failed' }, { status: 401 })
     }
 
     const webhookData = JSON.parse(body)
     const { event, userId, credentialsId, accountId } = webhookData
 
-    console.log(`[Tink Webhook] Received: ${event} for user: ${userId}`)
+    log.info('Received webhook event', { event, userId })
 
     // Log webhook to database
     const supabaseAdmin = getSupabaseAdmin()
@@ -214,7 +217,7 @@ export async function POST(request: NextRequest) {
 
       case 'credentials:error':
         // Credentials error - log it
-        console.error(`[Tink Webhook] Credentials error for user ${userId}:`, webhookData.error)
+        log.error('Credentials error for user', { userId, error: webhookData.error })
         // TODO: Notify user to re-authenticate
         break
 
@@ -227,12 +230,12 @@ export async function POST(request: NextRequest) {
         break
 
       default:
-        console.log(`[Tink Webhook] Unhandled event type: ${event}`)
+        log.info('Unhandled event type', { event })
     }
 
     return NextResponse.json({ received: true })
   } catch (error: any) {
-    console.error('[Tink Webhook] Error processing webhook:', error.message)
+    log.error('Error processing webhook', { error: error.message })
     return NextResponse.json(
       { error: 'Failed to process webhook', details: error.message },
       { status: 500 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { withCronLogging, RateLimiter } from '@/lib/cron-utils'
+import { logger } from '@/lib/logger'
 
 // Sync Norwegian Companies from Brreg (FREE - No API key required!)
 // Brønnøysund Register Centre - Official Norwegian business registry
@@ -59,18 +60,18 @@ async function brregRequest(endpoint: string): Promise<any | null> {
     })
 
     if (response.status === 429) {
-      console.log('Brreg rate limited')
+      logger.warn('Brreg rate limited')
       return { rateLimited: true }
     }
 
     if (!response.ok) {
-      console.log(`Brreg API returned ${response.status} for ${endpoint}`)
+      logger.info('Brreg API error', { status: response.status, endpoint })
       return null
     }
 
     return await response.json()
   } catch (error) {
-    console.error(`Brreg API request failed for ${endpoint}:`, error)
+    logger.error('Brreg API request failed', { endpoint, error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }
@@ -191,7 +192,7 @@ async function saveNorwegianCompany(company: NorwegianCompany): Promise<boolean>
     })
 
   if (error) {
-    console.error(`Failed to save Norwegian company ${company.orgNumber}:`, error)
+    logger.error('Failed to save Norwegian company', { orgNumber: company.orgNumber, error: error.message })
     return false
   }
 

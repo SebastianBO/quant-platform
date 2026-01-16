@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 // Free crypto prices from CoinGecko (no API key needed)
 // Rate limit: 10-50 calls/minute for free tier
@@ -44,7 +45,7 @@ async function fetchCoinGeckoPrices(ids: string[]): Promise<CryptoPrice[]> {
     )
 
     if (!response.ok) {
-      console.error('CoinGecko API error:', response.status)
+      logger.error('CoinGecko API error', { status: response.status })
       return []
     }
 
@@ -69,7 +70,7 @@ async function fetchCoinGeckoPrices(ids: string[]): Promise<CryptoPrice[]> {
       lastUpdated: coin.last_updated || new Date().toISOString(),
     }))
   } catch (error) {
-    console.error('CoinGecko fetch error:', error)
+    logger.error('CoinGecko fetch error', { error: error instanceof Error ? error.message : 'Unknown' })
     return []
   }
 }
@@ -95,7 +96,7 @@ async function fetchTrendingCrypto(): Promise<{ id: string; name: string; symbol
       rank: item.item.market_cap_rank,
     })) || []
   } catch (error) {
-    console.error('Trending crypto error:', error)
+    logger.error('Trending crypto error', { error: error instanceof Error ? error.message : 'Unknown' })
     return []
   }
 }
@@ -139,7 +140,7 @@ export async function GET(request: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('Crypto API error:', error)
+    logger.error('Crypto API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Failed to fetch crypto prices',
       details: error instanceof Error ? error.message : 'Unknown error',

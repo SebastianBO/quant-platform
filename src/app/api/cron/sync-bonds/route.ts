@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Sync corporate bonds data from OpenFIGI to Supabase
 // Runs weekly (bond data doesn't change frequently)
@@ -130,7 +131,7 @@ async function fetchBondsForTicker(ticker: string): Promise<{ bonds: ParsedBond[
     })
 
     if (!response.ok) {
-      console.error(`OpenFIGI API error for ${ticker}:`, response.status)
+      logger.error('OpenFIGI API error', { ticker, status: response.status })
       return { bonds: [], summary: null }
     }
 
@@ -189,7 +190,7 @@ async function fetchBondsForTicker(ticker: string): Promise<{ bonds: ParsedBond[
       }
     }
   } catch (error) {
-    console.error(`Error fetching bonds for ${ticker}:`, error)
+    logger.error('Error fetching bonds', { ticker, error: error instanceof Error ? error.message : 'Unknown' })
     return { bonds: [], summary: null }
   }
 }
@@ -205,7 +206,7 @@ export async function GET(request: NextRequest) {
   const cronSecret = process.env.CRON_SECRET
 
   if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-    console.log('Bonds sync called without CRON_SECRET')
+    logger.warn('Bonds sync called without CRON_SECRET')
   }
 
   const searchParams = request.nextUrl.searchParams
@@ -236,7 +237,7 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    console.log(`Syncing bonds for ${tickersToSync.length} tickers...`)
+    logger.info('Syncing bonds', { tickerCount: tickersToSync.length })
 
     for (let i = 0; i < tickersToSync.length; i++) {
       const t = tickersToSync[i]
@@ -260,7 +261,7 @@ export async function GET(request: NextRequest) {
         .eq('ticker', t)
 
       if (deleteError) {
-        console.error(`Delete error for ${t}:`, deleteError)
+        logger.error('Delete error', { ticker: t, error: deleteError.message })
       }
 
       // Insert new bonds
@@ -271,7 +272,7 @@ export async function GET(request: NextRequest) {
         .insert(bondsWithTicker)
 
       if (insertError) {
-        console.error(`Insert error for ${t}:`, insertError)
+        logger.error('Insert error', { ticker: t, error: insertError.message })
         results.push({ ticker: t, bondsInserted: 0, error: insertError.message })
         continue
       }
@@ -285,7 +286,7 @@ export async function GET(request: NextRequest) {
           })
 
         if (summaryError) {
-          console.error(`Summary error for ${t}:`, summaryError)
+          logger.error('Summary error', { ticker: t, error: summaryError.message })
         }
       }
 
@@ -306,7 +307,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Bonds sync error:', error)
+    logger.error('Bonds sync error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Sync failed',
       details: error instanceof Error ? error.message : 'Unknown error'

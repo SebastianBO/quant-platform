@@ -1,5 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth'
+import type {
+  IncomeStatement,
+  BalanceSheet,
+  CashFlow,
+  InsiderTrade,
+  AnalystEstimate,
+  BusinessSegment
+} from '@/types/financial'
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || ""
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || ""
@@ -45,20 +53,20 @@ interface AnalysisRequest {
     totalDebt?: number
     cash?: number
     // Historical data
-    incomeStatements?: any[]
-    balanceSheets?: any[]
-    cashFlows?: any[]
+    incomeStatements?: IncomeStatement[]
+    balanceSheets?: BalanceSheet[]
+    cashFlows?: CashFlow[]
     // Trading data
-    insiderTrades?: any[]
-    analystEstimates?: any[]
+    insiderTrades?: InsiderTrade[]
+    analystEstimates?: AnalystEstimate[]
     // Segments
-    segments?: any[]
+    segments?: BusinessSegment[]
     // Company info
-    companyFacts?: any
+    companyFacts?: Record<string, unknown>
   }
 }
 
-const ANALYSIS_PROMPTS: Record<string, (ticker: string, data: any) => string> = {
+const ANALYSIS_PROMPTS: Record<string, (ticker: string, data: AnalysisRequest['data']) => string> = {
   comprehensive: (ticker, data) => `You are a senior equity analyst at Goldman Sachs. Provide a comprehensive institutional-grade investment thesis for ${ticker}.
 
 FINANCIAL DATA:
@@ -79,22 +87,22 @@ FINANCIAL DATA:
 - Cash: $${((data.cash || 0) / 1e9).toFixed(2)}B
 
 HISTORICAL INCOME (last 3 years):
-${(data.incomeStatements || []).slice(0, 3).map((is: any) =>
+${(data.incomeStatements || []).slice(0, 3).map((is) =>
   `${is.fiscal_period}: Revenue $${((is.revenue || 0) / 1e9).toFixed(1)}B, Net Income $${((is.net_income || 0) / 1e9).toFixed(1)}B, Operating Income $${((is.operating_income || 0) / 1e9).toFixed(1)}B`
 ).join('\n')}
 
 INSIDER ACTIVITY (recent):
-${(data.insiderTrades || []).slice(0, 5).map((t: any) =>
-  `${t.transaction_date}: ${t.name} (${t.title}) ${t.transaction_shares > 0 ? 'BOUGHT' : 'SOLD'} ${Math.abs(t.transaction_shares).toLocaleString()} shares at $${t.price_per_share?.toFixed(2)}`
+${(data.insiderTrades || []).slice(0, 5).map((t) =>
+  `${t.transaction_date}: ${t.name} (${t.title}) ${(t.shares_traded || 0) > 0 ? 'BOUGHT' : 'SOLD'} ${Math.abs(t.shares_traded || 0).toLocaleString()} shares at $${t.price_per_share?.toFixed(2)}`
 ).join('\n') || 'No recent insider activity'}
 
 ANALYST ESTIMATES:
-${(data.analystEstimates || []).slice(0, 2).map((e: any) =>
-  `${e.period}: EPS Est $${e.eps_estimate_avg?.toFixed(2)} (Low: $${e.eps_estimate_low?.toFixed(2)}, High: $${e.eps_estimate_high?.toFixed(2)})`
+${(data.analystEstimates || []).slice(0, 2).map((e) =>
+  `${e.period}: EPS Est $${e.eps_avg?.toFixed(2)} (Low: $${e.eps_low?.toFixed(2)}, High: $${e.eps_high?.toFixed(2)})`
 ).join('\n') || 'No analyst estimates available'}
 
 REVENUE SEGMENTS:
-${(data.segments || []).map((s: any) => `${s.name}: $${((s.revenue || 0) / 1e9).toFixed(2)}B`).join('\n') || 'No segment data'}
+${(data.segments || []).map((s) => `${s.name}: $${((s.revenue || 0) / 1e9).toFixed(2)}B`).join('\n') || 'No segment data'}
 
 Provide a structured analysis with:
 
@@ -132,23 +140,23 @@ FINANCIAL DATA:
 - Cash: $${((data.cash || 0) / 1e9).toFixed(2)}B
 
 HISTORICAL TRENDS (3 years):
-${(data.incomeStatements || []).slice(0, 3).map((is: any) =>
+${(data.incomeStatements || []).slice(0, 3).map((is) =>
   `${is.fiscal_period}: Revenue $${((is.revenue || 0) / 1e9).toFixed(1)}B, Net Income $${((is.net_income || 0) / 1e9).toFixed(1)}B, Gross Profit $${((is.gross_profit || 0) / 1e9).toFixed(1)}B`
 ).join('\n')}
 
 BALANCE SHEET TRENDS:
-${(data.balanceSheets || []).slice(0, 3).map((bs: any) =>
+${(data.balanceSheets || []).slice(0, 3).map((bs) =>
   `${bs.fiscal_period}: Total Assets $${((bs.total_assets || 0) / 1e9).toFixed(1)}B, Total Liabilities $${((bs.total_liabilities || 0) / 1e9).toFixed(1)}B, Receivables $${((bs.accounts_receivable || 0) / 1e9).toFixed(1)}B, Inventory $${((bs.inventory || 0) / 1e9).toFixed(1)}B`
 ).join('\n')}
 
 CASH FLOW TRENDS:
-${(data.cashFlows || []).slice(0, 3).map((cf: any) =>
+${(data.cashFlows || []).slice(0, 3).map((cf) =>
   `${cf.fiscal_period}: Operating CF $${((cf.operating_cash_flow || 0) / 1e9).toFixed(1)}B, CapEx $${((cf.capital_expenditure || 0) / 1e9).toFixed(1)}B, FCF $${((cf.free_cash_flow || 0) / 1e9).toFixed(1)}B`
 ).join('\n')}
 
 INSIDER TRADING:
-${(data.insiderTrades || []).slice(0, 10).map((t: any) =>
-  `${t.transaction_date}: ${t.name} ${t.transaction_shares > 0 ? 'BUY' : 'SELL'} ${Math.abs(t.transaction_shares).toLocaleString()} shares`
+${(data.insiderTrades || []).slice(0, 10).map((t) =>
+  `${t.transaction_date}: ${t.name} ${(t.shares_traded || 0) > 0 ? 'BUY' : 'SELL'} ${Math.abs(t.shares_traded || 0).toLocaleString()} shares`
 ).join('\n') || 'No data'}
 
 Analyze for these specific RED FLAGS:
@@ -191,7 +199,7 @@ AVAILABLE DATA:
 - Debt/Equity: ${data.debtToEquity?.toFixed(2) || 'N/A'}
 
 SEGMENT REVENUE:
-${(data.segments || []).map((s: any) => `${s.name}: $${((s.revenue || 0) / 1e9).toFixed(2)}B`).join('\n') || 'Limited segment data'}
+${(data.segments || []).map((s) => `${s.name}: $${((s.revenue || 0) / 1e9).toFixed(2)}B`).join('\n') || 'Limited segment data'}
 
 Generate:
 
@@ -224,7 +232,7 @@ COMPANY DATA:
 - ROIC: ${((data.roic || 0) * 100).toFixed(1)}%
 
 REVENUE SEGMENTS:
-${(data.segments || []).map((s: any) => `${s.name}: $${((s.revenue || 0) / 1e9).toFixed(2)}B`).join('\n') || 'Limited data'}
+${(data.segments || []).map((s) => `${s.name}: $${((s.revenue || 0) / 1e9).toFixed(2)}B`).join('\n') || 'Limited data'}
 
 Based on your knowledge of this company and its industry, analyze:
 
@@ -256,13 +264,13 @@ FINANCIAL CONTEXT:
 - Debt/Equity: ${data.debtToEquity?.toFixed(2) || 'N/A'}
 
 INSIDER ACTIVITY:
-${(data.insiderTrades || []).slice(0, 10).map((t: any) =>
-  `${t.transaction_date}: ${t.name} (${t.title}) ${t.transaction_shares > 0 ? 'BOUGHT' : 'SOLD'} ${Math.abs(t.transaction_shares).toLocaleString()} shares at $${t.price_per_share?.toFixed(2) || 'N/A'}`
+${(data.insiderTrades || []).slice(0, 10).map((t) =>
+  `${t.transaction_date}: ${t.name} (${t.title}) ${(t.shares_traded || 0) > 0 ? 'BOUGHT' : 'SOLD'} ${Math.abs(t.shares_traded || 0).toLocaleString()} shares at $${t.price_per_share?.toFixed(2) || 'N/A'}`
 ).join('\n') || 'No recent insider activity'}
 
 CASH FLOW ALLOCATION:
-${(data.cashFlows || []).slice(0, 3).map((cf: any) =>
-  `${cf.fiscal_period}: Operating CF $${((cf.operating_cash_flow || 0) / 1e9).toFixed(1)}B, CapEx $${((cf.capital_expenditure || 0) / 1e9).toFixed(1)}B, Dividends $${((cf.dividends_paid || 0) / 1e9).toFixed(1)}B, Buybacks $${((cf.share_repurchase || 0) / 1e9).toFixed(1)}B`
+${(data.cashFlows || []).slice(0, 3).map((cf) =>
+  `${cf.fiscal_period}: Operating CF $${((cf.operating_cash_flow || 0) / 1e9).toFixed(1)}B, CapEx $${((cf.capital_expenditure || 0) / 1e9).toFixed(1)}B, Dividends $${((cf.dividends_paid || 0) / 1e9).toFixed(1)}B, Buybacks $${((cf.share_repurchases || 0) / 1e9).toFixed(1)}B`
 ).join('\n')}
 
 Based on your knowledge of this company's management, analyze:

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Financial Datasets API Compatible Endpoint
 // Matches: https://api.financialdatasets.ai/analyst-estimates
@@ -37,13 +38,13 @@ async function fetchFromFinancialDatasets(ticker: string, limit: number) {
     // Auto-cache: Store fetched data in Supabase for future requests
     if (estimates.length > 0) {
       cacheAnalystEstimates(estimates, ticker).catch(err =>
-        console.error('Failed to cache analyst estimates:', err)
+        logger.error('Failed to cache analyst estimates', { error: err instanceof Error ? err.message : 'Unknown' })
       )
     }
 
     return estimates
   } catch (error) {
-    console.error('Financial Datasets API error:', error)
+    logger.error('Financial Datasets API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }
@@ -94,7 +95,7 @@ export async function GET(request: NextRequest) {
       .limit(limit)
 
     if (error) {
-      console.error('Analyst estimates query error:', error)
+      logger.error('Analyst estimates query error', { error: error.message })
       return NextResponse.json({ error: 'Database error' }, { status: 500 })
     }
 
@@ -135,7 +136,7 @@ export async function GET(request: NextRequest) {
       }
     })
   } catch (error) {
-    console.error('Analyst estimates API error:', error)
+    logger.error('Analyst estimates API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

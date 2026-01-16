@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 /**
  * Biotech Sync Cron Job
@@ -141,7 +142,7 @@ async function fetchTrialsForCompany(
       if (trials.length > 0) break
 
     } catch (error) {
-      console.error(`Error fetching trials for ${searchTerm}:`, error)
+      logger.error('Error fetching trials', { searchTerm, error: error instanceof Error ? error.message : 'Unknown' })
     }
 
     // Rate limit
@@ -156,7 +157,7 @@ export async function GET(request: NextRequest) {
   const cronSecret = process.env.CRON_SECRET
 
   if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-    console.log('Biotech sync called without CRON_SECRET')
+    logger.warn('Biotech sync called without CRON_SECRET')
   }
 
   const searchParams = request.nextUrl.searchParams
@@ -189,7 +190,7 @@ export async function GET(request: NextRequest) {
     const batchStart = syncState.lastTrialSyncBatch % Math.max(1, Math.ceil(total / batchSize))
     const offset = batchStart * batchSize
 
-    console.log(`Syncing biotech batch ${batchStart + 1}/${Math.ceil(total / batchSize)}, offset ${offset}`)
+    logger.info('Syncing biotech batch', { batch: batchStart + 1, totalBatches: Math.ceil(total / batchSize), offset })
 
     // Get batch of companies
     const { data: companies } = await supabase
@@ -307,7 +308,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Biotech sync error:', error)
+    logger.error('Biotech sync error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Sync failed',
       details: error instanceof Error ? error.message : 'Unknown error',

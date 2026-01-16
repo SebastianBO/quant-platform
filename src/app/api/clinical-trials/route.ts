@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { autoMapBiotechCompany, similarityScore } from '@/lib/biotech-mapper'
+import { logger } from '@/lib/logger'
 
 // ClinicalTrials.gov API v2 Integration
 // Free API, no key required, ~50 requests/minute rate limit
@@ -255,7 +256,7 @@ export async function GET(request: NextRequest) {
             }
           }
         } catch (error) {
-          console.error('Auto-mapping failed:', error)
+          logger.error('Auto-mapping failed', { error: error instanceof Error ? error.message : 'Unknown' })
         }
       }
     }
@@ -367,7 +368,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Clinical trials API error:', error)
+    logger.error('Clinical trials API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Failed to fetch clinical trials',
       details: error instanceof Error ? error.message : 'Unknown error'

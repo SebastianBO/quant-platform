@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || ""
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || ""
@@ -61,7 +62,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
   } catch (error) {
-    console.error('Portfolio API error:', error)
+    logger.error('Portfolio API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Failed to process portfolio request'
     }, { status: 500 })
@@ -138,7 +139,7 @@ Rules:
 
   if (!response.ok) {
     const error = await response.text()
-    console.error('OpenAI Vision API error:', error)
+    logger.error('OpenAI Vision API error', { error })
     throw new Error('Failed to extract positions from image')
   }
 
@@ -176,7 +177,7 @@ Rules:
 
     return validPositions
   } catch (e) {
-    console.error('Failed to parse positions JSON:', content)
+    logger.error('Failed to parse positions JSON', { content })
     return []
   }
 }

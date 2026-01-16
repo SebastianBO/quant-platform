@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
@@ -34,7 +35,7 @@ export async function POST(request: NextRequest) {
 
     const supabase = getSupabase()
     if (!supabase) {
-      console.log('Newsletter unsubscribe (no DB):', email)
+      logger.info('Newsletter unsubscribe (no DB)', { email })
       return NextResponse.json({
         success: true,
         message: "You've been unsubscribed."
@@ -58,7 +59,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Newsletter unsubscribe error:', error)
+    logger.error('Newsletter unsubscribe error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json(
       { success: false, message: 'Something went wrong. Please try again.' },
       { status: 500 }

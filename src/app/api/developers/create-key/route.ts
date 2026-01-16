@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
+import { logger } from '@/lib/logger'
 
 function getSupabase() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -81,7 +82,7 @@ export async function POST(request: NextRequest) {
       })
 
     if (insertError) {
-      console.error('Error creating API key:', insertError)
+      logger.error('Error creating API key', { error: insertError.message })
       throw insertError
     }
 
@@ -94,7 +95,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('API key creation error:', error)
+    logger.error('API key creation error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json(
       { error: 'Failed to create API key. Please try again.' },
       { status: 500 }

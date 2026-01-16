@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Configuration, PlaidApi, PlaidEnvironments } from 'plaid'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 // Lazy initialization of Plaid client
 function getPlaidClient() {
@@ -124,7 +125,7 @@ export async function POST(request: NextRequest) {
         .single()
 
       if (portfolioError) {
-        console.error('Error creating portfolio:', portfolioError)
+        logger.error('Error creating portfolio', { error: portfolioError.message })
         return NextResponse.json(
           { error: 'Failed to create portfolio' },
           { status: 500 }
@@ -181,7 +182,7 @@ export async function POST(request: NextRequest) {
         })
 
       if (upsertError) {
-        console.error('Error upserting investments:', upsertError)
+        logger.error('Error upserting investments', { error: upsertError.message })
       }
     }
 
@@ -199,7 +200,7 @@ export async function POST(request: NextRequest) {
       institutionName: itemData.institution_name,
     })
   } catch (error: any) {
-    console.error('Error fetching investments:', error?.response?.data || error.message)
+    logger.error('Error fetching investments', { error: error?.response?.data || error.message })
     return NextResponse.json(
       {
         error: 'Failed to fetch investments',

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { withCronLogging, RateLimiter } from '@/lib/cron-utils'
+import { logger } from '@/lib/logger'
 
 // Sync Danish Companies from CVR Register (FREE!)
 // Financials endpoint: NO AUTH REQUIRED - completely open!
@@ -62,7 +63,7 @@ interface DanishFinancials {
 // Fetch company from CVR (requires auth)
 async function fetchCompany(cvrNumber: string): Promise<DanishCompany | null> {
   if (!DANISH_CVR_USER || !DANISH_CVR_PASS) {
-    console.log('Danish CVR credentials not configured - using financials-only mode')
+    logger.info('Danish CVR credentials not configured - using financials-only mode')
     return null
   }
 
@@ -84,7 +85,7 @@ async function fetchCompany(cvrNumber: string): Promise<DanishCompany | null> {
     })
 
     if (!response.ok) {
-      console.log(`CVR API returned ${response.status} for ${cvrNumber}`)
+      logger.warn('CVR API returned error', { status: response.status, cvrNumber })
       return null
     }
 
@@ -115,7 +116,7 @@ async function fetchCompany(cvrNumber: string): Promise<DanishCompany | null> {
       employees: metadata.nyesteKvartalsbeskaeftigelse?.intervalKodeAntalAnsatte,
     }
   } catch (error) {
-    console.error(`Error fetching Danish company ${cvrNumber}:`, error)
+    logger.error('Error fetching Danish company', { cvrNumber, error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }
@@ -134,7 +135,7 @@ async function fetchFinancials(cvrNumber: string): Promise<DanishFinancials | nu
     )
 
     if (!response.ok) {
-      console.log(`CVR financials returned ${response.status} for ${cvrNumber}`)
+      logger.warn('CVR financials returned error', { status: response.status, cvrNumber })
       return null
     }
 
@@ -168,7 +169,7 @@ async function fetchFinancials(cvrNumber: string): Promise<DanishFinancials | nu
       totalLiabilities: findValue(regnskab.balance, 'gæld'),
     }
   } catch (error) {
-    console.error(`Error fetching Danish financials for ${cvrNumber}:`, error)
+    logger.error('Error fetching Danish financials', { cvrNumber, error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }
@@ -210,7 +211,7 @@ async function saveCompany(company: DanishCompany): Promise<boolean> {
     })
 
   if (error) {
-    console.error(`Failed to save Danish company ${company.cvrNumber}:`, error)
+    logger.error('Failed to save Danish company', { cvrNumber: company.cvrNumber, error: error.message })
     return false
   }
 
@@ -267,8 +268,8 @@ async function saveFinancials(financials: DanishFinancials): Promise<{ income: b
       ignoreDuplicates: false
     })
 
-  if (incomeError) console.error(`Income save error for ${financials.cvrNumber}:`, incomeError)
-  if (balanceError) console.error(`Balance save error for ${financials.cvrNumber}:`, balanceError)
+  if (incomeError) logger.error('Income save error', { cvrNumber: financials.cvrNumber, error: incomeError.message })
+  if (balanceError) logger.error('Balance save error', { cvrNumber: financials.cvrNumber, error: balanceError.message })
 
   return {
     income: !incomeError,

@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 async function getSupabaseClient() {
   const cookieStore = await cookies()
@@ -57,7 +58,7 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: false })
 
     if (error) {
-      console.error('Error fetching portfolios:', error)
+      logger.error('Error fetching portfolios', { error: error.message })
       return NextResponse.json({ error: 'Failed to fetch portfolios' }, { status: 500 })
     }
 
@@ -95,7 +96,7 @@ export async function GET(request: NextRequest) {
       portfolios: mappedPortfolios
     })
   } catch (error) {
-    console.error('User portfolios API error:', error)
+    logger.error('User portfolios API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
@@ -131,13 +132,13 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (error) {
-      console.error('Error creating portfolio:', error)
+      logger.error('Error creating portfolio', { error: error.message })
       return NextResponse.json({ error: 'Failed to create portfolio' }, { status: 500 })
     }
 
     return NextResponse.json({ portfolio })
   } catch (error) {
-    console.error('Create portfolio API error:', error)
+    logger.error('Create portfolio API error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

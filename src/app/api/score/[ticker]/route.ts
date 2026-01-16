@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 import {
   calculateLicianScore,
   getSectorMedians,
@@ -55,7 +56,7 @@ async function fetchIncomeStatements(
     .limit(limit)
 
   if (error) {
-    console.error('Income statements fetch error:', error)
+    logger.error('Income statements fetch error', { ticker, error: error.message })
     return []
   }
 
@@ -93,7 +94,7 @@ async function fetchBalanceSheets(
     .limit(limit)
 
   if (error) {
-    console.error('Balance sheets fetch error:', error)
+    logger.error('Balance sheets fetch error', { ticker, error: error.message })
     return []
   }
 
@@ -131,7 +132,7 @@ async function fetchCashFlowStatements(
     .limit(limit)
 
   if (error) {
-    console.error('Cash flow statements fetch error:', error)
+    logger.error('Cash flow statements fetch error', { ticker, error: error.message })
     return []
   }
 
@@ -161,7 +162,7 @@ async function fetchFinancialMetrics(
     .single()
 
   if (error && error.code !== 'PGRST116') {
-    console.error('Financial metrics fetch error:', error)
+    logger.error('Financial metrics fetch error', { ticker, error: error.message })
     return null
   }
 
@@ -209,7 +210,7 @@ async function fetchPrices(
     .limit(limit)
 
   if (error) {
-    console.error('Prices fetch error:', error)
+    logger.error('Prices fetch error', { ticker, error: error.message })
     return []
   }
 
@@ -242,7 +243,7 @@ async function fetchAnalystRatings(
     .limit(20)
 
   if (error) {
-    console.error('Analyst ratings fetch error:', error)
+    logger.error('Analyst ratings fetch error', { ticker, error: error.message })
     return []
   }
 
@@ -404,7 +405,7 @@ export async function GET(
       }
     })
   } catch (error) {
-    console.error('Lician Score API error:', error)
+    logger.error('Lician Score API error', { ticker, error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json({
       error: 'Internal server error',
       message: error instanceof Error ? error.message : 'Unknown error'

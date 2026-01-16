@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 const EODHD_API_KEY = process.env.EODHD_API_KEY || ""
 
@@ -32,7 +33,7 @@ export async function GET(request: NextRequest) {
           }
         }
       } catch (e) {
-        console.error(`Error fetching ${t.symbol}:`, e)
+        logger.error('Error fetching treasury symbol', { symbol: t.symbol, error: e instanceof Error ? e.message : 'Unknown' })
       }
       return null
     })
@@ -74,7 +75,7 @@ export async function GET(request: NextRequest) {
       spread
     })
   } catch (error) {
-    console.error('Treasury API error:', error)
+    logger.error('Treasury API error', { error: error instanceof Error ? error.message : 'Unknown' })
 
     // Return mock data on error
     return NextResponse.json({

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 // SEC EDGAR requires a proper User-Agent header
 const SEC_USER_AGENT = 'Lician contact@lician.com'
@@ -94,7 +95,7 @@ async function getInstitutionFilings(cik: string): Promise<InstitutionInfo | nul
     )
 
     if (!response.ok) {
-      console.error(`SEC API error: ${response.status}`)
+      logger.error('SEC API error', { status: response.status })
       return null
     }
 
@@ -123,7 +124,7 @@ async function getInstitutionFilings(cik: string): Promise<InstitutionInfo | nul
       filings: filings.slice(0, 8) // Last 8 quarters (2 years)
     }
   } catch (error) {
-    console.error('Error fetching SEC data:', error)
+    logger.error('Error fetching SEC data', { error: error instanceof Error ? error.message : 'Unknown' })
     return null
   }
 }
@@ -185,7 +186,7 @@ async function getFilingHoldings(cik: string, accessionNumber: string): Promise<
       }
     }
   } catch (error) {
-    console.error('Error fetching filing directory:', error)
+    logger.error('Error fetching filing directory', { error: error instanceof Error ? error.message : 'Unknown' })
   }
 
   // Fallback: Try common file names
@@ -305,7 +306,7 @@ async function searchInstitutions(query: string): Promise<{ cik: string; name: s
 
     return []
   } catch (error) {
-    console.error('Search error:', error)
+    logger.error('Search error', { error: error instanceof Error ? error.message : 'Unknown' })
     return []
   }
 }

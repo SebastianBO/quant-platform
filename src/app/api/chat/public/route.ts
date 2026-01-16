@@ -2,6 +2,7 @@ import { streamText, createGateway } from 'ai'
 import { NextRequest, NextResponse } from 'next/server'
 import { financialTools } from '@/lib/ai/tools'
 import { createClient } from '@supabase/supabase-js'
+import { logger } from '@/lib/logger'
 
 export const maxDuration = 60
 
@@ -77,7 +78,7 @@ async function fetchRelevantContext(query: string): Promise<string> {
 
     return context
   } catch (error) {
-    console.error('RAG error:', error)
+    logger.error('RAG error', { error: error instanceof Error ? error.message : 'Unknown' })
     return ''
   }
 }
@@ -152,7 +153,7 @@ export async function POST(req: NextRequest) {
     return result.toUIMessageStreamResponse()
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error)
-    console.error('Chat error:', msg)
+    logger.error('Chat error', { error: msg })
     return NextResponse.json(
       { error: msg || 'Something went wrong' },
       { status: 500 }

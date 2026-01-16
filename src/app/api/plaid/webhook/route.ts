@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { Configuration, PlaidApi, PlaidEnvironments } from 'plaid'
 import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
+import { createLogger } from '@/lib/logger'
+
+const log = createLogger({ service: 'plaid-webhook' })
 
 // Plaid webhook types we care about
 const INVESTMENT_WEBHOOK_TYPES = [
@@ -55,7 +58,7 @@ function verifyPlaidWebhook(body: string, signedJwt: string | null): boolean {
   // In production, you should verify the JWT signature
   // For now, we'll do basic validation
   if (!signedJwt) {
-    console.warn('No Plaid-Verification header present')
+    log.warn('No Plaid-Verification header present')
     return process.env.PLAID_ENV === 'sandbox' // Allow in sandbox
   }
 
@@ -66,7 +69,7 @@ function verifyPlaidWebhook(body: string, signedJwt: string | null): boolean {
 
 // Sync holdings for a specific Plaid item
 async function syncHoldingsForItem(itemId: string, supabaseAdmin: any, plaidClient: PlaidApi) {
-  console.log(`[Plaid Webhook] Syncing holdings for item: ${itemId}`)
+  log.info('Syncing holdings for item', { itemId })
 
   // Get the access token for this item
   const { data: itemData, error: itemError } = await supabaseAdmin
@@ -76,7 +79,7 @@ async function syncHoldingsForItem(itemId: string, supabaseAdmin: any, plaidClie
     .single()
 
   if (itemError || !itemData) {
-    console.error(`[Plaid Webhook] Item not found: ${itemId}`)
+    log.error('Item not found', { itemId })
     return { success: false, error: 'Item not found' }
   }
 
@@ -97,7 +100,7 @@ async function syncHoldingsForItem(itemId: string, supabaseAdmin: any, plaidClie
       .single()
 
     if (!portfolio) {
-      console.error(`[Plaid Webhook] Portfolio not found for item: ${itemId}`)
+      log.error('Portfolio not found for item', { itemId })
       return { success: false, error: 'Portfolio not found' }
     }
 
@@ -149,7 +152,7 @@ async function syncHoldingsForItem(itemId: string, supabaseAdmin: any, plaidClie
         })
 
       if (upsertError) {
-        console.error('[Plaid Webhook] Error upserting investments:', upsertError)
+        log.error('Error upserting investments', { error: upsertError })
         return { success: false, error: upsertError.message }
       }
     }
@@ -160,10 +163,10 @@ async function syncHoldingsForItem(itemId: string, supabaseAdmin: any, plaidClie
       .update({ last_updated: new Date().toISOString() })
       .eq('item_id', itemId)
 
-    console.log(`[Plaid Webhook] Successfully synced ${holdings.length} holdings for item: ${itemId}`)
+    log.info('Successfully synced holdings for item', { itemId, holdingsCount: holdings.length })
     return { success: true, holdingsCount: holdings.length }
   } catch (error: any) {
-    console.error('[Plaid Webhook] Error syncing holdings:', error?.response?.data || error.message)
+    log.error('Error syncing holdings', { error: error?.response?.data || error.message })
     return { success: false, error: error.message }
   }
 }
@@ -175,14 +178,14 @@ export async function POST(request: NextRequest) {
 
     // Verify webhook authenticity
     if (!verifyPlaidWebhook(body, signedJwt)) {
-      console.error('[Plaid Webhook] Verification failed')
+      log.error('Verification failed')
       return NextResponse.json({ error: 'Verification failed' }, { status: 401 })
     }
 
     const webhookData = JSON.parse(body)
     const { webhook_type, webhook_code, item_id, error: webhookError } = webhookData
 
-    console.log(`[Plaid Webhook] Received: ${webhook_type} - ${webhook_code} for item: ${item_id}`)
+    log.info('Received webhook event', { webhookType: webhook_type, webhookCode: webhook_code, itemId: item_id })
 
     // Log webhook to database for debugging
     const supabaseAdmin = getSupabaseAdmin()
@@ -225,7 +228,7 @@ export async function POST(request: NextRequest) {
     if (webhook_type === 'ITEM') {
       if (webhook_code === 'ERROR') {
         // Item error - log it
-        console.error(`[Plaid Webhook] Item error for ${item_id}:`, webhookError)
+        log.error('Item error', { itemId: item_id, error: webhookError })
 
         // Update item status in database
         if (supabaseAdmin) {
@@ -242,14 +245,14 @@ export async function POST(request: NextRequest) {
 
       if (webhook_code === 'PENDING_EXPIRATION') {
         // Access token expiring - notify user
-        console.warn(`[Plaid Webhook] Token expiring for item: ${item_id}`)
+        log.warn('Token expiring for item', { itemId: item_id })
         // TODO: Send notification to user to re-authenticate
       }
     }
 
     return NextResponse.json({ received: true })
   } catch (error: any) {
-    console.error('[Plaid Webhook] Error processing webhook:', error.message)
+    log.error('Error processing webhook', { error: error.message })
     return NextResponse.json(
       { error: 'Failed to process webhook', details: error.message },
       { status: 500 }

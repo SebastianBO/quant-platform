@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 interface CronHealthAlert {
   scheduler_alive: boolean
@@ -14,7 +15,7 @@ export async function POST(req: NextRequest) {
   try {
     const alert: CronHealthAlert = await req.json()
 
-    console.error('[CRON ALERT]', JSON.stringify(alert, null, 2))
+    logger.error('Cron alert received', { alert })
 
     // Build alert message
     const messages: string[] = []
@@ -92,7 +93,7 @@ export async function POST(req: NextRequest) {
       timestamp: new Date().toISOString(),
     })
   } catch (error) {
-    console.error('Cron alert processing error:', error)
+    logger.error('Cron alert processing error', { error: error instanceof Error ? error.message : 'Unknown' })
     return NextResponse.json(
       { error: 'Failed to process alert' },
       { status: 500 }
