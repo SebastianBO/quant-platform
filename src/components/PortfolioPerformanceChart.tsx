@@ -139,13 +139,13 @@ export default function PortfolioPerformanceChart({
 
   if (loading) {
     return (
-      <Card className="bg-card border-border">
+      <Card className="bg-[#1a1a1a] border-white/[0.08]">
         <CardHeader>
           <CardTitle>Performance vs Market</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-64 flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-green-500"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-[#4ebe96]"></div>
           </div>
         </CardContent>
       </Card>
@@ -154,19 +154,19 @@ export default function PortfolioPerformanceChart({
 
   if (error) {
     return (
-      <Card className="bg-card border-border">
+      <Card className="bg-[#1a1a1a] border-white/[0.08]">
         <CardHeader>
           <CardTitle>Performance vs Market</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-muted-foreground text-center py-8">{error}</p>
+          <p className="text-[#868f97] text-center py-8">{error}</p>
         </CardContent>
       </Card>
     )
   }
 
   return (
-    <Card className="bg-card border-border">
+    <Card className="bg-[#1a1a1a] border-white/[0.08]">
       <CardHeader className="space-y-4">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
@@ -174,12 +174,12 @@ export default function PortfolioPerformanceChart({
           </CardTitle>
           <div className="flex items-center gap-2">
             {outperformance >= 0 ? (
-              <span className="text-sm text-green-500 flex items-center gap-1">
+              <span className="text-sm text-[#4ebe96] flex items-center gap-1">
                 <TrendingUp className="w-4 h-4" />
                 +{outperformance.toFixed(1)}% vs S&P 500
               </span>
             ) : (
-              <span className="text-sm text-red-500 flex items-center gap-1">
+              <span className="text-sm text-[#e15241] flex items-center gap-1">
                 <TrendingDown className="w-4 h-4" />
                 {outperformance.toFixed(1)}% vs S&P 500
               </span>
@@ -193,10 +193,10 @@ export default function PortfolioPerformanceChart({
             <button
               key={period.label}
               onClick={() => setSelectedPeriod(period.days)}
-              className={`px-3 py-1.5 text-xs font-medium rounded transition-colors ${
+              className={`px-3 py-1.5 text-xs font-medium rounded transition-colors duration-100 ${
                 selectedPeriod === period.days
-                  ? 'bg-green-500 text-white'
-                  : 'bg-secondary text-muted-foreground hover:text-foreground'
+                  ? 'bg-[#4ebe96] text-white'
+                  : 'bg-white/[0.05] text-[#868f97] hover:text-white hover:bg-white/[0.08]'
               }`}
             >
               {period.label}
@@ -210,23 +210,23 @@ export default function PortfolioPerformanceChart({
             <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="portfolioGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="#22c55e" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="#4ebe96" stopOpacity={0.3}/>
+                  <stop offset="95%" stopColor="#4ebe96" stopOpacity={0}/>
                 </linearGradient>
                 <linearGradient id="spyGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="#479ffa" stopOpacity={0.3}/>
+                  <stop offset="95%" stopColor="#479ffa" stopOpacity={0}/>
                 </linearGradient>
               </defs>
               <XAxis
                 dataKey="dateLabel"
-                stroke="hsl(var(--muted-foreground))"
+                stroke="#868f97"
                 fontSize={10}
                 tickLine={false}
                 interval="preserveStartEnd"
               />
               <YAxis
-                stroke="hsl(var(--muted-foreground))"
+                stroke="#868f97"
                 fontSize={10}
                 tickLine={false}
                 tickFormatter={(v) => `${v.toFixed(0)}%`}
@@ -234,8 +234,8 @@ export default function PortfolioPerformanceChart({
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: 'hsl(var(--card))',
-                  border: '1px solid hsl(var(--border))',
+                  backgroundColor: '#1a1a1a',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
                   borderRadius: '8px'
                 }}
                 formatter={(value: number, name: string) => {
@@ -249,7 +249,7 @@ export default function PortfolioPerformanceChart({
               <Area
                 type="monotone"
                 dataKey="portfolio"
-                stroke="#22c55e"
+                stroke="#4ebe96"
                 strokeWidth={2}
                 fill="url(#portfolioGradient)"
                 name="portfolio"
@@ -257,7 +257,7 @@ export default function PortfolioPerformanceChart({
               <Area
                 type="monotone"
                 dataKey="spy"
-                stroke="#3b82f6"
+                stroke="#479ffa"
                 strokeWidth={2}
                 fill="url(#spyGradient)"
                 name="spy"
@@ -267,24 +267,24 @@ export default function PortfolioPerformanceChart({
         </div>
 
         {/* Performance Summary */}
-        <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-border">
+        <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-white/[0.08]">
           <div className="text-center">
-            <p className={`text-lg font-bold ${portfolioReturn >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+            <p className={`text-lg font-bold ${portfolioReturn >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
               {portfolioReturn >= 0 ? '+' : ''}{portfolioReturn.toFixed(2)}%
             </p>
-            <p className="text-xs text-muted-foreground">Portfolio</p>
+            <p className="text-xs text-[#868f97]">Portfolio</p>
           </div>
           <div className="text-center">
-            <p className={`text-lg font-bold ${spyReturn >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+            <p className={`text-lg font-bold ${spyReturn >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
               {spyReturn >= 0 ? '+' : ''}{spyReturn.toFixed(2)}%
             </p>
-            <p className="text-xs text-muted-foreground">S&P 500</p>
+            <p className="text-xs text-[#868f97]">S&P 500</p>
           </div>
           <div className="text-center">
-            <p className={`text-lg font-bold ${outperformance >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+            <p className={`text-lg font-bold ${outperformance >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
               {outperformance >= 0 ? '+' : ''}{outperformance.toFixed(2)}%
             </p>
-            <p className="text-xs text-muted-foreground">Alpha</p>
+            <p className="text-xs text-[#868f97]">Alpha</p>
           </div>
         </div>
       </CardContent>

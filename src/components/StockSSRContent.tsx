@@ -132,8 +132,8 @@ function PeerComparisonSection({
       {insights.length > 0 && (
         <div className="mb-4 space-y-2">
           {insights.slice(0, 3).map((insight, i) => (
-            <div key={i} className="flex items-center gap-2 p-3 bg-green-500/10 border border-green-500/20 rounded-lg text-sm">
-              <span className="w-2 h-2 rounded-full bg-green-500 flex-shrink-0" />
+            <div key={i} className="flex items-center gap-2 p-3 bg-[#4ebe96]/10 border border-[#4ebe96]/20 rounded-lg text-sm">
+              <span className="w-2 h-2 rounded-full bg-[#4ebe96] flex-shrink-0" />
               <span>{insight}</span>
             </div>
           ))}
@@ -142,38 +142,38 @@ function PeerComparisonSection({
 
       {/* Ranking summary cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-        <div className="bg-card border border-border rounded-lg p-3 text-center">
-          <p className="text-xs text-muted-foreground mb-1">P/E Rank</p>
+        <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-3 text-center">
+          <p className="text-xs text-[#868f97] mb-1">P/E Rank</p>
           <p className="text-xl font-bold">{peRank > 0 ? `#${peRank}` : 'N/A'}</p>
-          <p className={`text-xs ${peRank > 0 && peRank <= 2 ? 'text-green-500' : 'text-muted-foreground'}`}>
+          <p className={`text-xs ${peRank > 0 && peRank <= 2 ? 'text-[#4ebe96]' : 'text-[#868f97]'}`}>
             of {validPE.length}
           </p>
         </div>
-        <div className="bg-card border border-border rounded-lg p-3 text-center">
-          <p className="text-xs text-muted-foreground mb-1">Margin Rank</p>
+        <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-3 text-center">
+          <p className="text-xs text-[#868f97] mb-1">Margin Rank</p>
           <p className="text-xl font-bold">{marginRank > 0 ? `#${marginRank}` : 'N/A'}</p>
-          <p className={`text-xs ${marginRank > 0 && marginRank <= 2 ? 'text-green-500' : 'text-muted-foreground'}`}>
+          <p className={`text-xs ${marginRank > 0 && marginRank <= 2 ? 'text-[#4ebe96]' : 'text-[#868f97]'}`}>
             of {validMargin.length}
           </p>
         </div>
-        <div className="bg-card border border-border rounded-lg p-3 text-center">
-          <p className="text-xs text-muted-foreground mb-1">Growth Rank</p>
+        <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-3 text-center">
+          <p className="text-xs text-[#868f97] mb-1">Growth Rank</p>
           <p className="text-xl font-bold">{growthRank > 0 ? `#${growthRank}` : 'N/A'}</p>
-          <p className={`text-xs ${growthRank > 0 && growthRank <= 2 ? 'text-green-500' : 'text-muted-foreground'}`}>
+          <p className={`text-xs ${growthRank > 0 && growthRank <= 2 ? 'text-[#4ebe96]' : 'text-[#868f97]'}`}>
             of {validGrowth.length}
           </p>
         </div>
-        <div className="bg-card border border-border rounded-lg p-3 text-center">
-          <p className="text-xs text-muted-foreground mb-1">Size Rank</p>
+        <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-3 text-center">
+          <p className="text-xs text-[#868f97] mb-1">Size Rank</p>
           <p className="text-xl font-bold">{sizeRank > 0 ? `#${sizeRank}` : 'N/A'}</p>
-          <p className="text-xs text-muted-foreground">of {validSize.length}</p>
+          <p className="text-xs text-[#868f97]">of {validSize.length}</p>
         </div>
       </div>
 
       {/* Peer comparison table */}
-      <div className="overflow-x-auto bg-card border border-border rounded-lg -mx-4 sm:mx-0">
+      <div className="overflow-x-auto bg-[#1a1a1a] border border-white/[0.08] rounded-lg -mx-4 sm:mx-0">
         <table className="w-full text-sm min-w-[500px]">
-          <thead className="bg-secondary/50">
+          <thead className="bg-white/[0.025]">
             <tr>
               <th className="p-2 sm:p-3 text-left font-medium">Company</th>
               <th className="p-2 sm:p-3 text-right font-medium hidden sm:table-cell">Market Cap</th>
@@ -183,17 +183,17 @@ function PeerComparisonSection({
               <th className="p-2 sm:p-3 text-center font-medium">Compare</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-border">
+          <tbody className="divide-y divide-white/[0.08]">
             {/* Current stock - highlighted */}
-            <tr className="bg-green-500/10">
+            <tr className="bg-[#4ebe96]/10">
               <td className="p-2 sm:p-3">
-                <span className="font-bold text-green-500">{symbol}</span>
-                <span className="text-muted-foreground ml-1 sm:ml-2 text-xs hidden sm:inline">(This stock)</span>
+                <span className="font-bold text-[#4ebe96]">{symbol}</span>
+                <span className="text-[#868f97] ml-1 sm:ml-2 text-xs hidden sm:inline">(This stock)</span>
               </td>
               <td className="p-2 sm:p-3 text-right font-medium hidden sm:table-cell">{formatCurrency(marketCap)}</td>
               <td className="p-2 sm:p-3 text-right">{pe > 0 ? pe.toFixed(1) : 'N/A'}</td>
               <td className="p-2 sm:p-3 text-right">
-                <span className={revenueGrowth >= 0 ? 'text-green-500' : 'text-red-500'}>
+                <span className={revenueGrowth >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}>
                   {(revenueGrowth * 100).toFixed(0)}%
                 </span>
               </td>
@@ -202,20 +202,20 @@ function PeerComparisonSection({
             </tr>
             {/* Peer stocks */}
             {peers.slice(0, 5).map(peer => (
-              <tr key={peer.ticker} className="hover:bg-secondary/30">
+              <tr key={peer.ticker} className="hover:bg-white/[0.024]">
                 <td className="p-2 sm:p-3">
                   <Link
                     href={`/stock/${peer.ticker.toLowerCase()}`}
-                    className="font-medium hover:text-green-500 transition-colors"
+                    className="font-medium hover:text-[#4ebe96] transition-colors duration-100"
                   >
                     {peer.ticker}
                   </Link>
-                  <span className="text-muted-foreground ml-1 sm:ml-2 text-xs hidden sm:inline">{peer.name.split(' ').slice(0, 2).join(' ')}</span>
+                  <span className="text-[#868f97] ml-1 sm:ml-2 text-xs hidden sm:inline">{peer.name.split(' ').slice(0, 2).join(' ')}</span>
                 </td>
                 <td className="p-2 sm:p-3 text-right hidden sm:table-cell">{formatCurrency(peer.marketCap)}</td>
                 <td className="p-2 sm:p-3 text-right">{peer.pe > 0 ? peer.pe.toFixed(1) : 'N/A'}</td>
                 <td className="p-2 sm:p-3 text-right">
-                  <span className={peer.revenueGrowth >= 0 ? 'text-green-500' : 'text-red-500'}>
+                  <span className={peer.revenueGrowth >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}>
                     {(peer.revenueGrowth * 100).toFixed(0)}%
                   </span>
                 </td>
@@ -223,7 +223,7 @@ function PeerComparisonSection({
                 <td className="p-2 sm:p-3 text-center">
                   <Link
                     href={`/compare/${symbol.toLowerCase()}-vs-${peer.ticker.toLowerCase()}`}
-                    className="text-xs px-2 py-1 bg-secondary hover:bg-green-500/20 hover:text-green-500 rounded transition-colors whitespace-nowrap"
+                    className="text-xs px-2 py-1 bg-white/[0.05] hover:bg-[#4ebe96]/20 hover:text-[#4ebe96] rounded transition-colors duration-100 whitespace-nowrap"
                   >
                     vs {peer.ticker}
                   </Link>
@@ -236,13 +236,13 @@ function PeerComparisonSection({
 
       {/* Comparison navigation links */}
       <nav className="mt-4">
-        <p className="text-sm text-muted-foreground mb-2">See full comparison:</p>
+        <p className="text-sm text-[#868f97] mb-2">See full comparison:</p>
         <div className="flex flex-wrap gap-2">
           {peers.slice(0, 5).map(peer => (
             <Link
               key={peer.ticker}
               href={`/compare/${symbol.toLowerCase()}-vs-${peer.ticker.toLowerCase()}`}
-              className="px-3 py-1.5 bg-secondary hover:bg-green-500/20 hover:text-green-500 rounded-lg text-sm transition-colors"
+              className="px-3 py-1.5 bg-white/[0.05] hover:bg-[#4ebe96]/20 hover:text-[#4ebe96] rounded-lg text-sm transition-colors duration-100"
             >
               {symbol} vs {peer.ticker}
             </Link>
@@ -279,10 +279,10 @@ export default function StockSSRContent({
       <header className="mb-8">
         <div className="flex items-start justify-between flex-wrap gap-4">
           <div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-foreground">
+            <h1 className="text-3xl sm:text-4xl font-bold text-white">
               {ticker} - {companyName}
             </h1>
-            <p className="text-muted-foreground mt-1">
+            <p className="text-[#868f97] mt-1">
               {exchange && <span>{exchange}</span>}
               {sector && <span> * {sector}</span>}
               {industry && <span> * {industry}</span>}
@@ -295,7 +295,7 @@ export default function StockSSRContent({
                 {formatCurrency(price)}
               </p>
               {dayChange !== undefined && dayChangePercent !== undefined && (
-                <p className={`text-lg font-medium ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
+                <p className={`text-lg font-medium ${isPositive ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
                   {isPositive ? '+' : ''}{formatCurrency(dayChange)} ({isPositive ? '+' : ''}{dayChangePercent.toFixed(2)}%)
                 </p>
               )}
@@ -308,7 +308,7 @@ export default function StockSSRContent({
       {description && (
         <section className="mb-8">
           <h2 className="text-xl font-semibold mb-3">About {companyName}</h2>
-          <p className="text-muted-foreground leading-relaxed">
+          <p className="text-[#868f97] leading-relaxed">
             {description}
           </p>
         </section>
@@ -319,8 +319,8 @@ export default function StockSSRContent({
         <h2 className="text-xl font-semibold mb-4">{ticker} Key Statistics</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {marketCap !== undefined && (
-            <div className="bg-card border border-border rounded-lg p-4">
-              <p className="text-sm text-muted-foreground">Market Cap</p>
+            <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-4">
+              <p className="text-sm text-[#868f97]">Market Cap</p>
               <p className="text-lg font-semibold">
                 {marketCap >= 1e12 ? `$${(marketCap / 1e12).toFixed(2)}T` :
                  marketCap >= 1e9 ? `$${(marketCap / 1e9).toFixed(2)}B` :
@@ -330,8 +330,8 @@ export default function StockSSRContent({
           )}
 
           {(peRatio || metrics?.price_to_earnings_ratio) && (
-            <div className="bg-card border border-border rounded-lg p-4">
-              <p className="text-sm text-muted-foreground">P/E Ratio</p>
+            <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-4">
+              <p className="text-sm text-[#868f97]">P/E Ratio</p>
               <p className="text-lg font-semibold">
                 {(peRatio || metrics?.price_to_earnings_ratio)?.toFixed(2)}
               </p>
@@ -339,8 +339,8 @@ export default function StockSSRContent({
           )}
 
           {metrics?.price_to_book_ratio && (
-            <div className="bg-card border border-border rounded-lg p-4">
-              <p className="text-sm text-muted-foreground">P/B Ratio</p>
+            <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-4">
+              <p className="text-sm text-[#868f97]">P/B Ratio</p>
               <p className="text-lg font-semibold">
                 {metrics.price_to_book_ratio.toFixed(2)}
               </p>
@@ -348,8 +348,8 @@ export default function StockSSRContent({
           )}
 
           {metrics?.earnings_per_share && (
-            <div className="bg-card border border-border rounded-lg p-4">
-              <p className="text-sm text-muted-foreground">EPS</p>
+            <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-4">
+              <p className="text-sm text-[#868f97]">EPS</p>
               <p className="text-lg font-semibold">
                 {formatCurrency(metrics.earnings_per_share)}
               </p>
@@ -357,8 +357,8 @@ export default function StockSSRContent({
           )}
 
           {metrics?.dividend_yield !== undefined && metrics.dividend_yield > 0 && (
-            <div className="bg-card border border-border rounded-lg p-4">
-              <p className="text-sm text-muted-foreground">Dividend Yield</p>
+            <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-4">
+              <p className="text-sm text-[#868f97]">Dividend Yield</p>
               <p className="text-lg font-semibold">
                 {(metrics.dividend_yield * 100).toFixed(2)}%
               </p>
@@ -366,17 +366,17 @@ export default function StockSSRContent({
           )}
 
           {metrics?.revenue_growth !== undefined && (
-            <div className="bg-card border border-border rounded-lg p-4">
-              <p className="text-sm text-muted-foreground">Revenue Growth</p>
-              <p className={`text-lg font-semibold ${metrics.revenue_growth >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+            <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-4">
+              <p className="text-sm text-[#868f97]">Revenue Growth</p>
+              <p className={`text-lg font-semibold ${metrics.revenue_growth >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
                 {metrics.revenue_growth >= 0 ? '+' : ''}{(metrics.revenue_growth * 100).toFixed(1)}%
               </p>
             </div>
           )}
 
           {metrics?.profit_margin !== undefined && (
-            <div className="bg-card border border-border rounded-lg p-4">
-              <p className="text-sm text-muted-foreground">Profit Margin</p>
+            <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-4">
+              <p className="text-sm text-[#868f97]">Profit Margin</p>
               <p className="text-lg font-semibold">
                 {(metrics.profit_margin * 100).toFixed(1)}%
               </p>
@@ -384,8 +384,8 @@ export default function StockSSRContent({
           )}
 
           {metrics?.debt_to_equity !== undefined && (
-            <div className="bg-card border border-border rounded-lg p-4">
-              <p className="text-sm text-muted-foreground">Debt to Equity</p>
+            <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-4">
+              <p className="text-sm text-[#868f97]">Debt to Equity</p>
               <p className="text-lg font-semibold">
                 {metrics.debt_to_equity.toFixed(2)}
               </p>
@@ -393,8 +393,8 @@ export default function StockSSRContent({
           )}
 
           {employees !== undefined && employees > 0 && (
-            <div className="bg-card border border-border rounded-lg p-4">
-              <p className="text-sm text-muted-foreground">Employees</p>
+            <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-4">
+              <p className="text-sm text-[#868f97]">Employees</p>
               <p className="text-lg font-semibold">
                 {employees.toLocaleString()}
               </p>
@@ -425,19 +425,19 @@ export default function StockSSRContent({
           <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {headquarters && (
               <div>
-                <dt className="text-sm text-muted-foreground">Headquarters</dt>
-                <dd className="text-foreground">{headquarters}</dd>
+                <dt className="text-sm text-[#868f97]">Headquarters</dt>
+                <dd className="text-white">{headquarters}</dd>
               </div>
             )}
             {website && (
               <div>
-                <dt className="text-sm text-muted-foreground">Website</dt>
+                <dt className="text-sm text-[#868f97]">Website</dt>
                 <dd>
                   <a
                     href={website.startsWith('http') ? website : `https://${website}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-green-500 hover:underline"
+                    className="text-[#4ebe96] hover:underline"
                   >
                     {website.replace(/^https?:\/\//, '')}
                   </a>
@@ -446,9 +446,9 @@ export default function StockSSRContent({
             )}
             {sector && (
               <div>
-                <dt className="text-sm text-muted-foreground">Sector</dt>
+                <dt className="text-sm text-[#868f97]">Sector</dt>
                 <dd>
-                  <Link href={`/sectors/${sector.toLowerCase().replace(/\s+/g, '-')}`} className="text-green-500 hover:underline">
+                  <Link href={`/sectors/${sector.toLowerCase().replace(/\s+/g, '-')}`} className="text-[#4ebe96] hover:underline">
                     {sector}
                   </Link>
                 </dd>
@@ -456,8 +456,8 @@ export default function StockSSRContent({
             )}
             {industry && (
               <div>
-                <dt className="text-sm text-muted-foreground">Industry</dt>
-                <dd className="text-foreground">{industry}</dd>
+                <dt className="text-sm text-[#868f97]">Industry</dt>
+                <dd className="text-white">{industry}</dd>
               </div>
             )}
           </dl>
@@ -470,31 +470,31 @@ export default function StockSSRContent({
         <div className="flex flex-wrap gap-2">
           <Link
             href={`/should-i-buy/${ticker.toLowerCase()}`}
-            className="px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-sm font-medium transition-colors"
+            className="px-4 py-2 bg-white/[0.05] hover:bg-white/[0.08] rounded-lg text-sm font-medium transition-colors duration-100"
           >
             Should I Buy {ticker}?
           </Link>
           <Link
             href={`/valuation/${ticker.toLowerCase()}`}
-            className="px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-sm font-medium transition-colors"
+            className="px-4 py-2 bg-white/[0.05] hover:bg-white/[0.08] rounded-lg text-sm font-medium transition-colors duration-100"
           >
             {ticker} Valuation
           </Link>
           <Link
             href={`/prediction/${ticker.toLowerCase()}`}
-            className="px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-sm font-medium transition-colors"
+            className="px-4 py-2 bg-white/[0.05] hover:bg-white/[0.08] rounded-lg text-sm font-medium transition-colors duration-100"
           >
             {ticker} Price Prediction
           </Link>
           <Link
             href={`/analysis/${ticker.toLowerCase()}/valuation`}
-            className="px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-sm font-medium transition-colors"
+            className="px-4 py-2 bg-white/[0.05] hover:bg-white/[0.08] rounded-lg text-sm font-medium transition-colors duration-100"
           >
             Deep Valuation
           </Link>
           <Link
             href={`/debt/${ticker.toLowerCase()}`}
-            className="px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-sm font-medium transition-colors"
+            className="px-4 py-2 bg-white/[0.05] hover:bg-white/[0.08] rounded-lg text-sm font-medium transition-colors duration-100"
           >
             {ticker} Debt Analysis
           </Link>

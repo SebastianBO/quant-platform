@@ -18,7 +18,10 @@
       "name": "Weekly Schedule",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
-      "position": [100, 300]
+      "position": [
+        100,
+        300
+      ]
     },
     {
       "parameters": {
@@ -31,7 +34,10 @@
       "name": "Manual Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [100, 500],
+      "position": [
+        100,
+        500
+      ],
       "webhookId": "competitor-backlinks-webhook"
     },
     {
@@ -40,7 +46,10 @@
       "name": "Merge Triggers",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3,
-      "position": [300, 400]
+      "position": [
+        300,
+        400
+      ]
     },
     {
       "parameters": {
@@ -50,7 +59,10 @@
       "name": "Define Competitors",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [500, 400]
+      "position": [
+        500,
+        400
+      ]
     },
     {
       "parameters": {
@@ -63,7 +75,10 @@
       "name": "Process One at a Time",
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
-      "position": [700, 400]
+      "position": [
+        700,
+        400
+      ]
     },
     {
       "parameters": {
@@ -82,7 +97,10 @@
       "name": "CommonCrawl Index API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [900, 300],
+      "position": [
+        900,
+        300
+      ],
       "continueOnFail": true
     },
     {
@@ -97,7 +115,10 @@
       "name": "Wayback Machine API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [900, 500],
+      "position": [
+        900,
+        500
+      ],
       "continueOnFail": true
     },
     {
@@ -108,7 +129,10 @@
       "name": "Parse Backlink Data",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1100, 400]
+      "position": [
+        1100,
+        400
+      ]
     },
     {
       "parameters": {
@@ -118,7 +142,10 @@
       "name": "Expand Domains",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1300, 400]
+      "position": [
+        1300,
+        400
+      ]
     },
     {
       "parameters": {
@@ -131,7 +158,10 @@
       "name": "Batch Domain Checks",
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
-      "position": [1500, 400]
+      "position": [
+        1500,
+        400
+      ]
     },
     {
       "parameters": {
@@ -145,7 +175,10 @@
       "name": "Check if Links to Us",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1700, 400],
+      "position": [
+        1700,
+        400
+      ],
       "continueOnFail": true
     },
     {
@@ -156,7 +189,10 @@
       "name": "Filter Opportunities",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1900, 400]
+      "position": [
+        1900,
+        400
+      ]
     },
     {
       "parameters": {
@@ -166,7 +202,10 @@
       "name": "Score Domain Authority",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2100, 400]
+      "position": [
+        2100,
+        400
+      ]
     },
     {
       "parameters": {
@@ -176,7 +215,10 @@
       "name": "Deduplicate & Aggregate",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2300, 400]
+      "position": [
+        2300,
+        400
+      ]
     },
     {
       "parameters": {
@@ -188,7 +230,10 @@
       "name": "Ensure Supabase Table",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
-      "position": [2500, 300],
+      "position": [
+        2500,
+        300
+      ],
       "credentials": {
         "postgres": {
           "id": "supabase-postgres",
@@ -209,7 +254,10 @@
       "name": "Upsert to Supabase",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
-      "position": [2700, 400],
+      "position": [
+        2700,
+        400
+      ],
       "credentials": {
         "postgres": {
           "id": "supabase-postgres",
@@ -227,7 +275,10 @@
       "name": "Get Top 20 Opportunities",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
-      "position": [2900, 400],
+      "position": [
+        2900,
+        400
+      ],
       "credentials": {
         "postgres": {
           "id": "supabase-postgres",
@@ -243,7 +294,10 @@
       "name": "Generate Report & Outreach List",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [3100, 400]
+      "position": [
+        3100,
+        400
+      ]
     },
     {
       "parameters": {
@@ -261,7 +315,10 @@
       "name": "Send Slack Report",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [3300, 300],
+      "position": [
+        3300,
+        300
+      ],
       "credentials": {
         "slackApi": {
           "id": "slack-bot",
@@ -279,7 +336,10 @@
       "name": "Webhook Response",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [3300, 500]
+      "position": [
+        3300,
+        500
+      ]
     },
     {
       "parameters": {
@@ -290,7 +350,10 @@
       "name": "Rate Limit Delay",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
-      "position": [1700, 600]
+      "position": [
+        1700,
+        600
+      ]
     },
     {
       "parameters": {
@@ -300,7 +363,10 @@
       "name": "Error Handler",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2500, 600]
+      "position": [
+        2500,
+        600
+      ]
     },
     {
       "parameters": {
@@ -317,7 +383,10 @@
       "name": "Slack Error Alert",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [2700, 600],
+      "position": [
+        2700,
+        600
+      ],
       "credentials": {
         "slackApi": {
           "id": "slack-bot",
@@ -602,20 +671,6 @@
     "errorWorkflow": ""
   },
   "staticData": null,
-  "tags": [
-    {
-      "name": "SEO",
-      "id": "seo-tag"
-    },
-    {
-      "name": "Backlinks",
-      "id": "backlinks-tag"
-    },
-    {
-      "name": "Competitor Analysis",
-      "id": "competitor-tag"
-    }
-  ],
   "triggerCount": 2,
   "pinData": {},
   "versionId": "1.0.0",

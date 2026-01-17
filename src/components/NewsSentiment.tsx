@@ -80,11 +80,11 @@ export default function NewsSentiment({ ticker }: NewsSentimentProps) {
   }
 
   const getSentimentLabel = (sentiment: number): { label: string; color: string; emoji: string } => {
-    if (sentiment >= 0.3) return { label: 'Bullish', color: 'text-emerald-500', emoji: '🐂' }
-    if (sentiment >= 0.1) return { label: 'Slightly Positive', color: 'text-green-500', emoji: '📈' }
-    if (sentiment > -0.1) return { label: 'Neutral', color: 'text-muted-foreground', emoji: '➖' }
-    if (sentiment > -0.3) return { label: 'Slightly Negative', color: 'text-orange-500', emoji: '📉' }
-    return { label: 'Bearish', color: 'text-red-500', emoji: '🐻' }
+    if (sentiment >= 0.3) return { label: 'Bullish', color: 'text-[#4ebe96]', emoji: '🐂' }
+    if (sentiment >= 0.1) return { label: 'Slightly Positive', color: 'text-[#4ebe96]', emoji: '📈' }
+    if (sentiment > -0.1) return { label: 'Neutral', color: 'text-[#868f97]', emoji: '➖' }
+    if (sentiment > -0.3) return { label: 'Slightly Negative', color: 'text-[#f4a623]', emoji: '📉' }
+    return { label: 'Bearish', color: 'text-[#e15241]', emoji: '🐻' }
   }
 
   const sentimentInfo = getSentimentLabel(overallSentiment)
@@ -97,10 +97,10 @@ export default function NewsSentiment({ ticker }: NewsSentimentProps) {
   }))
 
   const getSentimentColor = (sentiment: number): string => {
-    if (sentiment >= 0.2) return '#10b981'
-    if (sentiment >= 0) return '#84cc16'
-    if (sentiment >= -0.2) return '#f97316'
-    return '#ef4444'
+    if (sentiment >= 0.2) return '#4ebe96'
+    if (sentiment >= 0) return '#4ebe96'
+    if (sentiment >= -0.2) return '#f4a623'
+    return '#e15241'
   }
 
   return (
@@ -114,22 +114,22 @@ export default function NewsSentiment({ ticker }: NewsSentimentProps) {
       <CardContent>
         {loading ? (
           <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-emerald-500"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-[#4ebe96]"></div>
           </div>
         ) : (
           <>
             {/* Overall Sentiment */}
-            <div className="p-4 bg-secondary/50 rounded-lg mb-6">
+            <div className="p-4 bg-white/[0.05] rounded-lg mb-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-muted-foreground text-sm">Overall News Sentiment</p>
+                  <p className="text-[#868f97] text-sm">Overall News Sentiment</p>
                   <p className={`text-3xl font-bold ${sentimentInfo.color}`}>
                     {sentimentInfo.emoji} {sentimentInfo.label}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-muted-foreground text-sm">Sentiment Score</p>
-                  <p className={`text-2xl font-bold ${overallSentiment >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
+                  <p className="text-[#868f97] text-sm">Sentiment Score</p>
+                  <p className={`text-2xl font-bold ${overallSentiment >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
                     {overallSentiment >= 0 ? '+' : ''}{(overallSentiment * 100).toFixed(0)}%
                   </p>
                 </div>
@@ -139,13 +139,13 @@ export default function NewsSentiment({ ticker }: NewsSentimentProps) {
             {/* Sentiment Chart */}
             {chartData.length > 0 && (
               <div className="h-48 mb-6">
-                <p className="text-sm text-muted-foreground mb-2">Sentiment by Article</p>
+                <p className="text-sm text-[#868f97] mb-2">Sentiment by Article</p>
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={chartData} layout="vertical">
-                    <XAxis type="number" domain={[-1, 1]} stroke="hsl(var(--muted-foreground))" />
-                    <YAxis type="category" dataKey="name" stroke="hsl(var(--muted-foreground))" width={70} tick={{ fontSize: 11 }} />
+                    <XAxis type="number" domain={[-1, 1]} stroke="#868f97" />
+                    <YAxis type="category" dataKey="name" stroke="#868f97" width={70} tick={{ fontSize: 11 }} />
                     <Tooltip
-                      contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }}
+                      contentStyle={{ backgroundColor: '#1a1a1a', border: '1px solid rgba(255, 255, 255, 0.08)' }}
                       formatter={(value: number) => [`${(value * 100).toFixed(0)}%`, 'Sentiment']}
                       labelFormatter={(label: string) => chartData.find(d => d.name === label)?.title || label}
                     />
@@ -161,7 +161,7 @@ export default function NewsSentiment({ ticker }: NewsSentimentProps) {
 
             {/* News List */}
             <div className="space-y-3">
-              <p className="text-sm text-muted-foreground">Recent News</p>
+              <p className="text-sm text-[#868f97]">Recent News</p>
               {news.length > 0 ? (
                 news.map((article, i) => {
                   const articleSentiment = getSentimentLabel(article.sentiment || 0)
@@ -171,12 +171,12 @@ export default function NewsSentiment({ ticker }: NewsSentimentProps) {
                       href={article.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block p-3 bg-secondary/30 rounded-lg hover:bg-secondary/50 transition-colors"
+                      className="block p-3 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1">
                           <p className="font-medium text-sm line-clamp-2">{article.title}</p>
-                          <p className="text-muted-foreground text-xs mt-1">{article.date}</p>
+                          <p className="text-[#868f97] text-xs mt-1">{article.date}</p>
                         </div>
                         <span className={`text-lg ${articleSentiment.color}`}>{articleSentiment.emoji}</span>
                       </div>
@@ -184,7 +184,7 @@ export default function NewsSentiment({ ticker }: NewsSentimentProps) {
                   )
                 })
               ) : (
-                <p className="text-muted-foreground text-center py-4">No recent news available</p>
+                <p className="text-[#868f97] text-center py-4">No recent news available</p>
               )}
             </div>
           </>

@@ -129,21 +129,21 @@ function ResearchSection({
       <CollapsibleTrigger className="group flex items-center gap-2 w-full text-left py-2">
         <div className="flex items-center gap-2 flex-1 min-w-0">
           {isLoading ? (
-            <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+            <Loader2 className="w-4 h-4 animate-spin text-[#868f97]" />
           ) : (
-            <CheckCircle2 className="w-4 h-4 text-green-500" />
+            <CheckCircle2 className="w-4 h-4 text-[#4ebe96]" />
           )}
           <span className="text-sm font-medium truncate">{title}</span>
           {badge && (
-            <span className="text-xs text-muted-foreground bg-secondary px-2 py-0.5 rounded-full">
+            <span className="text-xs text-[#868f97] bg-white/[0.05] px-2 py-0.5 rounded-full">
               {badge}
             </span>
           )}
         </div>
-        <ChevronDown className="w-4 h-4 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180" />
+        <ChevronDown className="w-4 h-4 text-[#868f97] transition-transform duration-200 group-data-[state=open]:rotate-180" />
       </CollapsibleTrigger>
       <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapse-up data-[state=open]:animate-collapse-down">
-        <div className="pt-2 pb-3 text-sm text-muted-foreground">
+        <div className="pt-2 pb-3 text-sm text-[#868f97]">
           {children}
         </div>
       </CollapsibleContent>
@@ -182,7 +182,7 @@ function ChatMessage({
     <div className="mb-6 animate-fade-in">
       {/* Research phases section */}
       {message.tasks && message.tasks.length > 0 && (
-        <div className="mb-4 border border-border rounded-xl p-3 bg-card">
+        <div className="mb-4 border border-white/[0.08] rounded-xl p-3 bg-[#1a1a1a]">
           <ResearchSection
             title="Research Plan"
             badge={`${message.tasks.filter(t => t.status === 'completed').length}/${message.tasks.length} tasks`}
@@ -193,15 +193,15 @@ function ChatMessage({
               {message.tasks.map(task => (
                 <div key={task.id} className="flex items-start gap-2">
                   {task.status === 'completed' ? (
-                    <CheckCircle2 className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-[#4ebe96] mt-0.5 flex-shrink-0" />
                   ) : task.status === 'running' ? (
-                    <Loader2 className="w-4 h-4 animate-spin text-blue-500 mt-0.5 flex-shrink-0" />
+                    <Loader2 className="w-4 h-4 animate-spin text-[#479ffa] mt-0.5 flex-shrink-0" />
                   ) : (
                     <div className="w-4 h-4 rounded-full border border-muted-foreground/30 mt-0.5 flex-shrink-0" />
                   )}
                   <span className={cn(
                     "text-sm",
-                    task.status === 'completed' && "text-muted-foreground"
+                    task.status === 'completed' && "text-[#868f97]"
                   )}>
                     {task.description}
                   </span>
@@ -214,7 +214,7 @@ function ChatMessage({
 
       {/* Tool results section */}
       {message.toolResults && message.toolResults.length > 0 && (
-        <div className="mb-4 border border-border rounded-xl p-3 bg-card">
+        <div className="mb-4 border border-white/[0.08] rounded-xl p-3 bg-[#1a1a1a]">
           <ResearchSection
             title="Data Sources"
             badge={`${message.toolResults.length} sources`}
@@ -225,7 +225,7 @@ function ChatMessage({
               {message.toolResults.map((result, idx) => (
                 <span
                   key={idx}
-                  className="text-xs bg-secondary px-2 py-1 rounded-md"
+                  className="text-xs bg-white/[0.05] px-2 py-1 rounded-md"
                 >
                   {result.tool}
                 </span>
@@ -255,7 +255,7 @@ function ChatMessage({
           <Button
             variant="ghost"
             size="sm"
-            className="h-8 px-2 text-muted-foreground hover:text-foreground"
+            className="h-8 px-2 text-[#868f97] hover:text-white"
             onClick={copyToClipboard}
             aria-label={copied ? "Copied to clipboard" : "Copy message"}
           >
@@ -278,9 +278,9 @@ function ResearchSkeleton({ phase }: { phase: Phase }) {
 
   return (
     <div className="mb-6 animate-fade-in">
-      <div className="border border-border rounded-xl p-4 bg-card">
+      <div className="border border-white/[0.08] rounded-xl p-4 bg-[#1a1a1a]">
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+          <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center">
             <Icon className="w-4 h-4 text-primary" />
           </div>
           <div className="flex-1">
@@ -370,19 +370,19 @@ function EmptyState({
 
       {/* Chat input */}
       <div className="w-full max-w-2xl">
-        <div className="relative bg-card border border-border rounded-2xl shadow-lg focus-within:border-green-500/50 transition-all">
+        <div className="relative bg-[#1a1a1a] border border-white/[0.08] rounded-2xl shadow-lg focus-within:border-[#4ebe96]/50 transition-all">
           {/* Attached file preview */}
           {attachedFile && (
             <div className="px-4 pt-3 pb-0">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-secondary/50 rounded-lg text-sm">
-                <FileText className="w-4 h-4 text-muted-foreground" />
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/[0.05]/50 rounded-lg text-sm">
+                <FileText className="w-4 h-4 text-[#868f97]" />
                 <span className="truncate max-w-[200px]">{attachedFile.name}</span>
                 <button
                   onClick={onFileRemove}
-                  className="p-0.5 hover:bg-secondary rounded transition-colors"
+                  className="p-0.5 hover:bg-white/[0.08] rounded transition-colors duration-100"
                   aria-label="Remove attached file"
                 >
-                  <X className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground" aria-hidden="true" />
+                  <X className="w-3.5 h-3.5 text-[#868f97] hover:text-white" aria-hidden="true" />
                 </button>
               </div>
             </div>
@@ -394,7 +394,7 @@ function EmptyState({
             onChange={(e) => onInputChange(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Ask about any stock, market trends, or financial analysis..."
-            className="w-full min-h-[60px] max-h-[150px] py-4 px-5 pr-14 text-lg bg-transparent border-none resize-none focus:outline-none placeholder:text-muted-foreground"
+            className="w-full min-h-[60px] max-h-[150px] py-4 px-5 pr-14 text-lg bg-transparent border-none resize-none focus:outline-none placeholder:text-[#868f97]"
             disabled={isLoading}
             rows={1}
           />
@@ -412,7 +412,7 @@ function EmptyState({
               />
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors"
+                className="p-2 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
                 aria-label="Attach PDF or document"
               >
                 <Paperclip className="w-5 h-5" aria-hidden="true" />
@@ -424,10 +424,10 @@ function EmptyState({
               disabled={isLoading || (!inputValue.trim() && !attachedFile)}
               aria-label={isLoading ? "Sending message..." : "Send message"}
               className={cn(
-                "w-9 h-9 rounded-xl flex items-center justify-center transition-colors",
+                "w-9 h-9 rounded-xl flex items-center justify-center transition-colors duration-100",
                 inputValue.trim() || attachedFile
-                  ? "bg-green-600 hover:bg-green-500 text-white"
-                  : "bg-secondary text-muted-foreground"
+                  ? "bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black"
+                  : "bg-white/[0.05] text-[#868f97]"
               )}
             >
               {isLoading ? (
@@ -445,7 +445,7 @@ function EmptyState({
             <button
               key={prompt}
               onClick={() => onPromptClick(prompt)}
-              className="text-sm px-3 py-2 rounded-full border border-border bg-card hover:bg-secondary/50 transition-colors"
+              className="text-sm px-3 py-2 rounded-full border border-white/[0.08] bg-[#1a1a1a] hover:bg-white/[0.08]/50 transition-colors duration-100"
             >
               {prompt}
             </button>
@@ -460,8 +460,8 @@ function EmptyState({
               href={tool.href}
               className={cn(
                 "flex items-center gap-2 px-4 py-2.5 rounded-full",
-                "border border-border bg-card hover:bg-secondary",
-                "text-sm font-medium transition-colors"
+                "border border-white/[0.08] bg-[#1a1a1a] hover:bg-white/[0.08]",
+                "text-sm font-medium transition-colors duration-100"
               )}
             >
               <tool.icon className="w-4 h-4" />
@@ -728,11 +728,11 @@ function AutonomousChatComponent() {
 
             {/* Live task progress */}
             {isLoading && tasks.length > 0 && currentPhase === 'execute' && (
-              <div className="mb-6 border border-border rounded-xl p-4 bg-card animate-fade-in">
+              <div className="mb-6 border border-white/[0.08] rounded-xl p-4 bg-[#1a1a1a] animate-fade-in">
                 <div className="flex items-center gap-2 mb-3">
                   <Loader2 className="w-4 h-4 animate-spin text-primary" />
                   <span className="text-sm font-medium">Researching...</span>
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-xs text-[#868f97]">
                     {tasks.filter(t => t.status === 'completed').length}/{tasks.length}
                   </span>
                 </div>
@@ -740,15 +740,15 @@ function AutonomousChatComponent() {
                   {tasks.map(task => (
                     <div key={task.id} className="flex items-start gap-2">
                       {task.status === 'completed' ? (
-                        <CheckCircle2 className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                        <CheckCircle2 className="w-4 h-4 text-[#4ebe96] mt-0.5 flex-shrink-0" />
                       ) : task.status === 'running' ? (
-                        <Loader2 className="w-4 h-4 animate-spin text-blue-500 mt-0.5 flex-shrink-0" />
+                        <Loader2 className="w-4 h-4 animate-spin text-[#479ffa] mt-0.5 flex-shrink-0" />
                       ) : (
                         <div className="w-4 h-4 rounded-full border border-muted-foreground/30 mt-0.5 flex-shrink-0" />
                       )}
                       <span className={cn(
                         "text-sm",
-                        task.status === 'completed' && "text-muted-foreground"
+                        task.status === 'completed' && "text-[#868f97]"
                       )}>
                         {task.description}
                       </span>
@@ -763,7 +763,7 @@ function AutonomousChatComponent() {
 
       {/* Input area - only show when there are messages */}
       {messages.length > 0 && (
-        <div className="border-t border-border bg-background p-4">
+        <div className="border-t border-white/[0.08] bg-background p-4">
           <div className="max-w-3xl mx-auto">
             {/* Hidden file input */}
             <input
@@ -783,15 +783,15 @@ function AutonomousChatComponent() {
             {/* Attached file preview */}
             {attachedFile && (
               <div className="mb-2">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-secondary/50 rounded-lg text-sm">
-                  <FileText className="w-4 h-4 text-muted-foreground" />
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/[0.05]/50 rounded-lg text-sm">
+                  <FileText className="w-4 h-4 text-[#868f97]" />
                   <span className="truncate max-w-[200px]">{attachedFile.name}</span>
                   <button
                     onClick={() => setAttachedFile(null)}
-                    className="p-0.5 hover:bg-secondary rounded transition-colors"
+                    className="p-0.5 hover:bg-white/[0.08] rounded transition-colors duration-100"
                     aria-label="Remove attached file"
                   >
-                    <X className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground" aria-hidden="true" />
+                    <X className="w-3.5 h-3.5 text-[#868f97] hover:text-white" aria-hidden="true" />
                   </button>
                 </div>
               </div>
@@ -804,14 +804,14 @@ function AutonomousChatComponent() {
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Ask a follow-up question..."
-                className="min-h-[52px] max-h-[200px] pl-12 pr-14 resize-none rounded-xl border-border bg-secondary/30 focus-visible:ring-1 focus-visible:ring-ring"
+                className="min-h-[52px] max-h-[200px] pl-12 pr-14 resize-none rounded-xl border-white/[0.08] bg-white/[0.05]/30 focus-visible:ring-1 focus-visible:ring-ring"
                 disabled={isLoading}
                 rows={1}
               />
               {/* File attachment button */}
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="absolute left-3 bottom-3 p-1.5 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors"
+                className="absolute left-3 bottom-3 p-1.5 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
                 aria-label="Attach PDF or document"
               >
                 <Paperclip className="w-5 h-5" aria-hidden="true" />
@@ -822,7 +822,7 @@ function AutonomousChatComponent() {
                 disabled={isLoading || (!inputValue.trim() && !attachedFile)}
                 onClick={() => handleSubmit()}
                 aria-label={isLoading ? "Sending message..." : "Send message"}
-                className="absolute right-2 bottom-2 h-9 w-9 rounded-lg bg-green-600 hover:bg-green-500"
+                className="absolute right-2 bottom-2 h-9 w-9 rounded-lg bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black"
               >
                 {isLoading ? (
                   <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
@@ -834,7 +834,7 @@ function AutonomousChatComponent() {
             <div className="flex items-center justify-between mt-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="h-8 gap-2 text-muted-foreground hover:text-foreground">
+                  <Button variant="ghost" size="sm" className="h-8 gap-2 text-[#868f97] hover:text-white">
                     <span className="text-xs">{selectedModel.name}</span>
                     <ChevronDown className="w-3 h-3" />
                   </Button>
@@ -857,8 +857,8 @@ function AutonomousChatComponent() {
                       <span className={cn(
                         "text-[10px] px-1.5 py-0.5 rounded",
                         model.tier === 'premium' && "bg-amber-500/20 text-amber-600",
-                        model.tier === 'standard' && "bg-blue-500/20 text-blue-600",
-                        model.tier === 'fast' && "bg-green-500/20 text-green-600"
+                        model.tier === 'standard' && "bg-[#479ffa]/20 text-[#479ffa]",
+                        model.tier === 'fast' && "bg-[#4ebe96]/20 text-[#4ebe96]"
                       )}>
                         {model.tier}
                       </span>
@@ -866,7 +866,7 @@ function AutonomousChatComponent() {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-[#868f97]">
                 Enter to send
               </p>
             </div>

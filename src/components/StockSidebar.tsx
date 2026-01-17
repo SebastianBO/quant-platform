@@ -74,7 +74,7 @@ export default function StockSidebar({
       <div className={cn("lg:hidden w-full mb-4", className)}>
         <button
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          className="w-full flex items-center justify-between px-4 py-3 bg-secondary rounded-lg text-sm font-medium"
+          className="w-full flex items-center justify-between px-4 py-3 bg-white/[0.05] rounded-lg text-sm font-medium"
         >
           <span className="flex items-center gap-2">
             {activeItem && <activeItem.icon className="w-4 h-4" />}
@@ -84,7 +84,7 @@ export default function StockSidebar({
         </button>
 
         {isDropdownOpen && (
-          <div className="absolute z-50 mt-2 w-full max-w-md bg-card border border-border rounded-lg shadow-lg max-h-96 overflow-y-auto">
+          <div className="absolute z-50 mt-2 w-full max-w-md bg-[#1a1a1a] border border-white/[0.08] rounded-lg shadow-lg max-h-96 overflow-y-auto">
             {sidebarItems.map((item) => {
               const Icon = item.icon
               const isActive = activeTab === item.id
@@ -97,10 +97,10 @@ export default function StockSidebar({
                     setIsDropdownOpen(false)
                   }}
                   className={cn(
-                    "w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors border-b border-border/50 last:border-0",
+                    "w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors duration-100 border-b border-white/[0.08]/50 last:border-0",
                     isActive
-                      ? "bg-green-500/10 text-green-500"
-                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                      ? "bg-[#4ebe96]/10 text-[#4ebe96]"
+                      : "text-[#868f97] hover:text-white hover:bg-white/[0.05]/50"
                   )}
                 >
                   <Icon className="w-4 h-4" />
@@ -130,10 +130,10 @@ export default function StockSidebar({
                 onMouseEnter={() => setHoveredItem(item.id)}
                 onMouseLeave={() => setHoveredItem(null)}
                 className={cn(
-                  "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
+                  "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-100",
                   isActive
-                    ? "bg-green-500/10 text-green-500"
-                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                    ? "bg-[#4ebe96]/10 text-[#4ebe96]"
+                    : "text-[#868f97] hover:text-white hover:bg-white/[0.05]/50"
                 )}
               >
                 <Icon className={cn(

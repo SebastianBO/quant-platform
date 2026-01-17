@@ -45,11 +45,11 @@ type AnalysisType = 'comprehensive' | 'red_flags' | 'questions' | 'competitive' 
 
 const ANALYSIS_OPTIONS: { type: AnalysisType; label: string; icon: string; description: string; color: string }[] = [
   { type: 'comprehensive', label: 'Full Thesis', icon: '📊', description: 'Complete investment analysis with bull/bear cases', color: 'from-emerald-600 to-cyan-600' },
-  { type: 'red_flags', label: 'Red Flags', icon: '🚩', description: 'Forensic accounting & fraud detection', color: 'from-red-600 to-orange-600' },
+  { type: 'red_flags', label: 'Red Flags', icon: '🚩', description: 'Forensic accounting & fraud detection', color: 'from-[#e15241] to-orange-600' },
   { type: 'questions', label: 'Due Diligence', icon: '❓', description: 'What questions should you ask?', color: 'from-purple-600 to-pink-600' },
-  { type: 'competitive', label: 'Moat Analysis', icon: '🏰', description: 'Competitive position & Porter\'s Five Forces', color: 'from-blue-600 to-indigo-600' },
+  { type: 'competitive', label: 'Moat Analysis', icon: '🏰', description: 'Competitive position & Porter\'s Five Forces', color: 'from-[#479ffa] to-indigo-600' },
   { type: 'management', label: 'Management', icon: '👔', description: 'Leadership quality & capital allocation', color: 'from-amber-600 to-yellow-600' },
-  { type: 'valuation', label: 'Valuation', icon: '💰', description: 'Is it cheap or expensive?', color: 'from-green-600 to-lime-600' },
+  { type: 'valuation', label: 'Valuation', icon: '💰', description: 'Is it cheap or expensive?', color: 'from-[#4ebe96] to-lime-600' },
 ]
 
 export default function AIInvestmentSummary({ ticker, stockData }: AIInvestmentSummaryProps) {
@@ -131,26 +131,26 @@ export default function AIInvestmentSummary({ ticker, stockData }: AIInvestmentS
       if (trimmed.startsWith('## ')) {
         currentSection = trimmed.replace('## ', '')
         elements.push(
-          <h3 key={`h-${i}`} className="text-lg font-bold text-green-500 mt-6 mb-2 flex items-center gap-2">
-            <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+          <h3 key={`h-${i}`} className="text-lg font-bold text-[#4ebe96] mt-6 mb-2 flex items-center gap-2">
+            <span className="w-2 h-2 bg-[#4ebe96] rounded-full"></span>
             {currentSection}
           </h3>
         )
       } else if (trimmed.startsWith('### ')) {
         elements.push(
-          <h4 key={`h4-${i}`} className="text-md font-semibold text-foreground mt-4 mb-1">
+          <h4 key={`h4-${i}`} className="text-md font-semibold text-white mt-4 mb-1">
             {trimmed.replace('### ', '')}
           </h4>
         )
       } else if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
         elements.push(
-          <li key={`li-${i}`} className="text-muted-foreground ml-4 mb-1">
+          <li key={`li-${i}`} className="text-[#868f97] ml-4 mb-1">
             {trimmed.replace(/^[-*] /, '')}
           </li>
         )
       } else if (trimmed.match(/^\d+\. /)) {
         elements.push(
-          <li key={`li-${i}`} className="text-muted-foreground ml-4 mb-1 list-decimal">
+          <li key={`li-${i}`} className="text-[#868f97] ml-4 mb-1 list-decimal">
             {trimmed.replace(/^\d+\. /, '')}
           </li>
         )
@@ -158,15 +158,15 @@ export default function AIInvestmentSummary({ ticker, stockData }: AIInvestmentS
         // Bold text handling
         const parts = trimmed.split(/\*\*(.*?)\*\*/g)
         elements.push(
-          <p key={`p-${i}`} className="text-muted-foreground mb-2">
+          <p key={`p-${i}`} className="text-[#868f97] mb-2">
             {parts.map((part, j) =>
-              j % 2 === 1 ? <strong key={j} className="text-foreground">{part}</strong> : part
+              j % 2 === 1 ? <strong key={j} className="text-white">{part}</strong> : part
             )}
           </p>
         )
       } else if (trimmed) {
         elements.push(
-          <p key={`p-${i}`} className="text-muted-foreground mb-2 leading-relaxed">
+          <p key={`p-${i}`} className="text-[#868f97] mb-2 leading-relaxed">
             {trimmed}
           </p>
         )
@@ -187,20 +187,20 @@ export default function AIInvestmentSummary({ ticker, stockData }: AIInvestmentS
   ]
 
   return (
-    <Card className="w-full bg-card border-border">
+    <Card className="w-full bg-[#1a1a1a] border-white/[0.08]">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <span className="text-2xl">🤖</span>
           AI Deep Due Diligence - {ticker}
         </CardTitle>
-        <p className="text-sm text-muted-foreground">Powered by Claude 3.5 Sonnet | Institutional-Grade Analysis</p>
+        <p className="text-sm text-[#868f97]">Powered by Claude 3.5 Sonnet | Institutional-Grade Analysis</p>
       </CardHeader>
       <CardContent>
         {/* Quick Metrics Reference */}
         <div className="grid grid-cols-3 md:grid-cols-6 gap-3 mb-6">
           {metricsGrid.map((metric, i) => (
-            <div key={i} className="text-center p-2 bg-secondary/30 rounded">
-              <p className="text-muted-foreground text-xs">{metric.label}</p>
+            <div key={i} className="text-center p-2 bg-white/[0.015] rounded">
+              <p className="text-[#868f97] text-xs">{metric.label}</p>
               <p className="font-bold">{metric.value}</p>
             </div>
           ))}
@@ -218,12 +218,12 @@ export default function AIInvestmentSummary({ ticker, stockData }: AIInvestmentS
                 key={option.type}
                 onClick={() => hasAnalysis ? setActiveTab(option.type) : generateAnalysis(option.type)}
                 disabled={isLoading}
-                className={`p-3 rounded-lg border transition-all text-left ${
+                className={`p-3 rounded-lg border transition-all duration-100 text-left ${
                   isActive
                     ? `bg-gradient-to-br ${option.color} border-transparent text-white`
                     : hasAnalysis
-                    ? 'bg-secondary/50 border-border hover:border-muted-foreground'
-                    : 'bg-secondary/20 border-border hover:border-muted-foreground'
+                    ? 'bg-white/[0.025] border-white/[0.08] hover:border-[#868f97]'
+                    : 'bg-white/[0.01] border-white/[0.08] hover:border-[#868f97]'
                 }`}
               >
                 <div className="flex items-center gap-2 mb-1">
@@ -232,12 +232,12 @@ export default function AIInvestmentSummary({ ticker, stockData }: AIInvestmentS
                     {option.label}
                   </span>
                 </div>
-                <p className={`text-xs ${isActive ? 'text-white/80' : 'text-muted-foreground'}`}>
+                <p className={`text-xs ${isActive ? 'text-white/80' : 'text-[#868f97]'}`}>
                   {isLoading ? 'Analyzing...' : hasAnalysis ? 'Click to view' : option.description}
                 </p>
                 {hasAnalysis && !isActive && (
-                  <div className="mt-1 w-full h-1 bg-green-500/30 rounded-full">
-                    <div className="h-full w-full bg-green-500 rounded-full"></div>
+                  <div className="mt-1 w-full h-1 bg-[#4ebe96]/30 rounded-full">
+                    <div className="h-full w-full bg-[#4ebe96] rounded-full"></div>
                   </div>
                 )}
               </button>
@@ -247,10 +247,10 @@ export default function AIInvestmentSummary({ ticker, stockData }: AIInvestmentS
 
         {/* Loading State */}
         {loading && (
-          <div className="flex flex-col items-center justify-center py-12 bg-secondary/30 rounded-lg border border-border">
+          <div className="flex flex-col items-center justify-center py-12 bg-white/[0.015] rounded-lg border border-white/[0.08]">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-purple-500 mb-4"></div>
-            <p className="text-muted-foreground">Claude 3.5 Sonnet is analyzing {ticker}...</p>
-            <p className="text-muted-foreground/70 text-sm mt-1">
+            <p className="text-[#868f97]">Claude 3.5 Sonnet is analyzing {ticker}...</p>
+            <p className="text-[#868f97]/70 text-sm mt-1">
               {loading === 'comprehensive' && 'Building complete investment thesis...'}
               {loading === 'red_flags' && 'Scanning for accounting irregularities...'}
               {loading === 'questions' && 'Identifying information gaps...'}
@@ -276,14 +276,14 @@ export default function AIInvestmentSummary({ ticker, stockData }: AIInvestmentS
               </div>
               <button
                 onClick={() => generateAnalysis(activeTab)}
-                className="px-3 py-1 text-sm bg-secondary hover:bg-secondary/80 rounded-lg transition-colors"
+                className="px-3 py-1 text-sm bg-white/[0.05] hover:bg-white/[0.08] rounded-lg transition-colors duration-100"
               >
                 Regenerate
               </button>
             </div>
 
             {/* Analysis Body */}
-            <div className="p-6 bg-gradient-to-br from-secondary/50 to-secondary/30 rounded-lg border border-border/50 max-h-[600px] overflow-y-auto">
+            <div className="p-6 bg-gradient-to-br from-white/[0.025] to-white/[0.015] rounded-lg border border-white/[0.08]/50 max-h-[600px] overflow-y-auto">
               {formatAnalysis(analyses[activeTab])}
             </div>
 
@@ -293,7 +293,7 @@ export default function AIInvestmentSummary({ ticker, stockData }: AIInvestmentS
                 <button
                   key={option.type}
                   onClick={() => generateAnalysis(option.type)}
-                  className={`px-3 py-1.5 text-sm bg-gradient-to-r ${option.color} text-white rounded-lg hover:opacity-90 transition-opacity flex items-center gap-1`}
+                  className={`px-3 py-1.5 text-sm bg-gradient-to-r ${option.color} text-white rounded-lg hover:opacity-90 transition-opacity duration-100 flex items-center gap-1`}
                 >
                   <span>{option.icon}</span>
                   Run {option.label}
@@ -315,14 +315,14 @@ export default function AIInvestmentSummary({ ticker, stockData }: AIInvestmentS
         {!loading && !analyses[activeTab] && (
           <div className="text-center py-12 bg-gradient-to-br from-purple-900/10 to-indigo-900/10 rounded-lg border border-purple-500/20">
             <div className="text-4xl mb-4">🔬</div>
-            <p className="text-foreground text-lg mb-2">AI Deep Due Diligence</p>
-            <p className="text-muted-foreground text-sm mb-6 max-w-md mx-auto">
+            <p className="text-white text-lg mb-2">AI Deep Due Diligence</p>
+            <p className="text-[#868f97] text-sm mb-6 max-w-md mx-auto">
               Select an analysis type above to generate institutional-grade research.
               Each analysis uses Claude 3.5 Sonnet with your company's actual financial data.
             </p>
             <button
               onClick={() => generateAnalysis('comprehensive')}
-              className="px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-lg font-medium transition-all"
+              className="px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-lg font-medium transition-all duration-100"
             >
               Start with Full Investment Thesis
             </button>
@@ -331,17 +331,17 @@ export default function AIInvestmentSummary({ ticker, stockData }: AIInvestmentS
 
         {/* Analysis Summary (when multiple completed) */}
         {Object.values(analyses).filter(Boolean).length > 1 && (
-          <div className="mt-6 p-4 bg-secondary/30 rounded-lg border border-border">
-            <p className="text-sm text-muted-foreground mb-2">Completed Analyses</p>
+          <div className="mt-6 p-4 bg-white/[0.015] rounded-lg border border-white/[0.08]">
+            <p className="text-sm text-[#868f97] mb-2">Completed Analyses</p>
             <div className="flex flex-wrap gap-2">
               {ANALYSIS_OPTIONS.filter(o => analyses[o.type]).map(option => (
                 <button
                   key={option.type}
                   onClick={() => setActiveTab(option.type)}
-                  className={`px-3 py-1 text-sm rounded-full transition-all ${
+                  className={`px-3 py-1 text-sm rounded-full transition-all duration-100 ${
                     activeTab === option.type
-                      ? 'bg-green-600 text-white'
-                      : 'bg-secondary text-muted-foreground hover:bg-secondary/80'
+                      ? 'bg-[#4ebe96] text-white'
+                      : 'bg-white/[0.05] text-[#868f97] hover:bg-white/[0.08]'
                   }`}
                 >
                   {option.icon} {option.label}

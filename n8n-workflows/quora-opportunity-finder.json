@@ -16,7 +16,10 @@
       "name": "Daily 8 AM",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
-      "position": [240, 300]
+      "position": [
+        240,
+        300
+      ]
     },
     {
       "parameters": {
@@ -52,7 +55,10 @@
       "name": "Configuration",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [460, 300]
+      "position": [
+        460,
+        300
+      ]
     },
     {
       "parameters": {
@@ -62,7 +68,10 @@
       "name": "Split Search Queries",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [680, 300]
+      "position": [
+        680,
+        300
+      ]
     },
     {
       "parameters": {
@@ -75,7 +84,10 @@
       "name": "Process Each Query",
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
-      "position": [900, 300]
+      "position": [
+        900,
+        300
+      ]
     },
     {
       "parameters": {
@@ -86,7 +98,10 @@
       "name": "Rate Limit (3s)",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
-      "position": [1120, 300]
+      "position": [
+        1120,
+        300
+      ]
     },
     {
       "parameters": {
@@ -127,7 +142,10 @@
       "name": "Search Google for Quora",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1340, 300],
+      "position": [
+        1340,
+        300
+      ],
       "credentials": {
         "httpQueryAuth": {
           "id": "GOOGLE_API_CREDENTIAL_ID",
@@ -143,7 +161,10 @@
       "name": "Extract Quora URLs",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1560, 300]
+      "position": [
+        1560,
+        300
+      ]
     },
     {
       "parameters": {
@@ -172,7 +193,10 @@
       "name": "Filter Skipped",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [1780, 300]
+      "position": [
+        1780,
+        300
+      ]
     },
     {
       "parameters": {
@@ -185,7 +209,10 @@
       "name": "Process Each URL",
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
-      "position": [2000, 300]
+      "position": [
+        2000,
+        300
+      ]
     },
     {
       "parameters": {
@@ -196,7 +223,10 @@
       "name": "Scrape Rate Limit (2s)",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
-      "position": [2220, 300]
+      "position": [
+        2220,
+        300
+      ]
     },
     {
       "parameters": {
@@ -219,7 +249,10 @@
       "name": "Scrape Quora Page",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [2440, 300],
+      "position": [
+        2440,
+        300
+      ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "FIRECRAWL_CREDENTIAL_ID",
@@ -236,7 +269,10 @@
       "name": "Process Scraped Data",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2660, 300]
+      "position": [
+        2660,
+        300
+      ]
     },
     {
       "parameters": {
@@ -265,7 +301,10 @@
       "name": "Filter Processed",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [2880, 300]
+      "position": [
+        2880,
+        300
+      ]
     },
     {
       "parameters": {
@@ -277,7 +316,10 @@
       "name": "Store in Supabase",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
-      "position": [3100, 300],
+      "position": [
+        3100,
+        300
+      ],
       "credentials": {
         "postgres": {
           "id": "POSTGRES_CREDENTIAL_ID",
@@ -293,7 +335,10 @@
       "name": "Continue URL Batch",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [3320, 300]
+      "position": [
+        3320,
+        300
+      ]
     },
     {
       "parameters": {
@@ -305,7 +350,10 @@
       "name": "Get Top 10 Opportunities",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
-      "position": [3100, 520],
+      "position": [
+        3100,
+        520
+      ],
       "credentials": {
         "postgres": {
           "id": "POSTGRES_CREDENTIAL_ID",
@@ -340,7 +388,10 @@
       "name": "Has Opportunities?",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [3320, 520]
+      "position": [
+        3320,
+        520
+      ]
     },
     {
       "parameters": {
@@ -350,7 +401,10 @@
       "name": "Format Slack Message",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [3540, 520]
+      "position": [
+        3540,
+        520
+      ]
     },
     {
       "parameters": {
@@ -379,7 +433,10 @@
       "name": "Should Send?",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [3760, 520]
+      "position": [
+        3760,
+        520
+      ]
     },
     {
       "parameters": {
@@ -400,7 +457,10 @@
       "name": "Send to Slack",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [3980, 520],
+      "position": [
+        3980,
+        520
+      ],
       "credentials": {
         "slackApi": {
           "id": "SLACK_CREDENTIAL_ID",
@@ -418,7 +478,10 @@
       "name": "Log Workflow Run",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
-      "position": [4200, 520],
+      "position": [
+        4200,
+        520
+      ],
       "credentials": {
         "postgres": {
           "id": "POSTGRES_CREDENTIAL_ID",
@@ -449,7 +512,10 @@
       "name": "Workflow Complete",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [4420, 520]
+      "position": [
+        4420,
+        520
+      ]
     },
     {
       "parameters": {},
@@ -457,7 +523,10 @@
       "name": "No Opportunities",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
-      "position": [3760, 720]
+      "position": [
+        3760,
+        720
+      ]
     },
     {
       "parameters": {
@@ -472,7 +541,10 @@
       "name": "Error Notification",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [2440, 520]
+      "position": [
+        2440,
+        520
+      ]
     },
     {
       "parameters": {
@@ -484,7 +556,10 @@
       "name": "Get Answered Questions",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
-      "position": [680, 520],
+      "position": [
+        680,
+        520
+      ],
       "credentials": {
         "postgres": {
           "id": "POSTGRES_CREDENTIAL_ID",
@@ -500,7 +575,10 @@
       "name": "Filter Trackable",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [900, 520]
+      "position": [
+        900,
+        520
+      ]
     },
     {
       "parameters": {
@@ -529,7 +607,10 @@
       "name": "Has Trackable?",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [1120, 520]
+      "position": [
+        1120,
+        520
+      ]
     },
     {
       "parameters": {
@@ -552,7 +633,10 @@
       "name": "Check Answer Performance",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1340, 520],
+      "position": [
+        1340,
+        520
+      ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "FIRECRAWL_CREDENTIAL_ID",
@@ -569,7 +653,10 @@
       "name": "Extract Metrics",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1560, 520]
+      "position": [
+        1560,
+        520
+      ]
     },
     {
       "parameters": {
@@ -581,7 +668,10 @@
       "name": "Update Tracking",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
-      "position": [1780, 520],
+      "position": [
+        1780,
+        520
+      ],
       "credentials": {
         "postgres": {
           "id": "POSTGRES_CREDENTIAL_ID",
@@ -905,24 +995,6 @@
     "errorWorkflow": ""
   },
   "staticData": null,
-  "tags": [
-    {
-      "name": "marketing",
-      "id": "1"
-    },
-    {
-      "name": "quora",
-      "id": "4"
-    },
-    {
-      "name": "lician",
-      "id": "3"
-    },
-    {
-      "name": "seo",
-      "id": "5"
-    }
-  ],
   "triggerCount": 1,
   "updatedAt": "2026-01-16T00:00:00.000Z",
   "versionId": "1",

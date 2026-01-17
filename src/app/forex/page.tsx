@@ -235,12 +235,12 @@ export default async function ForexPage() {
             <SEOSidebar />
             <div className="flex-1 min-w-0">
           {/* Breadcrumbs */}
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground transition-colors">
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white transition-colors duration-100">
               Home
             </Link>
             {' / '}
-            <span className="text-foreground">Forex Rates</span>
+            <span className="text-white">Forex Rates</span>
           </nav>
 
           {/* Hero Section */}
@@ -248,11 +248,11 @@ export default async function ForexPage() {
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
               Live Forex & Currency Exchange Rates
             </h1>
-            <p className="text-xl text-muted-foreground mb-4">
+            <p className="text-xl text-[#868f97] mb-4">
               Real-time foreign exchange rates for major currency pairs including EUR/USD, GBP/USD, USD/JPY, and more.
               Track live forex rates updated every 5 minutes.
             </p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-[#868f97]">
               Last updated: {lastUpdated}
             </p>
           </div>
@@ -269,7 +269,7 @@ export default async function ForexPage() {
                 return (
                   <div
                     key={pairCode}
-                    className="bg-card p-6 rounded-xl border border-border hover:border-green-500/50 transition-all"
+                    className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all"
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
@@ -279,12 +279,12 @@ export default async function ForexPage() {
                       <span className="text-2xl">{getCurrencyFlag(pair.to)}</span>
                     </div>
                     <div className="mb-2">
-                      <div className="text-3xl font-bold text-green-500 tabular-nums">
+                      <div className="text-3xl font-bold text-[#4ebe96] tabular-nums">
                         {formatRate(rate, pairCode)}
                       </div>
                     </div>
-                    <p className="text-sm text-muted-foreground mb-2">{pair.description}</p>
-                    <div className="text-xs text-muted-foreground pt-2 border-t border-border">
+                    <p className="text-sm text-[#868f97] mb-2">{pair.description}</p>
+                    <div className="text-xs text-[#868f97] pt-2 border-t border-white/[0.08]">
                       1 {pair.from} = {formatRate(rate, pairCode)} {pair.to}
                       <br />
                       1 {pair.to} = {formatRate(inverseRate, pairCode)} {pair.from}
@@ -298,11 +298,11 @@ export default async function ForexPage() {
           {/* USD Exchange Rates */}
           <section className="mb-16">
             <h2 className="text-3xl font-bold mb-6">USD Exchange Rates</h2>
-            <div className="bg-card rounded-xl border border-border overflow-hidden">
+            <div className="bg-[#1a1a1a] rounded-xl border border-white/[0.08] overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-border">
+                    <tr className="border-b border-white/[0.08]">
                       <th className="text-left p-4 font-semibold">Currency</th>
                       <th className="text-left p-4 font-semibold">Code</th>
                       <th className="text-right p-4 font-semibold">1 USD =</th>
@@ -315,16 +315,16 @@ export default async function ForexPage() {
                       const inverseRate = rate > 0 ? 1 / rate : 0
 
                       return (
-                        <tr key={currency.code} className="border-b border-border hover:bg-secondary/30 transition-colors">
+                        <tr key={currency.code} className="border-b border-white/[0.08] hover:bg-white/[0.05]/30 transition-colors duration-100">
                           <td className="p-4">
                             <div className="flex items-center gap-2">
                               <span className="text-xl">{currency.flag}</span>
                               <span className="font-medium">{currency.name}</span>
                             </div>
                           </td>
-                          <td className="p-4 font-mono text-muted-foreground">{currency.code}</td>
+                          <td className="p-4 font-mono text-[#868f97]">{currency.code}</td>
                           <td className="p-4 text-right font-mono text-lg">{rate.toFixed(4)}</td>
-                          <td className="p-4 text-right font-mono text-lg text-green-500">{inverseRate.toFixed(4)}</td>
+                          <td className="p-4 text-right font-mono text-lg text-[#4ebe96]">{inverseRate.toFixed(4)}</td>
                         </tr>
                       )
                     })}
@@ -352,21 +352,21 @@ export default async function ForexPage() {
                 return (
                   <div
                     key={`${conversion.from}-${conversion.to}`}
-                    className="bg-card p-6 rounded-xl border border-border"
+                    className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]"
                   >
                     <div className="flex items-center justify-between mb-4">
                       <span className="text-2xl">{getCurrencyFlag(conversion.from)}</span>
-                      <span className="text-muted-foreground">→</span>
+                      <span className="text-[#868f97]">→</span>
                       <span className="text-2xl">{getCurrencyFlag(conversion.to)}</span>
                     </div>
                     <div className="text-center">
                       <div className="text-lg font-bold mb-2">
                         {conversion.amount} {conversion.from}
                       </div>
-                      <div className="text-2xl font-bold text-green-500 mb-2">
+                      <div className="text-2xl font-bold text-[#4ebe96] mb-2">
                         {result.toFixed(2)} {conversion.to}
                       </div>
-                      <div className="text-sm text-muted-foreground">
+                      <div className="text-sm text-[#868f97]">
                         Rate: {formatRate(rate, `${conversion.from}/${conversion.to}`)}
                       </div>
                     </div>
@@ -380,9 +380,9 @@ export default async function ForexPage() {
           <section className="mb-16">
             <h2 className="text-3xl font-bold mb-6">Understanding Forex Markets</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-xl font-bold mb-3 text-green-500">What is Forex Trading?</h3>
-                <p className="text-muted-foreground mb-4">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+                <h3 className="text-xl font-bold mb-3 text-[#4ebe96]">What is Forex Trading?</h3>
+                <p className="text-[#868f97] mb-4">
                   Forex (foreign exchange) is the global marketplace for trading national currencies.
                   It's the largest financial market in the world, with over $7.5 trillion traded daily.
                   Unlike stock markets, forex operates 24 hours a day, 5 days a week across major
@@ -390,9 +390,9 @@ export default async function ForexPage() {
                 </p>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-xl font-bold mb-3 text-green-500">How Currency Pairs Work</h3>
-                <p className="text-muted-foreground mb-4">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+                <h3 className="text-xl font-bold mb-3 text-[#4ebe96]">How Currency Pairs Work</h3>
+                <p className="text-[#868f97] mb-4">
                   Currency pairs are quoted with a base currency and a quote currency. In EUR/USD = 1.10,
                   EUR is the base currency and USD is the quote currency. The rate shows how much of the
                   quote currency (1.10 USD) is needed to buy one unit of the base currency (1 EUR).
@@ -400,9 +400,9 @@ export default async function ForexPage() {
                 </p>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-xl font-bold mb-3 text-green-500">Major vs Minor vs Exotic Pairs</h3>
-                <p className="text-muted-foreground mb-4">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+                <h3 className="text-xl font-bold mb-3 text-[#4ebe96]">Major vs Minor vs Exotic Pairs</h3>
+                <p className="text-[#868f97] mb-4">
                   Major pairs include USD and account for 80% of forex volume (EUR/USD, USD/JPY, GBP/USD, etc.).
                   Minor pairs (or crosses) don't include USD (EUR/GBP, EUR/JPY). Exotic pairs involve
                   one major currency and one from an emerging economy (USD/TRY, EUR/ZAR). Major pairs
@@ -410,9 +410,9 @@ export default async function ForexPage() {
                 </p>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-xl font-bold mb-3 text-green-500">Factors Affecting Exchange Rates</h3>
-                <p className="text-muted-foreground mb-4">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+                <h3 className="text-xl font-bold mb-3 text-[#4ebe96]">Factors Affecting Exchange Rates</h3>
+                <p className="text-[#868f97] mb-4">
                   Exchange rates are driven by interest rate differentials, inflation rates, economic
                   growth, political stability, and trade balances. Central bank decisions are particularly
                   influential - when a central bank raises interest rates, it typically strengthens that
@@ -426,11 +426,11 @@ export default async function ForexPage() {
           {/* Key Forex Concepts */}
           <section className="mb-16">
             <h2 className="text-3xl font-bold mb-6">Key Forex Concepts</h2>
-            <div className="bg-card p-6 rounded-xl border border-border">
+            <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
               <div className="space-y-4">
-                <div className="pb-4 border-b border-border">
-                  <h3 className="font-bold text-green-500 mb-2 text-lg">Pip (Percentage in Point)</h3>
-                  <p className="text-muted-foreground">
+                <div className="pb-4 border-b border-white/[0.08]">
+                  <h3 className="font-bold text-[#4ebe96] mb-2 text-lg">Pip (Percentage in Point)</h3>
+                  <p className="text-[#868f97]">
                     The smallest price increment in forex trading. For most pairs, a pip is 0.0001
                     (fourth decimal place). If EUR/USD moves from 1.1000 to 1.1001, that's 1 pip.
                     For JPY pairs, a pip is 0.01 (second decimal place). Traders measure profit and
@@ -438,9 +438,9 @@ export default async function ForexPage() {
                   </p>
                 </div>
 
-                <div className="pb-4 border-b border-border">
-                  <h3 className="font-bold text-green-500 mb-2 text-lg">Bid/Ask Spread</h3>
-                  <p className="text-muted-foreground">
+                <div className="pb-4 border-b border-white/[0.08]">
+                  <h3 className="font-bold text-[#4ebe96] mb-2 text-lg">Bid/Ask Spread</h3>
+                  <p className="text-[#868f97]">
                     The difference between the bid price (what buyers pay) and ask price (what sellers
                     receive). The spread represents the broker's commission. Major pairs like EUR/USD
                     typically have spreads of 0-2 pips, while exotic pairs may have spreads of 10+ pips.
@@ -448,9 +448,9 @@ export default async function ForexPage() {
                   </p>
                 </div>
 
-                <div className="pb-4 border-b border-border">
-                  <h3 className="font-bold text-green-500 mb-2 text-lg">Leverage in Forex</h3>
-                  <p className="text-muted-foreground">
+                <div className="pb-4 border-b border-white/[0.08]">
+                  <h3 className="font-bold text-[#4ebe96] mb-2 text-lg">Leverage in Forex</h3>
+                  <p className="text-[#868f97]">
                     Leverage allows traders to control large positions with relatively small capital.
                     For example, 100:1 leverage means you can control $100,000 with $1,000. While
                     leverage amplifies potential profits, it also magnifies losses. Retail traders
@@ -459,8 +459,8 @@ export default async function ForexPage() {
                 </div>
 
                 <div>
-                  <h3 className="font-bold text-green-500 mb-2 text-lg">Market Sessions</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="font-bold text-[#4ebe96] mb-2 text-lg">Market Sessions</h3>
+                  <p className="text-[#868f97]">
                     The forex market operates through four main sessions: Sydney (5 PM - 2 AM EST),
                     Tokyo (7 PM - 4 AM EST), London (3 AM - 12 PM EST), and New York (8 AM - 5 PM EST).
                     The highest volume and volatility occurs during session overlaps, particularly
@@ -477,39 +477,39 @@ export default async function ForexPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Link
                 href="/markets"
-                className="bg-card p-6 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all group"
               >
                 <div className="text-3xl mb-3">📊</div>
-                <h3 className="text-lg font-bold mb-2 group-hover:text-green-500 transition-colors">
+                <h3 className="text-lg font-bold mb-2 group-hover:text-[#4ebe96] transition-colors duration-100">
                   Stock Market Movers
                 </h3>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-[#868f97] text-sm">
                   Track top gainers, losers, and most active stocks in real-time.
                 </p>
               </Link>
 
               <Link
                 href="/dashboard"
-                className="bg-card p-6 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all group"
               >
                 <div className="text-3xl mb-3">🔍</div>
-                <h3 className="text-lg font-bold mb-2 group-hover:text-green-500 transition-colors">
+                <h3 className="text-lg font-bold mb-2 group-hover:text-[#4ebe96] transition-colors duration-100">
                   Stock Analysis Dashboard
                 </h3>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-[#868f97] text-sm">
                   AI-powered stock research and fundamental analysis tools.
                 </p>
               </Link>
 
               <Link
                 href="/screener"
-                className="bg-card p-6 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all group"
               >
                 <div className="text-3xl mb-3">🎯</div>
-                <h3 className="text-lg font-bold mb-2 group-hover:text-green-500 transition-colors">
+                <h3 className="text-lg font-bold mb-2 group-hover:text-[#4ebe96] transition-colors duration-100">
                   Stock Screener
                 </h3>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-[#868f97] text-sm">
                   Filter stocks by market cap, P/E ratio, growth metrics, and more.
                 </p>
               </Link>
@@ -523,17 +523,17 @@ export default async function ForexPage() {
               {faqs.map((faq, index) => (
                 <div
                   key={index}
-                  className="bg-card p-6 rounded-xl border border-border"
+                  className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]"
                 >
-                  <h3 className="text-lg font-bold mb-3 text-green-500">{faq.question}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
+                  <h3 className="text-lg font-bold mb-3 text-[#4ebe96]">{faq.question}</h3>
+                  <p className="text-[#868f97] leading-relaxed">{faq.answer}</p>
                 </div>
               ))}
             </div>
           </section>
 
           {/* CTA Section 1 - Analysis Tools */}
-          <section className="bg-gradient-to-r from-green-600 to-green-500 p-8 rounded-xl text-white text-center mb-8">
+          <section className="bg-gradient-to-r from-[#4ebe96] to-[#4ebe96] p-8 rounded-xl text-white text-center mb-8">
             <h2 className="text-3xl font-bold mb-4">
               Track Forex Impact on Global Markets
             </h2>
@@ -543,31 +543,31 @@ export default async function ForexPage() {
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-white text-green-600 px-8 py-3 rounded-lg font-semibold hover:bg-green-50 transition-colors"
+              className="inline-block bg-white text-[#4ebe96] px-8 py-3 rounded-lg font-semibold hover:bg-[#4ebe96]/10 transition-colors duration-100"
             >
               Analyze Stocks Now
             </Link>
           </section>
 
           {/* CTA Section 2 - Premium */}
-          <section className="bg-card p-8 rounded-xl border border-border text-center">
+          <section className="bg-[#1a1a1a] p-8 rounded-xl border border-white/[0.08] text-center">
             <h2 className="text-2xl font-bold mb-4">
               Get Real-Time Forex Alerts & Analysis
             </h2>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+            <p className="text-[#868f97] mb-6 max-w-2xl mx-auto">
               Upgrade to premium for real-time forex notifications, currency correlation analysis,
               and AI-powered insights on how currency movements impact your investments.
             </p>
             <div className="flex gap-4 justify-center">
               <Link
                 href="/premium"
-                className="bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+                className="bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-white px-8 py-3 rounded-lg font-medium transition-colors duration-100"
               >
                 Upgrade to Premium
               </Link>
               <Link
                 href="/learn"
-                className="bg-secondary hover:bg-secondary/70 text-foreground px-8 py-3 rounded-lg font-medium transition-colors"
+                className="bg-white/[0.05] hover:bg-white/[0.08] text-white px-8 py-3 rounded-lg font-medium transition-colors duration-100"
               >
                 Learn More About Forex
               </Link>

@@ -417,7 +417,7 @@ export default function ManusStyleHomeIntl() {
       {/* Left Sidebar */}
       <aside
         className={cn(
-          "flex flex-col py-4 border-r border-border bg-card/50 transition-all duration-200",
+          "flex flex-col py-4 border-r border-white/[0.08] bg-[#1a1a1a]/50 transition-all duration-200",
           sidebarExpanded ? "w-52" : "w-14"
         )}
         onMouseEnter={() => setSidebarExpanded(true)}
@@ -425,8 +425,8 @@ export default function ManusStyleHomeIntl() {
       >
         {/* Logo */}
         <Link href="/" className="mb-6 flex items-center gap-3 px-3">
-          <div className="w-9 h-9 bg-foreground rounded-xl flex items-center justify-center flex-shrink-0">
-            <span className="text-background font-bold text-lg">L</span>
+          <div className="w-9 h-9 bg-white rounded-xl flex items-center justify-center flex-shrink-0">
+            <span className="text-black font-bold text-lg">L</span>
           </div>
           {sidebarExpanded && (
             <span className="font-semibold text-lg whitespace-nowrap">Lician</span>
@@ -440,9 +440,9 @@ export default function ManusStyleHomeIntl() {
               key={item.id}
               onClick={() => handleSidebarAction(item)}
               className={cn(
-                "w-full flex items-center gap-3 px-2.5 py-2.5 rounded-xl transition-colors",
-                "text-muted-foreground hover:text-foreground hover:bg-secondary",
-                item.action === "new" && "bg-green-500/10 text-green-500 hover:bg-green-500/20"
+                "w-full flex items-center gap-3 px-2.5 py-2.5 rounded-xl transition-colors duration-100",
+                "text-[#868f97] hover:text-white hover:bg-white/[0.08]",
+                item.action === "new" && "bg-[#4ebe96]/10 text-[#4ebe96] hover:bg-[#4ebe96]/20"
               )}
               title={item.label}
             >
@@ -463,8 +463,8 @@ export default function ManusStyleHomeIntl() {
               key={item.id}
               href={item.href}
               className={cn(
-                "w-full flex items-center gap-3 px-2.5 py-2.5 rounded-xl transition-colors",
-                "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                "w-full flex items-center gap-3 px-2.5 py-2.5 rounded-xl transition-colors duration-100",
+                "text-[#868f97] hover:text-white hover:bg-white/[0.08]"
               )}
               title={item.label}
             >
@@ -480,10 +480,10 @@ export default function ManusStyleHomeIntl() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden">
         {/* Top bar */}
-        <header className="flex items-center justify-between px-6 py-3 border-b border-border flex-shrink-0">
+        <header className="flex items-center justify-between px-6 py-3 border-b border-white/[0.08] flex-shrink-0">
           <div className="flex items-center gap-2">
             <span className="font-semibold">Lician AI</span>
-            <ChevronDown className="w-4 h-4 text-muted-foreground" />
+            <ChevronDown className="w-4 h-4 text-[#868f97]" />
           </div>
 
           <div className="flex items-center gap-4">
@@ -493,39 +493,39 @@ export default function ManusStyleHomeIntl() {
             {/* Free plan / Start trial */}
             {!loading && !user && (
               <div className="flex items-center gap-2 text-sm">
-                <span className="text-muted-foreground">{t('common.freePlan')}</span>
-                <span className="text-muted-foreground">|</span>
-                <a href="/api/stripe/quick-checkout?plan=annual" className="text-green-500 hover:text-green-400 font-medium">
+                <span className="text-[#868f97]">{t('common.freePlan')}</span>
+                <span className="text-[#868f97]">|</span>
+                <a href="/api/stripe/quick-checkout?plan=annual" className="text-[#4ebe96] hover:text-[#4ebe96] font-medium transition-colors duration-100">
                   {t('common.startFreeTrial')}
                 </a>
               </div>
             )}
 
             {/* Credits */}
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-secondary/50 rounded-full">
-              <Zap className="w-4 h-4 text-yellow-500" />
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-white/[0.025] rounded-full">
+              <Zap className="w-4 h-4 text-[#f4a623]" />
               <span className="text-sm font-medium">{credits}</span>
             </div>
 
             {/* Share credits */}
             <button
-              className="p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors"
+              className="p-2 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
               title={t('common.inviteFriends')}
             >
               <Gift className="w-5 h-5" />
             </button>
 
             {/* Notifications */}
-            <button className="p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors">
+            <button className="p-2 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.08] transition-colors duration-100">
               <Bell className="w-5 h-5" />
             </button>
 
             {/* User/Auth */}
             {loading ? (
-              <div className="w-9 h-9 bg-secondary animate-pulse rounded-full" />
+              <div className="w-9 h-9 bg-white/[0.05] animate-pulse rounded-full" />
             ) : user ? (
               <Link href="/dashboard">
-                <div className="w-9 h-9 bg-green-600 rounded-full flex items-center justify-center text-white font-medium">
+                <div className="w-9 h-9 bg-[#4ebe96] rounded-full flex items-center justify-center text-black font-medium">
                   {user.email?.charAt(0).toUpperCase() || "U"}
                 </div>
               </Link>
@@ -535,7 +535,7 @@ export default function ManusStyleHomeIntl() {
                   <Button variant="ghost" size="sm">{t('common.signIn')}</Button>
                 </Link>
                 <Link href="/login">
-                  <Button size="sm" className="bg-green-600 hover:bg-green-500">{t('common.signUp')}</Button>
+                  <Button size="sm" className="bg-[#4ebe96] hover:bg-[#4ebe96] text-black">{t('common.signUp')}</Button>
                 </Link>
               </div>
             )}
@@ -560,8 +560,8 @@ export default function ManusStyleHomeIntl() {
                       className={cn(
                         "max-w-[85%] rounded-2xl px-4 py-3",
                         message.role === 'user'
-                          ? "bg-green-600 text-white"
-                          : "bg-card border border-border"
+                          ? "bg-[#4ebe96] text-black"
+                          : "bg-[#1a1a1a] border border-white/[0.08]"
                       )}
                     >
                       <div className="text-sm whitespace-pre-wrap">
@@ -573,7 +573,7 @@ export default function ManusStyleHomeIntl() {
                       {message.role === 'assistant' && message.content && (
                         <button
                           onClick={() => copyToClipboard(message.content, message.id)}
-                          className="mt-2 p-1 text-muted-foreground hover:text-foreground rounded transition-colors"
+                          className="mt-2 p-1 text-[#868f97] hover:text-white rounded transition-colors duration-100"
                         >
                           {copiedId === message.id ? (
                             <Check className="w-4 h-4" />
@@ -588,22 +588,22 @@ export default function ManusStyleHomeIntl() {
 
                 {/* Research tasks indicator */}
                 {isLoading && tasks.length > 0 && (
-                  <div className="bg-card border border-border rounded-xl p-4">
+                  <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-3">
-                      <Loader2 className="w-4 h-4 animate-spin text-green-500" />
+                      <Loader2 className="w-4 h-4 animate-spin text-[#4ebe96]" />
                       <span className="text-sm font-medium">{t('chat.researching')}</span>
                     </div>
                     <div className="space-y-2">
                       {tasks.map(task => (
                         <div key={task.id} className="flex items-center gap-2 text-sm">
                           {task.status === 'completed' ? (
-                            <CheckCircle2 className="w-4 h-4 text-green-500" />
+                            <CheckCircle2 className="w-4 h-4 text-[#4ebe96]" />
                           ) : task.status === 'running' ? (
-                            <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
+                            <Loader2 className="w-4 h-4 animate-spin text-[#479ffa]" />
                           ) : (
-                            <div className="w-4 h-4 rounded-full border border-muted-foreground/30" />
+                            <div className="w-4 h-4 rounded-full border border-[#868f97]/30" />
                           )}
-                          <span className={task.status === 'completed' ? 'text-muted-foreground' : ''}>
+                          <span className={task.status === 'completed' ? 'text-[#868f97]' : ''}>
                             {task.description}
                           </span>
                         </div>
@@ -620,7 +620,7 @@ export default function ManusStyleHomeIntl() {
           {/* Centered input area */}
           <div className={cn(
             "flex flex-col items-center px-6 py-8",
-            hasMessages ? "border-t border-border" : "flex-1 justify-center"
+            hasMessages ? "border-t border-white/[0.08]" : "flex-1 justify-center"
           )}>
             {/* Heading - only show when no messages */}
             {!hasMessages && (
@@ -643,27 +643,27 @@ export default function ManusStyleHomeIntl() {
               {/* Attached file preview */}
               {attachedFile && (
                 <div className="mb-2">
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-secondary/50 rounded-lg text-sm">
-                    <FileText className="w-4 h-4 text-muted-foreground" />
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/[0.025] rounded-lg text-sm">
+                    <FileText className="w-4 h-4 text-[#868f97]" />
                     <span className="truncate max-w-[200px]">{attachedFile.name}</span>
                     <button
                       onClick={() => setAttachedFile(null)}
-                      className="p-0.5 hover:bg-secondary rounded transition-colors"
+                      className="p-0.5 hover:bg-white/[0.08] rounded transition-colors duration-100"
                     >
-                      <X className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground" />
+                      <X className="w-3.5 h-3.5 text-[#868f97] hover:text-white" />
                     </button>
                   </div>
                 </div>
               )}
 
-              <div className="relative bg-card border border-border rounded-2xl shadow-lg focus-within:border-green-500/50 transition-all">
+              <div className="relative bg-[#1a1a1a] border border-white/[0.08] rounded-2xl shadow-lg focus-within:border-[#4ebe96]/50 transition-all">
                 <textarea
                   ref={textareaRef}
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder={t('home.placeholder')}
-                  className="w-full min-h-[60px] max-h-[150px] py-4 px-5 pl-14 pr-14 text-lg bg-transparent border-none resize-none focus:outline-none placeholder:text-muted-foreground"
+                  className="w-full min-h-[60px] max-h-[150px] py-4 px-5 pl-14 pr-14 text-lg bg-transparent border-none resize-none focus:outline-none placeholder:text-[#868f97]"
                   disabled={isLoading}
                   rows={1}
                 />
@@ -671,7 +671,7 @@ export default function ManusStyleHomeIntl() {
                 {/* File attachment button */}
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="absolute left-4 bottom-4 p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors"
+                  className="absolute left-4 bottom-4 p-2 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
                   title={t('chat.attachFile')}
                 >
                   <Paperclip className="w-5 h-5" />
@@ -682,10 +682,10 @@ export default function ManusStyleHomeIntl() {
                   onClick={handleSubmit}
                   disabled={isLoading || (!inputValue.trim() && !attachedFile)}
                   className={cn(
-                    "absolute right-4 bottom-4 w-9 h-9 rounded-xl flex items-center justify-center transition-colors",
+                    "absolute right-4 bottom-4 w-9 h-9 rounded-xl flex items-center justify-center transition-colors duration-100",
                     (inputValue.trim() || attachedFile) && !isLoading
-                      ? "bg-green-600 hover:bg-green-500 text-white"
-                      : "bg-secondary text-muted-foreground"
+                      ? "bg-[#4ebe96] hover:bg-[#4ebe96] text-black"
+                      : "bg-white/[0.05] text-[#868f97]"
                   )}
                 >
                   {isLoading ? (
@@ -707,7 +707,7 @@ export default function ManusStyleHomeIntl() {
                           setInputValue(suggestion)
                           setTimeout(() => handleSubmit(), 100)
                         }}
-                        className="text-sm px-3 py-2 rounded-full border border-border bg-card hover:bg-secondary/50 transition-colors"
+                        className="text-sm px-3 py-2 rounded-full border border-white/[0.08] bg-[#1a1a1a] hover:bg-white/[0.025] transition-colors duration-100"
                       >
                         {suggestion}
                       </button>
@@ -722,7 +722,7 @@ export default function ManusStyleHomeIntl() {
                           onClick={() => handleToolClick(tool)}
                           className={cn(
                             "flex items-center gap-2 px-4 py-2.5 rounded-full",
-                            "border border-border bg-card hover:bg-secondary",
+                            "border border-white/[0.08] bg-[#1a1a1a] hover:bg-white/[0.08]",
                             "text-sm font-medium transition-colors"
                           )}
                         >
@@ -732,15 +732,15 @@ export default function ManusStyleHomeIntl() {
 
                         {/* More tools dropdown */}
                         {tool.id === "more" && showMoreTools && (
-                          <div className="absolute top-full right-0 mt-2 w-56 bg-card border border-border rounded-xl shadow-xl py-2 z-50">
+                          <div className="absolute top-full right-0 mt-2 w-56 bg-[#1a1a1a] border border-white/[0.08] rounded-xl shadow-xl py-2 z-50">
                             {MORE_TOOLS.map((moreTool) => (
                               <Link
                                 key={moreTool.label}
                                 href={moreTool.href}
-                                className="flex items-center gap-3 px-4 py-2.5 hover:bg-secondary transition-colors"
+                                className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/[0.08] transition-colors duration-100"
                                 onClick={() => setShowMoreTools(false)}
                               >
-                                <moreTool.icon className="w-4 h-4 text-muted-foreground" />
+                                <moreTool.icon className="w-4 h-4 text-[#868f97]" />
                                 <span className="text-sm">{moreTool.label}</span>
                               </Link>
                             ))}
@@ -751,7 +751,7 @@ export default function ManusStyleHomeIntl() {
                   </div>
 
                   {/* Tool integration hint with stock logos */}
-                  <div className="flex items-center justify-between px-2 py-4 text-sm text-muted-foreground">
+                  <div className="flex items-center justify-between px-2 py-4 text-sm text-[#868f97]">
                     <div className="flex items-center gap-2">
                       <Wallet className="w-4 h-4" />
                       <span>{t('home.connectPortfolio')}</span>
@@ -777,22 +777,22 @@ export default function ManusStyleHomeIntl() {
                         {/* Carousel navigation */}
                         <button
                           onClick={() => setCarouselIndex((prev) => (prev - 1 + CAROUSEL_SLIDES.length) % CAROUSEL_SLIDES.length)}
-                          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 p-1.5 rounded-full bg-card border border-border shadow-lg hover:bg-secondary transition-colors"
+                          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 p-1.5 rounded-full bg-[#1a1a1a] border border-white/[0.08] shadow-lg hover:bg-white/[0.08] transition-colors duration-100"
                         >
                           <ChevronLeft className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => setCarouselIndex((prev) => (prev + 1) % CAROUSEL_SLIDES.length)}
-                          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 p-1.5 rounded-full bg-card border border-border shadow-lg hover:bg-secondary transition-colors"
+                          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 p-1.5 rounded-full bg-[#1a1a1a] border border-white/[0.08] shadow-lg hover:bg-white/[0.08] transition-colors duration-100"
                         >
                           <ChevronRight className="w-4 h-4" />
                         </button>
 
                         <a href="/markets" className="block">
-                          <div className="bg-card border border-border rounded-2xl p-4 flex items-center gap-4 shadow-lg hover:border-green-500/50 transition-colors">
+                          <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-2xl p-4 flex items-center gap-4 shadow-lg hover:border-[#4ebe96]/50 transition-colors duration-100">
                             <div className="flex-1">
                               <p className="font-medium mb-1">{CAROUSEL_SLIDES[carouselIndex].title}</p>
-                              <p className="text-sm text-muted-foreground">
+                              <p className="text-sm text-[#868f97]">
                                 {movers[0]?.symbol} {movers[0]?.changePercent > 0 ? "+" : ""}{movers[0]?.changePercent?.toFixed(2)}%
                                 {movers[1] && ` · ${movers[1].symbol} ${movers[1].changePercent > 0 ? "+" : ""}${movers[1].changePercent?.toFixed(2)}%`}
                               </p>
@@ -817,8 +817,8 @@ export default function ManusStyleHomeIntl() {
                               key={index}
                               onClick={() => setCarouselIndex(index)}
                               className={cn(
-                                "w-2 h-2 rounded-full transition-colors",
-                                index === carouselIndex ? "bg-foreground" : "bg-muted-foreground/30"
+                                "w-2 h-2 rounded-full transition-colors duration-100",
+                                index === carouselIndex ? "bg-white" : "bg-[#868f97]/30"
                               )}
                             />
                           ))}
@@ -831,8 +831,8 @@ export default function ManusStyleHomeIntl() {
                   {news.length > 0 && (
                     <div className="w-full max-w-2xl mx-auto mt-6">
                       <div className="flex items-center gap-2 mb-3">
-                        <Newspaper className="w-4 h-4 text-muted-foreground" />
-                        <span className="text-sm font-medium text-muted-foreground">{t('home.marketNews')}</span>
+                        <Newspaper className="w-4 h-4 text-[#868f97]" />
+                        <span className="text-sm font-medium text-[#868f97]">{t('home.marketNews')}</span>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         {news.map((item, i) => (
@@ -841,26 +841,26 @@ export default function ManusStyleHomeIntl() {
                             href={item.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="block p-3 rounded-lg border border-border bg-card hover:bg-secondary/50 transition-colors group"
+                            className="block p-3 rounded-lg border border-white/[0.08] bg-[#1a1a1a] hover:bg-white/[0.025] transition-colors duration-100 group"
                           >
                             <div className="flex items-start gap-2">
                               {item.sentiment?.polarity > 0.1 ? (
-                                <TrendingUp className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                                <TrendingUp className="w-4 h-4 text-[#4ebe96] flex-shrink-0 mt-0.5" />
                               ) : item.sentiment?.polarity < -0.1 ? (
-                                <TrendingDown className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
+                                <TrendingDown className="w-4 h-4 text-[#e15241] flex-shrink-0 mt-0.5" />
                               ) : (
-                                <Newspaper className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
+                                <Newspaper className="w-4 h-4 text-[#868f97] flex-shrink-0 mt-0.5" />
                               )}
                               <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium line-clamp-2 group-hover:text-green-500 transition-colors">
+                                <p className="text-sm font-medium line-clamp-2 group-hover:text-[#4ebe96] transition-colors duration-100">
                                   {item.title}
                                 </p>
                                 <div className="flex items-center gap-2 mt-1">
-                                  <span className="text-xs px-1.5 py-0.5 bg-secondary rounded text-muted-foreground">
+                                  <span className="text-xs px-1.5 py-0.5 bg-white/[0.05] rounded text-[#868f97]">
                                     {item.source || 'News'}
                                   </span>
                                   {item.symbols?.length > 0 && (
-                                    <span className="text-xs text-green-500 font-mono">
+                                    <span className="text-xs text-[#4ebe96] font-mono">
                                       ${item.symbols[0]}
                                     </span>
                                   )}

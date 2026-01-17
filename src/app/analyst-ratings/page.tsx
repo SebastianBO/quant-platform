@@ -183,17 +183,17 @@ function isBearishRating(rating: string): boolean {
 
 // Get rating display color
 function getRatingColor(rating: string): string {
-  if (isBullishRating(rating)) return 'text-green-500'
-  if (isBearishRating(rating)) return 'text-red-500'
-  return 'text-yellow-500'
+  if (isBullishRating(rating)) return 'text-[#4ebe96]'
+  if (isBearishRating(rating)) return 'text-[#e15241]'
+  return 'text-[#f4a623]'
 }
 
 // Get action display color
 function getActionColor(action: string): string {
-  if (action === 'upgrade') return 'bg-green-500/20 text-green-500'
-  if (action === 'downgrade') return 'bg-red-500/20 text-red-500'
-  if (action === 'initiate') return 'bg-blue-500/20 text-blue-500'
-  return 'bg-muted text-muted-foreground'
+  if (action === 'upgrade') return 'bg-[#4ebe96]/20 text-[#4ebe96]'
+  if (action === 'downgrade') return 'bg-[#e15241]/20 text-[#e15241]'
+  if (action === 'initiate') return 'bg-[#479ffa]/20 text-[#479ffa]'
+  return 'bg-white/[0.05] text-[#868f97]'
 }
 
 const faqs = [
@@ -360,18 +360,18 @@ export default async function AnalystRatingsPage() {
           ]),
         }}
       />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-screen bg-background text-white pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           <div className="flex gap-8">
             <SEOSidebar />
             <div className="flex-1 min-w-0">
           {/* Breadcrumbs */}
-          <nav className="text-sm text-muted-foreground mb-6" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-foreground transition-colors">
+          <nav className="text-sm text-[#868f97] mb-6" aria-label="Breadcrumb">
+            <Link href="/" className="hover:text-white transition-colors duration-100">
               Home
             </Link>
             {' / '}
-            <span className="text-foreground">Analyst Ratings</span>
+            <span className="text-white">Analyst Ratings</span>
           </nav>
 
           {/* Hero Section */}
@@ -379,34 +379,34 @@ export default async function AnalystRatingsPage() {
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
               Analyst Ratings & Stock Upgrades
             </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl">
+            <p className="text-lg sm:text-xl text-[#868f97] max-w-3xl">
               Track Wall Street analyst ratings, stock upgrades, downgrades, and price targets from top firms like Goldman Sachs, Morgan Stanley, and JPMorgan.
             </p>
           </div>
 
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 sm:mb-12">
-            <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-2">Recent Upgrades</p>
-              <p className="text-2xl sm:text-3xl font-bold text-green-500">{totalUpgrades}</p>
-              <p className="text-xs text-muted-foreground mt-1">Last 90 days</p>
+            <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <p className="text-sm text-[#868f97] mb-2">Recent Upgrades</p>
+              <p className="text-2xl sm:text-3xl font-bold text-[#4ebe96]">{totalUpgrades}</p>
+              <p className="text-xs text-[#868f97] mt-1">Last 90 days</p>
             </div>
-            <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-2">Recent Downgrades</p>
-              <p className="text-2xl sm:text-3xl font-bold text-red-500">{totalDowngrades}</p>
-              <p className="text-xs text-muted-foreground mt-1">Last 90 days</p>
+            <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <p className="text-sm text-[#868f97] mb-2">Recent Downgrades</p>
+              <p className="text-2xl sm:text-3xl font-bold text-[#e15241]">{totalDowngrades}</p>
+              <p className="text-xs text-[#868f97] mt-1">Last 90 days</p>
             </div>
-            <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-2">Buy Ratings</p>
-              <p className="text-2xl sm:text-3xl font-bold text-green-500">{totalBuyRatings}</p>
-              <p className="text-xs text-muted-foreground mt-1">
+            <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <p className="text-sm text-[#868f97] mb-2">Buy Ratings</p>
+              <p className="text-2xl sm:text-3xl font-bold text-[#4ebe96]">{totalBuyRatings}</p>
+              <p className="text-xs text-[#868f97] mt-1">
                 {totalSellRatings > 0 ? `${(totalBuyRatings / totalSellRatings).toFixed(1)}x vs Sell` : 'Active'}
               </p>
             </div>
-            <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-2">Analyst Firms</p>
+            <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <p className="text-sm text-[#868f97] mb-2">Analyst Firms</p>
               <p className="text-2xl sm:text-3xl font-bold">{topFirms.length}</p>
-              <p className="text-xs text-muted-foreground mt-1">Tracking coverage</p>
+              <p className="text-xs text-[#868f97] mt-1">Tracking coverage</p>
             </div>
           </div>
 
@@ -415,7 +415,7 @@ export default async function AnalystRatingsPage() {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-2xl sm:text-3xl font-bold">Recent Stock Upgrades</h2>
-                <p className="text-muted-foreground mt-1">
+                <p className="text-[#868f97] mt-1">
                   Latest analyst upgrades from Wall Street firms
                 </p>
               </div>
@@ -424,14 +424,14 @@ export default async function AnalystRatingsPage() {
               {upgrades.slice(0, 15).map((rating, index) => (
                 <div
                   key={`upgrade-${rating.id}-${index}`}
-                  className="bg-card p-4 sm:p-5 rounded-xl border border-border hover:border-green-500/50 transition-all"
+                  className="bg-[#1a1a1a] p-4 sm:p-5 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-2 flex-wrap">
                         <Link
                           href={`/stock/${rating.ticker}`}
-                          className="text-lg sm:text-xl font-bold hover:text-green-500 transition-colors"
+                          className="text-lg sm:text-xl font-bold hover:text-[#4ebe96] transition-colors duration-100"
                         >
                           {rating.ticker}
                         </Link>
@@ -439,7 +439,7 @@ export default async function AnalystRatingsPage() {
                           Upgrade
                         </span>
                         {rating.analyst_firms?.tier === 'tier1' && (
-                          <span className="px-2 py-1 rounded text-xs bg-blue-500/20 text-blue-500">
+                          <span className="px-2 py-1 rounded text-xs bg-[#479ffa]/20 text-[#479ffa]">
                             Tier 1 Firm
                           </span>
                         )}
@@ -447,14 +447,14 @@ export default async function AnalystRatingsPage() {
                       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm mb-2">
                         <span className="font-medium">{rating.analyst_firms?.name || 'Analyst'}</span>
                         {rating.analysts && (
-                          <span className="text-muted-foreground">{rating.analysts.name}</span>
+                          <span className="text-[#868f97]">{rating.analysts.name}</span>
                         )}
                       </div>
                       <div className="flex items-center gap-2 text-sm">
                         {rating.rating_prior && (
                           <>
-                            <span className="text-muted-foreground">{rating.rating_prior}</span>
-                            <span className="text-green-500">→</span>
+                            <span className="text-[#868f97]">{rating.rating_prior}</span>
+                            <span className="text-[#4ebe96]">→</span>
                           </>
                         )}
                         <span className={`font-bold ${getRatingColor(rating.rating)}`}>
@@ -465,14 +465,14 @@ export default async function AnalystRatingsPage() {
                     <div className="flex flex-row sm:flex-col items-start sm:items-end gap-4 sm:gap-1 text-right">
                       {rating.price_target && (
                         <div className="flex-1 sm:flex-none">
-                          <p className="text-lg sm:text-xl font-bold text-green-500">
+                          <p className="text-lg sm:text-xl font-bold text-[#4ebe96]">
                             ${rating.price_target.toFixed(2)}
                           </p>
-                          <p className="text-sm text-muted-foreground">Price Target</p>
+                          <p className="text-sm text-[#868f97]">Price Target</p>
                         </div>
                       )}
                       <div className="text-right">
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-[#868f97]">
                           {new Date(rating.rating_date).toLocaleDateString('en-US', {
                             month: 'short',
                             day: 'numeric',
@@ -492,7 +492,7 @@ export default async function AnalystRatingsPage() {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-2xl sm:text-3xl font-bold">Recent Stock Downgrades</h2>
-                <p className="text-muted-foreground mt-1">
+                <p className="text-[#868f97] mt-1">
                   Latest analyst downgrades and rating cuts
                 </p>
               </div>
@@ -501,14 +501,14 @@ export default async function AnalystRatingsPage() {
               {downgrades.slice(0, 15).map((rating, index) => (
                 <div
                   key={`downgrade-${rating.id}-${index}`}
-                  className="bg-card p-4 sm:p-5 rounded-xl border border-border hover:border-red-500/50 transition-all"
+                  className="bg-[#1a1a1a] p-4 sm:p-5 rounded-xl border border-white/[0.08] hover:border-[#e15241]/50 transition-all"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-2 flex-wrap">
                         <Link
                           href={`/stock/${rating.ticker}`}
-                          className="text-lg sm:text-xl font-bold hover:text-red-500 transition-colors"
+                          className="text-lg sm:text-xl font-bold hover:text-[#e15241] transition-colors duration-100"
                         >
                           {rating.ticker}
                         </Link>
@@ -516,7 +516,7 @@ export default async function AnalystRatingsPage() {
                           Downgrade
                         </span>
                         {rating.analyst_firms?.tier === 'tier1' && (
-                          <span className="px-2 py-1 rounded text-xs bg-blue-500/20 text-blue-500">
+                          <span className="px-2 py-1 rounded text-xs bg-[#479ffa]/20 text-[#479ffa]">
                             Tier 1 Firm
                           </span>
                         )}
@@ -524,14 +524,14 @@ export default async function AnalystRatingsPage() {
                       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm mb-2">
                         <span className="font-medium">{rating.analyst_firms?.name || 'Analyst'}</span>
                         {rating.analysts && (
-                          <span className="text-muted-foreground">{rating.analysts.name}</span>
+                          <span className="text-[#868f97]">{rating.analysts.name}</span>
                         )}
                       </div>
                       <div className="flex items-center gap-2 text-sm">
                         {rating.rating_prior && (
                           <>
-                            <span className="text-muted-foreground">{rating.rating_prior}</span>
-                            <span className="text-red-500">→</span>
+                            <span className="text-[#868f97]">{rating.rating_prior}</span>
+                            <span className="text-[#e15241]">→</span>
                           </>
                         )}
                         <span className={`font-bold ${getRatingColor(rating.rating)}`}>
@@ -542,14 +542,14 @@ export default async function AnalystRatingsPage() {
                     <div className="flex flex-row sm:flex-col items-start sm:items-end gap-4 sm:gap-1 text-right">
                       {rating.price_target && (
                         <div className="flex-1 sm:flex-none">
-                          <p className="text-lg sm:text-xl font-bold text-red-500">
+                          <p className="text-lg sm:text-xl font-bold text-[#e15241]">
                             ${rating.price_target.toFixed(2)}
                           </p>
-                          <p className="text-sm text-muted-foreground">Price Target</p>
+                          <p className="text-sm text-[#868f97]">Price Target</p>
                         </div>
                       )}
                       <div className="text-right">
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-[#868f97]">
                           {new Date(rating.rating_date).toLocaleDateString('en-US', {
                             month: 'short',
                             day: 'numeric',
@@ -569,7 +569,7 @@ export default async function AnalystRatingsPage() {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-2xl sm:text-3xl font-bold">Most Bullish Stocks</h2>
-                <p className="text-muted-foreground mt-1">
+                <p className="text-[#868f97] mt-1">
                   Stocks with multiple Buy ratings from analysts
                 </p>
               </div>
@@ -579,25 +579,25 @@ export default async function AnalystRatingsPage() {
                 <Link
                   key={stock.ticker}
                   href={`/stock/${stock.ticker}`}
-                  className="bg-card p-5 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                  className="bg-[#1a1a1a] p-5 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all group"
                 >
                   <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-xl font-bold group-hover:text-green-500 transition-colors">
+                    <h3 className="text-xl font-bold group-hover:text-[#4ebe96] transition-colors duration-100">
                       {stock.ticker}
                     </h3>
-                    <span className="px-2 py-1 rounded text-xs font-medium bg-green-500/20 text-green-500">
+                    <span className="px-2 py-1 rounded text-xs font-medium bg-[#4ebe96]/20 text-[#4ebe96]">
                       {stock.buyRatings} Buy{stock.buyRatings > 1 ? 's' : ''}
                     </span>
                   </div>
                   {stock.avgPriceTarget && !isNaN(stock.avgPriceTarget) && (
                     <div className="mb-2">
-                      <p className="text-2xl font-bold text-green-500">
+                      <p className="text-2xl font-bold text-[#4ebe96]">
                         ${stock.avgPriceTarget.toFixed(2)}
                       </p>
-                      <p className="text-sm text-muted-foreground">Avg. Price Target</p>
+                      <p className="text-sm text-[#868f97]">Avg. Price Target</p>
                     </div>
                   )}
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-[#868f97]">
                     Latest: {stock.latestRating.rating} by {stock.latestRating.analyst_firms?.name}
                   </p>
                 </Link>
@@ -611,7 +611,7 @@ export default async function AnalystRatingsPage() {
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h2 className="text-2xl sm:text-3xl font-bold">Most Bearish Stocks</h2>
-                  <p className="text-muted-foreground mt-1">
+                  <p className="text-[#868f97] mt-1">
                     Stocks with multiple Sell/Underperform ratings
                   </p>
                 </div>
@@ -621,25 +621,25 @@ export default async function AnalystRatingsPage() {
                   <Link
                     key={stock.ticker}
                     href={`/stock/${stock.ticker}`}
-                    className="bg-card p-5 rounded-xl border border-border hover:border-red-500/50 transition-all group"
+                    className="bg-[#1a1a1a] p-5 rounded-xl border border-white/[0.08] hover:border-[#e15241]/50 transition-all group"
                   >
                     <div className="flex items-start justify-between mb-3">
-                      <h3 className="text-xl font-bold group-hover:text-red-500 transition-colors">
+                      <h3 className="text-xl font-bold group-hover:text-[#e15241] transition-colors duration-100">
                         {stock.ticker}
                       </h3>
-                      <span className="px-2 py-1 rounded text-xs font-medium bg-red-500/20 text-red-500">
+                      <span className="px-2 py-1 rounded text-xs font-medium bg-[#e15241]/20 text-[#e15241]">
                         {stock.sellRatings} Sell{stock.sellRatings > 1 ? 's' : ''}
                       </span>
                     </div>
                     {stock.avgPriceTarget && !isNaN(stock.avgPriceTarget) && (
                       <div className="mb-2">
-                        <p className="text-2xl font-bold text-red-500">
+                        <p className="text-2xl font-bold text-[#e15241]">
                           ${stock.avgPriceTarget.toFixed(2)}
                         </p>
-                        <p className="text-sm text-muted-foreground">Avg. Price Target</p>
+                        <p className="text-sm text-[#868f97]">Avg. Price Target</p>
                       </div>
                     )}
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-[#868f97]">
                       Latest: {stock.latestRating.rating} by {stock.latestRating.analyst_firms?.name}
                     </p>
                   </Link>
@@ -653,7 +653,7 @@ export default async function AnalystRatingsPage() {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-2xl sm:text-3xl font-bold">Top Analyst Firms</h2>
-                <p className="text-muted-foreground mt-1">
+                <p className="text-[#868f97] mt-1">
                   Most active Wall Street research firms
                 </p>
               </div>
@@ -662,18 +662,18 @@ export default async function AnalystRatingsPage() {
               {topFirms.map((firm) => (
                 <div
                   key={firm.name}
-                  className="bg-card p-4 rounded-xl border border-border"
+                  className="bg-[#1a1a1a] p-4 rounded-xl border border-white/[0.08]"
                 >
                   <div className="flex items-start justify-between mb-2">
                     <h3 className="font-bold text-sm">{firm.name}</h3>
                     {firm.tier === 'tier1' && (
-                      <span className="px-2 py-1 rounded text-xs bg-blue-500/20 text-blue-500">
+                      <span className="px-2 py-1 rounded text-xs bg-[#479ffa]/20 text-[#479ffa]">
                         Tier 1
                       </span>
                     )}
                   </div>
-                  <p className="text-2xl font-bold text-green-500">{firm.count}</p>
-                  <p className="text-xs text-muted-foreground">Recent ratings</p>
+                  <p className="text-2xl font-bold text-[#4ebe96]">{firm.count}</p>
+                  <p className="text-xs text-[#868f97]">Recent ratings</p>
                 </div>
               ))}
             </div>
@@ -685,14 +685,14 @@ export default async function AnalystRatingsPage() {
               Understanding Analyst Ratings
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-xl font-bold mb-3 text-green-500">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+                <h3 className="text-xl font-bold mb-3 text-[#4ebe96]">
                   How Analyst Ratings Work
                 </h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="text-[#868f97] mb-4">
                   Wall Street analysts research companies and publish ratings based on fundamental analysis, valuation models, and industry expertise. Their recommendations influence institutional and retail investors.
                 </p>
-                <ul className="list-disc list-inside text-muted-foreground space-y-2">
+                <ul className="list-disc list-inside text-[#868f97] space-y-2">
                   <li>Buy/Outperform: Expected to beat the market</li>
                   <li>Hold/Neutral: Expected to match market returns</li>
                   <li>Sell/Underperform: Expected to lag the market</li>
@@ -700,14 +700,14 @@ export default async function AnalystRatingsPage() {
                 </ul>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-xl font-bold mb-3 text-green-500">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+                <h3 className="text-xl font-bold mb-3 text-[#4ebe96]">
                   Using Analyst Ratings Effectively
                 </h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="text-[#868f97] mb-4">
                   Analyst ratings are valuable inputs but shouldn\'t be your only decision factor. Use them alongside your own research and risk assessment.
                 </p>
-                <ul className="list-disc list-inside text-muted-foreground space-y-2">
+                <ul className="list-disc list-inside text-[#868f97] space-y-2">
                   <li>Look for consensus across multiple analysts</li>
                   <li>Pay more attention to Tier 1 firms</li>
                   <li>Watch for upgrade/downgrade patterns</li>
@@ -719,46 +719,46 @@ export default async function AnalystRatingsPage() {
           </section>
 
           {/* Rating Actions Explained */}
-          <section className="mb-12 bg-card p-6 sm:p-8 rounded-xl border border-border">
+          <section className="mb-12 bg-[#1a1a1a] p-6 sm:p-8 rounded-xl border border-white/[0.08]">
             <h2 className="text-2xl sm:text-3xl font-bold mb-6">
               Analyst Rating Actions Explained
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <h3 className="font-bold text-green-500 mb-3 flex items-center gap-2">
+                <h3 className="font-bold text-[#4ebe96] mb-3 flex items-center gap-2">
                   <span className="text-xl">📈</span>
                   Upgrades
                 </h3>
-                <p className="text-muted-foreground text-sm mb-3">
+                <p className="text-[#868f97] text-sm mb-3">
                   An upgrade occurs when an analyst raises their rating (Hold to Buy). This signals improved confidence and often drives buying.
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-[#868f97]">
                   Example: Goldman Sachs upgrades NVDA from Neutral to Buy
                 </p>
               </div>
 
               <div>
-                <h3 className="font-bold text-red-500 mb-3 flex items-center gap-2">
+                <h3 className="font-bold text-[#e15241] mb-3 flex items-center gap-2">
                   <span className="text-xl">📉</span>
                   Downgrades
                 </h3>
-                <p className="text-muted-foreground text-sm mb-3">
+                <p className="text-[#868f97] text-sm mb-3">
                   A downgrade lowers the rating (Buy to Hold), indicating concerns. Can trigger selling pressure and negative sentiment.
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-[#868f97]">
                   Example: Morgan Stanley downgrades TSLA from Overweight to Equal Weight
                 </p>
               </div>
 
               <div>
-                <h3 className="font-bold text-blue-500 mb-3 flex items-center gap-2">
+                <h3 className="font-bold text-[#479ffa] mb-3 flex items-center gap-2">
                   <span className="text-xl">🎯</span>
                   Initiations
                 </h3>
-                <p className="text-muted-foreground text-sm mb-3">
+                <p className="text-[#868f97] text-sm mb-3">
                   Initiation is when an analyst begins coverage of a stock for the first time, establishing a rating and price target.
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-[#868f97]">
                   Example: JPMorgan initiates coverage on PLTR with Overweight rating
                 </p>
               </div>
@@ -774,15 +774,15 @@ export default async function AnalystRatingsPage() {
               {faqs.map((faq, index) => (
                 <details
                   key={index}
-                  className="bg-card p-6 rounded-xl border border-border group"
+                  className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] group"
                 >
                   <summary className="text-lg font-bold cursor-pointer list-none flex items-center justify-between">
                     <span>{faq.question}</span>
-                    <span className="text-green-500 group-open:rotate-180 transition-transform">
+                    <span className="text-[#4ebe96] group-open:rotate-180 transition-transform">
                       ▼
                     </span>
                   </summary>
-                  <p className="text-muted-foreground mt-4 leading-relaxed">
+                  <p className="text-[#868f97] mt-4 leading-relaxed">
                     {faq.answer}
                   </p>
                 </details>
@@ -798,52 +798,52 @@ export default async function AnalystRatingsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Link
                 href="/insider-trading"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-[#1a1a1a] p-4 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all group"
               >
                 <div className="text-2xl mb-2">💼</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors">
+                <h3 className="font-bold group-hover:text-[#4ebe96] transition-colors duration-100">
                   Insider Trading
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-[#868f97]">
                   Corporate insider buys & sells
                 </p>
               </Link>
 
               <Link
                 href="/institutional"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-[#1a1a1a] p-4 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all group"
               >
                 <div className="text-2xl mb-2">🏛</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors">
+                <h3 className="font-bold group-hover:text-[#4ebe96] transition-colors duration-100">
                   Institutional Ownership
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-[#868f97]">
                   13F holdings & changes
                 </p>
               </Link>
 
               <Link
                 href="/earnings"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-[#1a1a1a] p-4 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all group"
               >
                 <div className="text-2xl mb-2">📊</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors">
+                <h3 className="font-bold group-hover:text-[#4ebe96] transition-colors duration-100">
                   Earnings Calendar
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-[#868f97]">
                   Upcoming earnings reports
                 </p>
               </Link>
 
               <Link
                 href="/dashboard"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-[#1a1a1a] p-4 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all group"
               >
                 <div className="text-2xl mb-2">🔍</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors">
+                <h3 className="font-bold group-hover:text-[#4ebe96] transition-colors duration-100">
                   Stock Analysis
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-[#868f97]">
                   AI-powered research
                 </p>
               </Link>
@@ -851,7 +851,7 @@ export default async function AnalystRatingsPage() {
           </section>
 
           {/* CTA Section */}
-          <section className="bg-gradient-to-r from-green-600 to-emerald-600 p-8 sm:p-12 rounded-xl text-white text-center">
+          <section className="bg-gradient-to-r from-[#4ebe96] to-[#4ebe96] p-8 sm:p-12 rounded-xl text-white text-center">
             <h2 className="text-2xl sm:text-3xl font-bold mb-4">
               Get AI-Powered Stock Analysis
             </h2>
@@ -860,7 +860,7 @@ export default async function AnalystRatingsPage() {
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-white text-green-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-bold transition-colors"
+              className="inline-block bg-white text-[#4ebe96] hover:bg-gray-100 px-8 py-3 rounded-lg font-bold transition-colors duration-100"
             >
               Start Analyzing Stocks Free
             </Link>

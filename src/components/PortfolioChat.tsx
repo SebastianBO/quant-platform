@@ -94,7 +94,7 @@ export default function PortfolioChat({ portfolioContext }: PortfolioChatProps) 
     return (
       <Button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-green-600 hover:bg-green-500 shadow-lg z-50 hidden md:flex"
+        className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-[#4ebe96] hover:bg-[#4ebe96]/90 shadow-lg z-50 hidden md:flex"
         size="icon"
         aria-label="Open AI chat assistant"
       >
@@ -106,8 +106,8 @@ export default function PortfolioChat({ portfolioContext }: PortfolioChatProps) 
   // Show upgrade prompt for non-premium users
   if (!isPremiumLoading && !isPremium) {
     return (
-      <Card className="fixed z-50 shadow-2xl border-primary/30 bg-card bottom-6 right-6 w-96 h-auto hidden md:block">
-        <CardHeader className="py-3 px-4 border-b border-border flex flex-row items-center justify-between space-y-0">
+      <Card className="fixed z-50 shadow-2xl border-primary/30 bg-[#1a1a1a] bottom-6 right-6 w-96 h-auto hidden md:block">
+        <CardHeader className="py-3 px-4 border-b border-white/[0.08] flex flex-row items-center justify-between space-y-0">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
               <Lock className="w-4 h-4 text-primary" />
@@ -129,17 +129,17 @@ export default function PortfolioChat({ portfolioContext }: PortfolioChatProps) 
             <Sparkles className="w-8 h-8 text-primary" />
           </div>
           <h3 className="text-lg font-semibold mb-2">Premium Feature</h3>
-          <p className="text-muted-foreground text-sm mb-4">
+          <p className="text-[#868f97] text-sm mb-4">
             Get instant AI-powered analysis of your portfolio, market insights, and personalized investment advice.
           </p>
           <Link
             href="/premium"
-            className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-6 py-2.5 rounded-lg font-medium hover:bg-primary/90 transition-colors w-full"
+            className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-6 py-2.5 rounded-lg font-medium hover:bg-primary/90 transition-colors duration-100 w-full"
           >
             <Sparkles className="w-4 h-4" />
             Upgrade to Premium
           </Link>
-          <p className="text-xs text-muted-foreground mt-3">
+          <p className="text-xs text-[#868f97] mt-3">
             Starting at $109/month • 3-day free trial
           </p>
         </CardContent>
@@ -148,21 +148,21 @@ export default function PortfolioChat({ portfolioContext }: PortfolioChatProps) 
   }
 
   return (
-    <Card className={`fixed z-50 shadow-2xl border-green-500/30 bg-card transition-all duration-300 hidden md:block ${
+    <Card className={`fixed z-50 shadow-2xl border-[#4ebe96]/30 bg-[#1a1a1a] transition-all duration-300 hidden md:block ${
       isMinimized
         ? "bottom-6 right-6 w-80 h-14"
         : "bottom-6 right-6 w-96 h-[500px] max-h-[80vh]"
     }`}>
       {/* Header */}
-      <CardHeader className="py-3 px-4 border-b border-border flex flex-row items-center justify-between space-y-0">
+      <CardHeader className="py-3 px-4 border-b border-white/[0.08] flex flex-row items-center justify-between space-y-0">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full bg-[#4ebe96] flex items-center justify-center">
             <Bot className="w-4 h-4 text-white" />
           </div>
           <div>
             <CardTitle className="text-sm font-medium">AI Assistant</CardTitle>
             {!isMinimized && (
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-[#868f97]">
                 {portfolioContext ? portfolioContext.name : "Financial Advisor"}
               </p>
             )}
@@ -207,21 +207,21 @@ export default function PortfolioChat({ portfolioContext }: PortfolioChatProps) 
                   }`}
                 >
                   {message.role === "assistant" && (
-                    <div className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-[#4ebe96] flex items-center justify-center flex-shrink-0">
                       <Bot className="w-4 h-4 text-white" />
                     </div>
                   )}
                   <div
                     className={`rounded-lg px-3 py-2 max-w-[80%] ${
                       message.role === "user"
-                        ? "bg-green-600 text-white"
-                        : "bg-secondary"
+                        ? "bg-[#4ebe96] text-white"
+                        : "bg-white/[0.05]"
                     }`}
                   >
                     <p className="text-sm whitespace-pre-wrap">{getMessageText(message)}</p>
                   </div>
                   {message.role === "user" && (
-                    <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-white/[0.05] flex items-center justify-center flex-shrink-0">
                       <User className="w-4 h-4" />
                     </div>
                   )}
@@ -229,10 +229,10 @@ export default function PortfolioChat({ portfolioContext }: PortfolioChatProps) 
               ))}
               {isLoading && (
                 <div className="flex gap-3 justify-start">
-                  <div className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-[#4ebe96] flex items-center justify-center flex-shrink-0">
                     <Bot className="w-4 h-4 text-white" />
                   </div>
-                  <div className="bg-secondary rounded-lg px-3 py-2">
+                  <div className="bg-white/[0.05] rounded-lg px-3 py-2">
                     <Loader2 className="w-4 h-4 animate-spin" />
                   </div>
                 </div>
@@ -246,26 +246,26 @@ export default function PortfolioChat({ portfolioContext }: PortfolioChatProps) 
           </ScrollArea>
 
           {/* Input */}
-          <CardContent className="p-3 border-t border-border">
+          <CardContent className="p-3 border-t border-white/[0.08]">
             <form onSubmit={handleSubmit} className="flex gap-2">
               <Input
                 value={input}
                 onChange={handleInputChange}
                 placeholder="Ask about your portfolio..."
-                className="flex-1 bg-secondary border-border"
+                className="flex-1 bg-white/[0.05] border-white/[0.08]"
                 disabled={isLoading}
               />
               <Button
                 type="submit"
                 size="icon"
                 disabled={isLoading || !input.trim()}
-                className="bg-green-600 hover:bg-green-500"
+                className="bg-[#4ebe96] hover:bg-[#4ebe96]/90 transition-colors duration-100"
                 aria-label="Send message"
               >
                 <Send className="h-4 w-4" />
               </Button>
             </form>
-            <p className="text-xs text-muted-foreground mt-2 text-center">
+            <p className="text-xs text-[#868f97] mt-2 text-center">
               AI responses are not financial advice
             </p>
           </CardContent>

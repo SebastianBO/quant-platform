@@ -103,16 +103,16 @@ export default function MarketNewsFeed({
 
   const getSentimentColor = (polarity: number): string => {
     if (polarity >= 0.3) return 'text-emerald-500'
-    if (polarity >= 0) return 'text-green-500'
+    if (polarity >= 0) return 'text-[#4ebe96]'
     if (polarity >= -0.3) return 'text-orange-500'
-    return 'text-red-500'
+    return 'text-[#e15241]'
   }
 
   const getTickerColor = (change?: number): string => {
-    if (change === undefined) return 'bg-secondary text-secondary-foreground'
+    if (change === undefined) return 'bg-white/[0.05] text-[#868f97]'
     if (change > 0) return 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
-    if (change < 0) return 'bg-red-500/10 text-red-500 border-red-500/20'
-    return 'bg-secondary text-secondary-foreground'
+    if (change < 0) return 'bg-[#e15241]/10 text-[#e15241] border-[#e15241]/20'
+    return 'bg-white/[0.05] text-[#868f97]'
   }
 
   // Separate featured (first) and sidebar news
@@ -141,7 +141,7 @@ export default function MarketNewsFeed({
     return (
       <Card className={cn("w-full", className)}>
         <CardContent className="py-8">
-          <p className="text-center text-muted-foreground">{error}</p>
+          <p className="text-center text-[#868f97]">{error}</p>
           <button
             onClick={fetchNews}
             className="mt-4 mx-auto block text-sm text-primary hover:underline"
@@ -160,7 +160,7 @@ export default function MarketNewsFeed({
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-bold flex items-center justify-between">
               Latest News
-              <span className="text-xs font-normal text-muted-foreground">
+              <span className="text-xs font-normal text-[#868f97]">
                 Updated just now
               </span>
             </CardTitle>
@@ -173,12 +173,12 @@ export default function MarketNewsFeed({
               href={article.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="block p-2 -mx-2 rounded-lg hover:bg-secondary/50 transition-colors"
+              className="block p-2 -mx-2 rounded-lg hover:bg-white/[0.04] transition-colors duration-100"
             >
               <p className="text-sm font-medium line-clamp-2 leading-tight">
                 {article.title.replace(/&amp;/g, '&').replace(/&#39;/g, "'")}
               </p>
-              <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
+              <div className="flex items-center gap-2 mt-1 text-xs text-[#868f97]">
                 <span>{article.source}</span>
                 <span>•</span>
                 <span>{article.relativeTime}</span>
@@ -218,7 +218,7 @@ export default function MarketNewsFeed({
               <Card className="overflow-hidden hover:shadow-lg transition-shadow">
                 {/* Featured image */}
                 {getArticleImage(featuredNews) && (
-                  <div className="relative h-64 bg-secondary overflow-hidden">
+                  <div className="relative h-64 bg-white/[0.05] overflow-hidden">
                     <img
                       src={getArticleImage(featuredNews)!}
                       alt=""
@@ -238,15 +238,15 @@ export default function MarketNewsFeed({
                 )}
                 <div className="p-4">
                   {!getArticleImage(featuredNews) && (
-                    <h3 className="text-xl font-bold leading-tight group-hover:text-primary transition-colors line-clamp-3 mb-3">
+                    <h3 className="text-xl font-bold leading-tight group-hover:text-primary transition-colors duration-100 line-clamp-3 mb-3">
                       {featuredNews.title.replace(/&amp;/g, '&').replace(/&#39;/g, "'")}
                     </h3>
                   )}
-                  <p className="text-muted-foreground text-sm line-clamp-2">
+                  <p className="text-[#868f97] text-sm line-clamp-2">
                     {featuredNews.content?.slice(0, 150)}...
                   </p>
                   <div className="flex items-center gap-3 mt-3">
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-xs text-[#868f97]">
                       {featuredNews.source} • {featuredNews.relativeTime}
                     </span>
                     <div className="flex gap-1.5">
@@ -254,7 +254,7 @@ export default function MarketNewsFeed({
                         <span
                           key={i}
                           className={cn(
-                            "text-xs font-medium px-2 py-0.5 rounded border border-border",
+                            "text-xs font-medium px-2 py-0.5 rounded border border-white/[0.08]",
                             getSentimentColor(featuredNews.sentiment.polarity)
                           )}
                         >
@@ -282,7 +282,7 @@ export default function MarketNewsFeed({
                 >
                   <Card className="h-full hover:shadow-md transition-shadow overflow-hidden">
                     {articleImage && (
-                      <div className="relative h-32 bg-secondary overflow-hidden">
+                      <div className="relative h-32 bg-white/[0.05] overflow-hidden">
                         <img
                           src={articleImage}
                           alt=""
@@ -294,11 +294,11 @@ export default function MarketNewsFeed({
                       </div>
                     )}
                     <CardContent className="p-4">
-                      <h4 className="font-semibold text-sm leading-tight group-hover:text-primary transition-colors line-clamp-2">
+                      <h4 className="font-semibold text-sm leading-tight group-hover:text-primary transition-colors duration-100 line-clamp-2">
                         {article.title.replace(/&amp;/g, '&').replace(/&#39;/g, "'")}
                       </h4>
                       <div className="flex items-center flex-wrap gap-2 mt-2">
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-xs text-[#868f97]">
                           {article.source} • {article.relativeTime}
                         </span>
                         {article.displaySymbols.slice(0, 2).map((symbol, j) => (
@@ -309,7 +309,7 @@ export default function MarketNewsFeed({
                             className={cn(
                               "text-xs px-1.5 py-0.5 rounded border",
                               getSentimentColor(article.sentiment.polarity),
-                              "hover:bg-secondary/50"
+                              "hover:bg-white/[0.04]"
                             )}
                           >
                             {symbol}
@@ -326,7 +326,7 @@ export default function MarketNewsFeed({
 
         {/* Sidebar - Latest news */}
         <div className="space-y-1">
-          <h3 className="font-bold text-sm text-muted-foreground uppercase tracking-wide mb-3">
+          <h3 className="font-bold text-sm text-[#868f97] uppercase tracking-wide mb-3">
             Latest
           </h3>
           {sidebarNews.map((article, i) => (
@@ -335,12 +335,12 @@ export default function MarketNewsFeed({
               href={article.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="block py-3 border-b border-border last:border-0 hover:bg-secondary/30 -mx-2 px-2 rounded transition-colors"
+              className="block py-3 border-b border-white/[0.08] last:border-0 hover:bg-white/[0.024] -mx-2 px-2 rounded transition-colors duration-100"
             >
               <p className="text-sm font-medium leading-tight line-clamp-2">
                 {article.title.replace(/&amp;/g, '&').replace(/&#39;/g, "'")}
               </p>
-              <div className="flex items-center gap-2 mt-1.5 text-xs text-muted-foreground">
+              <div className="flex items-center gap-2 mt-1.5 text-xs text-[#868f97]">
                 <span>{article.source}</span>
                 <span>•</span>
                 <span>{article.relativeTime}</span>
@@ -351,7 +351,7 @@ export default function MarketNewsFeed({
                     <span
                       key={j}
                       className={cn(
-                        "text-xs px-2 py-0.5 rounded border border-border",
+                        "text-xs px-2 py-0.5 rounded border border-white/[0.08]",
                         getSentimentColor(article.sentiment.polarity)
                       )}
                     >

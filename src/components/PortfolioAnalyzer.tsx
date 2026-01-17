@@ -210,25 +210,25 @@ export default function PortfolioAnalyzer() {
 
       if (trimmed.startsWith('## ')) {
         elements.push(
-          <h3 key={`h-${i}`} className="text-lg font-bold text-green-500 mt-4 mb-2">
+          <h3 key={`h-${i}`} className="text-lg font-bold text-[#4ebe96] mt-4 mb-2">
             {trimmed.replace('## ', '')}
           </h3>
         )
       } else if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
         elements.push(
-          <li key={`li-${i}`} className="text-muted-foreground ml-4 mb-1">
+          <li key={`li-${i}`} className="text-[#868f97] ml-4 mb-1">
             {trimmed.replace(/^[-*] /, '')}
           </li>
         )
       } else if (trimmed.match(/^\d+\. /)) {
         elements.push(
-          <li key={`li-${i}`} className="text-muted-foreground ml-4 mb-1 list-decimal">
+          <li key={`li-${i}`} className="text-[#868f97] ml-4 mb-1 list-decimal">
             {trimmed.replace(/^\d+\. /, '')}
           </li>
         )
       } else if (trimmed) {
         elements.push(
-          <p key={`p-${i}`} className="text-muted-foreground mb-2">
+          <p key={`p-${i}`} className="text-[#868f97] mb-2">
             {trimmed}
           </p>
         )
@@ -241,23 +241,23 @@ export default function PortfolioAnalyzer() {
   return (
     <div className="space-y-6">
       {/* Upload Section */}
-      <Card className="bg-card border-border">
+      <Card className="bg-[#1a1a1a] border-white/[0.08]">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <span className="text-2xl">📸</span>
             Portfolio Analyzer
           </CardTitle>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-[#868f97]">
             Upload a screenshot of your brokerage positions or add them manually
           </p>
         </CardHeader>
         <CardContent>
           {/* Drop Zone */}
           <div
-            className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-all ${
+            className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-all duration-100 ${
               dragActive
-                ? 'border-green-500 bg-green-500/10'
-                : 'border-border hover:border-muted-foreground'
+                ? 'border-[#4ebe96] bg-[#4ebe96]/10'
+                : 'border-white/[0.08] hover:border-[#868f97]'
             }`}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
@@ -266,15 +266,15 @@ export default function PortfolioAnalyzer() {
           >
             {loading === 'extract' ? (
               <div className="py-8">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-green-500 mx-auto mb-4"></div>
-                <p className="text-muted-foreground">Claude 3.5 Sonnet is extracting your positions...</p>
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-[#4ebe96] mx-auto mb-4"></div>
+                <p className="text-[#868f97]">Claude 3.5 Sonnet is extracting your positions...</p>
               </div>
             ) : imagePreview ? (
               <div className="space-y-4">
                 <img
                   src={imagePreview}
                   alt="Portfolio screenshot"
-                  className="max-h-48 mx-auto rounded-lg border border-border"
+                  className="max-h-48 mx-auto rounded-lg border border-white/[0.08]"
                 />
                 <button
                   onClick={() => {
@@ -282,7 +282,7 @@ export default function PortfolioAnalyzer() {
                     setPositions([])
                     setAnalysis(null)
                   }}
-                  className="px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-sm"
+                  className="px-4 py-2 bg-white/[0.05] hover:bg-white/[0.08] rounded-lg text-sm transition-colors duration-100"
                 >
                   Upload Different Image
                 </button>
@@ -290,10 +290,10 @@ export default function PortfolioAnalyzer() {
             ) : (
               <>
                 <div className="text-4xl mb-4">📤</div>
-                <p className="text-foreground mb-2">
+                <p className="text-white mb-2">
                   Drag and drop a screenshot of your portfolio
                 </p>
-                <p className="text-muted-foreground text-sm mb-4">
+                <p className="text-[#868f97] text-sm mb-4">
                   or click to select a file
                 </p>
                 <input
@@ -310,7 +310,7 @@ export default function PortfolioAnalyzer() {
           <div className="mt-4">
             <button
               onClick={() => setManualEntry(!manualEntry)}
-              className="text-sm text-green-500 hover:text-green-400"
+              className="text-sm text-[#4ebe96] hover:text-[#4ebe96]/80 transition-colors duration-100"
             >
               {manualEntry ? 'Hide manual entry' : 'Or add positions manually'}
             </button>
@@ -318,32 +318,32 @@ export default function PortfolioAnalyzer() {
 
           {/* Manual Entry Form */}
           {manualEntry && (
-            <div className="mt-4 p-4 bg-secondary/50 rounded-lg">
+            <div className="mt-4 p-4 bg-white/[0.025] rounded-lg">
               <div className="grid grid-cols-4 gap-3">
                 <input
                   type="text"
                   placeholder="Ticker (e.g., AAPL)"
                   value={newPosition.ticker}
                   onChange={(e) => setNewPosition({ ...newPosition, ticker: e.target.value.toUpperCase() })}
-                  className="bg-background border border-border rounded px-3 py-2 text-sm"
+                  className="bg-background border border-white/[0.08] rounded px-3 py-2 text-sm"
                 />
                 <input
                   type="number"
                   placeholder="Shares"
                   value={newPosition.shares}
                   onChange={(e) => setNewPosition({ ...newPosition, shares: e.target.value })}
-                  className="bg-background border border-border rounded px-3 py-2 text-sm"
+                  className="bg-background border border-white/[0.08] rounded px-3 py-2 text-sm"
                 />
                 <input
                   type="number"
                   placeholder="Avg Cost (optional)"
                   value={newPosition.avgCost}
                   onChange={(e) => setNewPosition({ ...newPosition, avgCost: e.target.value })}
-                  className="bg-background border border-border rounded px-3 py-2 text-sm"
+                  className="bg-background border border-white/[0.08] rounded px-3 py-2 text-sm"
                 />
                 <button
                   onClick={addPosition}
-                  className="bg-green-600 hover:bg-green-500 text-white rounded px-3 py-2 text-sm font-medium"
+                  className="bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-white rounded px-3 py-2 text-sm font-medium transition-colors duration-100"
                 >
                   Add
                 </button>
@@ -355,7 +355,7 @@ export default function PortfolioAnalyzer() {
 
       {/* Positions List */}
       {positions.length > 0 && (
-        <Card className="bg-card border-border">
+        <Card className="bg-[#1a1a1a] border-white/[0.08]">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2">
@@ -366,13 +366,13 @@ export default function PortfolioAnalyzer() {
                 <button
                   onClick={() => analyzePortfolio()}
                   disabled={loading === 'analyze'}
-                  className="px-4 py-2 bg-green-600 hover:bg-green-500 disabled:bg-secondary text-white rounded-lg text-sm font-medium"
+                  className="px-4 py-2 bg-[#4ebe96] hover:bg-[#4ebe96]/80 disabled:bg-white/[0.05] text-white rounded-lg text-sm font-medium transition-colors duration-100"
                 >
                   {loading === 'analyze' ? 'Analyzing...' : 'Analyze Portfolio'}
                 </button>
                 <button
                   onClick={clearAll}
-                  className="px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-sm"
+                  className="px-4 py-2 bg-white/[0.05] hover:bg-white/[0.08] rounded-lg text-sm transition-colors duration-100"
                 >
                   Clear All
                 </button>
@@ -383,7 +383,7 @@ export default function PortfolioAnalyzer() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border">
+                  <tr className="border-b border-white/[0.08]">
                     <th className="text-left p-2">Ticker</th>
                     <th className="text-right p-2">Shares</th>
                     <th className="text-right p-2">Avg Cost</th>
@@ -396,20 +396,20 @@ export default function PortfolioAnalyzer() {
                 </thead>
                 <tbody>
                   {positions.map((pos, i) => (
-                    <tr key={i} className="border-b border-border/50 hover:bg-secondary/50">
+                    <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.025] transition-colors duration-100">
                       <td className="p-2 font-bold">{pos.ticker || '-'}</td>
                       <td className="p-2 text-right">{pos.shares?.toLocaleString() || '-'}</td>
                       <td className="p-2 text-right">{pos.avgCost ? `$${pos.avgCost.toFixed(2)}` : '-'}</td>
                       <td className="p-2 text-right">{pos.currentPrice ? `$${pos.currentPrice.toFixed(2)}` : '-'}</td>
                       <td className="p-2 text-right">{pos.marketValue ? formatCurrency(pos.marketValue) : '-'}</td>
-                      <td className={`p-2 text-right ${(pos.gainLossPercent || 0) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                      <td className={`p-2 text-right ${(pos.gainLossPercent || 0) >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
                         {pos.gainLossPercent !== undefined ? `${pos.gainLossPercent >= 0 ? '+' : ''}${pos.gainLossPercent.toFixed(1)}%` : '-'}
                       </td>
                       <td className="p-2 text-right">{pos.weight ? `${pos.weight.toFixed(1)}%` : '-'}</td>
                       <td className="p-2 text-right">
                         <button
                           onClick={() => removePosition(i)}
-                          className="text-red-500 hover:text-red-400 text-xs"
+                          className="text-[#e15241] hover:text-[#e15241]/80 text-xs transition-colors duration-100"
                         >
                           Remove
                         </button>
@@ -428,33 +428,33 @@ export default function PortfolioAnalyzer() {
         <>
           {/* Metrics Overview */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Card className="bg-card border-border">
+            <Card className="bg-[#1a1a1a] border-white/[0.08]">
               <CardContent className="pt-6 text-center">
-                <p className="text-muted-foreground text-sm">Total Value</p>
-                <p className="text-2xl font-bold text-green-500">{formatCurrency(analysis.totalValue)}</p>
+                <p className="text-[#868f97] text-sm">Total Value</p>
+                <p className="text-2xl font-bold text-[#4ebe96]">{formatCurrency(analysis.totalValue)}</p>
               </CardContent>
             </Card>
-            <Card className="bg-card border-border">
+            <Card className="bg-[#1a1a1a] border-white/[0.08]">
               <CardContent className="pt-6 text-center">
-                <p className="text-muted-foreground text-sm">Diversification Score</p>
-                <p className={`text-2xl font-bold ${analysis.metrics.diversificationScore >= 70 ? 'text-green-500' : analysis.metrics.diversificationScore >= 50 ? 'text-yellow-500' : 'text-red-500'}`}>
+                <p className="text-[#868f97] text-sm">Diversification Score</p>
+                <p className={`text-2xl font-bold ${analysis.metrics.diversificationScore >= 70 ? 'text-[#4ebe96]' : analysis.metrics.diversificationScore >= 50 ? 'text-[#f4a623]' : 'text-[#e15241]'}`}>
                   {analysis.metrics.diversificationScore}/100
                 </p>
               </CardContent>
             </Card>
-            <Card className="bg-card border-border">
+            <Card className="bg-[#1a1a1a] border-white/[0.08]">
               <CardContent className="pt-6 text-center">
-                <p className="text-muted-foreground text-sm">Concentration Risk</p>
-                <p className={`text-2xl font-bold ${analysis.metrics.concentrationRisk === 'Low' ? 'text-green-500' : analysis.metrics.concentrationRisk === 'Medium' ? 'text-yellow-500' : 'text-red-500'}`}>
+                <p className="text-[#868f97] text-sm">Concentration Risk</p>
+                <p className={`text-2xl font-bold ${analysis.metrics.concentrationRisk === 'Low' ? 'text-[#4ebe96]' : analysis.metrics.concentrationRisk === 'Medium' ? 'text-[#f4a623]' : 'text-[#e15241]'}`}>
                   {analysis.metrics.concentrationRisk}
                 </p>
               </CardContent>
             </Card>
-            <Card className="bg-card border-border">
+            <Card className="bg-[#1a1a1a] border-white/[0.08]">
               <CardContent className="pt-6 text-center">
-                <p className="text-muted-foreground text-sm">Top Holding</p>
+                <p className="text-[#868f97] text-sm">Top Holding</p>
                 <p className="text-2xl font-bold">{analysis.metrics.topHolding}</p>
-                <p className="text-sm text-muted-foreground">{analysis.metrics.topHoldingWeight.toFixed(1)}%</p>
+                <p className="text-sm text-[#868f97]">{analysis.metrics.topHoldingWeight.toFixed(1)}%</p>
               </CardContent>
             </Card>
           </div>
@@ -462,7 +462,7 @@ export default function PortfolioAnalyzer() {
           {/* Charts */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Sector Allocation */}
-            <Card className="bg-card border-border">
+            <Card className="bg-[#1a1a1a] border-white/[0.08]">
               <CardHeader>
                 <CardTitle>Sector Allocation</CardTitle>
               </CardHeader>
@@ -498,7 +498,7 @@ export default function PortfolioAnalyzer() {
             </Card>
 
             {/* Position Weights */}
-            <Card className="bg-card border-border">
+            <Card className="bg-[#1a1a1a] border-white/[0.08]">
               <CardHeader>
                 <CardTitle>Position Weights</CardTitle>
               </CardHeader>
@@ -534,7 +534,7 @@ export default function PortfolioAnalyzer() {
           </div>
 
           {/* Recommendations */}
-          <Card className="bg-card border-border">
+          <Card className="bg-[#1a1a1a] border-white/[0.08]">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
@@ -544,7 +544,7 @@ export default function PortfolioAnalyzer() {
                 <button
                   onClick={getAIRecommendations}
                   disabled={loading === 'recommend'}
-                  className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 disabled:from-secondary disabled:to-secondary text-white rounded-lg text-sm font-medium"
+                  className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 disabled:from-white/[0.05] disabled:to-white/[0.05] text-white rounded-lg text-sm font-medium transition-colors duration-100"
                 >
                   {loading === 'recommend' ? 'Generating...' : 'Get AI Deep Analysis'}
                 </button>
@@ -554,9 +554,9 @@ export default function PortfolioAnalyzer() {
               {/* Quick Recommendations */}
               <div className="space-y-2 mb-6">
                 {analysis.recommendations.map((rec, i) => (
-                  <div key={i} className="flex items-start gap-2 p-3 bg-secondary/50 rounded-lg">
-                    <span className="text-yellow-500">⚡</span>
-                    <p className="text-muted-foreground text-sm">{rec}</p>
+                  <div key={i} className="flex items-start gap-2 p-3 bg-white/[0.025] rounded-lg">
+                    <span className="text-[#f4a623]">⚡</span>
+                    <p className="text-[#868f97] text-sm">{rec}</p>
                   </div>
                 ))}
               </div>
@@ -580,10 +580,10 @@ export default function PortfolioAnalyzer() {
 
       {/* Empty State */}
       {positions.length === 0 && !loading && (
-        <div className="text-center py-12 bg-secondary/30 rounded-lg border border-border">
+        <div className="text-center py-12 bg-white/[0.015] rounded-lg border border-white/[0.08]">
           <div className="text-4xl mb-4">📊</div>
-          <p className="text-foreground text-lg mb-2">Upload your portfolio to get started</p>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-white text-lg mb-2">Upload your portfolio to get started</p>
+          <p className="text-[#868f97] text-sm">
             Take a screenshot of your brokerage positions and drop it above
           </p>
         </div>

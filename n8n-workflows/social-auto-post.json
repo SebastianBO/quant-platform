@@ -14,7 +14,10 @@
       "name": "New Content Published",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [250, 300],
+      "position": [
+        250,
+        300
+      ],
       "webhookId": "new-content-lician"
     },
     {
@@ -26,7 +29,10 @@
       "name": "Prepare Content & Generate Copy",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [470, 300]
+      "position": [
+        470,
+        300
+      ]
     },
     {
       "parameters": {
@@ -62,7 +68,10 @@
       "name": "Save to Database",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [690, 300],
+      "position": [
+        690,
+        300
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -76,7 +85,10 @@
       "name": "Split for Platforms",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
-      "position": [910, 300]
+      "position": [
+        910,
+        300
+      ]
     },
     {
       "parameters": {
@@ -87,7 +99,10 @@
       "name": "Post to Twitter/X",
       "type": "n8n-nodes-base.twitter",
       "typeVersion": 2,
-      "position": [1130, 200],
+      "position": [
+        1130,
+        200
+      ],
       "credentials": {
         "twitterOAuth2Api": {
           "id": "CONFIGURE_TWITTER_CREDENTIALS",
@@ -104,7 +119,10 @@
       "name": "Wait 30 min for LinkedIn",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
-      "position": [1130, 400]
+      "position": [
+        1130,
+        400
+      ]
     },
     {
       "parameters": {
@@ -116,7 +134,10 @@
       "name": "Post to LinkedIn",
       "type": "n8n-nodes-base.linkedIn",
       "typeVersion": 1,
-      "position": [1350, 400],
+      "position": [
+        1350,
+        400
+      ],
       "credentials": {
         "linkedInOAuth2Api": {
           "id": "CONFIGURE_LINKEDIN_CREDENTIALS",
@@ -159,7 +180,10 @@
       "name": "Update Twitter Status",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [1350, 200],
+      "position": [
+        1350,
+        200
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -202,7 +226,10 @@
       "name": "Update LinkedIn Status",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [1570, 400],
+      "position": [
+        1570,
+        400
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -220,7 +247,10 @@
       "name": "Notify Slack",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [1570, 200],
+      "position": [
+        1570,
+        200
+      ],
       "credentials": {
         "slackApi": {
           "id": "CONFIGURE_SLACK_CREDENTIALS",
@@ -238,7 +268,10 @@
       "name": "Respond Success",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [1790, 300]
+      "position": [
+        1790,
+        300
+      ]
     },
     {
       "parameters": {
@@ -248,7 +281,10 @@
       "name": "Handle Errors",
       "type": "n8n-nodes-base.stopAndError",
       "typeVersion": 1,
-      "position": [1790, 500]
+      "position": [
+        1790,
+        500
+      ]
     },
     {
       "parameters": {
@@ -284,7 +320,10 @@
       "name": "Log Twitter Error",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [1350, 50],
+      "position": [
+        1350,
+        50
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -326,7 +365,10 @@
       "name": "Log LinkedIn Error",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [1570, 550],
+      "position": [
+        1570,
+        550
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -457,23 +499,6 @@
     "errorWorkflow": ""
   },
   "staticData": null,
-  "tags": [
-    {
-      "name": "social-media",
-      "createdAt": "2025-01-16T00:00:00.000Z",
-      "updatedAt": "2025-01-16T00:00:00.000Z"
-    },
-    {
-      "name": "content",
-      "createdAt": "2025-01-16T00:00:00.000Z",
-      "updatedAt": "2025-01-16T00:00:00.000Z"
-    },
-    {
-      "name": "lician",
-      "createdAt": "2025-01-16T00:00:00.000Z",
-      "updatedAt": "2025-01-16T00:00:00.000Z"
-    }
-  ],
   "pinData": {},
   "meta": {
     "templateCredsSetupCompleted": false,

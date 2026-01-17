@@ -48,7 +48,7 @@ function MiniSparkline({ data, isPositive }: { data: number[], isPositive: boole
       <polyline
         points={points}
         fill="none"
-        stroke={isPositive ? '#10b981' : '#ef4444'}
+        stroke={isPositive ? '#4ebe96' : '#ef4444'}
         strokeWidth="1.5"
       />
     </svg>
@@ -77,16 +77,16 @@ export default function MarketOverview() {
   }
 
   return (
-    <Card className="bg-card border-border">
+    <Card className="bg-[#1a1a1a] border-white/[0.08]">
       <CardContent className="py-4">
         {/* Market Status Header */}
         <div className="flex items-center justify-center gap-2 mb-4 text-sm">
           <div className={`w-2 h-2 rounded-full ${
-            data?.marketStatus === 'open' ? 'bg-green-500 animate-pulse' :
+            data?.marketStatus === 'open' ? 'bg-[#4ebe96] animate-pulse' :
             data?.marketStatus === 'premarket' || data?.marketStatus === 'afterhours' ? 'bg-yellow-500' :
-            'bg-muted-foreground'
+            'bg-[#868f97]'
           }`} />
-          <span className="text-muted-foreground">{data?.statusMessage || 'Loading...'}</span>
+          <span className="text-[#868f97]">{data?.statusMessage || 'Loading...'}</span>
         </div>
 
         {/* Region Tabs */}
@@ -97,7 +97,7 @@ export default function MarketOverview() {
               variant={activeRegion === region.id ? "default" : "ghost"}
               size="sm"
               onClick={() => setActiveRegion(region.id)}
-              className={activeRegion === region.id ? "bg-primary text-primary-foreground" : "text-muted-foreground"}
+              className={activeRegion === region.id ? "bg-primary text-primary-foreground" : "text-[#868f97]"}
             >
               {region.label}
             </Button>
@@ -108,10 +108,10 @@ export default function MarketOverview() {
         {loading ? (
           <div className="grid grid-cols-3 gap-4">
             {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="p-3 bg-secondary/30 rounded-lg animate-pulse">
-                <div className="h-4 w-20 bg-secondary rounded mb-2" />
-                <div className="h-6 w-16 bg-secondary rounded mb-2" />
-                <div className="h-6 w-14 bg-secondary rounded" />
+              <div key={i} className="p-3 bg-white/[0.015] rounded-lg animate-pulse">
+                <div className="h-4 w-20 bg-white/[0.05] rounded mb-2" />
+                <div className="h-6 w-16 bg-white/[0.05] rounded mb-2" />
+                <div className="h-6 w-14 bg-white/[0.05] rounded" />
               </div>
             ))}
           </div>
@@ -122,7 +122,7 @@ export default function MarketOverview() {
               return (
                 <div
                   key={index.symbol}
-                  className="p-3 bg-secondary/30 rounded-lg hover:bg-secondary/50 transition-colors cursor-pointer"
+                  className="p-3 bg-white/[0.015] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 cursor-pointer"
                 >
                   <p className="text-primary text-sm font-medium truncate">{index.name}</p>
                   <p className="text-lg font-bold tabular-nums">
@@ -131,7 +131,7 @@ export default function MarketOverview() {
                   <div className="flex items-center gap-2 mt-1">
                     <MiniSparkline data={index.sparkline} isPositive={isPositive} />
                   </div>
-                  <div className={`text-sm ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
+                  <div className={`text-sm ${isPositive ? 'text-[#4ebe96]' : 'text-red-500'}`}>
                     <span>{isPositive ? '+' : ''}{typeof index.change === 'number' ? index.change.toFixed(2) : '0.00'}</span>
                     <span className="ml-1">({isPositive ? '+' : ''}{typeof index.changePercent === 'number' ? index.changePercent.toFixed(2) : '0.00'}%)</span>
                   </div>

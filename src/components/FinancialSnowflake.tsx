@@ -71,17 +71,17 @@ export default function FinancialSnowflake({ ticker, metrics }: FinancialSnowfla
   const avgScore = radarData.reduce((sum, d) => sum + d.value, 0) / radarData.length
 
   const getScoreLabel = (score: number): { label: string; colorClass: string } => {
-    if (score >= 75) return { label: 'Excellent', colorClass: 'text-green-500' }
-    if (score >= 60) return { label: 'Good', colorClass: 'text-blue-500' }
+    if (score >= 75) return { label: 'Excellent', colorClass: 'text-[#4ebe96]' }
+    if (score >= 60) return { label: 'Good', colorClass: 'text-[#479ffa]' }
     if (score >= 45) return { label: 'Average', colorClass: 'text-yellow-500' }
     if (score >= 30) return { label: 'Below Average', colorClass: 'text-orange-500' }
-    return { label: 'Poor', colorClass: 'text-red-500' }
+    return { label: 'Poor', colorClass: 'text-[#e15241]' }
   }
 
   const scoreInfo = getScoreLabel(avgScore)
 
   return (
-    <Card className="w-full bg-card border-border">
+    <Card className="w-full bg-[#1a1a1a] border-white/[0.08]">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <span className="text-2xl">❄️</span>
@@ -90,9 +90,9 @@ export default function FinancialSnowflake({ ticker, metrics }: FinancialSnowfla
       </CardHeader>
       <CardContent>
         {/* Score Summary */}
-        <div className="flex items-center justify-center mb-6 p-6 bg-secondary/50 rounded-xl border border-border">
+        <div className="flex items-center justify-center mb-6 p-6 bg-white/[0.025] rounded-xl border border-white/[0.08]">
           <div className="text-center">
-            <p className="text-muted-foreground text-sm mb-2">Overall Health Score</p>
+            <p className="text-[#868f97] text-sm mb-2">Overall Health Score</p>
             <p className={`text-5xl font-bold ${scoreInfo.colorClass}`}>
               {avgScore.toFixed(0)}
             </p>
@@ -117,8 +117,8 @@ export default function FinancialSnowflake({ ticker, metrics }: FinancialSnowfla
               <Radar
                 name="Score"
                 dataKey="value"
-                stroke="#22c55e"
-                fill="#22c55e"
+                stroke="#4ebe96"
+                fill="#4ebe96"
                 fillOpacity={0.3}
                 strokeWidth={2}
               />
@@ -140,24 +140,24 @@ export default function FinancialSnowflake({ ticker, metrics }: FinancialSnowfla
         {/* Dimension Breakdown */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-6">
           {radarData.map((dim, i) => (
-            <div key={i} className="p-4 bg-secondary/30 rounded-xl border border-border/50 text-center hover:bg-secondary/50 transition-colors">
-              <p className="text-muted-foreground text-xs mb-1">{dim.dimension}</p>
+            <div key={i} className="p-4 bg-white/[0.015] rounded-xl border border-white/[0.04] text-center hover:bg-white/[0.08] transition-colors duration-100">
+              <p className="text-[#868f97] text-xs mb-1">{dim.dimension}</p>
               <p className={`text-2xl font-bold ${
-                dim.value >= 70 ? 'text-green-500' :
+                dim.value >= 70 ? 'text-[#4ebe96]' :
                 dim.value >= 50 ? 'text-yellow-500' :
-                'text-red-500'
+                'text-[#e15241]'
               }`}>
                 {dim.value.toFixed(0)}
               </p>
-              <p className="text-muted-foreground/70 text-xs mt-1">{dim.actual}</p>
+              <p className="text-[#868f97]/70 text-xs mt-1">{dim.actual}</p>
             </div>
           ))}
         </div>
 
         {/* Interpretation */}
-        <div className="mt-6 p-5 bg-gradient-to-br from-secondary/50 to-secondary/30 rounded-xl border border-border/50">
+        <div className="mt-6 p-5 bg-gradient-to-br from-white/[0.025] to-white/[0.015] rounded-xl border border-white/[0.04]">
           <p className="font-semibold mb-2">Snowflake Analysis</p>
-          <p className="text-sm text-muted-foreground leading-relaxed">
+          <p className="text-sm text-[#868f97] leading-relaxed">
             {avgScore >= 70
               ? `${ticker} shows exceptional financial health across all dimensions. The balanced snowflake indicates a well-run company with strong fundamentals.`
               : avgScore >= 50

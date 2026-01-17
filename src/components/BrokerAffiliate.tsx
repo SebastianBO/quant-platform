@@ -63,7 +63,7 @@ export function BrokerAffiliate({ ticker, variant = 'inline', className = '' }: 
 
   if (variant === 'minimal') {
     return (
-      <div className={`flex items-center gap-2 text-sm text-muted-foreground ${className}`}>
+      <div className={`flex items-center gap-2 text-sm text-[#868f97] ${className}`}>
         <span>Trade {ticker}:</span>
         {BROKERS.slice(0, 2).map((broker) => (
           <button
@@ -82,12 +82,12 @@ export function BrokerAffiliate({ ticker, variant = 'inline', className = '' }: 
   if (variant === 'card') {
     const featured = BROKERS[0]
     return (
-      <div className={`bg-card border border-border rounded-lg p-4 ${className}`}>
+      <div className={`bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-4 ${className}`}>
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-semibold text-sm">Trade {ticker}</h3>
           <button
             onClick={() => setDismissed(true)}
-            className="text-muted-foreground hover:text-foreground"
+            className="text-[#868f97] hover:text-white"
           >
             <X className="w-4 h-4" />
           </button>
@@ -97,22 +97,22 @@ export function BrokerAffiliate({ ticker, variant = 'inline', className = '' }: 
             <button
               key={broker.name}
               onClick={() => handleClick(broker.name, broker.affiliateUrl)}
-              className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-colors ${
+              className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-colors duration-100 ${
                 broker.highlight
                   ? 'border-primary/50 bg-primary/5 hover:bg-primary/10'
-                  : 'border-border hover:bg-muted/50'
+                  : 'border-white/[0.08] hover:bg-white/[0.08]'
               }`}
             >
-              <broker.icon className={`w-5 h-5 ${broker.highlight ? 'text-primary' : 'text-muted-foreground'}`} />
+              <broker.icon className={`w-5 h-5 ${broker.highlight ? 'text-primary' : 'text-[#868f97]'}`} />
               <div className="flex-1 text-left">
                 <div className="font-medium text-sm">{broker.name}</div>
-                <div className="text-xs text-muted-foreground">{broker.tagline}</div>
+                <div className="text-xs text-[#868f97]">{broker.tagline}</div>
               </div>
-              <ExternalLink className="w-4 h-4 text-muted-foreground" />
+              <ExternalLink className="w-4 h-4 text-[#868f97]" />
             </button>
           ))}
         </div>
-        <p className="text-xs text-muted-foreground mt-3 text-center">
+        <p className="text-xs text-[#868f97] mt-3 text-center">
           Affiliate links. We may earn a commission.
         </p>
       </div>
@@ -121,7 +121,7 @@ export function BrokerAffiliate({ ticker, variant = 'inline', className = '' }: 
 
   // Default: inline variant
   return (
-    <div className={`bg-gradient-to-r from-primary/5 to-transparent border border-border rounded-lg p-4 ${className}`}>
+    <div className={`bg-gradient-to-r from-primary/5 to-transparent border border-white/[0.08] rounded-lg p-4 ${className}`}>
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           <TrendingUp className="w-4 h-4 text-primary" />
@@ -129,7 +129,7 @@ export function BrokerAffiliate({ ticker, variant = 'inline', className = '' }: 
         </div>
         <button
           onClick={() => setDismissed(true)}
-          className="text-muted-foreground hover:text-foreground p-1"
+          className="text-[#868f97] hover:text-white p-1"
           aria-label="Dismiss"
         >
           <X className="w-4 h-4" />
@@ -140,10 +140,10 @@ export function BrokerAffiliate({ ticker, variant = 'inline', className = '' }: 
           <button
             key={broker.name}
             onClick={() => handleClick(broker.name, broker.affiliateUrl)}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-colors ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-colors duration-100 ${
               broker.highlight
                 ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-                : 'bg-muted hover:bg-muted/80 text-foreground'
+                : 'bg-white/[0.05] hover:bg-white/[0.08] text-white'
             }`}
           >
             {broker.name}
@@ -151,7 +151,7 @@ export function BrokerAffiliate({ ticker, variant = 'inline', className = '' }: 
           </button>
         ))}
       </div>
-      <p className="text-xs text-muted-foreground mt-2">
+      <p className="text-xs text-[#868f97] mt-2">
         Commission-free trading available. Affiliate links.
       </p>
     </div>
@@ -173,13 +173,13 @@ export function BrokerAffiliateCompact({ ticker }: { ticker: string }) {
 
   return (
     <div className="flex items-center gap-3 text-sm">
-      <span className="text-muted-foreground">Trade:</span>
+      <span className="text-[#868f97]">Trade:</span>
       <div className="flex gap-2">
         {BROKERS.slice(0, 2).map((broker) => (
           <button
             key={broker.name}
             onClick={() => handleClick(broker.name, broker.affiliateUrl)}
-            className="inline-flex items-center gap-1 px-2 py-1 bg-muted rounded text-xs hover:bg-muted/80 transition-colors"
+            className="inline-flex items-center gap-1 px-2 py-1 bg-white/[0.05] rounded text-xs hover:bg-white/[0.08] transition-colors duration-100"
           >
             {broker.name.split(' ')[0]}
             <ExternalLink className="w-3 h-3" />

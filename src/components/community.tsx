@@ -8,10 +8,10 @@ export function Community() {
   ]
 
   return (
-    <section className="py-24 px-6 bg-secondary/20">
+    <section className="py-24 px-6 bg-white/[0.01]">
       <div className="max-w-7xl mx-auto text-center">
-        <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Join the Lician community</h2>
-        <p className="text-lg text-muted-foreground mb-12">
+        <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Join the Lician community</h2>
+        <p className="text-lg text-[#868f97] mb-12">
           Hundreds of thousands of business enthusiasts and finance professionals worldwide interact with our content
           daily.
         </p>
@@ -19,9 +19,9 @@ export function Community() {
         <div className="grid grid-cols-3 gap-8 max-w-3xl mx-auto">
           {stats.map((stat, index) => (
             <div key={index} className="flex flex-col items-center">
-              <stat.icon className="w-6 h-6 text-foreground mb-4" />
-              <p className="text-2xl md:text-3xl font-bold text-foreground mb-1">{stat.value}</p>
-              <p className="text-xs md:text-sm text-muted-foreground">{stat.label}</p>
+              <stat.icon className="w-6 h-6 text-white mb-4" />
+              <p className="text-2xl md:text-3xl font-bold text-white mb-1">{stat.value}</p>
+              <p className="text-xs md:text-sm text-[#868f97]">{stat.label}</p>
             </div>
           ))}
         </div>

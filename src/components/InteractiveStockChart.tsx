@@ -107,7 +107,7 @@ export default function InteractiveStockChart({
   }
 
   const isPositive = (data?.periodChangePercent || 0) >= 0
-  const chartColor = isPositive ? '#22c55e' : '#ef4444'
+  const chartColor = isPositive ? '#4ebe96' : '#e15241'
 
   // Format chart data
   const chartData = useMemo(() => {
@@ -152,20 +152,20 @@ export default function InteractiveStockChart({
 
     const point = payload[0].payload
     return (
-      <div className="bg-card border border-border rounded-lg p-3 shadow-lg">
+      <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-3 shadow-lg">
         <p className="text-sm font-medium">{point.displayDate}</p>
         <div className="grid grid-cols-2 gap-x-4 gap-y-1 mt-2 text-sm">
-          <span className="text-muted-foreground">Open:</span>
+          <span className="text-[#868f97]">Open:</span>
           <span className="font-medium">${point.open?.toFixed(2)}</span>
-          <span className="text-muted-foreground">High:</span>
+          <span className="text-[#868f97]">High:</span>
           <span className="font-medium">${point.high?.toFixed(2)}</span>
-          <span className="text-muted-foreground">Low:</span>
+          <span className="text-[#868f97]">Low:</span>
           <span className="font-medium">${point.low?.toFixed(2)}</span>
-          <span className="text-muted-foreground">Close:</span>
+          <span className="text-[#868f97]">Close:</span>
           <span className="font-medium">${point.close?.toFixed(2)}</span>
           {showVolume && (
             <>
-              <span className="text-muted-foreground">Volume:</span>
+              <span className="text-[#868f97]">Volume:</span>
               <span className="font-medium">{(point.volume / 1e6).toFixed(2)}M</span>
             </>
           )}
@@ -175,14 +175,14 @@ export default function InteractiveStockChart({
   }
 
   return (
-    <Card className="bg-card border-border">
+    <Card className="bg-[#1a1a1a] border-white/[0.08]">
       <CardContent className="py-4">
         {/* Header with period change */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-4">
             {/* Period Change Badge */}
-            <div className={`px-3 py-1 rounded-lg ${isPositive ? 'bg-green-500/20' : 'bg-red-500/20'}`}>
-              <span className={`font-bold ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
+            <div className={`px-3 py-1 rounded-lg ${isPositive ? 'bg-[#4ebe96]/20' : 'bg-[#e15241]/20'}`}>
+              <span className={`font-bold ${isPositive ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
                 {isPositive ? '+' : ''}{data?.periodChangePercent?.toFixed(2)}%
               </span>
             </div>
@@ -217,7 +217,7 @@ export default function InteractiveStockChart({
               variant={period === p.id ? 'default' : 'ghost'}
               size="sm"
               onClick={() => setPeriod(p.id)}
-              className={`px-3 ${period === p.id ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}
+              className={`px-3 ${period === p.id ? 'bg-primary text-primary-foreground' : 'text-[#868f97]'}`}
             >
               {p.label}
             </Button>
@@ -246,7 +246,7 @@ export default function InteractiveStockChart({
                   tickLine={false}
                   axisLine={false}
                   interval="preserveStartEnd"
-                  className="text-muted-foreground"
+                  className="text-[#868f97]"
                 />
                 <YAxis
                   stroke="currentColor"
@@ -255,7 +255,7 @@ export default function InteractiveStockChart({
                   axisLine={false}
                   domain={['auto', 'auto']}
                   tickFormatter={(v) => `$${v}`}
-                  className="text-muted-foreground"
+                  className="text-[#868f97]"
                   yAxisId="price"
                 />
                 {showVolume && (
@@ -277,7 +277,7 @@ export default function InteractiveStockChart({
                     fill="currentColor"
                     opacity={0.2}
                     yAxisId="volume"
-                    className="text-muted-foreground"
+                    className="text-[#868f97]"
                   />
                 )}
 
@@ -310,17 +310,17 @@ export default function InteractiveStockChart({
 
         {/* Current Price Display */}
         {data && (
-          <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
+          <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/[0.08]">
             <div>
               <span className="text-2xl font-bold">${data.currentPrice?.toFixed(2)}</span>
-              <div className={`flex items-center gap-1 ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
+              <div className={`flex items-center gap-1 ${isPositive ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
                 {isPositive ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
                 <span className="text-sm font-medium">
                   {isPositive ? '+' : ''}{data.dayChange?.toFixed(2)} ({isPositive ? '+' : ''}{data.dayChangePercent?.toFixed(2)}%) today
                 </span>
               </div>
             </div>
-            <div className="text-right text-sm text-muted-foreground">
+            <div className="text-right text-sm text-[#868f97]">
               <p>52W High: ${data.high52Week?.toFixed(2) || '-'}</p>
               <p>52W Low: ${data.low52Week?.toFixed(2) || '-'}</p>
             </div>

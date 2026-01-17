@@ -67,10 +67,10 @@ export function Newsletter() {
     <section className="py-24 px-6">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
             Lician Daily
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg text-[#868f97]">
             Free daily market insights, stock picks, and AI-powered analysis delivered to your inbox.
           </p>
         </div>
@@ -78,7 +78,7 @@ export function Newsletter() {
         <form onSubmit={handleSubscribe} className="flex justify-center mb-12">
           <div className="flex flex-col sm:flex-row gap-2 max-w-md w-full">
             {status === "success" ? (
-              <div className="flex items-center gap-2 text-green-500 py-2">
+              <div className="flex items-center gap-2 text-[#4ebe96] py-2">
                 <CheckCircle2 className="h-5 w-5" />
                 <span>{message}</span>
               </div>
@@ -90,12 +90,12 @@ export function Newsletter() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={status === "loading"}
-                  className="bg-secondary border-border text-foreground placeholder:text-muted-foreground"
+                  className="bg-white/[0.05] border-white/[0.08] text-white placeholder:text-[#868f97]"
                 />
                 <Button
                   type="submit"
                   disabled={status === "loading"}
-                  className="bg-green-600 text-white hover:bg-green-700 shrink-0"
+                  className="bg-[#4ebe96] text-black hover:bg-[#4ebe96]/90 shrink-0"
                 >
                   {status === "loading" ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -112,21 +112,21 @@ export function Newsletter() {
           <p className="text-center text-red-500 text-sm mb-8">{message}</p>
         )}
 
-        <div className="text-center text-sm text-muted-foreground mb-8">
+        <div className="text-center text-sm text-[#868f97] mb-8">
           Join 10,000+ investors getting daily insights
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {articles.map((article, index) => (
             <div key={index} className="group cursor-pointer">
-              <div className="aspect-[3/4] rounded-xl overflow-hidden mb-3 bg-secondary">
+              <div className="aspect-[3/4] rounded-xl overflow-hidden mb-3 bg-white/[0.05]">
                 <img
                   src={article.image || "/placeholder.svg"}
                   alt={article.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
-              <h3 className="text-sm font-medium text-foreground group-hover:text-green-500 transition-colors line-clamp-2">
+              <h3 className="text-sm font-medium text-white group-hover:text-[#4ebe96] transition-colors duration-100 line-clamp-2">
                 {article.title}
               </h3>
             </div>

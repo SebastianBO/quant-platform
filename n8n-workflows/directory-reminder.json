@@ -7,7 +7,9 @@
           "interval": [
             {
               "field": "weeks",
-              "triggerAtDay": [1],
+              "triggerAtDay": [
+                1
+              ],
               "triggerAtHour": 9
             }
           ]
@@ -17,7 +19,10 @@
       "name": "Weekly Monday 9 AM",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
-      "position": [250, 300]
+      "position": [
+        250,
+        300
+      ]
     },
     {
       "parameters": {
@@ -49,7 +54,10 @@
       "name": "Fetch Pending Directories",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [470, 300],
+      "position": [
+        470,
+        300
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -66,7 +74,10 @@
       "name": "Categorize & Generate Report",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [690, 300]
+      "position": [
+        690,
+        300
+      ]
     },
     {
       "parameters": {
@@ -95,7 +106,10 @@
       "name": "Has Pending Items?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [910, 300]
+      "position": [
+        910,
+        300
+      ]
     },
     {
       "parameters": {
@@ -108,7 +122,10 @@
       "name": "Send Slack Report",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [1130, 200],
+      "position": [
+        1130,
+        200
+      ],
       "credentials": {
         "slackApi": {
           "id": "CONFIGURE_SLACK_CREDENTIALS",
@@ -129,7 +146,10 @@
       "name": "Send Email Report",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
-      "position": [1130, 400],
+      "position": [
+        1130,
+        400
+      ],
       "credentials": {
         "smtp": {
           "id": "CONFIGURE_SMTP_CREDENTIALS",
@@ -164,7 +184,10 @@
       "name": "Has Urgent Items?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [1350, 200]
+      "position": [
+        1350,
+        200
+      ]
     },
     {
       "parameters": {
@@ -178,7 +201,10 @@
       "name": "Urgent Slack Alert",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [1570, 100],
+      "position": [
+        1570,
+        100
+      ],
       "credentials": {
         "slackApi": {
           "id": "CONFIGURE_SLACK_CREDENTIALS",
@@ -192,7 +218,10 @@
       "name": "No Urgent Items",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
-      "position": [1570, 300]
+      "position": [
+        1570,
+        300
+      ]
     },
     {
       "parameters": {},
@@ -200,7 +229,10 @@
       "name": "No Pending Items",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
-      "position": [1130, 550]
+      "position": [
+        1130,
+        550
+      ]
     },
     {
       "parameters": {
@@ -212,7 +244,10 @@
       "name": "Auto-Mark for Follow-up",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [1790, 200],
+      "position": [
+        1790,
+        200
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -231,7 +266,10 @@
       "name": "Manual Status Update",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [250, 550],
+      "position": [
+        250,
+        550
+      ],
       "webhookId": "directory-status-lician"
     },
     {
@@ -271,7 +309,10 @@
       "name": "Update Submission Status",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [470, 550],
+      "position": [
+        470,
+        550
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -289,7 +330,10 @@
       "name": "Respond to Update",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [690, 550]
+      "position": [
+        690,
+        550
+      ]
     },
     {
       "parameters": {
@@ -302,7 +346,10 @@
       "name": "Add New Directory",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [250, 750],
+      "position": [
+        250,
+        750
+      ],
       "webhookId": "add-directory-lician"
     },
     {
@@ -338,7 +385,10 @@
       "name": "Insert New Directory",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [470, 750],
+      "position": [
+        470,
+        750
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -356,7 +406,10 @@
       "name": "Respond to Add",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [690, 750]
+      "position": [
+        690,
+        750
+      ]
     }
   ],
   "connections": {
@@ -505,23 +558,6 @@
     "executionOrder": "v1"
   },
   "staticData": null,
-  "tags": [
-    {
-      "name": "backlinks",
-      "createdAt": "2025-01-16T00:00:00.000Z",
-      "updatedAt": "2025-01-16T00:00:00.000Z"
-    },
-    {
-      "name": "directory",
-      "createdAt": "2025-01-16T00:00:00.000Z",
-      "updatedAt": "2025-01-16T00:00:00.000Z"
-    },
-    {
-      "name": "lician",
-      "createdAt": "2025-01-16T00:00:00.000Z",
-      "updatedAt": "2025-01-16T00:00:00.000Z"
-    }
-  ],
   "pinData": {},
   "meta": {
     "templateCredsSetupCompleted": false,

@@ -146,7 +146,7 @@ export default function StockInternalLinks({ ticker, companyName, sector }: Stoc
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
-            <BarChart3 className="w-5 h-5 text-blue-500" />
+            <BarChart3 className="w-5 h-5 text-[#479ffa]" />
             Analysis for {displayName}
           </CardTitle>
         </CardHeader>
@@ -154,58 +154,58 @@ export default function StockInternalLinks({ ticker, companyName, sector }: Stoc
           <div className="space-y-3">
             <Link
               href={`/analysis/${ticker.toLowerCase()}/valuation`}
-              className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors group"
+              className="flex items-center justify-between p-3 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] transition-colors duration-100 group"
             >
               <div className="flex items-center gap-3">
-                <DollarSign className="w-5 h-5 text-green-500" />
+                <DollarSign className="w-5 h-5 text-[#4ebe96]" />
                 <div>
                   <p className="font-medium text-sm">Is {displayName} Undervalued?</p>
-                  <p className="text-xs text-muted-foreground">DCF valuation analysis</p>
+                  <p className="text-xs text-[#868f97]">DCF valuation analysis</p>
                 </div>
               </div>
-              <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+              <ArrowRight className="w-4 h-4 text-[#868f97] group-hover:text-white transition-colors duration-100" />
             </Link>
 
             <Link
               href={`/analysis/${ticker.toLowerCase()}/dividend`}
-              className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors group"
+              className="flex items-center justify-between p-3 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] transition-colors duration-100 group"
             >
               <div className="flex items-center gap-3">
                 <TrendingUp className="w-5 h-5 text-purple-500" />
                 <div>
                   <p className="font-medium text-sm">{displayName} Dividend Analysis</p>
-                  <p className="text-xs text-muted-foreground">Yield, payout ratio & history</p>
+                  <p className="text-xs text-[#868f97]">Yield, payout ratio & history</p>
                 </div>
               </div>
-              <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+              <ArrowRight className="w-4 h-4 text-[#868f97] group-hover:text-white transition-colors duration-100" />
             </Link>
 
             <Link
               href={`/analysis/${ticker.toLowerCase()}/growth`}
-              className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors group"
+              className="flex items-center justify-between p-3 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] transition-colors duration-100 group"
             >
               <div className="flex items-center gap-3">
                 <Target className="w-5 h-5 text-orange-500" />
                 <div>
                   <p className="font-medium text-sm">{displayName} Growth Analysis</p>
-                  <p className="text-xs text-muted-foreground">Revenue & earnings growth</p>
+                  <p className="text-xs text-[#868f97]">Revenue & earnings growth</p>
                 </div>
               </div>
-              <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+              <ArrowRight className="w-4 h-4 text-[#868f97] group-hover:text-white transition-colors duration-100" />
             </Link>
 
             <Link
               href={`/analysis/${ticker.toLowerCase()}/health`}
-              className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors group"
+              className="flex items-center justify-between p-3 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] transition-colors duration-100 group"
             >
               <div className="flex items-center gap-3">
                 <Activity className="w-5 h-5 text-red-500" />
                 <div>
                   <p className="font-medium text-sm">{displayName} Financial Health</p>
-                  <p className="text-xs text-muted-foreground">Debt, liquidity & solvency</p>
+                  <p className="text-xs text-[#868f97]">Debt, liquidity & solvency</p>
                 </div>
               </div>
-              <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+              <ArrowRight className="w-4 h-4 text-[#868f97] group-hover:text-white transition-colors duration-100" />
             </Link>
           </div>
         </CardContent>
@@ -215,7 +215,7 @@ export default function StockInternalLinks({ ticker, companyName, sector }: Stoc
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
-            <FileText className="w-5 h-5 text-green-500" />
+            <FileText className="w-5 h-5 text-[#4ebe96]" />
             Related Pages
           </CardTitle>
         </CardHeader>
@@ -223,35 +223,35 @@ export default function StockInternalLinks({ ticker, companyName, sector }: Stoc
           <div className="space-y-3">
             <Link
               href={`/should-i-buy/${ticker.toLowerCase()}`}
-              className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors group"
+              className="flex items-center justify-between p-3 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] transition-colors duration-100 group"
             >
               <div>
                 <p className="font-medium text-sm">Should I Buy {displayName}?</p>
-                <p className="text-xs text-muted-foreground">AI-powered investment decision guide</p>
+                <p className="text-xs text-[#868f97]">AI-powered investment decision guide</p>
               </div>
-              <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+              <ArrowRight className="w-4 h-4 text-[#868f97] group-hover:text-white transition-colors duration-100" />
             </Link>
 
             <Link
               href={`/prediction/${ticker.toLowerCase()}`}
-              className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors group"
+              className="flex items-center justify-between p-3 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] transition-colors duration-100 group"
             >
               <div>
                 <p className="font-medium text-sm">{displayName} Price Prediction</p>
-                <p className="text-xs text-muted-foreground">Technical & fundamental forecasts</p>
+                <p className="text-xs text-[#868f97]">Technical & fundamental forecasts</p>
               </div>
-              <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+              <ArrowRight className="w-4 h-4 text-[#868f97] group-hover:text-white transition-colors duration-100" />
             </Link>
 
             <Link
               href={`/stock/${ticker.toLowerCase()}`}
-              className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors group"
+              className="flex items-center justify-between p-3 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] transition-colors duration-100 group"
             >
               <div>
                 <p className="font-medium text-sm">{displayName} Stock Overview</p>
-                <p className="text-xs text-muted-foreground">Complete stock analysis dashboard</p>
+                <p className="text-xs text-[#868f97]">Complete stock analysis dashboard</p>
               </div>
-              <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+              <ArrowRight className="w-4 h-4 text-[#868f97] group-hover:text-white transition-colors duration-100" />
             </Link>
           </div>
         </CardContent>
@@ -261,7 +261,7 @@ export default function StockInternalLinks({ ticker, companyName, sector }: Stoc
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
-            <TrendingUp className="w-5 h-5 text-blue-500" />
+            <TrendingUp className="w-5 h-5 text-[#479ffa]" />
             Compare {displayName}
           </CardTitle>
         </CardHeader>
@@ -271,12 +271,12 @@ export default function StockInternalLinks({ ticker, companyName, sector }: Stoc
               <Link
                 key={compareTicker}
                 href={`/compare/${ticker.toLowerCase()}-vs-${compareTicker.toLowerCase()}`}
-                className="p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors text-center group"
+                className="p-3 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] transition-colors duration-100 text-center group"
               >
-                <p className="font-medium text-sm group-hover:text-green-500 transition-colors">
+                <p className="font-medium text-sm group-hover:text-[#4ebe96] transition-colors duration-100">
                   vs {compareTicker}
                 </p>
-                <p className="text-xs text-muted-foreground mt-1">Compare</p>
+                <p className="text-xs text-[#868f97] mt-1">Compare</p>
               </Link>
             ))}
           </div>
@@ -297,12 +297,12 @@ export default function StockInternalLinks({ ticker, companyName, sector }: Stoc
               <Link
                 key={stock.ticker}
                 href={`/stock/${stock.ticker.toLowerCase()}`}
-                className="p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors text-center group"
+                className="p-3 rounded-lg bg-white/[0.05] hover:bg-white/[0.08] transition-colors duration-100 text-center group"
               >
-                <p className="font-bold text-sm group-hover:text-green-500 transition-colors">
+                <p className="font-bold text-sm group-hover:text-[#4ebe96] transition-colors duration-100">
                   {stock.ticker}
                 </p>
-                <p className="text-xs text-muted-foreground mt-1 truncate">{stock.name}</p>
+                <p className="text-xs text-[#868f97] mt-1 truncate">{stock.name}</p>
               </Link>
             ))}
           </div>

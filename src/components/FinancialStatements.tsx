@@ -294,7 +294,7 @@ function FinancialStatementsComponent({
               <span className="text-lg sm:text-xl">Complete Financials - {ticker}</span>
             </div>
             {companyFacts && (
-              <span className="text-xs sm:text-sm font-normal text-muted-foreground">
+              <span className="text-xs sm:text-sm font-normal text-[#868f97]">
                 {companyFacts.sector} | {companyFacts.industry}
               </span>
             )}
@@ -302,7 +302,7 @@ function FinancialStatementsComponent({
           </CardTitle>
           <button
             onClick={exportToCSV}
-            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg font-medium text-sm transition-colors flex items-center justify-center gap-2 w-full sm:w-auto"
+            className="px-4 py-2 bg-[#4ebe96] hover:bg-[#4ebe96] rounded-lg font-medium text-sm transition-colors duration-100 flex items-center justify-center gap-2 w-full sm:w-auto"
           >
             <span>📥</span> Export CSV
           </button>
@@ -311,30 +311,30 @@ function FinancialStatementsComponent({
       <CardContent>
         {/* Company Info Bar */}
         {companyFacts && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 mb-6 p-3 sm:p-4 bg-secondary/30 rounded-lg">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 mb-6 p-3 sm:p-4 bg-white/[0.015] rounded-lg">
             <div className="text-center">
-              <p className="text-muted-foreground text-xs">Exchange</p>
+              <p className="text-[#868f97] text-xs">Exchange</p>
               <p className="font-bold text-sm">{companyFacts.exchange}</p>
             </div>
             <div className="text-center">
-              <p className="text-muted-foreground text-xs">Employees</p>
+              <p className="text-[#868f97] text-xs">Employees</p>
               <p className="font-bold text-sm">{companyFacts.number_of_employees?.toLocaleString()}</p>
             </div>
             <div className="text-center">
-              <p className="text-muted-foreground text-xs">Listed</p>
+              <p className="text-[#868f97] text-xs">Listed</p>
               <p className="font-bold text-sm">{companyFacts.listing_date}</p>
             </div>
             <div className="text-center">
-              <p className="text-muted-foreground text-xs">Location</p>
+              <p className="text-[#868f97] text-xs">Location</p>
               <p className="font-bold text-xs">{companyFacts.location}</p>
             </div>
             <div className="text-center">
-              <p className="text-muted-foreground text-xs">SIC Industry</p>
+              <p className="text-[#868f97] text-xs">SIC Industry</p>
               <p className="font-bold text-xs">{companyFacts.sic_industry}</p>
             </div>
             <div className="text-center">
-              <p className="text-muted-foreground text-xs">Website</p>
-              <a href={companyFacts.website_url} target="_blank" rel="noopener noreferrer" className="font-bold text-emerald-500 text-xs hover:underline">
+              <p className="text-[#868f97] text-xs">Website</p>
+              <a href={companyFacts.website_url} target="_blank" rel="noopener noreferrer" className="font-bold text-[#4ebe96] text-xs hover:underline">
                 {companyFacts.website_url?.replace('https://', '').replace('www.', '')}
               </a>
             </div>
@@ -353,10 +353,10 @@ function FinancialStatementsComponent({
             <button
               key={tab.key}
               onClick={() => setActiveStatement(tab.key as StatementType)}
-              className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
+              className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors duration-100 ${
                 activeStatement === tab.key
-                  ? 'bg-emerald-600 text-white'
-                  : 'bg-secondary hover:bg-secondary/80'
+                  ? 'bg-[#4ebe96] text-white'
+                  : 'bg-white/[0.05] hover:bg-white/[0.064]'
               }`}
             >
               {tab.label}
@@ -370,13 +370,13 @@ function FinancialStatementsComponent({
             <div className="flex gap-2">
               <button
                 onClick={() => setPeriod('annual')}
-                className={`px-3 py-1 rounded text-xs sm:text-sm ${period === 'annual' ? 'bg-secondary' : 'bg-secondary/50'}`}
+                className={`px-3 py-1 rounded text-xs sm:text-sm ${period === 'annual' ? 'bg-white/[0.05]' : 'bg-white/[0.025]'}`}
               >
                 Annual
               </button>
               <button
                 onClick={() => setPeriod('quarterly')}
-                className={`px-3 py-1 rounded text-xs sm:text-sm ${period === 'quarterly' ? 'bg-secondary' : 'bg-secondary/50'}`}
+                className={`px-3 py-1 rounded text-xs sm:text-sm ${period === 'quarterly' ? 'bg-white/[0.05]' : 'bg-white/[0.025]'}`}
               >
                 Quarterly
               </button>
@@ -385,11 +385,11 @@ function FinancialStatementsComponent({
             {/* Data Source Selector */}
             {onSourceChange && (
               <div className="flex items-center gap-2">
-                <span className="text-xs text-muted-foreground">Source:</span>
+                <span className="text-xs text-[#868f97]">Source:</span>
                 <select
                   value={sourceOverride}
                   onChange={(e) => onSourceChange(e.target.value as SourceOverride)}
-                  className="px-2 py-1 rounded text-xs sm:text-sm bg-secondary border border-border focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  className="px-2 py-1 rounded text-xs sm:text-sm bg-white/[0.05] border border-white/[0.08] focus:outline-none focus:ring-1 focus:ring-[#4ebe96]"
                 >
                   <option value="auto">Auto (Cascade)</option>
                   <option value="financialdatasets">Financial Datasets</option>
@@ -406,7 +406,7 @@ function FinancialStatementsComponent({
             {/* Product Segments */}
             {productSegments.length > 0 && (
               <div>
-                <p className="text-sm text-muted-foreground mb-3">Revenue by Product/Service</p>
+                <p className="text-sm text-[#868f97] mb-3">Revenue by Product/Service</p>
                 <div className="h-64 sm:h-80">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
@@ -426,7 +426,7 @@ function FinancialStatementsComponent({
                         ))}
                       </Pie>
                       <Tooltip
-                        contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }}
+                        contentStyle={{ backgroundColor: '#1a1a1a', border: '1px solid rgba(255, 255, 255, 0.08)' }}
                         formatter={(value: number) => [formatCurrency(value), 'Revenue']}
                       />
                     </PieChart>
@@ -434,7 +434,7 @@ function FinancialStatementsComponent({
                 </div>
                 <div className="space-y-2 mt-4">
                   {productSegments.map((seg, i) => (
-                    <div key={i} className="flex items-center justify-between p-2 bg-secondary/30 rounded">
+                    <div key={i} className="flex items-center justify-between p-2 bg-white/[0.015] rounded">
                       <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
                         <span className="text-xs sm:text-sm">{seg.name}</span>
@@ -449,23 +449,23 @@ function FinancialStatementsComponent({
             {/* Geographic Segments */}
             {geoSegments.length > 0 && (
               <div>
-                <p className="text-sm text-muted-foreground mb-3">Revenue by Geography</p>
+                <p className="text-sm text-[#868f97] mb-3">Revenue by Geography</p>
                 <div className="h-64 sm:h-80">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={geoSegments} layout="vertical">
-                      <XAxis type="number" tickFormatter={(v) => formatCurrency(v)} stroke="hsl(var(--muted-foreground))" tick={{ fontSize: 10 }} />
-                      <YAxis type="category" dataKey="name" stroke="hsl(var(--muted-foreground))" width={80} tick={{ fontSize: 10 }} />
+                      <XAxis type="number" tickFormatter={(v) => formatCurrency(v)} stroke="#868f97" tick={{ fontSize: 10 }} />
+                      <YAxis type="category" dataKey="name" stroke="#868f97" width={80} tick={{ fontSize: 10 }} />
                       <Tooltip
-                        contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }}
+                        contentStyle={{ backgroundColor: '#1a1a1a', border: '1px solid rgba(255, 255, 255, 0.08)' }}
                         formatter={(value: number) => [formatCurrency(value), 'Revenue']}
                       />
-                      <Bar dataKey="revenue" fill="#6366f1" radius={[0, 4, 4, 0]} />
+                      <Bar dataKey="revenue" fill="#479ffa" radius={[0, 4, 4, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
                 <div className="space-y-2 mt-4">
                   {geoSegments.map((seg, i) => (
-                    <div key={i} className="flex items-center justify-between p-2 bg-secondary/30 rounded">
+                    <div key={i} className="flex items-center justify-between p-2 bg-white/[0.015] rounded">
                       <span className="text-xs sm:text-sm">{seg.name}</span>
                       <span className="font-bold text-xs sm:text-sm">{formatCurrency(seg.revenue)}</span>
                     </div>
@@ -475,7 +475,7 @@ function FinancialStatementsComponent({
             )}
 
             {productSegments.length === 0 && geoSegments.length === 0 && (
-              <div className="col-span-2 text-center py-12 text-muted-foreground">
+              <div className="col-span-2 text-center py-12 text-[#868f97]">
                 No segment data available for {ticker}
               </div>
             )}
@@ -486,8 +486,8 @@ function FinancialStatementsComponent({
             <div className="min-w-full inline-block align-middle">
               <table className="w-full text-xs sm:text-sm">
                 <thead>
-                  <tr className="border-b border-border">
-                    <th className="p-2 sm:p-3 text-left sticky left-0 bg-card min-w-36 sm:min-w-56 z-10">{title}</th>
+                  <tr className="border-b border-white/[0.08]">
+                    <th className="p-2 sm:p-3 text-left sticky left-0 bg-[#1a1a1a] min-w-36 sm:min-w-56 z-10">{title}</th>
                     {(data as Array<Record<string, unknown>>)?.map((period, i: number) => (
                       <th key={i} className="p-2 sm:p-3 text-right min-w-24 sm:min-w-28 whitespace-nowrap">
                         {String(period.fiscal_period || period.report_period || `Period ${i + 1}`)}
@@ -499,8 +499,8 @@ function FinancialStatementsComponent({
                   {rows.map((row: RowConfig, i: number) => {
                     const dataRecords = data as Array<Record<string, unknown>>
                     return (
-                      <tr key={i} className={`border-b border-border/50 ${row.highlight ? 'bg-secondary/30' : ''}`}>
-                        <td className={`p-2 sm:p-3 sticky left-0 bg-card z-10 ${row.highlight ? 'font-bold text-emerald-500' : ''}`}>
+                      <tr key={i} className={`border-b border-white/[0.04] ${row.highlight ? 'bg-white/[0.015]' : ''}`}>
+                        <td className={`p-2 sm:p-3 sticky left-0 bg-[#1a1a1a] z-10 ${row.highlight ? 'font-bold text-[#4ebe96]' : ''}`}>
                           {row.label}
                         </td>
                         {dataRecords?.map((period, j: number) => {
@@ -512,7 +512,7 @@ function FinancialStatementsComponent({
                             <td key={j} className={`p-2 sm:p-3 text-right ${row.highlight ? 'font-bold' : ''}`}>
                               <div>{formatValue(value, row)}</div>
                               {yoy && (
-                                <div className={`text-xs ${yoy.startsWith('+') ? 'text-emerald-500' : 'text-red-500'}`}>
+                                <div className={`text-xs ${yoy.startsWith('+') ? 'text-[#4ebe96]' : 'text-red-500'}`}>
                                   {yoy}
                                 </div>
                               )}
@@ -529,13 +529,13 @@ function FinancialStatementsComponent({
         )}
 
         {(!data || data.length === 0) && activeStatement !== 'segments' && (
-          <div className="text-center py-12 text-muted-foreground">
+          <div className="text-center py-12 text-[#868f97]">
             No {title.toLowerCase()} data available.
           </div>
         )}
 
         {/* Data Source Note */}
-        <div className="mt-6 p-3 bg-secondary/20 rounded text-xs flex flex-col sm:flex-row items-start sm:items-center gap-2 text-muted-foreground">
+        <div className="mt-6 p-3 bg-white/[0.01] rounded text-xs flex flex-col sm:flex-row items-start sm:items-center gap-2 text-[#868f97]">
           <span>Data source:</span>
           <DynamicSourceBadge source={source} />
           <span>

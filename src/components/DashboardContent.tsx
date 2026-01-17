@@ -203,76 +203,76 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
   const isViewingStock = !["myportfolios", "earnings", "screener", "market", "watchlist", "advisor"].includes(activeTab)
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main className="min-h-dvh bg-background text-white">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
+      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-white/[0.08]">
         <div className="max-w-[1800px] mx-auto px-4 sm:px-6 py-3">
           <div className="flex items-center gap-3 md:gap-6">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 bg-foreground rounded-xl flex items-center justify-center">
+              <div className="size-8 sm:size-9 bg-white rounded-xl flex items-center justify-center">
                 <span className="text-background font-bold text-base sm:text-lg">L</span>
               </div>
               <span className="font-semibold text-base sm:text-lg hidden xs:inline">Lician</span>
-              <span className="text-xs text-muted-foreground bg-secondary px-2 py-1 rounded hidden lg:inline">Dashboard</span>
+              <span className="text-xs text-[#868f97] bg-white/[0.05] px-2 py-1 rounded hidden lg:inline">Dashboard</span>
             </Link>
 
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 hover:bg-secondary rounded-lg transition-colors"
+              className="lg:hidden p-2 hover:bg-white/[0.08] rounded-lg transition-colors duration-100"
             >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
             </button>
 
             {/* Main Navigation - Desktop */}
             <nav className="hidden lg:flex items-center gap-1">
               <button
                 onClick={() => setActiveTab('market')}
-                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-100 ${
                   activeTab === 'market' || activeTab === 'overview'
-                    ? 'bg-green-500 text-white'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                    ? 'bg-[#4ebe96] text-black'
+                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
                 }`}
               >
                 Market
               </button>
               <button
                 onClick={() => setActiveTab('watchlist')}
-                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-100 ${
                   activeTab === 'watchlist'
-                    ? 'bg-green-500 text-white'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                    ? 'bg-[#4ebe96] text-black'
+                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
                 }`}
               >
                 Watchlist
               </button>
               <button
                 onClick={() => setActiveTab('myportfolios')}
-                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-100 ${
                   activeTab === 'myportfolios'
-                    ? 'bg-green-500 text-white'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                    ? 'bg-[#4ebe96] text-black'
+                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
                 }`}
               >
                 Portfolio
               </button>
               <button
                 onClick={() => setActiveTab('advisor')}
-                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-100 ${
                   activeTab === 'advisor' || activeTab === 'screener' || activeTab === 'dcf'
-                    ? 'bg-green-500 text-white'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                    ? 'bg-[#4ebe96] text-black'
+                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
                 }`}
               >
                 Advisor
               </button>
               <button
                 onClick={() => setActiveTab('earnings')}
-                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-100 ${
                   activeTab === 'earnings'
-                    ? 'bg-green-500 text-white'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                    ? 'bg-[#4ebe96] text-black'
+                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
                 }`}
               >
                 Earnings
@@ -298,16 +298,16 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
 
           {/* Mobile Navigation Menu */}
           {mobileMenuOpen && (
-            <div className="lg:hidden mt-4 pb-4 border-t border-border pt-4 space-y-2">
+            <div className="lg:hidden mt-4 pb-4 border-t border-white/[0.08] pt-4 space-y-2">
               <button
                 onClick={() => {
                   setActiveTab('market')
                   setMobileMenuOpen(false)
                 }}
-                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-100 ${
                   activeTab === 'market' || activeTab === 'overview'
-                    ? 'bg-green-500 text-white'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                    ? 'bg-[#4ebe96] text-black'
+                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
                 }`}
               >
                 Market
@@ -317,10 +317,10 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
                   setActiveTab('watchlist')
                   setMobileMenuOpen(false)
                 }}
-                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-100 ${
                   activeTab === 'watchlist'
-                    ? 'bg-green-500 text-white'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                    ? 'bg-[#4ebe96] text-black'
+                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
                 }`}
               >
                 Watchlist
@@ -330,10 +330,10 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
                   setActiveTab('myportfolios')
                   setMobileMenuOpen(false)
                 }}
-                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-100 ${
                   activeTab === 'myportfolios'
-                    ? 'bg-green-500 text-white'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                    ? 'bg-[#4ebe96] text-black'
+                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
                 }`}
               >
                 Portfolio
@@ -343,10 +343,10 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
                   setActiveTab('advisor')
                   setMobileMenuOpen(false)
                 }}
-                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-100 ${
                   activeTab === 'advisor' || activeTab === 'screener' || activeTab === 'dcf'
-                    ? 'bg-green-500 text-white'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                    ? 'bg-[#4ebe96] text-black'
+                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
                 }`}
               >
                 Advisor
@@ -356,10 +356,10 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
                   setActiveTab('earnings')
                   setMobileMenuOpen(false)
                 }}
-                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-100 ${
                   activeTab === 'earnings'
-                    ? 'bg-green-500 text-white'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                    ? 'bg-[#4ebe96] text-black'
+                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
                 }`}
               >
                 Earnings
@@ -377,7 +377,7 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
         {stockData?.snapshot && isViewingStock && (
           <div className="mb-4 sm:mb-6">
             {/* Breadcrumb */}
-            <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4 flex-wrap">
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-[#868f97] mb-3 sm:mb-4 flex-wrap">
               <span>NasdaqGS</span>
               <span>-</span>
               <span className="hidden sm:inline">Nasdaq Real Time Price</span>
@@ -397,9 +397,9 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
                     <h1 className="text-xl sm:text-2xl font-bold truncate">
                       {stockData.companyFacts?.name || ticker}
                     </h1>
-                    <span className="text-lg sm:text-xl text-muted-foreground">({ticker})</span>
+                    <span className="text-lg sm:text-xl text-[#868f97]">({ticker})</span>
                     <Button variant="outline" size="sm" className="gap-2 h-8 sm:h-9">
-                      <Star className="w-3 h-3 sm:w-4 sm:h-4" />
+                      <Star className="size-3 sm:size-4" />
                       <span className="hidden sm:inline">Follow</span>
                     </Button>
                   </div>
@@ -410,12 +410,12 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
                       {typeof stockData.snapshot.price === 'number' ? stockData.snapshot.price.toFixed(2) : Number(stockData.snapshot.price || 0).toFixed(2)}
                     </span>
                     <div className={`flex items-center gap-1 sm:gap-2 text-base sm:text-lg ${
-                      (stockData.snapshot.day_change_percent || 0) >= 0 ? 'text-green-500' : 'text-red-500'
+                      (stockData.snapshot.day_change_percent || 0) >= 0 ? 'text-[#4ebe96]' : 'text-red-500'
                     }`}>
                       {(stockData.snapshot.day_change_percent || 0) >= 0 ? (
-                        <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <TrendingUp className="size-4 sm:size-5" />
                       ) : (
-                        <TrendingDown className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <TrendingDown className="size-4 sm:size-5" />
                       )}
                       <span className="text-sm sm:text-lg">
                         {(stockData.snapshot.day_change || 0) >= 0 ? '+' : ''}
@@ -429,7 +429,7 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
                   </div>
 
                   {/* Market Status */}
-                  <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+                  <p className="text-xs sm:text-sm text-[#868f97] mt-1">
                     At close: {new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })} EST
                   </p>
                 </div>
@@ -438,14 +438,14 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
               {/* Quick Actions */}
               <div className="flex items-center gap-2 w-full sm:w-auto sm:ml-auto">
                 <Button variant="outline" size="sm" className="gap-2 flex-1 sm:flex-initial min-h-[44px]">
-                  <Share2 className="w-4 h-4" />
+                  <Share2 className="size-4" />
                   Share
                 </Button>
               </div>
             </div>
 
             {/* Key Statistics Grid - Responsive */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4 mt-4 sm:mt-6 p-3 sm:p-4 bg-secondary/30 rounded-xl overflow-x-auto">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4 mt-4 sm:mt-6 p-3 sm:p-4 bg-white/[0.05]/30 rounded-xl overflow-x-auto">
               <KeyStat label="Previous Close" value={Number(stockData.snapshot.previousClose || stockData.snapshot.price || 0).toFixed(2)} />
               <KeyStat label="Day's Range" value={stockData.snapshot.dayLow && stockData.snapshot.dayHigh ? `${stockData.snapshot.dayLow.toFixed(2)} - ${stockData.snapshot.dayHigh.toFixed(2)}` : '-'} />
               <KeyStat label="Market Cap" value={formatMarketCap(stockData.snapshot.market_cap)} />
@@ -518,7 +518,7 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
 
                   </div>
                 ) : (
-                  <p className="text-muted-foreground">Enter a ticker to analyze</p>
+                  <p className="text-[#868f97]">Enter a ticker to analyze</p>
                 )}
               </TabsContent>
 
@@ -714,17 +714,17 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
 
               {/* Watchlist Tab */}
               <TabsContent value="watchlist">
-                <Card className="bg-card border-border">
+                <Card className="bg-[#1a1a1a] border-white/[0.08]">
                   <CardHeader>
                     <CardTitle className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                       <span>Your Watchlist</span>
-                      <Button size="sm" className="bg-green-600 hover:bg-green-500 text-white w-full sm:w-auto min-h-[44px]">
+                      <Button size="sm" className="bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black w-full sm:w-auto min-h-[44px]">
                         + Add Stock
                       </Button>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground text-center py-12">
+                    <p className="text-[#868f97] text-center py-12">
                       Your watchlist is empty. Search for stocks and click "Follow" to add them here.
                     </p>
                   </CardContent>
@@ -762,33 +762,33 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
                   </div>
 
                   {/* Quick Research Tips */}
-                  <Card className="bg-card border-border">
+                  <Card className="bg-[#1a1a1a] border-white/[0.08]">
                     <CardHeader>
                       <CardTitle>Research Tips</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                        <div className="p-3 sm:p-4 bg-secondary/30 rounded-lg">
+                        <div className="p-3 sm:p-4 bg-white/[0.05]/30 rounded-lg">
                           <p className="font-medium mb-2 text-sm sm:text-base">Stock Screener</p>
-                          <p className="text-xs sm:text-sm text-muted-foreground">
+                          <p className="text-xs sm:text-sm text-[#868f97]">
                             Filter stocks by market cap, P/E ratio, revenue growth, and more.
                           </p>
                         </div>
-                        <div className="p-3 sm:p-4 bg-secondary/30 rounded-lg">
+                        <div className="p-3 sm:p-4 bg-white/[0.05]/30 rounded-lg">
                           <p className="font-medium mb-2 text-sm sm:text-base">DCF Calculator</p>
-                          <p className="text-xs sm:text-sm text-muted-foreground">
+                          <p className="text-xs sm:text-sm text-[#868f97]">
                             Calculate intrinsic value using discounted cash flow analysis.
                           </p>
                         </div>
-                        <div className="p-3 sm:p-4 bg-secondary/30 rounded-lg">
+                        <div className="p-3 sm:p-4 bg-white/[0.05]/30 rounded-lg">
                           <p className="font-medium mb-2 text-sm sm:text-base">Portfolio Analyzer</p>
-                          <p className="text-xs sm:text-sm text-muted-foreground">
+                          <p className="text-xs sm:text-sm text-[#868f97]">
                             Upload a screenshot of your portfolio for AI analysis.
                           </p>
                         </div>
-                        <div className="p-3 sm:p-4 bg-secondary/30 rounded-lg">
+                        <div className="p-3 sm:p-4 bg-white/[0.05]/30 rounded-lg">
                           <p className="font-medium mb-2 text-sm sm:text-base">AI Summary</p>
-                          <p className="text-xs sm:text-sm text-muted-foreground">
+                          <p className="text-xs sm:text-sm text-[#868f97]">
                             Search for any stock and click "AI" tab for instant analysis.
                           </p>
                         </div>
@@ -816,7 +816,7 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
 function KeyStat({ label, value }: { label: string; value: string | undefined }) {
   return (
     <div className="text-xs sm:text-sm">
-      <p className="text-muted-foreground text-[10px] sm:text-xs mb-0.5 truncate">{label}</p>
+      <p className="text-[#868f97] text-[10px] sm:text-xs mb-0.5 truncate">{label}</p>
       <p className="font-medium tabular-nums text-xs sm:text-sm">{value || '-'}</p>
     </div>
   )
@@ -838,11 +838,11 @@ function MetricBar({ label, value, max, threshold }: { label: string, value: num
     <div>
       <div className="flex justify-between text-sm mb-1">
         <span>{label}</span>
-        <span className={isGood ? 'text-green-500' : 'text-muted-foreground'}>{formatPercent(value)}</span>
+        <span className={isGood ? 'text-[#4ebe96]' : 'text-[#868f97]'}>{formatPercent(value)}</span>
       </div>
-      <div className="h-2 bg-secondary rounded-full overflow-hidden">
+      <div className="h-2 bg-white/[0.05] rounded-full overflow-hidden">
         <div
-          className={`h-full rounded-full transition-all ${isGood ? 'bg-green-500' : 'bg-muted-foreground/30'}`}
+          className={`h-full rounded-full transition-all ${isGood ? 'bg-[#4ebe96]' : 'bg-[#868f97]/30'}`}
           style={{ width: `${percentage}%` }}
         />
       </div>
@@ -853,7 +853,7 @@ function MetricBar({ label, value, max, threshold }: { label: string, value: num
 function LoadingState() {
   return (
     <div className="flex items-center justify-center h-64">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-green-500"></div>
+      <div className="animate-spin rounded-full size-12 border-t-2 border-[#4ebe96]"></div>
     </div>
   )
 }

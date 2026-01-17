@@ -99,27 +99,27 @@ export default function EarningsCalendar() {
       <CardHeader className="space-y-4">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
-            <Calendar className="w-6 h-6 text-green-500" />
+            <Calendar className="w-6 h-6 text-[#4ebe96]" />
             Earnings Calendar
           </CardTitle>
           <div className="flex gap-2">
             <button
               onClick={() => setSelectedWeek(w => w - 1)}
-              className="px-3 py-1.5 bg-secondary hover:bg-secondary/80 rounded-lg text-sm font-medium"
+              className="px-3 py-1.5 bg-white/[0.05] hover:bg-white/[0.08] rounded-lg text-sm font-medium"
             >
               <ChevronLeft className="w-4 h-4 inline" /> Prev
             </button>
             <button
               onClick={() => setSelectedWeek(0)}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium ${
-                selectedWeek === 0 ? 'bg-green-600 text-white' : 'bg-secondary hover:bg-secondary/80'
+                selectedWeek === 0 ? 'bg-[#4ebe96] text-white' : 'bg-white/[0.05] hover:bg-white/[0.08]'
               }`}
             >
               This Week
             </button>
             <button
               onClick={() => setSelectedWeek(w => w + 1)}
-              className="px-3 py-1.5 bg-secondary hover:bg-secondary/80 rounded-lg text-sm font-medium"
+              className="px-3 py-1.5 bg-white/[0.05] hover:bg-white/[0.08] rounded-lg text-sm font-medium"
             >
               Next <ChevronRight className="w-4 h-4 inline" />
             </button>
@@ -128,25 +128,25 @@ export default function EarningsCalendar() {
 
         {/* Statistics Bar */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          <div className="bg-secondary/50 rounded-lg p-3 text-center">
+          <div className="bg-white/[0.05] rounded-lg p-3 text-center">
             <p className="text-2xl font-bold">{totalEarnings}</p>
-            <p className="text-xs text-muted-foreground">Total Reports</p>
+            <p className="text-xs text-[#868f97]">Total Reports</p>
           </div>
-          <div className="bg-secondary/50 rounded-lg p-3 text-center">
+          <div className="bg-white/[0.05] rounded-lg p-3 text-center">
             <p className="text-2xl font-bold text-amber-500">{notableEarnings.length}</p>
-            <p className="text-xs text-muted-foreground">Notable</p>
+            <p className="text-xs text-[#868f97]">Notable</p>
           </div>
-          <div className="bg-secondary/50 rounded-lg p-3 text-center">
-            <p className="text-2xl font-bold text-green-500">{beatCount}</p>
-            <p className="text-xs text-muted-foreground">Beat</p>
+          <div className="bg-white/[0.05] rounded-lg p-3 text-center">
+            <p className="text-2xl font-bold text-[#4ebe96]">{beatCount}</p>
+            <p className="text-xs text-[#868f97]">Beat</p>
           </div>
-          <div className="bg-secondary/50 rounded-lg p-3 text-center">
+          <div className="bg-white/[0.05] rounded-lg p-3 text-center">
             <p className="text-2xl font-bold text-red-500">{missCount}</p>
-            <p className="text-xs text-muted-foreground">Missed</p>
+            <p className="text-xs text-[#868f97]">Missed</p>
           </div>
-          <div className="bg-secondary/50 rounded-lg p-3 text-center">
-            <p className="text-2xl font-bold text-muted-foreground">{totalEarnings - reported.length}</p>
-            <p className="text-xs text-muted-foreground">Pending</p>
+          <div className="bg-white/[0.05] rounded-lg p-3 text-center">
+            <p className="text-2xl font-bold text-[#868f97]">{totalEarnings - reported.length}</p>
+            <p className="text-xs text-[#868f97]">Pending</p>
           </div>
         </div>
 
@@ -154,20 +154,20 @@ export default function EarningsCalendar() {
         <div className="flex gap-2">
           <button
             onClick={() => setFilter('all')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-100 ${
               filter === 'all'
-                ? 'bg-green-600 text-white'
-                : 'bg-secondary text-muted-foreground hover:text-foreground'
+                ? 'bg-[#4ebe96] text-white'
+                : 'bg-white/[0.05] text-[#868f97] hover:text-white'
             }`}
           >
             All Earnings ({totalEarnings})
           </button>
           <button
             onClick={() => setFilter('notable')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-100 ${
               filter === 'notable'
                 ? 'bg-amber-500 text-white'
-                : 'bg-secondary text-muted-foreground hover:text-foreground'
+                : 'bg-white/[0.05] text-[#868f97] hover:text-white'
             }`}
           >
             Notable Only ({notableEarnings.length})
@@ -193,10 +193,10 @@ export default function EarningsCalendar() {
               const isToday = dateStr === new Date().toISOString().split('T')[0]
 
               return (
-                <div key={dayIndex} className={`bg-secondary/30 rounded-lg p-3 ${isToday ? 'ring-2 ring-emerald-500' : ''}`}>
-                  <div className="text-center mb-3 pb-2 border-b border-border">
+                <div key={dayIndex} className={`bg-white/[0.05] rounded-lg p-3 ${isToday ? 'ring-2 ring-emerald-500' : ''}`}>
+                  <div className="text-center mb-3 pb-2 border-b border-white/[0.08]">
                     <p className="font-bold text-lg">{weekDays[dayIndex]}</p>
-                    <p className="text-muted-foreground text-sm">
+                    <p className="text-[#868f97] text-sm">
                       {currentDay.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </p>
                     {isToday && <span className="text-xs text-emerald-500">TODAY</span>}
@@ -210,7 +210,7 @@ export default function EarningsCalendar() {
                         <EarningsCard key={i} event={e} />
                       ))}
                       {dayData.bmo.length > 8 && (
-                        <p className="text-xs text-muted-foreground">+{dayData.bmo.length - 8} more</p>
+                        <p className="text-xs text-[#868f97]">+{dayData.bmo.length - 8} more</p>
                       )}
                     </div>
                   )}
@@ -223,13 +223,13 @@ export default function EarningsCalendar() {
                         <EarningsCard key={i} event={e} />
                       ))}
                       {dayData.amc.length > 8 && (
-                        <p className="text-xs text-muted-foreground">+{dayData.amc.length - 8} more</p>
+                        <p className="text-xs text-[#868f97]">+{dayData.amc.length - 8} more</p>
                       )}
                     </div>
                   )}
 
                   {dayData.bmo.length === 0 && dayData.amc.length === 0 && (
-                    <p className="text-muted-foreground text-sm text-center py-4">No earnings</p>
+                    <p className="text-[#868f97] text-sm text-center py-4">No earnings</p>
                   )}
                 </div>
               )
@@ -238,7 +238,7 @@ export default function EarningsCalendar() {
         )}
 
         {/* Legend */}
-        <div className="mt-6 flex flex-wrap gap-4 text-sm text-muted-foreground">
+        <div className="mt-6 flex flex-wrap gap-4 text-sm text-[#868f97]">
           <div className="flex items-center gap-2">
             <span className="w-3 h-3 rounded bg-emerald-500"></span>
             <span>Beat Estimates</span>
@@ -248,7 +248,7 @@ export default function EarningsCalendar() {
             <span>Missed Estimates</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded bg-muted-foreground"></span>
+            <span className="w-3 h-3 rounded bg-[#868f97]"></span>
             <span>Pending</span>
           </div>
         </div>
@@ -271,14 +271,14 @@ function EarningsCard({ event }: { event: EarningsEvent }) {
       beat ? 'bg-emerald-500/20 border border-emerald-500/30' :
       miss ? 'bg-red-500/20 border border-red-500/30' :
       isNotable ? 'bg-amber-500/10 border border-amber-500/30' :
-      'bg-secondary/50 border border-transparent hover:border-border'
+      'bg-white/[0.05] border border-transparent hover:border-white/[0.08]'
     }`}>
       <div className="flex items-center gap-2">
         <StockLogo symbol={ticker} size="sm" />
         <div className="flex-1 min-w-0">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-1">
-              <span className="font-bold text-foreground">{ticker}</span>
+              <span className="font-bold text-white">{ticker}</span>
               {isNotable && !hasResults && (
                 <span className="text-[9px] px-1 py-0.5 bg-amber-500/20 text-amber-500 rounded">Notable</span>
               )}
@@ -289,11 +289,11 @@ function EarningsCard({ event }: { event: EarningsEvent }) {
                 {((actual - estimate) / Math.abs(estimate || 1) * 100).toFixed(0)}%
               </span>
             ) : (
-              <span className="text-muted-foreground">Est: ${estimate?.toFixed(2) || 'N/A'}</span>
+              <span className="text-[#868f97]">Est: ${estimate?.toFixed(2) || 'N/A'}</span>
             )}
           </div>
           {event.name && (
-            <p className="text-[10px] text-muted-foreground truncate">{event.name}</p>
+            <p className="text-[10px] text-[#868f97] truncate">{event.name}</p>
           )}
         </div>
       </div>

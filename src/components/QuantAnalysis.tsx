@@ -522,11 +522,11 @@ export default function QuantAnalysis({ ticker, metrics, currentPrice, dataSourc
   }
 
   const getGradeColor = (grade: string): string => {
-    if (grade.startsWith('A')) return 'text-emerald-400'
-    if (grade.startsWith('B')) return 'text-blue-400'
-    if (grade.startsWith('C')) return 'text-yellow-400'
+    if (grade.startsWith('A')) return 'text-[#4ebe96]'
+    if (grade.startsWith('B')) return 'text-[#479ffa]'
+    if (grade.startsWith('C')) return 'text-[#f4a623]'
     if (grade.startsWith('D')) return 'text-orange-400'
-    return 'text-red-400'
+    return 'text-[#e15241]'
   }
 
   return (
@@ -541,8 +541,8 @@ export default function QuantAnalysis({ ticker, metrics, currentPrice, dataSourc
             {hasMetrics && dataSource && (
               <span className={`text-xs px-2 py-0.5 rounded-full ${
                 dataSource === 'supabase'
-                  ? 'bg-green-500/20 text-green-400'
-                  : 'bg-blue-500/20 text-blue-400'
+                  ? 'bg-[#4ebe96]/20 text-[#4ebe96]'
+                  : 'bg-[#479ffa]/20 text-[#479ffa]'
               }`}>
                 {dataSource === 'supabase' ? 'Cached' : 'API'}
               </span>
@@ -552,7 +552,7 @@ export default function QuantAnalysis({ ticker, metrics, currentPrice, dataSourc
             <button
               onClick={runAnalysis}
               disabled={isAnalyzing}
-              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 disabled:bg-secondary rounded-lg font-medium transition-colors text-sm sm:text-base w-full sm:w-auto"
+              className="px-4 py-2 bg-[#4ebe96] hover:bg-white/[0.08] disabled:bg-white/[0.05] rounded-lg font-medium transition-colors duration-100 text-sm sm:text-base w-full sm:w-auto"
             >
               {isAnalyzing ? 'Analyzing...' : 'Run Analysis'}
             </button>
@@ -563,18 +563,18 @@ export default function QuantAnalysis({ ticker, metrics, currentPrice, dataSourc
         {stages.length === 0 && !isAnalyzing && !hasMetrics && (
           <div className="text-center py-12">
             <div className="text-4xl mb-4">📊</div>
-            <p className="text-muted-foreground">No financial metrics available for {ticker}</p>
-            <p className="text-sm text-muted-foreground mt-2">
+            <p className="text-[#868f97]">No financial metrics available for {ticker}</p>
+            <p className="text-sm text-[#868f97] mt-2">
               Metrics will be synced automatically when SEC filings are processed.
             </p>
-            <p className="text-xs text-muted-foreground mt-4">
+            <p className="text-xs text-[#868f97] mt-4">
               Data syncs every 5 minutes from SEC EDGAR
             </p>
           </div>
         )}
 
         {stages.length === 0 && !isAnalyzing && hasMetrics && (
-          <div className="text-center py-12 text-muted-foreground">
+          <div className="text-center py-12 text-[#868f97]">
             <p>Click "Run Analysis" to perform institutional-grade quantitative analysis</p>
             <p className="text-sm mt-2">7 stages with 30+ guard rails • {metricsCount} metrics available</p>
           </div>
@@ -588,16 +588,16 @@ export default function QuantAnalysis({ ticker, metrics, currentPrice, dataSourc
               className={`p-3 sm:p-4 rounded-lg border ${
                 stage.stage === 7
                   ? stage.grade === 'STRONG BUY' || stage.grade === 'BUY'
-                    ? 'bg-emerald-500/10 border-emerald-500/30'
+                    ? 'bg-[#4ebe96]/10 border-[#4ebe96]/30'
                     : stage.grade === 'HOLD'
-                    ? 'bg-yellow-500/10 border-yellow-500/30'
-                    : 'bg-red-500/10 border-red-500/30'
-                  : 'bg-secondary/30 border-border/50'
+                    ? 'bg-[#f4a623]/10 border-[#f4a623]/30'
+                    : 'bg-[#e15241]/10 border-[#e15241]/30'
+                  : 'bg-white/[0.05] border-white/[0.08]'
               }`}
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 gap-2">
                 <div className="flex items-center gap-3">
-                  <span className="text-muted-foreground text-sm">Stage {stage.stage}</span>
+                  <span className="text-[#868f97] text-sm">Stage {stage.stage}</span>
                   <span className="font-bold text-sm sm:text-base">{stage.name}</span>
                 </div>
                 <span className={`text-lg sm:text-xl font-bold ${getGradeColor(stage.grade)}`}>
@@ -607,8 +607,8 @@ export default function QuantAnalysis({ ticker, metrics, currentPrice, dataSourc
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                 {stage.ratings.map((r, j) => (
-                  <div key={j} className="flex items-center justify-between p-2 bg-secondary/50 rounded text-xs sm:text-sm">
-                    <span className="text-muted-foreground">{r.metric}</span>
+                  <div key={j} className="flex items-center justify-between p-2 bg-white/[0.05] rounded text-xs sm:text-sm">
+                    <span className="text-[#868f97]">{r.metric}</span>
                     <span className="flex items-center gap-1">
                       <span className="font-medium">{r.value}</span>
                       <span>{r.emoji}</span>
@@ -618,9 +618,9 @@ export default function QuantAnalysis({ ticker, metrics, currentPrice, dataSourc
               </div>
 
               {stage.flags.length > 0 && (
-                <div className="mt-3 pt-3 border-t border-border/50">
-                  <p className="text-red-500 text-xs sm:text-sm font-medium">Red Flags:</p>
-                  <ul className="text-xs sm:text-sm text-muted-foreground mt-1">
+                <div className="mt-3 pt-3 border-t border-white/[0.08]">
+                  <p className="text-[#e15241] text-xs sm:text-sm font-medium">Red Flags:</p>
+                  <ul className="text-xs sm:text-sm text-[#868f97] mt-1">
                     {stage.flags.map((flag, j) => (
                       <li key={j}>🚨 {flag}</li>
                     ))}
@@ -633,7 +633,7 @@ export default function QuantAnalysis({ ticker, metrics, currentPrice, dataSourc
 
         {isAnalyzing && (
           <div className="flex items-center justify-center py-4">
-            <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-emerald-500 mr-3"></div>
+            <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-[#4ebe96] mr-3"></div>
             <span className="text-sm sm:text-base">Analyzing Stage {stages.length + 1} of 7...</span>
           </div>
         )}

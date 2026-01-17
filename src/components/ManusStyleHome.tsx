@@ -192,9 +192,9 @@ const SidebarNavButton = memo(function SidebarNavButton({
     <button
       onClick={onClick}
       className={cn(
-        "w-full flex items-center gap-3 px-2.5 py-2.5 rounded-xl transition-colors",
-        "text-muted-foreground hover:text-foreground hover:bg-secondary",
-        item.action === "new" && "bg-green-500/10 text-green-500 hover:bg-green-500/20"
+        "w-full flex items-center gap-3 px-2.5 py-2.5 rounded-xl transition-colors duration-100",
+        "text-[#868f97] hover:text-white hover:bg-white/[0.05]",
+        item.action === "new" && "bg-[#4ebe96]/10 text-[#4ebe96] hover:bg-[#4ebe96]/20"
       )}
       title={item.label}
     >
@@ -217,8 +217,8 @@ const SidebarNavLink = memo(function SidebarNavLink({
     <Link
       href={item.href}
       className={cn(
-        "w-full flex items-center gap-3 px-2.5 py-2.5 rounded-xl transition-colors",
-        "text-muted-foreground hover:text-foreground hover:bg-secondary"
+        "w-full flex items-center gap-3 px-2.5 py-2.5 rounded-xl transition-colors duration-100",
+        "text-[#868f97] hover:text-white hover:bg-white/[0.05]"
       )}
       title={item.label}
     >
@@ -234,13 +234,13 @@ const TaskItem = memo(function TaskItem({ task }: { task: Task }) {
   return (
     <div className="flex items-center gap-2 text-sm">
       {task.status === 'completed' ? (
-        <CheckCircle2 className="w-4 h-4 text-green-500" />
+        <CheckCircle2 className="w-4 h-4 text-[#4ebe96]" />
       ) : task.status === 'running' ? (
-        <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
+        <Loader2 className="w-4 h-4 animate-spin text-[#479ffa]" />
       ) : (
-        <div className="w-4 h-4 rounded-full border border-muted-foreground/30" />
+        <div className="w-4 h-4 rounded-full border border-white/[0.15]" />
       )}
-      <span className={task.status === 'completed' ? 'text-muted-foreground' : ''}>
+      <span className={task.status === 'completed' ? 'text-[#868f97]' : 'text-white'}>
         {task.description}
       </span>
     </div>
@@ -267,8 +267,8 @@ const ChatMessage = memo(function ChatMessage({
         className={cn(
           "max-w-[85%] rounded-2xl px-4 py-3",
           message.role === 'user'
-            ? "bg-green-600 text-white"
-            : "bg-card border border-border"
+            ? "bg-[#4ebe96] text-black"
+            : "bg-[#1a1a1a] border border-white/[0.08]"
         )}
       >
         <div className="text-sm whitespace-pre-wrap">
@@ -288,7 +288,7 @@ const ChatMessage = memo(function ChatMessage({
         {message.role === 'assistant' && message.content && (
           <button
             onClick={() => onCopy(message.content, message.id)}
-            className="mt-2 p-1 text-muted-foreground hover:text-foreground rounded transition-colors"
+            className="mt-2 p-1 text-[#868f97] hover:text-white rounded transition-colors duration-100"
           >
             {copiedId === message.id ? (
               <Check className="w-4 h-4" />
@@ -927,11 +927,11 @@ export default function ManusStyleHome() {
   const hasMessages = messages.length > 0
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-dvh bg-[#000]">
       {/* Left Sidebar - Hidden on mobile */}
       <aside
         className={cn(
-          "hidden md:flex flex-col py-4 border-r border-border bg-card/50 transition-all duration-200",
+          "hidden md:flex flex-col py-4 border-r border-white/[0.08] bg-[#0a0a0a] transition-all duration-[250ms]",
           sidebarExpanded ? "w-52" : "w-14"
         )}
         onMouseEnter={() => setSidebarExpanded(true)}
@@ -939,11 +939,11 @@ export default function ManusStyleHome() {
       >
         {/* Logo - Lician brand */}
         <Link href="/" className="mb-6 flex items-center gap-3 px-3">
-          <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
+          <div className="size-9 bg-[#479ffa] rounded-xl flex items-center justify-center flex-shrink-0">
             <span className="text-white font-bold text-lg">L</span>
           </div>
           {sidebarExpanded && (
-            <span className="font-semibold text-lg whitespace-nowrap">Lician</span>
+            <span className="font-semibold text-lg text-white whitespace-nowrap">Lician</span>
           )}
         </Link>
 
@@ -977,14 +977,14 @@ export default function ManusStyleHome() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden">
         {/* Top bar */}
-        <header className="flex items-center justify-between px-4 md:px-6 py-3 border-b border-border flex-shrink-0 safe-area-top">
+        <header className="flex items-center justify-between px-4 md:px-6 py-3 border-b border-white/[0.08] flex-shrink-0 safe-area-top">
           <div className="flex items-center gap-2">
             {/* Mobile: Show logo + brand, Desktop: Just brand name */}
-            <div className="md:hidden w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+            <div className="md:hidden size-8 bg-[#479ffa] rounded-lg flex items-center justify-center">
               <span className="text-white font-bold">L</span>
             </div>
-            <span className="font-semibold">Lician AI</span>
-            <ChevronDown className="w-4 h-4 text-muted-foreground hidden md:block" />
+            <span className="font-semibold text-white">Lician AI</span>
+            <ChevronDown className="w-4 h-4 text-[#868f97] hidden md:block" />
           </div>
 
           <div className="flex items-center gap-2 md:gap-4">
@@ -994,49 +994,49 @@ export default function ManusStyleHome() {
             {/* Free plan / Start trial - hidden on mobile */}
             {!loading && !user && (
               <div className="hidden sm:flex items-center gap-2 text-sm">
-                <span className="text-muted-foreground">Free plan</span>
-                <span className="text-muted-foreground">|</span>
-                <Link href="/api/stripe/quick-checkout?plan=annual" prefetch={false} className="text-green-500 hover:text-green-400 font-medium">
+                <span className="text-[#868f97]">Free plan</span>
+                <span className="text-[#868f97]">|</span>
+                <Link href="/api/stripe/quick-checkout?plan=annual" prefetch={false} className="text-[#4ebe96] hover:text-[#4ebe96]/80 font-medium transition-colors duration-100">
                   Start free trial
                 </Link>
               </div>
             )}
 
             {/* Credits */}
-            <div className="flex items-center gap-1.5 md:gap-2 px-2 md:px-3 py-1.5 bg-secondary/50 rounded-full">
-              <Zap className="w-4 h-4 text-yellow-500" />
-              <span className="text-sm font-medium">{credits}</span>
+            <div className="flex items-center gap-1.5 md:gap-2 px-2 md:px-3 py-1.5 bg-white/[0.05] rounded-full">
+              <Zap className="w-4 h-4 text-[#f4a623]" />
+              <span className="text-sm font-medium text-white">{credits}</span>
             </div>
 
             {/* Share credits - hidden on mobile */}
             <button
-              className="hidden md:block p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors"
+              className="hidden md:block p-2 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.05] transition-colors duration-100"
               title="Invite friends for free credits"
             >
               <Gift className="w-5 h-5" />
             </button>
 
             {/* Notifications - hidden on mobile */}
-            <button className="hidden md:block p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors">
+            <button className="hidden md:block p-2 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.05] transition-colors duration-100">
               <Bell className="w-5 h-5" />
             </button>
 
             {/* User/Auth */}
             {loading ? (
-              <div className="w-9 h-9 bg-secondary animate-pulse rounded-full" />
+              <div className="size-9 bg-white/[0.05] animate-pulse rounded-full" />
             ) : user ? (
               <Link href="/dashboard">
-                <div className="w-9 h-9 bg-green-600 rounded-full flex items-center justify-center text-white font-medium">
+                <div className="size-9 bg-[#4ebe96] rounded-full flex items-center justify-center text-black font-medium">
                   {user.email?.charAt(0).toUpperCase() || "U"}
                 </div>
               </Link>
             ) : (
               <div className="flex items-center gap-2">
                 <Link href="/login">
-                  <Button variant="ghost" size="sm">Sign in</Button>
+                  <Button variant="ghost" size="sm" className="text-[#868f97] hover:text-white transition-colors duration-100">Sign in</Button>
                 </Link>
                 <Link href="/login">
-                  <Button size="sm" className="bg-green-600 hover:bg-green-500">Sign up</Button>
+                  <Button size="sm" className="bg-[#4ebe96] text-black hover:bg-[#4ebe96]/90 transition-colors duration-100">Sign up</Button>
                 </Link>
               </div>
             )}
@@ -1063,9 +1063,9 @@ export default function ManusStyleHome() {
 
                 {/* Research tasks indicator */}
                 {isLoading && tasks.length > 0 && (
-                  <div className="bg-card border border-border rounded-xl p-4">
+                  <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-3">
-                      <Loader2 className="w-4 h-4 animate-spin text-green-500" />
+                      <Loader2 className="w-4 h-4 animate-spin text-[#4ebe96]" />
                       <span className="text-sm font-medium">Researching...</span>
                     </div>
                     <div className="space-y-2">
@@ -1085,12 +1085,12 @@ export default function ManusStyleHome() {
           <div className={cn(
             "flex flex-col items-center px-4 md:px-6 py-4 md:py-8",
             hasMessages
-              ? "fixed bottom-0 left-0 right-0 md:relative md:bottom-auto bg-background border-t border-border safe-area-bottom z-40"
+              ? "fixed bottom-0 left-0 right-0 md:relative md:bottom-auto bg-[#000] border-t border-white/[0.08] safe-area-bottom z-40"
               : "min-h-0"
           )}>
             {/* Heading - only show when no messages */}
             {!hasMessages && (
-              <h1 className="text-3xl md:text-5xl font-semibold text-center mb-6 md:mb-10 px-4">
+              <h1 className="text-3xl md:text-5xl font-semibold text-center mb-6 md:mb-10 px-4 text-white">
                 What can I do for you?
               </h1>
             )}
@@ -1124,8 +1124,8 @@ export default function ManusStyleHome() {
                           onClick={() => handleToolClick(tool)}
                           className={cn(
                             "flex items-center gap-2 px-3 md:px-4 py-2 md:py-2.5 rounded-full",
-                            "border border-border bg-card hover:bg-secondary",
-                            "text-sm font-medium transition-colors whitespace-nowrap"
+                            "border border-white/[0.08] bg-[#1a1a1a] hover:bg-white/[0.08]",
+                            "text-sm font-medium text-white transition-colors duration-100 whitespace-nowrap"
                           )}
                         >
                           <tool.icon className="w-4 h-4" />
@@ -1134,16 +1134,16 @@ export default function ManusStyleHome() {
 
                         {/* More tools dropdown */}
                         {tool.id === "more" && showMoreTools && (
-                          <div className="absolute top-full right-0 mt-2 w-56 bg-card border border-border rounded-xl shadow-xl py-2 z-50">
+                          <div className="absolute top-full right-0 mt-2 w-56 bg-[#1a1a1a] border border-white/[0.08] rounded-xl shadow-xl py-2 z-50">
                             {MORE_TOOLS.map((moreTool) => (
                               <Link
                                 key={moreTool.label}
                                 href={moreTool.href}
-                                className="flex items-center gap-3 px-4 py-2.5 hover:bg-secondary transition-colors"
+                                className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/[0.05] transition-colors duration-100"
                                 onClick={() => setShowMoreTools(false)}
                               >
-                                <moreTool.icon className="w-4 h-4 text-muted-foreground" />
-                                <span className="text-sm">{moreTool.label}</span>
+                                <moreTool.icon className="w-4 h-4 text-[#868f97]" />
+                                <span className="text-sm text-white">{moreTool.label}</span>
                               </Link>
                             ))}
                           </div>
@@ -1153,7 +1153,7 @@ export default function ManusStyleHome() {
                   </div>
 
                   {/* Tool integration hint with stock logos - fixed height to prevent CLS */}
-                  <div className="flex items-center justify-between px-2 py-4 text-sm text-muted-foreground h-14">
+                  <div className="flex items-center justify-between px-2 py-4 text-sm text-[#868f97] h-14">
                     <div className="flex items-center gap-2">
                       <Wallet className="w-4 h-4 flex-shrink-0" />
                       <span className="hidden sm:inline">Connect your portfolio for personalized insights</span>
@@ -1165,7 +1165,7 @@ export default function ManusStyleHome() {
                           <Link
                             key={mover.symbol}
                             href={`/stock/${mover.symbol}`}
-                            className="hover:scale-110 transition-transform"
+                            className="hover:scale-110 transition-transform duration-100"
                             title={`${mover.symbol} - ${mover.changePercent > 0 ? '+' : ''}${mover.changePercent?.toFixed(2)}%`}
                           >
                             <StockLogo symbol={mover.symbol} size="sm" />
@@ -1174,7 +1174,7 @@ export default function ManusStyleHome() {
                       ) : (
                         /* Skeleton placeholders to prevent CLS */
                         Array.from({ length: 4 }).map((_, i) => (
-                          <div key={i} className="w-6 h-6 rounded-lg bg-muted animate-pulse" />
+                          <div key={i} className="size-6 rounded-lg bg-white/[0.05] animate-pulse" />
                         ))
                       )}
                     </div>
@@ -1186,16 +1186,16 @@ export default function ManusStyleHome() {
                       <div className="relative">
                         <div
                           onClick={() => handleCarouselClick(CAROUSEL_SLIDES[carouselIndex])}
-                          className="bg-card/80 border border-border rounded-2xl p-4 md:p-5 cursor-pointer hover:bg-card transition-colors group"
+                          className="bg-[#1a1a1a]/80 border border-white/[0.08] rounded-2xl p-4 md:p-5 cursor-pointer hover:bg-[#1a1a1a] transition-colors duration-100 group"
                         >
                           <div className="flex items-start justify-between gap-4 md:gap-6">
                             {/* Left content */}
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 mb-2">
-                                <h2 className="font-semibold text-base md:text-lg truncate">{CAROUSEL_SLIDES[carouselIndex].title}</h2>
-                                <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+                                <h2 className="font-semibold text-base md:text-lg truncate text-white">{CAROUSEL_SLIDES[carouselIndex].title}</h2>
+                                <ChevronRight className="w-4 h-4 text-[#868f97] group-hover:translate-x-1 transition-transform duration-100" />
                               </div>
-                              <p className="text-sm text-muted-foreground mb-4">
+                              <p className="text-sm text-[#868f97] mb-4">
                                 {CAROUSEL_SLIDES[carouselIndex].subtitle}
                               </p>
 
@@ -1211,7 +1211,7 @@ export default function ManusStyleHome() {
                                         // Focus the input
                                         textareaRef.current?.focus()
                                       }}
-                                      className="px-3 py-1.5 text-xs rounded-full border border-border bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground hover:border-green-500/50 transition-all cursor-pointer"
+                                      className="px-3 py-1.5 text-xs rounded-full border border-white/[0.08] bg-white/[0.05] text-[#868f97] hover:bg-white/[0.08] hover:text-white hover:border-[#4ebe96]/50 transition-all duration-100 cursor-pointer"
                                     >
                                       {tag.label}
                                     </button>
@@ -1221,29 +1221,29 @@ export default function ManusStyleHome() {
                             </div>
 
                             {/* Right visual */}
-                            <div className="hidden sm:flex flex-shrink-0 w-32 h-24 bg-gradient-to-br from-green-500/20 to-blue-500/20 rounded-xl items-center justify-center">
+                            <div className="hidden sm:flex flex-shrink-0 w-32 h-24 bg-gradient-to-br from-[#4ebe96]/20 to-[#479ffa]/20 rounded-xl items-center justify-center">
                               {CAROUSEL_SLIDES[carouselIndex].icon === "chart" && (
                                 <div className="relative">
-                                  <BarChart3 className="w-10 h-10 text-green-500" />
-                                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                                    <TrendingUp className="w-2.5 h-2.5 text-white" />
+                                  <BarChart3 className="w-10 h-10 text-[#4ebe96]" />
+                                  <div className="absolute -bottom-1 -right-1 size-4 bg-[#4ebe96] rounded-full flex items-center justify-center">
+                                    <TrendingUp className="w-2.5 h-2.5 text-black" />
                                   </div>
                                 </div>
                               )}
                               {CAROUSEL_SLIDES[carouselIndex].icon === "social" && (
-                                <div className="w-16 h-16 bg-card rounded-lg border border-border shadow-lg p-2">
-                                  <div className="w-full h-2 bg-muted-foreground/20 rounded mb-1" />
-                                  <div className="w-3/4 h-2 bg-muted-foreground/20 rounded mb-1" />
-                                  <div className="w-1/2 h-2 bg-muted-foreground/20 rounded" />
+                                <div className="size-16 bg-[#1a1a1a] rounded-lg border border-white/[0.08] shadow-lg p-2">
+                                  <div className="w-full h-2 bg-white/10 rounded mb-1" />
+                                  <div className="w-3/4 h-2 bg-white/10 rounded mb-1" />
+                                  <div className="w-1/2 h-2 bg-white/10 rounded" />
                                   <div className="flex items-center gap-1 mt-2">
-                                    <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />
-                                    <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />
-                                    <div className="w-2 h-2 rounded-full bg-blue-500" />
+                                    <div className="size-2 rounded-full bg-white/20" />
+                                    <div className="size-2 rounded-full bg-white/20" />
+                                    <div className="size-2 rounded-full bg-[#479ffa]" />
                                   </div>
                                 </div>
                               )}
                               {CAROUSEL_SLIDES[carouselIndex].icon === "globe" && (
-                                <Globe className="w-12 h-12 text-blue-500" />
+                                <Globe className="w-12 h-12 text-[#479ffa]" />
                               )}
                             </div>
                           </div>
@@ -1256,7 +1256,7 @@ export default function ManusStyleHome() {
                                   e.stopPropagation()
                                   setShowDismissTooltip(true)
                                 }}
-                                className="p-1.5 rounded-full hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
+                                className="p-1.5 rounded-full hover:bg-white/[0.05] transition-colors duration-100 text-[#868f97] hover:text-white"
                                 aria-label="Dismiss carousel"
                               >
                                 <X className="w-4 h-4" />
@@ -1270,7 +1270,7 @@ export default function ManusStyleHome() {
                                       handleDismissCarousel()
                                       setShowDismissTooltip(false)
                                     }}
-                                    className="whitespace-nowrap px-3 py-2 bg-foreground text-background text-sm rounded-lg shadow-xl"
+                                    className="whitespace-nowrap px-3 py-2 bg-white text-black text-sm rounded-lg shadow-xl"
                                   >
                                     Don't show again
                                   </button>
@@ -1287,8 +1287,8 @@ export default function ManusStyleHome() {
                               key={index}
                               onClick={() => setCarouselIndex(index)}
                               className={cn(
-                                "w-2 h-2 rounded-full transition-colors",
-                                index === carouselIndex ? "bg-foreground" : "bg-muted-foreground/30"
+                                "size-2 rounded-full transition-colors duration-100",
+                                index === carouselIndex ? "bg-white" : "bg-white/20"
                               )}
                               aria-label={`Go to slide ${index + 1}: ${slide.title}`}
                               aria-selected={index === carouselIndex}
@@ -1309,13 +1309,13 @@ export default function ManusStyleHome() {
                   <div id="features" className="w-full max-w-3xl mx-auto mt-8 md:mt-12 space-y-6 md:space-y-8">
                     {/* Popular Stock Analysis */}
                     <div>
-                      <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-center">Popular Stock Analysis</h2>
+                      <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-center text-white">Popular Stock Analysis</h2>
                       <div className="flex overflow-x-auto md:overflow-visible md:flex-wrap md:justify-center gap-2 pb-2 scrollbar-hide">
                         {['AAPL', 'MSFT', 'NVDA', 'TSLA', 'GOOGL', 'META', 'AMZN', 'AMD'].map((ticker) => (
                           <Link
                             key={ticker}
                             href={`/stock/${ticker.toLowerCase()}`}
-                            className="px-3 md:px-4 py-2 bg-card border border-border rounded-lg hover:border-green-500/50 hover:bg-secondary transition-all text-sm font-medium flex-shrink-0"
+                            className="px-3 md:px-4 py-2 bg-[#1a1a1a] border border-white/[0.08] rounded-lg hover:border-[#4ebe96]/50 hover:bg-white/[0.08] transition-all duration-100 text-sm font-medium text-white flex-shrink-0"
                           >
                             {ticker}
                           </Link>
@@ -1325,13 +1325,13 @@ export default function ManusStyleHome() {
 
                     {/* Price Predictions */}
                     <div>
-                      <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-center">Stock Price Predictions 2026</h2>
+                      <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-center text-white">Stock Price Predictions 2026</h2>
                       <div className="flex overflow-x-auto md:overflow-visible md:flex-wrap md:justify-center gap-2 pb-2 scrollbar-hide">
                         {['AAPL', 'MSFT', 'NVDA', 'TSLA', 'GOOGL', 'META', 'AMZN', 'AMD'].map((ticker) => (
                           <Link
                             key={ticker}
                             href={`/prediction/${ticker.toLowerCase()}`}
-                            className="px-3 md:px-4 py-2 bg-card border border-border rounded-lg hover:border-green-500/50 hover:bg-secondary transition-all text-sm whitespace-nowrap flex-shrink-0"
+                            className="px-3 md:px-4 py-2 bg-[#1a1a1a] border border-white/[0.08] rounded-lg hover:border-[#4ebe96]/50 hover:bg-white/[0.08] transition-all duration-100 text-sm text-white whitespace-nowrap flex-shrink-0"
                           >
                             {ticker} Prediction
                           </Link>
@@ -1341,7 +1341,7 @@ export default function ManusStyleHome() {
 
                     {/* Popular Comparisons */}
                     <div>
-                      <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-center">Compare Stocks</h2>
+                      <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-center text-white">Compare Stocks</h2>
                       <div className="flex overflow-x-auto md:overflow-visible md:flex-wrap md:justify-center gap-2 pb-2 scrollbar-hide">
                         {[
                           { slug: 'aapl-vs-msft', label: 'AAPL vs MSFT' },
@@ -1354,7 +1354,7 @@ export default function ManusStyleHome() {
                           <Link
                             key={pair.slug}
                             href={`/compare/${pair.slug}`}
-                            className="px-3 md:px-4 py-2 bg-card border border-border rounded-lg hover:border-green-500/50 hover:bg-secondary transition-all text-sm whitespace-nowrap flex-shrink-0"
+                            className="px-3 md:px-4 py-2 bg-[#1a1a1a] border border-white/[0.08] rounded-lg hover:border-[#4ebe96]/50 hover:bg-white/[0.08] transition-all duration-100 text-sm text-white whitespace-nowrap flex-shrink-0"
                           >
                             {pair.label}
                           </Link>
@@ -1364,13 +1364,13 @@ export default function ManusStyleHome() {
 
                     {/* Should I Buy */}
                     <div>
-                      <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-center">Investment Decisions</h2>
+                      <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-center text-white">Investment Decisions</h2>
                       <div className="flex overflow-x-auto md:overflow-visible md:flex-wrap md:justify-center gap-2 pb-2 scrollbar-hide">
                         {['AAPL', 'MSFT', 'NVDA', 'TSLA', 'GOOGL', 'META'].map((ticker) => (
                           <Link
                             key={ticker}
                             href={`/should-i-buy/${ticker.toLowerCase()}`}
-                            className="px-3 md:px-4 py-2 bg-card border border-border rounded-lg hover:border-green-500/50 hover:bg-secondary transition-all text-sm whitespace-nowrap flex-shrink-0"
+                            className="px-3 md:px-4 py-2 bg-[#1a1a1a] border border-white/[0.08] rounded-lg hover:border-[#4ebe96]/50 hover:bg-white/[0.08] transition-all duration-100 text-sm text-white whitespace-nowrap flex-shrink-0"
                           >
                             Should I Buy {ticker}?
                           </Link>
@@ -1380,7 +1380,7 @@ export default function ManusStyleHome() {
 
                     {/* Sectors */}
                     <div>
-                      <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-center">Browse by Sector</h2>
+                      <h2 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-center text-white">Browse by Sector</h2>
                       <div className="flex overflow-x-auto md:overflow-visible md:flex-wrap md:justify-center gap-2 pb-2 scrollbar-hide">
                         {[
                           { slug: 'technology', label: 'Technology' },
@@ -1393,7 +1393,7 @@ export default function ManusStyleHome() {
                           <Link
                             key={sector.slug}
                             href={`/sectors/${sector.slug}`}
-                            className="px-3 md:px-4 py-2 bg-green-600/20 text-green-500 border border-green-500/30 rounded-lg hover:bg-green-600/30 transition-all text-sm whitespace-nowrap flex-shrink-0"
+                            className="px-3 md:px-4 py-2 bg-[#4ebe96]/20 text-[#4ebe96] border border-[#4ebe96]/30 rounded-lg hover:bg-[#4ebe96]/30 transition-all duration-100 text-sm whitespace-nowrap flex-shrink-0"
                           >
                             {sector.label}
                           </Link>
@@ -1435,13 +1435,13 @@ export default function ManusStyleHome() {
       {/* Auth Prompt Modal */}
       {showAuthPrompt && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="bg-background border border-border rounded-2xl p-8 max-w-md mx-4 shadow-2xl">
+          <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-2xl p-8 max-w-md mx-4 shadow-2xl">
             <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Sparkles className="w-8 h-8 text-green-500" />
+              <div className="size-16 bg-[#4ebe96]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Sparkles className="w-8 h-8 text-[#4ebe96]" />
               </div>
-              <h2 className="text-2xl font-bold mb-2">Sign in to continue</h2>
-              <p className="text-muted-foreground">
+              <h2 className="text-2xl font-bold mb-2 text-white">Sign in to continue</h2>
+              <p className="text-[#868f97]">
                 Create a free account to use AI-powered stock analysis
               </p>
             </div>
@@ -1449,21 +1449,21 @@ export default function ManusStyleHome() {
               <Link
                 href="/login"
                 onClick={() => trackCTAClick('sign_in', 'auth_modal')}
-                className="w-full block text-center py-3 px-4 bg-green-600 hover:bg-green-500 text-white rounded-lg font-medium transition-colors"
+                className="w-full block text-center py-3 px-4 bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black rounded-lg font-medium transition-colors duration-100"
               >
                 Sign in
               </Link>
               <Link
                 href="/login?signup=true"
                 onClick={() => trackCTAClick('create_account', 'auth_modal')}
-                className="w-full block text-center py-3 px-4 bg-secondary hover:bg-secondary/80 text-foreground rounded-lg font-medium transition-colors"
+                className="w-full block text-center py-3 px-4 bg-white/[0.05] hover:bg-white/[0.08] text-white rounded-lg font-medium transition-colors duration-100"
               >
                 Create free account
               </Link>
             </div>
             <button
               onClick={() => setShowAuthPrompt(false)}
-              className="w-full mt-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="w-full mt-4 py-2 text-sm text-[#868f97] hover:text-white transition-colors duration-100"
             >
               Maybe later
             </button>
@@ -1474,22 +1474,22 @@ export default function ManusStyleHome() {
       {/* Payment Prompt Modal */}
       {showPaymentPrompt && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="bg-background border border-border rounded-2xl p-8 max-w-md mx-4 shadow-2xl">
+          <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-2xl p-8 max-w-md mx-4 shadow-2xl">
             <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Zap className="w-8 h-8 text-white" />
+              <div className="size-16 bg-gradient-to-br from-[#4ebe96] to-[#3da87e] rounded-full flex items-center justify-center mx-auto mb-4">
+                <Zap className="w-8 h-8 text-black" />
               </div>
-              <h2 className="text-2xl font-bold mb-2">Upgrade to Premium</h2>
-              <p className="text-muted-foreground">
+              <h2 className="text-2xl font-bold mb-2 text-white">Upgrade to Premium</h2>
+              <p className="text-[#868f97]">
                 You have used your 3 free queries. Upgrade for unlimited AI analysis.
               </p>
             </div>
-            <div className="bg-secondary/50 rounded-xl p-4 mb-6">
+            <div className="bg-white/[0.05] rounded-xl p-4 mb-6">
               <div className="flex items-center justify-between mb-2">
-                <span className="font-medium">Lician Pro</span>
-                <span className="text-green-500 font-bold">$109/mo</span>
+                <span className="font-medium text-white">Lician Pro</span>
+                <span className="text-[#4ebe96] font-bold">$109/mo</span>
               </div>
-              <ul className="text-sm text-muted-foreground space-y-1">
+              <ul className="text-sm text-[#868f97] space-y-1">
                 <li>Unlimited AI queries</li>
                 <li>Premium models (GPT-4o, Claude Sonnet 4)</li>
                 <li>Advanced financial analysis</li>
@@ -1503,13 +1503,13 @@ export default function ManusStyleHome() {
                 trackCTAClick('start_trial', 'payment_modal')
                 trackBeginCheckout('annual', 109)
               }}
-              className="w-full block text-center py-3 px-4 bg-green-600 hover:bg-green-500 text-white rounded-lg font-medium transition-colors"
+              className="w-full block text-center py-3 px-4 bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black rounded-lg font-medium transition-colors duration-100"
             >
               Start 3-day free trial
             </Link>
             <button
               onClick={() => setShowPaymentPrompt(false)}
-              className="w-full mt-4 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="w-full mt-4 py-2 text-sm text-[#868f97] hover:text-white transition-colors duration-100"
             >
               Maybe later
             </button>

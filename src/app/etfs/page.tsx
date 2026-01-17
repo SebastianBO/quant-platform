@@ -377,14 +377,14 @@ export default function ETFsPage() {
           __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema, itemListSchema])
         }}
       />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-screen bg-background text-white pt-20">
         <div className="max-w-6xl mx-auto px-6 py-12">
           <div className="flex gap-8">
             <SEOSidebar />
             <div className="flex-1 min-w-0">
           {/* Breadcrumbs */}
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white">Home</Link>
             {' / '}
             <span>ETFs</span>
           </nav>
@@ -394,11 +394,11 @@ export default function ETFsPage() {
             <h1 className="text-4xl font-bold mb-4">
               Best ETFs for {currentYear} - Complete Investment Guide
             </h1>
-            <p className="text-xl text-muted-foreground mb-4">
+            <p className="text-xl text-[#868f97] mb-4">
               Discover the top exchange-traded funds including SPY, QQQ, VOO, and VTI. Compare index funds,
               sector ETFs, dividend ETFs, and international funds with comprehensive analysis and real-time data.
             </p>
-            <p className="text-base text-muted-foreground max-w-3xl">
+            <p className="text-base text-[#868f97] max-w-3xl">
               ETFs (Exchange-Traded Funds) provide instant diversification at low cost, making them ideal for
               long-term investors. This guide covers the best ETFs across all categories with detailed analysis
               to help you build a winning portfolio.
@@ -407,21 +407,21 @@ export default function ETFsPage() {
 
           {/* Quick Stats */}
           <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-            <div className="bg-card p-6 rounded-xl border border-border text-center">
-              <div className="text-3xl font-bold text-green-500 mb-2">3,000+</div>
-              <div className="text-sm text-muted-foreground">ETFs Available</div>
+            <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] text-center">
+              <div className="text-3xl font-bold text-[#4ebe96] mb-2">3,000+</div>
+              <div className="text-sm text-[#868f97]">ETFs Available</div>
             </div>
-            <div className="bg-card p-6 rounded-xl border border-border text-center">
-              <div className="text-3xl font-bold text-green-500 mb-2">0.03%</div>
-              <div className="text-sm text-muted-foreground">Lowest Expense Ratio</div>
+            <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] text-center">
+              <div className="text-3xl font-bold text-[#4ebe96] mb-2">0.03%</div>
+              <div className="text-sm text-[#868f97]">Lowest Expense Ratio</div>
             </div>
-            <div className="bg-card p-6 rounded-xl border border-border text-center">
-              <div className="text-3xl font-bold text-green-500 mb-2">$10T+</div>
-              <div className="text-sm text-muted-foreground">Total ETF Assets</div>
+            <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] text-center">
+              <div className="text-3xl font-bold text-[#4ebe96] mb-2">$10T+</div>
+              <div className="text-sm text-[#868f97]">Total ETF Assets</div>
             </div>
-            <div className="bg-card p-6 rounded-xl border border-border text-center">
-              <div className="text-3xl font-bold text-green-500 mb-2">1 Share</div>
-              <div className="text-sm text-muted-foreground">Minimum Investment</div>
+            <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] text-center">
+              <div className="text-3xl font-bold text-[#4ebe96] mb-2">1 Share</div>
+              <div className="text-sm text-[#868f97]">Minimum Investment</div>
             </div>
           </section>
 
@@ -430,12 +430,12 @@ export default function ETFsPage() {
             <h2 className="text-2xl font-bold mb-6">Popular ETF Categories</h2>
             <div className="space-y-8">
               {ETF_CATEGORIES.map((category) => (
-                <div key={category.title} className="bg-card p-6 rounded-xl border border-border">
+                <div key={category.title} className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
                   <div className="flex items-start gap-4 mb-4">
                     <span className="text-4xl">{category.icon}</span>
                     <div className="flex-1">
                       <h3 className="text-xl font-bold mb-2">{category.title}</h3>
-                      <p className="text-muted-foreground">{category.description}</p>
+                      <p className="text-[#868f97]">{category.description}</p>
                     </div>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -443,21 +443,21 @@ export default function ETFsPage() {
                       <Link
                         key={etf.ticker}
                         href={`/stock/${etf.ticker}`}
-                        className="bg-secondary/30 p-4 rounded-lg hover:bg-secondary/50 transition-colors group"
+                        className="bg-white/[0.015] p-4 rounded-lg hover:bg-white/[0.025] transition-colors duration-100 group"
                       >
                         <div className="flex items-start justify-between mb-2">
-                          <span className="text-lg font-bold group-hover:text-green-500 transition-colors">
+                          <span className="text-lg font-bold group-hover:text-[#4ebe96] transition-colors duration-100">
                             {etf.ticker}
                           </span>
-                          <span className="text-xs text-muted-foreground bg-secondary px-2 py-1 rounded">
+                          <span className="text-xs text-[#868f97] bg-white/[0.05] px-2 py-1 rounded">
                             {etf.expense}
                           </span>
                         </div>
                         <h4 className="text-sm font-medium mb-2">{etf.name}</h4>
-                        <p className="text-xs text-muted-foreground mb-2">{etf.description}</p>
+                        <p className="text-xs text-[#868f97] mb-2">{etf.description}</p>
                         <div className="flex items-center justify-between text-xs">
-                          <span className="text-muted-foreground">AUM: {etf.aum}</span>
-                          <span className="text-green-500 group-hover:underline">View Details →</span>
+                          <span className="text-[#868f97]">AUM: {etf.aum}</span>
+                          <span className="text-[#4ebe96] group-hover:underline">View Details →</span>
                         </div>
                       </Link>
                     ))}
@@ -470,17 +470,17 @@ export default function ETFsPage() {
           {/* ETF vs Mutual Funds */}
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-6">ETFs vs Mutual Funds: Key Differences</h2>
-            <div className="bg-card rounded-xl border border-border overflow-hidden">
+            <div className="bg-[#1a1a1a] rounded-xl border border-white/[0.08] overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-secondary/30">
+                  <thead className="bg-white/[0.015]">
                     <tr>
                       <th className="text-left p-4 font-bold">Feature</th>
-                      <th className="text-left p-4 font-bold text-green-500">ETFs</th>
-                      <th className="text-left p-4 font-bold text-blue-500">Mutual Funds</th>
+                      <th className="text-left p-4 font-bold text-[#4ebe96]">ETFs</th>
+                      <th className="text-left p-4 font-bold text-[#479ffa]">Mutual Funds</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-border">
+                  <tbody className="divide-y divide-white/[0.08]">
                     <tr>
                       <td className="p-4 font-medium">Trading</td>
                       <td className="p-4">Trade all day like stocks</td>
@@ -488,17 +488,17 @@ export default function ETFsPage() {
                     </tr>
                     <tr>
                       <td className="p-4 font-medium">Minimum Investment</td>
-                      <td className="p-4 text-green-500">1 share (typically $50-500)</td>
+                      <td className="p-4 text-[#4ebe96]">1 share (typically $50-500)</td>
                       <td className="p-4">Often $1,000-$3,000</td>
                     </tr>
                     <tr>
                       <td className="p-4 font-medium">Expense Ratios</td>
-                      <td className="p-4 text-green-500">As low as 0.03%</td>
+                      <td className="p-4 text-[#4ebe96]">As low as 0.03%</td>
                       <td className="p-4">Average 0.50-1.50%</td>
                     </tr>
                     <tr>
                       <td className="p-4 font-medium">Tax Efficiency</td>
-                      <td className="p-4 text-green-500">Highly tax-efficient</td>
+                      <td className="p-4 text-[#4ebe96]">Highly tax-efficient</td>
                       <td className="p-4">Less tax-efficient</td>
                     </tr>
                     <tr>
@@ -508,13 +508,13 @@ export default function ETFsPage() {
                     </tr>
                     <tr>
                       <td className="p-4 font-medium">Transparency</td>
-                      <td className="p-4 text-green-500">Holdings disclosed daily</td>
+                      <td className="p-4 text-[#4ebe96]">Holdings disclosed daily</td>
                       <td className="p-4">Holdings disclosed quarterly</td>
                     </tr>
                     <tr>
                       <td className="p-4 font-medium">Auto-Investing</td>
                       <td className="p-4">Limited availability</td>
-                      <td className="p-4 text-green-500">Widely available</td>
+                      <td className="p-4 text-[#4ebe96]">Widely available</td>
                     </tr>
                   </tbody>
                 </table>
@@ -526,9 +526,9 @@ export default function ETFsPage() {
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-6">Complete ETF Investing Guide</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 text-green-500">Getting Started</h3>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+                <h3 className="text-lg font-bold mb-3 text-[#4ebe96]">Getting Started</h3>
+                <ul className="space-y-2 text-sm text-[#868f97]">
                   <li>• Start with broad market ETFs (SPY, VOO, or VTI)</li>
                   <li>• Keep it simple with 3-5 core ETFs</li>
                   <li>• Focus on low expense ratios (under 0.20%)</li>
@@ -537,9 +537,9 @@ export default function ETFsPage() {
                 </ul>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 text-blue-500">Building Your Portfolio</h3>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+                <h3 className="text-lg font-bold mb-3 text-[#479ffa]">Building Your Portfolio</h3>
+                <ul className="space-y-2 text-sm text-[#868f97]">
                   <li>• 60-70% U.S. stocks (VTI or VOO)</li>
                   <li>• 20-30% International stocks (VXUS)</li>
                   <li>• 10-20% Bonds (BND or AGG)</li>
@@ -548,9 +548,9 @@ export default function ETFsPage() {
                 </ul>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
                 <h3 className="text-lg font-bold mb-3 text-purple-500">Advanced Strategies</h3>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <ul className="space-y-2 text-sm text-[#868f97]">
                   <li>• Tax-loss harvesting with similar ETFs</li>
                   <li>• Dollar-cost averaging for volatility</li>
                   <li>• Dividend reinvestment for compounding</li>
@@ -559,9 +559,9 @@ export default function ETFsPage() {
                 </ul>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
                 <h3 className="text-lg font-bold mb-3 text-orange-500">Common Mistakes to Avoid</h3>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <ul className="space-y-2 text-sm text-[#868f97]">
                   <li>• Don't overtrade - ETFs work best long-term</li>
                   <li>• Avoid overlapping holdings in multiple ETFs</li>
                   <li>• Don't chase past performance</li>
@@ -576,46 +576,46 @@ export default function ETFsPage() {
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-6">Best ETFs by Investment Goal</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
                 <h3 className="text-lg font-bold mb-3">Long-Term Growth</h3>
                 <div className="space-y-2">
-                  <Link href="/stock/VTI" className="block text-sm hover:text-green-500">
+                  <Link href="/stock/VTI" className="block text-sm hover:text-[#4ebe96]">
                     <span className="font-medium">VTI</span> - Total Market
                   </Link>
-                  <Link href="/stock/QQQ" className="block text-sm hover:text-green-500">
+                  <Link href="/stock/QQQ" className="block text-sm hover:text-[#4ebe96]">
                     <span className="font-medium">QQQ</span> - Tech Growth
                   </Link>
-                  <Link href="/stock/VGT" className="block text-sm hover:text-green-500">
+                  <Link href="/stock/VGT" className="block text-sm hover:text-[#4ebe96]">
                     <span className="font-medium">VGT</span> - Technology
                   </Link>
                 </div>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
                 <h3 className="text-lg font-bold mb-3">Income & Dividends</h3>
                 <div className="space-y-2">
-                  <Link href="/stock/SCHD" className="block text-sm hover:text-green-500">
+                  <Link href="/stock/SCHD" className="block text-sm hover:text-[#4ebe96]">
                     <span className="font-medium">SCHD</span> - Dividend Growth
                   </Link>
-                  <Link href="/stock/VYM" className="block text-sm hover:text-green-500">
+                  <Link href="/stock/VYM" className="block text-sm hover:text-[#4ebe96]">
                     <span className="font-medium">VYM</span> - High Yield
                   </Link>
-                  <Link href="/stock/DGRO" className="block text-sm hover:text-green-500">
+                  <Link href="/stock/DGRO" className="block text-sm hover:text-[#4ebe96]">
                     <span className="font-medium">DGRO</span> - Dividend Growth
                   </Link>
                 </div>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
                 <h3 className="text-lg font-bold mb-3">Stability & Safety</h3>
                 <div className="space-y-2">
-                  <Link href="/stock/BND" className="block text-sm hover:text-green-500">
+                  <Link href="/stock/BND" className="block text-sm hover:text-[#4ebe96]">
                     <span className="font-medium">BND</span> - Total Bond Market
                   </Link>
-                  <Link href="/stock/AGG" className="block text-sm hover:text-green-500">
+                  <Link href="/stock/AGG" className="block text-sm hover:text-[#4ebe96]">
                     <span className="font-medium">AGG</span> - Aggregate Bonds
                   </Link>
-                  <Link href="/stock/TIP" className="block text-sm hover:text-green-500">
+                  <Link href="/stock/TIP" className="block text-sm hover:text-[#4ebe96]">
                     <span className="font-medium">TIP</span> - Inflation Protected
                   </Link>
                 </div>
@@ -632,10 +632,10 @@ export default function ETFsPage() {
               {faqs.map((faq, index) => (
                 <div
                   key={index}
-                  className="bg-card p-6 rounded-xl border border-border"
+                  className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]"
                 >
                   <h3 className="text-lg font-bold mb-3">{faq.question}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
+                  <p className="text-[#868f97] leading-relaxed">{faq.answer}</p>
                 </div>
               ))}
             </div>
@@ -647,45 +647,45 @@ export default function ETFsPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <Link
                 href="/sectors"
-                className="bg-card p-4 rounded-lg border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-[#1a1a1a] p-4 rounded-lg border border-white/[0.08] hover:border-[#4ebe96]/50 transition-colors duration-100 text-center"
               >
                 <p className="font-bold mb-1">Sectors</p>
-                <p className="text-xs text-muted-foreground">Browse by sector</p>
+                <p className="text-xs text-[#868f97]">Browse by sector</p>
               </Link>
               <Link
                 href="/best-stocks/dividend"
-                className="bg-card p-4 rounded-lg border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-[#1a1a1a] p-4 rounded-lg border border-white/[0.08] hover:border-[#4ebe96]/50 transition-colors duration-100 text-center"
               >
                 <p className="font-bold mb-1">Dividend Stocks</p>
-                <p className="text-xs text-muted-foreground">Income investing</p>
+                <p className="text-xs text-[#868f97]">Income investing</p>
               </Link>
               <Link
                 href="/screener"
-                className="bg-card p-4 rounded-lg border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-[#1a1a1a] p-4 rounded-lg border border-white/[0.08] hover:border-[#4ebe96]/50 transition-colors duration-100 text-center"
               >
                 <p className="font-bold mb-1">Stock Screener</p>
-                <p className="text-xs text-muted-foreground">Find opportunities</p>
+                <p className="text-xs text-[#868f97]">Find opportunities</p>
               </Link>
               <Link
                 href="/markets"
-                className="bg-card p-4 rounded-lg border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-[#1a1a1a] p-4 rounded-lg border border-white/[0.08] hover:border-[#4ebe96]/50 transition-colors duration-100 text-center"
               >
                 <p className="font-bold mb-1">Market Data</p>
-                <p className="text-xs text-muted-foreground">Live quotes</p>
+                <p className="text-xs text-[#868f97]">Live quotes</p>
               </Link>
             </div>
           </section>
 
           {/* CTA */}
-          <section className="bg-card p-8 rounded-xl border border-border text-center">
+          <section className="bg-[#1a1a1a] p-8 rounded-xl border border-white/[0.08] text-center">
             <h2 className="text-2xl font-bold mb-4">Start Analyzing ETFs Today</h2>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+            <p className="text-[#868f97] mb-6 max-w-2xl mx-auto">
               Get real-time quotes, comprehensive analysis, and AI-powered insights for any ETF.
               Compare holdings, track performance, and make informed investment decisions.
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+              className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white px-8 py-3 rounded-lg font-medium transition-colors duration-100"
             >
               Access Dashboard
             </Link>

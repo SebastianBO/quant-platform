@@ -16,7 +16,10 @@
       "name": "Daily Search (7 AM)",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
-      "position": [250, 300]
+      "position": [
+        250,
+        300
+      ]
     },
     {
       "parameters": {
@@ -29,7 +32,10 @@
       "name": "Manual Trigger Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [250, 500],
+      "position": [
+        250,
+        500
+      ],
       "webhookId": "link-reclamation-lician"
     },
     {
@@ -41,7 +47,10 @@
       "name": "Generate Search Queries",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [470, 400]
+      "position": [
+        470,
+        400
+      ]
     },
     {
       "parameters": {
@@ -54,7 +63,10 @@
       "name": "Batch Queries (2 at a time)",
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
-      "position": [690, 400]
+      "position": [
+        690,
+        400
+      ]
     },
     {
       "parameters": {
@@ -65,7 +77,10 @@
       "name": "Rate Limit (3s)",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
-      "position": [910, 400]
+      "position": [
+        910,
+        400
+      ]
     },
     {
       "parameters": {
@@ -102,7 +117,10 @@
       "name": "SerpAPI Web Search",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1130, 300],
+      "position": [
+        1130,
+        300
+      ],
       "credentials": {
         "serpApi": {
           "id": "CONFIGURE_SERPAPI_CREDENTIALS",
@@ -144,7 +162,10 @@
       "name": "SerpAPI News Search",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1130, 500],
+      "position": [
+        1130,
+        500
+      ],
       "credentials": {
         "serpApi": {
           "id": "CONFIGURE_SERPAPI_CREDENTIALS",
@@ -164,7 +185,10 @@
       "name": "Parse Search Results",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1350, 400]
+      "position": [
+        1350,
+        400
+      ]
     },
     {
       "parameters": {
@@ -193,7 +217,10 @@
       "name": "Has Results?",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [1570, 400]
+      "position": [
+        1570,
+        400
+      ]
     },
     {
       "parameters": {
@@ -206,7 +233,10 @@
       "name": "Batch for Verification",
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
-      "position": [1790, 400]
+      "position": [
+        1790,
+        400
+      ]
     },
     {
       "parameters": {
@@ -217,7 +247,10 @@
       "name": "Rate Limit (2s)",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
-      "position": [2010, 400]
+      "position": [
+        2010,
+        400
+      ]
     },
     {
       "parameters": {
@@ -243,7 +276,10 @@
       "name": "Fetch Page Content",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [2230, 400],
+      "position": [
+        2230,
+        400
+      ],
       "continueOnFail": true
     },
     {
@@ -255,7 +291,10 @@
       "name": "Analyze Page for Links",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2450, 400]
+      "position": [
+        2450,
+        400
+      ]
     },
     {
       "parameters": {
@@ -293,7 +332,10 @@
       "name": "Filter Unlinked Mentions",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [2670, 400]
+      "position": [
+        2670,
+        400
+      ]
     },
     {
       "parameters": {
@@ -318,7 +360,10 @@
       "name": "Check If Already Tracked",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [2890, 400],
+      "position": [
+        2890,
+        400
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -336,7 +381,10 @@
       "name": "Process Existing Check",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [3110, 400]
+      "position": [
+        3110,
+        400
+      ]
     },
     {
       "parameters": {
@@ -365,7 +413,10 @@
       "name": "Filter New Mentions",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [3330, 400]
+      "position": [
+        3330,
+        400
+      ]
     },
     {
       "parameters": {
@@ -384,7 +435,10 @@
       "name": "Get Domain Authority (Moz)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [3550, 300],
+      "position": [
+        3550,
+        300
+      ],
       "credentials": {
         "httpBasicAuth": {
           "id": "CONFIGURE_MOZ_CREDENTIALS",
@@ -404,7 +458,10 @@
       "name": "Calculate Authority Score",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [3770, 400]
+      "position": [
+        3770,
+        400
+      ]
     },
     {
       "parameters": {
@@ -415,7 +472,10 @@
       "name": "Generate Outreach Email",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [3990, 400]
+      "position": [
+        3990,
+        400
+      ]
     },
     {
       "parameters": {
@@ -461,7 +521,10 @@
       "name": "Save to Supabase",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [4210, 400],
+      "position": [
+        4210,
+        400
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -496,7 +559,10 @@
       "name": "Filter High DA",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [4430, 300]
+      "position": [
+        4430,
+        300
+      ]
     },
     {
       "parameters": {
@@ -510,7 +576,10 @@
       "name": "Slack High-DA Alert",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [4650, 300],
+      "position": [
+        4650,
+        300
+      ],
       "credentials": {
         "slackApi": {
           "id": "CONFIGURE_SLACK_CREDENTIALS",
@@ -545,7 +614,10 @@
       "name": "More Verification Batches?",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [4430, 500]
+      "position": [
+        4430,
+        500
+      ]
     },
     {
       "parameters": {
@@ -574,7 +646,10 @@
       "name": "More Query Batches?",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [4650, 500]
+      "position": [
+        4650,
+        500
+      ]
     },
     {
       "parameters": {
@@ -591,7 +666,10 @@
       "name": "Weekly Summary (Monday 10 AM)",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
-      "position": [250, 800]
+      "position": [
+        250,
+        800
+      ]
     },
     {
       "parameters": {
@@ -615,7 +693,10 @@
       "name": "Fetch All Mentions",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [470, 800],
+      "position": [
+        470,
+        800
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -632,7 +713,10 @@
       "name": "Generate Weekly Summary",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [690, 800]
+      "position": [
+        690,
+        800
+      ]
     },
     {
       "parameters": {
@@ -646,7 +730,10 @@
       "name": "Slack Weekly Summary",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [910, 800],
+      "position": [
+        910,
+        800
+      ],
       "credentials": {
         "slackApi": {
           "id": "CONFIGURE_SLACK_CREDENTIALS",
@@ -667,7 +754,10 @@
       "name": "Send Weekly Report Email",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
-      "position": [1130, 800],
+      "position": [
+        1130,
+        800
+      ],
       "credentials": {
         "smtp": {
           "id": "CONFIGURE_SMTP_CREDENTIALS",
@@ -686,7 +776,10 @@
       "name": "Status Update Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [250, 1100],
+      "position": [
+        250,
+        1100
+      ],
       "webhookId": "link-reclamation-status-lician"
     },
     {
@@ -698,7 +791,10 @@
       "name": "Parse Status Update",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [470, 1100]
+      "position": [
+        470,
+        1100
+      ]
     },
     {
       "parameters": {
@@ -727,7 +823,10 @@
       "name": "Valid Update?",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [690, 1100]
+      "position": [
+        690,
+        1100
+      ]
     },
     {
       "parameters": {
@@ -770,7 +869,10 @@
       "name": "Update Mention Status",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [910, 1100],
+      "position": [
+        910,
+        1100
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -805,7 +907,10 @@
       "name": "Is Conversion?",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [1130, 1000]
+      "position": [
+        1130,
+        1000
+      ]
     },
     {
       "parameters": {
@@ -819,7 +924,10 @@
       "name": "Slack Conversion Alert",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [1350, 1000],
+      "position": [
+        1350,
+        1000
+      ],
       "credentials": {
         "slackApi": {
           "id": "CONFIGURE_SLACK_CREDENTIALS",
@@ -837,7 +945,10 @@
       "name": "Status Update Response",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [1350, 1100]
+      "position": [
+        1350,
+        1100
+      ]
     },
     {
       "parameters": {
@@ -851,7 +962,10 @@
       "name": "Error Response",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [690, 1200]
+      "position": [
+        690,
+        1200
+      ]
     },
     {
       "parameters": {
@@ -863,7 +977,10 @@
       "name": "Manual Trigger Response",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [4870, 400]
+      "position": [
+        4870,
+        400
+      ]
     }
   ],
   "connections": {
@@ -1273,28 +1390,6 @@
     "errorWorkflow": ""
   },
   "staticData": null,
-  "tags": [
-    {
-      "name": "link-building",
-      "createdAt": "2025-01-16T00:00:00.000Z",
-      "updatedAt": "2025-01-16T00:00:00.000Z"
-    },
-    {
-      "name": "seo",
-      "createdAt": "2025-01-16T00:00:00.000Z",
-      "updatedAt": "2025-01-16T00:00:00.000Z"
-    },
-    {
-      "name": "outreach",
-      "createdAt": "2025-01-16T00:00:00.000Z",
-      "updatedAt": "2025-01-16T00:00:00.000Z"
-    },
-    {
-      "name": "lician",
-      "createdAt": "2025-01-16T00:00:00.000Z",
-      "updatedAt": "2025-01-16T00:00:00.000Z"
-    }
-  ],
   "pinData": {},
   "meta": {
     "templateCredsSetupCompleted": false,

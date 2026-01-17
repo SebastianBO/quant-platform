@@ -29,7 +29,7 @@ export default function StockChartSwitcher({ ticker, theme = "dark" }: StockChar
     : theme
 
   return (
-    <Card className="bg-card border-border">
+    <Card className="bg-[#1a1a1a] border-white/[0.08]">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">Price Chart</CardTitle>

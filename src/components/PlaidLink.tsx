@@ -141,14 +141,14 @@ export default function PlaidLink({ userId, onSuccess, onError }: PlaidLinkProps
 
   if (connected) {
     return (
-      <Card className="bg-green-500/10 border-green-500/30">
+      <Card className="bg-[#4ebe96]/10 border-[#4ebe96]/30">
         <CardContent className="py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <CheckCircle className="w-6 h-6 text-green-500" />
+              <CheckCircle className="w-6 h-6 text-[#4ebe96]" />
               <div>
-                <p className="font-medium">Connected to {institutionName}</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="font-medium text-white">Connected to {institutionName}</p>
+                <p className="text-sm text-[#868f97]">
                   Your investments are synced automatically
                 </p>
               </div>
@@ -173,15 +173,15 @@ export default function PlaidLink({ userId, onSuccess, onError }: PlaidLinkProps
   }
 
   return (
-    <Card className="bg-card border-border">
+    <Card className="bg-[#1a1a1a] border-white/[0.08]">
       <CardContent className="py-6">
         <div className="flex flex-col items-center text-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center">
-            <Building2 className="w-6 h-6 text-green-500" />
+          <div className="w-12 h-12 rounded-full bg-[#4ebe96]/20 flex items-center justify-center">
+            <Building2 className="w-6 h-6 text-[#4ebe96]" />
           </div>
           <div>
-            <h3 className="font-bold text-lg mb-2">Connect Your Brokerage</h3>
-            <p className="text-sm text-muted-foreground max-w-sm">
+            <h3 className="font-bold text-lg text-white mb-2">Connect Your Brokerage</h3>
+            <p className="text-sm text-[#868f97] max-w-sm">
               Securely connect your investment accounts to automatically sync your portfolio holdings.
               Supports 10,000+ US financial institutions.
             </p>
@@ -197,7 +197,7 @@ export default function PlaidLink({ userId, onSuccess, onError }: PlaidLinkProps
           <Button
             onClick={() => open()}
             disabled={!ready || loading}
-            className="bg-green-600 hover:bg-green-500 text-white"
+            className="bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white transition-colors duration-100"
           >
             {loading ? (
               <>
@@ -212,7 +212,7 @@ export default function PlaidLink({ userId, onSuccess, onError }: PlaidLinkProps
             )}
           </Button>
 
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-[#868f97]">
             Powered by Plaid. Your credentials are never stored.
           </p>
         </div>

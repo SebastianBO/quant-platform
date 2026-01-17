@@ -129,11 +129,11 @@ export default function QuickActions() {
             </div>
             <div className="flex-1">
               <h3 className="font-semibold">Track Your Investments</h3>
-              <p className="text-sm text-muted-foreground">Create a portfolio to see your holdings here</p>
+              <p className="text-sm text-[#868f97]">Create a portfolio to see your holdings here</p>
             </div>
             <Link
               href="/dashboard/portfolios"
-              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors duration-100"
             >
               Create Portfolio
             </Link>
@@ -148,7 +148,7 @@ export default function QuickActions() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Portfolio Summary */}
         {portfolios.slice(0, 1).map((portfolio) => (
-          <div key={portfolio.id} className="bg-card rounded-xl border border-border p-4">
+          <div key={portfolio.id} className="bg-[#1a1a1a] rounded-xl border border-white/[0.08] p-4">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <Briefcase className="w-4 h-4 text-primary" />
@@ -156,7 +156,7 @@ export default function QuickActions() {
               </div>
               <Link
                 href="/dashboard/portfolios"
-                className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
+                className="text-xs text-[#868f97] hover:text-white flex items-center gap-1"
               >
                 View all <ChevronRight className="w-3 h-3" />
               </Link>
@@ -166,15 +166,15 @@ export default function QuickActions() {
                 <Link
                   key={holding.symbol}
                   href={`/${holding.symbol}`}
-                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-secondary/50 transition-colors"
+                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
                 >
                   <StockLogo symbol={holding.symbol} size="sm" />
                   <span className="font-medium text-sm flex-1">{holding.symbol}</span>
-                  <span className="text-xs text-muted-foreground">{holding.shares} shares</span>
+                  <span className="text-xs text-[#868f97]">{holding.shares} shares</span>
                 </Link>
               ))}
               {portfolio.holdings.length === 0 && (
-                <p className="text-xs text-muted-foreground text-center py-2">
+                <p className="text-xs text-[#868f97] text-center py-2">
                   No holdings yet
                 </p>
               )}
@@ -183,7 +183,7 @@ export default function QuickActions() {
         ))}
 
         {/* Quick Links */}
-        <div className="bg-card rounded-xl border border-border p-4">
+        <div className="bg-[#1a1a1a] rounded-xl border border-white/[0.08] p-4">
           <h3 className="font-medium text-sm mb-3 flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-primary" />
             Quick Actions
@@ -217,7 +217,7 @@ export default function QuickActions() {
         </div>
 
         {/* Upcoming Earnings (if any in watchlist) */}
-        <div className="bg-card rounded-xl border border-border p-4">
+        <div className="bg-[#1a1a1a] rounded-xl border border-white/[0.08] p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-primary" />
@@ -225,7 +225,7 @@ export default function QuickActions() {
             </div>
             <Link
               href="/earnings"
-              className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
+              className="text-xs text-[#868f97] hover:text-white flex items-center gap-1"
             >
               Full calendar <ChevronRight className="w-3 h-3" />
             </Link>
@@ -233,22 +233,22 @@ export default function QuickActions() {
           {upcomingEarnings.length > 0 ? (
             <div className="space-y-2">
               {upcomingEarnings.map((event) => (
-                <div key={event.symbol} className="flex items-center gap-3 p-2 rounded-lg bg-secondary/30">
+                <div key={event.symbol} className="flex items-center gap-3 p-2 rounded-lg bg-white/[0.05]">
                   <StockLogo symbol={event.symbol} size="sm" />
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-sm">{event.symbol}</p>
-                    <p className="text-xs text-muted-foreground truncate">{event.name}</p>
+                    <p className="text-xs text-[#868f97] truncate">{event.name}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-xs font-medium">{event.date}</p>
-                    <p className="text-[10px] text-muted-foreground">{event.time}</p>
+                    <p className="text-[10px] text-[#868f97]">{event.time}</p>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
             <div className="text-center py-4">
-              <p className="text-xs text-muted-foreground">No earnings from your watchlist this week</p>
+              <p className="text-xs text-[#868f97]">No earnings from your watchlist this week</p>
               <Link
                 href="/earnings"
                 className="text-xs text-primary hover:underline mt-1 inline-block"
@@ -277,14 +277,14 @@ function QuickLink({
   return (
     <Link
       href={href}
-      className="flex items-center gap-2 p-2 rounded-lg hover:bg-secondary/50 transition-colors"
+      className="flex items-center gap-2 p-2 rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
     >
-      <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
-        <Icon className="w-4 h-4 text-muted-foreground" />
+      <div className="w-8 h-8 rounded-lg bg-white/[0.05] flex items-center justify-center">
+        <Icon className="w-4 h-4 text-[#868f97]" />
       </div>
       <div>
         <p className="text-sm font-medium">{label}</p>
-        <p className="text-[10px] text-muted-foreground">{description}</p>
+        <p className="text-[10px] text-[#868f97]">{description}</p>
       </div>
     </Link>
   )

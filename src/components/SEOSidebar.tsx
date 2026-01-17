@@ -107,7 +107,7 @@ export default function SEOSidebar({ className }: SEOSidebarProps) {
       <nav className="sticky top-24 space-y-6 pb-8">
         {navSections.map((section) => (
           <div key={section.title}>
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-3">
+            <h3 className="text-xs font-semibold text-[#868f97] uppercase tracking-wider mb-2 px-3">
               {section.title}
             </h3>
             <div className="space-y-0.5">
@@ -120,10 +120,10 @@ export default function SEOSidebar({ className }: SEOSidebarProps) {
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      "flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-all duration-200",
+                      "flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors duration-100",
                       isActive
-                        ? "bg-green-500/10 text-green-500 font-medium"
-                        : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                        ? "bg-[#4ebe96]/10 text-[#4ebe96] font-medium"
+                        : "text-[#868f97] hover:text-white hover:bg-white/[0.08]"
                     )}
                   >
                     <Icon className="w-4 h-4 flex-shrink-0" />
@@ -136,14 +136,14 @@ export default function SEOSidebar({ className }: SEOSidebarProps) {
         ))}
 
         {/* CTA */}
-        <div className="bg-gradient-to-br from-green-500/10 to-green-600/5 border border-green-500/20 rounded-xl p-4">
+        <div className="bg-gradient-to-br from-[#4ebe96]/10 to-[#4ebe96]/5 border border-[#4ebe96]/20 rounded-xl p-4">
           <h4 className="font-semibold text-sm mb-2">Get Full Analysis</h4>
-          <p className="text-xs text-muted-foreground mb-3">
+          <p className="text-xs text-[#868f97] mb-3">
             Access AI-powered stock analysis, DCF valuations, and institutional data.
           </p>
           <Link
             href="/dashboard"
-            className="block w-full text-center bg-green-600 hover:bg-green-500 text-white text-sm py-2 rounded-lg font-medium transition-colors"
+            className="block w-full text-center bg-[#4ebe96] hover:bg-[#4ebe96] text-white text-sm py-2 rounded-lg font-medium transition-colors duration-100"
           >
             Open Dashboard
           </Link>

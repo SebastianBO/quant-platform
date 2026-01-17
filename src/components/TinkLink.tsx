@@ -103,14 +103,14 @@ export default function TinkLink({ userId, onSuccess, onError }: TinkLinkProps) 
 
   if (connected) {
     return (
-      <Card className="bg-blue-500/10 border-blue-500/30">
+      <Card className="bg-[#479ffa]/10 border-[#479ffa]/30">
         <CardContent className="py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <CheckCircle className="w-6 h-6 text-blue-500" />
+              <CheckCircle className="w-6 h-6 text-[#479ffa]" />
               <div>
                 <p className="font-medium">Connected to European Broker</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-[#868f97]">
                   Your investments are synced automatically
                 </p>
               </div>
@@ -135,15 +135,15 @@ export default function TinkLink({ userId, onSuccess, onError }: TinkLinkProps) 
   }
 
   return (
-    <Card className="bg-card border-border">
+    <Card className="bg-[#1a1a1a] border-white/[0.08]">
       <CardContent className="py-6">
         <div className="flex flex-col items-center text-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
-            <Globe className="w-6 h-6 text-blue-500" />
+          <div className="w-12 h-12 rounded-full bg-[#479ffa]/20 flex items-center justify-center">
+            <Globe className="w-6 h-6 text-[#479ffa]" />
           </div>
           <div>
             <h3 className="font-bold text-lg mb-2">Connect European Bank</h3>
-            <p className="text-sm text-muted-foreground max-w-sm">
+            <p className="text-sm text-[#868f97] max-w-sm">
               Securely connect your European brokerage or bank to automatically sync your portfolio holdings.
             </p>
           </div>
@@ -180,7 +180,7 @@ export default function TinkLink({ userId, onSuccess, onError }: TinkLinkProps) 
           <Button
             onClick={handleConnect}
             disabled={loading}
-            className="bg-blue-600 hover:bg-blue-500 text-white"
+            className="bg-[#479ffa] hover:bg-[#479ffa]/90 text-white transition-colors duration-100"
           >
             {loading ? (
               <>
@@ -195,7 +195,7 @@ export default function TinkLink({ userId, onSuccess, onError }: TinkLinkProps) 
             )}
           </Button>
 
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-[#868f97]">
             Powered by Tink (Visa). Your credentials are never stored.
           </p>
         </div>

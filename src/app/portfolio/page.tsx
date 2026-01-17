@@ -125,7 +125,7 @@ export default function PortfolioPage() {
             <h1 className="text-3xl md:text-4xl font-bold mb-3">
               Portfolio Tracker
             </h1>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-lg text-[#868f97]">
               Track your investments with real-time prices. Free forever.
             </p>
           </div>
@@ -140,10 +140,10 @@ export default function PortfolioPage() {
             <h2 className="text-2xl font-bold mb-8 text-center">Why Use Lician Portfolio Tracker?</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {features.map((feature, i) => (
-                <div key={i} className="bg-card p-6 rounded-xl border border-border">
+                <div key={i} className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
                   <span className="text-3xl mb-4 block">{feature.icon}</span>
                   <h3 className="font-bold mb-2">{feature.title}</h3>
-                  <p className="text-sm text-muted-foreground">{feature.description}</p>
+                  <p className="text-sm text-[#868f97]">{feature.description}</p>
                 </div>
               ))}
             </div>
@@ -154,12 +154,12 @@ export default function PortfolioPage() {
             <h2 className="text-2xl font-bold mb-8 text-center">Frequently Asked Questions</h2>
             <div className="max-w-3xl mx-auto space-y-4">
               {faqs.map((faq, i) => (
-                <details key={i} className="bg-card p-6 rounded-xl border border-border group">
+                <details key={i} className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] group">
                   <summary className="font-bold cursor-pointer list-none flex items-center justify-between">
                     <span>{faq.question}</span>
-                    <span className="text-green-500 group-open:rotate-180 transition-transform">▼</span>
+                    <span className="text-[#4ebe96] group-open:rotate-180 transition-transform duration-100">▼</span>
                   </summary>
-                  <p className="text-muted-foreground mt-4">
+                  <p className="text-[#868f97] mt-4">
                     {faq.answer}
                   </p>
                 </details>
@@ -168,19 +168,19 @@ export default function PortfolioPage() {
           </section>
 
           {/* Related */}
-          <section className="border-t border-border pt-8">
+          <section className="border-t border-white/[0.08] pt-8">
             <h3 className="text-lg font-bold mb-4 text-center">Explore More Tools</h3>
             <div className="flex flex-wrap justify-center gap-3">
-              <Link href="/markets" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors text-sm">
+              <Link href="/markets" className="px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 text-sm">
                 Live Markets
               </Link>
-              <Link href="/screener" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors text-sm">
+              <Link href="/screener" className="px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 text-sm">
                 Stock Screener
               </Link>
-              <Link href="/newsletter" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors text-sm">
+              <Link href="/newsletter" className="px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 text-sm">
                 Newsletter
               </Link>
-              <Link href="/battle" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors text-sm">
+              <Link href="/battle" className="px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 text-sm">
                 Stock Battle
               </Link>
             </div>

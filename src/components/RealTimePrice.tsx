@@ -69,8 +69,8 @@ export default function RealTimePrice({
 
   // Determine change color
   const changeColor = quote?.change !== undefined
-    ? quote.change >= 0 ? 'text-green-500' : 'text-red-500'
-    : 'text-muted-foreground'
+    ? quote.change >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'
+    : 'text-[#868f97]'
 
   // Format price
   const formattedPrice = displayPrice > 0
@@ -92,7 +92,7 @@ export default function RealTimePrice({
     <span
       className={cn(
         'inline-block w-2 h-2 rounded-full',
-        isConnected ? 'bg-green-500 animate-pulse' : 'bg-yellow-500'
+        isConnected ? 'bg-[#4ebe96] animate-pulse' : 'bg-yellow-500'
       )}
       title={isConnected ? 'Real-time' : 'Connecting...'}
     />
@@ -105,9 +105,9 @@ export default function RealTimePrice({
         <span
           className={cn(
             sizes.price,
-            'transition-colors duration-300',
-            flashClass === 'flash-up' && 'text-green-400',
-            flashClass === 'flash-down' && 'text-red-400'
+            'transition-colors duration-100',
+            flashClass === 'flash-up' && 'text-[#4ebe96]',
+            flashClass === 'flash-down' && 'text-[#e15241]'
           )}
         >
           {formattedPrice}
@@ -124,7 +124,7 @@ export default function RealTimePrice({
 
       {/* Volume */}
       {showVolume && formattedVolume && (
-        <span className={cn(sizes.volume, 'text-muted-foreground')}>
+        <span className={cn(sizes.volume, 'text-[#868f97]')}>
           Vol: {formattedVolume}
         </span>
       )}
@@ -153,7 +153,7 @@ export function RealTimeTicker({
     <div className={cn('flex gap-6 overflow-x-auto py-2', className)}>
       {symbols.map(symbol => (
         <div key={symbol} className="flex items-center gap-2 whitespace-nowrap">
-          <span className="font-semibold text-muted-foreground">{symbol}</span>
+          <span className="font-semibold text-[#868f97]">{symbol}</span>
           <RealTimePrice symbol={symbol} size="sm" showChange={false} />
         </div>
       ))}
@@ -176,7 +176,7 @@ export function RealTimePriceTable({
       {symbols.map(symbol => (
         <div
           key={symbol}
-          className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-secondary/50 transition-colors"
+          className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
         >
           <span className="font-medium">{symbol}</span>
           <RealTimePrice symbol={symbol} size="sm" />

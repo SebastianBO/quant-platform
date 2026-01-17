@@ -156,8 +156,8 @@ export default function SectorsHubPage() {
             <SEOSidebar />
             <div className="flex-1 min-w-0">
           {/* Breadcrumbs */}
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white">Home</Link>
             {' / '}
             <span>Sectors</span>
           </nav>
@@ -167,10 +167,10 @@ export default function SectorsHubPage() {
             <h1 className="text-4xl font-bold mb-4">
               Stock Market Sectors {currentYear}
             </h1>
-            <p className="text-xl text-muted-foreground mb-4">
+            <p className="text-xl text-[#868f97] mb-4">
               Explore all 11 stock market sectors with top-performing stocks, comprehensive analysis, and AI-powered insights.
             </p>
-            <p className="text-base text-muted-foreground max-w-3xl">
+            <p className="text-base text-[#868f97] max-w-3xl">
               The stock market is divided into 11 sectors based on the Global Industry Classification Standard (GICS).
               Each sector represents companies with similar business characteristics and economic drivers. Understanding
               sector dynamics is crucial for portfolio diversification and identifying investment opportunities.
@@ -184,31 +184,31 @@ export default function SectorsHubPage() {
                 <Link
                   key={sector.slug}
                   href={`/sectors/${sector.slug}`}
-                  className="bg-card p-6 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                  className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all group"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <span className="text-4xl">{sector.icon}</span>
-                    <span className="text-xs text-muted-foreground bg-secondary px-2 py-1 rounded">
+                    <span className="text-xs text-[#868f97] bg-white/[0.05] px-2 py-1 rounded">
                       {sector.stockCount} stocks
                     </span>
                   </div>
-                  <h2 className="text-xl font-bold mb-2 group-hover:text-green-500 transition-colors">
+                  <h2 className="text-xl font-bold mb-2 group-hover:text-[#4ebe96] transition-colors duration-100">
                     {sector.title}
                   </h2>
-                  <p className="text-sm text-muted-foreground mb-4">
+                  <p className="text-sm text-[#868f97] mb-4">
                     {sector.description}
                   </p>
                   <div className="flex flex-wrap gap-2 mb-3">
                     {sector.topStocks.map((stock) => (
                       <span
                         key={stock}
-                        className="text-xs bg-secondary px-2 py-1 rounded font-medium"
+                        className="text-xs bg-white/[0.05] px-2 py-1 rounded font-medium"
                       >
                         {stock}
                       </span>
                     ))}
                   </div>
-                  <div className="text-sm text-green-500 group-hover:underline">
+                  <div className="text-sm text-[#4ebe96] group-hover:underline">
                     Explore {sector.title} →
                   </div>
                 </Link>
@@ -220,64 +220,64 @@ export default function SectorsHubPage() {
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-6">Understanding Stock Market Sectors</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 text-green-500">Growth Sectors</h3>
-                <p className="text-sm text-muted-foreground mb-3">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+                <h3 className="text-lg font-bold mb-3 text-[#4ebe96]">Growth Sectors</h3>
+                <p className="text-sm text-[#868f97] mb-3">
                   High-growth potential with above-average earnings growth
                 </p>
                 <div className="space-y-2">
-                  <Link href="/sectors/technology" className="block text-sm hover:text-green-500">
+                  <Link href="/sectors/technology" className="block text-sm hover:text-[#4ebe96]">
                     • Technology
                   </Link>
-                  <Link href="/sectors/healthcare" className="block text-sm hover:text-green-500">
+                  <Link href="/sectors/healthcare" className="block text-sm hover:text-[#4ebe96]">
                     • Healthcare
                   </Link>
-                  <Link href="/sectors/communication-services" className="block text-sm hover:text-green-500">
+                  <Link href="/sectors/communication-services" className="block text-sm hover:text-[#4ebe96]">
                     • Communication Services
                   </Link>
                 </div>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 text-blue-500">Cyclical Sectors</h3>
-                <p className="text-sm text-muted-foreground mb-3">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+                <h3 className="text-lg font-bold mb-3 text-[#479ffa]">Cyclical Sectors</h3>
+                <p className="text-sm text-[#868f97] mb-3">
                   Performance tied to economic cycles and growth
                 </p>
                 <div className="space-y-2">
-                  <Link href="/sectors/consumer-discretionary" className="block text-sm hover:text-green-500">
+                  <Link href="/sectors/consumer-discretionary" className="block text-sm hover:text-[#4ebe96]">
                     • Consumer Discretionary
                   </Link>
-                  <Link href="/sectors/industrials" className="block text-sm hover:text-green-500">
+                  <Link href="/sectors/industrials" className="block text-sm hover:text-[#4ebe96]">
                     • Industrials
                   </Link>
-                  <Link href="/sectors/materials" className="block text-sm hover:text-green-500">
+                  <Link href="/sectors/materials" className="block text-sm hover:text-[#4ebe96]">
                     • Materials
                   </Link>
-                  <Link href="/sectors/financials" className="block text-sm hover:text-green-500">
+                  <Link href="/sectors/financials" className="block text-sm hover:text-[#4ebe96]">
                     • Financials
                   </Link>
-                  <Link href="/sectors/energy" className="block text-sm hover:text-green-500">
+                  <Link href="/sectors/energy" className="block text-sm hover:text-[#4ebe96]">
                     • Energy
                   </Link>
-                  <Link href="/sectors/real-estate" className="block text-sm hover:text-green-500">
+                  <Link href="/sectors/real-estate" className="block text-sm hover:text-[#4ebe96]">
                     • Real Estate
                   </Link>
                 </div>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
                 <h3 className="text-lg font-bold mb-3 text-purple-500">Defensive Sectors</h3>
-                <p className="text-sm text-muted-foreground mb-3">
+                <p className="text-sm text-[#868f97] mb-3">
                   Stable earnings regardless of economic conditions
                 </p>
                 <div className="space-y-2">
-                  <Link href="/sectors/consumer-staples" className="block text-sm hover:text-green-500">
+                  <Link href="/sectors/consumer-staples" className="block text-sm hover:text-[#4ebe96]">
                     • Consumer Staples
                   </Link>
-                  <Link href="/sectors/utilities" className="block text-sm hover:text-green-500">
+                  <Link href="/sectors/utilities" className="block text-sm hover:text-[#4ebe96]">
                     • Utilities
                   </Link>
-                  <Link href="/sectors/healthcare" className="block text-sm hover:text-green-500">
+                  <Link href="/sectors/healthcare" className="block text-sm hover:text-[#4ebe96]">
                     • Healthcare
                   </Link>
                 </div>
@@ -289,32 +289,32 @@ export default function SectorsHubPage() {
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-6">Why Sector Analysis Matters</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
                 <h3 className="text-lg font-bold mb-3">Diversification</h3>
-                <p className="text-muted-foreground">
+                <p className="text-[#868f97]">
                   Spreading investments across different sectors reduces portfolio risk by minimizing exposure
                   to sector-specific downturns. Different sectors perform well at different stages of the
                   economic cycle.
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
                 <h3 className="text-lg font-bold mb-3">Opportunity Identification</h3>
-                <p className="text-muted-foreground">
+                <p className="text-[#868f97]">
                   Understanding sector trends helps identify emerging opportunities and avoid declining
                   industries. Sector rotation strategies can enhance returns by shifting capital to
                   sectors poised to outperform.
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
                 <h3 className="text-lg font-bold mb-3">Risk Management</h3>
-                <p className="text-muted-foreground">
+                <p className="text-[#868f97]">
                   Different sectors have different risk profiles. Defensive sectors like utilities provide
                   stability, while growth sectors like technology offer higher returns with greater volatility.
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
                 <h3 className="text-lg font-bold mb-3">Economic Understanding</h3>
-                <p className="text-muted-foreground">
+                <p className="text-[#868f97]">
                   Sector performance reflects broader economic conditions. Monitoring sector trends provides
                   insights into economic health, inflation, interest rates, and consumer confidence.
                 </p>
@@ -328,44 +328,44 @@ export default function SectorsHubPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <Link
                 href="/best-stocks/tech"
-                className="bg-card p-4 rounded-lg border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-[#1a1a1a] p-4 rounded-lg border border-white/[0.08] hover:border-[#4ebe96]/50 transition-colors duration-100 text-center"
               >
                 <p className="font-bold mb-1">Tech Stocks</p>
-                <p className="text-xs text-muted-foreground">Innovation leaders</p>
+                <p className="text-xs text-[#868f97]">Innovation leaders</p>
               </Link>
               <Link
                 href="/best-stocks/dividend"
-                className="bg-card p-4 rounded-lg border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-[#1a1a1a] p-4 rounded-lg border border-white/[0.08] hover:border-[#4ebe96]/50 transition-colors duration-100 text-center"
               >
                 <p className="font-bold mb-1">Dividend Stocks</p>
-                <p className="text-xs text-muted-foreground">Income generators</p>
+                <p className="text-xs text-[#868f97]">Income generators</p>
               </Link>
               <Link
                 href="/best-stocks/growth"
-                className="bg-card p-4 rounded-lg border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-[#1a1a1a] p-4 rounded-lg border border-white/[0.08] hover:border-[#4ebe96]/50 transition-colors duration-100 text-center"
               >
                 <p className="font-bold mb-1">Growth Stocks</p>
-                <p className="text-xs text-muted-foreground">High potential</p>
+                <p className="text-xs text-[#868f97]">High potential</p>
               </Link>
               <Link
                 href="/best-stocks/value"
-                className="bg-card p-4 rounded-lg border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-[#1a1a1a] p-4 rounded-lg border border-white/[0.08] hover:border-[#4ebe96]/50 transition-colors duration-100 text-center"
               >
                 <p className="font-bold mb-1">Value Stocks</p>
-                <p className="text-xs text-muted-foreground">Undervalued gems</p>
+                <p className="text-xs text-[#868f97]">Undervalued gems</p>
               </Link>
             </div>
           </section>
 
           {/* CTA */}
-          <section className="bg-card p-8 rounded-xl border border-border text-center">
+          <section className="bg-[#1a1a1a] p-8 rounded-xl border border-white/[0.08] text-center">
             <h2 className="text-2xl font-bold mb-4">Start Analyzing Stocks Today</h2>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-[#868f97] mb-6">
               Get AI-powered analysis, DCF valuations, and comprehensive insights for any stock across all sectors
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium"
+              className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white px-8 py-3 rounded-lg font-medium"
             >
               Access Dashboard
             </Link>

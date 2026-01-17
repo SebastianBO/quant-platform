@@ -25,7 +25,7 @@ export function PageLayout({
   }[maxWidth]
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-white">
       <Header />
       <div className="pt-20">
         <div className={`${maxWidthClass} mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8`}>

@@ -298,19 +298,19 @@ export default function PortfolioMemberChat({ portfolioId, portfolioName }: Port
 
   if (!currentUser) {
     return (
-      <Card className="bg-card border-border">
+      <Card className="bg-[#1a1a1a] border-white/[0.08]">
         <CardContent className="py-8 text-center">
-          <MessageCircle className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-          <p className="text-muted-foreground">Sign in to join the conversation</p>
+          <MessageCircle className="w-12 h-12 mx-auto mb-4 text-[#868f97]" />
+          <p className="text-[#868f97]">Sign in to join the conversation</p>
         </CardContent>
       </Card>
     )
   }
 
   return (
-    <Card className="bg-card border-border flex flex-col h-[500px] dark:bg-card">
-      <CardHeader className="border-b border-border pb-4">
-        <CardTitle className="flex items-center justify-between text-foreground">
+    <Card className="bg-[#1a1a1a] border-white/[0.08] flex flex-col h-[500px]">
+      <CardHeader className="border-b border-white/[0.08] pb-4">
+        <CardTitle className="flex items-center justify-between text-white">
           <div className="flex items-center gap-2">
             <MessageCircle className="w-5 h-5" />
             <span>Team Chat</span>
@@ -328,15 +328,15 @@ export default function PortfolioMemberChat({ portfolioId, portfolioName }: Port
 
         {/* Members Panel */}
         {showMembers && (
-          <div className="mt-4 p-3 bg-secondary/50 rounded-lg">
-            <p className="text-xs text-muted-foreground mb-2">Members</p>
+          <div className="mt-4 p-3 bg-white/[0.05]/50 rounded-lg">
+            <p className="text-xs text-[#868f97] mb-2">Members</p>
             <div className="flex flex-wrap gap-2">
               {members.map(member => (
                 <div
                   key={member.user_id}
                   className="flex items-center gap-2 px-2 py-1 bg-background rounded-full text-xs"
                 >
-                  <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center text-white text-[10px]">
+                  <div className="w-5 h-5 rounded-full bg-[#4ebe96] flex items-center justify-center text-white text-[10px]">
                     {member.profiles?.name?.[0] || member.profiles?.username?.[0] || '?'}
                   </div>
                   <span>{member.profiles?.name || member.profiles?.username || 'Member'}</span>
@@ -350,11 +350,11 @@ export default function PortfolioMemberChat({ portfolioId, portfolioName }: Port
       {/* Messages */}
       <CardContent className="flex-1 overflow-y-auto py-4 space-y-4">
         {loading ? (
-          <div className="text-center text-muted-foreground py-8">
+          <div className="text-center text-[#868f97] py-8">
             Loading messages...
           </div>
         ) : messages.length === 0 ? (
-          <div className="text-center text-muted-foreground py-8">
+          <div className="text-center text-[#868f97] py-8">
             <MessageCircle className="w-8 h-8 mx-auto mb-2 opacity-50" />
             <p>No messages yet</p>
             <p className="text-sm">Start the conversation!</p>
@@ -369,7 +369,7 @@ export default function PortfolioMemberChat({ portfolioId, portfolioName }: Port
               <div key={message.id}>
                 {showDateSeparator && (
                   <div className="flex items-center justify-center my-4">
-                    <span className="px-3 py-1 bg-secondary/50 rounded-full text-xs text-muted-foreground">
+                    <span className="px-3 py-1 bg-white/[0.05]/50 rounded-full text-xs text-[#868f97]">
                       {formatDate(message.created_at)}
                     </span>
                   </div>
@@ -377,7 +377,7 @@ export default function PortfolioMemberChat({ portfolioId, portfolioName }: Port
                 <div className={`flex gap-3 ${isOwn ? 'flex-row-reverse' : ''}`}>
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                      isOwn ? 'bg-green-500 text-white' : 'bg-secondary text-foreground'
+                      isOwn ? 'bg-[#4ebe96] text-white' : 'bg-white/[0.05] text-white'
                     }`}
                   >
                     {getInitial(message.profile)}
@@ -387,13 +387,13 @@ export default function PortfolioMemberChat({ portfolioId, portfolioName }: Port
                       {!isOwn && (
                         <span className="text-xs font-medium">{getName(message.profile)}</span>
                       )}
-                      <span className="text-xs text-muted-foreground">{formatTime(message.created_at)}</span>
+                      <span className="text-xs text-[#868f97]">{formatTime(message.created_at)}</span>
                     </div>
                     <div
                       className={`px-4 py-2 rounded-2xl ${
                         isOwn
-                          ? 'bg-green-500 text-white rounded-br-sm'
-                          : 'bg-secondary text-foreground rounded-bl-sm'
+                          ? 'bg-[#4ebe96] text-white rounded-br-sm'
+                          : 'bg-white/[0.05] text-white rounded-bl-sm'
                       }`}
                     >
                       <p className="text-sm whitespace-pre-wrap">{message.content}</p>
@@ -408,7 +408,7 @@ export default function PortfolioMemberChat({ portfolioId, portfolioName }: Port
       </CardContent>
 
       {/* Input */}
-      <div className="p-4 border-t border-border bg-background">
+      <div className="p-4 border-t border-white/[0.08] bg-background">
         <div className="flex gap-2">
           <Input
             value={newMessage}
@@ -416,12 +416,12 @@ export default function PortfolioMemberChat({ portfolioId, portfolioName }: Port
             onKeyPress={handleKeyPress}
             placeholder="Type a message..."
             disabled={sending}
-            className="flex-1 bg-secondary text-foreground placeholder:text-muted-foreground"
+            className="flex-1 bg-white/[0.05] text-white placeholder:text-[#868f97]"
           />
           <Button
             onClick={handleSend}
             disabled={!newMessage.trim() || sending}
-            className="bg-green-600 hover:bg-green-500 text-white"
+            className="bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white transition-colors duration-100"
           >
             <Send className="w-4 h-4" />
           </Button>

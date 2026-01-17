@@ -44,23 +44,23 @@ export default function LanguageSwitcher({
       <div className={cn("relative", className)} ref={dropdownRef}>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary transition-colors"
+          className="p-2 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
           title={t('select')}
         >
           <Globe className="w-5 h-5" />
         </button>
 
         {isOpen && (
-          <div className="absolute right-0 mt-2 w-40 bg-card border border-border rounded-xl shadow-xl py-2 z-50">
+          <div className="absolute right-0 mt-2 w-40 bg-[#1a1a1a] border border-white/[0.08] rounded-xl shadow-xl py-2 z-50">
             {locales.map((loc) => (
               <button
                 key={loc}
                 onClick={() => handleLocaleChange(loc)}
                 className={cn(
-                  "w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors",
+                  "w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors duration-100",
                   locale === loc
                     ? "bg-green-500/10 text-green-500"
-                    : "text-foreground hover:bg-secondary"
+                    : "text-white hover:bg-white/[0.08]"
                 )}
               >
                 <span className="text-base">{localeFlags[loc]}</span>
@@ -81,10 +81,10 @@ export default function LanguageSwitcher({
             key={loc}
             onClick={() => handleLocaleChange(loc)}
             className={cn(
-              "px-2 py-1 text-sm rounded transition-colors",
+              "px-2 py-1 text-sm rounded transition-colors duration-100",
               locale === loc
                 ? "bg-green-500/10 text-green-500 font-medium"
-                : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                : "text-[#868f97] hover:text-white hover:bg-white/[0.08]"
             )}
             title={localeNames[loc]}
           >
@@ -101,8 +101,8 @@ export default function LanguageSwitcher({
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "flex items-center gap-2 px-3 py-2 rounded-lg border border-border",
-          "bg-card hover:bg-secondary transition-colors text-sm"
+          "flex items-center gap-2 px-3 py-2 rounded-lg border border-white/[0.08]",
+          "bg-[#1a1a1a] hover:bg-white/[0.08] transition-colors duration-100 text-sm"
         )}
       >
         <span className="text-base">{localeFlags[locale]}</span>
@@ -114,16 +114,16 @@ export default function LanguageSwitcher({
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-card border border-border rounded-xl shadow-xl py-2 z-50">
+        <div className="absolute right-0 mt-2 w-48 bg-[#1a1a1a] border border-white/[0.08] rounded-xl shadow-xl py-2 z-50">
           {locales.map((loc) => (
             <button
               key={loc}
               onClick={() => handleLocaleChange(loc)}
               className={cn(
-                "w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors",
+                "w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors duration-100",
                 locale === loc
                   ? "bg-green-500/10 text-green-500"
-                  : "text-foreground hover:bg-secondary"
+                  : "text-white hover:bg-white/[0.08]"
               )}
             >
               <span className="text-base">{localeFlags[loc]}</span>

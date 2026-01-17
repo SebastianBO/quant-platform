@@ -97,7 +97,7 @@ function LoginForm() {
   }
 
   return (
-    <Card className="w-full max-w-md bg-card border-border">
+    <Card className="w-full max-w-md bg-[#1a1a1a] border-white/[0.08]">
       <CardHeader className="text-center">
         <Link href="/" className="flex items-center justify-center gap-2 mb-4">
           <div className="w-10 h-10 bg-foreground rounded-xl flex items-center justify-center">
@@ -107,7 +107,7 @@ function LoginForm() {
         <CardTitle className="text-2xl">
           {mode === "signup" ? "Create your account" : "Welcome back"}
         </CardTitle>
-        <p className="text-muted-foreground text-sm mt-2">
+        <p className="text-[#868f97] text-sm mt-2">
           {mode === "signup"
             ? "Start your investment journey with Lician"
             : "Sign in to access your portfolio"}
@@ -118,7 +118,7 @@ function LoginForm() {
         <div className="space-y-3">
           <Button
             variant="outline"
-            className="w-full h-12 bg-white hover:bg-gray-50 text-black border-gray-300"
+            className="w-full h-12 bg-white hover:bg-gray-50 text-black border-gray-300 transition-colors duration-100"
             onClick={() => handleOAuthLogin("google")}
             disabled={loading}
           >
@@ -133,7 +133,7 @@ function LoginForm() {
 
           <Button
             variant="outline"
-            className="w-full h-12 bg-black hover:bg-gray-900 text-white border-black"
+            className="w-full h-12 bg-black hover:bg-gray-900 text-white border-black transition-colors duration-100"
             onClick={() => handleOAuthLogin("apple")}
             disabled={loading}
           >
@@ -147,10 +147,10 @@ function LoginForm() {
         {/* Divider */}
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-border" />
+            <span className="w-full border-t border-white/[0.08]" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-card px-2 text-muted-foreground">Or continue with email</span>
+            <span className="bg-[#1a1a1a] px-2 text-[#868f97]">Or continue with email</span>
           </div>
         </div>
 
@@ -162,7 +162,7 @@ function LoginForm() {
               placeholder="Email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="h-12 bg-secondary border-border"
+              className="h-12 bg-white/[0.05] border-white/[0.08]"
               required
             />
           </div>
@@ -174,7 +174,7 @@ function LoginForm() {
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="h-12 bg-secondary border-border"
+                className="h-12 bg-white/[0.05] border-white/[0.08]"
                 required
                 minLength={6}
               />
@@ -186,12 +186,12 @@ function LoginForm() {
           )}
 
           {message && (
-            <p className="text-green-500 text-sm text-center">{message}</p>
+            <p className="text-[#4ebe96] text-sm text-center">{message}</p>
           )}
 
           <Button
             type="submit"
-            className="w-full h-12 bg-foreground text-background hover:bg-foreground/90"
+            className="w-full h-12 bg-foreground text-background hover:bg-foreground/90 transition-colors duration-100"
             disabled={loading}
           >
             {loading ? "Loading..." : mode === "signup" ? "Create account" : mode === "magic" ? "Send magic link" : "Sign in"}
@@ -205,16 +205,16 @@ function LoginForm() {
               <button
                 type="button"
                 onClick={() => setMode("magic")}
-                className="text-muted-foreground hover:text-foreground block w-full"
+                className="text-[#868f97] hover:text-white block w-full transition-colors duration-100"
               >
                 Sign in with magic link instead
               </button>
-              <p className="text-muted-foreground">
+              <p className="text-[#868f97]">
                 Don't have an account?{" "}
                 <button
                   type="button"
                   onClick={() => setMode("signup")}
-                  className="text-foreground font-medium hover:underline"
+                  className="text-white font-medium hover:underline"
                 >
                   Sign up
                 </button>
@@ -223,12 +223,12 @@ function LoginForm() {
           )}
 
           {mode === "signup" && (
-            <p className="text-muted-foreground">
+            <p className="text-[#868f97]">
               Already have an account?{" "}
               <button
                 type="button"
                 onClick={() => setMode("login")}
-                className="text-foreground font-medium hover:underline"
+                className="text-white font-medium hover:underline"
               >
                 Sign in
               </button>
@@ -239,7 +239,7 @@ function LoginForm() {
             <button
               type="button"
               onClick={() => setMode("login")}
-              className="text-muted-foreground hover:text-foreground"
+              className="text-[#868f97] hover:text-white transition-colors duration-100"
             >
               Back to password login
             </button>
@@ -254,7 +254,7 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen bg-background flex items-center justify-center p-6">
       <Suspense fallback={
-        <Card className="w-full max-w-md bg-card border-border">
+        <Card className="w-full max-w-md bg-[#1a1a1a] border-white/[0.08]">
           <CardContent className="p-8 text-center">
             <div className="animate-pulse">Loading...</div>
           </CardContent>

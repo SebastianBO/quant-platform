@@ -216,18 +216,18 @@ export default async function NewsPage() {
           __html: JSON.stringify(combinedSchemas),
         }}
       />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-screen bg-background text-white pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
           <div className="flex gap-8">
             <SEOSidebar />
             <div className="flex-1 min-w-0">
           {/* Breadcrumbs */}
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground transition-colors">
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white transition-colors duration-100">
               Home
             </Link>
             {' / '}
-            <span className="text-foreground">News</span>
+            <span className="text-white">News</span>
           </nav>
 
           {/* Hero Section */}
@@ -235,7 +235,7 @@ export default async function NewsPage() {
             <h1 className="text-3xl sm:text-4xl font-bold mb-4">
               Stock Market News Today
             </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl">
+            <p className="text-lg sm:text-xl text-[#868f97] max-w-3xl">
               Real-time financial news aggregated from top sources. Stay informed with the latest market headlines, earnings reports, and analyst insights.
             </p>
           </div>
@@ -252,8 +252,8 @@ export default async function NewsPage() {
                 ))}
               </div>
             ) : (
-              <div className="bg-card p-12 rounded-xl border border-border text-center">
-                <p className="text-muted-foreground text-lg">
+              <div className="bg-[#1a1a1a] p-12 rounded-xl border border-white/[0.08] text-center">
+                <p className="text-[#868f97] text-lg">
                   No news articles available at the moment. Please check back soon.
                 </p>
               </div>
@@ -266,51 +266,51 @@ export default async function NewsPage() {
               Why Follow Stock Market News?
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
                 <h3 className="text-lg font-bold mb-3">
                   Stay Informed
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-[#868f97]">
                   Market-moving events happen quickly. Real-time news helps you understand why stocks are moving and make informed decisions based on current events.
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
                 <h3 className="text-lg font-bold mb-3">
                   Earnings & Events
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-[#868f97]">
                   Track earnings reports, FDA approvals, product launches, and other catalysts that can significantly impact stock prices in the short and long term.
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
                 <h3 className="text-lg font-bold mb-3">
                   Analyst Insights
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-[#868f97]">
                   Get instant updates on analyst upgrades, downgrades, and price target changes from Wall Street firms covering your portfolio stocks.
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
                 <h3 className="text-lg font-bold mb-3">
                   Market Sentiment
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-[#868f97]">
                   Understand overall market sentiment through news aggregation and AI-powered sentiment analysis on individual stocks and sectors.
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
                 <h3 className="text-lg font-bold mb-3">
                   Risk Management
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-[#868f97]">
                   Early warnings about regulatory issues, lawsuits, executive departures, or competitive threats help you manage risk in your portfolio.
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
                 <h3 className="text-lg font-bold mb-3">
                   Opportunity Discovery
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-[#868f97]">
                   Identify new investment opportunities through news about emerging trends, industry shifts, and companies making strategic moves.
                 </p>
               </div>
@@ -327,13 +327,13 @@ export default async function NewsPage() {
                 <Link
                   key={resource.href}
                   href={resource.href}
-                  className="bg-card p-6 rounded-xl border border-border hover:border-green-500/50 transition-all hover:shadow-lg group"
+                  className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all hover:shadow-lg group"
                 >
                   <div className="text-4xl mb-4">{resource.icon}</div>
-                  <h3 className="text-xl font-bold mb-2 group-hover:text-green-500 transition-colors">
+                  <h3 className="text-xl font-bold mb-2 group-hover:text-[#4ebe96] transition-colors duration-100">
                     {resource.title}
                   </h3>
-                  <p className="text-muted-foreground">
+                  <p className="text-[#868f97]">
                     {resource.description}
                   </p>
                 </Link>
@@ -350,26 +350,26 @@ export default async function NewsPage() {
               {faqs.map((faq, index) => (
                 <div
                   key={index}
-                  className="bg-card p-6 rounded-xl border border-border"
+                  className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]"
                 >
                   <h3 className="text-lg font-bold mb-3">{faq.question}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
+                  <p className="text-[#868f97] leading-relaxed">{faq.answer}</p>
                 </div>
               ))}
             </div>
           </section>
 
           {/* CTA Section */}
-          <section className="bg-card p-8 rounded-xl border border-border text-center">
+          <section className="bg-[#1a1a1a] p-8 rounded-xl border border-white/[0.08] text-center">
             <h2 className="text-2xl sm:text-3xl font-bold mb-4">
               Get AI-Powered Stock Analysis
             </h2>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+            <p className="text-[#868f97] mb-6 max-w-2xl mx-auto">
               Combine news insights with fundamental analysis, DCF valuations, and AI-powered research for any stock in the market.
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+              className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white px-8 py-3 rounded-lg font-medium transition-colors duration-100"
             >
               Start Analyzing Stocks
             </Link>

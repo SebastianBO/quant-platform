@@ -153,7 +153,7 @@ export default function StockSearch({ onSelect, placeholder = "Search for news, 
     <div className={`relative ${className}`}>
       {/* Search Input */}
       <div className="relative">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#868f97]" />
         <Input
           ref={inputRef}
           type="text"
@@ -165,12 +165,12 @@ export default function StockSearch({ onSelect, placeholder = "Search for news, 
           onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="pl-12 pr-12 h-12 bg-secondary/80 border-border/50 rounded-xl text-base
-                     focus:ring-2 focus:ring-green-500/30 focus:border-green-500/50
-                     placeholder:text-muted-foreground/60"
+          className="pl-12 pr-12 h-12 bg-white/[0.04] border-white/[0.04] rounded-xl text-base
+                     focus:ring-2 focus:ring-[#4ebe96]/30 focus:border-[#4ebe96]/50
+                     placeholder:text-[#868f97]/60"
         />
         {loading && (
-          <Loader2 className="absolute right-12 top-1/2 -translate-y-1/2 w-4 h-4 animate-spin text-muted-foreground" />
+          <Loader2 className="absolute right-12 top-1/2 -translate-y-1/2 w-4 h-4 animate-spin text-[#868f97]" />
         )}
         {query && (
           <button
@@ -179,7 +179,7 @@ export default function StockSearch({ onSelect, placeholder = "Search for news, 
               inputRef.current?.focus()
             }}
             className="absolute right-4 top-1/2 -translate-y-1/2 p-1 rounded-full
-                       hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+                       hover:bg-white/[0.08] text-[#868f97] hover:text-white transition-colors duration-100"
           >
             <X className="w-4 h-4" />
           </button>
@@ -190,12 +190,12 @@ export default function StockSearch({ onSelect, placeholder = "Search for news, 
       {isOpen && (
         <div
           ref={dropdownRef}
-          className="absolute top-full left-0 right-0 mt-2 bg-card border border-border/50 rounded-xl
+          className="absolute top-full left-0 right-0 mt-2 bg-[#1a1a1a] border border-white/[0.04] rounded-xl
                      shadow-2xl shadow-black/20 overflow-hidden z-50 backdrop-blur-xl"
         >
           {/* Section Header */}
-          <div className="px-4 py-2 border-b border-border/50">
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+          <div className="px-4 py-2 border-b border-white/[0.04]">
+            <span className="text-xs font-medium text-[#868f97] uppercase tracking-wider">
               {showRecent ? 'Recent Searches' : query ? 'Search Results' : 'Popular Stocks'}
             </span>
           </div>
@@ -213,7 +213,7 @@ export default function StockSearch({ onSelect, placeholder = "Search for news, 
             ))}
 
             {query && results.length === 0 && !loading && (
-              <div className="px-4 py-8 text-center text-muted-foreground">
+              <div className="px-4 py-8 text-center text-[#868f97]">
                 <p>No results found for "{query}"</p>
                 <button
                   onClick={() => {
@@ -221,7 +221,7 @@ export default function StockSearch({ onSelect, placeholder = "Search for news, 
                     setQuery("")
                     setIsOpen(false)
                   }}
-                  className="mt-2 text-green-500 hover:underline text-sm"
+                  className="mt-2 text-[#4ebe96] hover:underline text-sm"
                 >
                   Search anyway
                 </button>
@@ -252,8 +252,8 @@ function SearchResultItem({
   return (
     <button
       onClick={onClick}
-      className={`w-full px-4 py-3 flex items-center gap-4 transition-colors text-left
-                  ${isSelected ? 'bg-green-500/10' : 'hover:bg-secondary/50'}`}
+      className={`w-full px-4 py-3 flex items-center gap-4 transition-colors duration-100 text-left
+                  ${isSelected ? 'bg-[#4ebe96]/10' : 'hover:bg-white/[0.04]'}`}
     >
       {/* Logo */}
       <div
@@ -277,26 +277,26 @@ function SearchResultItem({
       {/* Info */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <span className="font-bold text-foreground">{result.symbol}</span>
+          <span className="font-bold text-white">{result.symbol}</span>
           {isRecent && (
-            <Clock className="w-3 h-3 text-muted-foreground" />
+            <Clock className="w-3 h-3 text-[#868f97]" />
           )}
           {result.type && result.type !== 'Stock' && (
-            <span className="text-xs px-1.5 py-0.5 bg-secondary rounded text-muted-foreground">
+            <span className="text-xs px-1.5 py-0.5 bg-white/[0.05] rounded text-[#868f97]">
               {result.type}
             </span>
           )}
         </div>
-        <p className="text-sm text-muted-foreground truncate">{result.name}</p>
-        <p className="text-xs text-muted-foreground/70">{result.exchange}</p>
+        <p className="text-sm text-[#868f97] truncate">{result.name}</p>
+        <p className="text-xs text-[#868f97]/70">{result.exchange}</p>
       </div>
 
       {/* Price Info (if available) */}
       {result.price !== undefined && typeof result.price === 'number' && (
         <div className="text-right flex-shrink-0">
-          <p className="font-medium text-foreground">${result.price.toFixed(2)}</p>
+          <p className="font-medium text-white">${result.price.toFixed(2)}</p>
           {result.changePercent !== undefined && typeof result.changePercent === 'number' && (
-            <div className={`flex items-center justify-end gap-1 text-sm ${result.changePercent >= 0 ? 'text-green-500' : 'text-red-500'
+            <div className={`flex items-center justify-end gap-1 text-sm ${result.changePercent >= 0 ? 'text-[#4ebe96]' : 'text-red-500'
               }`}>
               {result.changePercent >= 0 ? (
                 <TrendingUp className="w-3 h-3" />

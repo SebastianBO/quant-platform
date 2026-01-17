@@ -14,7 +14,10 @@
       "name": "Content Published Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [250, 400],
+      "position": [
+        250,
+        400
+      ],
       "webhookId": "syndicate-content-lician"
     },
     {
@@ -26,7 +29,10 @@
       "name": "Validate & Prepare Content",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [470, 400]
+      "position": [
+        470,
+        400
+      ]
     },
     {
       "parameters": {
@@ -63,7 +69,10 @@
       "name": "Initialize Tracking Record",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [690, 400],
+      "position": [
+        690,
+        400
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -77,7 +86,10 @@
       "name": "Split to Platforms",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
-      "position": [910, 400]
+      "position": [
+        910,
+        400
+      ]
     },
     {
       "parameters": {
@@ -113,7 +125,10 @@
       "name": "Post to Dev.to",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1150, 100],
+      "position": [
+        1150,
+        100
+      ],
       "continueOnFail": true,
       "credentials": {
         "httpHeaderAuth": {
@@ -150,7 +165,10 @@
       "name": "Post to Medium",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1150, 280],
+      "position": [
+        1150,
+        280
+      ],
       "continueOnFail": true,
       "credentials": {
         "httpHeaderAuth": {
@@ -187,7 +205,10 @@
       "name": "Post to Hashnode",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1150, 460],
+      "position": [
+        1150,
+        460
+      ],
       "continueOnFail": true,
       "credentials": {
         "httpHeaderAuth": {
@@ -228,7 +249,10 @@
       "name": "Post to LinkedIn",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1150, 640],
+      "position": [
+        1150,
+        640
+      ],
       "continueOnFail": true,
       "credentials": {
         "httpHeaderAuth": {
@@ -246,7 +270,10 @@
       "name": "Process Dev.to Response",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1370, 100]
+      "position": [
+        1370,
+        100
+      ]
     },
     {
       "parameters": {
@@ -257,7 +284,10 @@
       "name": "Process Medium Response",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1370, 280]
+      "position": [
+        1370,
+        280
+      ]
     },
     {
       "parameters": {
@@ -268,7 +298,10 @@
       "name": "Process Hashnode Response",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1370, 460]
+      "position": [
+        1370,
+        460
+      ]
     },
     {
       "parameters": {
@@ -279,7 +312,10 @@
       "name": "Process LinkedIn Response",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1370, 640]
+      "position": [
+        1370,
+        640
+      ]
     },
     {
       "parameters": {
@@ -290,7 +326,10 @@
       "name": "Merge Platform Results",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3,
-      "position": [1590, 370]
+      "position": [
+        1590,
+        370
+      ]
     },
     {
       "parameters": {
@@ -301,7 +340,10 @@
       "name": "Aggregate Results",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1810, 370]
+      "position": [
+        1810,
+        370
+      ]
     },
     {
       "parameters": {
@@ -347,7 +389,10 @@
       "name": "Update Tracking Status",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [2030, 370],
+      "position": [
+        2030,
+        370
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -377,7 +422,10 @@
       "name": "Check for Failures",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [2250, 370]
+      "position": [
+        2250,
+        370
+      ]
     },
     {
       "parameters": {
@@ -389,7 +437,10 @@
       "name": "Slack - All Success",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [2500, 250],
+      "position": [
+        2500,
+        250
+      ],
       "credentials": {
         "slackApi": {
           "id": "CONFIGURE_SLACK_CREDENTIALS",
@@ -407,7 +458,10 @@
       "name": "Slack - Partial Failure",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [2500, 490],
+      "position": [
+        2500,
+        490
+      ],
       "credentials": {
         "slackApi": {
           "id": "CONFIGURE_SLACK_CREDENTIALS",
@@ -424,7 +478,10 @@
       "name": "Queue Failed for Retry",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2720, 490]
+      "position": [
+        2720,
+        490
+      ]
     },
     {
       "parameters": {
@@ -435,7 +492,10 @@
       "name": "Wait 5 Minutes",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
-      "position": [2940, 490]
+      "position": [
+        2940,
+        490
+      ]
     },
     {
       "parameters": {
@@ -450,7 +510,10 @@
       "name": "Trigger Retry Workflow",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [3160, 490]
+      "position": [
+        3160,
+        490
+      ]
     },
     {
       "parameters": {
@@ -462,7 +525,10 @@
       "name": "Webhook Response",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [910, 600]
+      "position": [
+        910,
+        600
+      ]
     },
     {
       "parameters": {
@@ -477,7 +543,10 @@
       "name": "Retry Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [250, 800],
+      "position": [
+        250,
+        800
+      ],
       "webhookId": "syndication-retry-lician"
     },
     {
@@ -489,7 +558,10 @@
       "name": "Process Retry Request",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [470, 800]
+      "position": [
+        470,
+        800
+      ]
     },
     {
       "parameters": {
@@ -512,7 +584,10 @@
       "name": "Fetch Original Data",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [690, 800],
+      "position": [
+        690,
+        800
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -542,7 +617,10 @@
       "name": "Route Dev.to Retry",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [910, 700]
+      "position": [
+        910,
+        700
+      ]
     },
     {
       "parameters": {
@@ -566,7 +644,10 @@
       "name": "Route Medium Retry",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [910, 850]
+      "position": [
+        910,
+        850
+      ]
     },
     {
       "parameters": {
@@ -590,7 +671,10 @@
       "name": "Route Hashnode Retry",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [910, 1000]
+      "position": [
+        910,
+        1000
+      ]
     },
     {
       "parameters": {
@@ -602,7 +686,10 @@
       "name": "Slack - Retry Notification",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [1130, 1150],
+      "position": [
+        1130,
+        1150
+      ],
       "credentials": {
         "slackApi": {
           "id": "CONFIGURE_SLACK_CREDENTIALS",
@@ -909,23 +996,6 @@
     "templateCredsSetupCompleted": false,
     "instanceId": "lician-content-syndication"
   },
-  "tags": [
-    {
-      "name": "content",
-      "createdAt": "2026-01-16T00:00:00.000Z",
-      "updatedAt": "2026-01-16T00:00:00.000Z"
-    },
-    {
-      "name": "syndication",
-      "createdAt": "2026-01-16T00:00:00.000Z",
-      "updatedAt": "2026-01-16T00:00:00.000Z"
-    },
-    {
-      "name": "lician",
-      "createdAt": "2026-01-16T00:00:00.000Z",
-      "updatedAt": "2026-01-16T00:00:00.000Z"
-    }
-  ],
   "pinData": {},
   "staticData": null,
   "triggerCount": 0

@@ -20,7 +20,10 @@
       "name": "Check HARO Emails",
       "type": "n8n-nodes-base.imapEmail",
       "typeVersion": 2,
-      "position": [250, 300],
+      "position": [
+        250,
+        300
+      ],
       "credentials": {
         "imap": {
           "id": "CONFIGURE_IMAP_CREDENTIALS",
@@ -55,7 +58,10 @@
       "name": "Filter Finance Keywords",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [470, 300]
+      "position": [
+        470,
+        300
+      ]
     },
     {
       "parameters": {
@@ -66,7 +72,10 @@
       "name": "Extract Journalist Details",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [690, 300]
+      "position": [
+        690,
+        300
+      ]
     },
     {
       "parameters": {
@@ -95,7 +104,10 @@
       "name": "Filter High Relevance",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [910, 300]
+      "position": [
+        910,
+        300
+      ]
     },
     {
       "parameters": {
@@ -136,7 +148,10 @@
       "name": "Save to Supabase",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [1130, 300],
+      "position": [
+        1130,
+        300
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -156,7 +171,10 @@
       "name": "Send Slack Alert",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [1350, 200],
+      "position": [
+        1350,
+        200
+      ],
       "credentials": {
         "slackApi": {
           "id": "CONFIGURE_SLACK_CREDENTIALS",
@@ -177,7 +195,10 @@
       "name": "Send Email Alert",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
-      "position": [1350, 400],
+      "position": [
+        1350,
+        400
+      ],
       "credentials": {
         "smtp": {
           "id": "CONFIGURE_SMTP_CREDENTIALS",
@@ -196,7 +217,10 @@
       "name": "Webhook Trigger (Alternative)",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [250, 500],
+      "position": [
+        250,
+        500
+      ],
       "webhookId": "haro-webhook-lician"
     },
     {
@@ -208,7 +232,10 @@
       "name": "Transform Webhook Data",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [470, 500]
+      "position": [
+        470,
+        500
+      ]
     },
     {
       "parameters": {
@@ -220,7 +247,10 @@
       "name": "Respond to Webhook",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [1570, 300]
+      "position": [
+        1570,
+        300
+      ]
     }
   ],
   "connections": {
@@ -333,23 +363,6 @@
     "executionOrder": "v1"
   },
   "staticData": null,
-  "tags": [
-    {
-      "name": "backlinks",
-      "createdAt": "2025-01-16T00:00:00.000Z",
-      "updatedAt": "2025-01-16T00:00:00.000Z"
-    },
-    {
-      "name": "seo",
-      "createdAt": "2025-01-16T00:00:00.000Z",
-      "updatedAt": "2025-01-16T00:00:00.000Z"
-    },
-    {
-      "name": "lician",
-      "createdAt": "2025-01-16T00:00:00.000Z",
-      "updatedAt": "2025-01-16T00:00:00.000Z"
-    }
-  ],
   "pinData": {},
   "meta": {
     "templateCredsSetupCompleted": false,

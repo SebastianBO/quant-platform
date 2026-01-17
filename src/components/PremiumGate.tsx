@@ -35,17 +35,17 @@ export function PremiumGate({ children, feature = 'this feature', showPreview = 
         </div>
       )}
       <div className={`${showPreview ? 'absolute inset-0' : ''} flex items-center justify-center`}>
-        <div className="bg-background/95 backdrop-blur-sm border rounded-xl p-6 max-w-md text-center shadow-lg">
-          <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-            <Lock className="w-6 h-6 text-primary" />
+        <div className="bg-background/95 backdrop-blur-sm border-white/[0.08] border rounded-xl p-6 max-w-md text-center shadow-lg">
+          <div className="w-12 h-12 rounded-full bg-[#4ebe96]/10 flex items-center justify-center mx-auto mb-4">
+            <Lock className="w-6 h-6 text-[#4ebe96]" />
           </div>
           <h3 className="text-lg font-semibold mb-2">Premium Feature</h3>
-          <p className="text-muted-foreground mb-4">
+          <p className="text-[#868f97] mb-4">
             Upgrade to Lician Premium to unlock {feature} and get full access to all features.
           </p>
           <Link
             href="/premium"
-            className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-6 py-2.5 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+            className="inline-flex items-center justify-center gap-2 bg-[#4ebe96] text-black px-6 py-2.5 rounded-lg font-medium hover:bg-[#3ea67d] transition-colors duration-100"
           >
             <Sparkles className="w-4 h-4" />
             Upgrade to Premium
@@ -61,19 +61,19 @@ export function PremiumGate({ children, feature = 'this feature', showPreview = 
  */
 export function UpgradePrompt({ feature }: { feature: string }) {
   return (
-    <div className="bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 rounded-lg p-4 my-4">
+    <div className="bg-gradient-to-r from-[#4ebe96]/10 to-[#4ebe96]/5 border border-[#4ebe96]/20 rounded-lg p-4 my-4">
       <div className="flex items-start gap-3">
-        <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
-          <Sparkles className="w-5 h-5 text-primary" />
+        <div className="w-10 h-10 rounded-lg bg-[#4ebe96]/20 flex items-center justify-center flex-shrink-0">
+          <Sparkles className="w-5 h-5 text-[#4ebe96]" />
         </div>
         <div className="flex-1">
           <h4 className="font-medium text-sm">Unlock {feature}</h4>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-sm text-[#868f97] mt-1">
             Get access to AI analysis, institutional data, and more with Lician Premium.
           </p>
           <Link
             href="/premium"
-            className="inline-flex items-center text-sm text-primary font-medium mt-2 hover:underline"
+            className="inline-flex items-center text-sm text-[#4ebe96] font-medium mt-2 hover:underline"
           >
             Learn more →
           </Link>
@@ -107,7 +107,7 @@ export function PremiumBanner() {
         </div>
         <Link
           href="/premium"
-          className="bg-white text-indigo-600 px-4 py-1.5 rounded-full text-sm font-medium hover:bg-white/90 transition-colors"
+          className="bg-white text-indigo-600 px-4 py-1.5 rounded-full text-sm font-medium hover:bg-white/90 transition-colors duration-100"
         >
           Try Premium Free →
         </Link>

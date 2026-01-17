@@ -93,8 +93,8 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
   }
 
   const getSentimentColor = (sentiment: string): string => {
-    if (sentiment === 'Bullish') return 'text-emerald-500'
-    if (sentiment === 'Bearish') return 'text-red-500'
+    if (sentiment === 'Bullish') return 'text-[#4ebe96]'
+    if (sentiment === 'Bearish') return 'text-[#e15241]'
     return 'text-yellow-500'
   }
 
@@ -154,15 +154,15 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
   const pieData = useMemo(() => {
     if (!data?.summary) return []
     return [
-      { name: 'Calls', value: data.summary.totalCallVolume || 0, color: '#10b981' },
-      { name: 'Puts', value: data.summary.totalPutVolume || 0, color: '#ef4444' },
+      { name: 'Calls', value: data.summary.totalCallVolume || 0, color: '#4ebe96' },
+      { name: 'Puts', value: data.summary.totalPutVolume || 0, color: '#e15241' },
     ]
   }, [data?.summary])
 
   const daysUntilExp = data?.summary?.expirationDate ? getDaysUntilExpiration(data.summary.expirationDate) : 0
 
   return (
-    <Card className="w-full bg-card border-border">
+    <Card className="w-full bg-[#1a1a1a] border-white/[0.08]">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
@@ -171,13 +171,13 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
           </CardTitle>
           {data?.summary?.expirationDate && (
             <div className="flex items-center gap-2 text-sm">
-              <Calendar className="w-4 h-4 text-muted-foreground" />
-              <span className="text-muted-foreground">Exp:</span>
+              <Calendar className="w-4 h-4 text-[#868f97]" />
+              <span className="text-[#868f97]">Exp:</span>
               <span className="font-medium">{formatExpiration(data.summary.expirationDate)}</span>
               <span className={`px-2 py-0.5 rounded text-xs font-medium ${
-                daysUntilExp <= 2 ? 'bg-red-500/20 text-red-500' :
+                daysUntilExp <= 2 ? 'bg-[#e15241]/20 text-[#e15241]' :
                 daysUntilExp <= 7 ? 'bg-yellow-500/20 text-yellow-500' :
-                'bg-secondary text-muted-foreground'
+                'bg-white/[0.05] text-[#868f97]'
               }`}>
                 {daysUntilExp}d
               </span>
@@ -188,36 +188,36 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
       <CardContent>
         {loading ? (
           <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-emerald-500"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-[#4ebe96]"></div>
           </div>
         ) : data?.summary ? (
           <>
             {/* Summary Cards */}
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-              <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-center">
-                <p className="text-muted-foreground text-sm">Call Volume</p>
-                <p className="text-2xl font-bold text-emerald-500">
+              <div className="p-4 bg-[#4ebe96]/10 border border-[#4ebe96]/30 rounded-lg text-center">
+                <p className="text-[#868f97] text-sm">Call Volume</p>
+                <p className="text-2xl font-bold text-[#4ebe96]">
                   {(data.summary.totalCallVolume || 0).toLocaleString()}
                 </p>
               </div>
-              <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-center">
-                <p className="text-muted-foreground text-sm">Put Volume</p>
-                <p className="text-2xl font-bold text-red-500">
+              <div className="p-4 bg-[#e15241]/10 border border-[#e15241]/30 rounded-lg text-center">
+                <p className="text-[#868f97] text-sm">Put Volume</p>
+                <p className="text-2xl font-bold text-[#e15241]">
                   {(data.summary.totalPutVolume || 0).toLocaleString()}
                 </p>
               </div>
-              <div className="p-4 bg-secondary/50 rounded-lg text-center">
-                <p className="text-muted-foreground text-sm">Put/Call Ratio</p>
-                <p className={`text-2xl font-bold ${(data.summary.putCallRatio || 0) > 1 ? 'text-red-500' : 'text-emerald-500'}`}>
+              <div className="p-4 bg-white/[0.05] rounded-lg text-center">
+                <p className="text-[#868f97] text-sm">Put/Call Ratio</p>
+                <p className={`text-2xl font-bold ${(data.summary.putCallRatio || 0) > 1 ? 'text-[#e15241]' : 'text-[#4ebe96]'}`}>
                   {(data.summary.putCallRatio || 0).toFixed(2)}
                 </p>
               </div>
-              <div className="p-4 bg-secondary/50 rounded-lg text-center">
-                <p className="text-muted-foreground text-sm">Max Pain</p>
+              <div className="p-4 bg-white/[0.05] rounded-lg text-center">
+                <p className="text-[#868f97] text-sm">Max Pain</p>
                 <p className="text-2xl font-bold">${data.summary.maxPain || 0}</p>
               </div>
-              <div className="p-4 bg-secondary/50 rounded-lg text-center">
-                <p className="text-muted-foreground text-sm">Sentiment</p>
+              <div className="p-4 bg-white/[0.05] rounded-lg text-center">
+                <p className="text-[#868f97] text-sm">Sentiment</p>
                 <p className={`text-2xl font-bold ${getSentimentColor(data.summary.sentiment || 'Neutral')}`}>
                   {getSentimentEmoji(data.summary.sentiment || 'Neutral')} {data.summary.sentiment || 'Neutral'}
                 </p>
@@ -228,11 +228,11 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
             {data.summary.expectedMove && data.summary.iv && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
                 {/* Expected Move Card */}
-                <div className="p-5 bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/30 rounded-xl">
+                <div className="p-5 bg-gradient-to-br from-purple-500/10 to-[#479ffa]/10 border border-purple-500/30 rounded-xl">
                   <div className="flex items-center gap-2 mb-4">
                     <Target className="w-5 h-5 text-purple-500" />
                     <h3 className="font-semibold text-purple-400">Expected Move</h3>
-                    <span className="ml-auto text-xs text-muted-foreground">
+                    <span className="ml-auto text-xs text-[#868f97]">
                       {data.summary.expectedMove.daysToExpiration}d to exp
                     </span>
                   </div>
@@ -240,18 +240,18 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
                   {/* Price Range Visualization */}
                   <div className="mb-4">
                     <div className="flex justify-between text-sm mb-2">
-                      <span className="text-red-400">${data.summary.expectedMove.low.toFixed(2)}</span>
+                      <span className="text-[#e15241]">${data.summary.expectedMove.low.toFixed(2)}</span>
                       <span className="font-bold text-lg">${data.summary.currentPrice?.toFixed(2)}</span>
-                      <span className="text-emerald-400">${data.summary.expectedMove.high.toFixed(2)}</span>
+                      <span className="text-[#4ebe96]">${data.summary.expectedMove.high.toFixed(2)}</span>
                     </div>
-                    <div className="relative h-3 bg-secondary rounded-full overflow-hidden">
+                    <div className="relative h-3 bg-white/[0.05] rounded-full overflow-hidden">
                       <div className="absolute inset-y-0 left-0 right-0 flex">
-                        <div className="flex-1 bg-red-500/30" />
-                        <div className="w-1 bg-foreground" />
-                        <div className="flex-1 bg-emerald-500/30" />
+                        <div className="flex-1 bg-[#e15241]/30" />
+                        <div className="w-1 bg-white" />
+                        <div className="flex-1 bg-[#4ebe96]/30" />
                       </div>
                     </div>
-                    <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                    <div className="flex justify-between text-xs text-[#868f97] mt-1">
                       <span>-{data.summary.expectedMove.percent.toFixed(1)}%</span>
                       <span>Current</span>
                       <span>+{data.summary.expectedMove.percent.toFixed(1)}%</span>
@@ -260,22 +260,22 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
 
                   {/* Straddle Breakdown */}
                   <div className="grid grid-cols-3 gap-2 text-center text-sm">
-                    <div className="p-2 bg-secondary/50 rounded">
-                      <p className="text-muted-foreground text-xs">ATM Strike</p>
+                    <div className="p-2 bg-white/[0.05] rounded">
+                      <p className="text-[#868f97] text-xs">ATM Strike</p>
                       <p className="font-bold">${data.summary.expectedMove.atmStrike}</p>
                     </div>
-                    <div className="p-2 bg-emerald-500/10 rounded">
-                      <p className="text-muted-foreground text-xs">Call</p>
-                      <p className="font-bold text-emerald-500">${data.summary.expectedMove.atmCallPrice.toFixed(2)}</p>
+                    <div className="p-2 bg-[#4ebe96]/10 rounded">
+                      <p className="text-[#868f97] text-xs">Call</p>
+                      <p className="font-bold text-[#4ebe96]">${data.summary.expectedMove.atmCallPrice.toFixed(2)}</p>
                     </div>
-                    <div className="p-2 bg-red-500/10 rounded">
-                      <p className="text-muted-foreground text-xs">Put</p>
-                      <p className="font-bold text-red-500">${data.summary.expectedMove.atmPutPrice.toFixed(2)}</p>
+                    <div className="p-2 bg-[#e15241]/10 rounded">
+                      <p className="text-[#868f97] text-xs">Put</p>
+                      <p className="font-bold text-[#e15241]">${data.summary.expectedMove.atmPutPrice.toFixed(2)}</p>
                     </div>
                   </div>
 
-                  <div className="mt-3 p-2 bg-secondary/30 rounded text-xs text-muted-foreground">
-                    Market expects <span className="font-bold text-foreground">±${data.summary.expectedMove.amount.toFixed(2)}</span> ({data.summary.expectedMove.percent.toFixed(1)}%) move by expiration
+                  <div className="mt-3 p-2 bg-white/[0.05] rounded text-xs text-[#868f97]">
+                    Market expects <span className="font-bold text-white">±${data.summary.expectedMove.amount.toFixed(2)}</span> ({data.summary.expectedMove.percent.toFixed(1)}%) move by expiration
                   </div>
                 </div>
 
@@ -290,30 +290,30 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
                   <div className="flex items-center gap-6 mb-4">
                     <div className="text-center">
                       <p className="text-4xl font-bold">{data.summary.iv.atm.toFixed(1)}%</p>
-                      <p className="text-xs text-muted-foreground">ATM IV</p>
+                      <p className="text-xs text-[#868f97]">ATM IV</p>
                     </div>
                     <div className="flex-1">
-                      <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                      <div className="flex justify-between text-xs text-[#868f97] mb-1">
                         <span>IV Rank</span>
                         <span className={`font-bold ${
-                          data.summary.iv.rank > 70 ? 'text-red-500' :
-                          data.summary.iv.rank < 30 ? 'text-emerald-500' :
+                          data.summary.iv.rank > 70 ? 'text-[#e15241]' :
+                          data.summary.iv.rank < 30 ? 'text-[#4ebe96]' :
                           'text-amber-500'
                         }`}>
                           {data.summary.iv.rank.toFixed(0)}%
                         </span>
                       </div>
-                      <div className="h-3 bg-secondary rounded-full overflow-hidden">
+                      <div className="h-3 bg-white/[0.05] rounded-full overflow-hidden">
                         <div
-                          className={`h-full transition-all ${
-                            data.summary.iv.rank > 70 ? 'bg-red-500' :
-                            data.summary.iv.rank < 30 ? 'bg-emerald-500' :
+                          className={`h-full transition-all duration-100 ${
+                            data.summary.iv.rank > 70 ? 'bg-[#e15241]' :
+                            data.summary.iv.rank < 30 ? 'bg-[#4ebe96]' :
                             'bg-amber-500'
                           }`}
                           style={{ width: `${Math.min(100, data.summary.iv.rank)}%` }}
                         />
                       </div>
-                      <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                      <div className="flex justify-between text-xs text-[#868f97] mt-1">
                         <span>Low</span>
                         <span>High</span>
                       </div>
@@ -322,20 +322,20 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
 
                   {/* IV Stats */}
                   <div className="grid grid-cols-2 gap-2 text-center text-sm">
-                    <div className="p-2 bg-secondary/50 rounded">
-                      <p className="text-muted-foreground text-xs">IV Range Low</p>
+                    <div className="p-2 bg-white/[0.05] rounded">
+                      <p className="text-[#868f97] text-xs">IV Range Low</p>
                       <p className="font-bold">{data.summary.iv.min.toFixed(1)}%</p>
                     </div>
-                    <div className="p-2 bg-secondary/50 rounded">
-                      <p className="text-muted-foreground text-xs">IV Range High</p>
+                    <div className="p-2 bg-white/[0.05] rounded">
+                      <p className="text-[#868f97] text-xs">IV Range High</p>
                       <p className="font-bold">{data.summary.iv.max.toFixed(1)}%</p>
                     </div>
                   </div>
 
                   <div className={`mt-3 p-2 rounded text-xs ${
-                    data.summary.iv.rank > 70 ? 'bg-red-500/10 text-red-400' :
-                    data.summary.iv.rank < 30 ? 'bg-emerald-500/10 text-emerald-400' :
-                    'bg-secondary/30 text-muted-foreground'
+                    data.summary.iv.rank > 70 ? 'bg-[#e15241]/10 text-[#e15241]' :
+                    data.summary.iv.rank < 30 ? 'bg-[#4ebe96]/10 text-[#4ebe96]' :
+                    'bg-white/[0.05] text-[#868f97]'
                   }`}>
                     {data.summary.iv.rank > 70
                       ? '⚠️ High IV - Options are expensive. Consider selling strategies.'
@@ -350,7 +350,7 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
               {/* Volume by Strike */}
               <div>
-                <p className="text-sm text-muted-foreground mb-2">Volume by Strike Price</p>
+                <p className="text-sm text-[#868f97] mb-2">Volume by Strike Price</p>
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={strikeData}>
@@ -359,26 +359,26 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
                         stroke="currentColor"
                         tick={{ fontSize: 10, fill: 'currentColor' }}
                         tickLine={{ stroke: 'currentColor' }}
-                        className="text-muted-foreground"
+                        className="text-[#868f97]"
                       />
                       <YAxis
                         stroke="currentColor"
                         tick={{ fill: 'currentColor' }}
                         tickLine={{ stroke: 'currentColor' }}
-                        className="text-muted-foreground"
+                        className="text-[#868f97]"
                       />
                       <Tooltip
                         contentStyle={{
-                          backgroundColor: 'hsl(var(--card))',
-                          border: '1px solid hsl(var(--border))',
+                          backgroundColor: '#1a1a1a',
+                          border: '1px solid rgba(255, 255, 255, 0.08)',
                           borderRadius: '8px',
-                          color: 'hsl(var(--foreground))'
+                          color: 'white'
                         }}
-                        labelStyle={{ color: 'hsl(var(--foreground))' }}
+                        labelStyle={{ color: 'white' }}
                         formatter={(value: number, name: string) => [value.toLocaleString(), name]}
                       />
-                      <Bar dataKey="callVolume" name="Call Volume" fill="#10b981" />
-                      <Bar dataKey="putVolume" name="Put Volume" fill="#ef4444" />
+                      <Bar dataKey="callVolume" name="Call Volume" fill="#4ebe96" />
+                      <Bar dataKey="putVolume" name="Put Volume" fill="#e15241" />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -386,7 +386,7 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
 
               {/* Put/Call Pie */}
               <div>
-                <p className="text-sm text-muted-foreground mb-2">Put/Call Distribution</p>
+                <p className="text-sm text-[#868f97] mb-2">Put/Call Distribution</p>
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
@@ -399,7 +399,7 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
                         paddingAngle={2}
                         dataKey="value"
                         label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
-                        labelLine={{ stroke: 'hsl(var(--muted-foreground))' }}
+                        labelLine={{ stroke: '#868f97' }}
                       >
                         {pieData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={entry.color} />
@@ -407,10 +407,10 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
                       </Pie>
                       <Tooltip
                         contentStyle={{
-                          backgroundColor: 'hsl(var(--card))',
-                          border: '1px solid hsl(var(--border))',
+                          backgroundColor: '#1a1a1a',
+                          border: '1px solid rgba(255, 255, 255, 0.08)',
                           borderRadius: '8px',
-                          color: 'hsl(var(--foreground))'
+                          color: 'white'
                         }}
                         formatter={(value: number) => [value.toLocaleString(), 'Volume']}
                       />
@@ -422,7 +422,7 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
 
             {/* Open Interest by Strike */}
             <div className="mb-6">
-              <p className="text-sm text-muted-foreground mb-2">Open Interest by Strike</p>
+              <p className="text-sm text-[#868f97] mb-2">Open Interest by Strike</p>
               <div className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={strikeData} layout="vertical">
@@ -431,7 +431,7 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
                       stroke="currentColor"
                       tick={{ fill: 'currentColor' }}
                       tickLine={{ stroke: 'currentColor' }}
-                      className="text-muted-foreground"
+                      className="text-[#868f97]"
                     />
                     <YAxis
                       type="category"
@@ -440,19 +440,19 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
                       tick={{ fontSize: 10, fill: 'currentColor' }}
                       tickLine={{ stroke: 'currentColor' }}
                       width={60}
-                      className="text-muted-foreground"
+                      className="text-[#868f97]"
                     />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: 'hsl(var(--card))',
-                        border: '1px solid hsl(var(--border))',
+                        backgroundColor: '#1a1a1a',
+                        border: '1px solid rgba(255, 255, 255, 0.08)',
                         borderRadius: '8px',
-                        color: 'hsl(var(--foreground))'
+                        color: 'white'
                       }}
                       formatter={(value: number) => [value.toLocaleString(), 'OI']}
                     />
-                    <Bar dataKey="callOI" name="Call OI" fill="#10b981" />
-                    <Bar dataKey="putOI" name="Put OI" fill="#ef4444" />
+                    <Bar dataKey="callOI" name="Call OI" fill="#4ebe96" />
+                    <Bar dataKey="putOI" name="Put OI" fill="#e15241" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -467,21 +467,21 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
                 </div>
                 <div className="space-y-2">
                   {data.summary.unusualActivity.map((activity, i) => (
-                    <div key={i} className="flex items-center justify-between p-2 bg-secondary/50 rounded-lg text-sm">
+                    <div key={i} className="flex items-center justify-between p-2 bg-white/[0.05] rounded-lg text-sm">
                       <div className="flex items-center gap-2">
                         {activity.type === 'call' ? (
-                          <TrendingUp className="w-4 h-4 text-emerald-500" />
+                          <TrendingUp className="w-4 h-4 text-[#4ebe96]" />
                         ) : (
-                          <TrendingDown className="w-4 h-4 text-red-500" />
+                          <TrendingDown className="w-4 h-4 text-[#e15241]" />
                         )}
-                        <span className={activity.type === 'call' ? 'text-emerald-500' : 'text-red-500'}>
+                        <span className={activity.type === 'call' ? 'text-[#4ebe96]' : 'text-[#e15241]'}>
                           {activity.type.toUpperCase()}
                         </span>
                         <span className="font-medium">${activity.strike}</span>
                       </div>
-                      <div className="flex items-center gap-4 text-muted-foreground">
-                        <span>Vol: <span className="text-foreground font-medium">{activity.volume.toLocaleString()}</span></span>
-                        <span>OI: <span className="text-foreground">{activity.openInterest.toLocaleString()}</span></span>
+                      <div className="flex items-center gap-4 text-[#868f97]">
+                        <span>Vol: <span className="text-white font-medium">{activity.volume.toLocaleString()}</span></span>
+                        <span>OI: <span className="text-white">{activity.openInterest.toLocaleString()}</span></span>
                         <span className="text-yellow-500 font-medium">{activity.ratio}x OI</span>
                       </div>
                     </div>
@@ -493,13 +493,13 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
             {/* Interpretation */}
             <div className={`p-4 rounded-lg ${
               (data.summary.sentiment || 'Neutral') === 'Bullish'
-                ? 'bg-emerald-500/10 border border-emerald-500/30'
+                ? 'bg-[#4ebe96]/10 border border-[#4ebe96]/30'
                 : (data.summary.sentiment || 'Neutral') === 'Bearish'
-                ? 'bg-red-500/10 border border-red-500/30'
-                : 'bg-secondary/30 border border-border'
+                ? 'bg-[#e15241]/10 border border-[#e15241]/30'
+                : 'bg-white/[0.05] border border-white/[0.08]'
             }`}>
               <p className="font-medium mb-1">Options Flow Interpretation</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-[#868f97]">
                 {(data.summary.putCallRatio || 0) < 0.7
                   ? `Heavy call buying suggests bullish sentiment. The put/call ratio of ${(data.summary.putCallRatio || 0).toFixed(2)} indicates traders expect ${ticker} to rise.`
                   : (data.summary.putCallRatio || 0) > 1.2
@@ -511,7 +511,7 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
             </div>
           </>
         ) : (
-          <div className="text-center py-12 text-muted-foreground">
+          <div className="text-center py-12 text-[#868f97]">
             No options data available for {ticker}
           </div>
         )}

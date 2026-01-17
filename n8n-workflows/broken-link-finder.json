@@ -16,7 +16,10 @@
       "name": "Weekly Schedule (Sunday 3 AM)",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
-      "position": [250, 300],
+      "position": [
+        250,
+        300
+      ],
       "notes": "Runs every Sunday at 3 AM to find broken link opportunities"
     },
     {
@@ -29,7 +32,10 @@
       "name": "Manual Webhook Trigger",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [250, 500],
+      "position": [
+        250,
+        500
+      ],
       "webhookId": "broken-link-manual",
       "notes": "POST to trigger manual scan"
     },
@@ -42,7 +48,10 @@
       "name": "Define Target Finance Sites",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [500, 400],
+      "position": [
+        500,
+        400
+      ],
       "notes": "List of high-authority finance sites with resource pages to check for broken links"
     },
     {
@@ -56,7 +65,10 @@
       "name": "Batch Sites (5 at a time)",
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
-      "position": [720, 400]
+      "position": [
+        720,
+        400
+      ]
     },
     {
       "parameters": {
@@ -67,7 +79,10 @@
       "name": "Rate Limit (3s delay)",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
-      "position": [940, 400]
+      "position": [
+        940,
+        400
+      ]
     },
     {
       "parameters": {
@@ -93,7 +108,10 @@
       "name": "Fetch Resource Page",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1160, 400],
+      "position": [
+        1160,
+        400
+      ],
       "continueOnFail": true
     },
     {
@@ -105,7 +123,10 @@
       "name": "Extract Outbound Links",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1380, 400]
+      "position": [
+        1380,
+        400
+      ]
     },
     {
       "parameters": {
@@ -134,7 +155,10 @@
       "name": "Has Outbound Links?",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [1600, 400]
+      "position": [
+        1600,
+        400
+      ]
     },
     {
       "parameters": {
@@ -145,7 +169,10 @@
       "name": "Flatten Links for Checking",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1820, 400]
+      "position": [
+        1820,
+        400
+      ]
     },
     {
       "parameters": {
@@ -158,7 +185,10 @@
       "name": "Batch Links (20 at a time)",
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
-      "position": [2040, 400]
+      "position": [
+        2040,
+        400
+      ]
     },
     {
       "parameters": {
@@ -169,7 +199,10 @@
       "name": "Rate Limit (1.5s delay)",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
-      "position": [2260, 400]
+      "position": [
+        2260,
+        400
+      ]
     },
     {
       "parameters": {
@@ -194,7 +227,10 @@
       "name": "Check Link Status (HEAD)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [2480, 400],
+      "position": [
+        2480,
+        400
+      ],
       "continueOnFail": true
     },
     {
@@ -206,7 +242,10 @@
       "name": "Analyze Link Status",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2700, 400]
+      "position": [
+        2700,
+        400
+      ]
     },
     {
       "parameters": {
@@ -235,7 +274,10 @@
       "name": "Is Broken Link?",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [2920, 400]
+      "position": [
+        2920,
+        400
+      ]
     },
     {
       "parameters": {
@@ -246,7 +288,10 @@
       "name": "Match Lician.com Content",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [3140, 400]
+      "position": [
+        3140,
+        400
+      ]
     },
     {
       "parameters": {
@@ -257,7 +302,10 @@
       "name": "Generate Outreach Email",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [3360, 400]
+      "position": [
+        3360,
+        400
+      ]
     },
     {
       "parameters": {
@@ -301,7 +349,9 @@
             "discovered_at": "={{ $json.scannedAt }}",
             "last_checked_at": "={{ $json.checkedAt }}"
           },
-          "matchingColumns": ["opportunity_id"]
+          "matchingColumns": [
+            "opportunity_id"
+          ]
         },
         "options": {}
       },
@@ -309,7 +359,10 @@
       "name": "Store in Supabase",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [3580, 400],
+      "position": [
+        3580,
+        400
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -341,7 +394,10 @@
       "name": "Fetch Week's Opportunities",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [3800, 300],
+      "position": [
+        3800,
+        300
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -358,7 +414,10 @@
       "name": "Generate Slack Report",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [4020, 300]
+      "position": [
+        4020,
+        300
+      ]
     },
     {
       "parameters": {
@@ -379,7 +438,10 @@
       "name": "Send Slack Report",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [4240, 300],
+      "position": [
+        4240,
+        300
+      ],
       "credentials": {
         "slackApi": {
           "id": "CONFIGURE_SLACK_CREDENTIALS",
@@ -396,7 +458,10 @@
       "name": "Error Handler",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [3580, 600]
+      "position": [
+        3580,
+        600
+      ]
     },
     {
       "parameters": {
@@ -425,7 +490,10 @@
       "name": "Many Errors?",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [3800, 600]
+      "position": [
+        3800,
+        600
+      ]
     },
     {
       "parameters": {
@@ -444,7 +512,10 @@
       "name": "Send Error Alert",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [4020, 600],
+      "position": [
+        4020,
+        600
+      ],
       "credentials": {
         "slackApi": {
           "id": "CONFIGURE_SLACK_CREDENTIALS",
@@ -458,7 +529,10 @@
       "name": "Merge Triggers",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3,
-      "position": [500, 300],
+      "position": [
+        500,
+        300
+      ],
       "notes": "Combines weekly schedule and manual triggers"
     },
     {
@@ -467,7 +541,10 @@
       "name": "Done",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
-      "position": [4460, 400]
+      "position": [
+        4460,
+        400
+      ]
     }
   ],
   "connections": {
@@ -758,20 +835,6 @@
     "errorWorkflow": ""
   },
   "staticData": null,
-  "tags": [
-    {
-      "name": "SEO",
-      "id": "seo-tag"
-    },
-    {
-      "name": "Link Building",
-      "id": "link-building-tag"
-    },
-    {
-      "name": "Lician.com",
-      "id": "lician-tag"
-    }
-  ],
   "triggerCount": 2,
   "updatedAt": "2026-01-16T00:00:00.000Z",
   "versionId": "1",

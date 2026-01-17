@@ -130,7 +130,7 @@ export default function PortfolioConnect({
         {loading ? (
           <Loader2 className="w-4 h-4 animate-spin" />
         ) : connected ? (
-          <CheckCircle2 className="w-4 h-4 text-green-500" />
+          <CheckCircle2 className="w-4 h-4 text-[#4ebe96]" />
         ) : (
           <Wallet className="w-4 h-4" />
         )}
@@ -141,24 +141,24 @@ export default function PortfolioConnect({
 
   // Full card version
   return (
-    <div className={cn("bg-card border border-border rounded-2xl p-6", className)}>
+    <div className={cn("bg-[#1a1a1a] border border-white/[0.08] rounded-2xl p-6", className)}>
       {/* Header */}
       <div className="flex items-start justify-between mb-6">
         <div>
           <h3 className="text-xl font-bold mb-1">Connect Your Portfolio</h3>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-[#868f97]">
             Link your brokerage account to get personalized insights
           </p>
         </div>
-        <div className="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center">
-          <Wallet className="w-6 h-6 text-green-500" />
+        <div className="w-12 h-12 rounded-xl bg-[#4ebe96]/10 flex items-center justify-center">
+          <Wallet className="w-6 h-6 text-[#4ebe96]" />
         </div>
       </div>
 
       {/* Benefits */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="flex items-center gap-3">
-          <TrendingUp className="w-5 h-5 text-blue-500" />
+          <TrendingUp className="w-5 h-5 text-[#479ffa]" />
           <span className="text-sm">Track performance</span>
         </div>
         <div className="flex items-center gap-3">
@@ -166,7 +166,7 @@ export default function PortfolioConnect({
           <span className="text-sm">AI analysis</span>
         </div>
         <div className="flex items-center gap-3">
-          <Shield className="w-5 h-5 text-green-500" />
+          <Shield className="w-5 h-5 text-[#4ebe96]" />
           <span className="text-sm">Bank-level security</span>
         </div>
       </div>
@@ -183,7 +183,7 @@ export default function PortfolioConnect({
       {connected && holdings.length > 0 ? (
         <div>
           <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2 text-green-500">
+            <div className="flex items-center gap-2 text-[#4ebe96]">
               <CheckCircle2 className="w-5 h-5" />
               <span className="font-medium">Portfolio Connected</span>
             </div>
@@ -197,21 +197,21 @@ export default function PortfolioConnect({
               Add Another
             </Button>
           </div>
-          <div className="bg-secondary/50 rounded-lg p-4">
-            <p className="text-sm text-muted-foreground mb-2">
+          <div className="bg-white/[0.025] rounded-lg p-4">
+            <p className="text-sm text-[#868f97] mb-2">
               {holdings.length} holdings synced
             </p>
             <div className="flex flex-wrap gap-2">
               {holdings.slice(0, 5).map((h, i) => (
                 <span
                   key={i}
-                  className="px-2 py-1 bg-card rounded text-xs font-mono"
+                  className="px-2 py-1 bg-[#1a1a1a] rounded text-xs font-mono"
                 >
                   {h.symbol || h.name}
                 </span>
               ))}
               {holdings.length > 5 && (
-                <span className="px-2 py-1 text-xs text-muted-foreground">
+                <span className="px-2 py-1 text-xs text-[#868f97]">
                   +{holdings.length - 5} more
                 </span>
               )}
@@ -223,7 +223,7 @@ export default function PortfolioConnect({
         <Button
           onClick={() => open()}
           disabled={!ready || loading}
-          className="w-full h-12 bg-green-600 hover:bg-green-500 text-white"
+          className="w-full h-12 bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black transition-colors duration-100"
         >
           {loading ? (
             <>
@@ -240,7 +240,7 @@ export default function PortfolioConnect({
       )}
 
       {/* Security note */}
-      <p className="text-xs text-muted-foreground text-center mt-4">
+      <p className="text-xs text-[#868f97] text-center mt-4">
         Secured by Plaid. We never store your login credentials.
       </p>
     </div>

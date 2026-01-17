@@ -143,13 +143,13 @@ export default function OptionsChain({ ticker }: OptionsChainProps) {
 
   if (loading) {
     return (
-      <Card className="bg-card border-border">
+      <Card className="bg-[#1a1a1a] border-white/[0.08]">
         <CardHeader>
           <CardTitle>Options Chain</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-green-500"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-[#4ebe96]"></div>
           </div>
         </CardContent>
       </Card>
@@ -158,12 +158,12 @@ export default function OptionsChain({ ticker }: OptionsChainProps) {
 
   if (error || !data || !data.data || data.data.length === 0) {
     return (
-      <Card className="bg-card border-border">
+      <Card className="bg-[#1a1a1a] border-white/[0.08]">
         <CardHeader>
           <CardTitle>Options Chain</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-muted-foreground text-center py-8">{error || "No options data available for this ticker"}</p>
+          <p className="text-[#868f97] text-center py-8">{error || "No options data available for this ticker"}</p>
         </CardContent>
       </Card>
     )
@@ -172,13 +172,13 @@ export default function OptionsChain({ ticker }: OptionsChainProps) {
   const currentPrice = data.lastTradePrice || 0
 
   return (
-    <Card className="bg-card border-border">
+    <Card className="bg-[#1a1a1a] border-white/[0.08]">
       <CardHeader className="space-y-4">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             Options Chain - {ticker}
           </CardTitle>
-          <div className="text-sm text-muted-foreground">
+          <div className="text-sm text-[#868f97]">
             {data.lastTradeDate && (
               <>At close: {formatDate(data.lastTradeDate)} | </>
             )}
@@ -192,13 +192,13 @@ export default function OptionsChain({ ticker }: OptionsChainProps) {
           <div className="relative">
             <button
               onClick={() => setShowExpirationDropdown(!showExpirationDropdown)}
-              className="flex items-center gap-2 px-4 py-2 bg-secondary rounded-lg text-sm font-medium hover:bg-secondary/80"
+              className="flex items-center gap-2 px-4 py-2 bg-white/[0.05] rounded-lg text-sm font-medium hover:bg-white/[0.08] transition-colors duration-100"
             >
               {selectedExpiration ? formatDate(selectedExpiration) : "Select Date"}
               <ChevronDown className="w-4 h-4" />
             </button>
             {showExpirationDropdown && data?.data && Array.isArray(data.data) && (
-              <div className="absolute top-full left-0 mt-1 w-48 bg-card border border-border rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto">
+              <div className="absolute top-full left-0 mt-1 w-48 bg-[#1a1a1a] border border-white/[0.08] rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto">
                 {data.data.map(exp => (
                   <button
                     key={exp.expirationDate}
@@ -206,8 +206,8 @@ export default function OptionsChain({ ticker }: OptionsChainProps) {
                       setSelectedExpiration(exp.expirationDate)
                       setShowExpirationDropdown(false)
                     }}
-                    className={`w-full px-4 py-2 text-left text-sm hover:bg-secondary ${
-                      selectedExpiration === exp.expirationDate ? "bg-green-500/20 text-green-500" : ""
+                    className={`w-full px-4 py-2 text-left text-sm hover:bg-white/[0.08] transition-colors duration-100 ${
+                      selectedExpiration === exp.expirationDate ? "bg-[#4ebe96]/20 text-[#4ebe96]" : ""
                     }`}
                   >
                     {formatDate(exp.expirationDate)}
@@ -222,7 +222,7 @@ export default function OptionsChain({ ticker }: OptionsChainProps) {
             <select
               value={strikeFilter}
               onChange={(e) => setStrikeFilter(e.target.value as typeof strikeFilter)}
-              className="px-4 py-2 bg-secondary rounded-lg text-sm font-medium appearance-none pr-8 cursor-pointer"
+              className="px-4 py-2 bg-white/[0.05] rounded-lg text-sm font-medium appearance-none pr-8 cursor-pointer hover:bg-white/[0.08] transition-colors duration-100"
             >
               <option value="all">All Strikes</option>
               <option value="near">Near the Money</option>
@@ -233,15 +233,15 @@ export default function OptionsChain({ ticker }: OptionsChainProps) {
           </div>
 
           {/* View Mode */}
-          <div className="flex bg-secondary rounded-lg p-1">
+          <div className="flex bg-white/[0.05] rounded-lg p-1">
             {(["straddle", "calls", "puts"] as ViewMode[]).map(mode => (
               <button
                 key={mode}
                 onClick={() => setViewMode(mode)}
-                className={`px-4 py-1.5 text-sm font-medium rounded-md capitalize transition-colors ${
+                className={`px-4 py-1.5 text-sm font-medium rounded-md capitalize transition-colors duration-100 ${
                   viewMode === mode
-                    ? "bg-green-500 text-white"
-                    : "text-muted-foreground hover:text-foreground"
+                    ? "bg-[#4ebe96] text-white"
+                    : "text-[#868f97] hover:text-white"
                 }`}
               >
                 {mode}
@@ -300,7 +300,7 @@ function StraddleView({
   formatVolume: (v: number) => string
 }) {
   if (!strikes || strikes.length === 0) {
-    return <div className="text-muted-foreground text-center py-8">No options data available</div>
+    return <div className="text-[#868f97] text-center py-8">No options data available</div>
   }
   const callMap = new Map((calls || []).map(c => [c.strike, c]))
   const putMap = new Map((puts || []).map(p => [p.strike, p]))
@@ -309,18 +309,18 @@ function StraddleView({
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-border">
-            <th colSpan={5} className="text-left py-2 px-2 font-semibold text-green-500">Calls</th>
+          <tr className="border-b border-white/[0.08]">
+            <th colSpan={5} className="text-left py-2 px-2 font-semibold text-[#4ebe96]">Calls</th>
             <th className="py-2 px-4 font-semibold"></th>
-            <th colSpan={5} className="text-right py-2 px-2 font-semibold text-red-500">Puts</th>
+            <th colSpan={5} className="text-right py-2 px-2 font-semibold text-[#e15241]">Puts</th>
           </tr>
-          <tr className="border-b border-border text-muted-foreground text-xs">
+          <tr className="border-b border-white/[0.08] text-[#868f97] text-xs">
             <th className="py-2 px-2 text-left">Last</th>
             <th className="py-2 px-2 text-left">Chg</th>
             <th className="py-2 px-2 text-left">%Chg</th>
             <th className="py-2 px-2 text-right">Vol</th>
             <th className="py-2 px-2 text-right">OI</th>
-            <th className="py-2 px-4 text-center font-semibold text-foreground">Strike</th>
+            <th className="py-2 px-4 text-center font-semibold text-white">Strike</th>
             <th className="py-2 px-2 text-left">Last</th>
             <th className="py-2 px-2 text-left">Chg</th>
             <th className="py-2 px-2 text-left">%Chg</th>
@@ -339,28 +339,28 @@ function StraddleView({
             return (
               <tr
                 key={strike}
-                className={`border-b border-border/50 hover:bg-secondary/30 ${
+                className={`border-b border-white/[0.08]/50 hover:bg-white/[0.05]/30 transition-colors duration-100 ${
                   isATM ? "bg-yellow-500/10" : ""
                 }`}
               >
                 {/* Calls */}
-                <td className={`py-2 px-2 ${isITMCall ? "bg-green-500/5" : ""}`}>
+                <td className={`py-2 px-2 ${isITMCall ? "bg-[#4ebe96]/5" : ""}`}>
                   {call ? formatPrice(call.lastPrice) : "-"}
                 </td>
-                <td className={`py-2 px-2 ${isITMCall ? "bg-green-500/5" : ""} ${
-                  call && call.change > 0 ? "text-green-500" : call && call.change < 0 ? "text-red-500" : ""
+                <td className={`py-2 px-2 ${isITMCall ? "bg-[#4ebe96]/5" : ""} ${
+                  call && call.change > 0 ? "text-[#4ebe96]" : call && call.change < 0 ? "text-[#e15241]" : ""
                 }`}>
                   {call ? formatChange(call.change) : "-"}
                 </td>
-                <td className={`py-2 px-2 ${isITMCall ? "bg-green-500/5" : ""} ${
-                  call && call.changePercent > 0 ? "text-green-500" : call && call.changePercent < 0 ? "text-red-500" : ""
+                <td className={`py-2 px-2 ${isITMCall ? "bg-[#4ebe96]/5" : ""} ${
+                  call && call.changePercent > 0 ? "text-[#4ebe96]" : call && call.changePercent < 0 ? "text-[#e15241]" : ""
                 }`}>
                   {call ? formatPercent(call.changePercent) : "-"}
                 </td>
-                <td className={`py-2 px-2 text-right ${isITMCall ? "bg-green-500/5" : ""}`}>
+                <td className={`py-2 px-2 text-right ${isITMCall ? "bg-[#4ebe96]/5" : ""}`}>
                   {call ? formatVolume(call.volume) : "-"}
                 </td>
-                <td className={`py-2 px-2 text-right ${isITMCall ? "bg-green-500/5" : ""}`}>
+                <td className={`py-2 px-2 text-right ${isITMCall ? "bg-[#4ebe96]/5" : ""}`}>
                   {call ? formatVolume(call.openInterest) : "-"}
                 </td>
 
@@ -370,23 +370,23 @@ function StraddleView({
                 </td>
 
                 {/* Puts */}
-                <td className={`py-2 px-2 ${isITMPut ? "bg-red-500/5" : ""}`}>
+                <td className={`py-2 px-2 ${isITMPut ? "bg-[#e15241]/5" : ""}`}>
                   {put ? formatPrice(put.lastPrice) : "-"}
                 </td>
-                <td className={`py-2 px-2 ${isITMPut ? "bg-red-500/5" : ""} ${
-                  put && put.change > 0 ? "text-green-500" : put && put.change < 0 ? "text-red-500" : ""
+                <td className={`py-2 px-2 ${isITMPut ? "bg-[#e15241]/5" : ""} ${
+                  put && put.change > 0 ? "text-[#4ebe96]" : put && put.change < 0 ? "text-[#e15241]" : ""
                 }`}>
                   {put ? formatChange(put.change) : "-"}
                 </td>
-                <td className={`py-2 px-2 ${isITMPut ? "bg-red-500/5" : ""} ${
-                  put && put.changePercent > 0 ? "text-green-500" : put && put.changePercent < 0 ? "text-red-500" : ""
+                <td className={`py-2 px-2 ${isITMPut ? "bg-[#e15241]/5" : ""} ${
+                  put && put.changePercent > 0 ? "text-[#4ebe96]" : put && put.changePercent < 0 ? "text-[#e15241]" : ""
                 }`}>
                   {put ? formatPercent(put.changePercent) : "-"}
                 </td>
-                <td className={`py-2 px-2 text-right ${isITMPut ? "bg-red-500/5" : ""}`}>
+                <td className={`py-2 px-2 text-right ${isITMPut ? "bg-[#e15241]/5" : ""}`}>
                   {put ? formatVolume(put.volume) : "-"}
                 </td>
-                <td className={`py-2 px-2 text-right ${isITMPut ? "bg-red-500/5" : ""}`}>
+                <td className={`py-2 px-2 text-right ${isITMPut ? "bg-[#e15241]/5" : ""}`}>
                   {put ? formatVolume(put.openInterest) : "-"}
                 </td>
               </tr>
@@ -420,7 +420,7 @@ function ListView({
   const safeOptions = options && Array.isArray(options) ? options : []
 
   if (safeOptions.length === 0) {
-    return <div className="text-muted-foreground text-center py-8">No options data available</div>
+    return <div className="text-[#868f97] text-center py-8">No options data available</div>
   }
   const sortedOptions = safeOptions.slice().sort((a, b) => a.strike - b.strike)
 
@@ -428,7 +428,7 @@ function ListView({
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-border text-muted-foreground text-xs">
+          <tr className="border-b border-white/[0.08] text-[#868f97] text-xs">
             <th className="py-2 px-2 text-left">Contract</th>
             <th className="py-2 px-2 text-center">Strike</th>
             <th className="py-2 px-2 text-right">Last</th>
@@ -450,8 +450,8 @@ function ListView({
             return (
               <tr
                 key={option.contractName}
-                className={`border-b border-border/50 hover:bg-secondary/30 cursor-pointer ${
-                  isATM ? "bg-yellow-500/10" : isITM ? (type === "CALL" ? "bg-green-500/5" : "bg-red-500/5") : ""
+                className={`border-b border-white/[0.08]/50 hover:bg-white/[0.05]/30 cursor-pointer transition-colors duration-100 ${
+                  isATM ? "bg-yellow-500/10" : isITM ? (type === "CALL" ? "bg-[#4ebe96]/5" : "bg-[#e15241]/5") : ""
                 }`}
               >
                 <td className="py-2 px-2 font-mono text-xs">{option.contractName}</td>
@@ -459,15 +459,15 @@ function ListView({
                   ${option.strike.toFixed(2)}
                 </td>
                 <td className="py-2 px-2 text-right">{formatPrice(option.lastPrice)}</td>
-                <td className="py-2 px-2 text-right text-muted-foreground">{formatPrice(option.bid)}</td>
-                <td className="py-2 px-2 text-right text-muted-foreground">{formatPrice(option.ask)}</td>
+                <td className="py-2 px-2 text-right text-[#868f97]">{formatPrice(option.bid)}</td>
+                <td className="py-2 px-2 text-right text-[#868f97]">{formatPrice(option.ask)}</td>
                 <td className={`py-2 px-2 text-right ${
-                  option.change > 0 ? "text-green-500" : option.change < 0 ? "text-red-500" : ""
+                  option.change > 0 ? "text-[#4ebe96]" : option.change < 0 ? "text-[#e15241]" : ""
                 }`}>
                   {formatChange(option.change)}
                 </td>
                 <td className={`py-2 px-2 text-right ${
-                  option.changePercent > 0 ? "text-green-500" : option.changePercent < 0 ? "text-red-500" : ""
+                  option.changePercent > 0 ? "text-[#4ebe96]" : option.changePercent < 0 ? "text-[#e15241]" : ""
                 }`}>
                   {formatPercent(option.changePercent)}
                 </td>

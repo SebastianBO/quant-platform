@@ -16,7 +16,10 @@
       "name": "Every 6 Hours",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
-      "position": [240, 300]
+      "position": [
+        240,
+        300
+      ]
     },
     {
       "parameters": {
@@ -44,7 +47,10 @@
       "name": "Configuration",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [460, 300]
+      "position": [
+        460,
+        300
+      ]
     },
     {
       "parameters": {
@@ -54,7 +60,10 @@
       "name": "Split Subreddits",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [680, 300]
+      "position": [
+        680,
+        300
+      ]
     },
     {
       "parameters": {
@@ -67,7 +76,10 @@
       "name": "Process Each Subreddit",
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
-      "position": [900, 300]
+      "position": [
+        900,
+        300
+      ]
     },
     {
       "parameters": {
@@ -78,7 +90,10 @@
       "name": "Rate Limit (2s)",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
-      "position": [1120, 300]
+      "position": [
+        1120,
+        300
+      ]
     },
     {
       "parameters": {
@@ -121,7 +136,10 @@
       "name": "Search Reddit",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1340, 300]
+      "position": [
+        1340,
+        300
+      ]
     },
     {
       "parameters": {
@@ -131,7 +149,10 @@
       "name": "Filter & Score Opportunities",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1560, 300]
+      "position": [
+        1560,
+        300
+      ]
     },
     {
       "parameters": {
@@ -160,7 +181,10 @@
       "name": "Filter Empty Results",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [1780, 300]
+      "position": [
+        1780,
+        300
+      ]
     },
     {
       "parameters": {
@@ -172,7 +196,10 @@
       "name": "Store in Supabase",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
-      "position": [2000, 300],
+      "position": [
+        2000,
+        300
+      ],
       "credentials": {
         "postgres": {
           "id": "POSTGRES_CREDENTIAL_ID",
@@ -190,7 +217,10 @@
       "name": "Get Top Opportunities",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.5,
-      "position": [2220, 300],
+      "position": [
+        2220,
+        300
+      ],
       "credentials": {
         "postgres": {
           "id": "POSTGRES_CREDENTIAL_ID",
@@ -225,7 +255,10 @@
       "name": "Has Opportunities?",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [2440, 300]
+      "position": [
+        2440,
+        300
+      ]
     },
     {
       "parameters": {
@@ -235,7 +268,10 @@
       "name": "Format Slack Message",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2660, 300]
+      "position": [
+        2660,
+        300
+      ]
     },
     {
       "parameters": {
@@ -264,7 +300,10 @@
       "name": "Should Send?",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [2880, 300]
+      "position": [
+        2880,
+        300
+      ]
     },
     {
       "parameters": {
@@ -285,7 +324,10 @@
       "name": "Send to Slack",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [3100, 300],
+      "position": [
+        3100,
+        300
+      ],
       "credentials": {
         "slackApi": {
           "id": "SLACK_CREDENTIAL_ID",
@@ -315,7 +357,10 @@
       "name": "Workflow Complete",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [3320, 300]
+      "position": [
+        3320,
+        300
+      ]
     },
     {
       "parameters": {},
@@ -323,7 +368,10 @@
       "name": "No Opportunities",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
-      "position": [2880, 480]
+      "position": [
+        2880,
+        480
+      ]
     }
   ],
   "connections": {
@@ -497,20 +545,6 @@
     "errorWorkflow": ""
   },
   "staticData": null,
-  "tags": [
-    {
-      "name": "marketing",
-      "id": "1"
-    },
-    {
-      "name": "reddit",
-      "id": "2"
-    },
-    {
-      "name": "lician",
-      "id": "3"
-    }
-  ],
   "triggerCount": 1,
   "updatedAt": "2026-01-16T00:00:00.000Z",
   "versionId": "1",

@@ -63,7 +63,7 @@ const quickLinks = [
 
 export default function FeaturedArticles() {
   return (
-    <section className="py-8 sm:py-12 border-t border-border">
+    <section className="py-8 sm:py-12 border-t border-white/[0.08]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Featured Articles */}
         <div className="mb-8 sm:mb-12">
@@ -75,20 +75,20 @@ export default function FeaturedArticles() {
                 <Link
                   key={article.href}
                   href={article.href}
-                  className="group p-4 sm:p-5 bg-card hover:bg-secondary/50 rounded-xl border border-border transition-all duration-200 hover:border-green-500/30 min-h-[44px] flex items-start"
+                  className="group p-4 sm:p-5 bg-[#1a1a1a] hover:bg-white/[0.08] rounded-xl border border-white/[0.08] transition-colors duration-100 hover:border-[#4ebe96]/30 min-h-[44px] flex items-start"
                 >
                   <div className="flex items-start gap-3 sm:gap-4 w-full">
-                    <div className={`p-2 sm:p-2.5 rounded-lg bg-${article.color}-500/10 group-hover:bg-${article.color}-500/20 transition-colors flex-shrink-0`}>
+                    <div className={`p-2 sm:p-2.5 rounded-lg bg-${article.color}-500/10 group-hover:bg-${article.color}-500/20 transition-colors duration-100 flex-shrink-0`}>
                       <Icon className={`w-4 h-4 sm:w-5 sm:h-5 text-${article.color}-500`} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <span className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide block mb-1">
+                      <span className="text-[10px] sm:text-xs font-medium text-[#868f97] uppercase tracking-wide block mb-1">
                         {article.category}
                       </span>
-                      <h3 className="font-semibold text-sm sm:text-base group-hover:text-green-500 transition-colors mb-1">
+                      <h3 className="font-semibold text-sm sm:text-base group-hover:text-[#4ebe96] transition-colors duration-100 mb-1">
                         {article.title}
                       </h3>
-                      <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">
+                      <p className="text-xs sm:text-sm text-[#868f97] line-clamp-2">
                         {article.description}
                       </p>
                     </div>
@@ -109,7 +109,7 @@ export default function FeaturedArticles() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="inline-flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-xs sm:text-sm font-medium transition-colors hover:text-green-500 min-h-[44px]"
+                  className="inline-flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-2 bg-white/[0.05] hover:bg-white/[0.08] rounded-lg text-xs sm:text-sm font-medium transition-colors duration-100 hover:text-[#4ebe96] min-h-[44px]"
                 >
                   <Icon className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                   <span>{link.label}</span>

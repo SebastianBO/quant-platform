@@ -41,7 +41,7 @@ export function MobileTabBar({ className }: MobileTabBarProps) {
     <nav
       className={cn(
         "fixed bottom-0 left-0 right-0 z-50 md:hidden",
-        "bg-background/80 backdrop-blur-xl border-t border-border",
+        "bg-background/80 backdrop-blur-xl border-t border-white/[0.08]",
         "safe-area-bottom",
         className
       )}
@@ -61,7 +61,7 @@ export function MobileTabBar({ className }: MobileTabBarProps) {
               {isActive && (
                 <motion.div
                   layoutId="activeTab"
-                  className="absolute inset-0 bg-green-500/10 rounded-xl"
+                  className="absolute inset-0 bg-[#4ebe96]/10 rounded-xl"
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 />
               )}
@@ -75,16 +75,16 @@ export function MobileTabBar({ className }: MobileTabBarProps) {
               >
                 <Icon
                   className={cn(
-                    "w-5 h-5 transition-colors",
-                    isActive ? "text-green-500" : "text-muted-foreground"
+                    "w-5 h-5 transition-colors duration-100",
+                    isActive ? "text-[#4ebe96]" : "text-[#868f97]"
                   )}
                 />
               </motion.div>
 
               <span
                 className={cn(
-                  "text-[10px] font-medium transition-colors",
-                  isActive ? "text-green-500" : "text-muted-foreground"
+                  "text-[10px] font-medium transition-colors duration-100",
+                  isActive ? "text-[#4ebe96]" : "text-[#868f97]"
                 )}
               >
                 {tab.label}
@@ -95,7 +95,7 @@ export function MobileTabBar({ className }: MobileTabBarProps) {
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="absolute -top-0.5 w-1 h-1 bg-green-500 rounded-full"
+                  className="absolute -top-0.5 w-1 h-1 bg-[#4ebe96] rounded-full"
                 />
               )}
             </Link>

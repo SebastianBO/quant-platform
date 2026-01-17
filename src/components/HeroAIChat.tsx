@@ -79,7 +79,7 @@ function ToolArgsDisplay({ args }: { args: Record<string, unknown> }) {
   const type = args.type as string | undefined
 
   return (
-    <div className="text-xs text-muted-foreground mt-1">
+    <div className="text-xs text-[#868f97] mt-1">
       {ticker && <span>Looking up {ticker.toUpperCase()}</span>}
       {query && <span>Searching: {query}</span>}
       {ticker1 && ticker2 && (
@@ -96,19 +96,19 @@ function ToolInvocationCard({ toolName, args, state, result }: ToolInvocationPro
   const displayName = TOOL_NAMES[toolName] || toolName
 
   return (
-    <div className="bg-secondary/50 rounded-lg p-3 my-2 text-sm">
+    <div className="bg-white/[0.025] rounded-lg p-3 my-2 text-sm">
       <div
         className="flex items-center justify-between cursor-pointer"
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center gap-2">
-          <Icon className="w-4 h-4 text-green-500" />
+          <Icon className="w-4 h-4 text-[#4ebe96]" />
           <span className="font-medium">{displayName}</span>
           {state === 'call' && (
             <Loader2 className="w-3 h-3 animate-spin text-yellow-500" />
           )}
           {state === 'result' && (
-            <span className="text-xs text-green-500">Done</span>
+            <span className="text-xs text-[#4ebe96]">Done</span>
           )}
         </div>
         {result !== undefined && (
@@ -175,40 +175,40 @@ export default function HeroAIChat() {
   }, [messages])
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-background via-background to-secondary/20">
+    <section className="relative overflow-hidden bg-gradient-to-b from-background via-background to-white/[0.01]">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-green-500/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl" />
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#4ebe96]/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#479ffa]/10 rounded-full blur-3xl" />
       </div>
 
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-20">
         {/* Hero Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-full mb-6">
-            <Sparkles className="w-4 h-4 text-green-500" />
-            <span className="text-sm font-medium text-green-500">AI-Powered Financial Analysis</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#4ebe96]/10 border border-[#4ebe96]/20 rounded-full mb-6">
+            <Sparkles className="w-4 h-4 text-[#4ebe96]" />
+            <span className="text-sm font-medium text-[#4ebe96]">AI-Powered Financial Analysis</span>
           </div>
           <h1 className="text-3xl md:text-5xl font-bold mb-4">
             Ask AI About Any Stock
           </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg text-[#868f97] max-w-2xl mx-auto">
             Get instant insights with real data from our database. Analyze fundamentals, track insiders, compare stocks, and more.
           </p>
         </div>
 
         {/* Chat Interface */}
         <div className="max-w-3xl mx-auto">
-          <div className="bg-card border border-border rounded-2xl shadow-2xl overflow-hidden">
+          <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-2xl shadow-2xl overflow-hidden">
             {/* Chat Header */}
-            <div className="bg-gradient-to-r from-green-600 to-green-500 px-6 py-4">
+            <div className="bg-gradient-to-r from-[#4ebe96] to-[#4ebe96] px-6 py-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-                  <Bot className="w-5 h-5 text-white" />
+                  <Bot className="w-5 h-5 text-black" />
                 </div>
                 <div>
-                  <h2 className="font-semibold text-white">Lician AI Assistant</h2>
-                  <p className="text-sm text-white/80">Real-time data • 18 financial tools</p>
+                  <h2 className="font-semibold text-black">Lician AI Assistant</h2>
+                  <p className="text-sm text-black/80">Real-time data • 18 financial tools</p>
                 </div>
               </div>
             </div>
@@ -226,15 +226,15 @@ export default function HeroAIChat() {
                   }`}
                 >
                   {message.role === "assistant" && (
-                    <div className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center flex-shrink-0">
-                      <Bot className="w-4 h-4 text-white" />
+                    <div className="w-8 h-8 rounded-full bg-[#4ebe96] flex items-center justify-center flex-shrink-0">
+                      <Bot className="w-4 h-4 text-black" />
                     </div>
                   )}
                   <div
                     className={`rounded-2xl px-4 py-3 max-w-[85%] ${
                       message.role === "user"
-                        ? "bg-green-600 text-white"
-                        : "bg-secondary"
+                        ? "bg-[#4ebe96] text-black"
+                        : "bg-white/[0.05]"
                     }`}
                   >
                     {/* Show tool invocations */}
@@ -258,7 +258,7 @@ export default function HeroAIChat() {
                     )}
                   </div>
                   {message.role === "user" && (
-                    <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-white/[0.05] flex items-center justify-center flex-shrink-0">
                       <User className="w-4 h-4" />
                     </div>
                   )}
@@ -267,26 +267,26 @@ export default function HeroAIChat() {
 
               {isLoading && (
                 <div className="flex gap-3 justify-start">
-                  <div className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center flex-shrink-0">
-                    <Bot className="w-4 h-4 text-white" />
+                  <div className="w-8 h-8 rounded-full bg-[#4ebe96] flex items-center justify-center flex-shrink-0">
+                    <Bot className="w-4 h-4 text-black" />
                   </div>
-                  <div className="bg-secondary rounded-2xl px-4 py-3">
+                  <div className="bg-white/[0.05] rounded-2xl px-4 py-3">
                     <div className="flex items-center gap-2">
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      <span className="text-sm text-muted-foreground">Analyzing...</span>
+                      <span className="text-sm text-[#868f97]">Analyzing...</span>
                     </div>
                   </div>
                 </div>
               )}
 
               {error && (
-                <div className="text-center py-4 px-4 bg-secondary/50 rounded-xl mx-4">
-                  <p className="text-sm text-muted-foreground mb-2">
+                <div className="text-center py-4 px-4 bg-white/[0.025] rounded-xl mx-4">
+                  <p className="text-sm text-[#868f97] mb-2">
                     {error.message?.includes('429') || error.message?.includes('Rate limit')
                       ? "You've used your free questions for this hour!"
                       : "Something went wrong. Please try again."}
                   </p>
-                  <Link href="/api/stripe/quick-checkout?plan=annual" prefetch={false} className="inline-flex items-center gap-2 text-sm text-green-500 hover:underline font-medium">
+                  <Link href="/api/stripe/quick-checkout?plan=annual" prefetch={false} className="inline-flex items-center gap-2 text-sm text-[#4ebe96] hover:underline font-medium">
                     <Sparkles className="w-4 h-4" />
                     Upgrade to Premium for unlimited AI access
                   </Link>
@@ -295,19 +295,19 @@ export default function HeroAIChat() {
             </div>
 
             {/* Input */}
-            <div className="border-t border-border p-4 md:p-6 bg-secondary/30">
+            <div className="border-t border-white/[0.08] p-4 md:p-6 bg-white/[0.015]">
               <form onSubmit={handleSubmit} className="flex gap-3">
                 <Input
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder="Ask about any stock, insider trading, fundamentals..."
-                  className="flex-1 bg-background border-border h-12 text-base"
+                  className="flex-1 bg-background border-white/[0.08] h-12 text-base"
                   disabled={isLoading}
                 />
                 <Button
                   type="submit"
                   disabled={isLoading || !inputValue.trim()}
-                  className="bg-green-600 hover:bg-green-500 h-12 px-6"
+                  className="bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black h-12 px-6"
                 >
                   <Send className="h-5 w-5" />
                 </Button>
@@ -317,14 +317,14 @@ export default function HeroAIChat() {
 
           {/* Example Prompts */}
           <div className="mt-6">
-            <p className="text-sm text-muted-foreground text-center mb-3">Try asking:</p>
+            <p className="text-sm text-[#868f97] text-center mb-3">Try asking:</p>
             <div className="flex flex-wrap justify-center gap-2">
               {EXAMPLE_PROMPTS.slice(0, 3).map((prompt) => (
                 <button
                   key={prompt}
                   onClick={() => handleExampleClick(prompt)}
                   disabled={isLoading}
-                  className="px-4 py-2 bg-secondary hover:bg-secondary/80 rounded-full text-sm transition-colors disabled:opacity-50"
+                  className="px-4 py-2 bg-white/[0.05] hover:bg-white/[0.08] rounded-full text-sm transition-colors duration-100 disabled:opacity-50"
                 >
                   {prompt}
                 </button>
@@ -335,31 +335,31 @@ export default function HeroAIChat() {
 
         {/* Quick Links */}
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
-          <Link href="/screener" className="group flex items-center gap-3 p-4 bg-card border border-border rounded-xl hover:border-green-500/50 transition-colors">
-            <div className="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center group-hover:bg-green-500/20 transition-colors">
-              <BarChart3 className="w-5 h-5 text-green-500" />
+          <Link href="/screener" className="group flex items-center gap-3 p-4 bg-[#1a1a1a] border border-white/[0.08] rounded-xl hover:border-[#4ebe96]/50 transition-colors duration-100">
+            <div className="w-10 h-10 bg-[#4ebe96]/10 rounded-lg flex items-center justify-center group-hover:bg-[#4ebe96]/20 transition-colors duration-100">
+              <BarChart3 className="w-5 h-5 text-[#4ebe96]" />
             </div>
             <div>
               <p className="font-medium">Stock Screener</p>
-              <p className="text-sm text-muted-foreground">Filter by metrics</p>
+              <p className="text-sm text-[#868f97]">Filter by metrics</p>
             </div>
           </Link>
-          <Link href="/markets" className="group flex items-center gap-3 p-4 bg-card border border-border rounded-xl hover:border-green-500/50 transition-colors">
-            <div className="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
-              <TrendingUp className="w-5 h-5 text-blue-500" />
+          <Link href="/markets" className="group flex items-center gap-3 p-4 bg-[#1a1a1a] border border-white/[0.08] rounded-xl hover:border-[#4ebe96]/50 transition-colors duration-100">
+            <div className="w-10 h-10 bg-[#479ffa]/10 rounded-lg flex items-center justify-center group-hover:bg-[#479ffa]/20 transition-colors duration-100">
+              <TrendingUp className="w-5 h-5 text-[#479ffa]" />
             </div>
             <div>
               <p className="font-medium">Market Pulse</p>
-              <p className="text-sm text-muted-foreground">Real-time data</p>
+              <p className="text-sm text-[#868f97]">Real-time data</p>
             </div>
           </Link>
-          <Link href="/portfolio" className="group flex items-center gap-3 p-4 bg-card border border-border rounded-xl hover:border-green-500/50 transition-colors">
-            <div className="w-10 h-10 bg-purple-500/10 rounded-lg flex items-center justify-center group-hover:bg-purple-500/20 transition-colors">
+          <Link href="/portfolio" className="group flex items-center gap-3 p-4 bg-[#1a1a1a] border border-white/[0.08] rounded-xl hover:border-[#4ebe96]/50 transition-colors duration-100">
+            <div className="w-10 h-10 bg-purple-500/10 rounded-lg flex items-center justify-center group-hover:bg-purple-500/20 transition-colors duration-100">
               <PieChart className="w-5 h-5 text-purple-500" />
             </div>
             <div>
               <p className="font-medium">Portfolio Tracker</p>
-              <p className="text-sm text-muted-foreground">Track investments</p>
+              <p className="text-sm text-[#868f97]">Track investments</p>
             </div>
           </Link>
         </div>

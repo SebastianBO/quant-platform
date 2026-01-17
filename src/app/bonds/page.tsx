@@ -191,12 +191,12 @@ export default async function BondsPage() {
             </div>
             <div className="flex-1 min-w-0">
           {/* Breadcrumbs */}
-          <nav className="text-sm text-muted-foreground mb-4 sm:mb-6" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-foreground transition-colors">
+          <nav className="text-sm text-[#868f97] mb-4 sm:mb-6" aria-label="Breadcrumb">
+            <Link href="/" className="hover:text-white transition-colors duration-100">
               Home
             </Link>
             {' / '}
-            <span className="text-foreground">Bonds & Treasury Yields</span>
+            <span className="text-white">Bonds & Treasury Yields</span>
           </nav>
 
           {/* Hero Section */}
@@ -204,7 +204,7 @@ export default async function BondsPage() {
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">
               US Treasury Yields & Bond Rates
             </h1>
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl">
+            <p className="text-base sm:text-lg md:text-xl text-[#868f97] max-w-3xl">
               Live treasury bond yields and interest rates. Track the 10 year treasury rate,
               yield curve, and all US government bond rates updated daily.
             </p>
@@ -227,20 +227,20 @@ export default async function BondsPage() {
               ].map((item, idx) => (
                 <div
                   key={idx}
-                  className="bg-card p-4 sm:p-6 rounded-xl border border-border"
+                  className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]"
                 >
-                  <div className="text-xs sm:text-sm text-muted-foreground mb-2">
+                  <div className="text-xs sm:text-sm text-[#868f97] mb-2">
                     {item.label}
                   </div>
-                  <div className="text-2xl sm:text-3xl font-bold text-green-500">
+                  <div className="text-2xl sm:text-3xl font-bold text-[#4ebe96]">
                     {item.data?.yield?.toFixed(2)}%
                   </div>
                   {idx === 3 && (
                     <div
                       className={`text-xs mt-2 font-medium ${
                         treasuryData.inverted
-                          ? 'text-red-500'
-                          : 'text-green-500'
+                          ? 'text-[#e15241]'
+                          : 'text-[#4ebe96]'
                       }`}
                     >
                       {item.data?.name}
@@ -256,7 +256,7 @@ export default async function BondsPage() {
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
               Current Treasury Yield Curve
             </h2>
-            <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+            <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
               {/* Yield Curve Visualization */}
               <div className="mb-6">
                 <div className="relative h-48 sm:h-64 flex items-end justify-around gap-1 sm:gap-2">
@@ -268,11 +268,11 @@ export default async function BondsPage() {
                         key={idx}
                         className="flex flex-col items-center flex-1"
                       >
-                        <div className="text-xs text-muted-foreground mb-2">
+                        <div className="text-xs text-[#868f97] mb-2">
                           {item.yield.toFixed(2)}%
                         </div>
                         <div
-                          className="w-full bg-gradient-to-t from-green-600 to-green-400 rounded-t-lg transition-all hover:from-green-500 hover:to-green-300"
+                          className="w-full bg-gradient-to-t from-[#4ebe96] to-[#4ebe96]/70 rounded-t-lg transition-all hover:from-[#4ebe96]/90 hover:to-[#4ebe96]/60"
                           style={{ height: `${Math.max(heightPercent, 10)}%` }}
                         />
                         <div className="text-xs font-medium mt-2">
@@ -292,7 +292,7 @@ export default async function BondsPage() {
                     className="flex justify-between items-center p-3 bg-background rounded-lg"
                   >
                     <span className="font-medium text-sm">{item.name}</span>
-                    <span className="text-green-500 font-bold text-sm">
+                    <span className="text-[#4ebe96] font-bold text-sm">
                       {item.yield.toFixed(2)}%
                     </span>
                   </div>
@@ -300,14 +300,14 @@ export default async function BondsPage() {
               </div>
 
               {treasuryData.inverted && (
-                <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
+                <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-[#e15241]/10 border border-[#e15241]/20 rounded-lg">
                   <div className="flex items-start gap-3">
                     <span className="text-xl sm:text-2xl">⚠️</span>
                     <div>
-                      <h3 className="font-bold text-red-500 mb-1 text-sm sm:text-base">
+                      <h3 className="font-bold text-[#e15241] mb-1 text-sm sm:text-base">
                         Inverted Yield Curve
                       </h3>
-                      <p className="text-xs sm:text-sm text-muted-foreground">
+                      <p className="text-xs sm:text-sm text-[#868f97]">
                         The yield curve is currently inverted (short-term rates
                         exceed long-term rates). Historically, this has been a
                         reliable predictor of economic recessions within 12-24
@@ -326,18 +326,18 @@ export default async function BondsPage() {
               Understanding US Treasury Bonds
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
-                <h3 className="text-lg sm:text-xl font-bold mb-3 text-green-500">
+              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+                <h3 className="text-lg sm:text-xl font-bold mb-3 text-[#4ebe96]">
                   What Are Treasury Yields?
                 </h3>
-                <p className="text-sm sm:text-base text-muted-foreground mb-4">
+                <p className="text-sm sm:text-base text-[#868f97] mb-4">
                   Treasury yields are the interest rates paid on US government
                   debt securities. They represent the return investors receive
                   for lending money to the federal government. Yields move
                   inversely to bond prices and reflect market expectations for
                   inflation, economic growth, and Federal Reserve policy.
                 </p>
-                <ul className="list-disc list-inside text-sm sm:text-base text-muted-foreground space-y-2">
+                <ul className="list-disc list-inside text-sm sm:text-base text-[#868f97] space-y-2">
                   <li>Risk-free benchmark rates</li>
                   <li>Backed by US government</li>
                   <li>Inversely related to bond prices</li>
@@ -345,8 +345,8 @@ export default async function BondsPage() {
                 </ul>
               </div>
 
-              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
-                <h3 className="text-lg sm:text-xl font-bold mb-3 text-green-500">
+              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+                <h3 className="text-lg sm:text-xl font-bold mb-3 text-[#4ebe96]">
                   Types of Treasury Securities
                 </h3>
                 <div className="space-y-3">
@@ -354,7 +354,7 @@ export default async function BondsPage() {
                     <h4 className="font-bold text-xs sm:text-sm mb-1">
                       Treasury Bills (T-Bills)
                     </h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground">
+                    <p className="text-xs sm:text-sm text-[#868f97]">
                       Mature in 1 year or less. Sold at discount to face value.
                     </p>
                   </div>
@@ -362,7 +362,7 @@ export default async function BondsPage() {
                     <h4 className="font-bold text-xs sm:text-sm mb-1">
                       Treasury Notes (T-Notes)
                     </h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground">
+                    <p className="text-xs sm:text-sm text-[#868f97]">
                       Mature in 2-10 years. Pay interest every 6 months.
                     </p>
                   </div>
@@ -370,7 +370,7 @@ export default async function BondsPage() {
                     <h4 className="font-bold text-xs sm:text-sm mb-1">
                       Treasury Bonds (T-Bonds)
                     </h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground">
+                    <p className="text-xs sm:text-sm text-[#868f97]">
                       Mature in 20-30 years. Highest long-term yields.
                     </p>
                   </div>
@@ -385,60 +385,60 @@ export default async function BondsPage() {
               Why Treasury Yields Matter for Investors
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
                 <div className="text-2xl sm:text-3xl mb-3">📈</div>
                 <h3 className="text-base sm:text-lg font-bold mb-2">Stock Valuations</h3>
-                <p className="text-xs sm:text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-[#868f97]">
                   Rising treasury yields increase the discount rate used to
                   value stocks, often pressuring equity valuations. Growth
                   stocks are especially sensitive to yield changes.
                 </p>
               </div>
 
-              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
                 <div className="text-2xl sm:text-3xl mb-3">🏠</div>
                 <h3 className="text-base sm:text-lg font-bold mb-2">Mortgage Rates</h3>
-                <p className="text-xs sm:text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-[#868f97]">
                   The 10-year treasury rate is the primary benchmark for
                   30-year mortgage rates. When the 10-year yield rises, home
                   borrowing costs increase.
                 </p>
               </div>
 
-              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
                 <div className="text-2xl sm:text-3xl mb-3">💼</div>
                 <h3 className="text-base sm:text-lg font-bold mb-2">Corporate Bonds</h3>
-                <p className="text-xs sm:text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-[#868f97]">
                   Corporate bond yields are priced relative to treasuries.
                   Rising treasury yields force companies to pay higher interest
                   on new debt issuance.
                 </p>
               </div>
 
-              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
                 <div className="text-2xl sm:text-3xl mb-3">🌍</div>
                 <h3 className="text-base sm:text-lg font-bold mb-2">Dollar Strength</h3>
-                <p className="text-xs sm:text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-[#868f97]">
                   Higher US treasury yields attract foreign investment, often
                   strengthening the dollar. This impacts international trade
                   and corporate earnings.
                 </p>
               </div>
 
-              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
                 <div className="text-2xl sm:text-3xl mb-3">📊</div>
                 <h3 className="text-base sm:text-lg font-bold mb-2">Economic Indicator</h3>
-                <p className="text-xs sm:text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-[#868f97]">
                   The yield curve shape predicts economic conditions. An
                   inverted curve (short rates above long rates) often precedes
                   recessions.
                 </p>
               </div>
 
-              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
                 <div className="text-2xl sm:text-3xl mb-3">💰</div>
                 <h3 className="text-base sm:text-lg font-bold mb-2">Alternative to Stocks</h3>
-                <p className="text-xs sm:text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-[#868f97]">
                   When treasury yields are high, bonds become more attractive
                   relative to stocks, potentially pulling investment away from
                   equities.
@@ -448,19 +448,19 @@ export default async function BondsPage() {
           </section>
 
           {/* How to Interpret the Yield Curve */}
-          <section className="mb-8 sm:mb-12 bg-card p-4 sm:p-6 lg:p-8 rounded-xl border border-border">
+          <section className="mb-8 sm:mb-12 bg-[#1a1a1a] p-4 sm:p-6 lg:p-8 rounded-xl border border-white/[0.08]">
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
               How to Interpret the Yield Curve
             </h2>
             <div className="space-y-4 sm:space-y-6">
               <div>
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-green-600 flex items-center justify-center text-white font-bold text-lg sm:text-xl">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#4ebe96] flex items-center justify-center text-white font-bold text-lg sm:text-xl">
                     ↗
                   </div>
                   <h3 className="text-base sm:text-xl font-bold">Normal Yield Curve</h3>
                 </div>
-                <p className="text-sm sm:text-base text-muted-foreground ml-0 sm:ml-15">
+                <p className="text-sm sm:text-base text-[#868f97] ml-0 sm:ml-15">
                   Long-term rates exceed short-term rates (slopes upward).
                   Indicates healthy economic expectations with moderate growth
                   and inflation. Investors demand higher compensation for
@@ -476,7 +476,7 @@ export default async function BondsPage() {
                   </div>
                   <h3 className="text-base sm:text-xl font-bold">Flat Yield Curve</h3>
                 </div>
-                <p className="text-sm sm:text-base text-muted-foreground ml-0 sm:ml-15">
+                <p className="text-sm sm:text-base text-[#868f97] ml-0 sm:ml-15">
                   Short and long-term rates are similar (flat line). Often
                   occurs during transition periods when the Fed is hiking rates
                   but long-term growth concerns persist. Can signal economic
@@ -487,12 +487,12 @@ export default async function BondsPage() {
 
               <div>
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-red-600 flex items-center justify-center text-white font-bold text-lg sm:text-xl">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#e15241] flex items-center justify-center text-white font-bold text-lg sm:text-xl">
                     ↘
                   </div>
                   <h3 className="text-base sm:text-xl font-bold">Inverted Yield Curve</h3>
                 </div>
-                <p className="text-sm sm:text-base text-muted-foreground ml-0 sm:ml-15">
+                <p className="text-sm sm:text-base text-[#868f97] ml-0 sm:ml-15">
                   Short-term rates exceed long-term rates (slopes downward).
                   Has predicted every US recession since 1950. Suggests
                   investors expect the Federal Reserve to cut rates due to
@@ -509,40 +509,40 @@ export default async function BondsPage() {
               Bond Investment Strategies
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
                 <div className="text-2xl sm:text-3xl mb-3">🎯</div>
                 <h3 className="text-base sm:text-lg font-bold mb-2">Buy and Hold</h3>
-                <p className="text-xs sm:text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-[#868f97]">
                   Purchase treasuries and hold until maturity. Provides
                   predictable income and return of principal. Best for capital
                   preservation and income generation.
                 </p>
               </div>
 
-              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
                 <div className="text-2xl sm:text-3xl mb-3">⏰</div>
                 <h3 className="text-base sm:text-lg font-bold mb-2">Laddering</h3>
-                <p className="text-xs sm:text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-[#868f97]">
                   Buy bonds with staggered maturities (e.g., 1, 3, 5, 10 years).
                   Provides liquidity as bonds mature regularly while capturing
                   different interest rates.
                 </p>
               </div>
 
-              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
                 <div className="text-2xl sm:text-3xl mb-3">📊</div>
                 <h3 className="text-base sm:text-lg font-bold mb-2">Duration Targeting</h3>
-                <p className="text-xs sm:text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-[#868f97]">
                   Match bond duration to investment time horizon. Longer
                   duration = higher interest rate risk but higher yields.
                   Shorter duration = lower risk, lower returns.
                 </p>
               </div>
 
-              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
                 <div className="text-2xl sm:text-3xl mb-3">🔄</div>
                 <h3 className="text-base sm:text-lg font-bold mb-2">Bond ETFs</h3>
-                <p className="text-xs sm:text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-[#868f97]">
                   Invest in treasury ETFs for instant diversification and
                   liquidity. Popular options: SHY (1-3 year), IEF (7-10 year),
                   TLT (20+ year).
@@ -560,15 +560,15 @@ export default async function BondsPage() {
               {bondFAQs.map((faq, index) => (
                 <details
                   key={index}
-                  className="bg-card p-4 sm:p-6 rounded-xl border border-border group"
+                  className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08] group"
                 >
                   <summary className="text-base sm:text-lg font-bold cursor-pointer list-none flex items-center justify-between gap-4">
                     <span className="flex-1">{faq.question}</span>
-                    <span className="text-green-500 group-open:rotate-180 transition-transform flex-shrink-0">
+                    <span className="text-[#4ebe96] group-open:rotate-180 transition-transform duration-100 flex-shrink-0">
                       ▼
                     </span>
                   </summary>
-                  <p className="text-sm sm:text-base text-muted-foreground mt-3 sm:mt-4 leading-relaxed">
+                  <p className="text-sm sm:text-base text-[#868f97] mt-3 sm:mt-4 leading-relaxed">
                     {faq.answer}
                   </p>
                 </details>
@@ -584,52 +584,52 @@ export default async function BondsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               <Link
                 href="/markets"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-[#1a1a1a] p-4 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all duration-100 group"
               >
                 <div className="text-xl sm:text-2xl mb-2">📊</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors text-sm sm:text-base">
+                <h3 className="font-bold group-hover:text-[#4ebe96] transition-colors duration-100 text-sm sm:text-base">
                   Market Movers
                 </h3>
-                <p className="text-xs sm:text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-[#868f97]">
                   Top gainers and losers
                 </p>
               </Link>
 
               <Link
                 href="/sectors"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-[#1a1a1a] p-4 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all duration-100 group"
               >
                 <div className="text-xl sm:text-2xl mb-2">🏢</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors text-sm sm:text-base">
+                <h3 className="font-bold group-hover:text-[#4ebe96] transition-colors duration-100 text-sm sm:text-base">
                   Sectors
                 </h3>
-                <p className="text-xs sm:text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-[#868f97]">
                   Browse by industry
                 </p>
               </Link>
 
               <Link
                 href="/earnings"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-[#1a1a1a] p-4 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all duration-100 group"
               >
                 <div className="text-xl sm:text-2xl mb-2">📅</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors text-sm sm:text-base">
+                <h3 className="font-bold group-hover:text-[#4ebe96] transition-colors duration-100 text-sm sm:text-base">
                   Earnings Calendar
                 </h3>
-                <p className="text-xs sm:text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-[#868f97]">
                   Upcoming earnings
                 </p>
               </Link>
 
               <Link
                 href="/dashboard"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-[#1a1a1a] p-4 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all duration-100 group"
               >
                 <div className="text-xl sm:text-2xl mb-2">🔍</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors text-sm sm:text-base">
+                <h3 className="font-bold group-hover:text-[#4ebe96] transition-colors duration-100 text-sm sm:text-base">
                   Stock Analysis
                 </h3>
-                <p className="text-xs sm:text-sm text-muted-foreground">
+                <p className="text-xs sm:text-sm text-[#868f97]">
                   AI-powered research
                 </p>
               </Link>
@@ -637,7 +637,7 @@ export default async function BondsPage() {
           </section>
 
           {/* CTA Section */}
-          <section className="bg-gradient-to-r from-green-600 to-emerald-600 p-6 sm:p-8 lg:p-12 rounded-xl text-white text-center">
+          <section className="bg-gradient-to-r from-[#4ebe96] to-[#4ebe96]/80 p-6 sm:p-8 lg:p-12 rounded-xl text-white text-center">
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4">
               Analyze Stocks with AI-Powered Research
             </h2>
@@ -648,7 +648,7 @@ export default async function BondsPage() {
             </p>
             <Link
               href="/dashboard"
-              className="inline-block w-full sm:w-auto bg-white text-green-600 hover:bg-gray-100 px-6 sm:px-8 py-3 rounded-lg font-bold transition-colors"
+              className="inline-block w-full sm:w-auto bg-white text-[#4ebe96] hover:bg-gray-100 px-6 sm:px-8 py-3 rounded-lg font-bold transition-colors duration-100"
             >
               Start Analyzing Stocks Free
             </Link>

@@ -71,17 +71,17 @@ export default function EnhancedMarketMovers() {
 
   if (loading) {
     return (
-      <div className="border-b border-border bg-card/50">
+      <div className="border-b border-white/[0.08] bg-[#1a1a1a]/50">
         <div className="max-w-7xl mx-auto px-4 py-3">
           <div className="flex items-center gap-4">
             <div className="flex gap-2">
               {[1, 2, 3].map(i => (
-                <div key={i} className="h-8 w-24 bg-secondary/50 rounded-lg animate-pulse" />
+                <div key={i} className="h-8 w-24 bg-white/[0.025] rounded-lg animate-pulse" />
               ))}
             </div>
             <div className="flex-1 flex gap-3 overflow-hidden">
               {[1, 2, 3, 4, 5, 6].map(i => (
-                <div key={i} className="h-16 w-40 bg-secondary/30 rounded-xl animate-pulse flex-shrink-0" />
+                <div key={i} className="h-16 w-40 bg-white/[0.015] rounded-xl animate-pulse flex-shrink-0" />
               ))}
             </div>
           </div>
@@ -95,7 +95,7 @@ export default function EnhancedMarketMovers() {
   const Icon = config.icon
 
   return (
-    <div className="border-b border-border bg-card/50">
+    <div className="border-b border-white/[0.08] bg-[#1a1a1a]/50">
       <div className="max-w-7xl mx-auto px-4 py-3">
         <div className="flex items-center gap-4">
           {/* Mode Switcher */}
@@ -107,18 +107,18 @@ export default function EnhancedMarketMovers() {
                   key={mode}
                   onClick={() => setViewMode(mode as ViewMode)}
                   className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
+                    "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-100",
                     viewMode === mode
                       ? `bg-${conf.color}-500/20 text-${conf.color}-500`
-                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                      : "text-[#868f97] hover:text-white hover:bg-white/[0.025]"
                   )}
                   style={viewMode === mode ? {
-                    backgroundColor: conf.color === 'green' ? 'rgb(34 197 94 / 0.2)' :
-                                    conf.color === 'red' ? 'rgb(239 68 68 / 0.2)' :
-                                    'rgb(59 130 246 / 0.2)',
-                    color: conf.color === 'green' ? 'rgb(34 197 94)' :
-                           conf.color === 'red' ? 'rgb(239 68 68)' :
-                           'rgb(59 130 246)'
+                    backgroundColor: conf.color === 'green' ? '#4ebe9633' :
+                                    conf.color === 'red' ? '#e1524133' :
+                                    '#479ffa33',
+                    color: conf.color === 'green' ? '#4ebe96' :
+                           conf.color === 'red' ? '#e15241' :
+                           '#479ffa'
                   } : undefined}
                 >
                   <ModeIcon className="w-3.5 h-3.5" />
@@ -144,7 +144,7 @@ export default function EnhancedMarketMovers() {
           {/* See All Link */}
           <Link
             href={config.link}
-            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
+            className="flex items-center gap-1 text-xs text-[#868f97] hover:text-white transition-colors duration-100 flex-shrink-0"
           >
             <span className="hidden sm:inline">See all</span>
             <ChevronRight className="w-4 h-4" />
@@ -170,11 +170,11 @@ function MoverCard({
     <Link
       href={`/${mover.symbol}`}
       className={cn(
-        "flex-shrink-0 flex items-center gap-3 px-3 py-2 rounded-xl transition-all hover:scale-[1.02]",
+        "flex-shrink-0 flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-100 hover:scale-[1.02]",
         "border border-transparent",
-        isGainer && "bg-green-500/5 hover:bg-green-500/10 hover:border-green-500/30",
-        isLoser && "bg-red-500/5 hover:bg-red-500/10 hover:border-red-500/30",
-        !isGainer && !isLoser && "bg-secondary/30 hover:bg-secondary/50"
+        isGainer && "bg-[#4ebe96]/5 hover:bg-[#4ebe96]/10 hover:border-[#4ebe96]/30",
+        isLoser && "bg-[#e15241]/5 hover:bg-[#e15241]/10 hover:border-[#e15241]/30",
+        !isGainer && !isLoser && "bg-white/[0.015] hover:bg-white/[0.025]"
       )}
     >
       {/* Logo */}
@@ -183,7 +183,7 @@ function MoverCard({
       {/* Symbol & Name */}
       <div className="min-w-0">
         <p className="font-semibold text-sm">{mover.symbol}</p>
-        <p className="text-[10px] text-muted-foreground truncate max-w-[70px]">
+        <p className="text-[10px] text-[#868f97] truncate max-w-[70px]">
           {mover.name}
         </p>
       </div>
@@ -195,7 +195,7 @@ function MoverCard({
         </p>
         <p className={cn(
           "text-xs font-semibold tabular-nums flex items-center justify-end gap-0.5",
-          isPositive ? "text-green-500" : "text-red-500"
+          isPositive ? "text-[#4ebe96]" : "text-[#e15241]"
         )}>
           {isPositive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
           {isPositive ? '+' : ''}{typeof mover.changePercent === 'number' ? mover.changePercent.toFixed(2) : '0.00'}%

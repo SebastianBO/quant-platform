@@ -16,7 +16,10 @@
       "name": "Weekly Monday 7 AM",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
-      "position": [250, 300]
+      "position": [
+        250,
+        300
+      ]
     },
     {
       "parameters": {
@@ -29,7 +32,10 @@
       "name": "Manual Webhook Trigger",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [250, 500],
+      "position": [
+        250,
+        500
+      ],
       "webhookId": "seo-dashboard-lician"
     },
     {
@@ -41,7 +47,10 @@
       "name": "Set Date Range",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [500, 400]
+      "position": [
+        500,
+        400
+      ]
     },
     {
       "parameters": {
@@ -53,7 +62,10 @@
       "name": "Query Backlinks",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [750, 100],
+      "position": [
+        750,
+        100
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -71,7 +83,10 @@
       "name": "Query HARO",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [750, 250],
+      "position": [
+        750,
+        250
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -89,7 +104,10 @@
       "name": "Query Social Posts",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [750, 400],
+      "position": [
+        750,
+        400
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -107,7 +125,10 @@
       "name": "Query Directories",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [750, 550],
+      "position": [
+        750,
+        550
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -125,7 +146,10 @@
       "name": "Query Reddit",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [750, 700],
+      "position": [
+        750,
+        700
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -143,7 +167,10 @@
       "name": "Query Quora",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [750, 850],
+      "position": [
+        750,
+        850
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -161,7 +188,10 @@
       "name": "Query Guest Posts",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [750, 1000],
+      "position": [
+        750,
+        1000
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -179,7 +209,10 @@
       "name": "Query Podcasts",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [750, 1150],
+      "position": [
+        750,
+        1150
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -197,7 +230,10 @@
       "name": "Query Rankings",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [750, 1300],
+      "position": [
+        750,
+        1300
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -215,7 +251,10 @@
       "name": "Query Press",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [750, 1450],
+      "position": [
+        750,
+        1450
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -233,7 +272,10 @@
       "name": "Query Influencers",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [750, 1600],
+      "position": [
+        750,
+        1600
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -251,7 +293,10 @@
       "name": "Query Broken Links",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [750, 1750],
+      "position": [
+        750,
+        1750
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -269,7 +314,10 @@
       "name": "Query Syndication",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [750, 1900],
+      "position": [
+        750,
+        1900
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -287,7 +335,10 @@
       "name": "Query Previous Week",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [750, 2050],
+      "position": [
+        750,
+        2050
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -304,7 +355,10 @@
       "name": "Aggregate All Metrics",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1100, 700]
+      "position": [
+        1100,
+        700
+      ]
     },
     {
       "parameters": {
@@ -315,7 +369,10 @@
       "name": "Generate HTML Report",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1350, 700]
+      "position": [
+        1350,
+        700
+      ]
     },
     {
       "parameters": {
@@ -386,7 +443,10 @@
       "name": "Save to Supabase",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [1600, 550],
+      "position": [
+        1600,
+        550
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -406,7 +466,10 @@
       "name": "Post to Slack",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [1600, 700],
+      "position": [
+        1600,
+        700
+      ],
       "credentials": {
         "slackApi": {
           "id": "CONFIGURE_SLACK_CREDENTIALS",
@@ -429,7 +492,10 @@
       "name": "Send Email Report",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
-      "position": [1600, 850],
+      "position": [
+        1600,
+        850
+      ],
       "credentials": {
         "smtp": {
           "id": "CONFIGURE_SMTP_CREDENTIALS",
@@ -447,7 +513,10 @@
       "name": "Respond to Webhook",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [1850, 700]
+      "position": [
+        1850,
+        700
+      ]
     },
     {
       "parameters": {
@@ -465,7 +534,10 @@
       "name": "Set Webhook Flag",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [400, 500]
+      "position": [
+        400,
+        500
+      ]
     },
     {
       "parameters": {
@@ -483,7 +555,10 @@
       "name": "Set Schedule Flag",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [400, 300]
+      "position": [
+        400,
+        300
+      ]
     }
   ],
   "connections": {
@@ -833,28 +908,6 @@
     "callerPolicy": "workflowsFromSameOwner"
   },
   "staticData": null,
-  "tags": [
-    {
-      "name": "seo",
-      "createdAt": "2025-01-16T00:00:00.000Z",
-      "updatedAt": "2025-01-16T00:00:00.000Z"
-    },
-    {
-      "name": "dashboard",
-      "createdAt": "2025-01-16T00:00:00.000Z",
-      "updatedAt": "2025-01-16T00:00:00.000Z"
-    },
-    {
-      "name": "reporting",
-      "createdAt": "2025-01-16T00:00:00.000Z",
-      "updatedAt": "2025-01-16T00:00:00.000Z"
-    },
-    {
-      "name": "lician",
-      "createdAt": "2025-01-16T00:00:00.000Z",
-      "updatedAt": "2025-01-16T00:00:00.000Z"
-    }
-  ],
   "pinData": {},
   "meta": {
     "templateCredsSetupCompleted": false,

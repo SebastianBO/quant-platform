@@ -76,7 +76,7 @@ export function EarningsAlertSignup({
 
   // Check icon
   const CheckIcon = () => (
-    <svg className="w-5 h-5 text-emerald-400" viewBox="0 0 20 20" fill="currentColor">
+    <svg className="w-5 h-5 text-[#4ebe96]" viewBox="0 0 20 20" fill="currentColor">
       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
     </svg>
   )
@@ -94,7 +94,7 @@ export function EarningsAlertSignup({
     return (
       <div className={cn("flex items-center gap-2", className)}>
         {status === "success" ? (
-          <span className="flex items-center gap-1 text-sm text-emerald-400">
+          <span className="flex items-center gap-1 text-sm text-[#4ebe96]">
             <CheckIcon /> Subscribed
           </span>
         ) : (
@@ -105,12 +105,12 @@ export function EarningsAlertSignup({
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email for alerts"
               disabled={status === "loading"}
-              className="px-3 py-1.5 text-sm bg-zinc-800 border border-zinc-700 rounded focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              className="px-3 py-1.5 text-sm bg-white/[0.05] border border-white/[0.08] rounded focus:ring-2 focus:ring-[#4ebe96] focus:border-transparent"
             />
             <button
               type="submit"
               disabled={status === "loading"}
-              className="px-3 py-1.5 text-sm font-medium bg-emerald-600 hover:bg-emerald-500 text-white rounded disabled:opacity-50"
+              className="px-3 py-1.5 text-sm font-medium bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black rounded disabled:opacity-50"
             >
               {status === "loading" ? <Spinner /> : <BellIcon />}
             </button>
@@ -124,19 +124,19 @@ export function EarningsAlertSignup({
   if (variant === "banner") {
     return (
       <div className={cn(
-        "bg-gradient-to-r from-emerald-600/20 to-blue-600/20 border border-emerald-500/30 rounded-lg p-4",
+        "bg-gradient-to-r from-[#4ebe96]/20 to-[#479ffa]/20 border border-[#4ebe96]/30 rounded-lg p-4",
         className
       )}>
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-emerald-500/20 rounded-lg">
+            <div className="p-2 bg-[#4ebe96]/20 rounded-lg">
               <BellIcon />
             </div>
             <div>
-              <p className="font-medium text-zinc-100">
+              <p className="font-medium text-white">
                 {ticker ? `Get ${ticker} Earnings Alerts` : "Get Earnings Alerts"}
               </p>
-              <p className="text-sm text-zinc-400">
+              <p className="text-sm text-[#868f97]">
                 {earningsDate
                   ? `Next earnings: ${earningsDate}`
                   : "We'll notify you before earnings reports"}
@@ -145,7 +145,7 @@ export function EarningsAlertSignup({
           </div>
 
           {status === "success" ? (
-            <span className="flex items-center gap-2 text-emerald-400">
+            <span className="flex items-center gap-2 text-[#4ebe96]">
               <CheckIcon /> You're subscribed!
             </span>
           ) : (
@@ -156,12 +156,12 @@ export function EarningsAlertSignup({
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
                 disabled={status === "loading"}
-                className="flex-1 sm:w-48 px-3 py-2 text-sm bg-zinc-900 border border-zinc-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                className="flex-1 sm:w-48 px-3 py-2 text-sm bg-[#1a1a1a] border border-white/[0.08] rounded-lg focus:ring-2 focus:ring-[#4ebe96] focus:border-transparent"
               />
               <button
                 type="submit"
                 disabled={status === "loading"}
-                className="px-4 py-2 text-sm font-medium bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg disabled:opacity-50 whitespace-nowrap"
+                className="px-4 py-2 text-sm font-medium bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black rounded-lg disabled:opacity-50 whitespace-nowrap"
               >
                 {status === "loading" ? <Spinner /> : "Notify Me"}
               </button>
@@ -178,36 +178,36 @@ export function EarningsAlertSignup({
   // Card variant (default - for sidebar/standalone use)
   return (
     <div className={cn(
-      "bg-zinc-900/50 border border-zinc-800 rounded-xl p-5",
+      "bg-[#1a1a1a]/50 border border-white/[0.08] rounded-xl p-5",
       className
     )}>
       <div className="flex items-center gap-3 mb-4">
-        <div className="p-2 bg-emerald-500/20 rounded-lg text-emerald-400">
+        <div className="p-2 bg-[#4ebe96]/20 rounded-lg text-[#4ebe96]">
           <BellIcon />
         </div>
         <div>
-          <h3 className="font-semibold text-zinc-100">
+          <h3 className="font-semibold text-white">
             {ticker ? `${ticker} Earnings Alerts` : "Earnings Alerts"}
           </h3>
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-[#868f97]">
             Get notified before earnings
           </p>
         </div>
       </div>
 
       {ticker && companyName && (
-        <div className="mb-4 p-3 bg-zinc-800/50 rounded-lg">
-          <p className="text-sm text-zinc-400">
-            <span className="font-medium text-zinc-200">{companyName}</span>
+        <div className="mb-4 p-3 bg-white/[0.05] rounded-lg">
+          <p className="text-sm text-[#868f97]">
+            <span className="font-medium text-white">{companyName}</span>
             {earningsDate && (
-              <> reports earnings on <span className="text-emerald-400">{earningsDate}</span></>
+              <> reports earnings on <span className="text-[#4ebe96]">{earningsDate}</span></>
             )}
           </p>
         </div>
       )}
 
       {status === "success" ? (
-        <div className="flex items-center gap-2 p-3 bg-emerald-500/10 rounded-lg text-emerald-400">
+        <div className="flex items-center gap-2 p-3 bg-[#4ebe96]/10 rounded-lg text-[#4ebe96]">
           <CheckIcon />
           <span>{message}</span>
         </div>
@@ -219,12 +219,12 @@ export function EarningsAlertSignup({
             onChange={(e) => setEmail(e.target.value)}
             placeholder="your@email.com"
             disabled={status === "loading"}
-            className="w-full px-4 py-2.5 bg-zinc-800 border border-zinc-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent placeholder-zinc-500"
+            className="w-full px-4 py-2.5 bg-white/[0.05] border border-white/[0.08] rounded-lg focus:ring-2 focus:ring-[#4ebe96] focus:border-transparent placeholder-[#868f97]"
           />
           <button
             type="submit"
             disabled={status === "loading"}
-            className="w-full px-4 py-2.5 font-medium bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
+            className="w-full px-4 py-2.5 font-medium bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black rounded-lg disabled:opacity-50 transition-colors duration-100 flex items-center justify-center gap-2"
           >
             {status === "loading" ? (
               <Spinner />
@@ -241,7 +241,7 @@ export function EarningsAlertSignup({
         </form>
       )}
 
-      <p className="mt-4 text-xs text-zinc-600 text-center">
+      <p className="mt-4 text-xs text-[#868f97] text-center">
         We'll email you 24 hours before earnings. Unsubscribe anytime.
       </p>
     </div>
@@ -290,7 +290,7 @@ export function EarningsAlertButton({
 
   if (status === "success") {
     return (
-      <span className={cn("text-sm text-emerald-400 flex items-center gap-1", className)}>
+      <span className={cn("text-sm text-[#4ebe96] flex items-center gap-1", className)}>
         <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
         </svg>
@@ -308,19 +308,19 @@ export function EarningsAlertButton({
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
           autoFocus
-          className="px-2 py-1 text-sm bg-zinc-800 border border-zinc-700 rounded w-32"
+          className="px-2 py-1 text-sm bg-white/[0.05] border border-white/[0.08] rounded w-32"
         />
         <button
           type="submit"
           disabled={status === "loading"}
-          className="px-2 py-1 text-sm bg-emerald-600 hover:bg-emerald-500 text-white rounded"
+          className="px-2 py-1 text-sm bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black rounded"
         >
           {status === "loading" ? "..." : "Go"}
         </button>
         <button
           type="button"
           onClick={() => setShowForm(false)}
-          className="text-zinc-500 hover:text-zinc-300"
+          className="text-[#868f97] hover:text-white transition-colors duration-100"
         >
           ×
         </button>
@@ -333,7 +333,7 @@ export function EarningsAlertButton({
       onClick={() => setShowForm(true)}
       className={cn(
         "flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium",
-        "bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30 rounded-lg transition-colors",
+        "bg-[#4ebe96]/20 text-[#4ebe96] hover:bg-white/[0.08] rounded-lg transition-colors duration-100",
         className
       )}
     >

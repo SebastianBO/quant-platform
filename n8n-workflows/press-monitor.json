@@ -16,7 +16,10 @@
       "name": "Every 4 Hours",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
-      "position": [250, 300]
+      "position": [
+        250,
+        300
+      ]
     },
     {
       "parameters": {
@@ -34,7 +37,10 @@
       "name": "Google News: Stock Analysis",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [500, 100],
+      "position": [
+        500,
+        100
+      ],
       "continueOnFail": true
     },
     {
@@ -53,7 +59,10 @@
       "name": "Google News: Best Apps",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [500, 250],
+      "position": [
+        500,
+        250
+      ],
       "continueOnFail": true
     },
     {
@@ -72,7 +81,10 @@
       "name": "PR Newswire: Finance",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [500, 400],
+      "position": [
+        500,
+        400
+      ],
       "continueOnFail": true
     },
     {
@@ -91,7 +103,10 @@
       "name": "PR Newswire: Fintech",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [500, 550],
+      "position": [
+        500,
+        550
+      ],
       "continueOnFail": true
     },
     {
@@ -110,7 +125,10 @@
       "name": "Business Wire: Finance",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [500, 700],
+      "position": [
+        500,
+        700
+      ],
       "continueOnFail": true
     },
     {
@@ -129,7 +147,10 @@
       "name": "Business Wire: Technology",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [500, 850],
+      "position": [
+        500,
+        850
+      ],
       "continueOnFail": true
     },
     {
@@ -141,7 +162,10 @@
       "name": "Parse All RSS Feeds",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [800, 450]
+      "position": [
+        800,
+        450
+      ]
     },
     {
       "parameters": {
@@ -179,7 +203,10 @@
       "name": "Filter Valid Articles",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [1020, 450]
+      "position": [
+        1020,
+        450
+      ]
     },
     {
       "parameters": {
@@ -190,7 +217,10 @@
       "name": "Analyze Opportunity Type",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1240, 450]
+      "position": [
+        1240,
+        450
+      ]
     },
     {
       "parameters": {
@@ -219,7 +249,10 @@
       "name": "Filter Relevant (Score >= 15)",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [1460, 450]
+      "position": [
+        1460,
+        450
+      ]
     },
     {
       "parameters": {
@@ -245,7 +278,10 @@
       "name": "Check If Already Exists",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [1680, 450],
+      "position": [
+        1680,
+        450
+      ],
       "continueOnFail": true,
       "credentials": {
         "supabaseApi": {
@@ -263,7 +299,10 @@
       "name": "Check If New",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1900, 450]
+      "position": [
+        1900,
+        450
+      ]
     },
     {
       "parameters": {
@@ -292,7 +331,10 @@
       "name": "New Opportunities Only",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [2120, 450]
+      "position": [
+        2120,
+        450
+      ]
     },
     {
       "parameters": {
@@ -303,7 +345,10 @@
       "name": "Generate Pitch Template",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2340, 450]
+      "position": [
+        2340,
+        450
+      ]
     },
     {
       "parameters": {
@@ -351,7 +396,10 @@
       "name": "Save to Supabase",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [2560, 450],
+      "position": [
+        2560,
+        450
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -386,7 +434,10 @@
       "name": "High Priority Only",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [2780, 300]
+      "position": [
+        2780,
+        300
+      ]
     },
     {
       "parameters": {
@@ -401,7 +452,10 @@
       "name": "Slack: High Priority Alert",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [3000, 300],
+      "position": [
+        3000,
+        300
+      ],
       "credentials": {
         "slackApi": {
           "id": "CONFIGURE_SLACK_CREDENTIALS",
@@ -436,7 +490,10 @@
       "name": "Best-Of Lists Only",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [2780, 600]
+      "position": [
+        2780,
+        600
+      ]
     },
     {
       "parameters": {
@@ -451,7 +508,10 @@
       "name": "Email: Best-Of Alert",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
-      "position": [3000, 600],
+      "position": [
+        3000,
+        600
+      ],
       "credentials": {
         "smtp": {
           "id": "CONFIGURE_SMTP_CREDENTIALS",
@@ -468,12 +528,15 @@
       "name": "Aggregate Run Summary",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2780, 750]
+      "position": [
+        2780,
+        750
+      ]
     },
     {
       "parameters": {
         "channel": "#seo-reports",
-        "text": "=:chart_with_upwards_trend: *Press Monitor Run Complete*\n\n*Total Opportunities:* {{ $json.total_processed }}\n\n*By Priority:*\n:red_circle: High: {{ $json.by_priority.high }}\n:yellow_circle: Medium: {{ $json.by_priority.medium }}\n:white_circle: Low: {{ $json.by_priority.low }}\n\n*By Type:*\n{{ Object.entries($json.by_type).map(([k,v]) => `• ${k.replace('_', ' ')}: ${v}`).join('\\n') }}\n\n*By Source:*\n{{ Object.entries($json.by_source).map(([k,v]) => `• ${k.replace('_', ' ')}: ${v}`).join('\\n') }}\n\n{{ $json.top_opportunities.length > 0 ? '*Top Opportunities:*\\n' + $json.top_opportunities.slice(0,5).map((o, i) => `${i+1}. ${o.domain} (${o.score}): ${o.title}`).join('\\n') : '' }}\n\n_Run completed: {{ $json.run_time }}_",
+        "text": "=:chart_with_upwards_trend: *Press Monitor Run Complete*\n\n*Total Opportunities:* {{ $json.total_processed }}\n\n*By Priority:*\n:red_circle: High: {{ $json.by_priority.high }}\n:yellow_circle: Medium: {{ $json.by_priority.medium }}\n:white_circle: Low: {{ $json.by_priority.low }}\n\n*By Type:*\n{{ Object.entries($json.by_type).map(([k,v]) => `\u2022 ${k.replace('_', ' ')}: ${v}`).join('\\n') }}\n\n*By Source:*\n{{ Object.entries($json.by_source).map(([k,v]) => `\u2022 ${k.replace('_', ' ')}: ${v}`).join('\\n') }}\n\n{{ $json.top_opportunities.length > 0 ? '*Top Opportunities:*\\n' + $json.top_opportunities.slice(0,5).map((o, i) => `${i+1}. ${o.domain} (${o.score}): ${o.title}`).join('\\n') : '' }}\n\n_Run completed: {{ $json.run_time }}_",
         "otherOptions": {
           "includeLinkToWorkflow": false,
           "mrkdwn": true
@@ -483,7 +546,10 @@
       "name": "Slack: Run Summary",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [3000, 750],
+      "position": [
+        3000,
+        750
+      ],
       "credentials": {
         "slackApi": {
           "id": "CONFIGURE_SLACK_CREDENTIALS",
@@ -502,7 +568,10 @@
       "name": "Webhook: Update Outreach Status",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [250, 1000],
+      "position": [
+        250,
+        1000
+      ],
       "webhookId": "press-outreach-lician"
     },
     {
@@ -514,7 +583,10 @@
       "name": "Validate Update Request",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [500, 1000]
+      "position": [
+        500,
+        1000
+      ]
     },
     {
       "parameters": {
@@ -531,7 +603,9 @@
           "mode": "list",
           "cachedResultName": "press_opportunities"
         },
-        "matchingColumns": ["id"],
+        "matchingColumns": [
+          "id"
+        ],
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
@@ -552,7 +626,10 @@
       "name": "Update Opportunity Status",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [720, 1000],
+      "position": [
+        720,
+        1000
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -587,7 +664,10 @@
       "name": "If Placement Achieved",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [940, 1000]
+      "position": [
+        940,
+        1000
+      ]
     },
     {
       "parameters": {
@@ -602,7 +682,10 @@
       "name": "Slack: Celebrate Placement",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [1160, 1000],
+      "position": [
+        1160,
+        1000
+      ],
       "credentials": {
         "slackApi": {
           "id": "CONFIGURE_SLACK_CREDENTIALS",
@@ -620,7 +703,10 @@
       "name": "Webhook Response",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [1380, 1000]
+      "position": [
+        1380,
+        1000
+      ]
     },
     {
       "parameters": {
@@ -637,7 +723,10 @@
       "name": "Weekly Report (Monday 9AM)",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
-      "position": [250, 1300]
+      "position": [
+        250,
+        1300
+      ]
     },
     {
       "parameters": {
@@ -648,7 +737,10 @@
       "name": "Get Weekly Stats",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [500, 1300],
+      "position": [
+        500,
+        1300
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -665,7 +757,10 @@
       "name": "Get Weekly Placements",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
-      "position": [500, 1450],
+      "position": [
+        500,
+        1450
+      ],
       "credentials": {
         "supabaseApi": {
           "id": "CONFIGURE_SUPABASE_CREDENTIALS",
@@ -682,12 +777,15 @@
       "name": "Compile Weekly Report",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [800, 1375]
+      "position": [
+        800,
+        1375
+      ]
     },
     {
       "parameters": {
         "channel": "#seo-reports",
-        "text": "=:newspaper: *Weekly Press Monitor Report*\n_{{ $json.period }}_\n\n*Overview:*\n• Total opportunities found: {{ $json.total_opportunities }}\n• Placements this week: {{ $json.placement_count }}\n• Conversion rate: {{ $json.conversion_rate }}%\n\n*By Status:*\n{{ Object.entries($json.by_status).map(([k,v]) => `• ${k}: ${v}`).join('\\n') }}\n\n*By Type:*\n{{ Object.entries($json.by_type).map(([k,v]) => `• ${k.replace('_', ' ')}: ${v}`).join('\\n') }}\n\n*By Priority:*\n:red_circle: High: {{ $json.by_priority.high || 0 }}\n:yellow_circle: Medium: {{ $json.by_priority.medium || 0 }}\n:white_circle: Low: {{ $json.by_priority.low || 0 }}\n\n{{ $json.placements.length > 0 ? '*:trophy: Placements This Week:*\\n' + $json.placements.map(p => `• ${p.domain}: ${p.title}${p.url ? ' - ' + p.url : ''}`).join('\\n') : '_No placements this week_' }}\n\n---\n_Report generated: {{ new Date($json.generated_at).toLocaleString() }}_",
+        "text": "=:newspaper: *Weekly Press Monitor Report*\n_{{ $json.period }}_\n\n*Overview:*\n\u2022 Total opportunities found: {{ $json.total_opportunities }}\n\u2022 Placements this week: {{ $json.placement_count }}\n\u2022 Conversion rate: {{ $json.conversion_rate }}%\n\n*By Status:*\n{{ Object.entries($json.by_status).map(([k,v]) => `\u2022 ${k}: ${v}`).join('\\n') }}\n\n*By Type:*\n{{ Object.entries($json.by_type).map(([k,v]) => `\u2022 ${k.replace('_', ' ')}: ${v}`).join('\\n') }}\n\n*By Priority:*\n:red_circle: High: {{ $json.by_priority.high || 0 }}\n:yellow_circle: Medium: {{ $json.by_priority.medium || 0 }}\n:white_circle: Low: {{ $json.by_priority.low || 0 }}\n\n{{ $json.placements.length > 0 ? '*:trophy: Placements This Week:*\\n' + $json.placements.map(p => `\u2022 ${p.domain}: ${p.title}${p.url ? ' - ' + p.url : ''}`).join('\\n') : '_No placements this week_' }}\n\n---\n_Report generated: {{ new Date($json.generated_at).toLocaleString() }}_",
         "otherOptions": {
           "includeLinkToWorkflow": false,
           "mrkdwn": true
@@ -697,7 +795,10 @@
       "name": "Slack: Weekly Report",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [1100, 1375],
+      "position": [
+        1100,
+        1375
+      ],
       "credentials": {
         "slackApi": {
           "id": "CONFIGURE_SLACK_CREDENTIALS",
@@ -718,7 +819,10 @@
       "name": "Email: Weekly Report",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
-      "position": [1100, 1550],
+      "position": [
+        1100,
+        1550
+      ],
       "credentials": {
         "smtp": {
           "id": "CONFIGURE_SMTP_CREDENTIALS",
@@ -1080,28 +1184,6 @@
     "executionOrder": "v1"
   },
   "staticData": null,
-  "tags": [
-    {
-      "name": "backlinks",
-      "createdAt": "2025-01-16T00:00:00.000Z",
-      "updatedAt": "2025-01-16T00:00:00.000Z"
-    },
-    {
-      "name": "seo",
-      "createdAt": "2025-01-16T00:00:00.000Z",
-      "updatedAt": "2025-01-16T00:00:00.000Z"
-    },
-    {
-      "name": "press",
-      "createdAt": "2025-01-16T00:00:00.000Z",
-      "updatedAt": "2025-01-16T00:00:00.000Z"
-    },
-    {
-      "name": "lician",
-      "createdAt": "2025-01-16T00:00:00.000Z",
-      "updatedAt": "2025-01-16T00:00:00.000Z"
-    }
-  ],
   "pinData": {},
   "meta": {
     "templateCredsSetupCompleted": false,

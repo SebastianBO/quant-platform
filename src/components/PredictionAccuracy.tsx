@@ -31,10 +31,10 @@ function AccuracyGauge({ value, label, size = "large" }: { value: number; label:
 
   // Color based on accuracy
   const getColor = (accuracy: number) => {
-    if (accuracy >= 90) return { stroke: "#10b981", bg: "from-emerald-500/20 to-emerald-500/5" }
-    if (accuracy >= 75) return { stroke: "#22c55e", bg: "from-green-500/20 to-green-500/5" }
-    if (accuracy >= 60) return { stroke: "#eab308", bg: "from-yellow-500/20 to-yellow-500/5" }
-    return { stroke: "#f97316", bg: "from-orange-500/20 to-orange-500/5" }
+    if (accuracy >= 90) return { stroke: "#4ebe96", bg: "from-[#4ebe96]/20 to-[#4ebe96]/5" }
+    if (accuracy >= 75) return { stroke: "#4ebe96", bg: "from-[#4ebe96]/20 to-[#4ebe96]/5" }
+    if (accuracy >= 60) return { stroke: "#f4a623", bg: "from-[#f4a623]/20 to-[#f4a623]/5" }
+    return { stroke: "#f4a623", bg: "from-[#f4a623]/20 to-[#f4a623]/5" }
   }
 
   const colors = getColor(value)
@@ -51,7 +51,7 @@ function AccuracyGauge({ value, label, size = "large" }: { value: number; label:
             fill="none"
             stroke="currentColor"
             strokeWidth={isLarge ? "8" : "6"}
-            className="text-secondary"
+            className="text-white/[0.05]"
           />
           {/* Progress circle */}
           <circle
@@ -73,7 +73,7 @@ function AccuracyGauge({ value, label, size = "large" }: { value: number; label:
           </span>
         </div>
       </div>
-      <p className={`text-muted-foreground mt-2 text-center ${isLarge ? 'text-sm' : 'text-xs'}`}>{label}</p>
+      <p className={`text-[#868f97] mt-2 text-center ${isLarge ? 'text-sm' : 'text-xs'}`}>{label}</p>
     </div>
   )
 }
@@ -86,15 +86,15 @@ function PredictionCard({ prediction }: { prediction: HistoricalPrediction }) {
   const weBeatWallStreet = accuracy > (prediction.wallStreetAccuracy || 0)
 
   return (
-    <div className="p-4 bg-secondary/30 rounded-lg border border-border/50">
+    <div className="p-4 bg-white/[0.015] rounded-lg border border-white/[0.04]">
       <div className="flex items-start justify-between mb-3">
         <div>
           <h4 className="font-bold text-lg">{prediction.ticker}</h4>
-          <p className="text-sm text-muted-foreground">{prediction.companyName}</p>
+          <p className="text-sm text-[#868f97]">{prediction.companyName}</p>
         </div>
         <div className={`px-2 py-1 rounded-full text-xs font-medium ${
           prediction.outcome === 'correct'
-            ? 'bg-emerald-500/20 text-emerald-500'
+            ? 'bg-[#4ebe96]/20 text-[#4ebe96]'
             : prediction.outcome === 'partially_correct'
             ? 'bg-yellow-500/20 text-yellow-500'
             : 'bg-red-500/20 text-red-500'
@@ -106,22 +106,22 @@ function PredictionCard({ prediction }: { prediction: HistoricalPrediction }) {
 
       <div className="grid grid-cols-3 gap-3 text-sm">
         <div>
-          <p className="text-muted-foreground text-xs">Our Prediction</p>
+          <p className="text-[#868f97] text-xs">Our Prediction</p>
           <p className="font-bold">${prediction.predictedPrice.toFixed(2)}</p>
-          <p className={`text-xs ${prediction.predictedChange >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
+          <p className={`text-xs ${prediction.predictedChange >= 0 ? 'text-[#4ebe96]' : 'text-red-500'}`}>
             {prediction.predictedChange >= 0 ? '+' : ''}{prediction.predictedChange.toFixed(1)}%
           </p>
         </div>
         <div>
-          <p className="text-muted-foreground text-xs">Actual Result</p>
+          <p className="text-[#868f97] text-xs">Actual Result</p>
           <p className="font-bold">${prediction.actualPrice.toFixed(2)}</p>
-          <p className={`text-xs ${prediction.actualChange >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
+          <p className={`text-xs ${prediction.actualChange >= 0 ? 'text-[#4ebe96]' : 'text-red-500'}`}>
             {prediction.actualChange >= 0 ? '+' : ''}{prediction.actualChange.toFixed(1)}%
           </p>
         </div>
         <div>
-          <p className="text-muted-foreground text-xs">Our Accuracy</p>
-          <p className="font-bold text-emerald-500">{accuracy.toFixed(1)}%</p>
+          <p className="text-[#868f97] text-xs">Our Accuracy</p>
+          <p className="font-bold text-[#4ebe96]">{accuracy.toFixed(1)}%</p>
           {weBeatWallStreet && (
             <p className="text-xs text-emerald-400 flex items-center gap-1">
               <Award className="w-3 h-3" /> Beat WS
@@ -152,19 +152,19 @@ function ComparisonRow({
   weBeatWallStreet: boolean
 }) {
   return (
-    <tr className="border-b border-border/50 hover:bg-secondary/30 transition-colors">
+    <tr className="border-b border-white/[0.04] hover:bg-white/[0.08] transition-colors duration-100">
       <td className="p-3 font-medium">{ticker}</td>
       <td className="p-3 text-sm">{ourPrediction}</td>
       <td className="p-3 text-sm">{actualResult}</td>
       <td className="p-3 text-right">
-        <span className={`font-bold ${ourAccuracy >= 95 ? 'text-emerald-500' : ourAccuracy >= 90 ? 'text-green-500' : 'text-yellow-500'}`}>
+        <span className={`font-bold ${ourAccuracy >= 95 ? 'text-[#4ebe96]' : ourAccuracy >= 90 ? 'text-green-500' : 'text-yellow-500'}`}>
           {ourAccuracy.toFixed(1)}%
         </span>
       </td>
-      <td className="p-3 text-right text-muted-foreground">{wallStreetAccuracy.toFixed(1)}%</td>
+      <td className="p-3 text-right text-[#868f97]">{wallStreetAccuracy.toFixed(1)}%</td>
       <td className="p-3 text-center">
         {weBeatWallStreet ? (
-          <CheckCircle className="w-5 h-5 text-emerald-500 mx-auto" />
+          <CheckCircle className="w-5 h-5 text-[#4ebe96] mx-auto" />
         ) : (
           <XCircle className="w-5 h-5 text-red-500 mx-auto" />
         )}
@@ -203,10 +203,10 @@ function StockPredictionAccuracy({
               <BarChart3 className="w-8 h-8 text-blue-500" />
             </div>
             <p className="text-lg font-medium mb-2">Coming Soon for {ticker}</p>
-            <p className="text-muted-foreground">
+            <p className="text-[#868f97]">
               {getTrackingMessage()}
             </p>
-            <p className="text-sm text-muted-foreground mt-4 max-w-md mx-auto">
+            <p className="text-sm text-[#868f97] mt-4 max-w-md mx-auto">
               We are building a comprehensive track record of our AI predictions.
               Check back to see how our forecasts perform against actual results.
             </p>
@@ -225,26 +225,26 @@ function StockPredictionAccuracy({
     <Card className="w-full">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Target className="w-6 h-6 text-emerald-500" />
+          <Target className="w-6 h-6 text-[#4ebe96]" />
           Our Track Record: {ticker}
         </CardTitle>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-[#868f97]">
           How our AI prediction performed vs. reality
         </p>
       </CardHeader>
       <CardContent>
         {/* Main Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="p-4 bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 rounded-xl border border-emerald-500/30 text-center">
-            <p className="text-muted-foreground text-sm mb-1">Our Prediction (Jan 2025)</p>
-            <p className="text-3xl font-bold text-emerald-500">${prediction.predictedPrice.toFixed(2)}</p>
+          <div className="p-4 bg-gradient-to-br from-[#4ebe96]/20 to-[#4ebe96]/5 rounded-xl border border-[#4ebe96]/30 text-center">
+            <p className="text-[#868f97] text-sm mb-1">Our Prediction (Jan 2025)</p>
+            <p className="text-3xl font-bold text-[#4ebe96]">${prediction.predictedPrice.toFixed(2)}</p>
             <p className={`text-sm ${prediction.predictedChange >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
               {prediction.predictedChange >= 0 ? '+' : ''}{prediction.predictedChange.toFixed(1)}% expected
             </p>
           </div>
 
-          <div className="p-4 bg-secondary/50 rounded-xl border border-border text-center">
-            <p className="text-muted-foreground text-sm mb-1">Actual Result (Dec 2025)</p>
+          <div className="p-4 bg-white/[0.025] rounded-xl border border-white/[0.08] text-center">
+            <p className="text-[#868f97] text-sm mb-1">Actual Result (Dec 2025)</p>
             <p className="text-3xl font-bold">${prediction.actualPrice.toFixed(2)}</p>
             <p className={`text-sm ${prediction.actualChange >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
               {prediction.actualChange >= 0 ? '+' : ''}{prediction.actualChange.toFixed(1)}% actual
@@ -253,25 +253,25 @@ function StockPredictionAccuracy({
 
           <div className={`p-4 rounded-xl border text-center ${
             accuracy >= 95
-              ? 'bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 border-emerald-500/30'
+              ? 'bg-gradient-to-br from-[#4ebe96]/20 to-[#4ebe96]/5 border-[#4ebe96]/30'
               : 'bg-gradient-to-br from-yellow-500/20 to-yellow-500/5 border-yellow-500/30'
           }`}>
-            <p className="text-muted-foreground text-sm mb-1">Our Accuracy</p>
-            <p className={`text-3xl font-bold ${accuracy >= 95 ? 'text-emerald-500' : 'text-yellow-500'}`}>
+            <p className="text-[#868f97] text-sm mb-1">Our Accuracy</p>
+            <p className={`text-3xl font-bold ${accuracy >= 95 ? 'text-[#4ebe96]' : 'text-yellow-500'}`}>
               {accuracy.toFixed(1)}%
             </p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-[#868f97]">
               {prediction.outcome === 'correct' ? 'Direction Correct' : 'Direction Correct'}
             </p>
           </div>
         </div>
 
         {/* Comparison with Wall Street */}
-        <div className="p-4 bg-secondary/30 rounded-lg border border-border mb-6">
+        <div className="p-4 bg-white/[0.015] rounded-lg border border-white/[0.08] mb-6">
           <div className="flex items-center justify-between mb-3">
             <p className="font-medium">vs. Wall Street Consensus</p>
             {weBeatWallStreet && (
-              <span className="flex items-center gap-1 text-sm text-emerald-500">
+              <span className="flex items-center gap-1 text-sm text-[#4ebe96]">
                 <Award className="w-4 h-4" />
                 We outperformed
               </span>
@@ -280,15 +280,15 @@ function StockPredictionAccuracy({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-sm text-muted-foreground">Wall Street Target</p>
+              <p className="text-sm text-[#868f97]">Wall Street Target</p>
               <p className="font-bold">${prediction.wallStreetTarget?.toFixed(2)}</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-[#868f97]">
                 Accuracy: {prediction.wallStreetAccuracy?.toFixed(1)}%
               </p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Our Prediction</p>
-              <p className="font-bold text-emerald-500">${prediction.predictedPrice.toFixed(2)}</p>
+              <p className="text-sm text-[#868f97]">Our Prediction</p>
+              <p className="font-bold text-[#4ebe96]">${prediction.predictedPrice.toFixed(2)}</p>
               <p className="text-sm text-emerald-400">
                 Accuracy: {accuracy.toFixed(1)}%
               </p>
@@ -297,19 +297,19 @@ function StockPredictionAccuracy({
 
           {/* Visual comparison bar */}
           <div className="mt-4">
-            <div className="flex justify-between text-xs text-muted-foreground mb-1">
+            <div className="flex justify-between text-xs text-[#868f97] mb-1">
               <span>Wall Street: {prediction.wallStreetAccuracy?.toFixed(1)}%</span>
               <span>Lician AI: {accuracy.toFixed(1)}%</span>
             </div>
-            <div className="h-3 bg-secondary rounded-full overflow-hidden flex">
+            <div className="h-3 bg-white/[0.05] rounded-full overflow-hidden flex">
               <div
-                className="h-full bg-muted-foreground/50"
+                className="h-full bg-[#868f97]/50"
                 style={{ width: `${prediction.wallStreetAccuracy}%` }}
               />
             </div>
-            <div className="h-3 bg-secondary rounded-full overflow-hidden flex mt-1">
+            <div className="h-3 bg-white/[0.05] rounded-full overflow-hidden flex mt-1">
               <div
-                className="h-full bg-emerald-500"
+                className="h-full bg-[#4ebe96]"
                 style={{ width: `${accuracy}%` }}
               />
             </div>
@@ -317,14 +317,14 @@ function StockPredictionAccuracy({
         </div>
 
         {/* Prediction Timeline */}
-        <div className="flex items-center justify-between text-sm text-muted-foreground border-t border-border pt-4">
+        <div className="flex items-center justify-between text-sm text-[#868f97] border-t border-white/[0.08] pt-4">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-blue-500" />
             <span>Prediction: {prediction.predictionDate}</span>
           </div>
-          <div className="flex-1 h-0.5 bg-border mx-4" />
+          <div className="flex-1 h-0.5 bg-white/[0.08] mx-4" />
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-emerald-500" />
+            <div className="w-3 h-3 rounded-full bg-[#4ebe96]" />
             <span>Evaluated: {prediction.evaluationDate}</span>
           </div>
         </div>
@@ -347,27 +347,27 @@ function PredictionDashboard() {
   return (
     <div className="space-y-6">
       {/* Header Card */}
-      <Card className="bg-gradient-to-br from-emerald-500/10 via-card to-card border-emerald-500/20">
+      <Card className="bg-gradient-to-br from-[#4ebe96]/10 via-[#1a1a1a] to-[#1a1a1a] border-[#4ebe96]/20">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-2xl">
-            <Award className="w-8 h-8 text-emerald-500" />
+            <Award className="w-8 h-8 text-[#4ebe96]" />
             Our 2025 Predictions: {stats.accuracyRate.toFixed(1)}% Accurate
           </CardTitle>
-          <p className="text-muted-foreground">
+          <p className="text-[#868f97]">
             Transparent track record of AI-powered stock predictions
           </p>
         </CardHeader>
         <CardContent>
           {/* Navigation */}
-          <div className="flex gap-2 mb-6 border-b border-border">
+          <div className="flex gap-2 mb-6 border-b border-white/[0.08]">
             {(['overview', 'details', 'methodology'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px ${
+                className={`px-4 py-2 text-sm font-medium transition-colors duration-100 border-b-2 -mb-px ${
                   activeTab === tab
-                    ? 'border-emerald-500 text-emerald-500'
-                    : 'border-transparent text-muted-foreground hover:text-foreground'
+                    ? 'border-[#4ebe96] text-[#4ebe96]'
+                    : 'border-transparent text-[#868f97] hover:text-white'
                 }`}
               >
                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -380,16 +380,16 @@ function PredictionDashboard() {
             <div>
               {/* Main Gauges */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div className="bg-secondary/30 rounded-xl">
+                <div className="bg-white/[0.015] rounded-xl">
                   <AccuracyGauge value={stats.accuracyRate} label="Overall Accuracy" />
                 </div>
-                <div className="bg-secondary/30 rounded-xl">
+                <div className="bg-white/[0.015] rounded-xl">
                   <AccuracyGauge value={stats.directionAccuracyRate} label="Direction Accuracy" />
                 </div>
-                <div className="bg-secondary/30 rounded-xl">
+                <div className="bg-white/[0.015] rounded-xl">
                   <AccuracyGauge value={stats.wallStreetAccuracyRate} label="Wall Street Avg" />
                 </div>
-                <div className="bg-secondary/30 rounded-xl">
+                <div className="bg-white/[0.015] rounded-xl">
                   <AccuracyGauge
                     value={(beatWallStreetCount / stats.totalPredictions) * 100}
                     label="Beat Wall Street"
@@ -399,33 +399,33 @@ function PredictionDashboard() {
 
               {/* Stats Grid */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div className="p-4 bg-secondary/50 rounded-lg text-center">
-                  <p className="text-3xl font-bold text-emerald-500">{stats.totalPredictions}</p>
-                  <p className="text-sm text-muted-foreground">Total Predictions</p>
+                <div className="p-4 bg-white/[0.025] rounded-lg text-center">
+                  <p className="text-3xl font-bold text-[#4ebe96]">{stats.totalPredictions}</p>
+                  <p className="text-sm text-[#868f97]">Total Predictions</p>
                 </div>
-                <div className="p-4 bg-secondary/50 rounded-lg text-center">
-                  <p className="text-3xl font-bold text-emerald-500">{stats.correctPredictions}</p>
-                  <p className="text-sm text-muted-foreground">Fully Correct</p>
+                <div className="p-4 bg-white/[0.025] rounded-lg text-center">
+                  <p className="text-3xl font-bold text-[#4ebe96]">{stats.correctPredictions}</p>
+                  <p className="text-sm text-[#868f97]">Fully Correct</p>
                 </div>
-                <div className="p-4 bg-secondary/50 rounded-lg text-center">
+                <div className="p-4 bg-white/[0.025] rounded-lg text-center">
                   <p className="text-3xl font-bold text-yellow-500">{stats.partiallyCorrect}</p>
-                  <p className="text-sm text-muted-foreground">Partially Correct</p>
+                  <p className="text-sm text-[#868f97]">Partially Correct</p>
                 </div>
-                <div className="p-4 bg-secondary/50 rounded-lg text-center">
+                <div className="p-4 bg-white/[0.025] rounded-lg text-center">
                   <p className="text-3xl font-bold">{stats.averageError.toFixed(1)}%</p>
-                  <p className="text-sm text-muted-foreground">Avg. Error</p>
+                  <p className="text-sm text-[#868f97]">Avg. Error</p>
                 </div>
               </div>
 
               {/* Beat Wall Street Banner */}
               {stats.beatWallStreet && (
-                <div className="p-4 bg-gradient-to-r from-emerald-500/20 to-emerald-500/5 rounded-lg border border-emerald-500/30 flex items-center gap-3">
-                  <Award className="w-10 h-10 text-emerald-500" />
+                <div className="p-4 bg-gradient-to-r from-[#4ebe96]/20 to-[#4ebe96]/5 rounded-lg border border-[#4ebe96]/30 flex items-center gap-3">
+                  <Award className="w-10 h-10 text-[#4ebe96]" />
                   <div>
-                    <p className="font-bold text-emerald-500">
+                    <p className="font-bold text-[#4ebe96]">
                       Outperformed Wall Street in {beatWallStreetCount}/{stats.totalPredictions} predictions
                     </p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-[#868f97]">
                       Our AI models achieved {(stats.accuracyRate - stats.wallStreetAccuracyRate).toFixed(1)}% higher accuracy than Wall Street consensus
                     </p>
                   </div>
@@ -440,7 +440,7 @@ function PredictionDashboard() {
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-border">
+                    <tr className="border-b border-white/[0.08]">
                       <th className="p-3 text-left">Stock</th>
                       <th className="p-3 text-left">Our Prediction</th>
                       <th className="p-3 text-left">Actual Result</th>
@@ -469,27 +469,27 @@ function PredictionDashboard() {
           {/* Methodology Tab */}
           {activeTab === 'methodology' && (
             <div className="space-y-6">
-              <div className="p-4 bg-secondary/30 rounded-lg">
+              <div className="p-4 bg-white/[0.015] rounded-lg">
                 <h3 className="font-bold mb-2 flex items-center gap-2">
-                  <Target className="w-5 h-5 text-emerald-500" />
+                  <Target className="w-5 h-5 text-[#4ebe96]" />
                   How We Score Accuracy
                 </h3>
-                <p className="text-sm text-muted-foreground mb-3">
+                <p className="text-sm text-[#868f97] mb-3">
                   Our accuracy score measures how close our predicted price was to the actual price at the evaluation date:
                 </p>
-                <div className="bg-card p-3 rounded-lg font-mono text-sm">
+                <div className="bg-[#1a1a1a] p-3 rounded-lg font-mono text-sm">
                   Accuracy = 100% - |Predicted Price - Actual Price| / Actual Price * 100%
                 </div>
               </div>
 
-              <div className="p-4 bg-secondary/30 rounded-lg">
+              <div className="p-4 bg-white/[0.015] rounded-lg">
                 <h3 className="font-bold mb-2 flex items-center gap-2">
                   <BarChart3 className="w-5 h-5 text-blue-500" />
                   Prediction Categories
                 </h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-emerald-500" />
+                    <CheckCircle className="w-4 h-4 text-[#4ebe96]" />
                     <span><strong>Correct:</strong> Price direction correct + within 10% of target</span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -503,12 +503,12 @@ function PredictionDashboard() {
                 </div>
               </div>
 
-              <div className="p-4 bg-secondary/30 rounded-lg">
+              <div className="p-4 bg-white/[0.015] rounded-lg">
                 <h3 className="font-bold mb-2 flex items-center gap-2">
                   <Award className="w-5 h-5 text-purple-500" />
                   Why We Track This
                 </h3>
-                <ul className="text-sm text-muted-foreground space-y-2">
+                <ul className="text-sm text-[#868f97] space-y-2">
                   <li>1. <strong>Accountability:</strong> We stand behind our predictions</li>
                   <li>2. <strong>Transparency:</strong> You deserve to know our track record</li>
                   <li>3. <strong>Improvement:</strong> We use results to refine our AI models</li>
@@ -558,23 +558,23 @@ function PredictionAccuracyComponent({
   const stats = calculatePredictionStats(HISTORICAL_PREDICTIONS)
 
   return (
-    <Card className="w-full bg-gradient-to-br from-emerald-500/5 to-transparent">
+    <Card className="w-full bg-gradient-to-br from-[#4ebe96]/5 to-transparent">
       <CardContent className="pt-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center">
-              <Award className="w-6 h-6 text-emerald-500" />
+            <div className="w-12 h-12 rounded-full bg-[#4ebe96]/20 flex items-center justify-center">
+              <Award className="w-6 h-6 text-[#4ebe96]" />
             </div>
             <div>
               <p className="font-bold">Our 2025 Prediction Accuracy</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-[#868f97]">
                 {stats.totalPredictions} predictions tracked
               </p>
             </div>
           </div>
           <div className="text-right">
-            <p className="text-3xl font-bold text-emerald-500">{stats.accuracyRate.toFixed(1)}%</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-3xl font-bold text-[#4ebe96]">{stats.accuracyRate.toFixed(1)}%</p>
+            <p className="text-sm text-[#868f97]">
               vs {stats.wallStreetAccuracyRate.toFixed(1)}% Wall Street
             </p>
           </div>

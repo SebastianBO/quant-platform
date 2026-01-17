@@ -163,7 +163,7 @@ export default function PremiumPage() {
               <h2 className="text-3xl font-bold mb-4">
                 Get <span className="text-orange-500">unlimited access</span> to professional trading tools
               </h2>
-              <p className="text-muted-foreground text-lg">
+              <p className="text-[#868f97] text-lg">
                 Join thousands of traders using Lician Pro to make smarter investment decisions.
                 Get real-time data, AI insights, and professional analysis tools.
               </p>
@@ -171,13 +171,13 @@ export default function PremiumPage() {
 
             <div className="grid gap-4">
               {FEATURES.map((feature, i) => (
-                <div key={i} className="flex gap-4 p-4 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors">
+                <div key={i} className="flex gap-4 p-4 rounded-lg bg-white/[0.015] hover:bg-white/[0.04] transition-colors duration-100">
                   <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center flex-shrink-0">
                     <feature.icon className="w-5 h-5 text-orange-500" />
                   </div>
                   <div>
                     <h3 className="font-semibold">{feature.title}</h3>
-                    <p className="text-sm text-muted-foreground">{feature.description}</p>
+                    <p className="text-sm text-[#868f97]">{feature.description}</p>
                   </div>
                 </div>
               ))}
@@ -194,7 +194,7 @@ export default function PremiumPage() {
                       ))}
                     </div>
                     <p className="font-semibold mb-1">"{testimonial.quote}</p>
-                    <p className="text-sm text-muted-foreground">{testimonial.detail}</p>
+                    <p className="text-sm text-[#868f97]">{testimonial.detail}</p>
                     <p className="text-orange-500 text-sm mt-2">{testimonial.author}</p>
                   </CardContent>
                 </Card>
@@ -208,7 +208,7 @@ export default function PremiumPage() {
               <CardContent className="p-6 space-y-6">
                 <div className="text-center">
                   <h3 className="font-bold text-xl mb-1">Start Your Free Trial</h3>
-                  <p className="text-muted-foreground text-sm">
+                  <p className="text-[#868f97] text-sm">
                     {isAnnual ? "3 days free, then billed yearly" : "Billed monthly, cancel anytime"}
                   </p>
                 </div>
@@ -222,20 +222,20 @@ export default function PremiumPage() {
                   <div className={`relative flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all ${
                     selectedPlan === "annual"
                       ? "border-orange-500 bg-orange-500/5 shadow-md"
-                      : "border-border hover:border-orange-500/50"
+                      : "border-white/[0.08] hover:border-orange-500/50"
                   }`}>
                     <RadioGroupItem value="annual" id="annual" className="mr-4" />
                     <Label htmlFor="annual" className="flex-1 cursor-pointer">
                       <div className="flex items-center justify-between">
                         <div>
                           <span className="font-bold text-lg">Annual</span>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-sm text-[#868f97]">
                             ${PLANS.annual.monthlyEquivalent}/mo billed annually
                           </p>
                         </div>
                         <div className="text-right">
                           <span className="font-bold text-lg">${PLANS.annual.price}</span>
-                          <span className="text-muted-foreground">/year</span>
+                          <span className="text-[#868f97]">/year</span>
                         </div>
                       </div>
                     </Label>
@@ -245,7 +245,7 @@ export default function PremiumPage() {
                       </span>
                     )}
                     {PLANS.annual.trial && (
-                      <span className="absolute -top-3 right-4 bg-green-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                      <span className="absolute -top-3 right-4 bg-[#4ebe96] text-black text-xs px-2 py-1 rounded-full font-medium">
                         3 Days Free
                       </span>
                     )}
@@ -255,7 +255,7 @@ export default function PremiumPage() {
                   <div className={`relative flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all ${
                     selectedPlan === "monthly"
                       ? "border-orange-500 bg-orange-500/5 shadow-md"
-                      : "border-border hover:border-orange-500/50"
+                      : "border-white/[0.08] hover:border-orange-500/50"
                   }`}>
                     <RadioGroupItem value="monthly" id="monthly" className="mr-4" />
                     <Label htmlFor="monthly" className="flex-1 cursor-pointer">
@@ -263,7 +263,7 @@ export default function PremiumPage() {
                         <span className="font-bold text-lg">Monthly</span>
                         <div className="text-right">
                           <span className="font-bold text-lg">${PLANS.monthly.price}</span>
-                          <span className="text-muted-foreground">/month</span>
+                          <span className="text-[#868f97]">/month</span>
                         </div>
                       </div>
                     </Label>
@@ -272,35 +272,35 @@ export default function PremiumPage() {
 
                 {/* Trial Timeline for Yearly */}
                 {isAnnual && (
-                  <div className="bg-secondary/50 rounded-lg p-4 space-y-3">
+                  <div className="bg-white/[0.025] rounded-lg p-4 space-y-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
-                        <Check className="w-4 h-4 text-green-500" />
+                      <div className="w-8 h-8 rounded-full bg-[#4ebe96]/20 flex items-center justify-center">
+                        <Check className="w-4 h-4 text-[#4ebe96]" />
                       </div>
                       <div>
                         <p className="font-medium text-sm">Today</p>
-                        <p className="text-xs text-muted-foreground">Unlock all features instantly</p>
+                        <p className="text-xs text-[#868f97]">Unlock all features instantly</p>
                       </div>
                     </div>
-                    <div className="w-0.5 h-4 bg-border ml-4" />
+                    <div className="w-0.5 h-4 bg-white/[0.08] ml-4" />
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center">
                         <CreditCard className="w-4 h-4 text-orange-500" />
                       </div>
                       <div>
                         <p className="font-medium text-sm">In 3 Days</p>
-                        <p className="text-xs text-muted-foreground">You'll be charged ${PLANS.annual.price}/year</p>
+                        <p className="text-xs text-[#868f97]">You'll be charged ${PLANS.annual.price}/year</p>
                       </div>
                     </div>
                   </div>
                 )}
 
                 {/* Payment Info */}
-                <div className="flex items-center gap-3 p-3 bg-secondary/30 rounded-lg">
-                  <Shield className="w-5 h-5 text-green-500" />
+                <div className="flex items-center gap-3 p-3 bg-white/[0.015] rounded-lg">
+                  <Shield className="w-5 h-5 text-[#4ebe96]" />
                   <div>
                     <p className="text-sm font-medium">Secure Payment via Stripe</p>
-                    <p className="text-xs text-muted-foreground">Cancel anytime, no questions asked</p>
+                    <p className="text-xs text-[#868f97]">Cancel anytime, no questions asked</p>
                   </div>
                 </div>
 
@@ -356,7 +356,7 @@ export default function PremiumPage() {
                   }
                 </Button>
 
-                <p className="text-xs text-center text-muted-foreground">
+                <p className="text-xs text-center text-[#868f97]">
                   {isAnnual
                     ? "No payment due today. Cancel anytime during the trial."
                     : "Cancel anytime. No hidden fees."

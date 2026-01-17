@@ -65,9 +65,9 @@ interface BiotechCatalystsProps {
 }
 
 const catalystTypeConfig: Record<string, { icon: typeof Beaker; label: string; color: string }> = {
-  TRIAL_RESULT: { icon: Beaker, label: 'Trial Result', color: 'text-blue-500' },
+  TRIAL_RESULT: { icon: Beaker, label: 'Trial Result', color: 'text-[#479ffa]' },
   DATA_READOUT: { icon: Activity, label: 'Data Readout', color: 'text-purple-500' },
-  FDA_DECISION: { icon: FileText, label: 'FDA Decision', color: 'text-green-500' },
+  FDA_DECISION: { icon: FileText, label: 'FDA Decision', color: 'text-[#4ebe96]' },
   PDUFA_DATE: { icon: Calendar, label: 'PDUFA Date', color: 'text-orange-500' },
   PHASE_TRANSITION: { icon: TrendingUp, label: 'Phase Transition', color: 'text-cyan-500' },
 }
@@ -81,10 +81,10 @@ const importanceConfig: Record<string, { label: string; variant: 'default' | 'se
 const phaseConfig: Record<string, { label: string; color: string }> = {
   PHASE1: { label: 'Phase 1', color: 'bg-gray-500' },
   EARLY_PHASE1: { label: 'Phase 1', color: 'bg-gray-500' },
-  PHASE2: { label: 'Phase 2', color: 'bg-blue-500' },
+  PHASE2: { label: 'Phase 2', color: 'bg-[#479ffa]' },
   'PHASE2/PHASE3': { label: 'Phase 2/3', color: 'bg-indigo-500' },
   PHASE3: { label: 'Phase 3', color: 'bg-purple-500' },
-  PHASE4: { label: 'Phase 4', color: 'bg-green-500' },
+  PHASE4: { label: 'Phase 4', color: 'bg-[#4ebe96]' },
   NA: { label: 'N/A', color: 'bg-gray-400' },
 }
 
@@ -112,13 +112,13 @@ function CatalystCard({ catalyst }: { catalyst: Catalyst }) {
 
   return (
     <div className={cn(
-      "border rounded-lg p-4 hover:bg-muted/50 transition-colors",
+      "border rounded-lg p-4 hover:bg-white/[0.08] transition-colors duration-100",
       catalyst.status === 'IMMINENT' && "border-orange-500/50 bg-orange-500/5",
       catalyst.importance === 'HIGH' && "border-purple-500/30"
     )}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3 flex-1 min-w-0">
-          <div className={cn("p-2 rounded-lg bg-muted", typeConfig.color)}>
+          <div className={cn("p-2 rounded-lg bg-white/[0.05]", typeConfig.color)}>
             <TypeIcon className="h-4 w-4" />
           </div>
           <div className="flex-1 min-w-0">
@@ -144,7 +144,7 @@ function CatalystCard({ catalyst }: { catalyst: Catalyst }) {
             <h4 className="font-medium mt-2 line-clamp-2">
               {catalyst.title}
             </h4>
-            <div className="flex items-center gap-3 mt-2 text-sm text-muted-foreground">
+            <div className="flex items-center gap-3 mt-2 text-sm text-[#868f97]">
               {catalyst.drugName && (
                 <span className="flex items-center gap-1">
                   <Pill className="h-3 w-3" />
@@ -167,15 +167,15 @@ function CatalystCard({ catalyst }: { catalyst: Catalyst }) {
           <div className={cn(
             "text-xs mt-1",
             catalyst.daysUntil !== null && catalyst.daysUntil <= 30 ? "text-orange-500 font-medium" :
-            catalyst.daysUntil !== null && catalyst.daysUntil <= 90 ? "text-yellow-500" :
-            "text-muted-foreground"
+            catalyst.daysUntil !== null && catalyst.daysUntil <= 90 ? "text-[#f4a623]" :
+            "text-[#868f97]"
           )}>
             {formatDaysUntil(catalyst.daysUntil)}
           </div>
         </div>
       </div>
       {catalyst.sourceId && (
-        <div className="mt-3 pt-3 border-t flex items-center justify-between text-xs text-muted-foreground">
+        <div className="mt-3 pt-3 border-t flex items-center justify-between text-xs text-[#868f97]">
           <span>{catalyst.sourceType === 'CLINICAL_TRIAL' ? 'ClinicalTrials.gov' : 'FDA'}</span>
           <a
             href={catalyst.sourceType === 'CLINICAL_TRIAL'
@@ -184,7 +184,7 @@ function CatalystCard({ catalyst }: { catalyst: Catalyst }) {
             }
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 hover:text-foreground transition-colors"
+            className="flex items-center gap-1 hover:text-white transition-colors duration-100"
           >
             {catalyst.sourceId}
             <ExternalLink className="h-3 w-3" />
@@ -239,7 +239,7 @@ export function BiotechCatalysts({ ticker, className }: BiotechCatalystsProps) {
         <CardContent>
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-24 bg-muted animate-pulse rounded-lg" />
+              <div key={i} className="h-24 bg-white/[0.05] animate-pulse rounded-lg" />
             ))}
           </div>
         </CardContent>
@@ -257,7 +257,7 @@ export function BiotechCatalysts({ ticker, className }: BiotechCatalystsProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-8 text-muted-foreground">
+          <div className="text-center py-8 text-[#868f97]">
             <AlertTriangle className="h-8 w-8 mx-auto mb-2 opacity-50" />
             <p>No clinical trial data available for {ticker}</p>
             <p className="text-sm mt-1">This company may not have active clinical trials</p>
@@ -294,27 +294,27 @@ export function BiotechCatalysts({ ticker, className }: BiotechCatalystsProps) {
       <CardContent>
         {/* Summary Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="text-center p-3 bg-muted rounded-lg">
+          <div className="text-center p-3 bg-white/[0.05] rounded-lg">
             <div className="text-2xl font-bold">{data.summary.upcoming}</div>
-            <div className="text-xs text-muted-foreground">Upcoming</div>
+            <div className="text-xs text-[#868f97]">Upcoming</div>
           </div>
           <div className="text-center p-3 bg-orange-500/10 rounded-lg">
             <div className="text-2xl font-bold text-orange-500">{data.summary.imminent}</div>
-            <div className="text-xs text-muted-foreground">Within 90 Days</div>
+            <div className="text-xs text-[#868f97]">Within 90 Days</div>
           </div>
           <div className="text-center p-3 bg-purple-500/10 rounded-lg">
             <div className="text-2xl font-bold text-purple-500">{data.summary.highImportance}</div>
-            <div className="text-xs text-muted-foreground">High Impact</div>
+            <div className="text-xs text-[#868f97]">High Impact</div>
           </div>
-          <div className="text-center p-3 bg-blue-500/10 rounded-lg">
-            <div className="text-2xl font-bold text-blue-500">{data.summary.phase3Trials}</div>
-            <div className="text-xs text-muted-foreground">Phase 3</div>
+          <div className="text-center p-3 bg-[#479ffa]/10 rounded-lg">
+            <div className="text-2xl font-bold text-[#479ffa]">{data.summary.phase3Trials}</div>
+            <div className="text-xs text-[#868f97]">Phase 3</div>
           </div>
         </div>
 
         {/* Catalysts List */}
         {data.catalysts.length === 0 ? (
-          <div className="text-center py-8 text-muted-foreground">
+          <div className="text-center py-8 text-[#868f97]">
             <CheckCircle2 className="h-8 w-8 mx-auto mb-2 opacity-50" />
             <p>No upcoming catalysts found</p>
           </div>
@@ -347,7 +347,7 @@ export function BiotechCatalysts({ ticker, className }: BiotechCatalystsProps) {
             href={`https://clinicaltrials.gov/search?spons=${encodeURIComponent(data.companyName)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
+            className="text-sm text-[#868f97] hover:text-white inline-flex items-center gap-1 transition-colors duration-100"
           >
             View all trials on ClinicalTrials.gov
             <ExternalLink className="h-3 w-3" />

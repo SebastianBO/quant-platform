@@ -353,10 +353,10 @@ export default function BiotechCatalystsPage() {
           <div className="flex gap-8">
             <SEOSidebar />
             <div className="flex-1 min-w-0">
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white">Home</Link>
             {' / '}
-            <Link href="/sectors" className="hover:text-foreground">Sectors</Link>
+            <Link href="/sectors" className="hover:text-white">Sectors</Link>
             {' / '}
             <span>Biotech Catalysts</span>
           </nav>
@@ -364,7 +364,7 @@ export default function BiotechCatalystsPage() {
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Biotech Catalysts 2025
           </h1>
-          <p className="text-xl text-muted-foreground mb-8">
+          <p className="text-xl text-[#868f97] mb-8">
             Track FDA approvals, clinical trial results, and pipeline updates. Expert analysis of biotech and pharma stocks
             including MRNA, REGN, VRTX, BIIB, and GILD with AI-powered insights.
           </p>
@@ -372,14 +372,14 @@ export default function BiotechCatalystsPage() {
           {/* What Are Biotech Catalysts */}
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-6">What Are Biotech Catalysts?</h2>
-            <div className="bg-card p-6 rounded-xl border border-border mb-6">
-              <p className="text-muted-foreground mb-4 leading-relaxed">
+            <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] mb-6">
+              <p className="text-[#868f97] mb-4 leading-relaxed">
                 Biotech catalysts are specific events that can dramatically impact a biotechnology company&apos;s stock price.
                 Unlike traditional stocks driven by quarterly earnings, biotech stocks move on binary events like clinical
                 trial results, FDA approvals, and pipeline updates. A single positive Phase 3 readout can double a stock,
                 while a trial failure can result in 50-90% declines.
               </p>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-[#868f97] leading-relaxed">
                 Understanding and tracking catalysts is essential for biotech investing. The most impactful catalysts include
                 FDA approval decisions (PDUFA dates), Phase 2/3 clinical trial data releases, regulatory designations
                 (Breakthrough Therapy, Fast Track), M&A activity, and commercial performance of approved drugs.
@@ -387,25 +387,25 @@ export default function BiotechCatalystsPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {catalystTypes.map((catalyst, i) => (
-                <div key={i} className="bg-card p-5 rounded-xl border border-border">
+                <div key={i} className="bg-[#1a1a1a] p-5 rounded-xl border border-white/[0.08]">
                   <div className="flex items-center gap-3 mb-3">
                     <span className="text-3xl">{catalyst.icon}</span>
                     <h3 className="text-lg font-bold">{catalyst.type}</h3>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-3">{catalyst.description}</p>
+                  <p className="text-sm text-[#868f97] mb-3">{catalyst.description}</p>
                   <div className="mb-3">
-                    <p className="text-xs font-medium text-green-500 mb-1">Examples:</p>
+                    <p className="text-xs font-medium text-[#4ebe96] mb-1">Examples:</p>
                     <div className="flex flex-wrap gap-1">
                       {catalyst.examples.map((ex, j) => (
-                        <span key={j} className="text-xs bg-secondary px-2 py-1 rounded">
+                        <span key={j} className="text-xs bg-white/[0.05] px-2 py-1 rounded">
                           {ex}
                         </span>
                       ))}
                     </div>
                   </div>
                   <p className="text-xs font-medium">
-                    <span className="text-muted-foreground">Impact: </span>
-                    <span className="text-green-500">{catalyst.impact}</span>
+                    <span className="text-[#868f97]">Impact: </span>
+                    <span className="text-[#4ebe96]">{catalyst.impact}</span>
                   </p>
                 </div>
               ))}
@@ -415,29 +415,29 @@ export default function BiotechCatalystsPage() {
           {/* FDA Approval Process */}
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-6">FDA Approval Process Explained</h2>
-            <div className="bg-card p-6 rounded-xl border border-border mb-6">
-              <p className="text-muted-foreground mb-4 leading-relaxed">
+            <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] mb-6">
+              <p className="text-[#868f97] mb-4 leading-relaxed">
                 The FDA drug approval process takes an average of 10-15 years from discovery to market. Understanding this
                 timeline helps investors assess risk and potential catalysts. Each stage has specific success rates and
                 regulatory requirements.
               </p>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-[#868f97] leading-relaxed">
                 Only about 10% of drugs that enter clinical trials ultimately receive FDA approval. The highest attrition
                 occurs in Phase 2 and Phase 3 trials where efficacy and safety are rigorously tested in larger patient populations.
               </p>
             </div>
             <div className="space-y-3">
               {fdaApprovalProcess.map((stage, i) => (
-                <div key={i} className="bg-card p-5 rounded-xl border border-border flex items-start gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-green-600/20 rounded-lg flex items-center justify-center">
-                    <span className="text-lg font-bold text-green-500">{i + 1}</span>
+                <div key={i} className="bg-[#1a1a1a] p-5 rounded-xl border border-white/[0.08] flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 bg-[#4ebe96]/20 rounded-lg flex items-center justify-center">
+                    <span className="text-lg font-bold text-[#4ebe96]">{i + 1}</span>
                   </div>
                   <div className="flex-1">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
                       <h3 className="text-lg font-bold">{stage.step}</h3>
-                      <span className="text-sm text-green-500 font-medium">{stage.duration}</span>
+                      <span className="text-sm text-[#4ebe96] font-medium">{stage.duration}</span>
                     </div>
-                    <p className="text-sm text-muted-foreground">{stage.description}</p>
+                    <p className="text-sm text-[#868f97]">{stage.description}</p>
                   </div>
                 </div>
               ))}
@@ -449,28 +449,28 @@ export default function BiotechCatalystsPage() {
             <h2 className="text-3xl font-bold mb-6">Clinical Trial Phases</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {clinicalTrialPhases.map((phase, i) => (
-                <div key={i} className="bg-card p-6 rounded-xl border border-border">
+                <div key={i} className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-xl font-bold">{phase.phase}</h3>
-                    <span className="text-xs px-3 py-1 bg-green-600/20 text-green-500 rounded-full font-medium">
+                    <span className="text-xs px-3 py-1 bg-[#4ebe96]/20 text-[#4ebe96] rounded-full font-medium">
                       {phase.successRate} success
                     </span>
                   </div>
                   <div className="space-y-2 mb-4">
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Focus:</span>
+                      <span className="text-[#868f97]">Focus:</span>
                       <span className="font-medium">{phase.focus}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Participants:</span>
+                      <span className="text-[#868f97]">Participants:</span>
                       <span className="font-medium">{phase.participants}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Duration:</span>
+                      <span className="text-[#868f97]">Duration:</span>
                       <span className="font-medium">{phase.duration}</span>
                     </div>
                   </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+                  <p className="text-sm text-[#868f97] leading-relaxed">
                     {phase.description}
                   </p>
                 </div>
@@ -483,32 +483,32 @@ export default function BiotechCatalystsPage() {
             <h2 className="text-3xl font-bold mb-6">Top Biotech Stocks to Watch</h2>
             <div className="space-y-4">
               {biotechStocks.map((stock) => (
-                <div key={stock.ticker} className="bg-card p-6 rounded-xl border border-border hover:border-green-500/50 transition-colors">
+                <div key={stock.ticker} className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-colors duration-100">
                   <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
                     <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0 w-12 h-12 bg-green-600/20 rounded-lg flex items-center justify-center">
-                        <span className="text-xl font-bold text-green-500">#{stock.rank}</span>
+                      <div className="flex-shrink-0 w-12 h-12 bg-[#4ebe96]/20 rounded-lg flex items-center justify-center">
+                        <span className="text-xl font-bold text-[#4ebe96]">#{stock.rank}</span>
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
                           <h3 className="text-2xl font-bold">{stock.ticker}</h3>
-                          <span className="text-sm text-muted-foreground">•</span>
-                          <span className="text-lg text-muted-foreground">{stock.name}</span>
+                          <span className="text-sm text-[#868f97]">•</span>
+                          <span className="text-lg text-[#868f97]">{stock.name}</span>
                         </div>
-                        <p className="text-sm text-muted-foreground mb-3">{stock.focus}</p>
+                        <p className="text-sm text-[#868f97] mb-3">{stock.focus}</p>
                         <div className="mb-3">
-                          <p className="text-xs font-medium text-green-500 mb-2">Pipeline Focus:</p>
+                          <p className="text-xs font-medium text-[#4ebe96] mb-2">Pipeline Focus:</p>
                           <div className="flex flex-wrap gap-2">
                             {stock.pipeline.map((item, i) => (
-                              <span key={i} className="text-xs px-3 py-1 bg-secondary rounded-full">
+                              <span key={i} className="text-xs px-3 py-1 bg-white/[0.05] rounded-full">
                                 {item}
                               </span>
                             ))}
                           </div>
                         </div>
                         <p className="text-sm">
-                          <span className="font-medium text-green-500">Key Catalyst: </span>
-                          <span className="text-muted-foreground">{stock.catalysts}</span>
+                          <span className="font-medium text-[#4ebe96]">Key Catalyst: </span>
+                          <span className="text-[#868f97]">{stock.catalysts}</span>
                         </p>
                       </div>
                     </div>
@@ -516,19 +516,19 @@ export default function BiotechCatalystsPage() {
                   <div className="flex flex-wrap gap-2">
                     <Link
                       href={`/stock/${stock.ticker.toLowerCase()}`}
-                      className="text-sm px-4 py-2 bg-green-600/20 text-green-500 rounded-lg hover:bg-green-600/30 transition-colors font-medium"
+                      className="text-sm px-4 py-2 bg-[#4ebe96]/20 text-[#4ebe96] rounded-lg hover:bg-[#4ebe96]/30 transition-colors duration-100 font-medium"
                     >
                       View Analysis
                     </Link>
                     <Link
                       href={`/should-i-buy/${stock.ticker.toLowerCase()}`}
-                      className="text-sm px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors"
+                      className="text-sm px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
                     >
                       Should I Buy?
                     </Link>
                     <Link
                       href={`/prediction/${stock.ticker.toLowerCase()}`}
-                      className="text-sm px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors"
+                      className="text-sm px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
                     >
                       Price Target
                     </Link>
@@ -541,8 +541,8 @@ export default function BiotechCatalystsPage() {
           {/* Investment Risks */}
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-6">Risks of Biotech Investing</h2>
-            <div className="bg-gradient-to-br from-red-600/10 to-red-600/5 p-6 rounded-xl border border-red-500/20 mb-6">
-              <p className="text-muted-foreground leading-relaxed">
+            <div className="bg-gradient-to-br from-[#e15241]/10 to-[#e15241]/5 p-6 rounded-xl border border-[#e15241]/20 mb-6">
+              <p className="text-[#868f97] leading-relaxed">
                 Biotech investing carries significantly higher risk than traditional stocks due to binary clinical outcomes,
                 regulatory uncertainty, and high cash burn rates. Understanding these risks is essential for proper position
                 sizing and portfolio management.
@@ -550,21 +550,21 @@ export default function BiotechCatalystsPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {investmentRisks.map((risk, i) => (
-                <div key={i} className="bg-card p-5 rounded-xl border border-border">
+                <div key={i} className="bg-[#1a1a1a] p-5 rounded-xl border border-white/[0.08]">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-lg font-bold">{risk.risk}</h3>
                     <span className={`text-xs px-3 py-1 rounded-full font-medium ${
-                      risk.severity === 'Very High' ? 'bg-red-600/20 text-red-500' :
-                      risk.severity === 'High' ? 'bg-orange-600/20 text-orange-500' :
-                      'bg-yellow-600/20 text-yellow-500'
+                      risk.severity === 'Very High' ? 'bg-[#e15241]/20 text-[#e15241]' :
+                      risk.severity === 'High' ? 'bg-[#f4a623]/20 text-[#f4a623]' :
+                      'bg-[#f4a623]/20 text-[#f4a623]'
                     }`}>
                       {risk.severity}
                     </span>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-3">{risk.description}</p>
+                  <p className="text-sm text-[#868f97] mb-3">{risk.description}</p>
                   <div className="text-sm">
-                    <span className="font-medium text-green-500">Mitigation: </span>
-                    <span className="text-muted-foreground">{risk.mitigation}</span>
+                    <span className="font-medium text-[#4ebe96]">Mitigation: </span>
+                    <span className="text-[#868f97]">{risk.mitigation}</span>
                   </div>
                 </div>
               ))}
@@ -575,9 +575,9 @@ export default function BiotechCatalystsPage() {
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-6">Biotech Investment Strategies</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-xl font-bold mb-3 text-green-500">Diversified Approach</h3>
-                <p className="text-sm text-muted-foreground mb-4">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+                <h3 className="text-xl font-bold mb-3 text-[#4ebe96]">Diversified Approach</h3>
+                <p className="text-sm text-[#868f97] mb-4">
                   Lower risk through portfolio diversification
                 </p>
                 <div className="space-y-2 text-sm">
@@ -588,9 +588,9 @@ export default function BiotechCatalystsPage() {
                   <p>• Limit single position to 5-10%</p>
                 </div>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-xl font-bold mb-3 text-blue-500">Catalyst-Driven</h3>
-                <p className="text-sm text-muted-foreground mb-4">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+                <h3 className="text-xl font-bold mb-3 text-[#479ffa]">Catalyst-Driven</h3>
+                <p className="text-sm text-[#868f97] mb-4">
                   Time entries around specific events
                 </p>
                 <div className="space-y-2 text-sm">
@@ -601,9 +601,9 @@ export default function BiotechCatalystsPage() {
                   <p>• Use options for defined risk</p>
                 </div>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
                 <h3 className="text-xl font-bold mb-3 text-purple-500">Quality Growth</h3>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-sm text-[#868f97] mb-4">
                   Long-term holdings in proven winners
                 </p>
                 <div className="space-y-2 text-sm">
@@ -622,12 +622,12 @@ export default function BiotechCatalystsPage() {
             <h2 className="text-3xl font-bold mb-6">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {faqs.map((faq, i) => (
-                <details key={i} className="bg-card p-6 rounded-xl border border-border group">
+                <details key={i} className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] group">
                   <summary className="font-bold cursor-pointer list-none flex items-center justify-between">
                     <span>{faq.question}</span>
-                    <span className="text-green-500 group-open:rotate-180 transition-transform">▼</span>
+                    <span className="text-[#4ebe96] group-open:rotate-180 transition-transform">▼</span>
                   </summary>
-                  <p className="text-muted-foreground mt-4 leading-relaxed">
+                  <p className="text-[#868f97] mt-4 leading-relaxed">
                     {faq.answer}
                   </p>
                 </details>
@@ -636,45 +636,45 @@ export default function BiotechCatalystsPage() {
           </section>
 
           {/* CTA */}
-          <section className="bg-gradient-to-br from-green-600/20 to-green-600/5 p-8 rounded-xl border border-green-500/20 text-center mb-12">
+          <section className="bg-gradient-to-br from-[#4ebe96]/20 to-[#4ebe96]/5 p-8 rounded-xl border border-[#4ebe96]/20 text-center mb-12">
             <h2 className="text-2xl font-bold mb-4">Analyze Biotech Stocks with AI</h2>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-[#868f97] mb-6">
               Get comprehensive analysis, DCF valuations, and pipeline insights for biotech and pharma stocks
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+              className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-white px-8 py-3 rounded-lg font-medium transition-colors duration-100"
             >
               Start Your Analysis
             </Link>
           </section>
 
           {/* Related Links */}
-          <section className="border-t border-border pt-8">
+          <section className="border-t border-white/[0.08] pt-8">
             <h3 className="text-lg font-bold mb-4">Related Pages</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <Link href="/sectors" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors text-center text-sm">
+              <Link href="/sectors" className="px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 text-center text-sm">
                 All Sectors
               </Link>
-              <Link href="/sectors/healthcare" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors text-center text-sm">
+              <Link href="/sectors/healthcare" className="px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 text-center text-sm">
                 Healthcare Sector
               </Link>
-              <Link href="/best-stocks/healthcare" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors text-center text-sm">
+              <Link href="/best-stocks/healthcare" className="px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 text-center text-sm">
                 Best Healthcare Stocks
               </Link>
-              <Link href="/ipo" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors text-center text-sm">
+              <Link href="/ipo" className="px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 text-center text-sm">
                 Biotech IPOs
               </Link>
-              <Link href="/analyst-ratings" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors text-center text-sm">
+              <Link href="/analyst-ratings" className="px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 text-center text-sm">
                 Analyst Ratings
               </Link>
-              <Link href="/earnings" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors text-center text-sm">
+              <Link href="/earnings" className="px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 text-center text-sm">
                 Earnings Calendar
               </Link>
-              <Link href="/institutional" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors text-center text-sm">
+              <Link href="/institutional" className="px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 text-center text-sm">
                 Institutional Holdings
               </Link>
-              <Link href="/insights" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors text-center text-sm">
+              <Link href="/insights" className="px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 text-center text-sm">
                 Market Insights
               </Link>
             </div>

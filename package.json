@@ -97,6 +97,7 @@
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^5.1.2",
     "jsdom": "^27.4.0",
+    "pg": "^8.17.1",
     "playwright": "^1.57.0",
     "postcss": "^8.5",
     "tailwindcss": "^4.1.9",

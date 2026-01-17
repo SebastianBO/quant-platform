@@ -171,19 +171,19 @@ interface MarketHeatmapProps {
 }
 
 function getChangeColor(change: number | undefined): string {
-  if (change === undefined) return "bg-zinc-700"
-  if (change >= 3) return "bg-emerald-500"
-  if (change >= 1.5) return "bg-emerald-600"
-  if (change >= 0.5) return "bg-green-600"
-  if (change >= 0) return "bg-green-700"
-  if (change >= -0.5) return "bg-red-700"
-  if (change >= -1.5) return "bg-red-600"
-  if (change >= -3) return "bg-red-500"
-  return "bg-red-400"
+  if (change === undefined) return "bg-white/[0.05]"
+  if (change >= 3) return "bg-[#4ebe96]"
+  if (change >= 1.5) return "bg-[#4ebe96]/90"
+  if (change >= 0.5) return "bg-[#4ebe96]/80"
+  if (change >= 0) return "bg-[#4ebe96]/70"
+  if (change >= -0.5) return "bg-[#e15241]/70"
+  if (change >= -1.5) return "bg-[#e15241]/80"
+  if (change >= -3) return "bg-[#e15241]/90"
+  return "bg-[#e15241]"
 }
 
 function getChangeTextColor(change: number | undefined): string {
-  if (change === undefined) return "text-zinc-300"
+  if (change === undefined) return "text-[#868f97]"
   if (change >= 0) return "text-white"
   return "text-white"
 }
@@ -209,7 +209,7 @@ function StockTile({
   }
 
   const className = cn(
-    "flex flex-col items-center justify-center p-1 rounded transition-all",
+    "flex flex-col items-center justify-center p-1 rounded transition-all duration-100",
     bgColor,
     sizeClasses[size],
     interactive && "hover:ring-2 hover:ring-white/30 hover:z-10 cursor-pointer"
@@ -259,7 +259,7 @@ function SectorTile({
 
   return (
     <div
-      className="flex flex-col rounded-lg overflow-hidden border border-zinc-800"
+      className="flex flex-col rounded-lg overflow-hidden border border-white/[0.08]"
       style={{ flex: `${sector.weight} 1 0%` }}
     >
       {/* Sector header */}
@@ -270,7 +270,7 @@ function SectorTile({
         >
           <span className="truncate">{sector.name}</span>
           {!isNaN(avgChange) && (
-            <span className={cn("text-[10px]", avgChange >= 0 ? "text-emerald-200" : "text-red-200")}>
+            <span className={cn("text-[10px]", avgChange >= 0 ? "text-[#4ebe96]" : "text-[#e15241]")}>
               {avgChange >= 0 ? "+" : ""}{avgChange.toFixed(2)}%
             </span>
           )}
@@ -278,7 +278,7 @@ function SectorTile({
       )}
 
       {/* Stocks grid */}
-      <div className="flex flex-wrap flex-1 gap-0.5 p-1 bg-zinc-900/50">
+      <div className="flex flex-wrap flex-1 gap-0.5 p-1 bg-white/[0.05]">
         {displayStocks.map((stock) => (
           <StockTile
             key={stock.ticker}
@@ -319,25 +319,25 @@ export function MarketHeatmap({
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h2 className="text-lg font-semibold text-zinc-100">Market Heatmap</h2>
-          <p className="text-xs text-zinc-500">S&P 500 sectors by market cap weight</p>
+          <h2 className="text-lg font-semibold text-white">Market Heatmap</h2>
+          <p className="text-xs text-[#868f97]">S&P 500 sectors by market cap weight</p>
         </div>
         <div className="flex items-center gap-4 text-xs">
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded bg-emerald-500" />
-            <span className="text-zinc-400">+3%+</span>
+            <div className="w-3 h-3 rounded bg-[#4ebe96]" />
+            <span className="text-[#868f97]">+3%+</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded bg-green-600" />
-            <span className="text-zinc-400">+0-3%</span>
+            <div className="w-3 h-3 rounded bg-[#4ebe96]/80" />
+            <span className="text-[#868f97]">+0-3%</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded bg-red-600" />
-            <span className="text-zinc-400">-0-3%</span>
+            <div className="w-3 h-3 rounded bg-[#e15241]/80" />
+            <span className="text-[#868f97]">-0-3%</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded bg-red-400" />
-            <span className="text-zinc-400">-3%+</span>
+            <div className="w-3 h-3 rounded bg-[#e15241]" />
+            <span className="text-[#868f97]">-3%+</span>
           </div>
         </div>
       </div>
@@ -372,9 +372,9 @@ export function MarketHeatmap({
       </div>
 
       {/* Footer */}
-      <div className="mt-4 flex items-center justify-between text-xs text-zinc-500">
+      <div className="mt-4 flex items-center justify-between text-xs text-[#868f97]">
         <span>Size = Market cap weight • Color = Daily % change</span>
-        <Link href="/markets" className="text-emerald-400 hover:text-emerald-300">
+        <Link href="/markets" className="text-[#4ebe96] hover:text-[#4ebe96]/80 transition-colors duration-100">
           View full market data →
         </Link>
       </div>
@@ -409,14 +409,14 @@ export function CompactHeatmap({
               className="w-2 h-2 rounded-full"
               style={{ backgroundColor: sector.color }}
             />
-            <span className="text-xs text-zinc-400 flex-1 truncate">{sector.name}</span>
+            <span className="text-xs text-[#868f97] flex-1 truncate">{sector.name}</span>
             <div className="flex gap-0.5">
               {sector.stocks.slice(0, 4).map((stock) => (
                 <Link
                   key={stock.ticker}
                   href={`/stock/${stock.ticker.toLowerCase()}`}
                   className={cn(
-                    "w-6 h-6 rounded text-[8px] font-bold flex items-center justify-center",
+                    "w-6 h-6 rounded text-[8px] font-bold flex items-center justify-center transition-colors duration-100",
                     getChangeColor(stock.change),
                     "hover:ring-1 hover:ring-white/30"
                   )}
@@ -429,7 +429,7 @@ export function CompactHeatmap({
             <span
               className={cn(
                 "text-xs font-medium w-12 text-right",
-                avgChange >= 0 ? "text-emerald-400" : "text-red-400"
+                avgChange >= 0 ? "text-[#4ebe96]" : "text-[#e15241]"
               )}
             >
               {!isNaN(avgChange) ? `${avgChange >= 0 ? "+" : ""}${avgChange.toFixed(1)}%` : "—"}
@@ -469,12 +469,12 @@ export function SectorBars({
                   className="w-2 h-2 rounded-full"
                   style={{ backgroundColor: sector.color }}
                 />
-                <span className="text-zinc-300">{sector.name}</span>
+                <span className="text-white">{sector.name}</span>
               </div>
               <span
                 className={cn(
                   "font-medium",
-                  isPositive ? "text-emerald-400" : "text-red-400"
+                  isPositive ? "text-[#4ebe96]" : "text-[#e15241]"
                 )}
               >
                 {!isNaN(avgChange)
@@ -482,12 +482,12 @@ export function SectorBars({
                   : "—"}
               </span>
             </div>
-            <div className="h-2 bg-zinc-800 rounded-full overflow-hidden flex">
+            <div className="h-2 bg-white/[0.05] rounded-full overflow-hidden flex">
               {isPositive ? (
                 <>
                   <div className="w-1/2" />
                   <div
-                    className="bg-emerald-500 rounded-full transition-all duration-300"
+                    className="bg-[#4ebe96] rounded-full transition-all duration-100"
                     style={{ width: `${barWidth / 2}%` }}
                   />
                 </>
@@ -495,7 +495,7 @@ export function SectorBars({
                 <>
                   <div className="flex-1 flex justify-end">
                     <div
-                      className="bg-red-500 rounded-full transition-all duration-300"
+                      className="bg-[#e15241] rounded-full transition-all duration-100"
                       style={{ width: `${barWidth / 2}%` }}
                     />
                   </div>

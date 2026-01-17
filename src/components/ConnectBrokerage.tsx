@@ -15,12 +15,12 @@ export default function ConnectBrokerage({ userId, onConnectionSuccess }: Connec
   const [activeTab, setActiveTab] = useState<'us' | 'europe'>('us')
 
   return (
-    <Card className="bg-card border-border">
+    <Card className="bg-[#1a1a1a] border-white/[0.08]">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           Connect Your Brokerage
         </CardTitle>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-[#868f97]">
           Link your investment accounts to automatically sync your portfolio
         </p>
       </CardHeader>
@@ -54,11 +54,11 @@ export default function ConnectBrokerage({ userId, onConnectionSuccess }: Connec
           </TabsContent>
         </Tabs>
 
-        <div className="mt-6 pt-6 border-t border-border">
+        <div className="mt-6 pt-6 border-t border-white/[0.08]">
           <h4 className="text-sm font-medium mb-3">Supported Platforms</h4>
-          <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground">
+          <div className="grid grid-cols-2 gap-4 text-sm text-[#868f97]">
             <div>
-              <p className="font-medium text-foreground mb-1">US Brokerages</p>
+              <p className="font-medium text-white mb-1">US Brokerages</p>
               <ul className="space-y-1">
                 <li>Robinhood</li>
                 <li>Fidelity</li>
@@ -71,7 +71,7 @@ export default function ConnectBrokerage({ userId, onConnectionSuccess }: Connec
               </ul>
             </div>
             <div>
-              <p className="font-medium text-foreground mb-1">European Banks</p>
+              <p className="font-medium text-white mb-1">European Banks</p>
               <ul className="space-y-1">
                 <li>Avanza (Sweden)</li>
                 <li>Nordnet</li>

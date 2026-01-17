@@ -136,8 +136,8 @@ export default function MarketsHubPage() {
             </div>
             <div className="flex-1 min-w-0">
           {/* Breadcrumbs */}
-          <nav className="text-sm text-muted-foreground mb-4 sm:mb-6">
-            <Link href="/" className="hover:text-foreground">
+          <nav className="text-sm text-[#868f97] mb-4 sm:mb-6">
+            <Link href="/" className="hover:text-white">
               Home
             </Link>
             {' / '}
@@ -149,7 +149,7 @@ export default function MarketsHubPage() {
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
               Stock Market Movers Today
             </h1>
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6">
+            <p className="text-base sm:text-lg md:text-xl text-[#868f97] mb-6">
               Track real-time data on the biggest movers in the stock market.
               Find top gainers, losers, most active stocks, and more.
             </p>
@@ -173,16 +173,16 @@ export default function MarketsHubPage() {
                 <Link
                   key={page.href}
                   href={page.href}
-                  className="bg-card p-4 sm:p-6 rounded-xl border border-border hover:border-green-500/50 transition-all hover:shadow-lg group"
+                  className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all hover:shadow-lg group"
                 >
                   <div className="text-3xl sm:text-4xl mb-4">{page.icon}</div>
-                  <h3 className="text-lg sm:text-xl font-bold mb-2 group-hover:text-green-500 transition-colors">
+                  <h3 className="text-lg sm:text-xl font-bold mb-2 group-hover:text-[#4ebe96] transition-colors duration-100">
                     {page.title}
                   </h3>
-                  <p className="text-sm sm:text-base text-muted-foreground mb-3">
+                  <p className="text-sm sm:text-base text-[#868f97] mb-3">
                     {page.description}
                   </p>
-                  <p className="text-xs sm:text-sm text-green-500">{page.keywords}</p>
+                  <p className="text-xs sm:text-sm text-[#4ebe96]">{page.keywords}</p>
                 </Link>
               ))}
             </div>
@@ -194,38 +194,38 @@ export default function MarketsHubPage() {
               Why Track Market Movers?
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
                 <h3 className="text-base sm:text-lg font-bold mb-3">
                   Identify Opportunities
                 </h3>
-                <p className="text-sm sm:text-base text-muted-foreground">
+                <p className="text-sm sm:text-base text-[#868f97]">
                   Market movers help you spot stocks with momentum, unusual
                   activity, or potential value opportunities before they become
                   mainstream.
                 </p>
               </div>
-              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
                 <h3 className="text-base sm:text-lg font-bold mb-3">
                   Understand Market Sentiment
                 </h3>
-                <p className="text-sm sm:text-base text-muted-foreground">
+                <p className="text-sm sm:text-base text-[#868f97]">
                   By tracking which stocks are moving and why, you gain insight
                   into broader market trends and investor sentiment.
                 </p>
               </div>
-              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
                 <h3 className="text-base sm:text-lg font-bold mb-3">Risk Management</h3>
-                <p className="text-sm sm:text-base text-muted-foreground">
+                <p className="text-sm sm:text-base text-[#868f97]">
                   Monitor stocks hitting 52-week lows in your portfolio or
                   watch list to make informed decisions about position sizing
                   and exits.
                 </p>
               </div>
-              <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
                 <h3 className="text-base sm:text-lg font-bold mb-3">
                   Trading Opportunities
                 </h3>
-                <p className="text-sm sm:text-base text-muted-foreground">
+                <p className="text-sm sm:text-base text-[#868f97]">
                   High volume movers and breakouts to new highs often present
                   short-term trading opportunities for active traders.
                 </p>
@@ -236,43 +236,43 @@ export default function MarketsHubPage() {
           {/* Key Metrics Explained */}
           <section className="mb-12 sm:mb-16">
             <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Key Metrics Explained</h2>
-            <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
+            <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
               <div className="space-y-4">
                 <div>
-                  <h3 className="font-bold text-green-500 mb-2 text-sm sm:text-base">
+                  <h3 className="font-bold text-[#4ebe96] mb-2 text-sm sm:text-base">
                     Trading Volume
                   </h3>
-                  <p className="text-sm sm:text-base text-muted-foreground">
+                  <p className="text-sm sm:text-base text-[#868f97]">
                     The number of shares traded during a period. High volume
                     indicates strong interest and liquidity, making it easier to
                     enter and exit positions.
                   </p>
                 </div>
                 <div>
-                  <h3 className="font-bold text-green-500 mb-2 text-sm sm:text-base">
+                  <h3 className="font-bold text-[#4ebe96] mb-2 text-sm sm:text-base">
                     Percent Change
                   </h3>
-                  <p className="text-sm sm:text-base text-muted-foreground">
+                  <p className="text-sm sm:text-base text-[#868f97]">
                     The percentage difference between current price and previous
                     close. This normalizes price movements across different
                     stocks for easy comparison.
                   </p>
                 </div>
                 <div>
-                  <h3 className="font-bold text-green-500 mb-2 text-sm sm:text-base">
+                  <h3 className="font-bold text-[#4ebe96] mb-2 text-sm sm:text-base">
                     52-Week Range
                   </h3>
-                  <p className="text-sm sm:text-base text-muted-foreground">
+                  <p className="text-sm sm:text-base text-[#868f97]">
                     The highest and lowest prices over the past year. Helps
                     identify if a stock is near historical highs (potential
                     breakout) or lows (potential value).
                   </p>
                 </div>
                 <div>
-                  <h3 className="font-bold text-green-500 mb-2 text-sm sm:text-base">
+                  <h3 className="font-bold text-[#4ebe96] mb-2 text-sm sm:text-base">
                     Volume Ratio
                   </h3>
-                  <p className="text-sm sm:text-base text-muted-foreground">
+                  <p className="text-sm sm:text-base text-[#868f97]">
                     Current volume compared to average volume. Ratios above 2x
                     indicate unusual activity that may signal significant news
                     or events.
@@ -291,15 +291,15 @@ export default function MarketsHubPage() {
               {faqs.map((faq, index) => (
                 <details
                   key={index}
-                  className="bg-card p-4 sm:p-6 rounded-xl border border-border group"
+                  className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08] group"
                 >
                   <summary className="text-base sm:text-lg font-bold cursor-pointer list-none flex items-center justify-between gap-4">
                     <span className="flex-1">{faq.question}</span>
-                    <span className="text-green-500 group-open:rotate-180 transition-transform flex-shrink-0">
+                    <span className="text-[#4ebe96] group-open:rotate-180 transition-transform flex-shrink-0">
                       ▼
                     </span>
                   </summary>
-                  <p className="text-sm sm:text-base text-muted-foreground mt-3 sm:mt-4">
+                  <p className="text-sm sm:text-base text-[#868f97] mt-3 sm:mt-4">
                     {faq.answer}
                   </p>
                 </details>
@@ -308,17 +308,17 @@ export default function MarketsHubPage() {
           </section>
 
           {/* CTA */}
-          <section className="bg-card p-6 sm:p-8 rounded-xl border border-border text-center">
+          <section className="bg-[#1a1a1a] p-6 sm:p-8 rounded-xl border border-white/[0.08] text-center">
             <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">
               Get AI-Powered Stock Analysis
             </h2>
-            <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6">
+            <p className="text-sm sm:text-base text-[#868f97] mb-4 sm:mb-6">
               Access detailed fundamental analysis, DCF valuations, and AI
               insights for any stock in the market.
             </p>
             <Link
               href="/dashboard"
-              className="inline-block w-full sm:w-auto bg-green-600 hover:bg-green-500 text-white px-6 sm:px-8 py-3 rounded-lg font-medium transition-colors"
+              className="inline-block w-full sm:w-auto bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-white px-6 sm:px-8 py-3 rounded-lg font-medium transition-colors duration-100"
             >
               Start Analyzing Stocks
             </Link>

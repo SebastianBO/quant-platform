@@ -52,13 +52,13 @@ export default function TrendingTickers({ onSelectTicker }: TrendingTickersProps
 
   if (loading) {
     return (
-      <div className="bg-background/95 backdrop-blur-md border-b border-border">
+      <div className="bg-background/95 backdrop-blur-md border-b border-white/[0.08]">
         <div className="max-w-[1800px] mx-auto px-4 py-3">
           <div className="flex items-center gap-4">
-            <div className="h-6 w-24 bg-secondary/50 rounded animate-pulse" />
+            <div className="h-6 w-24 bg-white/[0.025] rounded animate-pulse" />
             <div className="flex-1 flex gap-4 overflow-hidden">
               {[1,2,3,4,5,6].map(i => (
-                <div key={i} className="h-12 w-32 bg-secondary/30 rounded-lg animate-pulse flex-shrink-0" />
+                <div key={i} className="h-12 w-32 bg-white/[0.015] rounded-lg animate-pulse flex-shrink-0" />
               ))}
             </div>
           </div>
@@ -70,7 +70,7 @@ export default function TrendingTickers({ onSelectTicker }: TrendingTickersProps
   const currentData = viewMode === 'gainers' ? gainers : viewMode === 'losers' ? losers : trending
 
   return (
-    <div className="bg-background/95 backdrop-blur-md border-b border-border">
+    <div className="bg-background/95 backdrop-blur-md border-b border-white/[0.08]">
       <div className="max-w-[1800px] mx-auto px-4 py-2">
         <div className="flex items-center gap-4">
           {/* Mode Switcher */}
@@ -78,10 +78,10 @@ export default function TrendingTickers({ onSelectTicker }: TrendingTickersProps
             <button
               onClick={() => setViewMode('gainers')}
               className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
+                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-100",
                 viewMode === 'gainers'
-                  ? "bg-green-500/20 text-green-500"
-                  : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                  ? "bg-[#4ebe96]/20 text-[#4ebe96]"
+                  : "text-[#868f97] hover:text-white hover:bg-white/[0.025]"
               )}
             >
               <Flame className="w-3.5 h-3.5" />
@@ -90,10 +90,10 @@ export default function TrendingTickers({ onSelectTicker }: TrendingTickersProps
             <button
               onClick={() => setViewMode('losers')}
               className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
+                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-100",
                 viewMode === 'losers'
-                  ? "bg-red-500/20 text-red-500"
-                  : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                  ? "bg-[#e15241]/20 text-[#e15241]"
+                  : "text-[#868f97] hover:text-white hover:bg-white/[0.025]"
               )}
             >
               <TrendingDown className="w-3.5 h-3.5" />
@@ -102,10 +102,10 @@ export default function TrendingTickers({ onSelectTicker }: TrendingTickersProps
             <button
               onClick={() => setViewMode('active')}
               className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
+                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-100",
                 viewMode === 'active'
-                  ? "bg-blue-500/20 text-blue-500"
-                  : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                  ? "bg-[#479ffa]/20 text-[#479ffa]"
+                  : "text-[#868f97] hover:text-white hover:bg-white/[0.025]"
               )}
             >
               <Activity className="w-3.5 h-3.5" />
@@ -158,11 +158,11 @@ const MoverCard = memo(function MoverCard({
     <button
       onClick={onClick}
       className={cn(
-        "flex-shrink-0 px-3 py-2 rounded-lg transition-all hover:scale-[1.02]",
+        "flex-shrink-0 px-3 py-2 rounded-lg transition-all duration-100 hover:scale-[1.02]",
         "border border-transparent",
-        isGainer && "bg-green-500/5 hover:bg-green-500/10 hover:border-green-500/30",
-        isLoser && "bg-red-500/5 hover:bg-red-500/10 hover:border-red-500/30",
-        !isGainer && !isLoser && "bg-secondary/30 hover:bg-secondary/50"
+        isGainer && "bg-[#4ebe96]/5 hover:bg-[#4ebe96]/10 hover:border-[#4ebe96]/30",
+        isLoser && "bg-[#e15241]/5 hover:bg-[#e15241]/10 hover:border-[#e15241]/30",
+        !isGainer && !isLoser && "bg-white/[0.015] hover:bg-white/[0.025]"
       )}
     >
       <div className="flex items-center gap-3">
@@ -181,7 +181,7 @@ const MoverCard = memo(function MoverCard({
               <Zap className="w-3 h-3 text-yellow-500" />
             )}
           </div>
-          <p className="text-[10px] text-muted-foreground truncate max-w-[80px]">
+          <p className="text-[10px] text-[#868f97] truncate max-w-[80px]">
             {mover.name}
           </p>
         </div>
@@ -191,7 +191,7 @@ const MoverCard = memo(function MoverCard({
           <p className="text-sm font-medium tabular-nums">${typeof mover.price === 'number' ? mover.price.toFixed(2) : '—'}</p>
           <p className={cn(
             "text-xs font-semibold tabular-nums flex items-center justify-end gap-0.5",
-            isPositive ? "text-green-500" : "text-red-500"
+            isPositive ? "text-[#4ebe96]" : "text-[#e15241]"
           )}>
             {isPositive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
             {isPositive ? '+' : ''}{typeof mover.changePercent === 'number' ? mover.changePercent.toFixed(2) : '0.00'}%
@@ -209,8 +209,8 @@ const MoverCard = memo(function MoverCard({
                 "text-[9px] px-1.5 py-0.5 rounded-full font-medium",
                 signal.includes('🔥') ? "bg-orange-500/20 text-orange-400" :
                 signal.includes('52wk') ? "bg-purple-500/20 text-purple-400" :
-                signal.includes('vol') || signal.includes('Vol') ? "bg-blue-500/20 text-blue-400" :
-                "bg-secondary text-muted-foreground"
+                signal.includes('vol') || signal.includes('Vol') ? "bg-[#479ffa]/20 text-[#479ffa]" :
+                "bg-white/[0.05] text-[#868f97]"
               )}
             >
               {signal}

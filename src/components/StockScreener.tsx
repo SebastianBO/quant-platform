@@ -154,13 +154,13 @@ function StockScreenerComponent() {
       <CardContent>
         {/* Preset Screens */}
         <div className="mb-6">
-          <p className="text-sm text-muted-foreground mb-2">Quick Screens</p>
+          <p className="text-sm text-[#868f97] mb-2">Quick Screens</p>
           <div className="flex flex-wrap gap-2">
             {PRESET_SCREENS.map((preset, i) => (
               <button
                 key={i}
                 onClick={() => applyPreset(preset)}
-                className="px-3 py-2 bg-secondary hover:bg-secondary/80 rounded-lg text-sm transition-colors"
+                className="px-3 py-2 bg-white/[0.05] hover:bg-white/[0.08] rounded-lg text-sm transition-colors duration-100"
                 title={preset.description}
               >
                 {preset.name}
@@ -170,12 +170,12 @@ function StockScreenerComponent() {
         </div>
 
         {/* Custom Criteria */}
-        <div className="mb-6 p-4 bg-secondary/30 rounded-lg">
+        <div className="mb-6 p-4 bg-white/[0.015] rounded-lg">
           <div className="flex items-center justify-between mb-4">
             <p className="font-medium">Custom Criteria</p>
             <button
               onClick={addCriteria}
-              className="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 rounded text-sm"
+              className="px-3 py-1 bg-[#4ebe96] hover:bg-[#4ebe96]/80 rounded text-sm transition-colors duration-100"
             >
               + Add Filter
             </button>
@@ -186,7 +186,7 @@ function StockScreenerComponent() {
               <select
                 value={c.metric}
                 onChange={(e) => updateCriteria(i, 'metric', e.target.value)}
-                className="bg-card border border-border rounded px-2 py-1 text-sm"
+                className="bg-[#1a1a1a] border border-white/[0.08] rounded px-2 py-1 text-sm"
               >
                 {METRICS.map(m => (
                   <option key={m.key} value={m.key}>{m.name}</option>
@@ -196,7 +196,7 @@ function StockScreenerComponent() {
               <select
                 value={c.operator}
                 onChange={(e) => updateCriteria(i, 'operator', e.target.value)}
-                className="bg-card border border-border rounded px-2 py-1 text-sm"
+                className="bg-[#1a1a1a] border border-white/[0.08] rounded px-2 py-1 text-sm"
               >
                 <option value="gt">Greater than</option>
                 <option value="lt">Less than</option>
@@ -207,18 +207,18 @@ function StockScreenerComponent() {
                 type="number"
                 value={c.value}
                 onChange={(e) => updateCriteria(i, 'value', parseFloat(e.target.value))}
-                className="bg-card border border-border rounded px-2 py-1 text-sm w-24"
+                className="bg-[#1a1a1a] border border-white/[0.08] rounded px-2 py-1 text-sm w-24"
                 step="0.01"
               />
 
               {c.operator === 'between' && (
                 <>
-                  <span className="text-muted-foreground">and</span>
+                  <span className="text-[#868f97]">and</span>
                   <input
                     type="number"
                     value={c.value2 || ''}
                     onChange={(e) => updateCriteria(i, 'value2', parseFloat(e.target.value))}
-                    className="bg-card border border-border rounded px-2 py-1 text-sm w-24"
+                    className="bg-[#1a1a1a] border border-white/[0.08] rounded px-2 py-1 text-sm w-24"
                     step="0.01"
                   />
                 </>
@@ -226,7 +226,7 @@ function StockScreenerComponent() {
 
               <button
                 onClick={() => removeCriteria(i)}
-                className="text-red-500 hover:text-red-400"
+                className="text-[#e15241] hover:text-[#e15241]/80 transition-colors duration-100"
               >
                 ✕
               </button>
@@ -235,7 +235,7 @@ function StockScreenerComponent() {
 
           <button
             onClick={() => applyScreen()}
-            className="mt-4 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded font-medium"
+            className="mt-4 px-4 py-2 bg-[#4ebe96] hover:bg-[#4ebe96]/80 rounded font-medium transition-colors duration-100"
           >
             Run Screen
           </button>
@@ -247,11 +247,11 @@ function StockScreenerComponent() {
             <div className="flex items-center justify-between mb-4">
               <p className="font-medium">{results.length} stocks match your criteria</p>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">Sort by:</span>
+                <span className="text-sm text-[#868f97]">Sort by:</span>
                 <select
                   value={sortBy}
                   onChange={(e) => { setSortBy(e.target.value); applyScreen(); }}
-                  className="bg-card border border-border rounded px-2 py-1 text-sm"
+                  className="bg-[#1a1a1a] border border-white/[0.08] rounded px-2 py-1 text-sm"
                 >
                   {METRICS.map(m => (
                     <option key={m.key} value={m.key}>{m.name}</option>
@@ -259,7 +259,7 @@ function StockScreenerComponent() {
                 </select>
                 <button
                   onClick={() => { setSortOrder(o => o === 'asc' ? 'desc' : 'asc'); applyScreen(); }}
-                  className="px-2 py-1 bg-secondary rounded text-sm"
+                  className="px-2 py-1 bg-white/[0.05] rounded text-sm transition-colors duration-100 hover:bg-white/[0.08]"
                 >
                   {sortOrder === 'asc' ? '↑' : '↓'}
                 </button>
@@ -269,7 +269,7 @@ function StockScreenerComponent() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border">
+                  <tr className="border-b border-white/[0.08]">
                     <th className="p-3 text-left">Ticker</th>
                     <th className="p-3 text-left">Company</th>
                     <th className="p-3 text-right">Price</th>
@@ -283,13 +283,13 @@ function StockScreenerComponent() {
                 </thead>
                 <tbody>
                   {results.map((stock) => (
-                    <tr key={stock.ticker} className="border-b border-border/50 hover:bg-secondary/30">
-                      <td className="p-3 font-bold text-emerald-500">{stock.ticker}</td>
+                    <tr key={stock.ticker} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors duration-100">
+                      <td className="p-3 font-bold text-[#4ebe96]">{stock.ticker}</td>
                       <td className="p-3">{stock.name}</td>
                       <td className="p-3 text-right">${typeof stock.price === 'number' ? stock.price.toFixed(2) : '—'}</td>
                       <td className="p-3 text-right">{formatCurrency(stock.marketCap)}</td>
                       <td className="p-3 text-right">{typeof stock.pe === 'number' ? stock.pe.toFixed(1) : '—'}</td>
-                      <td className="p-3 text-right text-emerald-500">{formatPercent(stock.roic)}</td>
+                      <td className="p-3 text-right text-[#4ebe96]">{formatPercent(stock.roic)}</td>
                       <td className="p-3 text-right">{formatPercent(stock.revenueGrowth)}</td>
                       <td className="p-3 text-right">{formatPercent(stock.grossMargin)}</td>
                       <td className="p-3 text-right">{formatPercent(stock.freeCashFlowYield)}</td>

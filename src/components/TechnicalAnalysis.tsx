@@ -87,7 +87,7 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
     return (
       <Card className="w-full">
         <CardContent className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-emerald-500"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-[#4ebe96]"></div>
         </CardContent>
       </Card>
     )
@@ -96,7 +96,7 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
   if (!data) {
     return (
       <Card className="w-full">
-        <CardContent className="text-center py-12 text-muted-foreground">
+        <CardContent className="text-center py-12 text-[#868f97]">
           Unable to load technical data for {ticker}
         </CardContent>
       </Card>
@@ -152,20 +152,20 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
 
           {/* 52-Week Price Position */}
           <div className="mb-6">
-            <p className="text-xs sm:text-sm text-muted-foreground mb-2">52-Week Price Range</p>
-            <div className="relative h-8 bg-secondary rounded-full overflow-hidden">
+            <p className="text-xs sm:text-sm text-[#868f97] mb-2">52-Week Price Range</p>
+            <div className="relative h-8 bg-white/[0.05] rounded-full overflow-hidden">
               <div
-                className="absolute h-full bg-gradient-to-r from-red-500 via-yellow-500 to-emerald-500 opacity-30"
+                className="absolute h-full bg-gradient-to-r from-[#e15241] via-[#f4a623] to-[#4ebe96] opacity-30"
                 style={{ width: '100%' }}
               />
               <div
-                className="absolute h-full w-1 bg-foreground"
+                className="absolute h-full w-1 bg-white"
                 style={{ left: `${Math.min(100, Math.max(0, pricePositionPct))}%` }}
               />
             </div>
-            <div className="flex justify-between text-xs text-muted-foreground mt-1">
+            <div className="flex justify-between text-xs text-[#868f97] mt-1">
               <span>${technicals?.fiftyTwoWeekLow?.toFixed(2)}</span>
-              <span className="font-bold text-foreground">${currentPrice.toFixed(2)} ({pricePositionPct.toFixed(0)}%)</span>
+              <span className="font-bold text-white">${currentPrice.toFixed(2)} ({pricePositionPct.toFixed(0)}%)</span>
               <span>${technicals?.fiftyTwoWeekHigh?.toFixed(2)}</span>
             </div>
           </div>
@@ -194,26 +194,26 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
 
           {/* Short Interest */}
           {technicals?.sharesShort && (
-            <div className="p-3 sm:p-4 bg-secondary/30 rounded-lg mb-6">
+            <div className="p-3 sm:p-4 bg-white/[0.05] rounded-lg mb-6">
               <p className="font-medium mb-2 text-sm sm:text-base">Short Interest Analysis</p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 text-xs sm:text-sm">
                 <div>
-                  <p className="text-muted-foreground">Shares Short</p>
+                  <p className="text-[#868f97]">Shares Short</p>
                   <p className="font-bold">{(technicals.sharesShort / 1e6).toFixed(2)}M</p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground">Short Ratio</p>
+                  <p className="text-[#868f97]">Short Ratio</p>
                   <p className="font-bold">{technicals.shortRatio?.toFixed(2)} days</p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground">Short % of Float</p>
-                  <p className={`font-bold ${(technicals.shortPercent || 0) > 0.1 ? 'text-red-500' : ''}`}>
+                  <p className="text-[#868f97]">Short % of Float</p>
+                  <p className={`font-bold ${(technicals.shortPercent || 0) > 0.1 ? 'text-[#e15241]' : ''}`}>
                     {formatPercent(technicals.shortPercent || 0)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground">MoM Change</p>
-                  <p className={`font-bold ${(technicals.sharesShort || 0) < (technicals.sharesShortPriorMonth || 0) ? 'text-emerald-500' : 'text-red-500'}`}>
+                  <p className="text-[#868f97]">MoM Change</p>
+                  <p className={`font-bold ${(technicals.sharesShort || 0) < (technicals.sharesShortPriorMonth || 0) ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
                     {(technicals.sharesShort || 0) < (technicals.sharesShortPriorMonth || 0) ? 'Decreasing' : 'Increasing'}
                   </p>
                 </div>
@@ -235,7 +235,7 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Rating Distribution */}
             <div>
-              <p className="text-xs sm:text-sm text-muted-foreground mb-3">Analyst Recommendation Distribution</p>
+              <p className="text-xs sm:text-sm text-[#868f97] mb-3">Analyst Recommendation Distribution</p>
               <div className="h-48 sm:h-56">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
@@ -258,7 +258,7 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
                 </ResponsiveContainer>
               </div>
               <div className="text-center mt-2">
-                <p className="text-muted-foreground text-xs sm:text-sm">{analystRatings?.totalAnalysts} Analysts</p>
+                <p className="text-[#868f97] text-xs sm:text-sm">{analystRatings?.totalAnalysts} Analysts</p>
                 <p className="text-xl sm:text-2xl font-bold">
                   {analystRatings?.rating?.toFixed(2)} / 5
                 </p>
@@ -267,24 +267,24 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
 
             {/* Price Target */}
             <div>
-              <p className="text-xs sm:text-sm text-muted-foreground mb-3">Price Target Analysis</p>
+              <p className="text-xs sm:text-sm text-[#868f97] mb-3">Price Target Analysis</p>
               <div className="space-y-4">
-                <div className="p-4 bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 rounded-lg border border-emerald-500/30 text-center">
-                  <p className="text-muted-foreground text-xs sm:text-sm">Wall Street Target Price</p>
-                  <p className="text-2xl sm:text-3xl font-bold text-emerald-500">${targetPrice.toFixed(2)}</p>
-                  <p className={`text-base sm:text-lg ${upside >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
+                <div className="p-4 bg-gradient-to-br from-[#4ebe96]/20 to-[#4ebe96]/5 rounded-lg border border-[#4ebe96]/30 text-center">
+                  <p className="text-[#868f97] text-xs sm:text-sm">Wall Street Target Price</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-[#4ebe96]">${targetPrice.toFixed(2)}</p>
+                  <p className={`text-base sm:text-lg ${upside >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
                     {upside >= 0 ? '+' : ''}{upside.toFixed(1)}% {upside >= 0 ? 'Upside' : 'Downside'}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="p-3 bg-secondary/50 rounded-lg text-center">
-                    <p className="text-muted-foreground text-xs">Current Price</p>
+                  <div className="p-3 bg-white/[0.05] rounded-lg text-center">
+                    <p className="text-[#868f97] text-xs">Current Price</p>
                     <p className="font-bold text-sm sm:text-base">${currentPrice.toFixed(2)}</p>
                   </div>
-                  <div className="p-3 bg-secondary/50 rounded-lg text-center">
-                    <p className="text-muted-foreground text-xs">To Target</p>
-                    <p className={`font-bold text-sm sm:text-base ${upside >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
+                  <div className="p-3 bg-white/[0.05] rounded-lg text-center">
+                    <p className="text-[#868f97] text-xs">To Target</p>
+                    <p className={`font-bold text-sm sm:text-base ${upside >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
                       ${Math.abs(targetPrice - currentPrice).toFixed(2)}
                     </p>
                   </div>
@@ -311,25 +311,25 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
                 label="Annualized Volatility"
                 value={riskMetrics?.volatility ? formatPercent(riskMetrics.volatility) : 'N/A'}
                 interpretation={(riskMetrics?.volatility || 0) > 0.4 ? 'High Risk' : (riskMetrics?.volatility || 0) > 0.2 ? 'Moderate' : 'Low Risk'}
-                color={(riskMetrics?.volatility || 0) > 0.4 ? 'text-red-400' : (riskMetrics?.volatility || 0) > 0.2 ? 'text-yellow-400' : 'text-emerald-400'}
+                color={(riskMetrics?.volatility || 0) > 0.4 ? 'text-[#e15241]' : (riskMetrics?.volatility || 0) > 0.2 ? 'text-[#f4a623]' : 'text-[#4ebe96]'}
               />
               <RiskMetric
                 label="Sharpe Ratio"
                 value={riskMetrics?.sharpeRatio?.toFixed(2) || 'N/A'}
                 interpretation={(riskMetrics?.sharpeRatio || 0) > 1 ? 'Good Risk-Adjusted Returns' : (riskMetrics?.sharpeRatio || 0) > 0 ? 'Positive' : 'Negative'}
-                color={(riskMetrics?.sharpeRatio || 0) > 1 ? 'text-emerald-400' : (riskMetrics?.sharpeRatio || 0) > 0 ? 'text-yellow-400' : 'text-red-400'}
+                color={(riskMetrics?.sharpeRatio || 0) > 1 ? 'text-[#4ebe96]' : (riskMetrics?.sharpeRatio || 0) > 0 ? 'text-[#f4a623]' : 'text-[#e15241]'}
               />
               <RiskMetric
                 label="Max Drawdown"
                 value={riskMetrics?.maxDrawdown ? formatPercent(riskMetrics.maxDrawdown) : 'N/A'}
                 interpretation={(riskMetrics?.maxDrawdown || 0) > 0.3 ? 'Significant Drawdown' : (riskMetrics?.maxDrawdown || 0) > 0.15 ? 'Moderate' : 'Low Drawdown'}
-                color={(riskMetrics?.maxDrawdown || 0) > 0.3 ? 'text-red-400' : (riskMetrics?.maxDrawdown || 0) > 0.15 ? 'text-yellow-400' : 'text-emerald-400'}
+                color={(riskMetrics?.maxDrawdown || 0) > 0.3 ? 'text-[#e15241]' : (riskMetrics?.maxDrawdown || 0) > 0.15 ? 'text-[#f4a623]' : 'text-[#4ebe96]'}
               />
               <RiskMetric
                 label="Beta"
                 value={technicals?.beta?.toFixed(2) || 'N/A'}
                 interpretation={(technicals?.beta || 0) > 1.2 ? 'High Market Sensitivity' : (technicals?.beta || 0) > 0.8 ? 'Market Correlated' : 'Defensive'}
-                color={(technicals?.beta || 0) > 1.2 ? 'text-yellow-400' : (technicals?.beta || 0) < 0.8 ? 'text-blue-400' : 'text-zinc-400'}
+                color={(technicals?.beta || 0) > 1.2 ? 'text-[#f4a623]' : (technicals?.beta || 0) < 0.8 ? 'text-[#479ffa]' : 'text-zinc-400'}
               />
             </div>
           </CardContent>
@@ -350,22 +350,22 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
                 <div className="flex items-center justify-between mb-2">
                   <p className="font-medium text-sm sm:text-base">Piotroski F-Score</p>
                   <p className={`text-xl sm:text-2xl font-bold ${
-                    (qualityScores?.piotroskiFScore || 0) >= 7 ? 'text-emerald-500' :
-                    (qualityScores?.piotroskiFScore || 0) >= 4 ? 'text-yellow-500' : 'text-red-500'
+                    (qualityScores?.piotroskiFScore || 0) >= 7 ? 'text-[#4ebe96]' :
+                    (qualityScores?.piotroskiFScore || 0) >= 4 ? 'text-[#f4a623]' : 'text-[#e15241]'
                   }`}>
                     {qualityScores?.piotroskiFScore || 0}/9
                   </p>
                 </div>
-                <div className="h-3 bg-secondary rounded-full overflow-hidden">
+                <div className="h-3 bg-white/[0.05] rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full ${
-                      (qualityScores?.piotroskiFScore || 0) >= 7 ? 'bg-emerald-500' :
-                      (qualityScores?.piotroskiFScore || 0) >= 4 ? 'bg-yellow-500' : 'bg-red-500'
+                      (qualityScores?.piotroskiFScore || 0) >= 7 ? 'bg-[#4ebe96]' :
+                      (qualityScores?.piotroskiFScore || 0) >= 4 ? 'bg-[#f4a623]' : 'bg-[#e15241]'
                     }`}
                     style={{ width: `${((qualityScores?.piotroskiFScore || 0) / 9) * 100}%` }}
                   />
                 </div>
-                <p className="text-xs sm:text-sm text-muted-foreground mt-1">{qualityScores?.piotroskiInterpretation || 'Unknown'} Financial Health</p>
+                <p className="text-xs sm:text-sm text-[#868f97] mt-1">{qualityScores?.piotroskiInterpretation || 'Unknown'} Financial Health</p>
               </div>
 
               {/* Altman Z-Score */}
@@ -373,15 +373,15 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
                 <div className="flex items-center justify-between mb-2">
                   <p className="font-medium text-sm sm:text-base">Altman Z-Score</p>
                   <p className={`text-xl sm:text-2xl font-bold ${
-                    qualityScores?.altmanInterpretation === 'Safe' ? 'text-emerald-500' :
-                    qualityScores?.altmanInterpretation === 'Grey Zone' ? 'text-yellow-500' : 'text-red-500'
+                    qualityScores?.altmanInterpretation === 'Safe' ? 'text-[#4ebe96]' :
+                    qualityScores?.altmanInterpretation === 'Grey Zone' ? 'text-[#f4a623]' : 'text-[#e15241]'
                   }`}>
                     {qualityScores?.altmanZScore?.toFixed(2) || 'N/A'}
                   </p>
                 </div>
                 <p className={`text-xs sm:text-sm ${
-                  qualityScores?.altmanInterpretation === 'Safe' ? 'text-emerald-500' :
-                  qualityScores?.altmanInterpretation === 'Grey Zone' ? 'text-yellow-500' : 'text-red-500'
+                  qualityScores?.altmanInterpretation === 'Safe' ? 'text-[#4ebe96]' :
+                  qualityScores?.altmanInterpretation === 'Grey Zone' ? 'text-[#f4a623]' : 'text-[#e15241]'
                 }`}>
                   {qualityScores?.altmanInterpretation === 'Safe' ? 'Low Bankruptcy Risk' :
                    qualityScores?.altmanInterpretation === 'Grey Zone' ? 'Moderate Risk - Monitor' : 'High Bankruptcy Risk'}
@@ -389,8 +389,8 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
               </div>
 
               {/* Interpretation */}
-              <div className="p-3 sm:p-4 bg-secondary/30 rounded-lg">
-                <p className="text-xs sm:text-sm text-muted-foreground">
+              <div className="p-3 sm:p-4 bg-white/[0.05] rounded-lg">
+                <p className="text-xs sm:text-sm text-[#868f97]">
                   {(qualityScores?.piotroskiFScore || 0) >= 7 && qualityScores?.altmanInterpretation === 'Safe'
                     ? `${ticker} shows strong fundamental quality with low financial distress risk.`
                     : (qualityScores?.piotroskiFScore || 0) >= 4
@@ -415,20 +415,20 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6">
-              <div className="p-3 bg-secondary/50 rounded-lg text-center">
-                <p className="text-muted-foreground text-xs">Total Institutional Value</p>
-                <p className="font-bold text-emerald-500 text-sm sm:text-base">{formatCurrency(institutionalOwnership?.totalValue || 0)}</p>
+              <div className="p-3 bg-white/[0.05] rounded-lg text-center">
+                <p className="text-[#868f97] text-xs">Total Institutional Value</p>
+                <p className="font-bold text-[#4ebe96] text-sm sm:text-base">{formatCurrency(institutionalOwnership?.totalValue || 0)}</p>
               </div>
-              <div className="p-3 bg-secondary/50 rounded-lg text-center">
-                <p className="text-muted-foreground text-xs">Total Shares Held</p>
+              <div className="p-3 bg-white/[0.05] rounded-lg text-center">
+                <p className="text-[#868f97] text-xs">Total Shares Held</p>
                 <p className="font-bold text-sm sm:text-base">{((institutionalOwnership?.totalShares || 0) / 1e6).toFixed(2)}M</p>
               </div>
-              <div className="p-3 bg-secondary/50 rounded-lg text-center">
-                <p className="text-muted-foreground text-xs">Number of Holders</p>
+              <div className="p-3 bg-white/[0.05] rounded-lg text-center">
+                <p className="text-[#868f97] text-xs">Number of Holders</p>
                 <p className="font-bold text-sm sm:text-base">{institutionalOwnership?.topHolders?.length || 0}+</p>
               </div>
-              <div className="p-3 bg-secondary/50 rounded-lg text-center">
-                <p className="text-muted-foreground text-xs">Avg Position</p>
+              <div className="p-3 bg-white/[0.05] rounded-lg text-center">
+                <p className="text-[#868f97] text-xs">Avg Position</p>
                 <p className="font-bold text-sm sm:text-base">{formatCurrency((institutionalOwnership?.totalValue || 0) / (institutionalOwnership?.topHolders?.length || 1))}</p>
               </div>
             </div>
@@ -436,7 +436,7 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
             <div className="overflow-x-auto -mx-4 sm:mx-0">
               <table className="w-full text-xs sm:text-sm">
                 <thead>
-                  <tr className="border-b border-border">
+                  <tr className="border-b border-white/[0.08]">
                     <th className="p-2 text-left">Investor</th>
                     <th className="p-2 text-right">Shares</th>
                     <th className="p-2 text-right">Value</th>
@@ -445,11 +445,11 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
                 </thead>
                 <tbody>
                   {(institutionalOwnership?.topHolders || []).slice(0, 10).map((holder: InstitutionalHolder, i: number) => (
-                    <tr key={i} className="border-b border-border/50">
+                    <tr key={i} className="border-b border-white/[0.08]">
                       <td className="p-2 font-medium">{holder.investor?.replace(/_/g, ' ')}</td>
                       <td className="p-2 text-right">{(holder.shares / 1e6).toFixed(2)}M</td>
-                      <td className="p-2 text-right text-emerald-500">{formatCurrency(holder.market_value)}</td>
-                      <td className="p-2 text-right text-muted-foreground hidden sm:table-cell">{holder.report_period}</td>
+                      <td className="p-2 text-right text-[#4ebe96]">{formatCurrency(holder.market_value)}</td>
+                      <td className="p-2 text-right text-[#868f97] hidden sm:table-cell">{holder.report_period}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -464,28 +464,28 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
 
 function MetricCard({ label, value, highlight, positive }: { label: string; value: string | undefined; highlight?: boolean; positive?: boolean }) {
   return (
-    <div className={`p-2 sm:p-3 rounded-lg text-center ${highlight ? (positive ? 'bg-emerald-500/10 border border-emerald-500/30' : 'bg-red-500/10 border border-red-500/30') : 'bg-secondary/50'}`}>
-      <p className="text-muted-foreground text-xs">{label}</p>
-      <p className={`font-bold text-sm sm:text-base ${highlight ? (positive ? 'text-emerald-500' : 'text-red-500') : ''}`}>{value || 'N/A'}</p>
+    <div className={`p-2 sm:p-3 rounded-lg text-center transition-colors duration-100 ${highlight ? (positive ? 'bg-[#4ebe96]/10 border border-[#4ebe96]/30' : 'bg-[#e15241]/10 border border-[#e15241]/30') : 'bg-white/[0.05]'}`}>
+      <p className="text-[#868f97] text-xs">{label}</p>
+      <p className={`font-bold text-sm sm:text-base ${highlight ? (positive ? 'text-[#4ebe96]' : 'text-[#e15241]') : ''}`}>{value || 'N/A'}</p>
     </div>
   )
 }
 
 function SignalCard({ label, signal, positive, detail }: { label: string; signal: string; positive: boolean; detail: string }) {
   return (
-    <div className={`p-3 sm:p-4 rounded-lg ${positive ? 'bg-emerald-500/10 border border-emerald-500/30' : 'bg-red-500/10 border border-red-500/30'}`}>
-      <p className="text-muted-foreground text-xs sm:text-sm">{label}</p>
-      <p className={`text-lg sm:text-xl font-bold ${positive ? 'text-emerald-500' : 'text-red-500'}`}>
+    <div className={`p-3 sm:p-4 rounded-lg transition-colors duration-100 ${positive ? 'bg-[#4ebe96]/10 border border-[#4ebe96]/30' : 'bg-[#e15241]/10 border border-[#e15241]/30'}`}>
+      <p className="text-[#868f97] text-xs sm:text-sm">{label}</p>
+      <p className={`text-lg sm:text-xl font-bold ${positive ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
         {positive ? '🟢' : '🔴'} {signal}
       </p>
-      <p className="text-xs text-muted-foreground mt-1">{detail}</p>
+      <p className="text-xs text-[#868f97] mt-1">{detail}</p>
     </div>
   )
 }
 
 function RiskMetric({ label, value, interpretation, color }: { label: string; value: string; interpretation: string; color: string }) {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-2 sm:p-3 bg-secondary/30 rounded-lg gap-2">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-2 sm:p-3 bg-white/[0.05] rounded-lg gap-2 transition-colors duration-100">
       <div>
         <p className="font-medium text-sm sm:text-base">{label}</p>
         <p className={`text-xs sm:text-sm ${color}`}>{interpretation}</p>

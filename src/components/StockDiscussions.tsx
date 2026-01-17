@@ -48,7 +48,7 @@ function SentimentBadge({ sentiment }: { sentiment: string | null }) {
   if (!sentiment) return null
 
   const config = {
-    bullish: { icon: TrendingUp, color: "text-green-500 bg-green-500/10", label: "Bullish" },
+    bullish: { icon: TrendingUp, color: "text-[#4ebe96] bg-[#4ebe96]/10", label: "Bullish" },
     bearish: { icon: TrendingDown, color: "text-red-500 bg-red-500/10", label: "Bearish" },
     neutral: { icon: Minus, color: "text-yellow-500 bg-yellow-500/10", label: "Neutral" },
   }[sentiment] || null
@@ -177,7 +177,7 @@ export default function StockDiscussions({ ticker }: StockDiscussionsProps) {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <MessageSquare className="w-5 h-5 text-blue-500" />
+          <MessageSquare className="w-5 h-5 text-[#479ffa]" />
           Community Discussion
         </CardTitle>
       </CardHeader>
@@ -196,23 +196,23 @@ export default function StockDiscussions({ ticker }: StockDiscussionsProps) {
                   value={newPost}
                   onChange={(e) => setNewPost(e.target.value)}
                   placeholder={`What's your take on ${ticker}?`}
-                  className="w-full p-3 bg-secondary/50 rounded-lg border border-border focus:border-green-500/50 focus:outline-none resize-none text-sm"
+                  className="w-full p-3 bg-white/[0.05]/50 rounded-lg border border-white/[0.08] focus:border-[#4ebe96]/50 focus:outline-none resize-none text-sm"
                   rows={3}
                 />
                 <div className="flex items-center justify-between mt-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-muted-foreground">Sentiment:</span>
+                    <span className="text-xs text-[#868f97]">Sentiment:</span>
                     {(['bullish', 'bearish', 'neutral'] as const).map((s) => (
                       <button
                         key={s}
                         onClick={() => setSentiment(sentiment === s ? null : s)}
                         className={cn(
-                          "px-2 py-1 rounded-lg text-xs font-medium transition-colors",
+                          "px-2 py-1 rounded-lg text-xs font-medium transition-colors duration-100",
                           sentiment === s
-                            ? s === 'bullish' ? "bg-green-500/20 text-green-500"
+                            ? s === 'bullish' ? "bg-[#4ebe96]/20 text-[#4ebe96]"
                               : s === 'bearish' ? "bg-red-500/20 text-red-500"
                               : "bg-yellow-500/20 text-yellow-500"
-                            : "bg-secondary/50 text-muted-foreground hover:bg-secondary"
+                            : "bg-white/[0.05]/50 text-[#868f97] hover:bg-white/[0.08]"
                         )}
                       >
                         {s.charAt(0).toUpperCase() + s.slice(1)}
@@ -223,7 +223,7 @@ export default function StockDiscussions({ ticker }: StockDiscussionsProps) {
                     size="sm"
                     onClick={handlePost}
                     disabled={posting || !newPost.trim()}
-                    className="bg-green-600 hover:bg-green-500"
+                    className="bg-[#4ebe96] hover:bg-[#4ebe96]/90"
                   >
                     <Send className="w-4 h-4 mr-1" />
                     Post
@@ -233,8 +233,8 @@ export default function StockDiscussions({ ticker }: StockDiscussionsProps) {
             </div>
           </div>
         ) : (
-          <div className="text-center py-6 bg-secondary/30 rounded-lg">
-            <p className="text-muted-foreground mb-3">Sign in to join the discussion</p>
+          <div className="text-center py-6 bg-white/[0.05]/30 rounded-lg">
+            <p className="text-[#868f97] mb-3">Sign in to join the discussion</p>
             <a href="/login">
               <Button variant="outline" size="sm">Sign in</Button>
             </a>
@@ -242,16 +242,16 @@ export default function StockDiscussions({ ticker }: StockDiscussionsProps) {
         )}
 
         {/* Posts list */}
-        <div className="space-y-4 pt-4 border-t border-border">
+        <div className="space-y-4 pt-4 border-t border-white/[0.08]">
           {loading ? (
             <div className="space-y-4">
               {[1, 2, 3].map(i => (
                 <div key={i} className="animate-pulse">
                   <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-full bg-secondary" />
+                    <div className="w-10 h-10 rounded-full bg-white/[0.05]" />
                     <div className="flex-1 space-y-2">
-                      <div className="h-4 bg-secondary rounded w-1/4" />
-                      <div className="h-16 bg-secondary rounded" />
+                      <div className="h-4 bg-white/[0.05] rounded w-1/4" />
+                      <div className="h-16 bg-white/[0.05] rounded" />
                     </div>
                   </div>
                 </div>
@@ -259,7 +259,7 @@ export default function StockDiscussions({ ticker }: StockDiscussionsProps) {
             </div>
           ) : posts.length > 0 ? (
             posts.map((post) => (
-              <div key={post.id} className="flex items-start gap-3 p-3 rounded-lg hover:bg-secondary/30 transition-colors">
+              <div key={post.id} className="flex items-start gap-3 p-3 rounded-lg hover:bg-white/[0.08]/30 transition-colors duration-100">
                 <img
                   src={post.profile?.avatar_url || getDefaultAvatar(post.user_id)}
                   alt={post.profile?.username || "User"}
@@ -271,27 +271,27 @@ export default function StockDiscussions({ ticker }: StockDiscussionsProps) {
                       {post.profile?.full_name || post.profile?.username || "Anonymous"}
                     </span>
                     {post.profile?.username && (
-                      <span className="text-xs text-muted-foreground">@{post.profile.username}</span>
+                      <span className="text-xs text-[#868f97]">@{post.profile.username}</span>
                     )}
-                    <span className="text-xs text-muted-foreground">·</span>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-xs text-[#868f97]">·</span>
+                    <span className="text-xs text-[#868f97]">
                       {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
                     </span>
                     <SentimentBadge sentiment={post.sentiment} />
                   </div>
-                  <p className="text-sm text-foreground/90 whitespace-pre-wrap">{post.content}</p>
+                  <p className="text-sm text-white/90 whitespace-pre-wrap">{post.content}</p>
                   <div className="flex items-center gap-4 mt-2">
                     <button
                       onClick={() => handleLike(post.id)}
                       className={cn(
-                        "flex items-center gap-1 text-xs transition-colors",
-                        post.user_has_liked ? "text-green-500" : "text-muted-foreground hover:text-green-500"
+                        "flex items-center gap-1 text-xs transition-colors duration-100",
+                        post.user_has_liked ? "text-[#4ebe96]" : "text-[#868f97] hover:text-[#4ebe96]"
                       )}
                     >
                       <ThumbsUp className="w-4 h-4" />
                       {post.likes_count > 0 && post.likes_count}
                     </button>
-                    <button className="flex items-center gap-1 text-xs text-muted-foreground hover:text-blue-500 transition-colors">
+                    <button className="flex items-center gap-1 text-xs text-[#868f97] hover:text-[#479ffa] transition-colors duration-100">
                       <MessageSquare className="w-4 h-4" />
                       {post.comments_count > 0 && post.comments_count}
                     </button>
@@ -301,9 +301,9 @@ export default function StockDiscussions({ ticker }: StockDiscussionsProps) {
             ))
           ) : (
             <div className="text-center py-8">
-              <MessageSquare className="w-12 h-12 mx-auto mb-3 text-muted-foreground/50" />
-              <p className="text-muted-foreground">No discussions yet for {ticker}</p>
-              <p className="text-sm text-muted-foreground/70 mt-1">Be the first to share your thoughts!</p>
+              <MessageSquare className="w-12 h-12 mx-auto mb-3 text-[#868f97]/50" />
+              <p className="text-[#868f97]">No discussions yet for {ticker}</p>
+              <p className="text-sm text-[#868f97]/70 mt-1">Be the first to share your thoughts!</p>
             </div>
           )}
         </div>

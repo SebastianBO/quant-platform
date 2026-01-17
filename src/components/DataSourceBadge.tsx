@@ -13,9 +13,9 @@ interface DataSourceBadgeProps {
 }
 
 const colorMap: Record<string, string> = {
-  blue: 'bg-blue-500/10 text-blue-500 border-blue-500/30',
+  blue: 'bg-[#479ffa]/10 text-[#479ffa] border-[#479ffa]/30',
   purple: 'bg-purple-500/10 text-purple-500 border-purple-500/30',
-  green: 'bg-green-500/10 text-green-500 border-green-500/30',
+  green: 'bg-[#4ebe96]/10 text-[#4ebe96] border-[#4ebe96]/30',
   orange: 'bg-orange-500/10 text-orange-500 border-orange-500/30',
   red: 'bg-red-500/10 text-red-500 border-red-500/30',
   gray: 'bg-gray-500/10 text-gray-400 border-gray-500/30',
@@ -54,7 +54,7 @@ export default function DataSourceBadge({
         onMouseEnter={() => showTooltip && setShowInfo(true)}
         onMouseLeave={() => showTooltip && setShowInfo(false)}
         className={cn(
-          "inline-flex items-center gap-1 rounded border font-medium transition-colors cursor-help",
+          "inline-flex items-center gap-1 rounded border font-medium transition-colors duration-100 cursor-help",
           sizeClasses,
           colorMap[primarySource.color] || colorMap.gray
         )}
@@ -68,15 +68,15 @@ export default function DataSourceBadge({
 
       {/* Tooltip */}
       {showInfo && showTooltip && (
-        <div className="absolute bottom-full left-0 mb-2 z-50 w-64 p-3 bg-card border border-border rounded-lg shadow-lg">
+        <div className="absolute bottom-full left-0 mb-2 z-50 w-64 p-3 bg-[#1a1a1a] border border-white/[0.08] rounded-lg shadow-lg">
           <div className="space-y-2">
             {sources.map((src) => (
               <div key={src.id} className="flex items-start gap-2">
                 <div className={cn(
                   "w-2 h-2 rounded-full mt-1.5 flex-shrink-0",
-                  src.color === 'blue' && 'bg-blue-500',
+                  src.color === 'blue' && 'bg-[#479ffa]',
                   src.color === 'purple' && 'bg-purple-500',
-                  src.color === 'green' && 'bg-green-500',
+                  src.color === 'green' && 'bg-[#4ebe96]',
                   src.color === 'orange' && 'bg-orange-500',
                   src.color === 'red' && 'bg-red-500',
                   src.color === 'gray' && 'bg-gray-500',
@@ -93,7 +93,7 @@ export default function DataSourceBadge({
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-muted-foreground">{src.description}</p>
+                  <p className="text-xs text-[#868f97]">{src.description}</p>
                   {src.url && (
                     <a
                       href={src.url}
@@ -135,7 +135,7 @@ export function DataSourceIndicator({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 text-[10px] text-muted-foreground",
+        "inline-flex items-center gap-1 text-[10px] text-[#868f97]",
         className
       )}
       title={`Data from: ${sources.map(s => s.name).join(', ')}`}
@@ -168,7 +168,7 @@ export function DynamicSourceBadge({
     },
     'financialdatasets.ai': {
       label: 'API',
-      colorClass: 'bg-blue-500/10 text-blue-500 border-blue-500/30',
+      colorClass: 'bg-[#479ffa]/10 text-[#479ffa] border-[#479ffa]/30',
       description: 'Live data from Financial Datasets API'
     },
     'yahoo-finance': {
@@ -178,7 +178,7 @@ export function DynamicSourceBadge({
     },
     'eodhd': {
       label: 'EODHD',
-      colorClass: 'bg-green-500/10 text-green-500 border-green-500/30',
+      colorClass: 'bg-[#4ebe96]/10 text-[#4ebe96] border-[#4ebe96]/30',
       description: 'Live data from EODHD API'
     },
     'mock-data': {

@@ -151,24 +151,24 @@ export function Header() {
   const isDashboard = pathname?.startsWith("/dashboard") || pathname?.startsWith("/stock/")
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[#000]/80 backdrop-blur-md border-b border-white/[0.08]">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3 sm:py-4 lg:px-8" ref={menuRef}>
         <div className="flex items-center gap-4 sm:gap-8">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-foreground rounded-lg flex items-center justify-center">
-              <span className="text-background font-bold text-lg">L</span>
+            <div className="size-8 bg-white rounded-lg flex items-center justify-center">
+              <span className="text-black font-bold text-lg">L</span>
             </div>
-            <span className="font-semibold text-base sm:text-lg text-foreground">Lician</span>
+            <span className="font-semibold text-base sm:text-lg text-white">Lician</span>
           </Link>
 
           <div className="hidden lg:flex items-center gap-1">
             {Object.entries(navMenus).map(([name, menu]) => (
               <div key={name} className="relative">
                 <button
-                  className={`flex items-center gap-1 px-3 py-2 text-sm rounded-lg transition-colors min-h-[44px] ${
+                  className={`flex items-center gap-1 px-3 py-2 text-sm rounded-lg transition-colors duration-100 min-h-[44px] ${
                     activeMenu === name
-                      ? "bg-secondary text-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                      ? "bg-white/[0.08] text-white"
+                      : "text-[#868f97] hover:text-white hover:bg-white/[0.05]"
                   }`}
                   onClick={() => setActiveMenu(activeMenu === name ? null : name)}
                 >
@@ -178,10 +178,10 @@ export function Header() {
                 </button>
 
                 {activeMenu === name && (
-                  <div className="absolute top-full left-0 mt-2 bg-card border border-border rounded-xl shadow-xl p-4 min-w-[500px] grid grid-cols-2 gap-6 z-50">
+                  <div className="absolute top-full left-0 mt-2 bg-[#1a1a1a] border border-white/[0.08] rounded-2xl shadow-xl p-4 min-w-[500px] grid grid-cols-2 gap-6 z-50">
                     {menu.sections.map((section) => (
                       <div key={section.title}>
-                        <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                        <h4 className="text-xs font-semibold text-[#868f97] uppercase tracking-wider mb-3">
                           {section.title}
                         </h4>
                         <ul className="space-y-1">
@@ -189,14 +189,14 @@ export function Header() {
                             <li key={link.href}>
                               <Link
                                 href={link.href}
-                                className="block p-2 rounded-lg hover:bg-secondary transition-colors group min-h-[44px] flex items-start"
+                                className="block p-2 rounded-lg hover:bg-white/[0.05] transition-colors duration-100 group min-h-[44px] flex items-start"
                                 onClick={() => setActiveMenu(null)}
                               >
                                 <div>
-                                  <span className="font-medium text-foreground group-hover:text-green-500 transition-colors">
+                                  <span className="font-medium text-white group-hover:text-[#4ebe96] transition-colors duration-100">
                                     {link.label}
                                   </span>
-                                  <p className="text-xs text-muted-foreground">{link.desc}</p>
+                                  <p className="text-xs text-[#868f97]">{link.desc}</p>
                                 </div>
                               </Link>
                             </li>
@@ -210,7 +210,7 @@ export function Header() {
             ))}
             <Link
               href="/premium"
-              className="px-3 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors min-h-[44px] flex items-center"
+              className="px-3 py-2 text-sm text-[#868f97] hover:text-white transition-colors duration-100 min-h-[44px] flex items-center"
             >
               Pricing
             </Link>
@@ -224,7 +224,7 @@ export function Header() {
           {/* Portfolio Connect */}
           {!user && !loading && (
             <Link href="/dashboard/portfolios">
-              <Button variant="outline" className="border-green-500/50 text-green-500 hover:bg-green-500/10 gap-2">
+              <Button variant="outline" className="border-[#4ebe96]/50 text-[#4ebe96] hover:bg-[#4ebe96]/10 gap-2 transition-colors duration-100">
                 <Wallet className="w-4 h-4" />
                 Connect Portfolio
               </Button>
@@ -233,14 +233,14 @@ export function Header() {
 
           <ThemeToggle />
           {loading ? (
-            <div className="w-20 h-9 bg-secondary animate-pulse rounded-lg" />
+            <div className="w-20 h-9 bg-white/[0.05] animate-pulse rounded-lg" />
           ) : user ? (
             <>
               <Link href="/dashboard">
                 <Button
                   variant="outline"
-                  className={`border-border hover:bg-secondary bg-transparent gap-2 min-h-[44px] ${
-                    isDashboard ? "text-green-500 border-green-500/50" : "text-foreground"
+                  className={`border-white/[0.08] hover:bg-white/[0.05] bg-transparent gap-2 min-h-[44px] transition-colors duration-100 ${
+                    isDashboard ? "text-[#4ebe96] border-[#4ebe96]/50" : "text-white"
                   }`}
                 >
                   <User className="w-4 h-4" />
@@ -251,7 +251,7 @@ export function Header() {
                 variant="ghost"
                 size="icon"
                 onClick={handleLogout}
-                className="text-muted-foreground hover:text-foreground min-h-[44px] min-w-[44px]"
+                className="text-[#868f97] hover:text-white min-h-[44px] min-w-[44px] transition-colors duration-100"
                 aria-label="Sign out"
               >
                 <LogOut className="w-4 h-4" />
@@ -260,34 +260,34 @@ export function Header() {
           ) : (
             <>
               <Link href="/login">
-                <Button variant="outline" className="border-border text-foreground hover:bg-secondary bg-transparent min-h-[44px]">
+                <Button variant="outline" className="border-white/[0.08] text-white hover:bg-white/[0.05] bg-transparent min-h-[44px] transition-colors duration-100">
                   Sign in
                 </Button>
               </Link>
               <Link href="/login">
-                <Button className="bg-green-600 text-white hover:bg-green-500 min-h-[44px]">Get started free</Button>
+                <Button className="bg-[#4ebe96] text-black hover:bg-[#4ebe96]/90 min-h-[44px] transition-colors duration-100">Get started free</Button>
               </Link>
             </>
           )}
         </div>
 
         <button
-          className="lg:hidden p-2 hover:bg-secondary rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+          className="lg:hidden p-2 hover:bg-white/[0.05] rounded-lg transition-colors duration-100 min-h-[44px] min-w-[44px] flex items-center justify-center"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           aria-expanded={mobileMenuOpen}
         >
-          {mobileMenuOpen ? <X className="w-6 h-6 text-foreground" /> : <Menu className="w-6 h-6 text-foreground" />}
+          {mobileMenuOpen ? <X className="w-6 h-6 text-white" /> : <Menu className="w-6 h-6 text-white" />}
         </button>
       </nav>
 
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-background border-t border-border max-h-[calc(100vh-64px)] overflow-y-auto">
+        <div className="lg:hidden bg-[#000] border-t border-white/[0.08] max-h-[calc(100vh-64px)] overflow-y-auto">
           <div className="px-4 sm:px-6 py-4 space-y-4">
             {Object.entries(navMenus).map(([name, menu]) => (
               <div key={name}>
                 <button
-                  className="flex items-center justify-between w-full py-3 text-sm font-medium text-foreground min-h-[44px]"
+                  className="flex items-center justify-between w-full py-3 text-sm font-medium text-white min-h-[44px]"
                   onClick={() => setActiveMenu(activeMenu === name ? null : name)}
                 >
                   <span className="flex items-center gap-2">
@@ -300,13 +300,13 @@ export function Header() {
                   <div className="pl-6 space-y-4 mt-2">
                     {menu.sections.map((section) => (
                       <div key={section.title}>
-                        <h4 className="text-xs font-semibold text-muted-foreground uppercase mb-2">{section.title}</h4>
+                        <h4 className="text-xs font-semibold text-[#868f97] uppercase mb-2">{section.title}</h4>
                         <ul className="space-y-2">
                           {section.links.map((link) => (
                             <li key={link.href}>
                               <Link
                                 href={link.href}
-                                className="block py-2 text-sm text-muted-foreground hover:text-foreground min-h-[44px] flex items-center"
+                                className="block py-2 text-sm text-[#868f97] hover:text-white min-h-[44px] flex items-center transition-colors duration-100"
                                 onClick={() => {
                                   setMobileMenuOpen(false)
                                   setActiveMenu(null)
@@ -328,22 +328,22 @@ export function Header() {
             ))}
             <Link
               href="/premium"
-              className="block py-3 text-sm text-muted-foreground hover:text-foreground min-h-[44px] flex items-center"
+              className="block py-3 text-sm text-[#868f97] hover:text-white min-h-[44px] flex items-center transition-colors duration-100"
               onClick={() => setMobileMenuOpen(false)}
             >
               Pricing
             </Link>
-            <div className="flex flex-col gap-3 pt-4 border-t border-border">
+            <div className="flex flex-col gap-3 pt-4 border-t border-white/[0.08]">
               {user ? (
                 <>
                   <Link href="/dashboard" className="w-full" onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="outline" className="w-full border-border text-foreground bg-transparent min-h-[44px]">
+                    <Button variant="outline" className="w-full border-white/[0.08] text-white bg-transparent min-h-[44px] transition-colors duration-100">
                       Dashboard
                     </Button>
                   </Link>
                   <Button
                     variant="outline"
-                    className="w-full border-border text-foreground bg-transparent min-h-[44px]"
+                    className="w-full border-white/[0.08] text-white bg-transparent min-h-[44px] transition-colors duration-100"
                     onClick={() => {
                       handleLogout()
                       setMobileMenuOpen(false)
@@ -355,12 +355,12 @@ export function Header() {
               ) : (
                 <>
                   <Link href="/login" className="w-full" onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="outline" className="w-full border-border text-foreground bg-transparent min-h-[44px]">
+                    <Button variant="outline" className="w-full border-white/[0.08] text-white bg-transparent min-h-[44px] transition-colors duration-100">
                       Sign in
                     </Button>
                   </Link>
                   <Link href="/login" className="w-full" onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full bg-green-600 text-white min-h-[44px]">Get started free</Button>
+                    <Button className="w-full bg-[#4ebe96] text-black min-h-[44px] transition-colors duration-100">Get started free</Button>
                   </Link>
                 </>
               )}

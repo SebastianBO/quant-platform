@@ -490,10 +490,10 @@ export default async function ComparePage({ params }: Props) {
           <div className="flex gap-8">
             <SEOSidebar />
             <div className="flex-1 min-w-0">
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white transition-colors duration-100">Home</Link>
             {' / '}
-            <Link href="/dashboard" className="hover:text-foreground">Stocks</Link>
+            <Link href="/dashboard" className="hover:text-white transition-colors duration-100">Stocks</Link>
             {' / '}
             <span>{ticker1} vs {ticker2}</span>
           </nav>
@@ -501,7 +501,7 @@ export default async function ComparePage({ params }: Props) {
           <h1 className="text-4xl font-bold mb-4">
             {ticker1} vs {ticker2}: Which Stock is Better?
           </h1>
-          <p className="text-xl text-muted-foreground mb-4">
+          <p className="text-xl text-[#868f97] mb-4">
             Side-by-side comparison of {stock1.name} and {stock2.name} in {currentYear}
           </p>
 
@@ -514,14 +514,14 @@ export default async function ComparePage({ params }: Props) {
 
           {/* Header Cards */}
           <div className="grid grid-cols-2 gap-6 mb-8">
-            <div className="bg-card p-6 rounded-xl border border-border text-center">
-              <h2 className="text-2xl font-bold text-green-500 mb-2">{stock1.symbol}</h2>
-              <p className="text-muted-foreground mb-4">{stock1.name}</p>
+            <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] text-center">
+              <h2 className="text-2xl font-bold text-[#4ebe96] mb-2">{stock1.symbol}</h2>
+              <p className="text-[#868f97] mb-4">{stock1.name}</p>
               <p className="text-3xl font-bold">{stock1.price && stock1.price > 0 ? `$${stock1.price.toFixed(2)}` : '—'}</p>
             </div>
-            <div className="bg-card p-6 rounded-xl border border-border text-center">
-              <h2 className="text-2xl font-bold text-blue-500 mb-2">{stock2.symbol}</h2>
-              <p className="text-muted-foreground mb-4">{stock2.name}</p>
+            <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] text-center">
+              <h2 className="text-2xl font-bold text-[#479ffa] mb-2">{stock2.symbol}</h2>
+              <p className="text-[#868f97] mb-4">{stock2.name}</p>
               <p className="text-3xl font-bold">{stock2.price && stock2.price > 0 ? `$${stock2.price.toFixed(2)}` : '—'}</p>
             </div>
           </div>
@@ -529,23 +529,23 @@ export default async function ComparePage({ params }: Props) {
           {/* Comparison Table */}
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-4">Key Metrics Comparison</h2>
-            <div className="bg-card rounded-xl border border-border overflow-hidden">
+            <div className="bg-[#1a1a1a] rounded-xl border border-white/[0.08] overflow-hidden">
               <table className="w-full">
-                <thead className="bg-secondary">
+                <thead className="bg-white/[0.05]">
                   <tr>
                     <th className="text-left p-4">Metric</th>
-                    <th className="text-center p-4 text-green-500">{stock1.symbol}</th>
-                    <th className="text-center p-4 text-blue-500">{stock2.symbol}</th>
+                    <th className="text-center p-4 text-[#4ebe96]">{stock1.symbol}</th>
+                    <th className="text-center p-4 text-[#479ffa]">{stock2.symbol}</th>
                     <th className="text-center p-4">Winner</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-border">
+                <tbody className="divide-y divide-white/[0.08]">
                   <tr>
                     <td className="p-4">Market Cap</td>
                     <td className="text-center p-4">{formatMarketCap(stock1.marketCap)}</td>
                     <td className="text-center p-4">{formatMarketCap(stock2.marketCap)}</td>
                     <td className="text-center p-4">
-                      <span className={getWinner(stock1.marketCap, stock2.marketCap) === 'stock1' ? 'text-green-500' : getWinner(stock1.marketCap, stock2.marketCap) === 'stock2' ? 'text-blue-500' : ''}>
+                      <span className={getWinner(stock1.marketCap, stock2.marketCap) === 'stock1' ? 'text-[#4ebe96]' : getWinner(stock1.marketCap, stock2.marketCap) === 'stock2' ? 'text-[#479ffa]' : ''}>
                         {getWinner(stock1.marketCap, stock2.marketCap) === 'stock1' ? stock1.symbol : getWinner(stock1.marketCap, stock2.marketCap) === 'stock2' ? stock2.symbol : 'Tie'}
                       </span>
                     </td>
@@ -555,7 +555,7 @@ export default async function ComparePage({ params }: Props) {
                     <td className="text-center p-4">{typeof stock1.pe === 'number' && stock1.pe > 0 ? safeFixed(stock1.pe, 2) : 'N/A'}</td>
                     <td className="text-center p-4">{typeof stock2.pe === 'number' && stock2.pe > 0 ? safeFixed(stock2.pe, 2) : 'N/A'}</td>
                     <td className="text-center p-4">
-                      <span className={getWinner(stock1.pe, stock2.pe, false) === 'stock1' ? 'text-green-500' : getWinner(stock1.pe, stock2.pe, false) === 'stock2' ? 'text-blue-500' : ''}>
+                      <span className={getWinner(stock1.pe, stock2.pe, false) === 'stock1' ? 'text-[#4ebe96]' : getWinner(stock1.pe, stock2.pe, false) === 'stock2' ? 'text-[#479ffa]' : ''}>
                         {getWinner(stock1.pe, stock2.pe, false) === 'stock1' ? stock1.symbol : getWinner(stock1.pe, stock2.pe, false) === 'stock2' ? stock2.symbol : 'Tie'}
                       </span>
                     </td>
@@ -565,7 +565,7 @@ export default async function ComparePage({ params }: Props) {
                     <td className="text-center p-4">${typeof stock1.eps === 'number' && stock1.eps > 0 ? safeFixed(stock1.eps, 2) : 'N/A'}</td>
                     <td className="text-center p-4">${typeof stock2.eps === 'number' && stock2.eps > 0 ? safeFixed(stock2.eps, 2) : 'N/A'}</td>
                     <td className="text-center p-4">
-                      <span className={getWinner(stock1.eps, stock2.eps) === 'stock1' ? 'text-green-500' : getWinner(stock1.eps, stock2.eps) === 'stock2' ? 'text-blue-500' : ''}>
+                      <span className={getWinner(stock1.eps, stock2.eps) === 'stock1' ? 'text-[#4ebe96]' : getWinner(stock1.eps, stock2.eps) === 'stock2' ? 'text-[#479ffa]' : ''}>
                         {getWinner(stock1.eps, stock2.eps) === 'stock1' ? stock1.symbol : getWinner(stock1.eps, stock2.eps) === 'stock2' ? stock2.symbol : 'Tie'}
                       </span>
                     </td>
@@ -575,7 +575,7 @@ export default async function ComparePage({ params }: Props) {
                     <td className="text-center p-4">{safeFixed(stock1.revenueGrowth * 100, 1)}%</td>
                     <td className="text-center p-4">{safeFixed(stock2.revenueGrowth * 100, 1)}%</td>
                     <td className="text-center p-4">
-                      <span className={getWinner(stock1.revenueGrowth, stock2.revenueGrowth) === 'stock1' ? 'text-green-500' : getWinner(stock1.revenueGrowth, stock2.revenueGrowth) === 'stock2' ? 'text-blue-500' : ''}>
+                      <span className={getWinner(stock1.revenueGrowth, stock2.revenueGrowth) === 'stock1' ? 'text-[#4ebe96]' : getWinner(stock1.revenueGrowth, stock2.revenueGrowth) === 'stock2' ? 'text-[#479ffa]' : ''}>
                         {getWinner(stock1.revenueGrowth, stock2.revenueGrowth) === 'stock1' ? stock1.symbol : getWinner(stock1.revenueGrowth, stock2.revenueGrowth) === 'stock2' ? stock2.symbol : 'Tie'}
                       </span>
                     </td>
@@ -585,7 +585,7 @@ export default async function ComparePage({ params }: Props) {
                     <td className="text-center p-4">{safeFixed(stock1.grossMargin * 100, 1)}%</td>
                     <td className="text-center p-4">{safeFixed(stock2.grossMargin * 100, 1)}%</td>
                     <td className="text-center p-4">
-                      <span className={getWinner(stock1.grossMargin, stock2.grossMargin) === 'stock1' ? 'text-green-500' : getWinner(stock1.grossMargin, stock2.grossMargin) === 'stock2' ? 'text-blue-500' : ''}>
+                      <span className={getWinner(stock1.grossMargin, stock2.grossMargin) === 'stock1' ? 'text-[#4ebe96]' : getWinner(stock1.grossMargin, stock2.grossMargin) === 'stock2' ? 'text-[#479ffa]' : ''}>
                         {getWinner(stock1.grossMargin, stock2.grossMargin) === 'stock1' ? stock1.symbol : getWinner(stock1.grossMargin, stock2.grossMargin) === 'stock2' ? stock2.symbol : 'Tie'}
                       </span>
                     </td>
@@ -599,17 +599,17 @@ export default async function ComparePage({ params }: Props) {
           <section className="grid grid-cols-2 gap-6">
             <Link
               href={`/dashboard?ticker=${stock1.symbol}&tab=quant`}
-              className="bg-green-600/20 hover:bg-green-600/30 border border-green-500/30 p-6 rounded-xl text-center"
+              className="bg-[#4ebe96]/20 hover:bg-[#4ebe96]/30 border border-[#4ebe96]/30 p-6 rounded-xl text-center transition-colors duration-100"
             >
-              <p className="font-bold text-green-500 mb-2">Analyze {stock1.symbol}</p>
-              <p className="text-sm text-muted-foreground">Full quant analysis</p>
+              <p className="font-bold text-[#4ebe96] mb-2">Analyze {stock1.symbol}</p>
+              <p className="text-sm text-[#868f97]">Full quant analysis</p>
             </Link>
             <Link
               href={`/dashboard?ticker=${stock2.symbol}&tab=quant`}
-              className="bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 p-6 rounded-xl text-center"
+              className="bg-[#479ffa]/20 hover:bg-[#479ffa]/30 border border-[#479ffa]/30 p-6 rounded-xl text-center transition-colors duration-100"
             >
-              <p className="font-bold text-blue-500 mb-2">Analyze {stock2.symbol}</p>
-              <p className="text-sm text-muted-foreground">Full quant analysis</p>
+              <p className="font-bold text-[#479ffa] mb-2">Analyze {stock2.symbol}</p>
+              <p className="text-sm text-[#868f97]">Full quant analysis</p>
             </Link>
           </section>
 
@@ -618,23 +618,23 @@ export default async function ComparePage({ params }: Props) {
             <h3 className="text-lg font-bold mb-4">Analyze Each Stock</h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <h4 className="font-medium text-green-500">{stock1.symbol}</h4>
+                <h4 className="font-medium text-[#4ebe96]">{stock1.symbol}</h4>
                 <div className="flex flex-wrap gap-2">
-                  <Link href={`/should-i-buy/${stock1.symbol.toLowerCase()}`} className="text-sm text-muted-foreground hover:text-foreground">
+                  <Link href={`/should-i-buy/${stock1.symbol.toLowerCase()}`} className="text-sm text-[#868f97] hover:text-white transition-colors duration-100">
                     Should I Buy {stock1.symbol}?
                   </Link>
-                  <Link href={`/prediction/${stock1.symbol.toLowerCase()}`} className="text-sm text-muted-foreground hover:text-foreground">
+                  <Link href={`/prediction/${stock1.symbol.toLowerCase()}`} className="text-sm text-[#868f97] hover:text-white transition-colors duration-100">
                     {stock1.symbol} Prediction
                   </Link>
                 </div>
               </div>
               <div className="space-y-2">
-                <h4 className="font-medium text-blue-500">{stock2.symbol}</h4>
+                <h4 className="font-medium text-[#479ffa]">{stock2.symbol}</h4>
                 <div className="flex flex-wrap gap-2">
-                  <Link href={`/should-i-buy/${stock2.symbol.toLowerCase()}`} className="text-sm text-muted-foreground hover:text-foreground">
+                  <Link href={`/should-i-buy/${stock2.symbol.toLowerCase()}`} className="text-sm text-[#868f97] hover:text-white transition-colors duration-100">
                     Should I Buy {stock2.symbol}?
                   </Link>
-                  <Link href={`/prediction/${stock2.symbol.toLowerCase()}`} className="text-sm text-muted-foreground hover:text-foreground">
+                  <Link href={`/prediction/${stock2.symbol.toLowerCase()}`} className="text-sm text-[#868f97] hover:text-white transition-colors duration-100">
                     {stock2.symbol} Prediction
                   </Link>
                 </div>
@@ -647,9 +647,9 @@ export default async function ComparePage({ params }: Props) {
             <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {comparisonFaqs.map((faq, index) => (
-                <div key={index} className="bg-card p-5 rounded-lg border border-border">
+                <div key={index} className="bg-[#1a1a1a] p-5 rounded-lg border border-white/[0.08]">
                   <h3 className="font-bold text-lg mb-2">{faq.question}</h3>
-                  <p className="text-muted-foreground">{faq.answer}</p>
+                  <p className="text-[#868f97]">{faq.answer}</p>
                 </div>
               ))}
             </div>

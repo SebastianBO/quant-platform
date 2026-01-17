@@ -59,11 +59,11 @@ function CorrelationBar({ value, size = 'default' }: { value: number; size?: 'de
   const width = size === 'small' ? 'w-16' : 'w-24'
 
   return (
-    <div className={`${width} ${height} bg-secondary rounded-full overflow-hidden`}>
+    <div className={`${width} ${height} bg-white/[0.05] rounded-full overflow-hidden`}>
       <div
         className={cn(
           "h-full rounded-full transition-all",
-          isPositive ? "bg-green-500" : "bg-red-500"
+          isPositive ? "bg-[#4ebe96]" : "bg-[#e15241]"
         )}
         style={{ width: `${Math.min(percentage, 100)}%` }}
       />
@@ -73,9 +73,9 @@ function CorrelationBar({ value, size = 'default' }: { value: number; size?: 'de
 
 function SensitivityBadge({ sensitivity, direction }: { sensitivity: Sensitivity['sensitivity']; direction: Sensitivity['direction'] }) {
   const bgColors = {
-    high: direction === 'negative' ? 'bg-red-500/10 text-red-500 border-red-500/30' : 'bg-green-500/10 text-green-500 border-green-500/30',
+    high: direction === 'negative' ? 'bg-[#e15241]/10 text-[#e15241] border-[#e15241]/30' : 'bg-[#4ebe96]/10 text-[#4ebe96] border-[#4ebe96]/30',
     medium: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30',
-    low: 'bg-secondary text-muted-foreground border-border'
+    low: 'bg-white/[0.05] text-[#868f97] border-white/[0.08]'
   }
 
   const icons = {
@@ -135,7 +135,7 @@ export default function BondsCorrelation({ ticker }: BondsCorrelationProps) {
         <CardContent>
           <div className="space-y-4">
             {[1, 2, 3, 4, 5].map(i => (
-              <div key={i} className="h-12 bg-secondary/30 rounded-lg animate-pulse" />
+              <div key={i} className="h-12 bg-white/[0.015] rounded-lg animate-pulse" />
             ))}
           </div>
         </CardContent>
@@ -153,7 +153,7 @@ export default function BondsCorrelation({ ticker }: BondsCorrelationProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-8 text-muted-foreground">
+          <div className="text-center py-8 text-[#868f97]">
             <AlertTriangle className="w-8 h-8 mx-auto mb-2 opacity-50" />
             <p>{error || 'No data available'}</p>
           </div>
@@ -183,15 +183,15 @@ export default function BondsCorrelation({ ticker }: BondsCorrelationProps) {
           "p-4 rounded-lg border",
           data.sensitivity.sensitivity === 'high'
             ? data.sensitivity.direction === 'negative'
-              ? 'bg-red-500/5 border-red-500/30'
-              : 'bg-green-500/5 border-green-500/30'
-            : 'bg-secondary/30 border-border'
+              ? 'bg-[#e15241]/5 border-[#e15241]/30'
+              : 'bg-[#4ebe96]/5 border-[#4ebe96]/30'
+            : 'bg-white/[0.015] border-white/[0.08]'
         )}>
           <div className="flex items-start gap-3">
-            <Info className="w-4 h-4 mt-0.5 text-muted-foreground flex-shrink-0" />
+            <Info className="w-4 h-4 mt-0.5 text-[#868f97] flex-shrink-0" />
             <div>
               <p className="text-sm font-medium mb-1">Interest Rate Impact on {ticker}</p>
-              <p className="text-sm text-muted-foreground">{data.sensitivity.explanation}</p>
+              <p className="text-sm text-[#868f97]">{data.sensitivity.explanation}</p>
             </div>
           </div>
         </div>
@@ -205,7 +205,7 @@ export default function BondsCorrelation({ ticker }: BondsCorrelationProps) {
                 <LineChart data={data.chartData}>
                   <XAxis
                     dataKey="date"
-                    stroke="hsl(var(--muted-foreground))"
+                    stroke="#868f97"
                     tick={{ fontSize: 10 }}
                     tickFormatter={(v) => {
                       const d = new Date(v)
@@ -214,15 +214,15 @@ export default function BondsCorrelation({ ticker }: BondsCorrelationProps) {
                     interval="preserveStartEnd"
                   />
                   <YAxis
-                    stroke="hsl(var(--muted-foreground))"
+                    stroke="#868f97"
                     tickFormatter={(v) => `${v > 0 ? '+' : ''}${v.toFixed(0)}%`}
                     tick={{ fontSize: 10 }}
                     width={45}
                   />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: 'hsl(var(--card))',
-                      border: '1px solid hsl(var(--border))',
+                      backgroundColor: '#1a1a1a',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
                       borderRadius: '8px',
                       fontSize: '12px'
                     }}
@@ -231,7 +231,7 @@ export default function BondsCorrelation({ ticker }: BondsCorrelationProps) {
                       name === 'stock' ? ticker : 'TLT'
                     ]}
                   />
-                  <ReferenceLine y={0} stroke="hsl(var(--muted-foreground))" strokeDasharray="3 3" />
+                  <ReferenceLine y={0} stroke="#868f97" strokeDasharray="3 3" />
                   <Legend
                     formatter={(value) => value === 'stock' ? ticker : 'TLT'}
                     wrapperStyle={{ fontSize: '12px' }}
@@ -239,14 +239,14 @@ export default function BondsCorrelation({ ticker }: BondsCorrelationProps) {
                   <Line
                     type="monotone"
                     dataKey="stock"
-                    stroke="#10b981"
+                    stroke="#4ebe96"
                     strokeWidth={2}
                     dot={false}
                   />
                   <Line
                     type="monotone"
                     dataKey="tlt"
-                    stroke="#6366f1"
+                    stroke="#479ffa"
                     strokeWidth={2}
                     dot={false}
                   />
@@ -267,13 +267,13 @@ export default function BondsCorrelation({ ticker }: BondsCorrelationProps) {
               return (
                 <div
                   key={bond.symbol}
-                  className="p-3 bg-secondary/30 rounded-lg hover:bg-secondary/50 transition-colors"
+                  className="p-3 bg-white/[0.015] rounded-lg hover:bg-white/[0.025] transition-colors duration-100"
                 >
                   <div className="flex items-center justify-between mb-1">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-sm">{bond.symbol}</span>
-                        <span className="text-xs text-muted-foreground truncate">{bond.name}</span>
+                        <span className="text-xs text-[#868f97] truncate">{bond.name}</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
@@ -281,14 +281,14 @@ export default function BondsCorrelation({ ticker }: BondsCorrelationProps) {
                       <span className={cn(
                         "font-mono text-sm font-medium min-w-[50px] text-right",
                         absCorr > 0.4
-                          ? isPositive ? "text-green-500" : "text-red-500"
-                          : "text-muted-foreground"
+                          ? isPositive ? "text-[#4ebe96]" : "text-[#e15241]"
+                          : "text-[#868f97]"
                       )}>
                         {isPositive ? '+' : ''}{bond.correlation.toFixed(2)}
                       </span>
                     </div>
                   </div>
-                  <p className="text-xs text-muted-foreground">{bond.interpretation}</p>
+                  <p className="text-xs text-[#868f97]">{bond.interpretation}</p>
                 </div>
               )
             })}
@@ -297,22 +297,22 @@ export default function BondsCorrelation({ ticker }: BondsCorrelationProps) {
 
         {/* Summary */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="p-3 bg-secondary/30 rounded-lg text-center">
-            <p className="text-xs text-muted-foreground mb-1">Most Correlated</p>
+          <div className="p-3 bg-white/[0.015] rounded-lg text-center">
+            <p className="text-xs text-[#868f97] mb-1">Most Correlated</p>
             <p className="font-medium text-sm">{data.summary.mostCorrelated.name}</p>
             <p className={cn(
               "text-sm font-mono",
-              data.summary.mostCorrelated.correlation >= 0 ? "text-green-500" : "text-red-500"
+              data.summary.mostCorrelated.correlation >= 0 ? "text-[#4ebe96]" : "text-[#e15241]"
             )}>
               {data.summary.mostCorrelated.correlation >= 0 ? '+' : ''}
               {data.summary.mostCorrelated.correlation.toFixed(2)}
             </p>
           </div>
-          <div className="p-3 bg-secondary/30 rounded-lg text-center">
-            <p className="text-xs text-muted-foreground mb-1">Avg Correlation</p>
+          <div className="p-3 bg-white/[0.015] rounded-lg text-center">
+            <p className="text-xs text-[#868f97] mb-1">Avg Correlation</p>
             <p className={cn(
               "text-xl font-bold font-mono",
-              data.summary.avgCorrelation >= 0 ? "text-green-500" : "text-red-500"
+              data.summary.avgCorrelation >= 0 ? "text-[#4ebe96]" : "text-[#e15241]"
             )}>
               {data.summary.avgCorrelation >= 0 ? '+' : ''}
               {data.summary.avgCorrelation.toFixed(2)}
@@ -321,12 +321,12 @@ export default function BondsCorrelation({ ticker }: BondsCorrelationProps) {
         </div>
 
         {/* Interpretation Guide */}
-        <div className="text-xs text-muted-foreground border-t border-border pt-4">
+        <div className="text-xs text-[#868f97] border-t border-white/[0.08] pt-4">
           <p className="font-medium mb-1">Understanding Correlations</p>
           <ul className="space-y-0.5">
-            <li>• <span className="text-green-500">Positive</span>: Stock moves with bonds (both rise/fall together)</li>
-            <li>• <span className="text-red-500">Negative</span>: Stock moves opposite to bonds</li>
-            <li>• <span className="text-muted-foreground">Near 0</span>: No significant relationship</li>
+            <li>• <span className="text-[#4ebe96]">Positive</span>: Stock moves with bonds (both rise/fall together)</li>
+            <li>• <span className="text-[#e15241]">Negative</span>: Stock moves opposite to bonds</li>
+            <li>• <span className="text-[#868f97]">Near 0</span>: No significant relationship</li>
           </ul>
         </div>
       </CardContent>

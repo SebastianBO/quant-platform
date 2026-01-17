@@ -29,7 +29,7 @@ function LoginScreenComponent({
             <Shield className="w-6 h-6 text-primary" />
           </div>
           <CardTitle>Lician Admin Dashboard</CardTitle>
-          <p className="text-sm text-muted-foreground mt-2">
+          <p className="text-sm text-[#868f97] mt-2">
             System monitoring for 150+ edge functions and 90+ database tables
           </p>
         </CardHeader>

@@ -54,17 +54,17 @@ interface CalendarData {
 
 const importanceColors: Record<string, string> = {
   HIGH: 'bg-purple-500 text-white',
-  MEDIUM: 'bg-blue-500 text-white',
+  MEDIUM: 'bg-[#479ffa] text-white',
   LOW: 'bg-gray-400 text-white'
 }
 
 const phaseColors: Record<string, string> = {
   PHASE1: 'bg-gray-500',
   EARLY_PHASE1: 'bg-gray-500',
-  PHASE2: 'bg-blue-500',
+  PHASE2: 'bg-[#479ffa]',
   'PHASE2/PHASE3': 'bg-indigo-500',
   PHASE3: 'bg-purple-600',
-  PHASE4: 'bg-green-500',
+  PHASE4: 'bg-[#4ebe96]',
 }
 
 function formatDateShort(dateStr: string | null): string {
@@ -141,7 +141,7 @@ function MonthView({ catalysts, month }: MonthViewProps) {
       {/* Calendar Header */}
       <div className="grid grid-cols-7 gap-1 mb-2">
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-          <div key={day} className="text-center text-xs font-medium text-muted-foreground py-2">
+          <div key={day} className="text-center text-xs font-medium text-[#868f97] py-2">
             {day}
           </div>
         ))}
@@ -162,7 +162,7 @@ function MonthView({ catalysts, month }: MonthViewProps) {
             <div
               key={index}
               className={cn(
-                "min-h-[80px] border rounded-lg p-1 transition-colors",
+                "min-h-[80px] border rounded-lg p-1 transition-colors duration-100",
                 isToday(day) && "border-primary bg-primary/5",
                 dayCatalysts.length > 0 && "bg-muted/50",
                 hasHighImportance && "border-purple-500/50"
@@ -188,7 +188,7 @@ function MonthView({ catalysts, month }: MonthViewProps) {
                   </div>
                 ))}
                 {dayCatalysts.length > 3 && (
-                  <div className="text-xs text-muted-foreground text-center">
+                  <div className="text-xs text-[#868f97] text-center">
                     +{dayCatalysts.length - 3} more
                   </div>
                 )}
@@ -210,7 +210,7 @@ function CatalystListItem({ catalyst }: CatalystListItemProps) {
 
   return (
     <div className={cn(
-      "flex items-center gap-3 p-3 border rounded-lg hover:bg-muted/50 transition-colors",
+      "flex items-center gap-3 p-3 border rounded-lg hover:bg-white/[0.08] transition-colors duration-100",
       catalyst.importance === 'HIGH' && "border-purple-500/30"
     )}>
       <div className={cn(
@@ -232,11 +232,11 @@ function CatalystListItem({ catalyst }: CatalystListItemProps) {
             {catalyst.importance}
           </Badge>
         </div>
-        <p className="text-sm text-muted-foreground truncate mt-1">
+        <p className="text-sm text-[#868f97] truncate mt-1">
           {catalyst.title}
         </p>
         {catalyst.drugName && (
-          <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
+          <p className="text-xs text-[#868f97] flex items-center gap-1 mt-1">
             <Pill className="h-3 w-3" />
             {catalyst.drugName}
           </p>
@@ -250,8 +250,8 @@ function CatalystListItem({ catalyst }: CatalystListItemProps) {
           <div className={cn(
             "text-xs",
             catalyst.daysUntil <= 30 ? "text-orange-500 font-medium" :
-            catalyst.daysUntil <= 90 ? "text-yellow-600" :
-            "text-muted-foreground"
+            catalyst.daysUntil <= 90 ? "text-[#f4a623]" :
+            "text-[#868f97]"
           )}>
             {catalyst.daysUntil <= 0 ? 'Now' : `${catalyst.daysUntil}d`}
           </div>
@@ -335,7 +335,7 @@ export function BiotechCatalystCalendar() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-8 text-muted-foreground">
+          <div className="text-center py-8 text-[#868f97]">
             <p>Failed to load catalyst calendar</p>
           </div>
         </CardContent>
@@ -352,7 +352,7 @@ export function BiotechCatalystCalendar() {
               <Calendar className="h-5 w-5" />
               Biotech Catalyst Calendar
             </CardTitle>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="text-sm text-[#868f97] mt-1">
               {data.companiesTracked} companies tracked · {data.totalCount} upcoming catalysts
             </p>
           </div>
@@ -365,19 +365,19 @@ export function BiotechCatalystCalendar() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
           <div className="text-center p-2 bg-orange-500/10 rounded-lg">
             <div className="text-xl font-bold text-orange-500">{data.summary.imminent}</div>
-            <div className="text-xs text-muted-foreground">Within 90 Days</div>
+            <div className="text-xs text-[#868f97]">Within 90 Days</div>
           </div>
           <div className="text-center p-2 bg-purple-500/10 rounded-lg">
             <div className="text-xl font-bold text-purple-500">{data.summary.highImportance}</div>
-            <div className="text-xs text-muted-foreground">High Impact</div>
+            <div className="text-xs text-[#868f97]">High Impact</div>
           </div>
-          <div className="text-center p-2 bg-blue-500/10 rounded-lg">
-            <div className="text-xl font-bold text-blue-500">{data.summary.phase3Trials}</div>
-            <div className="text-xs text-muted-foreground">Phase 3 Trials</div>
+          <div className="text-center p-2 bg-[#479ffa]/10 rounded-lg">
+            <div className="text-xl font-bold text-[#479ffa]">{data.summary.phase3Trials}</div>
+            <div className="text-xs text-[#868f97]">Phase 3 Trials</div>
           </div>
           <div className="text-center p-2 bg-muted rounded-lg">
             <div className="text-xl font-bold">{data.summary.upcoming}</div>
-            <div className="text-xs text-muted-foreground">Total Upcoming</div>
+            <div className="text-xs text-[#868f97]">Total Upcoming</div>
           </div>
         </div>
 
@@ -401,7 +401,7 @@ export function BiotechCatalystCalendar() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-muted-foreground" />
+            <Filter className="h-4 w-4 text-[#868f97]" />
             <Button
               variant={importanceFilter === 'ALL' ? 'default' : 'outline'}
               size="sm"
@@ -447,7 +447,7 @@ export function BiotechCatalystCalendar() {
         ) : (
           <div className="space-y-2 max-h-[600px] overflow-y-auto">
             {filteredCatalysts.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
+              <div className="text-center py-8 text-[#868f97]">
                 No catalysts match your filters
               </div>
             ) : (

@@ -35,14 +35,14 @@ function OverviewTabComponent({
           <CardContent className="pt-4 pb-4">
             <div className="flex items-center gap-3">
               <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                status?.database.connected ? 'bg-green-500/10' : 'bg-red-500/10'
+                status?.database.connected ? 'bg-[#4ebe96]/10' : 'bg-[#e15241]/10'
               }`}>
                 <Database className={`w-5 h-5 ${
-                  status?.database.connected ? 'text-green-500' : 'text-red-500'
+                  status?.database.connected ? 'text-[#4ebe96]' : 'text-[#e15241]'
                 }`} />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Database</p>
+                <p className="text-xs text-[#868f97]">Database</p>
                 <p className="font-bold text-lg">
                   {status?.database.connected ? 'Online' : 'Offline'}
                 </p>
@@ -54,11 +54,11 @@ function OverviewTabComponent({
         <Card>
           <CardContent className="pt-4 pb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                <FileText className="w-5 h-5 text-blue-500" />
+              <div className="w-10 h-10 rounded-lg bg-[#479ffa]/10 flex items-center justify-center">
+                <FileText className="w-5 h-5 text-[#479ffa]" />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Symbols</p>
+                <p className="text-xs text-[#868f97]">Symbols</p>
                 <p className="font-bold text-lg">{formatNumber(status?.metrics?.totalSymbols || 0)}</p>
               </div>
             </div>
@@ -72,7 +72,7 @@ function OverviewTabComponent({
                 <Wallet className="w-5 h-5 text-purple-500" />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Portfolios</p>
+                <p className="text-xs text-[#868f97]">Portfolios</p>
                 <p className="font-bold text-lg">{formatNumber(status?.metrics?.totalPortfolios || 0)}</p>
               </div>
             </div>
@@ -86,7 +86,7 @@ function OverviewTabComponent({
                 <Users className="w-5 h-5 text-orange-500" />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Users</p>
+                <p className="text-xs text-[#868f97]">Users</p>
                 <p className="font-bold text-lg">{formatNumber(status?.metrics?.totalUsers || 0)}</p>
               </div>
             </div>
@@ -100,7 +100,7 @@ function OverviewTabComponent({
                 <HardDrive className="w-5 h-5 text-cyan-500" />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Total Rows</p>
+                <p className="text-xs text-[#868f97]">Total Rows</p>
                 <p className="font-bold text-lg">{formatNumber(status?.database?.totalRows || 0)}</p>
               </div>
             </div>
@@ -114,7 +114,7 @@ function OverviewTabComponent({
                 <Activity className="w-5 h-5 text-pink-500" />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">API Calls</p>
+                <p className="text-xs text-[#868f97]">API Calls</p>
                 <p className="font-bold text-lg">{formatNumber(status?.metrics?.apiCallsToday || 0)}</p>
               </div>
             </div>
@@ -173,31 +173,31 @@ function OverviewTabComponent({
                 <div
                   key={api.name}
                   className={`flex items-center justify-between py-2 px-3 rounded-lg ${
-                    api.status === 'healthy' ? 'bg-green-500/5' :
+                    api.status === 'healthy' ? 'bg-[#4ebe96]/5' :
                     api.status === 'degraded' ? 'bg-yellow-500/5' :
-                    'bg-red-500/5'
+                    'bg-[#e15241]/5'
                   }`}
                 >
                   <div className="flex items-center gap-2">
                     {api.status === 'healthy' ? (
-                      <CheckCircle2 className="w-4 h-4 text-green-500" />
+                      <CheckCircle2 className="w-4 h-4 text-[#4ebe96]" />
                     ) : api.status === 'degraded' ? (
                       <AlertTriangle className="w-4 h-4 text-yellow-500" />
                     ) : (
-                      <XCircle className="w-4 h-4 text-red-500" />
+                      <XCircle className="w-4 h-4 text-[#e15241]" />
                     )}
                     <span className="text-sm font-medium">{api.name}</span>
                     {api.critical && (
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-red-500/20 text-red-500">CRITICAL</span>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#e15241]/20 text-[#e15241]">CRITICAL</span>
                     )}
                   </div>
                   <div className="flex items-center gap-2">
                     {api.responseTime && (
-                      <span className="text-xs text-muted-foreground">{api.responseTime}ms</span>
+                      <span className="text-xs text-[#868f97]">{api.responseTime}ms</span>
                     )}
                     <span className={`text-xs font-medium ${
-                      api.status === 'healthy' ? 'text-green-500' :
-                      api.status === 'degraded' ? 'text-yellow-500' : 'text-red-500'
+                      api.status === 'healthy' ? 'text-[#4ebe96]' :
+                      api.status === 'degraded' ? 'text-yellow-500' : 'text-[#e15241]'
                     }`}>
                       {api.status.toUpperCase()}
                     </span>
@@ -242,32 +242,32 @@ function OverviewTabComponent({
                 <div
                   key={log.id}
                   className={`flex items-center justify-between py-2 px-3 rounded-lg ${
-                    log.status === 'success' ? 'bg-green-500/5' :
-                    log.status === 'error' ? 'bg-red-500/5' :
-                    'bg-blue-500/5'
+                    log.status === 'success' ? 'bg-[#4ebe96]/5' :
+                    log.status === 'error' ? 'bg-[#e15241]/5' :
+                    'bg-[#479ffa]/5'
                   }`}
                 >
                   <div className="flex items-center gap-2">
                     {log.status === 'success' ? (
-                      <CheckCircle2 className="w-4 h-4 text-green-500" />
+                      <CheckCircle2 className="w-4 h-4 text-[#4ebe96]" />
                     ) : log.status === 'error' ? (
-                      <XCircle className="w-4 h-4 text-red-500" />
+                      <XCircle className="w-4 h-4 text-[#e15241]" />
                     ) : (
-                      <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />
+                      <Loader2 className="w-4 h-4 text-[#479ffa] animate-spin" />
                     )}
                     <span className="text-xs font-mono">{log.functionName}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     {log.duration && (
-                      <span className="text-xs text-muted-foreground">{log.duration}ms</span>
+                      <span className="text-xs text-[#868f97]">{log.duration}ms</span>
                     )}
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-xs text-[#868f97]">
                       {formatTimeAgo(log.timestamp)}
                     </span>
                   </div>
                 </div>
               )) : (
-                <p className="text-muted-foreground text-center py-4 text-sm">
+                <p className="text-[#868f97] text-center py-4 text-sm">
                   No recent function activity. Test a function to see logs here.
                 </p>
               )}
@@ -290,31 +290,31 @@ function OverviewTabComponent({
               <div
                 key={sync.name}
                 className={`py-3 px-4 rounded-lg border ${
-                  sync.status === 'fresh' ? 'bg-green-500/5 border-green-500/20' :
+                  sync.status === 'fresh' ? 'bg-[#4ebe96]/5 border-[#4ebe96]/20' :
                   sync.status === 'stale' ? 'bg-yellow-500/5 border-yellow-500/20' :
-                  'bg-red-500/5 border-red-500/20'
+                  'bg-[#e15241]/5 border-[#e15241]/20'
                 }`}
               >
                 <div className="flex items-center gap-2 mb-1">
                   <div className={`w-2 h-2 rounded-full ${
-                    sync.status === 'fresh' ? 'bg-green-500' :
-                    sync.status === 'stale' ? 'bg-yellow-500' : 'bg-red-500'
+                    sync.status === 'fresh' ? 'bg-[#4ebe96]' :
+                    sync.status === 'stale' ? 'bg-yellow-500' : 'bg-[#e15241]'
                   }`} />
                   <span className="text-sm font-medium truncate">{sync.name}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-xs text-[#868f97]">
                     {sync.lastSync ? formatTimeAgo(sync.lastSync) : 'Never'}
                   </span>
                   {sync.recordsProcessed && (
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-xs text-[#868f97]">
                       {formatNumber(sync.recordsProcessed)}
                     </span>
                   )}
                 </div>
               </div>
             )) : (
-              <p className="text-muted-foreground text-center py-4 col-span-4">No sync data available</p>
+              <p className="text-[#868f97] text-center py-4 col-span-4">No sync data available</p>
             )}
           </div>
         </CardContent>
@@ -322,9 +322,9 @@ function OverviewTabComponent({
 
       {/* Recent Errors */}
       {status?.errors && status.errors.length > 0 && (
-        <Card className="border-red-500/20">
+        <Card className="border-[#e15241]/20">
           <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-base text-red-500">
+            <CardTitle className="flex items-center gap-2 text-base text-[#e15241]">
               <AlertTriangle className="w-5 h-5" />
               Recent Errors ({status.errors.length})
             </CardTitle>
@@ -334,15 +334,15 @@ function OverviewTabComponent({
               {status.errors.slice(0, 5).map((err, i) => (
                 <div
                   key={i}
-                  className="py-2 px-3 bg-red-500/5 border border-red-500/20 rounded-lg"
+                  className="py-2 px-3 bg-[#e15241]/5 border border-[#e15241]/20 rounded-lg"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-red-500">{err.source}</span>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-sm font-medium text-[#e15241]">{err.source}</span>
+                    <span className="text-xs text-[#868f97]">
                       {formatTimeAgo(err.timestamp)}
                     </span>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1 truncate">{err.message}</p>
+                  <p className="text-xs text-[#868f97] mt-1 truncate">{err.message}</p>
                 </div>
               ))}
             </div>

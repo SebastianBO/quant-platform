@@ -244,17 +244,17 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
 
   const getTypeColor = (type: string) => {
     const colors: Record<string, string> = {
-      'Index Fund': 'bg-blue-500/20 text-blue-400',
+      'Index Fund': 'bg-[#479ffa]/20 text-blue-400',
       'Hedge Fund': 'bg-purple-500/20 text-purple-400',
       'Pension Fund': 'bg-orange-500/20 text-orange-400',
       'Bank': 'bg-emerald-500/20 text-emerald-400',
       'Mutual Fund': 'bg-cyan-500/20 text-cyan-400',
       'Insurance': 'bg-yellow-500/20 text-yellow-400',
-      'Conglomerate': 'bg-red-500/20 text-red-400',
+      'Conglomerate': 'bg-[#e15241]/20 text-red-400',
       'Sovereign Wealth': 'bg-pink-500/20 text-pink-400',
       'Investment Manager': 'bg-gray-500/20 text-gray-400'
     }
-    return colors[type] || 'bg-secondary text-secondary-foreground'
+    return colors[type] || 'bg-white/[0.05] text-white'
   }
 
   // Format investor name properly
@@ -274,7 +274,7 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
     const hasData = selectedInvestor.holdings && selectedInvestor.holdings.length > 0
 
     return (
-      <Card className="bg-card border-border">
+      <Card className="bg-[#1a1a1a] border-white/[0.08]">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div>
@@ -302,7 +302,7 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
             </div>
             {/* Data Source Toggle */}
             <div className="flex flex-col items-end gap-1">
-              <span className="text-xs text-muted-foreground">Data Source</span>
+              <span className="text-xs text-[#868f97]">Data Source</span>
               <div className="flex gap-1">
                 <Button
                   variant={dataSource === 'auto' ? 'default' : 'outline'}
@@ -338,11 +338,11 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
             </div>
           ) : !hasData ? (
             <div className="text-center py-8">
-              <Building2 className="w-12 h-12 mx-auto mb-4 text-muted-foreground opacity-50" />
-              <p className="text-muted-foreground mb-2">
+              <Building2 className="w-12 h-12 mx-auto mb-4 text-[#868f97] opacity-50" />
+              <p className="text-[#868f97] mb-2">
                 Detailed holdings data not available for this institution
               </p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-[#868f97]">
                 Full portfolio data is available for select institutions including Berkshire Hathaway, BlackRock, and others.
               </p>
               <div className="flex gap-2 justify-center mt-4">
@@ -372,7 +372,7 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
             <>
               {/* Filing Info */}
               {selectedInvestor.filing && (
-                <div className="mb-4 p-2 bg-secondary/20 rounded text-xs text-muted-foreground flex items-center justify-between">
+                <div className="mb-4 p-2 bg-white/[0.02] rounded text-xs text-[#868f97] flex items-center justify-between">
                   <span>Report Date: {selectedInvestor.filing.reportDate}</span>
                   <span>Filed: {selectedInvestor.filing.filingDate}</span>
                 </div>
@@ -380,27 +380,27 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
 
               {/* Investor Summary */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-                <div className="p-3 bg-secondary/30 rounded-lg text-center">
+                <div className="p-3 bg-white/[0.03] rounded-lg text-center">
                   <p className="text-xl font-bold">{formatValue(selectedInvestor.summary.totalAUM)}</p>
-                  <p className="text-xs text-muted-foreground">Total 13F AUM</p>
+                  <p className="text-xs text-[#868f97]">Total 13F AUM</p>
                 </div>
-                <div className="p-3 bg-secondary/30 rounded-lg text-center">
+                <div className="p-3 bg-white/[0.03] rounded-lg text-center">
                   <p className="text-xl font-bold">{selectedInvestor.summary.totalPositions}</p>
-                  <p className="text-xs text-muted-foreground">Positions</p>
+                  <p className="text-xs text-[#868f97]">Positions</p>
                 </div>
-                <div className="p-3 bg-green-500/10 rounded-lg text-center">
-                  <p className="text-xl font-bold text-green-500">{selectedInvestor.summary.increasedPositions}</p>
-                  <p className="text-xs text-muted-foreground">Increased</p>
+                <div className="p-3 bg-[#4ebe96]/10 rounded-lg text-center">
+                  <p className="text-xl font-bold text-[#4ebe96]">{selectedInvestor.summary.increasedPositions}</p>
+                  <p className="text-xs text-[#868f97]">Increased</p>
                 </div>
-                <div className="p-3 bg-red-500/10 rounded-lg text-center">
-                  <p className="text-xl font-bold text-red-500">{selectedInvestor.summary.decreasedPositions}</p>
-                  <p className="text-xs text-muted-foreground">Decreased</p>
+                <div className="p-3 bg-[#e15241]/10 rounded-lg text-center">
+                  <p className="text-xl font-bold text-[#e15241]">{selectedInvestor.summary.decreasedPositions}</p>
+                  <p className="text-xs text-[#868f97]">Decreased</p>
                 </div>
               </div>
 
               {/* Holdings Table */}
               <div className="space-y-1">
-                <div className="grid grid-cols-12 gap-2 px-2 py-1 text-xs text-muted-foreground font-medium border-b border-border">
+                <div className="grid grid-cols-12 gap-2 px-2 py-1 text-xs text-[#868f97] font-medium border-b border-white/[0.08]">
                   <div className="col-span-4">Holding</div>
                   <div className="col-span-2 text-right">Value</div>
                   <div className="col-span-2 text-right">% Portfolio</div>
@@ -416,7 +416,7 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                     return (
                       <div
                         key={i}
-                        className="grid grid-cols-12 gap-2 px-2 py-2 text-sm rounded hover:bg-secondary/50 transition-colors"
+                        className="grid grid-cols-12 gap-2 px-2 py-2 text-sm rounded hover:bg-white/[0.08] transition-colors duration-100"
                       >
                         <div className="col-span-4 font-medium">
                           <div className="flex items-center gap-2">
@@ -431,25 +431,25 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                               <span className="truncate">{displayName}</span>
                             )}
                             {h.isNew && (
-                              <span className="px-1 py-0.5 bg-blue-500/20 text-blue-400 text-[10px] rounded shrink-0">NEW</span>
+                              <span className="px-1 py-0.5 bg-[#479ffa]/20 text-blue-400 text-[10px] rounded shrink-0">NEW</span>
                             )}
                           </div>
                           {/* Show issuer name below ticker if available */}
                           {tickerSymbol && h.issuer && (
-                            <span className="text-xs text-muted-foreground truncate block">{h.issuer}</span>
+                            <span className="text-xs text-[#868f97] truncate block">{h.issuer}</span>
                           )}
                           {!tickerSymbol && h.titleOfClass && (
-                            <span className="text-xs text-muted-foreground">{h.titleOfClass}</span>
+                            <span className="text-xs text-[#868f97]">{h.titleOfClass}</span>
                           )}
                         </div>
                         <div className="col-span-2 text-right">{formatValue(h.value)}</div>
                         <div className="col-span-2 text-right">
                           <span className="text-primary">{h.portfolioPercent?.toFixed(2)}%</span>
                         </div>
-                        <div className="col-span-2 text-right text-muted-foreground">{formatShares(h.shares)}</div>
+                        <div className="col-span-2 text-right text-[#868f97]">{formatShares(h.shares)}</div>
                         <div className={`col-span-2 text-right flex items-center justify-end gap-1 ${
-                          h.changeInShares > 0 ? 'text-green-500' :
-                          h.changeInShares < 0 ? 'text-red-500' : 'text-muted-foreground'
+                          h.changeInShares > 0 ? 'text-[#4ebe96]' :
+                          h.changeInShares < 0 ? 'text-[#e15241]' : 'text-[#868f97]'
                         }`}>
                           {!isSECData && h.changeInShares > 0 ? <ArrowUpRight className="w-3 h-3" /> :
                            !isSECData && h.changeInShares < 0 ? <ArrowDownRight className="w-3 h-3" /> : null}
@@ -468,7 +468,7 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
   }
 
   return (
-    <Card className="bg-card border-border">
+    <Card className="bg-[#1a1a1a] border-white/[0.08]">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
@@ -506,7 +506,7 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
               </Button>
             )}
             {searchResults.length > 0 && (
-              <div className="absolute z-50 w-full mt-1 bg-card border border-border rounded-lg shadow-lg max-h-64 overflow-y-auto">
+              <div className="absolute z-50 w-full mt-1 bg-[#1a1a1a] border border-white/[0.08] rounded-lg shadow-lg max-h-64 overflow-y-auto">
                 {searchResults.map((inv, i) => (
                   <button
                     key={i}
@@ -515,7 +515,7 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                       setShowSearch(false)
                       setSearchQuery("")
                     }}
-                    className="w-full px-3 py-2 text-left hover:bg-secondary/50 flex items-center justify-between"
+                    className="w-full px-3 py-2 text-left hover:bg-white/[0.08] flex items-center justify-between"
                   >
                     <span className="text-sm">{inv.name}</span>
                     <span className={`text-xs px-2 py-0.5 rounded ${getTypeColor(inv.type)}`}>
@@ -526,7 +526,7 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
               </div>
             )}
             {searchLoading && (
-              <div className="absolute z-50 w-full mt-1 bg-card border border-border rounded-lg p-4 text-center">
+              <div className="absolute z-50 w-full mt-1 bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-4 text-center">
                 <Loader2 className="w-4 h-4 animate-spin mx-auto" />
               </div>
             )}
@@ -538,34 +538,34 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
         {loading ? (
           <div className="space-y-3">
             {[1, 2, 3, 4, 5].map(i => (
-              <div key={i} className="flex justify-between items-center p-3 bg-secondary/30 rounded animate-pulse">
-                <div className="h-4 w-40 bg-secondary rounded" />
-                <div className="h-4 w-24 bg-secondary rounded" />
+              <div key={i} className="flex justify-between items-center p-3 bg-white/[0.03] rounded animate-pulse">
+                <div className="h-4 w-40 bg-white/[0.05] rounded" />
+                <div className="h-4 w-24 bg-white/[0.05] rounded" />
               </div>
             ))}
           </div>
         ) : data?.holders.length === 0 ? (
-          <p className="text-muted-foreground text-sm text-center py-8">
+          <p className="text-[#868f97] text-sm text-center py-8">
             No institutional ownership data available
           </p>
         ) : (
           <>
             {/* Summary Stats */}
             <div className="grid grid-cols-4 gap-3 mb-4">
-              <div className="p-3 bg-secondary/30 rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Total Institutional Value</p>
+              <div className="p-3 bg-white/[0.03] rounded-lg text-center">
+                <p className="text-sm text-[#868f97]">Total Institutional Value</p>
                 <p className="text-xl font-bold text-emerald-500">{formatValue(data?.summary.totalValue || 0)}</p>
               </div>
-              <div className="p-3 bg-secondary/30 rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Total Shares Held</p>
+              <div className="p-3 bg-white/[0.03] rounded-lg text-center">
+                <p className="text-sm text-[#868f97]">Total Shares Held</p>
                 <p className="text-xl font-bold">{formatShares(data?.summary.totalShares || 0)}</p>
               </div>
-              <div className="p-3 bg-secondary/30 rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Number of Holders</p>
+              <div className="p-3 bg-white/[0.03] rounded-lg text-center">
+                <p className="text-sm text-[#868f97]">Number of Holders</p>
                 <p className="text-xl font-bold">{data?.summary.totalInstitutionalHolders || 0}+</p>
               </div>
-              <div className="p-3 bg-secondary/30 rounded-lg text-center">
-                <p className="text-sm text-muted-foreground">Avg Position</p>
+              <div className="p-3 bg-white/[0.03] rounded-lg text-center">
+                <p className="text-sm text-[#868f97]">Avg Position</p>
                 <p className="text-xl font-bold">{formatValue(data?.summary.avgPosition || 0)}</p>
               </div>
             </div>
@@ -577,10 +577,10 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                 {data?.summary.flowScore !== undefined && (
                   <div className={`p-3 rounded-lg border ${
                     data.summary.flowSignal === 'STRONG_BUY' ? 'bg-emerald-500/10 border-emerald-500/30' :
-                    data.summary.flowSignal === 'BUY' ? 'bg-green-500/10 border-green-500/30' :
+                    data.summary.flowSignal === 'BUY' ? 'bg-[#4ebe96]/10 border-[#4ebe96]/30' :
                     data.summary.flowSignal === 'SELL' ? 'bg-orange-500/10 border-orange-500/30' :
-                    data.summary.flowSignal === 'STRONG_SELL' ? 'bg-red-500/10 border-red-500/30' :
-                    'bg-secondary/30 border-border'
+                    data.summary.flowSignal === 'STRONG_SELL' ? 'bg-[#e15241]/10 border-[#e15241]/30' :
+                    'bg-white/[0.03] border-white/[0.08]'
                   }`}>
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
@@ -589,23 +589,23 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                       </div>
                       <span className={`text-xs px-2 py-0.5 rounded font-bold ${
                         data.summary.flowSignal === 'STRONG_BUY' ? 'bg-emerald-500 text-white' :
-                        data.summary.flowSignal === 'BUY' ? 'bg-green-500 text-white' :
+                        data.summary.flowSignal === 'BUY' ? 'bg-[#4ebe96] text-white' :
                         data.summary.flowSignal === 'SELL' ? 'bg-orange-500 text-white' :
-                        data.summary.flowSignal === 'STRONG_SELL' ? 'bg-red-500 text-white' :
-                        'bg-secondary text-muted-foreground'
+                        data.summary.flowSignal === 'STRONG_SELL' ? 'bg-[#e15241] text-white' :
+                        'bg-white/[0.05] text-[#868f97]'
                       }`}>
                         {data.summary.flowSignal?.replace('_', ' ')}
                       </span>
                     </div>
                     <div className="flex items-end gap-2">
                       <span className="text-2xl font-bold">{data.summary.flowScore.toFixed(0)}</span>
-                      <span className="text-xs text-muted-foreground mb-1">/100</span>
+                      <span className="text-xs text-[#868f97] mb-1">/100</span>
                     </div>
-                    <div className="w-full h-2 bg-secondary rounded-full mt-2 overflow-hidden">
+                    <div className="w-full h-2 bg-white/[0.05] rounded-full mt-2 overflow-hidden">
                       <div
                         className={`h-full transition-all ${
-                          data.summary.flowScore >= 60 ? 'bg-green-500' :
-                          data.summary.flowScore >= 40 ? 'bg-yellow-500' : 'bg-red-500'
+                          data.summary.flowScore >= 60 ? 'bg-[#4ebe96]' :
+                          data.summary.flowScore >= 40 ? 'bg-yellow-500' : 'bg-[#e15241]'
                         }`}
                         style={{ width: `${data.summary.flowScore}%` }}
                       />
@@ -616,10 +616,10 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                 {/* Concentration Analysis */}
                 {data?.summary.concentration && (
                   <div className={`p-3 rounded-lg border ${
-                    data.summary.concentration.rating === 'VERY_HIGH' ? 'bg-red-500/10 border-red-500/30' :
+                    data.summary.concentration.rating === 'VERY_HIGH' ? 'bg-[#e15241]/10 border-[#e15241]/30' :
                     data.summary.concentration.rating === 'HIGH' ? 'bg-orange-500/10 border-orange-500/30' :
                     data.summary.concentration.rating === 'MODERATE' ? 'bg-yellow-500/10 border-yellow-500/30' :
-                    'bg-secondary/30 border-border'
+                    'bg-white/[0.03] border-white/[0.08]'
                   }`}>
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
@@ -632,22 +632,22 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                           {data.summary.concentration.rating.replace('_', ' ')}
                         </span>
                       ) : (
-                        <span className="text-xs px-2 py-0.5 rounded bg-secondary text-muted-foreground">
+                        <span className="text-xs px-2 py-0.5 rounded bg-white/[0.05] text-[#868f97]">
                           {data.summary.concentration.rating}
                         </span>
                       )}
                     </div>
                     <div className="grid grid-cols-2 gap-2 text-sm">
                       <div>
-                        <span className="text-muted-foreground">Top 5:</span>
+                        <span className="text-[#868f97]">Top 5:</span>
                         <span className="ml-1 font-medium">{data.summary.concentration.top5Percent.toFixed(1)}%</span>
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Top 10:</span>
+                        <span className="text-[#868f97]">Top 10:</span>
                         <span className="ml-1 font-medium">{data.summary.concentration.top10Percent.toFixed(1)}%</span>
                       </div>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-2">
+                    <p className="text-xs text-[#868f97] mt-2">
                       ~{Math.round(data.summary.concentration.effectiveHolders)} effective equal-sized holders
                     </p>
                   </div>
@@ -657,20 +657,20 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
 
             {/* Activity Summary */}
             <div className="flex gap-3 mb-4">
-              <div className="flex-1 p-2 bg-green-500/10 rounded-lg flex items-center justify-center gap-2">
-                <TrendingUp className="w-4 h-4 text-green-500" />
-                <span className="text-green-500 font-bold">{data?.summary.increasedPositions || 0}</span>
-                <span className="text-xs text-muted-foreground">Increased</span>
+              <div className="flex-1 p-2 bg-[#4ebe96]/10 rounded-lg flex items-center justify-center gap-2">
+                <TrendingUp className="w-4 h-4 text-[#4ebe96]" />
+                <span className="text-[#4ebe96] font-bold">{data?.summary.increasedPositions || 0}</span>
+                <span className="text-xs text-[#868f97]">Increased</span>
               </div>
-              <div className="flex-1 p-2 bg-red-500/10 rounded-lg flex items-center justify-center gap-2">
-                <TrendingDown className="w-4 h-4 text-red-500" />
-                <span className="text-red-500 font-bold">{data?.summary.decreasedPositions || 0}</span>
-                <span className="text-xs text-muted-foreground">Decreased</span>
+              <div className="flex-1 p-2 bg-[#e15241]/10 rounded-lg flex items-center justify-center gap-2">
+                <TrendingDown className="w-4 h-4 text-[#e15241]" />
+                <span className="text-[#e15241] font-bold">{data?.summary.decreasedPositions || 0}</span>
+                <span className="text-xs text-[#868f97]">Decreased</span>
               </div>
-              <div className="flex-1 p-2 bg-blue-500/10 rounded-lg flex items-center justify-center gap-2">
-                <Plus className="w-4 h-4 text-blue-500" />
-                <span className="text-blue-500 font-bold">{data?.summary.newPositions || 0}</span>
-                <span className="text-xs text-muted-foreground">New</span>
+              <div className="flex-1 p-2 bg-[#479ffa]/10 rounded-lg flex items-center justify-center gap-2">
+                <Plus className="w-4 h-4 text-[#479ffa]" />
+                <span className="text-[#479ffa] font-bold">{data?.summary.newPositions || 0}</span>
+                <span className="text-xs text-[#868f97]">New</span>
               </div>
             </div>
 
@@ -678,15 +678,15 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
             <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-4">
               <TabsList className="grid grid-cols-3 w-full">
                 <TabsTrigger value="all">All Holders</TabsTrigger>
-                <TabsTrigger value="increased" className="text-green-500">Increased</TabsTrigger>
-                <TabsTrigger value="decreased" className="text-red-500">Decreased</TabsTrigger>
+                <TabsTrigger value="increased" className="text-[#4ebe96]">Increased</TabsTrigger>
+                <TabsTrigger value="decreased" className="text-[#e15241]">Decreased</TabsTrigger>
               </TabsList>
             </Tabs>
 
             {/* Holders Table */}
             <div className="space-y-1">
               {/* Header */}
-              <div className="grid grid-cols-12 gap-2 px-3 py-2 text-xs text-muted-foreground font-medium bg-secondary/30 rounded-t-lg">
+              <div className="grid grid-cols-12 gap-2 px-3 py-2 text-xs text-[#868f97] font-medium bg-white/[0.03] rounded-t-lg">
                 <div className="col-span-4">Investor</div>
                 <div className="col-span-2 text-right">Shares</div>
                 <div className="col-span-2 text-right">Value</div>
@@ -702,13 +702,13 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                   <button
                     key={i}
                     onClick={() => fetchInvestorDetails(holder.investor.toUpperCase().replace(/ /g, '_'))}
-                    className="w-full grid grid-cols-12 gap-2 px-3 py-3 text-sm border-b border-border/50 hover:bg-secondary/30 transition-colors text-left"
+                    className="w-full grid grid-cols-12 gap-2 px-3 py-3 text-sm border-b border-white/[0.04] hover:bg-white/[0.08] transition-colors duration-100 text-left"
                   >
                     <div className="col-span-4">
                       <div className="flex items-center gap-2">
                         <span className="font-medium truncate">{holder.investor}</span>
                         {holder.isNew && (
-                          <span className="px-1.5 py-0.5 bg-blue-500/20 text-blue-400 text-[10px] rounded shrink-0">NEW</span>
+                          <span className="px-1.5 py-0.5 bg-[#479ffa]/20 text-blue-400 text-[10px] rounded shrink-0">NEW</span>
                         )}
                       </div>
                       <span className={`text-[10px] px-1.5 py-0.5 rounded mt-1 inline-block ${getTypeColor(holder.investorType)}`}>
@@ -718,8 +718,8 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                     <div className="col-span-2 text-right">
                       <p>{formatShares(holder.shares)}</p>
                       <p className={`text-xs flex items-center justify-end gap-0.5 ${
-                        holder.changeInShares > 0 ? 'text-green-500' :
-                        holder.changeInShares < 0 ? 'text-red-500' : 'text-muted-foreground'
+                        holder.changeInShares > 0 ? 'text-[#4ebe96]' :
+                        holder.changeInShares < 0 ? 'text-[#e15241]' : 'text-[#868f97]'
                       }`}>
                         {holder.changeInShares > 0 ? <ArrowUpRight className="w-3 h-3" /> :
                          holder.changeInShares < 0 ? <ArrowDownRight className="w-3 h-3" /> : null}
@@ -736,10 +736,10 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                           <span className="text-primary">{holder.portfolioPercent.toFixed(2)}%</span>
                         </div>
                       ) : (
-                        <span className="text-muted-foreground">-</span>
+                        <span className="text-[#868f97]">-</span>
                       )}
                     </div>
-                    <div className="col-span-2 text-right text-muted-foreground text-xs">
+                    <div className="col-span-2 text-right text-[#868f97] text-xs">
                       {holder.reportDate || '-'}
                     </div>
                   </button>
@@ -749,7 +749,7 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
 
             {/* Holder Types Breakdown */}
             {data?.summary.holdersByType && Object.keys(data.summary.holdersByType).length > 0 && (
-              <div className="mt-6 pt-4 border-t border-border">
+              <div className="mt-6 pt-4 border-t border-white/[0.08]">
                 <p className="text-sm font-medium mb-3 flex items-center gap-2">
                   <Briefcase className="w-4 h-4" />
                   Holders by Type

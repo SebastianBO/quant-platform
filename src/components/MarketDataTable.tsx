@@ -76,22 +76,22 @@ function formatPrice(value: number): string {
 function PercentCell({ value }: { value: number }) {
   const isPositive = value >= 0
   return (
-    <span className={`tabular-nums ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
+    <span className={`tabular-nums ${isPositive ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
       {formatPercent(value)}
     </span>
   )
 }
 
 function RangeBar({ low, high, current }: { low: number; high: number; current: number }) {
-  if (!low || !high || low === high) return <span className="text-muted-foreground">-</span>
+  if (!low || !high || low === high) return <span className="text-[#868f97]">-</span>
 
   const percentage = ((current - low) / (high - low)) * 100
   const clampedPercentage = Math.max(0, Math.min(100, percentage))
 
   return (
     <div className="flex items-center gap-2 min-w-[120px]">
-      <span className="text-xs text-muted-foreground tabular-nums">{formatPrice(low)}</span>
-      <div className="flex-1 h-1.5 bg-secondary rounded-full relative">
+      <span className="text-xs text-[#868f97] tabular-nums">{formatPrice(low)}</span>
+      <div className="flex-1 h-1.5 bg-white/[0.05] rounded-full relative">
         <div
           className="absolute top-0 left-0 h-full bg-primary rounded-full"
           style={{ width: `${clampedPercentage}%` }}
@@ -101,7 +101,7 @@ function RangeBar({ low, high, current }: { low: number; high: number; current: 
           style={{ left: `calc(${clampedPercentage}% - 4px)` }}
         />
       </div>
-      <span className="text-xs text-muted-foreground tabular-nums">{formatPrice(high)}</span>
+      <span className="text-xs text-[#868f97] tabular-nums">{formatPrice(high)}</span>
     </div>
   )
 }
@@ -184,13 +184,13 @@ export default function MarketDataTable() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Market Data</h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-[#868f97]">
             Key market indices, sectors, and asset classes
           </p>
         </div>
         <div className="flex items-center gap-2">
           {data?.lastUpdated && (
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs text-[#868f97]">
               Updated: {new Date(data.lastUpdated).toLocaleTimeString()}
             </span>
           )}
@@ -226,14 +226,14 @@ export default function MarketDataTable() {
       {loading ? (
         <div className="space-y-6">
           {[1, 2, 3].map(i => (
-            <Card key={i} className="bg-card border-border">
+            <Card key={i} className="bg-[#1a1a1a] border-white/[0.08]">
               <CardHeader>
-                <div className="h-6 w-40 bg-secondary animate-pulse rounded" />
+                <div className="h-6 w-40 bg-white/[0.05] animate-pulse rounded" />
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   {[1, 2, 3, 4].map(j => (
-                    <div key={j} className="h-8 bg-secondary animate-pulse rounded" />
+                    <div key={j} className="h-8 bg-white/[0.05] animate-pulse rounded" />
                   ))}
                 </div>
               </CardContent>
@@ -251,13 +251,13 @@ export default function MarketDataTable() {
               const isRealCommodities = cat === 'real_commodities'
 
               return (
-                <Card key={cat} className="bg-card border-border overflow-hidden">
-                  <CardHeader className="bg-secondary/30 py-3">
+                <Card key={cat} className="bg-[#1a1a1a] border-white/[0.08] overflow-hidden">
+                  <CardHeader className="bg-white/[0.015] py-3">
                     <div className="flex items-center gap-2">
                       {isRealCommodities && <Flame className="w-4 h-4 text-orange-500" />}
                       <CardTitle className="text-base">{category.name}</CardTitle>
                       {isRealCommodities && (
-                        <span className="text-xs text-muted-foreground ml-2">via Alpha Vantage</span>
+                        <span className="text-xs text-[#868f97] ml-2">via Alpha Vantage</span>
                       )}
                     </div>
                   </CardHeader>
@@ -265,40 +265,40 @@ export default function MarketDataTable() {
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm">
                         <thead>
-                          <tr className="border-b border-border">
-                            <th className="text-left p-3 font-medium text-muted-foreground">Name</th>
-                            <th className="text-left p-3 font-medium text-muted-foreground">Symbol</th>
+                          <tr className="border-b border-white/[0.08]">
+                            <th className="text-left p-3 font-medium text-[#868f97]">Name</th>
+                            <th className="text-left p-3 font-medium text-[#868f97]">Symbol</th>
                             {isRealCommodities && (
-                              <th className="text-right p-3 font-medium text-muted-foreground">Price</th>
+                              <th className="text-right p-3 font-medium text-[#868f97]">Price</th>
                             )}
-                            <th className="text-right p-3 font-medium text-muted-foreground">
+                            <th className="text-right p-3 font-medium text-[#868f97]">
                               {isRealCommodities ? "Change" : "Today"}
                             </th>
                             {!isRealCommodities && (
                               <>
-                                <th className="text-right p-3 font-medium text-muted-foreground">5 Days</th>
-                                <th className="text-right p-3 font-medium text-muted-foreground">1 Month</th>
-                                <th className="text-right p-3 font-medium text-muted-foreground">YTD</th>
-                                <th className="text-right p-3 font-medium text-muted-foreground">1 Year</th>
-                                <th className="text-right p-3 font-medium text-muted-foreground">3 Years</th>
-                                <th className="p-3 font-medium text-muted-foreground">Day Range</th>
+                                <th className="text-right p-3 font-medium text-[#868f97]">5 Days</th>
+                                <th className="text-right p-3 font-medium text-[#868f97]">1 Month</th>
+                                <th className="text-right p-3 font-medium text-[#868f97]">YTD</th>
+                                <th className="text-right p-3 font-medium text-[#868f97]">1 Year</th>
+                                <th className="text-right p-3 font-medium text-[#868f97]">3 Years</th>
+                                <th className="p-3 font-medium text-[#868f97]">Day Range</th>
                               </>
                             )}
-                            <th className="p-3 font-medium text-muted-foreground">52 Week Range</th>
+                            <th className="p-3 font-medium text-[#868f97]">52 Week Range</th>
                           </tr>
                         </thead>
                         <tbody>
                           {category.data.map((item, i) => (
                             <tr
                               key={item.symbol}
-                              className={`border-b border-border/50 hover:bg-secondary/30 transition-colors cursor-pointer ${
-                                i % 2 === 0 ? '' : 'bg-secondary/10'
+                              className={`border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors duration-100 cursor-pointer ${
+                                i % 2 === 0 ? '' : 'bg-white/[0.005]'
                               }`}
                             >
                               <td className="p-3 font-medium">
                                 {item.name}
                                 {item.unit && (
-                                  <span className="text-xs text-muted-foreground ml-1">({item.unit})</span>
+                                  <span className="text-xs text-[#868f97] ml-1">({item.unit})</span>
                                 )}
                               </td>
                               <td className="p-3">

@@ -14,7 +14,10 @@
       "name": "Webhook: Add Target",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [250, 200],
+      "position": [
+        250,
+        200
+      ],
       "webhookId": "guest-post-target"
     },
     {
@@ -32,7 +35,10 @@
       "name": "Schedule: Process Queue",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
-      "position": [250, 500]
+      "position": [
+        250,
+        500
+      ]
     },
     {
       "parameters": {
@@ -45,7 +51,10 @@
       "name": "Webhook: Track Response",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [250, 800],
+      "position": [
+        250,
+        800
+      ],
       "webhookId": "guest-post-response"
     },
     {
@@ -69,7 +78,10 @@
       "name": "Supabase: Insert Target",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [500, 200],
+      "position": [
+        500,
+        200
+      ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "CONFIGURE_SUPABASE_AUTH",
@@ -86,7 +98,10 @@
       "name": "Respond: Success",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [720, 200]
+      "position": [
+        720,
+        200
+      ]
     },
     {
       "parameters": {
@@ -125,7 +140,10 @@
       "name": "Supabase: Fetch Pending",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [500, 500],
+      "position": [
+        500,
+        500
+      ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "CONFIGURE_SUPABASE_AUTH",
@@ -160,7 +178,10 @@
       "name": "Filter: Has Targets",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [720, 500]
+      "position": [
+        720,
+        500
+      ]
     },
     {
       "parameters": {
@@ -171,7 +192,10 @@
       "name": "Split Targets",
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
-      "position": [940, 500]
+      "position": [
+        940,
+        500
+      ]
     },
     {
       "parameters": {
@@ -182,7 +206,10 @@
       "name": "Generate Personalized Email",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1160, 500]
+      "position": [
+        1160,
+        500
+      ]
     },
     {
       "parameters": {
@@ -199,7 +226,10 @@
       "name": "Send Email (SMTP)",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
-      "position": [1380, 500],
+      "position": [
+        1380,
+        500
+      ],
       "credentials": {
         "smtp": {
           "id": "CONFIGURE_SMTP_CREDENTIALS",
@@ -231,7 +261,10 @@
       "name": "Supabase: Update Status",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1600, 500],
+      "position": [
+        1600,
+        500
+      ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "CONFIGURE_SUPABASE_AUTH",
@@ -254,7 +287,10 @@
       "name": "Supabase: Log Email",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1600, 680],
+      "position": [
+        1600,
+        680
+      ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "CONFIGURE_SUPABASE_AUTH",
@@ -271,7 +307,10 @@
       "name": "Wait (Rate Limit)",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
-      "position": [1820, 500]
+      "position": [
+        1820,
+        500
+      ]
     },
     {
       "parameters": {
@@ -282,7 +321,10 @@
       "name": "Parse Response",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [500, 800]
+      "position": [
+        500,
+        800
+      ]
     },
     {
       "parameters": {
@@ -311,7 +353,10 @@
       "name": "Filter: Valid Response",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [720, 800]
+      "position": [
+        720,
+        800
+      ]
     },
     {
       "parameters": {
@@ -337,7 +382,10 @@
       "name": "Supabase: Update Response",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [940, 800],
+      "position": [
+        940,
+        800
+      ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "CONFIGURE_SUPABASE_AUTH",
@@ -369,7 +417,10 @@
       "name": "Supabase: Update Email Log",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [940, 980],
+      "position": [
+        940,
+        980
+      ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "CONFIGURE_SUPABASE_AUTH",
@@ -404,7 +455,10 @@
       "name": "Filter: Should Notify",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [1160, 800]
+      "position": [
+        1160,
+        800
+      ]
     },
     {
       "parameters": {
@@ -431,7 +485,10 @@
       "name": "Supabase: Get Target Details",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1380, 800],
+      "position": [
+        1380,
+        800
+      ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "CONFIGURE_SUPABASE_AUTH",
@@ -456,7 +513,10 @@
       "name": "Slack: Notify Reply",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [1600, 800],
+      "position": [
+        1600,
+        800
+      ],
       "credentials": {
         "slackApi": {
           "id": "CONFIGURE_SLACK_CREDENTIALS",
@@ -473,7 +533,10 @@
       "name": "Respond: Recorded",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [1820, 800]
+      "position": [
+        1820,
+        800
+      ]
     },
     {
       "parameters": {
@@ -490,7 +553,10 @@
       "name": "Schedule: Weekly Report",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
-      "position": [250, 1100]
+      "position": [
+        250,
+        1100
+      ]
     },
     {
       "parameters": {
@@ -504,7 +570,10 @@
       "name": "Supabase: Get Weekly Stats",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [500, 1100],
+      "position": [
+        500,
+        1100
+      ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "CONFIGURE_SUPABASE_AUTH",
@@ -521,7 +590,10 @@
       "name": "Generate Weekly Report",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [720, 1100]
+      "position": [
+        720,
+        1100
+      ]
     },
     {
       "parameters": {
@@ -540,7 +612,10 @@
       "name": "Slack: Weekly Report",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [940, 1100],
+      "position": [
+        940,
+        1100
+      ],
       "credentials": {
         "slackApi": {
           "id": "CONFIGURE_SLACK_CREDENTIALS",
@@ -556,7 +631,10 @@
       "name": "Error Handler",
       "type": "n8n-nodes-base.stopAndError",
       "typeVersion": 1,
-      "position": [1820, 300]
+      "position": [
+        1820,
+        300
+      ]
     }
   ],
   "connections": {
@@ -788,20 +866,6 @@
     "errorWorkflow": ""
   },
   "staticData": null,
-  "tags": [
-    {
-      "name": "outreach",
-      "id": "outreach-tag"
-    },
-    {
-      "name": "lician",
-      "id": "lician-tag"
-    },
-    {
-      "name": "seo",
-      "id": "seo-tag"
-    }
-  ],
   "triggerCount": 4,
   "updatedAt": "2026-01-16T00:00:00.000Z",
   "versionId": "1"

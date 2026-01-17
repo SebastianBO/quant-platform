@@ -159,7 +159,7 @@ function StackedLogos({ holdings, max = 4 }: { holdings: Investment[]; max?: num
 
   if (holdings.length === 0) {
     return (
-      <div className="flex items-center gap-2 text-muted-foreground text-sm">
+      <div className="flex items-center gap-2 text-[#868f97] text-sm">
         <Briefcase className="w-4 h-4" />
         <span>No holdings yet</span>
       </div>
@@ -177,7 +177,7 @@ function StackedLogos({ holdings, max = 4 }: { holdings: Investment[]; max?: num
       </div>
       {remaining > 0 && (
         <div
-          className="rounded-full bg-secondary flex items-center justify-center text-xs font-medium border-2 border-background ml-1"
+          className="rounded-full bg-white/[0.05] flex items-center justify-center text-xs font-medium border-2 border-background ml-1"
           style={{ width: 28, height: 28, marginLeft: -8, zIndex: 0 }}
         >
           +{remaining}
@@ -486,22 +486,22 @@ export default function UserPortfolios() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-green-500"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-[#4ebe96]"></div>
       </div>
     )
   }
 
   if (!user) {
     return (
-      <Card className="bg-card border-border">
+      <Card className="bg-[#1a1a1a] border-white/[0.08]">
         <CardContent className="py-12 text-center">
-          <Briefcase className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+          <Briefcase className="w-12 h-12 mx-auto mb-4 text-[#868f97]" />
           <p className="text-lg font-medium mb-2">Sign in to view your portfolios</p>
-          <p className="text-muted-foreground text-sm mb-4">
+          <p className="text-[#868f97] text-sm mb-4">
             Create and manage your investment portfolios
           </p>
           <a href="/login">
-            <Button className="bg-green-600 hover:bg-green-500 text-white">
+            <Button className="bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white">
               Sign in
             </Button>
           </a>
@@ -513,17 +513,17 @@ export default function UserPortfolios() {
   return (
     <div className="space-y-6">
       {/* User Welcome Header */}
-      <div className="bg-gradient-to-r from-green-500/10 via-emerald-500/5 to-transparent rounded-2xl p-6 border border-green-500/20">
+      <div className="bg-gradient-to-r from-[#4ebe96]/10 via-[#4ebe96]/5 to-transparent rounded-2xl p-6 border border-[#4ebe96]/20">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white font-bold text-2xl shadow-lg shadow-green-500/25">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#4ebe96] to-[#4ebe96]/80 flex items-center justify-center text-white font-bold text-2xl shadow-lg shadow-[#4ebe96]/25">
               {user.full_name?.[0] || user.email?.[0]?.toUpperCase() || 'U'}
             </div>
             <div>
               <h2 className="text-2xl font-bold">
                 Welcome back, {user.full_name?.split(' ')[0] || user.username || 'Investor'}
               </h2>
-              <p className="text-muted-foreground">{user.email}</p>
+              <p className="text-[#868f97]">{user.email}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -533,7 +533,7 @@ export default function UserPortfolios() {
                 setShowCreateForm(false)
               }}
               variant="outline"
-              className="border-green-500/50 hover:bg-green-500/10"
+              className="border-[#4ebe96]/50 hover:bg-[#4ebe96]/10"
             >
               <Link2 className="w-4 h-4 mr-2" />
               Connect Brokerage
@@ -543,7 +543,7 @@ export default function UserPortfolios() {
                 setShowCreateForm(!showCreateForm)
                 setShowConnectBrokerage(false)
               }}
-              className="bg-green-600 hover:bg-green-500 text-white shadow-lg shadow-green-500/25"
+              className="bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white shadow-lg shadow-[#4ebe96]/25"
             >
               <Plus className="w-4 h-4 mr-2" />
               New Portfolio
@@ -565,7 +565,7 @@ export default function UserPortfolios() {
 
       {/* Create Portfolio Form */}
       {showCreateForm && (
-        <Card className="bg-card border-border">
+        <Card className="bg-[#1a1a1a] border-white/[0.08]">
           <CardHeader>
             <CardTitle>Create New Portfolio</CardTitle>
           </CardHeader>
@@ -575,13 +575,13 @@ export default function UserPortfolios() {
                 placeholder="Portfolio name"
                 value={newPortfolioName}
                 onChange={(e) => setNewPortfolioName(e.target.value)}
-                className="bg-secondary border-border"
+                className="bg-white/[0.05] border-white/[0.08]"
                 onKeyDown={(e) => e.key === 'Enter' && createPortfolio()}
               />
               <Button
                 onClick={createPortfolio}
                 disabled={creating || !newPortfolioName.trim()}
-                className="bg-green-600 hover:bg-green-500 text-white"
+                className="bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white"
               >
                 {creating ? 'Creating...' : 'Create'}
               </Button>
@@ -595,18 +595,18 @@ export default function UserPortfolios() {
 
       {/* Empty State */}
       {portfolios.length === 0 ? (
-        <Card className="bg-card border-border border-dashed">
+        <Card className="bg-[#1a1a1a] border-white/[0.08] border-dashed">
           <CardContent className="py-16 text-center">
-            <div className="w-16 h-16 rounded-2xl bg-secondary mx-auto mb-4 flex items-center justify-center">
-              <Briefcase className="w-8 h-8 text-muted-foreground" />
+            <div className="w-16 h-16 rounded-2xl bg-white/[0.05] mx-auto mb-4 flex items-center justify-center">
+              <Briefcase className="w-8 h-8 text-[#868f97]" />
             </div>
             <p className="text-xl font-medium mb-2">No portfolios yet</p>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-[#868f97] mb-6">
               Create your first portfolio to start tracking investments
             </p>
             <Button
               onClick={() => setShowCreateForm(true)}
-              className="bg-green-600 hover:bg-green-500 text-white"
+              className="bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white"
             >
               <Plus className="w-4 h-4 mr-2" />
               Create Portfolio
@@ -624,7 +624,7 @@ export default function UserPortfolios() {
             return (
               <Card
                 key={portfolio.id}
-                className="bg-card border-border hover:border-green-500/50 hover:shadow-lg hover:shadow-green-500/5 transition-all duration-300 cursor-pointer group overflow-hidden"
+                className="bg-[#1a1a1a] border-white/[0.08] hover:border-[#4ebe96]/50 hover:shadow-lg hover:shadow-[#4ebe96]/5 transition-all duration-100 cursor-pointer group overflow-hidden"
                 onClick={() => router.push(`/dashboard/portfolio/${portfolio.id}`)}
               >
                 <CardContent className="p-5">
@@ -634,20 +634,20 @@ export default function UserPortfolios() {
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-semibold text-lg truncate">{portfolio.name}</h3>
                         {portfolio.access_type === 'member' && (
-                          <span className="px-2 py-0.5 text-[10px] bg-blue-500/20 text-blue-400 rounded-full flex-shrink-0">
+                          <span className="px-2 py-0.5 text-[10px] bg-[#479ffa]/20 text-[#479ffa] rounded-full flex-shrink-0">
                             Shared
                           </span>
                         )}
                       </div>
                       {portfolio.description && (
-                        <p className="text-muted-foreground text-sm truncate">{portfolio.description}</p>
+                        <p className="text-[#868f97] text-sm truncate">{portfolio.description}</p>
                       )}
                     </div>
                     <div className="flex items-center gap-1">
                       {/* Sync button for connected portfolios */}
                       {(portfolio.plaid_item_id || portfolio.tink_connected) && (
                         <button
-                          className={`p-1.5 rounded-lg hover:bg-secondary transition-colors ${syncingPortfolios.has(portfolio.id) ? 'animate-pulse' : ''}`}
+                          className={`p-1.5 rounded-lg hover:bg-white/[0.08] transition-colors duration-100 ${syncingPortfolios.has(portfolio.id) ? 'animate-pulse' : ''}`}
                           onClick={(e) => {
                             e.stopPropagation()
                             syncPortfolio(portfolio)
@@ -655,42 +655,42 @@ export default function UserPortfolios() {
                           disabled={syncingPortfolios.has(portfolio.id)}
                           title={`Last synced: ${formatRelativeTime(lastSyncTimes[portfolio.id] || portfolio.last_synced)}`}
                         >
-                          <RefreshCw className={`w-4 h-4 ${syncingPortfolios.has(portfolio.id) ? 'animate-spin text-green-500' : 'text-muted-foreground'}`} />
+                          <RefreshCw className={`w-4 h-4 ${syncingPortfolios.has(portfolio.id) ? 'animate-spin text-[#4ebe96]' : 'text-[#868f97]'}`} />
                         </button>
                       )}
                       <button
-                        className="p-1.5 rounded-lg hover:bg-secondary transition-colors opacity-0 group-hover:opacity-100"
+                        className="p-1.5 rounded-lg hover:bg-white/[0.08] transition-colors duration-100 opacity-0 group-hover:opacity-100"
                         onClick={(e) => { e.stopPropagation() }}
                       >
-                        <MessageCircle className="w-4 h-4 text-muted-foreground" />
+                        <MessageCircle className="w-4 h-4 text-[#868f97]" />
                       </button>
                       <button
-                        className="p-1.5 rounded-lg hover:bg-secondary transition-colors opacity-0 group-hover:opacity-100"
+                        className="p-1.5 rounded-lg hover:bg-white/[0.08] transition-colors duration-100 opacity-0 group-hover:opacity-100"
                         onClick={(e) => { e.stopPropagation() }}
                       >
-                        <Users className="w-4 h-4 text-muted-foreground" />
+                        <Users className="w-4 h-4 text-[#868f97]" />
                       </button>
-                      <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-green-500 transition-colors" />
+                      <ChevronRight className="w-5 h-5 text-[#868f97] group-hover:text-[#4ebe96] transition-colors duration-100" />
                     </div>
                   </div>
 
                   {/* Value - Now with proper currency conversion */}
                   <div className="mb-4">
-                    <p className="text-3xl font-bold text-green-500 tabular-nums">
+                    <p className="text-3xl font-bold text-[#4ebe96] tabular-nums">
                       {formatCurrency(stats.totalValueInPortfolioCurrency, portfolio.currency)}
                     </p>
                     <div className="flex items-center gap-2 flex-wrap">
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-[#868f97]">
                         {holdingsCount} {holdingsCount === 1 ? 'holding' : 'holdings'} • {portfolio.currency}
                       </p>
                       {holdingsCount > 0 && (
-                        <span className={`text-xs px-1.5 py-0.5 rounded ${isPositive ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'}`}>
+                        <span className={`text-xs px-1.5 py-0.5 rounded ${isPositive ? 'bg-[#4ebe96]/20 text-[#4ebe96]' : 'bg-[#e15241]/20 text-[#e15241]'}`}>
                           {isPositive ? '+' : ''}{stats.totalGainLossPercent.toFixed(1)}%
                         </span>
                       )}
                       {/* Connected broker indicator */}
                       {portfolio.plaid_item_id && (
-                        <span className="text-xs px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 flex items-center gap-1">
+                        <span className="text-xs px-1.5 py-0.5 rounded bg-[#479ffa]/20 text-[#479ffa] flex items-center gap-1">
                           <CheckCircle className="w-3 h-3" />
                           Plaid
                         </span>
@@ -704,7 +704,7 @@ export default function UserPortfolios() {
                     </div>
                     {/* Last sync time for connected portfolios */}
                     {(portfolio.plaid_item_id || portfolio.tink_connected) && (
-                      <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
+                      <div className="flex items-center gap-1 mt-1 text-xs text-[#868f97]">
                         <Clock className="w-3 h-3" />
                         <span>Synced {formatRelativeTime(lastSyncTimes[portfolio.id] || portfolio.last_synced)}</span>
                       </div>
@@ -713,7 +713,7 @@ export default function UserPortfolios() {
 
                   {/* Holdings Preview - Values in portfolio currency */}
                   {holdingsCount > 0 ? (
-                    <div className="space-y-2 pt-4 border-t border-border/50">
+                    <div className="space-y-2 pt-4 border-t border-white/[0.04]">
                       {portfolio.investments.slice(0, 3).map((inv) => {
                         // Get stock's native currency based on ticker
                         const stockCurrency = getStockCurrency(inv.ticker || '')
@@ -726,7 +726,7 @@ export default function UserPortfolios() {
                             <HoldingLogo symbol={inv.ticker} size={32} />
                             <div className="flex-1 min-w-0">
                               <p className="font-medium text-sm">{inv.ticker}</p>
-                              <p className="text-xs text-muted-foreground">
+                              <p className="text-xs text-[#868f97]">
                                 {inv.shares} shares
                               </p>
                             </div>
@@ -736,7 +736,7 @@ export default function UserPortfolios() {
                               </p>
                               {inv.avg_cost && inv.current_price && (
                                 <p className={`text-xs tabular-nums ${
-                                  inv.current_price >= inv.avg_cost ? 'text-green-500' : 'text-red-500'
+                                  inv.current_price >= inv.avg_cost ? 'text-[#4ebe96]' : 'text-[#e15241]'
                                 }`}>
                                   {inv.current_price >= inv.avg_cost ? '+' : ''}
                                   {(((inv.current_price - inv.avg_cost) / inv.avg_cost) * 100).toFixed(1)}%
@@ -749,15 +749,15 @@ export default function UserPortfolios() {
                       {holdingsCount > 3 && (
                         <div className="flex items-center justify-center gap-2 pt-2">
                           <StackedLogos holdings={portfolio.investments.slice(3)} max={3} />
-                          <span className="text-xs text-muted-foreground">
+                          <span className="text-xs text-[#868f97]">
                             +{holdingsCount - 3} more
                           </span>
                         </div>
                       )}
                     </div>
                   ) : (
-                    <div className="pt-4 border-t border-border/50">
-                      <div className="flex items-center justify-center gap-2 py-4 text-muted-foreground">
+                    <div className="pt-4 border-t border-white/[0.04]">
+                      <div className="flex items-center justify-center gap-2 py-4 text-[#868f97]">
                         <Plus className="w-4 h-4" />
                         <span className="text-sm">Add your first holding</span>
                       </div>

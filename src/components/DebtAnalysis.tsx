@@ -109,11 +109,11 @@ function formatCurrency(value: number | null | undefined): string {
 }
 
 const healthRatingConfig = {
-  EXCELLENT: { label: 'Excellent', color: 'text-green-500', bg: 'bg-green-500/10', border: 'border-green-500/30' },
-  GOOD: { label: 'Good', color: 'text-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/30' },
-  MODERATE: { label: 'Moderate', color: 'text-yellow-500', bg: 'bg-yellow-500/10', border: 'border-yellow-500/30' },
-  CONCERN: { label: 'Concern', color: 'text-orange-500', bg: 'bg-orange-500/10', border: 'border-orange-500/30' },
-  HIGH_RISK: { label: 'High Risk', color: 'text-red-500', bg: 'bg-red-500/10', border: 'border-red-500/30' },
+  EXCELLENT: { label: 'Excellent', color: 'text-[#4ebe96]', bg: 'bg-[#4ebe96]/10', border: 'border-[#4ebe96]/30' },
+  GOOD: { label: 'Good', color: 'text-[#4ebe96]', bg: 'bg-[#4ebe96]/10', border: 'border-[#4ebe96]/30' },
+  MODERATE: { label: 'Moderate', color: 'text-[#f4a623]', bg: 'bg-[#f4a623]/10', border: 'border-[#f4a623]/30' },
+  CONCERN: { label: 'Concern', color: 'text-[#f4a623]', bg: 'bg-[#f4a623]/10', border: 'border-[#f4a623]/30' },
+  HIGH_RISK: { label: 'High Risk', color: 'text-[#e15241]', bg: 'bg-[#e15241]/10', border: 'border-[#e15241]/30' },
 }
 
 function formatRatio(value: number | null | undefined, decimals: number = 2): string {
@@ -170,13 +170,13 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
   if (loading) {
     return (
       <div className="space-y-6">
-        <div className="h-32 bg-secondary/30 rounded-lg animate-pulse" />
+        <div className="h-32 bg-white/[0.015] rounded-lg animate-pulse" />
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map(i => (
-            <div key={i} className="h-24 bg-secondary/30 rounded-lg animate-pulse" />
+            <div key={i} className="h-24 bg-white/[0.015] rounded-lg animate-pulse" />
           ))}
         </div>
-        <div className="h-64 bg-secondary/30 rounded-lg animate-pulse" />
+        <div className="h-64 bg-white/[0.015] rounded-lg animate-pulse" />
       </div>
     )
   }
@@ -185,7 +185,7 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
     return (
       <Card>
         <CardContent className="py-12">
-          <div className="text-center text-muted-foreground">
+          <div className="text-center text-[#868f97]">
             <AlertTriangle className="w-12 h-12 mx-auto mb-4 opacity-50" />
             <p className="text-lg font-medium">No Debt Data Available</p>
             <p className="text-sm mt-2">{error || 'Unable to retrieve debt information for this company'}</p>
@@ -215,7 +215,7 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
             <Building2 className="w-6 h-6" />
             {data.companyName} Debt Analysis
           </h2>
-          <p className="text-muted-foreground text-sm flex items-center gap-2 mt-1">
+          <p className="text-[#868f97] text-sm flex items-center gap-2 mt-1">
             <DataSourceIndicator source="sec-edgar" />
             {data.asOfDate && <span>As of {new Date(data.asOfDate).toLocaleDateString()}</span>}
           </p>
@@ -227,7 +227,7 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
             ratingConfig.bg,
             ratingConfig.border
           )}>
-            <p className="text-xs text-muted-foreground">Debt Health</p>
+            <p className="text-xs text-[#868f97]">Debt Health</p>
             <p className={cn("text-lg font-bold", ratingConfig.color)}>
               {ratingConfig.label}
             </p>
@@ -244,7 +244,7 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-1">
+            <div className="flex items-center gap-2 text-[#868f97] mb-1">
               <DollarSign className="w-4 h-4" />
               <span className="text-xs font-medium">Total Debt</span>
             </div>
@@ -253,7 +253,7 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
         </Card>
         <Card>
           <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-1">
+            <div className="flex items-center gap-2 text-[#868f97] mb-1">
               <PiggyBank className="w-4 h-4" />
               <span className="text-xs font-medium">Net Debt</span>
             </div>
@@ -262,7 +262,7 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
         </Card>
         <Card>
           <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-1">
+            <div className="flex items-center gap-2 text-[#868f97] mb-1">
               <Percent className="w-4 h-4" />
               <span className="text-xs font-medium">Interest Coverage</span>
             </div>
@@ -271,7 +271,7 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
         </Card>
         <Card>
           <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-1">
+            <div className="flex items-center gap-2 text-[#868f97] mb-1">
               <Activity className="w-4 h-4" />
               <span className="text-xs font-medium">Debt to Equity</span>
             </div>
@@ -296,13 +296,13 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
                   <BarChart data={chartData} barSize={32}>
                     <XAxis
                       dataKey="name"
-                      stroke="hsl(var(--muted-foreground))"
+                      stroke="#868f97"
                       tick={{ fontSize: 10 }}
                       tickLine={false}
                       axisLine={false}
                     />
                     <YAxis
-                      stroke="hsl(var(--muted-foreground))"
+                      stroke="#868f97"
                       tick={{ fontSize: 10 }}
                       tickFormatter={(v) => `$${v}B`}
                       width={40}
@@ -311,8 +311,8 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
                     />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: 'hsl(var(--card))',
-                        border: '1px solid hsl(var(--border))',
+                        backgroundColor: '#1a1a1a',
+                        border: '1px solid rgba(255, 255, 255, 0.08)',
                         borderRadius: '8px',
                         fontSize: '12px'
                       }}
@@ -323,12 +323,12 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
                         <Cell
                           key={`cell-${index}`}
                           fill={
-                            entry.year === 'Year 1' ? '#ef4444' :
+                            entry.year === 'Year 1' ? '#e15241' :
                             entry.year === 'Year 2' ? '#f97316' :
-                            entry.year === 'Year 3' ? '#eab308' :
-                            entry.year === 'Year 4' ? '#22c55e' :
-                            entry.year === 'Year 5' ? '#10b981' :
-                            '#3b82f6'
+                            entry.year === 'Year 3' ? '#f4a623' :
+                            entry.year === 'Year 4' ? '#4ebe96' :
+                            entry.year === 'Year 5' ? '#4ebe96' :
+                            '#479ffa'
                           }
                         />
                       ))}
@@ -337,7 +337,7 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
                 </ResponsiveContainer>
               </div>
             ) : (
-              <div className="h-48 flex items-center justify-center text-muted-foreground">
+              <div className="h-48 flex items-center justify-center text-[#868f97]">
                 No maturity schedule data available
               </div>
             )}
@@ -355,14 +355,14 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
           <CardContent className="space-y-3">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <ArrowUpRight className="w-4 h-4 text-red-500" />
+                <ArrowUpRight className="w-4 h-4 text-[#e15241]" />
                 <span className="text-sm">New Debt Issued</span>
               </div>
               <span className="font-medium">{formatCurrency(cashFlow?.debtIssuances)}</span>
             </div>
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <ArrowDownRight className="w-4 h-4 text-green-500" />
+                <ArrowDownRight className="w-4 h-4 text-[#4ebe96]" />
                 <span className="text-sm">Debt Repaid</span>
               </div>
               <span className="font-medium">{formatCurrency(cashFlow?.debtRepayments)}</span>
@@ -370,26 +370,26 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
             <div className={cn(
               "p-3 rounded-lg border",
               cashFlow?.isPayingDownDebt
-                ? "bg-green-500/10 border-green-500/30"
-                : "bg-red-500/10 border-red-500/30"
+                ? "bg-[#4ebe96]/10 border-[#4ebe96]/30"
+                : "bg-[#e15241]/10 border-[#e15241]/30"
             )}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   {cashFlow?.isPayingDownDebt ? (
-                    <TrendingDown className="w-4 h-4 text-green-500" />
+                    <TrendingDown className="w-4 h-4 text-[#4ebe96]" />
                   ) : (
-                    <TrendingUp className="w-4 h-4 text-red-500" />
+                    <TrendingUp className="w-4 h-4 text-[#e15241]" />
                   )}
                   <span className="font-medium text-sm">Net Change</span>
                 </div>
                 <span className={cn(
                   "font-bold",
-                  cashFlow?.isPayingDownDebt ? "text-green-500" : "text-red-500"
+                  cashFlow?.isPayingDownDebt ? "text-[#4ebe96]" : "text-[#e15241]"
                 )}>
                   {formatCurrency(cashFlow?.netDebtChange)}
                 </span>
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-xs text-[#868f97] mt-1">
                 {cashFlow?.isPayingDownDebt
                   ? "Company is reducing debt"
                   : "Company is adding debt"}
@@ -409,7 +409,7 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
               <DataSourceIndicator source="openfigi" />
             </div>
             {bondsData && (
-              <span className="text-sm font-normal text-muted-foreground">
+              <span className="text-sm font-normal text-[#868f97]">
                 {bondsData.summary.totalBonds} active bonds
                 {bondsData.summary.avgCouponRate && ` • Avg coupon: ${bondsData.summary.avgCouponRate.toFixed(2)}%`}
               </span>
@@ -420,15 +420,15 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
           {bondsLoading ? (
             <div className="space-y-2">
               {[1, 2, 3].map(i => (
-                <div key={i} className="h-10 bg-secondary/30 rounded animate-pulse" />
+                <div key={i} className="h-10 bg-white/[0.015] rounded animate-pulse" />
               ))}
             </div>
           ) : bondsData && bondsData.bonds.length > 0 ? (
             <>
               {bondsData.maturingSoon.length > 0 && (
-                <div className="mb-4 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+                <div className="mb-4 p-3 bg-[#f4a623]/10 border border-[#f4a623]/30 rounded-lg">
                   <div className="flex items-center gap-2">
-                    <AlertTriangle className="w-4 h-4 text-yellow-500" />
+                    <AlertTriangle className="w-4 h-4 text-[#f4a623]" />
                     <span className="font-medium text-sm">
                       {bondsData.maturingSoon.length} bonds maturing within 2 years
                     </span>
@@ -439,28 +439,28 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-border">
-                      <th className="text-left py-2 px-2 font-medium text-muted-foreground">Bond</th>
-                      <th className="text-right py-2 px-2 font-medium text-muted-foreground">Coupon</th>
-                      <th className="text-right py-2 px-2 font-medium text-muted-foreground">Maturity</th>
-                      <th className="text-right py-2 px-2 font-medium text-muted-foreground">Years</th>
+                    <tr className="border-b border-white/[0.08]">
+                      <th className="text-left py-2 px-2 font-medium text-[#868f97]">Bond</th>
+                      <th className="text-right py-2 px-2 font-medium text-[#868f97]">Coupon</th>
+                      <th className="text-right py-2 px-2 font-medium text-[#868f97]">Maturity</th>
+                      <th className="text-right py-2 px-2 font-medium text-[#868f97]">Years</th>
                     </tr>
                   </thead>
                   <tbody>
                     {(showAllBonds ? bondsData.bonds : bondsData.bonds.slice(0, 5)).map((bond) => (
-                      <tr key={bond.figi} className="border-b border-border/50 hover:bg-secondary/20">
+                      <tr key={bond.figi} className="border-b border-white/[0.04] hover:bg-white/[0.08]">
                         <td className="py-2 px-2">
                           <span className="font-mono text-xs">{bond.ticker}</span>
                         </td>
                         <td className="py-2 px-2 text-right">
                           {bond.couponRate ? `${bond.couponRate.toFixed(2)}%` : 'Float'}
                         </td>
-                        <td className="py-2 px-2 text-right text-muted-foreground">
+                        <td className="py-2 px-2 text-right text-[#868f97]">
                           {bond.maturityDate ? new Date(bond.maturityDate).toLocaleDateString() : '-'}
                         </td>
                         <td className="py-2 px-2 text-right">
                           <span className={cn(
-                            bond.yearsToMaturity && bond.yearsToMaturity <= 2 ? "text-yellow-500" : "text-muted-foreground"
+                            bond.yearsToMaturity && bond.yearsToMaturity <= 2 ? "text-[#f4a623]" : "text-[#868f97]"
                           )}>
                             {bond.yearsToMaturity ? `${bond.yearsToMaturity.toFixed(1)}y` : '-'}
                           </span>
@@ -483,7 +483,7 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
               )}
             </>
           ) : (
-            <div className="text-center py-6 text-muted-foreground">
+            <div className="text-center py-6 text-[#868f97]">
               <DollarSign className="w-8 h-8 mx-auto mb-2 opacity-50" />
               <p>No bond data available for this company</p>
             </div>

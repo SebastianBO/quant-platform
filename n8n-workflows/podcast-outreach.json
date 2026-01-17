@@ -14,7 +14,10 @@
       "name": "Webhook: Add Podcast",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [250, 200],
+      "position": [
+        250,
+        200
+      ],
       "webhookId": "podcast-target"
     },
     {
@@ -32,7 +35,10 @@
       "name": "Schedule: Process Follow-ups",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
-      "position": [250, 600]
+      "position": [
+        250,
+        600
+      ]
     },
     {
       "parameters": {
@@ -45,7 +51,10 @@
       "name": "Webhook: Track Response",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [250, 1000],
+      "position": [
+        250,
+        1000
+      ],
       "webhookId": "podcast-response"
     },
     {
@@ -59,7 +68,10 @@
       "name": "Webhook: Track Booking",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [250, 1400],
+      "position": [
+        250,
+        1400
+      ],
       "webhookId": "podcast-booking"
     },
     {
@@ -73,7 +85,10 @@
       "name": "Webhook: Episode Released",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [250, 1800],
+      "position": [
+        250,
+        1800
+      ],
       "webhookId": "podcast-episode-released"
     },
     {
@@ -91,7 +106,10 @@
       "name": "Schedule: Weekly Pipeline Report",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
-      "position": [250, 2200]
+      "position": [
+        250,
+        2200
+      ]
     },
     {
       "parameters": {
@@ -114,7 +132,10 @@
       "name": "Supabase: Insert Podcast",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [500, 200],
+      "position": [
+        500,
+        200
+      ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "CONFIGURE_SUPABASE_AUTH",
@@ -131,7 +152,10 @@
       "name": "Respond: Podcast Added",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [720, 200]
+      "position": [
+        720,
+        200
+      ]
     },
     {
       "parameters": {
@@ -150,7 +174,10 @@
       "name": "Slack: New Podcast Added",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [940, 200],
+      "position": [
+        940,
+        200
+      ],
       "credentials": {
         "slackApi": {
           "id": "CONFIGURE_SLACK_CREDENTIALS",
@@ -195,7 +222,10 @@
       "name": "Supabase: Fetch Pending",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [500, 600],
+      "position": [
+        500,
+        600
+      ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "CONFIGURE_SUPABASE_AUTH",
@@ -230,7 +260,10 @@
       "name": "Filter: Has Podcasts",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [720, 600]
+      "position": [
+        720,
+        600
+      ]
     },
     {
       "parameters": {
@@ -241,7 +274,10 @@
       "name": "Split Podcasts",
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
-      "position": [940, 600]
+      "position": [
+        940,
+        600
+      ]
     },
     {
       "parameters": {
@@ -252,7 +288,10 @@
       "name": "Generate Pitch Email",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1160, 600]
+      "position": [
+        1160,
+        600
+      ]
     },
     {
       "parameters": {
@@ -269,7 +308,10 @@
       "name": "Send Pitch Email (SMTP)",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
-      "position": [1380, 600],
+      "position": [
+        1380,
+        600
+      ],
       "credentials": {
         "smtp": {
           "id": "CONFIGURE_SMTP_CREDENTIALS",
@@ -301,7 +343,10 @@
       "name": "Supabase: Update Podcast Status",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1600, 600],
+      "position": [
+        1600,
+        600
+      ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "CONFIGURE_SUPABASE_AUTH",
@@ -324,7 +369,10 @@
       "name": "Supabase: Log Pitch Email",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1600, 780],
+      "position": [
+        1600,
+        780
+      ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "CONFIGURE_SUPABASE_AUTH",
@@ -341,7 +389,10 @@
       "name": "Wait (Rate Limit)",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
-      "position": [1820, 600]
+      "position": [
+        1820,
+        600
+      ]
     },
     {
       "parameters": {
@@ -352,7 +403,10 @@
       "name": "Parse Response",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [500, 1000]
+      "position": [
+        500,
+        1000
+      ]
     },
     {
       "parameters": {
@@ -381,7 +435,10 @@
       "name": "Filter: Valid Response",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [720, 1000]
+      "position": [
+        720,
+        1000
+      ]
     },
     {
       "parameters": {
@@ -410,7 +467,10 @@
       "name": "Filter: Should Update Status",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [940, 1000]
+      "position": [
+        940,
+        1000
+      ]
     },
     {
       "parameters": {
@@ -436,7 +496,10 @@
       "name": "Supabase: Update Response",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1160, 1000],
+      "position": [
+        1160,
+        1000
+      ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "CONFIGURE_SUPABASE_AUTH",
@@ -468,7 +531,10 @@
       "name": "Supabase: Update Email Log",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [940, 1180],
+      "position": [
+        940,
+        1180
+      ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "CONFIGURE_SUPABASE_AUTH",
@@ -503,7 +569,10 @@
       "name": "Filter: Should Notify",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2,
-      "position": [1380, 1000]
+      "position": [
+        1380,
+        1000
+      ]
     },
     {
       "parameters": {
@@ -530,7 +599,10 @@
       "name": "Supabase: Get Podcast Details",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1600, 1000],
+      "position": [
+        1600,
+        1000
+      ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "CONFIGURE_SUPABASE_AUTH",
@@ -555,7 +627,10 @@
       "name": "Slack: Notify Response",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [1820, 1000],
+      "position": [
+        1820,
+        1000
+      ],
       "credentials": {
         "slackApi": {
           "id": "CONFIGURE_SLACK_CREDENTIALS",
@@ -572,7 +647,10 @@
       "name": "Respond: Response Recorded",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [2040, 1000]
+      "position": [
+        2040,
+        1000
+      ]
     },
     {
       "parameters": {
@@ -583,7 +661,10 @@
       "name": "Parse Booking",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [500, 1400]
+      "position": [
+        500,
+        1400
+      ]
     },
     {
       "parameters": {
@@ -609,7 +690,10 @@
       "name": "Supabase: Update Booking",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [720, 1400],
+      "position": [
+        720,
+        1400
+      ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "CONFIGURE_SUPABASE_AUTH",
@@ -642,7 +726,10 @@
       "name": "Supabase: Get Booked Podcast",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [940, 1400],
+      "position": [
+        940,
+        1400
+      ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "CONFIGURE_SUPABASE_AUTH",
@@ -667,7 +754,10 @@
       "name": "Slack: Notify Booking",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [1160, 1400],
+      "position": [
+        1160,
+        1400
+      ],
       "credentials": {
         "slackApi": {
           "id": "CONFIGURE_SLACK_CREDENTIALS",
@@ -684,7 +774,10 @@
       "name": "Respond: Booking Recorded",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [1380, 1400]
+      "position": [
+        1380,
+        1400
+      ]
     },
     {
       "parameters": {
@@ -695,7 +788,10 @@
       "name": "Parse Episode Release",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [500, 1800]
+      "position": [
+        500,
+        1800
+      ]
     },
     {
       "parameters": {
@@ -721,7 +817,10 @@
       "name": "Supabase: Update Episode Release",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [720, 1800],
+      "position": [
+        720,
+        1800
+      ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "CONFIGURE_SUPABASE_AUTH",
@@ -754,7 +853,10 @@
       "name": "Supabase: Get Released Podcast",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [940, 1800],
+      "position": [
+        940,
+        1800
+      ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "CONFIGURE_SUPABASE_AUTH",
@@ -779,7 +881,10 @@
       "name": "Slack: Notify Release",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [1160, 1800],
+      "position": [
+        1160,
+        1800
+      ],
       "credentials": {
         "slackApi": {
           "id": "CONFIGURE_SLACK_CREDENTIALS",
@@ -796,7 +901,10 @@
       "name": "Respond: Release Recorded",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [1380, 1800]
+      "position": [
+        1380,
+        1800
+      ]
     },
     {
       "parameters": {
@@ -813,7 +921,10 @@
       "name": "Supabase: Get Pipeline Stats",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [500, 2200],
+      "position": [
+        500,
+        2200
+      ],
       "credentials": {
         "httpHeaderAuth": {
           "id": "CONFIGURE_SUPABASE_AUTH",
@@ -830,7 +941,10 @@
       "name": "Generate Pipeline Report",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [720, 2200]
+      "position": [
+        720,
+        2200
+      ]
     },
     {
       "parameters": {
@@ -849,7 +963,10 @@
       "name": "Slack: Weekly Pipeline Report",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [940, 2200],
+      "position": [
+        940,
+        2200
+      ],
       "credentials": {
         "slackApi": {
           "id": "CONFIGURE_SLACK_CREDENTIALS",
@@ -865,7 +982,10 @@
       "name": "Error Handler",
       "type": "n8n-nodes-base.stopAndError",
       "typeVersion": 1,
-      "position": [2040, 200]
+      "position": [
+        2040,
+        200
+      ]
     }
   ],
   "connections": {
@@ -1223,24 +1343,6 @@
     "errorWorkflow": ""
   },
   "staticData": null,
-  "tags": [
-    {
-      "name": "outreach",
-      "id": "outreach-tag"
-    },
-    {
-      "name": "lician",
-      "id": "lician-tag"
-    },
-    {
-      "name": "podcast",
-      "id": "podcast-tag"
-    },
-    {
-      "name": "marketing",
-      "id": "marketing-tag"
-    }
-  ],
   "triggerCount": 5,
   "updatedAt": "2026-01-16T00:00:00.000Z",
   "versionId": "1"

@@ -22,34 +22,34 @@ const reviews = [
 
 export function MobileApp() {
   return (
-    <section className="py-24 px-6 bg-secondary/20">
+    <section className="py-24 px-6 bg-white/[0.05]">
       <div className="max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div>
-            <p className="text-sm text-muted-foreground mb-4">Research anytime, anywhere</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 text-balance">
+            <p className="text-sm text-[#868f97] mb-4">Research anytime, anywhere</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 text-balance">
               Built for professionals. Loved by everyone.
             </h2>
-            <p className="text-lg text-muted-foreground mb-8">Try our free mobile app.</p>
-            <Button className="bg-foreground text-background hover:bg-foreground/90">Download</Button>
+            <p className="text-lg text-[#868f97] mb-8">Try our free mobile app.</p>
+            <Button className="bg-white text-background hover:bg-white/90 transition-colors duration-100">Download</Button>
           </div>
 
           <div className="space-y-4">
             {reviews.map((review, index) => (
-              <div key={index} className="bg-card border border-border rounded-xl p-5">
+              <div key={index} className="bg-[#1a1a1a] border border-white/[0.08] rounded-xl p-5 transition-colors duration-100">
                 <div className="flex gap-1 mb-3">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} className="w-4 h-4 fill-yellow-500 text-yellow-500" />
                   ))}
                 </div>
-                <p className="text-sm text-muted-foreground mb-4 leading-relaxed">&quot;{review.quote}&quot;</p>
+                <p className="text-sm text-[#868f97] mb-4 leading-relaxed">&quot;{review.quote}&quot;</p>
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
-                    <span className="text-xs font-medium text-foreground">{review.author[0]}</span>
+                  <div className="w-8 h-8 rounded-full bg-white/[0.05] flex items-center justify-center">
+                    <span className="text-xs font-medium text-white">{review.author[0]}</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-foreground">{review.author}</p>
-                    <p className="text-xs text-muted-foreground">{review.platform}</p>
+                    <p className="text-sm font-medium text-white">{review.author}</p>
+                    <p className="text-xs text-[#868f97]">{review.platform}</p>
                   </div>
                 </div>
               </div>

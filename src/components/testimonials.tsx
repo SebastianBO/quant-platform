@@ -28,21 +28,21 @@ export function Testimonials() {
   return (
     <section className="py-24 px-6">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-12 text-center">
+        <h2 className="text-2xl md:text-3xl font-bold text-white mb-12 text-center">
           What our clients say about Lician Pro
         </h2>
 
         <div className="grid md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <div key={index} className="bg-card border border-border rounded-2xl p-6">
-              <p className="text-sm text-muted-foreground leading-relaxed mb-6">&quot;{testimonial.quote}&quot;</p>
+            <div key={index} className="bg-[#1a1a1a] border border-white/[0.08] rounded-2xl p-6">
+              <p className="text-sm text-[#868f97] leading-relaxed mb-6">&quot;{testimonial.quote}&quot;</p>
               <div className="flex items-center gap-3">
                 <Avatar className="w-10 h-10">
-                  <AvatarFallback className="bg-secondary text-foreground text-sm">{testimonial.avatar}</AvatarFallback>
+                  <AvatarFallback className="bg-white/[0.05] text-white text-sm">{testimonial.avatar}</AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="text-sm font-medium text-foreground">{testimonial.author}</p>
-                  <p className="text-xs text-muted-foreground">{testimonial.role}</p>
+                  <p className="text-sm font-medium text-white">{testimonial.author}</p>
+                  <p className="text-xs text-[#868f97]">{testimonial.role}</p>
                 </div>
               </div>
             </div>

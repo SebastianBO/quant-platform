@@ -48,20 +48,20 @@ function MaturityBar({ maturity, maxAmount }: { maturity: DebtMaturity; maxAmoun
 
   return (
     <div className="flex items-center gap-3">
-      <div className="w-20 text-xs text-muted-foreground font-medium">
+      <div className="w-20 text-xs text-[#868f97] font-medium">
         {maturity.label}
       </div>
       <div className="flex-1 flex items-center gap-2">
-        <div className="flex-1 h-6 bg-secondary/30 rounded overflow-hidden">
+        <div className="flex-1 h-6 bg-white/[0.05] rounded overflow-hidden">
           <div
             className={cn(
-              "h-full rounded transition-all",
-              maturity.year === 'Year 1' ? 'bg-red-500/80' :
+              "h-full rounded transition-all duration-100",
+              maturity.year === 'Year 1' ? 'bg-[#e15241]/80' :
               maturity.year === 'Year 2' ? 'bg-orange-500/80' :
-              maturity.year === 'Year 3' ? 'bg-yellow-500/80' :
-              maturity.year === 'Year 4' ? 'bg-green-500/80' :
+              maturity.year === 'Year 3' ? 'bg-[#f4a623]/80' :
+              maturity.year === 'Year 4' ? 'bg-[#4ebe96]/80' :
               maturity.year === 'Year 5' ? 'bg-emerald-500/80' :
-              'bg-blue-500/80'
+              'bg-[#479ffa]/80'
             )}
             style={{ width: `${Math.min(percentage, 100)}%` }}
           />
@@ -70,7 +70,7 @@ function MaturityBar({ maturity, maxAmount }: { maturity: DebtMaturity; maxAmoun
           <span className="text-sm font-medium">{formatCurrency(maturity.amount)}</span>
         </div>
         <div className="w-12 text-right">
-          <span className="text-xs text-muted-foreground">{maturity.percentOfTotal.toFixed(1)}%</span>
+          <span className="text-xs text-[#868f97]">{maturity.percentOfTotal.toFixed(1)}%</span>
         </div>
       </div>
     </div>
@@ -117,7 +117,7 @@ export default function CompanyDebt({ ticker }: CompanyDebtProps) {
         <CardContent>
           <div className="space-y-4">
             {[1, 2, 3, 4, 5].map(i => (
-              <div key={i} className="h-8 bg-secondary/30 rounded animate-pulse" />
+              <div key={i} className="h-8 bg-white/[0.05] rounded animate-pulse" />
             ))}
           </div>
         </CardContent>
@@ -135,7 +135,7 @@ export default function CompanyDebt({ ticker }: CompanyDebtProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-8 text-muted-foreground">
+          <div className="text-center py-8 text-[#868f97]">
             <AlertTriangle className="w-8 h-8 mx-auto mb-2 opacity-50" />
             <p>{error || 'No debt data available'}</p>
           </div>
@@ -174,7 +174,7 @@ export default function CompanyDebt({ ticker }: CompanyDebtProps) {
             <DataSourceIndicator source="sec-edgar" />
           </div>
           {data.asOfDate && (
-            <span className="text-xs text-muted-foreground font-normal">
+            <span className="text-xs text-[#868f97] font-normal">
               As of {new Date(data.asOfDate).toLocaleDateString()}
             </span>
           )}
@@ -183,20 +183,20 @@ export default function CompanyDebt({ ticker }: CompanyDebtProps) {
       <CardContent className="space-y-6">
         {/* Debt Summary Cards */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="p-4 bg-secondary/30 rounded-lg">
-            <div className="flex items-center gap-2 text-muted-foreground mb-1">
+          <div className="p-4 bg-white/[0.05] rounded-lg">
+            <div className="flex items-center gap-2 text-[#868f97] mb-1">
               <DollarSign className="w-3.5 h-3.5" />
               <span className="text-xs font-medium">Total Debt</span>
             </div>
             <p className="text-xl font-bold">{formatCurrency(debt.totalDebt)}</p>
           </div>
-          <div className="p-4 bg-secondary/30 rounded-lg">
-            <div className="flex items-center gap-2 text-muted-foreground mb-1">
+          <div className="p-4 bg-white/[0.05] rounded-lg">
+            <div className="flex items-center gap-2 text-[#868f97] mb-1">
               <TrendingDown className="w-3.5 h-3.5" />
               <span className="text-xs font-medium">Interest Expense</span>
             </div>
             <p className="text-xl font-bold">{formatCurrency(debt.interestExpense)}</p>
-            <p className="text-xs text-muted-foreground">Annual</p>
+            <p className="text-xs text-[#868f97]">Annual</p>
           </div>
         </div>
 
@@ -204,15 +204,15 @@ export default function CompanyDebt({ ticker }: CompanyDebtProps) {
         <div className="space-y-2">
           <p className="text-sm font-medium mb-3">Debt Structure</p>
           <div className="space-y-2">
-            <div className="flex justify-between items-center p-2 bg-secondary/20 rounded">
+            <div className="flex justify-between items-center p-2 bg-white/[0.05] rounded">
               <span className="text-sm">Long-term Debt</span>
               <span className="font-medium">{formatCurrency(debt.longTermDebt)}</span>
             </div>
-            <div className="flex justify-between items-center p-2 bg-secondary/20 rounded">
+            <div className="flex justify-between items-center p-2 bg-white/[0.05] rounded">
               <div className="flex items-center gap-2">
                 <span className="text-sm">Short-term Debt</span>
                 {shortTermPercent > 30 && (
-                  <span className="text-[10px] px-1.5 py-0.5 bg-yellow-500/20 text-yellow-500 rounded">
+                  <span className="text-[10px] px-1.5 py-0.5 bg-[#f4a623]/20 text-[#f4a623] rounded">
                     {shortTermPercent.toFixed(0)}% of total
                   </span>
                 )}
@@ -220,7 +220,7 @@ export default function CompanyDebt({ ticker }: CompanyDebtProps) {
               <span className="font-medium">{formatCurrency(debt.shortTermDebt)}</span>
             </div>
             {debt.currentPortionOfLongTermDebt && debt.currentPortionOfLongTermDebt > 0 && (
-              <div className="flex justify-between items-center p-2 pl-6 text-muted-foreground text-sm">
+              <div className="flex justify-between items-center p-2 pl-6 text-[#868f97] text-sm">
                 <span className="flex items-center gap-1">
                   <ChevronRight className="w-3 h-3" />
                   Current portion of LT debt
@@ -229,7 +229,7 @@ export default function CompanyDebt({ ticker }: CompanyDebtProps) {
               </div>
             )}
             {debt.commercialPaper && debt.commercialPaper > 0 && (
-              <div className="flex justify-between items-center p-2 pl-6 text-muted-foreground text-sm">
+              <div className="flex justify-between items-center p-2 pl-6 text-[#868f97] text-sm">
                 <span className="flex items-center gap-1">
                   <ChevronRight className="w-3 h-3" />
                   Commercial Paper
@@ -245,7 +245,7 @@ export default function CompanyDebt({ ticker }: CompanyDebtProps) {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <p className="text-sm font-medium">Debt Maturity Schedule</p>
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1 text-xs text-[#868f97]">
                 <Clock className="w-3 h-3" />
                 <span>Total: {formatCurrency(debt.totalScheduledMaturities)}</span>
               </div>
@@ -257,13 +257,13 @@ export default function CompanyDebt({ ticker }: CompanyDebtProps) {
                 <BarChart data={chartData} barSize={32}>
                   <XAxis
                     dataKey="name"
-                    stroke="hsl(var(--muted-foreground))"
+                    stroke="#868f97"
                     tick={{ fontSize: 10 }}
                     tickLine={false}
                     axisLine={false}
                   />
                   <YAxis
-                    stroke="hsl(var(--muted-foreground))"
+                    stroke="#868f97"
                     tick={{ fontSize: 10 }}
                     tickFormatter={(v) => `$${v}B`}
                     width={45}
@@ -272,8 +272,8 @@ export default function CompanyDebt({ ticker }: CompanyDebtProps) {
                   />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: 'hsl(var(--card))',
-                      border: '1px solid hsl(var(--border))',
+                      backgroundColor: '#1a1a1a',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
                       borderRadius: '8px',
                       fontSize: '12px'
                     }}
@@ -285,12 +285,12 @@ export default function CompanyDebt({ ticker }: CompanyDebtProps) {
                       <Cell
                         key={`cell-${index}`}
                         fill={
-                          entry.year === 'Year 1' ? '#ef4444' :
+                          entry.year === 'Year 1' ? '#e15241' :
                           entry.year === 'Year 2' ? '#f97316' :
-                          entry.year === 'Year 3' ? '#eab308' :
-                          entry.year === 'Year 4' ? '#22c55e' :
+                          entry.year === 'Year 3' ? '#f4a623' :
+                          entry.year === 'Year 4' ? '#4ebe96' :
                           entry.year === 'Year 5' ? '#10b981' :
-                          '#3b82f6'
+                          '#479ffa'
                         }
                         opacity={0.8}
                       />
@@ -318,19 +318,19 @@ export default function CompanyDebt({ ticker }: CompanyDebtProps) {
           <div className={cn(
             "p-3 rounded-lg border",
             nearTermMaturityPercent > 30 || shortTermPercent > 40
-              ? "bg-red-500/5 border-red-500/30"
-              : "bg-yellow-500/5 border-yellow-500/30"
+              ? "bg-[#e15241]/5 border-[#e15241]/30"
+              : "bg-[#f4a623]/5 border-[#f4a623]/30"
           )}>
             <div className="flex items-start gap-2">
               <AlertTriangle className={cn(
                 "w-4 h-4 mt-0.5 flex-shrink-0",
                 nearTermMaturityPercent > 30 || shortTermPercent > 40
-                  ? "text-red-500"
-                  : "text-yellow-500"
+                  ? "text-[#e15241]"
+                  : "text-[#f4a623]"
               )} />
               <div className="text-xs">
                 <p className="font-medium mb-1">Refinancing Risk</p>
-                <p className="text-muted-foreground">
+                <p className="text-[#868f97]">
                   {nearTermMaturityPercent > 20 && (
                     <span>{nearTermMaturityPercent.toFixed(0)}% of scheduled debt matures within 1 year. </span>
                   )}
@@ -345,7 +345,7 @@ export default function CompanyDebt({ ticker }: CompanyDebtProps) {
         )}
 
         {/* Footer */}
-        <div className="text-xs text-muted-foreground border-t border-border pt-4">
+        <div className="text-xs text-[#868f97] border-t border-white/[0.08] pt-4">
           <p className="font-medium mb-1">Data Source</p>
           <p>SEC EDGAR XBRL filings - Updated with each 10-K/10-Q filing</p>
         </div>

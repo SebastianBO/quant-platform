@@ -109,14 +109,14 @@ export default function UserAvatar() {
 
   if (loading) {
     return (
-      <div className="w-10 h-10 rounded-full bg-secondary animate-pulse" />
+      <div className="w-10 h-10 rounded-full bg-white/[0.05] animate-pulse" />
     )
   }
 
   if (!user) {
     return (
       <Link href="/login">
-        <button className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-600 hover:bg-green-500 text-white text-sm font-medium transition-colors">
+        <button className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white text-sm font-medium transition-colors duration-100">
           <User className="w-4 h-4" />
           Sign in
         </button>
@@ -131,35 +131,35 @@ export default function UserAvatar() {
     <div className="relative z-50" ref={dropdownRef}>
       <button
         onClick={() => setDropdownOpen(!dropdownOpen)}
-        className="relative flex items-center gap-2 p-1 rounded-full hover:ring-2 hover:ring-green-500/50 transition-all cursor-pointer bg-secondary/50 hover:bg-secondary"
+        className="relative flex items-center gap-2 p-1 rounded-full hover:ring-2 hover:ring-[#4ebe96]/50 transition-all cursor-pointer bg-white/[0.025] hover:bg-white/[0.08]"
       >
         <img
           src={avatarUrl}
           alt={displayName}
-          className="w-10 h-10 rounded-full object-cover bg-secondary border-2 border-green-500/30"
+          className="w-10 h-10 rounded-full object-cover bg-white/[0.05] border-2 border-[#4ebe96]/30"
           onError={(e) => {
             // Fallback to default avatar on error
             (e.target as HTMLImageElement).src = getDefaultAvatar(user.id)
           }}
         />
         {/* Online indicator */}
-        <span className="absolute bottom-0.5 right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-background" />
+        <span className="absolute bottom-0.5 right-0.5 w-3 h-3 bg-[#4ebe96] rounded-full border-2 border-background" />
       </button>
 
       {/* Dropdown Menu */}
       {dropdownOpen && (
-        <div className="absolute right-0 top-full mt-2 w-64 bg-card border border-border rounded-xl shadow-xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute right-0 top-full mt-2 w-64 bg-[#1a1a1a] border border-white/[0.08] rounded-xl shadow-xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
           {/* User info header */}
-          <div className="p-4 bg-secondary/30 border-b border-border">
+          <div className="p-4 bg-white/[0.015] border-b border-white/[0.08]">
             <div className="flex items-center gap-3">
               <img
                 src={avatarUrl}
                 alt={displayName}
-                className="w-12 h-12 rounded-full object-cover bg-secondary"
+                className="w-12 h-12 rounded-full object-cover bg-white/[0.05]"
               />
               <div className="flex-1 min-w-0">
                 <p className="font-semibold truncate">{displayName}</p>
-                <p className="text-sm text-muted-foreground truncate">{user.email}</p>
+                <p className="text-sm text-[#868f97] truncate">{user.email}</p>
               </div>
             </div>
           </div>
@@ -169,37 +169,37 @@ export default function UserAvatar() {
             <Link
               href="/dashboard"
               onClick={() => setDropdownOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-secondary/50 transition-colors group"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/[0.08] transition-colors duration-100 group"
             >
-              <Briefcase className="w-4 h-4 text-muted-foreground group-hover:text-green-500" />
+              <Briefcase className="w-4 h-4 text-[#868f97] group-hover:text-[#4ebe96]" />
               <span className="text-sm">My Portfolios</span>
             </Link>
 
             <Link
               href="/premium"
               onClick={() => setDropdownOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-secondary/50 transition-colors group"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/[0.08] transition-colors duration-100 group"
             >
-              <CreditCard className="w-4 h-4 text-muted-foreground group-hover:text-green-500" />
+              <CreditCard className="w-4 h-4 text-[#868f97] group-hover:text-[#4ebe96]" />
               <span className="text-sm">Subscription</span>
             </Link>
 
             <Link
               href="/settings"
               onClick={() => setDropdownOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-secondary/50 transition-colors group"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/[0.08] transition-colors duration-100 group"
             >
-              <Settings className="w-4 h-4 text-muted-foreground group-hover:text-green-500" />
+              <Settings className="w-4 h-4 text-[#868f97] group-hover:text-[#4ebe96]" />
               <span className="text-sm">Settings</span>
             </Link>
 
-            <div className="my-2 border-t border-border" />
+            <div className="my-2 border-t border-white/[0.08]" />
 
             <button
               onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-red-500/10 transition-colors group"
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-red-500/10 transition-colors duration-100 group"
             >
-              <LogOut className="w-4 h-4 text-muted-foreground group-hover:text-red-500" />
+              <LogOut className="w-4 h-4 text-[#868f97] group-hover:text-red-500" />
               <span className="text-sm group-hover:text-red-500">Sign out</span>
             </button>
           </div>

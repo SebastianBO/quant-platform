@@ -42,7 +42,7 @@ export function ScrollIndicator({
     >
       {/* Label */}
       <motion.span
-        className="text-sm text-muted-foreground group-hover:text-foreground transition-colors"
+        className="text-sm text-[#868f97] group-hover:text-white transition-colors duration-100"
         animate={{ opacity: [0.5, 1, 0.5] }}
         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
       >
@@ -64,7 +64,7 @@ export function ScrollIndicator({
             ease: "easeInOut",
           }}
         >
-          <ChevronDown className="w-6 h-6 text-green-500" />
+          <ChevronDown className="w-6 h-6 text-[#4ebe96]" />
         </motion.div>
 
         {/* Second chevron (delayed) */}
@@ -81,13 +81,13 @@ export function ScrollIndicator({
             delay: 0.2,
           }}
         >
-          <ChevronDown className="w-6 h-6 text-green-500/50" />
+          <ChevronDown className="w-6 h-6 text-[#4ebe96]/50" />
         </motion.div>
       </div>
 
       {/* Glowing line */}
       <motion.div
-        className="w-px h-8 bg-gradient-to-b from-green-500/50 to-transparent"
+        className="w-px h-8 bg-gradient-to-b from-[#4ebe96]/50 to-transparent"
         animate={{
           scaleY: [0.5, 1, 0.5],
           opacity: [0.3, 0.7, 0.3],
@@ -128,7 +128,7 @@ export function ScrollDots({
       {[0, 1, 2].map((i) => (
         <motion.div
           key={i}
-          className="w-1.5 h-1.5 rounded-full bg-green-500"
+          className="w-1.5 h-1.5 rounded-full bg-[#4ebe96]"
           animate={{
             opacity: [0.2, 1, 0.2],
             scale: [0.8, 1.2, 0.8],

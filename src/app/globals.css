@@ -22,6 +22,56 @@ body {
   overflow-x: hidden;
 }
 
+/* =============================================================================
+   FEY DESIGN TOKENS (Pixel-perfect from Fey.com)
+   ============================================================================= */
+:root {
+  /* Colors */
+  --fey-black: #000000;
+  --fey-white: #ffffff;
+  --fey-muted: #868f97;
+  --fey-link: #479ffa;
+  --fey-success: #4ebe96;
+  --fey-error: #e15241;
+  --fey-warning: #f4a623;
+  --fey-accent: #ff9966;
+  --fey-border: rgba(255, 255, 255, 0.08);
+  --fey-border-hover: rgba(255, 255, 255, 0.15);
+
+  /* Typography */
+  --fey-font: 'Calibre', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --fey-h1: 48px;
+  --fey-h2: 54px;
+  --fey-h3: 26px;
+  --fey-body: 14px;
+  --fey-caption: 12px;
+
+  /* Spacing (8px base) */
+  --fey-space-1: 8px;
+  --fey-space-2: 16px;
+  --fey-space-3: 24px;
+  --fey-space-4: 32px;
+  --fey-space-5: 40px;
+  --fey-space-6: 48px;
+
+  /* Border Radius */
+  --fey-radius-pill: 99px;
+  --fey-radius-card: 16px;
+  --fey-radius-button: 8px;
+
+  /* Transitions */
+  --fey-duration-quick: 100ms;
+  --fey-duration-smooth: 250ms;
+  --fey-duration-slow: 1000ms;
+  --fey-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Shadows */
+  --fey-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.85);
+  --fey-shadow-md: 0 8px 30px rgba(0, 0, 0, 0.6);
+  --fey-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.7);
+  --fey-shadow-glow: 0 0 14px rgba(255, 255, 255, 0.25);
+}
+
 /* Custom scrollbar - Light mode */
 ::-webkit-scrollbar {
   width: 8px;
