@@ -4,10 +4,10 @@ import crypto from 'crypto'
 import { logger } from '@/lib/logger'
 
 function getSupabase() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim()
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim()
   if (!supabaseUrl || !supabaseKey) {
-    throw new Error('Supabase environment variables are not set')
+    throw new Error(`Supabase env missing: URL=${!!supabaseUrl}, KEY=${!!supabaseKey}`)
   }
   return createClient(supabaseUrl, supabaseKey)
 }
@@ -95,9 +95,12 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    logger.error('API key creation error', { error: error instanceof Error ? error.message : 'Unknown' })
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    const errorCode = (error as { code?: string })?.code
+    logger.error('API key creation error', { error: errorMessage, code: errorCode })
+    console.error('[create-key] Full error:', error)
     return NextResponse.json(
-      { error: 'Failed to create API key. Please try again.' },
+      { error: `Failed to create API key: ${errorMessage}` },
       { status: 500 }
     )
   }

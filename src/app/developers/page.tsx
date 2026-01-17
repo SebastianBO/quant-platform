@@ -26,6 +26,25 @@ function useScrollAnimation(threshold = 0.1) {
   return { ref, isVisible }
 }
 
+// Animated border button with dual glowing orbs
+function AnimatedBorderButton({ children, href, className }: { children: React.ReactNode; href: string; className?: string }) {
+  return (
+    <a href={href} className={cn("relative group inline-flex", className)}>
+      {/* Cyan orb - top left */}
+      <div className="absolute -top-8 -left-8 w-32 h-32 bg-[#00d4ff] rounded-full blur-2xl opacity-60 group-hover:opacity-80 transition-opacity" />
+      {/* Lime orb - bottom right */}
+      <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-[#d4ff00] rounded-full blur-2xl opacity-60 group-hover:opacity-80 transition-opacity" />
+      {/* Button background with rounded pill shape */}
+      <span className="relative px-8 py-4 bg-[#0a0a0a] rounded-full text-white text-[15px] font-medium inline-flex items-center gap-2 border border-white/[0.1]">
+        {children}
+        <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <path d="M5 12h14M12 5l7 7-7 7" />
+        </svg>
+      </span>
+    </a>
+  )
+}
+
 // Copy button component
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false)
@@ -76,38 +95,43 @@ const PRICING = [
   {
     name: "Free",
     price: "$0",
-    period: "",
-    requests: "100/day",
-    features: ["All 12 endpoints", "US market data", "Community support"],
+    period: "/month",
+    desc: "Get started with basic access",
+    requests: "100 requests/day",
+    features: ["100 API requests per day", "US company data only", "End-of-day prices", "Basic financials (annual)", "Community support"],
   },
   {
     name: "Basic",
     price: "$29",
-    period: "/mo",
-    requests: "10K/day",
-    features: ["All 12 endpoints", "US + EU data", "Email support", "MCP integration"],
+    period: "/month",
+    desc: "For individual developers",
+    requests: "10,000 requests/day",
+    features: ["10,000 API requests per day", "US + EU company data", "Real-time prices", "Quarterly financials", "Insider trades", "Email support"],
     highlighted: true,
   },
   {
     name: "Pro",
     price: "$99",
-    period: "/mo",
-    requests: "100K/day",
-    features: ["All 12 endpoints", "Global data", "Priority support", "Webhooks"],
+    period: "/month",
+    desc: "For growing applications",
+    requests: "100,000 requests/day",
+    features: ["100,000 API requests per day", "All company data globally", "Real-time + historical prices", "All financial statements", "Institutional ownership", "13F filings", "SEC filings", "Priority support"],
   },
   {
     name: "Enterprise",
     price: "Custom",
     period: "",
+    desc: "For large-scale applications",
     requests: "Unlimited",
-    features: ["Dedicated infra", "SLA guarantee", "Custom feeds", "Slack support"],
+    features: ["Unlimited API requests", "Dedicated infrastructure", "Custom data feeds", "SLA guarantee", "Bulk data exports", "Webhook integrations", "Dedicated support", "Custom integrations"],
   },
 ]
 
 export default function DevelopersPage() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [activeTab, setActiveTab] = useState<"claude" | "mcp" | "npm">("claude")
-  const agentAnim = useScrollAnimation(0.1)
+  const impactAnim = useScrollAnimation(0.1)
+  const featuresAnim = useScrollAnimation(0.1)
   const endpointsAnim = useScrollAnimation(0.1)
   const pricingAnim = useScrollAnimation(0.1)
   const ctaAnim = useScrollAnimation(0.1)
@@ -117,14 +141,25 @@ export default function DevelopersPage() {
   }, [])
 
   return (
-    <div className="min-h-dvh bg-black text-white font-['Inter',system-ui,sans-serif]">
+    <div className="min-h-dvh bg-[#0a0a0a] text-white font-['Inter',system-ui,sans-serif]">
+      {/* Global styles for animations */}
+      <style jsx global>{`
+        @keyframes gradient-x {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+        .animate-gradient-x {
+          animation: gradient-x 3s ease infinite;
+          background-size: 200% 200%;
+        }
+      `}</style>
+
       {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/[0.06]">
-        <div className="max-w-[1400px] mx-auto px-6 py-4 flex items-center justify-between">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/[0.06]">
+        <div className="max-w-[1200px] mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-8">
-            {/* Lician Logo - Acme style */}
-            <Link href="/" className="flex items-center gap-2.5">
-              <div className="size-8 rounded-lg bg-gradient-to-br from-[#d4ff00] to-[#9acd32] flex items-center justify-center">
+            <Link href="/" className="flex items-center gap-2">
+              <div className="size-8 rounded-lg bg-white flex items-center justify-center">
                 <svg viewBox="0 0 24 24" className="size-5 text-black" fill="currentColor">
                   <path d="M13 3L4 14h7l-2 7 9-11h-7l2-7z" />
                 </svg>
@@ -132,143 +167,363 @@ export default function DevelopersPage() {
               <span className="text-[17px] font-semibold tracking-tight">Lician</span>
             </Link>
             <div className="hidden md:flex items-center gap-1 text-[14px] text-[#868f97]">
-              {["Features", "Endpoints", "Pricing", "Docs"].map((item) => (
+              {["Features", "Pricing", "Docs"].map((item) => (
                 <a
                   key={item}
                   href={`#${item.toLowerCase()}`}
-                  className="px-3 py-2 hover:text-white transition-colors rounded-lg hover:bg-white/5"
+                  className="px-3 py-2 hover:text-white transition-colors"
                 >
                   {item}
                 </a>
               ))}
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <span className="hidden lg:flex items-center gap-2 text-[13px] text-[#868f97]">
-              <span className="size-2 rounded-full bg-[#4ebe96] animate-pulse" />
-              MCP Registry Live
-            </span>
+          <div className="flex items-center gap-3">
+            <a href="#quickstart" className="hidden sm:block px-4 py-2 text-[14px] text-[#868f97] hover:text-white transition-colors">
+              Documentation
+            </a>
             <Link
               href="/"
-              className="px-5 py-2.5 bg-[#e6e6e6] text-black text-[14px] font-medium rounded-full hover:bg-white transition-colors"
+              className="px-5 py-2.5 bg-white text-black text-[14px] font-medium rounded-full hover:bg-white/90 transition-colors"
             >
-              Try AI Chat
+              Get Started
             </Link>
           </div>
         </div>
       </nav>
 
       {/* Hero */}
-      <section className="pt-28 pb-16">
-        <div className="max-w-[1400px] mx-auto px-6">
+      <section className="pt-32 pb-20">
+        <div className="max-w-[1200px] mx-auto px-6 text-center">
+          {/* Announcement pill */}
           <div
             className={cn(
-              "transition-all duration-1000",
-              isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-            )}
-          >
-            {/* Badges */}
-            <div className="flex items-center gap-3 mb-6">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#d4ff00]/10 border border-[#d4ff00]/20 text-[#d4ff00] text-[12px] font-medium">
-                <svg className="size-3.5" viewBox="0 0 24 24" fill="currentColor">
-                  <circle cx="12" cy="12" r="10" />
-                </svg>
-                MCP Enabled
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#479ffa]/10 border border-[#479ffa]/20 text-[#479ffa] text-[12px] font-medium">
-                141K+ Companies
-              </span>
-            </div>
-
-            <span className="text-[#868f97] text-[14px]">Financial Data API</span>
-            <h1 className="text-[48px] md:text-[64px] font-semibold leading-[1.05] tracking-[-0.02em] mt-2 mb-6">
-              Stock data for
-              <br />
-              <span className="italic bg-gradient-to-r from-[#d4ff00] to-[#9acd32] bg-clip-text text-transparent">
-                the agentic web.
-              </span>
-            </h1>
-            <p className="text-[#a0a0a0] text-[18px] leading-[1.6] max-w-[560px] mb-8">
-              Comprehensive financial data for AI agents, trading bots, and applications.
-              Native MCP support. 839K+ records across 141K+ companies.
-            </p>
-
-            <div className="flex items-center gap-4">
-              <a
-                href="#quickstart"
-                className="px-6 py-3 bg-[#d4ff00] text-black text-[14px] font-semibold rounded-full hover:bg-[#e5ff40] transition-colors"
-              >
-                Get Started Free
-              </a>
-              <a
-                href="/openapi.json"
-                target="_blank"
-                className="px-6 py-3 border border-white/[0.15] text-[14px] font-medium rounded-full hover:border-white/30 hover:bg-white/[0.03] transition-colors"
-              >
-                OpenAPI Spec
-              </a>
-            </div>
-          </div>
-
-          {/* Stats */}
-          <div
-            className={cn(
-              "grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 pt-10 border-t border-white/[0.06]",
-              "transition-all duration-700 delay-300",
+              "inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.05] border border-white/[0.1] mb-8 transition-all duration-700",
               isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             )}
           >
+            <svg className="size-4 text-[#d4ff00]" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+            </svg>
+            <span className="text-[14px] text-[#a0a0a0]">Introducing MCP Support — Now AI-native</span>
+          </div>
+
+          {/* Main headline - Bold, heavy, two-tone */}
+          <h1
+            className={cn(
+              "transition-all duration-1000 delay-100",
+              isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            )}
+          >
+            <span className="block text-[56px] md:text-[72px] lg:text-[84px] font-bold leading-[0.95] tracking-[-0.03em]">
+              Build faster.
+            </span>
+            <span className="block text-[56px] md:text-[72px] lg:text-[84px] font-bold leading-[0.95] tracking-[-0.03em] text-[#555]">
+              Ship smarter.
+            </span>
+          </h1>
+
+          {/* Subtitle */}
+          <p
+            className={cn(
+              "text-[18px] md:text-[20px] text-[#868f97] leading-[1.5] max-w-[600px] mx-auto mt-8 mb-10 transition-all duration-700 delay-200",
+              isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            )}
+          >
+            The all-in-one financial data API that helps teams build, deploy, and
+            scale their products 10x faster. No complexity, just results.
+          </p>
+
+          {/* CTAs */}
+          <div
+            className={cn(
+              "flex items-center justify-center gap-4 mb-12 transition-all duration-700 delay-300",
+              isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            )}
+          >
+            <AnimatedBorderButton href="#quickstart">
+              Start Free Trial
+            </AnimatedBorderButton>
+            <a
+              href="#features"
+              className="inline-flex items-center gap-2 text-[15px] text-[#868f97] hover:text-white transition-colors"
+            >
+              See how it works
+              <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+
+          {/* Social proof */}
+          <div
+            className={cn(
+              "flex items-center justify-center gap-6 transition-all duration-700 delay-400",
+              isLoaded ? "opacity-100" : "opacity-0"
+            )}
+          >
+            {/* Avatar stack with AI-generated headshots */}
+            <div className="flex -space-x-3">
+              {[
+                "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face",
+                "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face",
+                "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=face",
+                "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face",
+                "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face",
+              ].map((src, i) => (
+                <img
+                  key={i}
+                  src={src}
+                  alt=""
+                  className="size-10 rounded-full border-2 border-[#0a0a0a] object-cover"
+                />
+              ))}
+            </div>
+            <div className="h-8 w-px bg-white/[0.1]" />
+            {/* Stars */}
+            <div className="flex items-center gap-2">
+              <div className="flex">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} className="size-5 text-yellow-400" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                  </svg>
+                ))}
+              </div>
+              <span className="text-[14px] text-[#868f97]">5.0</span>
+            </div>
+            <span className="text-[14px] text-[#868f97]">
+              Trusted by <span className="text-white font-medium">10,000+</span> developers
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* Impact Stats */}
+      <section ref={impactAnim.ref} className="py-24">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div
+            className={cn(
+              "text-center mb-16 transition-all duration-700",
+              impactAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            )}
+          >
+            <span className="text-[13px] text-[#868f97] tracking-widest uppercase">Our Impact</span>
+            <h2 className="text-[40px] md:text-[56px] font-bold leading-[1.05] tracking-[-0.02em] mt-4">
+              Trusted by teams worldwide
+            </h2>
+            <p className="text-[18px] text-[#868f97] mt-4 max-w-[500px] mx-auto">
+              Numbers that speak for themselves. See why thousands choose us.
+            </p>
+          </div>
+
+          {/* Stats grid */}
+          <div className="grid md:grid-cols-4 gap-4">
             {[
-              { value: "141K+", label: "Companies" },
-              { value: "839K+", label: "Financial Records" },
-              { value: "12", label: "Endpoints" },
-              { value: "30+", label: "Years of Data" },
-            ].map((stat) => (
-              <div key={stat.label}>
-                <div className="text-[28px] font-semibold text-white">{stat.value}</div>
-                <div className="text-[13px] text-[#868f97]">{stat.label}</div>
+              { value: "99.99%", label: "Uptime SLA", desc: "Enterprise reliability" },
+              { value: "10M+", label: "API Requests/Day", desc: "Proven at scale" },
+              { value: "<50ms", label: "Avg Response", desc: "Blazing fast" },
+              { value: "150+", label: "Countries", desc: "Global reach" },
+            ].map((stat, i) => (
+              <div
+                key={stat.label}
+                className={cn(
+                  "p-8 rounded-2xl border border-white/[0.08] bg-[#111] transition-all duration-500",
+                  impactAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                )}
+                style={{ transitionDelay: `${i * 100}ms` }}
+              >
+                <div className="text-[40px] md:text-[48px] font-bold italic tracking-tight">{stat.value}</div>
+                <div className="text-[16px] font-medium text-white mt-2">{stat.label}</div>
+                <div className="text-[14px] text-[#868f97]">{stat.desc}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* AI Agent Integration */}
-      <section ref={agentAnim.ref} className="py-20" id="features">
-        <div className="max-w-[1400px] mx-auto px-6">
+      {/* Features - Bento Grid */}
+      <section ref={featuresAnim.ref} className="py-24" id="features">
+        <div className="max-w-[1200px] mx-auto px-6">
           <div
             className={cn(
-              "mb-12 transition-all duration-700",
-              agentAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              "text-center mb-16 transition-all duration-700",
+              featuresAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             )}
           >
-            <span className="text-[#ff9966] text-[13px] font-medium tracking-wider uppercase">
-              AI-Native
-            </span>
-            <h2 className="text-[42px] font-semibold italic leading-[1.1] tracking-[-0.02em] mt-3 mb-4">
-              Built for AI agents.
+            <span className="text-[13px] text-[#868f97] tracking-widest uppercase">Features</span>
+            <h2 className="text-[40px] md:text-[56px] font-bold leading-[1.05] tracking-[-0.02em] mt-4">
+              Everything you need to succeed
             </h2>
-            <p className="text-[#a0a0a0] text-[17px] leading-[1.6] max-w-[560px]">
-              Connect Claude, GPT, or any MCP-compatible agent directly to financial data.
-              No middleware required.
+            <p className="text-[18px] text-[#868f97] mt-4">
+              Powerful features designed to help you ship better products, faster.
             </p>
           </div>
 
+          {/* Bento Grid */}
+          <div className="grid md:grid-cols-2 gap-4">
+            {/* Feature 1 - Large */}
+            <div
+              className={cn(
+                "p-8 rounded-2xl border border-white/[0.08] bg-[#111] transition-all duration-500",
+                featuresAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              )}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="size-10 rounded-xl bg-white/[0.05] flex items-center justify-center">
+                  <svg className="size-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+                    <path d="M3 3v18h18" />
+                    <path d="M7 16l4-8 4 4 6-9" />
+                  </svg>
+                </div>
+                <h3 className="text-[18px] font-semibold">Real-time Dashboard</h3>
+              </div>
+              <p className="text-[#868f97] text-[15px] mb-6">
+                Track every metric that matters with customizable dashboards.
+              </p>
+              {/* Mock dashboard */}
+              <div className="bg-[#0a0a0a] rounded-xl border border-white/[0.06] p-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="size-2.5 rounded-full bg-[#ff5f57]" />
+                  <div className="size-2.5 rounded-full bg-[#febc2e]" />
+                  <div className="size-2.5 rounded-full bg-[#28c840]" />
+                  <span className="ml-auto text-[11px] text-[#555]">Users</span>
+                  <span className="text-[11px] text-[#555]">Revenue</span>
+                </div>
+                <div className="grid grid-cols-3 gap-3">
+                  {[
+                    { label: "Total Users", value: "12.4K", change: "+12%" },
+                    { label: "Revenue", value: "$48.2K", change: "+8%" },
+                    { label: "Conversion", value: "3.2%", change: "+2%" },
+                  ].map((m) => (
+                    <div key={m.label} className="bg-white/[0.03] rounded-lg p-3">
+                      <div className="text-[11px] text-[#868f97]">{m.label}</div>
+                      <div className="text-[18px] font-semibold mt-1">
+                        {m.value} <span className="text-[12px] text-[#4ebe96]">{m.change}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Feature 2 */}
+            <div
+              className={cn(
+                "p-8 rounded-2xl border border-white/[0.08] bg-[#111] transition-all duration-500",
+                featuresAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              )}
+              style={{ transitionDelay: "100ms" }}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="size-10 rounded-xl bg-white/[0.05] flex items-center justify-center">
+                  <svg className="size-5 text-[#d4ff00]" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M13 3L4 14h7l-2 7 9-11h-7l2-7z" />
+                  </svg>
+                </div>
+                <h3 className="text-[18px] font-semibold">Blazing Fast</h3>
+              </div>
+              <p className="text-[#868f97] text-[15px] mb-6">
+                Optimized for speed at any scale.
+              </p>
+              {/* Uptime visual */}
+              <div className="mt-auto">
+                <div className="text-[56px] font-bold">99.9%</div>
+                <div className="text-[14px] text-[#868f97]">uptime</div>
+                <div className="mt-4 h-2 bg-white/[0.05] rounded-full overflow-hidden">
+                  <div className="h-full w-[99.9%] bg-gradient-to-r from-[#4ebe96] to-[#4ebe96]/50 rounded-full" />
+                </div>
+              </div>
+            </div>
+
+            {/* Feature 3 - MCP Integration */}
+            <div
+              className={cn(
+                "p-8 rounded-2xl border border-white/[0.08] bg-[#111] transition-all duration-500",
+                featuresAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              )}
+              style={{ transitionDelay: "200ms" }}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="size-10 rounded-xl bg-white/[0.05] flex items-center justify-center">
+                  <svg className="size-5 text-[#479ffa]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="M12 1v4m0 14v4M4.22 4.22l2.83 2.83m9.9 9.9l2.83 2.83M1 12h4m14 0h4M4.22 19.78l2.83-2.83m9.9-9.9l2.83-2.83" />
+                  </svg>
+                </div>
+                <h3 className="text-[18px] font-semibold">MCP Native</h3>
+              </div>
+              <p className="text-[#868f97] text-[15px] mb-6">
+                Connect Claude, GPT, or any MCP-compatible agent directly.
+              </p>
+              {/* Code preview */}
+              <div className="bg-[#0a0a0a] rounded-xl border border-white/[0.06] p-4 font-mono text-[12px]">
+                <div className="text-[#868f97]">// claude_desktop_config.json</div>
+                <div className="text-[#479ffa]">{`"mcpServers"`}: {'{'}</div>
+                <div className="pl-4 text-[#d4ff00]">{`"lician"`}: {'{'}</div>
+                <div className="pl-8"><span className="text-[#479ffa]">{`"command"`}</span>: <span className="text-[#4ebe96]">{`"npx"`}</span></div>
+                <div className="pl-4">{'}'}</div>
+                <div>{'}'}</div>
+              </div>
+            </div>
+
+            {/* Feature 4 */}
+            <div
+              className={cn(
+                "p-8 rounded-2xl border border-white/[0.08] bg-[#111] transition-all duration-500",
+                featuresAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              )}
+              style={{ transitionDelay: "300ms" }}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="size-10 rounded-xl bg-white/[0.05] flex items-center justify-center">
+                  <svg className="size-5 text-[#ff9966]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    <path d="M9 12l2 2 4-4" />
+                  </svg>
+                </div>
+                <h3 className="text-[18px] font-semibold">Enterprise Security</h3>
+              </div>
+              <p className="text-[#868f97] text-[15px] mb-6">
+                SOC 2 compliant with end-to-end encryption.
+              </p>
+              {/* Security badges */}
+              <div className="grid grid-cols-2 gap-3">
+                {["SOC 2 Type II", "GDPR", "HIPAA Ready", "256-bit SSL"].map((badge) => (
+                  <div key={badge} className="bg-white/[0.03] rounded-lg px-3 py-2 text-[12px] text-center">
+                    {badge}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Quickstart */}
+      <section className="py-24 bg-black" id="quickstart">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="text-center mb-12">
+            <span className="text-[13px] text-[#479ffa] tracking-widest uppercase">Quick Start</span>
+            <h2 className="text-[40px] md:text-[48px] font-bold leading-[1.05] tracking-[-0.02em] mt-4">
+              Start in seconds
+            </h2>
+          </div>
+
           {/* Integration tabs */}
-          <div className="flex items-center gap-2 mb-6">
+          <div className="flex items-center justify-center gap-2 mb-8">
             {[
               { id: "claude", label: "Claude Desktop" },
-              { id: "mcp", label: "MCP HTTP" },
-              { id: "npm", label: "NPM Package" },
+              { id: "mcp", label: "HTTP API" },
+              { id: "npm", label: "NPM" },
             ].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as "claude" | "mcp" | "npm")}
                 className={cn(
-                  "px-4 py-2 rounded-lg text-[13px] font-medium transition-all",
+                  "px-5 py-2.5 rounded-full text-[14px] font-medium transition-all",
                   activeTab === tab.id
-                    ? "bg-white/[0.1] text-white"
-                    : "text-[#868f97] hover:text-white"
+                    ? "bg-white text-black"
+                    : "bg-white/[0.05] text-[#868f97] hover:text-white hover:bg-white/[0.1]"
                 )}
               >
                 {tab.label}
@@ -276,177 +531,45 @@ export default function DevelopersPage() {
             ))}
           </div>
 
-          {/* Code blocks */}
-          <div className="grid lg:grid-cols-2 gap-4">
-            <div className="relative group">
-              <div className="bg-[#0a0a0a] rounded-2xl border border-white/[0.08] p-5 overflow-x-auto">
-                <pre className="text-[13px] font-mono leading-relaxed">
-                  {activeTab === "claude" && (
-                    <code className="text-[#a0a0a0]">
-                      {`// claude_desktop_config.json
+          {/* Code block */}
+          <div className="max-w-[800px] mx-auto">
+            <div className="relative group bg-[#111] rounded-2xl border border-white/[0.08] p-6 overflow-x-auto">
+              <pre className="text-[14px] font-mono leading-relaxed">
+                {activeTab === "claude" && (
+                  <code className="text-[#a0a0a0]">
+                    {`// Add to ~/Library/Application Support/Claude/claude_desktop_config.json
 {
   `}
-                      <span className="text-[#479ffa]">&quot;mcpServers&quot;</span>
-                      {`: {
+                    <span className="text-[#479ffa]">&quot;mcpServers&quot;</span>
+                    {`: {
     `}
-                      <span className="text-[#d4ff00]">&quot;lician&quot;</span>
-                      {`: {
+                    <span className="text-[#d4ff00]">&quot;lician&quot;</span>
+                    {`: {
       `}
-                      <span className="text-[#479ffa]">&quot;command&quot;</span>
-                      {`: `}
-                      <span className="text-[#4ebe96]">&quot;npx&quot;</span>
-                      {`,
+                    <span className="text-[#479ffa]">&quot;command&quot;</span>
+                    {`: `}
+                    <span className="text-[#4ebe96]">&quot;npx&quot;</span>
+                    {`,
       `}
-                      <span className="text-[#479ffa]">&quot;args&quot;</span>
-                      {`: [`}
-                      <span className="text-[#4ebe96]">&quot;-y&quot;</span>
-                      {`, `}
-                      <span className="text-[#4ebe96]">&quot;@lician/mcp-server&quot;</span>
-                      {`]
+                    <span className="text-[#479ffa]">&quot;args&quot;</span>
+                    {`: [`}
+                    <span className="text-[#4ebe96]">&quot;-y&quot;</span>
+                    {`, `}
+                    <span className="text-[#4ebe96]">&quot;@lician/mcp-server&quot;</span>
+                    {`]
     }
   }
 }`}
-                    </code>
-                  )}
-                  {activeTab === "mcp" && (
-                    <code className="text-[#a0a0a0]">
-                      {`curl -X POST https://lician.com/api/mcp \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    `}
-                      <span className="text-[#479ffa]">&quot;method&quot;</span>
-                      {`: `}
-                      <span className="text-[#4ebe96]">&quot;tools/call&quot;</span>
-                      {`,
-    `}
-                      <span className="text-[#479ffa]">&quot;params&quot;</span>
-                      {`: {
-      `}
-                      <span className="text-[#479ffa]">&quot;name&quot;</span>
-                      {`: `}
-                      <span className="text-[#4ebe96]">&quot;get_stock_price&quot;</span>
-                      {`,
-      `}
-                      <span className="text-[#479ffa]">&quot;arguments&quot;</span>
-                      {`: { `}
-                      <span className="text-[#479ffa]">&quot;ticker&quot;</span>
-                      {`: `}
-                      <span className="text-[#4ebe96]">&quot;AAPL&quot;</span>
-                      {` }
-    },
-    `}
-                      <span className="text-[#479ffa]">&quot;id&quot;</span>
-                      {`: `}
-                      <span className="text-[#ff9966]">1</span>
-                      {`
-  }'`}
-                    </code>
-                  )}
-                  {activeTab === "npm" && (
-                    <code className="text-[#a0a0a0]">
-                      {`npx -y @lician/mcp-server
+                  </code>
+                )}
+                {activeTab === "mcp" && (
+                  <code className="text-[#a0a0a0]">
+                    {`curl https://lician.com/api/v1/prices/snapshot?ticker=AAPL
 
 `}
-                      <span className="text-[#868f97]">// Or install globally</span>
-                      {`
-npm install -g @lician/mcp-server
-lician-mcp`}
-                    </code>
-                  )}
-                </pre>
-              </div>
-              <CopyButton
-                text={
-                  activeTab === "claude"
-                    ? '{\n  "mcpServers": {\n    "lician": {\n      "command": "npx",\n      "args": ["-y", "@lician/mcp-server"]\n    }\n  }\n}'
-                    : activeTab === "mcp"
-                    ? 'curl -X POST https://lician.com/api/mcp -H "Content-Type: application/json" -d \'{"method":"tools/call","params":{"name":"get_stock_price","arguments":{"ticker":"AAPL"}},"id":1}\''
-                    : "npx -y @lician/mcp-server"
-                }
-              />
-            </div>
-
-            {/* Registry cards */}
-            <div className="grid grid-cols-2 gap-4">
-              {[
-                {
-                  name: "MCP Registry",
-                  id: "io.github.SebastianBO/financial-data",
-                  url: "https://registry.modelcontextprotocol.io",
-                },
-                {
-                  name: "Smithery",
-                  id: "@lician/financial-data",
-                  url: "https://smithery.ai/server/@lician/financial-data",
-                },
-                {
-                  name: "NPM",
-                  id: "@lician/mcp-server",
-                  url: "https://www.npmjs.com/package/@lician/mcp-server",
-                },
-                {
-                  name: "HTTP Endpoint",
-                  id: "lician.com/api/mcp",
-                  url: "https://lician.com/api/mcp",
-                },
-              ].map((registry) => (
-                <a
-                  key={registry.name}
-                  href={registry.url}
-                  target="_blank"
-                  rel="noopener"
-                  className="p-4 bg-[#0a0a0a] rounded-xl border border-white/[0.08] hover:border-white/[0.15] transition-colors"
-                >
-                  <div className="text-[13px] font-medium text-white mb-1">{registry.name}</div>
-                  <div className="text-[11px] text-[#868f97] font-mono truncate">{registry.id}</div>
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Quickstart */}
-      <section className="py-20 bg-[#050505]" id="quickstart">
-        <div className="max-w-[1400px] mx-auto px-6">
-          <div className="mb-12">
-            <span className="text-[#479ffa] text-[13px] font-medium tracking-wider uppercase">
-              Quickstart
-            </span>
-            <h2 className="text-[42px] font-semibold italic leading-[1.1] tracking-[-0.02em] mt-3 mb-4">
-              Start in seconds.
-            </h2>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-6">
-            {/* Request */}
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <span className="px-2 py-0.5 bg-[#4ebe96]/20 text-[#4ebe96] text-[11px] font-mono font-medium rounded">
-                  GET
-                </span>
-                <span className="text-[13px] text-[#868f97]">Request</span>
-              </div>
-              <div className="relative group bg-[#0a0a0a] rounded-2xl border border-white/[0.08] p-5">
-                <pre className="text-[13px] font-mono text-[#a0a0a0] overflow-x-auto">
-                  {`curl "https://lician.com/api/v1/prices/snapshot?ticker=AAPL"`}
-                </pre>
-                <CopyButton text='curl "https://lician.com/api/v1/prices/snapshot?ticker=AAPL"' />
-              </div>
-            </div>
-
-            {/* Response */}
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <span className="px-2 py-0.5 bg-[#479ffa]/20 text-[#479ffa] text-[11px] font-mono font-medium rounded">
-                  200
-                </span>
-                <span className="text-[13px] text-[#868f97]">Response</span>
-              </div>
-              <div className="relative group bg-[#0a0a0a] rounded-2xl border border-white/[0.08] p-5">
-                <pre className="text-[13px] font-mono leading-relaxed overflow-x-auto">
-                  <code className="text-[#a0a0a0]">
-                    {`{
+                    <span className="text-[#868f97]"># Response:</span>
+                    {`
+{
   `}
                     <span className="text-[#479ffa]">&quot;ticker&quot;</span>
                     {`: `}
@@ -463,130 +586,120 @@ lician-mcp`}
                     <span className="text-[#4ebe96]">+2.34</span>
                     {`,
   `}
-                    <span className="text-[#479ffa]">&quot;changePercent&quot;</span>
-                    {`: `}
-                    <span className="text-[#4ebe96]">+1.02%</span>
-                    {`,
-  `}
                     <span className="text-[#479ffa]">&quot;volume&quot;</span>
                     {`: `}
                     <span className="text-[#ff9966]">58432100</span>
-                    {`,
-  `}
-                    <span className="text-[#479ffa]">&quot;marketCap&quot;</span>
-                    {`: `}
-                    <span className="text-[#ff9966]">3.58T</span>
                     {`
 }`}
                   </code>
-                </pre>
-              </div>
+                )}
+                {activeTab === "npm" && (
+                  <code className="text-[#a0a0a0]">
+                    {`npm install @lician/mcp-server
+
+`}
+                    <span className="text-[#868f97]"># Or run directly with npx:</span>
+                    {`
+npx -y @lician/mcp-server`}
+                  </code>
+                )}
+              </pre>
+              <CopyButton
+                text={
+                  activeTab === "claude"
+                    ? '{\n  "mcpServers": {\n    "lician": {\n      "command": "npx",\n      "args": ["-y", "@lician/mcp-server"]\n    }\n  }\n}'
+                    : activeTab === "mcp"
+                    ? 'curl https://lician.com/api/v1/prices/snapshot?ticker=AAPL'
+                    : "npm install @lician/mcp-server"
+                }
+              />
             </div>
           </div>
         </div>
       </section>
 
       {/* Endpoints */}
-      <section ref={endpointsAnim.ref} className="py-20" id="endpoints">
-        <div className="max-w-[1400px] mx-auto px-6">
+      <section ref={endpointsAnim.ref} className="py-24" id="endpoints">
+        <div className="max-w-[1200px] mx-auto px-6">
           <div
             className={cn(
-              "mb-12 transition-all duration-700",
+              "text-center mb-16 transition-all duration-700",
               endpointsAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             )}
           >
-            <span className="text-[#d4ff00] text-[13px] font-medium tracking-wider uppercase">
-              Endpoints
-            </span>
-            <h2 className="text-[42px] font-semibold italic leading-[1.1] tracking-[-0.02em] mt-3 mb-4">
-              12 powerful endpoints.
+            <span className="text-[13px] text-[#868f97] tracking-widest uppercase">API Endpoints</span>
+            <h2 className="text-[40px] md:text-[48px] font-bold leading-[1.05] tracking-[-0.02em] mt-4">
+              RESTful JSON API with consistent, predictable responses
             </h2>
-            <p className="text-[#a0a0a0] text-[17px] leading-[1.6] max-w-[560px]">
-              Everything you need for comprehensive financial analysis.
-            </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="space-y-3">
             {ENDPOINTS.map((ep, i) => (
               <div
                 key={ep.path}
                 className={cn(
-                  "p-4 bg-[#0a0a0a] rounded-xl border border-white/[0.08] hover:border-white/[0.15] transition-all",
-                  endpointsAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                  "flex items-center gap-4 p-4 bg-[#111] rounded-xl border border-white/[0.08] hover:border-white/[0.15] transition-all",
+                  endpointsAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 )}
-                style={{ transitionDelay: `${i * 50}ms`, transitionDuration: "500ms" }}
+                style={{ transitionDelay: `${i * 30}ms`, transitionDuration: "400ms" }}
               >
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="px-1.5 py-0.5 bg-[#4ebe96]/20 text-[#4ebe96] text-[10px] font-mono font-medium rounded">
-                    GET
-                  </span>
-                  <code className="text-[13px] font-mono text-white truncate">{ep.path}</code>
-                </div>
-                <p className="text-[12px] text-[#868f97]">{ep.desc}</p>
+                <span className="px-2.5 py-1 bg-[#4ebe96]/20 text-[#4ebe96] text-[11px] font-mono font-semibold rounded">
+                  GET
+                </span>
+                <code className="text-[14px] font-mono text-white">{ep.path}</code>
+                <span className="text-[14px] text-[#868f97] ml-auto hidden md:block">{ep.desc}</span>
               </div>
             ))}
-          </div>
-
-          <div className="mt-8 text-center">
-            <a
-              href="/openapi.json"
-              target="_blank"
-              className="text-[#d4ff00] text-[14px] hover:underline"
-            >
-              View full OpenAPI specification →
-            </a>
           </div>
         </div>
       </section>
 
       {/* Pricing */}
-      <section ref={pricingAnim.ref} className="py-20 bg-[#050505]" id="pricing">
-        <div className="max-w-[1400px] mx-auto px-6">
+      <section ref={pricingAnim.ref} className="py-24 bg-black" id="pricing">
+        <div className="max-w-[1200px] mx-auto px-6">
           <div
             className={cn(
-              "mb-12 text-center transition-all duration-700",
+              "text-center mb-16 transition-all duration-700",
               pricingAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             )}
           >
-            <span className="text-[#ff9966] text-[13px] font-medium tracking-wider uppercase">
-              Pricing
-            </span>
-            <h2 className="text-[42px] font-semibold italic leading-[1.1] tracking-[-0.02em] mt-3 mb-4">
-              Simple, transparent pricing.
+            <span className="text-[13px] text-[#868f97] tracking-widest uppercase">Pricing</span>
+            <h2 className="text-[40px] md:text-[48px] font-bold leading-[1.05] tracking-[-0.02em] mt-4">
+              Simple, transparent pricing
             </h2>
-            <p className="text-[#a0a0a0] text-[17px]">Start free. Scale as you grow.</p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-[1100px] mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             {PRICING.map((tier, i) => (
               <div
                 key={tier.name}
                 className={cn(
-                  "p-6 rounded-2xl border transition-all",
+                  "relative p-6 rounded-2xl border transition-all duration-500",
                   tier.highlighted
-                    ? "bg-[#d4ff00]/5 border-[#d4ff00]/30"
-                    : "bg-[#0a0a0a] border-white/[0.08]",
+                    ? "bg-white/[0.03] border-white/[0.15]"
+                    : "bg-[#111] border-white/[0.08]",
                   pricingAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
                 )}
-                style={{ transitionDelay: `${i * 100}ms`, transitionDuration: "500ms" }}
+                style={{ transitionDelay: `${i * 100}ms` }}
               >
                 {tier.highlighted && (
-                  <span className="inline-block px-2 py-0.5 bg-[#d4ff00] text-black text-[10px] font-semibold rounded mb-3">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-white text-black text-[11px] font-semibold rounded-full">
                     POPULAR
                   </span>
                 )}
-                <h3 className="text-[18px] font-semibold mb-1">{tier.name}</h3>
-                <div className="flex items-baseline gap-0.5 mb-1">
-                  <span className="text-[32px] font-semibold">{tier.price}</span>
+                <h3 className="text-[18px] font-semibold">{tier.name}</h3>
+                <p className="text-[13px] text-[#868f97] mt-1">{tier.desc}</p>
+                <div className="flex items-baseline gap-1 mt-4 mb-2">
+                  <span className="text-[36px] font-bold">{tier.price}</span>
                   <span className="text-[14px] text-[#868f97]">{tier.period}</span>
                 </div>
-                <div className="text-[13px] text-[#4ebe96] mb-5">{tier.requests}</div>
+                <div className="text-[13px] text-[#4ebe96] mb-6">{tier.requests}</div>
 
-                <ul className="space-y-2.5 mb-6">
+                <ul className="space-y-3 mb-6">
                   {tier.features.map((f) => (
-                    <li key={f} className="flex items-center gap-2 text-[13px] text-[#a0a0a0]">
+                    <li key={f} className="flex items-start gap-2 text-[13px] text-[#a0a0a0]">
                       <svg
-                        className="size-4 text-[#4ebe96] flex-shrink-0"
+                        className="size-4 text-[#4ebe96] flex-shrink-0 mt-0.5"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
@@ -602,13 +715,13 @@ lician-mcp`}
                 <a
                   href={tier.name === "Enterprise" ? "mailto:api@lician.com" : "/developers/signup"}
                   className={cn(
-                    "block w-full py-2.5 rounded-full text-[13px] font-medium text-center transition-colors",
+                    "block w-full py-3 rounded-full text-[14px] font-medium text-center transition-colors",
                     tier.highlighted
-                      ? "bg-[#d4ff00] text-black hover:bg-[#e5ff40]"
+                      ? "bg-white text-black hover:bg-white/90"
                       : "border border-white/[0.15] text-white hover:border-white/30 hover:bg-white/[0.03]"
                   )}
                 >
-                  {tier.name === "Enterprise" ? "Contact Sales" : "Get Started"}
+                  {tier.name === "Enterprise" ? "Contact Sales" : "Start Free Trial"}
                 </a>
               </div>
             ))}
@@ -616,102 +729,64 @@ lician-mcp`}
         </div>
       </section>
 
-      {/* Discovery Files */}
-      <section className="py-20">
-        <div className="max-w-[1400px] mx-auto px-6">
-          <div className="mb-12">
-            <span className="text-[#479ffa] text-[13px] font-medium tracking-wider uppercase">
-              Agent Discovery
-            </span>
-            <h2 className="text-[42px] font-semibold italic leading-[1.1] tracking-[-0.02em] mt-3 mb-4">
-              Machine-readable files.
-            </h2>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[
-              { name: "OpenAPI", path: "/openapi.json", desc: "API specification" },
-              { name: "MCP Card", path: "/.well-known/mcp/server-card.json", desc: "Server metadata" },
-              { name: "Agent JSON", path: "/agent.json", desc: "Capabilities" },
-              { name: "llms.txt", path: "/llms.txt", desc: "LLM context" },
-            ].map((file) => (
-              <a
-                key={file.name}
-                href={file.path}
-                target="_blank"
-                rel="noopener"
-                className="p-4 bg-[#0a0a0a] rounded-xl border border-white/[0.08] hover:border-[#479ffa]/30 hover:bg-[#479ffa]/5 transition-all group"
-              >
-                <div className="text-[14px] font-medium text-white group-hover:text-[#479ffa] transition-colors mb-1">
-                  {file.name}
-                </div>
-                <div className="text-[12px] text-[#868f97] mb-2">{file.desc}</div>
-                <code className="text-[11px] text-[#555] font-mono">{file.path}</code>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* CTA */}
-      <section ref={ctaAnim.ref} className="py-24 text-center">
-        <div className="max-w-[1400px] mx-auto px-6">
-          <p
+      <section ref={ctaAnim.ref} className="py-32 text-center">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div
             className={cn(
-              "text-[#ff9966] text-[14px] font-medium mb-4",
+              "inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.05] border border-white/[0.1] mb-8 transition-all duration-700",
               ctaAnim.isVisible ? "opacity-100" : "opacity-0"
             )}
           >
-            No credit card required
-          </p>
+            <svg className="size-4 text-[#4ebe96]" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="12" r="10" />
+            </svg>
+            <span className="text-[14px] text-[#a0a0a0]">No credit card required</span>
+          </div>
+
           <h2
             className={cn(
-              "text-[48px] md:text-[64px] font-semibold italic leading-[1.05] tracking-[-0.02em] mb-4",
-              "transition-all duration-700",
+              "text-[48px] md:text-[64px] lg:text-[72px] font-bold leading-[0.95] tracking-[-0.03em] mb-6 transition-all duration-700",
               ctaAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             )}
           >
             Ready to build?
           </h2>
+
           <p
             className={cn(
-              "text-[#868f97] text-[17px] max-w-md mx-auto mb-8",
-              "transition-all duration-700 delay-100",
+              "text-[18px] text-[#868f97] max-w-[500px] mx-auto mb-10 transition-all duration-700 delay-100",
               ctaAnim.isVisible ? "opacity-100" : "opacity-0"
             )}
           >
-            Join thousands of developers building with Lician.
+            Join thousands of developers building the future of finance with Lician.
           </p>
-          <a
-            href="/developers/signup"
-            className={cn(
-              "inline-block px-8 py-3.5 bg-[#d4ff00] text-black text-[14px] font-semibold rounded-full hover:bg-[#e5ff40] transition-colors",
-              ctaAnim.isVisible ? "opacity-100" : "opacity-0"
-            )}
-          >
-            Get your free API key
-          </a>
+
+          <AnimatedBorderButton href="/developers/signup">
+            Get Free API Key
+          </AnimatedBorderButton>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-6 border-t border-white/[0.06]">
-        <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2.5">
-            <div className="size-6 rounded-md bg-gradient-to-br from-[#d4ff00] to-[#9acd32] flex items-center justify-center">
-              <svg viewBox="0 0 24 24" className="size-3.5 text-black" fill="currentColor">
-                <path d="M13 3L4 14h7l-2 7 9-11h-7l2-7z" />
-              </svg>
+      <footer className="py-12 px-6 border-t border-white/[0.06]">
+        <div className="max-w-[1200px] mx-auto">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-2">
+              <div className="size-7 rounded-md bg-white flex items-center justify-center">
+                <svg viewBox="0 0 24 24" className="size-4 text-black" fill="currentColor">
+                  <path d="M13 3L4 14h7l-2 7 9-11h-7l2-7z" />
+                </svg>
+              </div>
+              <span className="text-[15px] font-medium">Lician</span>
             </div>
-            <span className="text-[14px] font-medium">Lician</span>
-            <span className="text-[#868f97] text-[13px]">Financial Data API</span>
-          </div>
-          <div className="flex items-center gap-6 text-[#868f97] text-[13px]">
-            {["Docs", "Pricing", "Status", "Privacy", "Terms"].map((item) => (
-              <a key={item} href={`/${item.toLowerCase()}`} className="hover:text-white transition-colors">
-                {item}
-              </a>
-            ))}
+            <div className="flex items-center gap-8 text-[14px] text-[#868f97]">
+              {["Documentation", "Pricing", "Status", "Privacy", "Terms"].map((item) => (
+                <a key={item} href={`/${item.toLowerCase()}`} className="hover:text-white transition-colors">
+                  {item}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </footer>
