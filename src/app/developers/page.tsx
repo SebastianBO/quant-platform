@@ -73,14 +73,15 @@ function StatusIndicator({ status }: { status: ApiStatus }) {
   )
 }
 
-// API Health Check component
+// API Health Check component - checks REAL production endpoints
 function ApiHealthCheck() {
   const [endpoints, setEndpoints] = useState<ApiEndpointStatus[]>([
     { name: "Earnings Calendar", endpoint: "/api/earnings", status: "checking" },
-    { name: "Earnings Transcripts", endpoint: "/api/v1/earnings-transcript", status: "checking" },
-    { name: "Price Snapshot", endpoint: "/api/v1/prices/snapshot", status: "checking" },
+    { name: "Stock Prices", endpoint: "/api/v1/prices/snapshot", status: "checking" },
     { name: "Financial Statements", endpoint: "/api/v1/financials/income-statements", status: "checking" },
     { name: "Analyst Ratings", endpoint: "/api/v1/analyst-ratings", status: "checking" },
+    { name: "Institutional Ownership", endpoint: "/api/v1/institutional-ownership", status: "checking" },
+    { name: "Market News", endpoint: "/api/v1/news", status: "checking" },
   ])
 
   useEffect(() => {
@@ -191,7 +192,7 @@ function ApiHealthCheck() {
       </div>
 
       {/* Footer with refresh hint */}
-      <div className="p-4 bg-white/[0.02] border-t border-white/[0.06]">
+      <div className="p-4 bg-white/[0.02] border-t border-white/[0.08]">
         <div className="flex items-center justify-between text-[12px] text-[#868f97]">
           <span>Auto-refreshes every 30 seconds</span>
           <a href="https://status.lician.com" className="text-[#479ffa] hover:underline">
@@ -212,7 +213,7 @@ function AnimatedBorderButton({ children, href, className }: { children: React.R
       {/* Lime orb - bottom right */}
       <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-[#d4ff00] rounded-full blur-2xl opacity-60 group-hover:opacity-80 transition-opacity" />
       {/* Button background with rounded pill shape */}
-      <span className="relative px-8 py-4 bg-[#0a0a0a] rounded-full text-white text-[15px] font-medium inline-flex items-center gap-2 border border-white/[0.1]">
+      <span className="relative px-8 py-4 bg-black rounded-full text-white text-[15px] font-medium inline-flex items-center gap-2 border border-white/[0.1]">
         {children}
         <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
           <path d="M5 12h14M12 5l7 7-7 7" />
@@ -326,7 +327,7 @@ export default function DevelopersPage() {
   }, [])
 
   return (
-    <div className="min-h-dvh bg-[#0a0a0a] text-white font-['Inter',system-ui,sans-serif]">
+    <div className="min-h-dvh bg-black text-white">
       {/* Global styles for animations */}
       <style jsx global>{`
         @keyframes gradient-x {
@@ -340,7 +341,7 @@ export default function DevelopersPage() {
       `}</style>
 
       {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/[0.06]">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/[0.08]">
         <div className="max-w-[1200px] mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-2">
@@ -566,7 +567,7 @@ export default function DevelopersPage() {
                 Track every metric that matters with customizable dashboards.
               </p>
               {/* Mock dashboard */}
-              <div className="bg-[#0a0a0a] rounded-xl border border-white/[0.06] p-4">
+              <div className="bg-black rounded-xl border border-white/[0.08] p-4">
                 <div className="flex items-center gap-2 mb-4">
                   <div className="size-2.5 rounded-full bg-[#ff5f57]" />
                   <div className="size-2.5 rounded-full bg-[#febc2e]" />
@@ -641,7 +642,7 @@ export default function DevelopersPage() {
                 Connect Claude, GPT, or any MCP-compatible agent directly.
               </p>
               {/* Code preview */}
-              <div className="bg-[#0a0a0a] rounded-xl border border-white/[0.06] p-4 font-mono text-[12px]">
+              <div className="bg-black rounded-xl border border-white/[0.08] p-4 font-mono text-[12px]">
                 <div className="text-[#868f97]">// claude_desktop_config.json</div>
                 <div className="text-[#479ffa]">{`"mcpServers"`}: {'{'}</div>
                 <div className="pl-4 text-[#d4ff00]">{`"lician"`}: {'{'}</div>
@@ -703,7 +704,7 @@ export default function DevelopersPage() {
       </section>
 
       {/* Quickstart */}
-      <section className="py-24 bg-[#0a0a0a]" id="quickstart">
+      <section className="py-24 bg-black" id="quickstart">
         <div className="max-w-[1200px] mx-auto px-6">
           <div className="text-center mb-12">
             <span className="text-[13px] text-[#479ffa] tracking-widest uppercase">Quick Start</span>
@@ -972,7 +973,7 @@ npx -y @lician/mcp-server`}
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-6 border-t border-white/[0.06]">
+      <footer className="py-12 px-6 border-t border-white/[0.08]">
         <div className="max-w-[1200px] mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
