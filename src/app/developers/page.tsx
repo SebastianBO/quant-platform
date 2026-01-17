@@ -99,6 +99,8 @@ const PRICING = [
     desc: "Get started with basic access",
     requests: "100 requests/day",
     features: ["100 API requests per day", "US company data only", "End-of-day prices", "Basic financials (annual)", "Community support"],
+    href: "/developers/signup",
+    cta: "Get Free API Key",
   },
   {
     name: "Basic",
@@ -108,6 +110,8 @@ const PRICING = [
     requests: "10,000 requests/day",
     features: ["10,000 API requests per day", "US + EU company data", "Real-time prices", "Quarterly financials", "Insider trades", "Email support"],
     highlighted: true,
+    href: "/api/stripe/api-checkout?plan=basic",
+    cta: "Start 7-Day Free Trial",
   },
   {
     name: "Pro",
@@ -116,6 +120,8 @@ const PRICING = [
     desc: "For growing applications",
     requests: "100,000 requests/day",
     features: ["100,000 API requests per day", "All company data globally", "Real-time + historical prices", "All financial statements", "Institutional ownership", "13F filings", "SEC filings", "Priority support"],
+    href: "/api/stripe/api-checkout?plan=pro",
+    cta: "Start 7-Day Free Trial",
   },
   {
     name: "Enterprise",
@@ -124,6 +130,8 @@ const PRICING = [
     desc: "For large-scale applications",
     requests: "Unlimited",
     features: ["Unlimited API requests", "Dedicated infrastructure", "Custom data feeds", "SLA guarantee", "Bulk data exports", "Webhook integrations", "Dedicated support", "Custom integrations"],
+    href: "mailto:api@lician.com",
+    cta: "Contact Sales",
   },
 ]
 
@@ -713,7 +721,7 @@ npx -y @lician/mcp-server`}
                 </ul>
 
                 <a
-                  href={tier.name === "Enterprise" ? "mailto:api@lician.com" : "/developers/signup"}
+                  href={tier.href}
                   className={cn(
                     "block w-full py-3 rounded-full text-[14px] font-medium text-center transition-colors",
                     tier.highlighted
@@ -721,7 +729,7 @@ npx -y @lician/mcp-server`}
                       : "border border-white/[0.15] text-white hover:border-white/30 hover:bg-white/[0.03]"
                   )}
                 >
-                  {tier.name === "Enterprise" ? "Contact Sales" : "Start Free Trial"}
+                  {tier.cta}
                 </a>
               </div>
             ))}
