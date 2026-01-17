@@ -26,6 +26,183 @@ function useScrollAnimation(threshold = 0.1) {
   return { ref, isVisible }
 }
 
+// API Status types
+type ApiStatus = "checking" | "online" | "offline"
+
+interface ApiEndpointStatus {
+  name: string
+  endpoint: string
+  status: ApiStatus
+  latency?: number
+  lastChecked?: Date
+}
+
+// Status indicator with animations
+function StatusIndicator({ status }: { status: ApiStatus }) {
+  return (
+    <div className="relative flex items-center gap-2">
+      {/* Animated pulse ring for online status */}
+      {status === "online" && (
+        <span className="absolute size-3 rounded-full bg-[#4ebe96]/30 motion-safe:animate-ping" />
+      )}
+      {status === "checking" && (
+        <span className="absolute size-3 rounded-full bg-[#479ffa]/30 motion-safe:animate-ping" />
+      )}
+      {/* Core dot */}
+      <span
+        className={cn(
+          "relative size-3 rounded-full motion-safe:transition-colors duration-300",
+          status === "online" && "bg-[#4ebe96]",
+          status === "offline" && "bg-[#ff5c5c]",
+          status === "checking" && "bg-[#479ffa]"
+        )}
+      />
+      <span
+        className={cn(
+          "text-[13px] font-medium motion-safe:transition-colors duration-300",
+          status === "online" && "text-[#4ebe96]",
+          status === "offline" && "text-[#ff5c5c]",
+          status === "checking" && "text-[#479ffa]"
+        )}
+      >
+        {status === "online" && "Online"}
+        {status === "offline" && "Offline"}
+        {status === "checking" && "Checking..."}
+      </span>
+    </div>
+  )
+}
+
+// API Health Check component
+function ApiHealthCheck() {
+  const [endpoints, setEndpoints] = useState<ApiEndpointStatus[]>([
+    { name: "Earnings Calendar", endpoint: "/api/earnings", status: "checking" },
+    { name: "Earnings Transcripts", endpoint: "/api/v1/earnings-transcript", status: "checking" },
+    { name: "Price Snapshot", endpoint: "/api/v1/prices/snapshot", status: "checking" },
+    { name: "Financial Statements", endpoint: "/api/v1/financials/income-statements", status: "checking" },
+    { name: "Analyst Ratings", endpoint: "/api/v1/analyst-ratings", status: "checking" },
+  ])
+
+  useEffect(() => {
+    const checkEndpoints = async () => {
+      const updatedEndpoints = await Promise.all(
+        endpoints.map(async (ep) => {
+          const start = Date.now()
+          try {
+            // Use a simple ticker for testing
+            const url = ep.endpoint.includes("?")
+              ? `${ep.endpoint}&ticker=AAPL`
+              : `${ep.endpoint}?ticker=AAPL`
+            const res = await fetch(url, {
+              method: "GET",
+              cache: "no-store",
+              signal: AbortSignal.timeout(5000),
+            })
+            const latency = Date.now() - start
+            return {
+              ...ep,
+              status: res.ok ? "online" : "offline",
+              latency,
+              lastChecked: new Date(),
+            } as ApiEndpointStatus
+          } catch {
+            return {
+              ...ep,
+              status: "offline",
+              lastChecked: new Date(),
+            } as ApiEndpointStatus
+          }
+        })
+      )
+      setEndpoints(updatedEndpoints)
+    }
+
+    checkEndpoints()
+    // Re-check every 30 seconds
+    const interval = setInterval(checkEndpoints, 30000)
+    return () => clearInterval(interval)
+  }, [])
+
+  const onlineCount = endpoints.filter((e) => e.status === "online").length
+  const overallStatus: ApiStatus =
+    endpoints.some((e) => e.status === "checking")
+      ? "checking"
+      : onlineCount === endpoints.length
+      ? "online"
+      : onlineCount > 0
+      ? "online"
+      : "offline"
+
+  return (
+    <div className="bg-[#111] rounded-2xl border border-white/[0.08] overflow-hidden">
+      {/* Header with overall status */}
+      <div className="flex items-center justify-between p-6 border-b border-white/[0.08]">
+        <div>
+          <h3 className="text-[18px] font-semibold">API Status</h3>
+          <p className="text-[13px] text-[#868f97] mt-1">Real-time endpoint health monitoring</p>
+        </div>
+        <div className="flex items-center gap-4">
+          <StatusIndicator status={overallStatus} />
+          <span className="text-[13px] text-[#868f97]">
+            {onlineCount}/{endpoints.length} endpoints
+          </span>
+        </div>
+      </div>
+
+      {/* Endpoint list */}
+      <div className="divide-y divide-white/[0.06]">
+        {endpoints.map((ep, i) => (
+          <div
+            key={ep.endpoint}
+            className={cn(
+              "flex items-center justify-between p-4 motion-safe:transition-all duration-500",
+              "hover:bg-white/[0.02]"
+            )}
+            style={{ transitionDelay: `${i * 50}ms` }}
+          >
+            <div className="flex items-center gap-4">
+              <StatusIndicator status={ep.status} />
+              <div>
+                <div className="text-[14px] font-medium text-white">{ep.name}</div>
+                <code className="text-[12px] text-[#868f97] font-mono">{ep.endpoint}</code>
+              </div>
+            </div>
+            <div className="text-right">
+              {ep.latency !== undefined && (
+                <div
+                  className={cn(
+                    "text-[14px] font-mono tabular-nums",
+                    ep.latency < 100 && "text-[#4ebe96]",
+                    ep.latency >= 100 && ep.latency < 300 && "text-[#f4a623]",
+                    ep.latency >= 300 && "text-[#ff5c5c]"
+                  )}
+                >
+                  {ep.latency}ms
+                </div>
+              )}
+              {ep.lastChecked && (
+                <div className="text-[11px] text-[#555]">
+                  Last checked: {ep.lastChecked.toLocaleTimeString()}
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Footer with refresh hint */}
+      <div className="p-4 bg-white/[0.02] border-t border-white/[0.06]">
+        <div className="flex items-center justify-between text-[12px] text-[#868f97]">
+          <span>Auto-refreshes every 30 seconds</span>
+          <a href="https://status.lician.com" className="text-[#479ffa] hover:underline">
+            View full status page →
+          </a>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // Animated border button with dual glowing orbs
 function AnimatedBorderButton({ children, href, className }: { children: React.ReactNode; href: string; className?: string }) {
   return (
@@ -507,8 +684,26 @@ export default function DevelopersPage() {
         </div>
       </section>
 
+      {/* API Status - Live Health Check Demo */}
+      <section className="py-24 bg-black" id="status">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="text-center mb-12">
+            <span className="text-[13px] text-[#4ebe96] tracking-widest uppercase">Live Demo</span>
+            <h2 className="text-[40px] md:text-[48px] font-bold leading-[1.05] tracking-[-0.02em] mt-4 text-balance">
+              Earnings & Financial Data API
+            </h2>
+            <p className="text-[18px] text-[#868f97] mt-4 max-w-[600px] mx-auto text-pretty">
+              Watch our endpoints in real-time. Green means online and fast. This is the same infrastructure your app will use.
+            </p>
+          </div>
+          <div className="max-w-[800px] mx-auto">
+            <ApiHealthCheck />
+          </div>
+        </div>
+      </section>
+
       {/* Quickstart */}
-      <section className="py-24 bg-black" id="quickstart">
+      <section className="py-24 bg-[#0a0a0a]" id="quickstart">
         <div className="max-w-[1200px] mx-auto px-6">
           <div className="text-center mb-12">
             <span className="text-[13px] text-[#479ffa] tracking-widest uppercase">Quick Start</span>
