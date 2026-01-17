@@ -41,7 +41,7 @@ export function MobileTabBar({ className }: MobileTabBarProps) {
     <nav
       className={cn(
         "fixed bottom-0 left-0 right-0 z-50 md:hidden",
-        "bg-background/80 backdrop-blur-xl border-t border-white/[0.08]",
+        "bg-black/90 backdrop-blur-[10px] border-t border-white/[0.08]",
         "safe-area-bottom",
         className
       )}
@@ -75,7 +75,7 @@ export function MobileTabBar({ className }: MobileTabBarProps) {
               >
                 <Icon
                   className={cn(
-                    "w-5 h-5 transition-colors duration-100",
+                    "w-5 h-5 motion-safe:transition-colors motion-safe:duration-150",
                     isActive ? "text-[#4ebe96]" : "text-[#868f97]"
                   )}
                 />
@@ -83,7 +83,7 @@ export function MobileTabBar({ className }: MobileTabBarProps) {
 
               <span
                 className={cn(
-                  "text-[10px] font-medium transition-colors duration-100",
+                  "text-[10px] font-medium motion-safe:transition-colors motion-safe:duration-150",
                   isActive ? "text-[#4ebe96]" : "text-[#868f97]"
                 )}
               >

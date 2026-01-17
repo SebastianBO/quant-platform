@@ -343,7 +343,7 @@ export default function DCFCalculator({
 
   if (!dcfResults) {
     return (
-      <Card className="w-full">
+      <Card className="w-full bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]">
         <CardHeader>
           <CardTitle className="text-lg sm:text-xl">DCF Valuation - {ticker}</CardTitle>
         </CardHeader>
@@ -355,7 +355,7 @@ export default function DCFCalculator({
   }
 
   return (
-    <Card className="w-full">
+    <Card className="w-full bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
           <span className="text-2xl">📊</span>
@@ -365,7 +365,7 @@ export default function DCFCalculator({
       </CardHeader>
       <CardContent className="space-y-6 sm:space-y-8">
         {/* WACC Derivation */}
-        <div className="bg-white/[0.05] p-3 sm:p-4 rounded-lg border border-white/[0.08]">
+        <div className="bg-white/[0.04] p-3 sm:p-4 rounded-lg border border-white/[0.08]">
           <h3 className="text-base sm:text-lg font-bold mb-3 sm:mb-4 flex items-center gap-2">
             <span className="text-[#479ffa]">📐</span> WACC Calculation (CAPM)
           </h3>
@@ -379,9 +379,9 @@ export default function DCFCalculator({
                 step="0.25"
                 value={riskFreeRate}
                 onChange={(e) => setRiskFreeRate(parseFloat(e.target.value))}
-                className="w-full accent-[#479ffa]"
+                className="w-full accent-[#4ebe96] bg-white/[0.04] border border-white/[0.08] rounded-lg motion-safe:transition motion-safe:duration-150"
               />
-              <span className="text-[#479ffa] font-mono text-xs sm:text-sm block mt-1">{riskFreeRate.toFixed(2)}%</span>
+              <span className="text-[#4ebe96] font-mono tabular-nums text-xs sm:text-sm block mt-1">{riskFreeRate.toFixed(2)}%</span>
             </div>
             <div>
               <label className="text-xs text-[#868f97] block mb-1">Equity Risk Premium</label>
@@ -392,43 +392,43 @@ export default function DCFCalculator({
                 step="0.25"
                 value={equityRiskPremium}
                 onChange={(e) => setEquityRiskPremium(parseFloat(e.target.value))}
-                className="w-full accent-[#479ffa]"
+                className="w-full accent-[#4ebe96] bg-white/[0.04] border border-white/[0.08] rounded-lg motion-safe:transition motion-safe:duration-150"
               />
-              <span className="text-[#479ffa] font-mono text-xs sm:text-sm block mt-1">{equityRiskPremium.toFixed(2)}%</span>
+              <span className="text-[#4ebe96] font-mono tabular-nums text-xs sm:text-sm block mt-1">{equityRiskPremium.toFixed(2)}%</span>
             </div>
             <div>
               <label className="text-xs text-[#868f97] block mb-1">Beta (Market Risk)</label>
-              <span className="block text-[#479ffa] font-mono text-xs sm:text-sm mt-1">{beta.toFixed(2)}</span>
+              <span className="block text-[#4ebe96] font-mono tabular-nums text-xs sm:text-sm mt-1">{beta.toFixed(2)}</span>
             </div>
             <div>
               <label className="text-xs text-[#868f97] block mb-1">D/E Ratio</label>
-              <span className="block text-[#479ffa] font-mono text-xs sm:text-sm mt-1">{debtToEquity.toFixed(2)}</span>
+              <span className="block text-[#4ebe96] font-mono tabular-nums text-xs sm:text-sm mt-1">{debtToEquity.toFixed(2)}</span>
             </div>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-center text-xs sm:text-sm">
-            <div className="bg-white/[0.05] p-2 rounded">
+            <div className="bg-white/[0.04] p-2 rounded">
               <p className="text-[#868f97] text-xs">Cost of Equity</p>
-              <p className="text-[#479ffa] font-mono text-xs sm:text-sm">{waccCalculation.costOfEquity.toFixed(2)}%</p>
+              <p className="text-[#479ffa] font-mono tabular-nums text-xs sm:text-sm">{waccCalculation.costOfEquity.toFixed(2)}%</p>
             </div>
-            <div className="bg-white/[0.05] p-2 rounded">
+            <div className="bg-white/[0.04] p-2 rounded">
               <p className="text-[#868f97] text-xs">Cost of Debt</p>
-              <p className="text-[#479ffa] font-mono text-xs sm:text-sm">{waccCalculation.costOfDebt.toFixed(2)}%</p>
+              <p className="text-[#479ffa] font-mono tabular-nums text-xs sm:text-sm">{waccCalculation.costOfDebt.toFixed(2)}%</p>
             </div>
-            <div className="bg-white/[0.05] p-2 rounded">
+            <div className="bg-white/[0.04] p-2 rounded">
               <p className="text-[#868f97] text-xs">Equity Weight</p>
-              <p className="text-[#479ffa] font-mono text-xs sm:text-sm">{(waccCalculation.equityWeight * 100).toFixed(1)}%</p>
+              <p className="text-[#479ffa] font-mono tabular-nums text-xs sm:text-sm">{(waccCalculation.equityWeight * 100).toFixed(1)}%</p>
             </div>
-            <div className="bg-white/[0.05] p-2 rounded">
+            <div className="bg-white/[0.04] p-2 rounded">
               <p className="text-[#868f97] text-xs">Debt Weight</p>
-              <p className="text-[#479ffa] font-mono text-xs sm:text-sm">{(waccCalculation.debtWeight * 100).toFixed(1)}%</p>
+              <p className="text-[#479ffa] font-mono tabular-nums text-xs sm:text-sm">{(waccCalculation.debtWeight * 100).toFixed(1)}%</p>
             </div>
-            <div className="bg-white/[0.05] p-2 rounded">
+            <div className="bg-white/[0.04] p-2 rounded">
               <p className="text-[#868f97] text-xs">Tax Rate</p>
-              <p className="text-[#479ffa] font-mono text-xs sm:text-sm">{(waccCalculation.taxRate * 100).toFixed(0)}%</p>
+              <p className="text-[#479ffa] font-mono tabular-nums text-xs sm:text-sm">{(waccCalculation.taxRate * 100).toFixed(0)}%</p>
             </div>
             <div className="bg-[#4ebe96]/20 p-2 rounded border border-[#4ebe96]/50">
               <p className="text-white text-xs font-bold">WACC</p>
-              <p className="text-[#4ebe96] font-mono font-bold text-xs sm:text-sm">{waccCalculation.wacc.toFixed(2)}%</p>
+              <p className="text-[#4ebe96] font-mono tabular-nums font-bold text-xs sm:text-sm">{waccCalculation.wacc.toFixed(2)}%</p>
             </div>
           </div>
         </div>
@@ -444,9 +444,9 @@ export default function DCFCalculator({
               step="1"
               value={growthRate}
               onChange={(e) => setGrowthRate(parseFloat(e.target.value))}
-              className="w-full accent-[#4ebe96]"
+              className="w-full accent-[#4ebe96] bg-white/[0.04] border border-white/[0.08] rounded-lg motion-safe:transition motion-safe:duration-150"
             />
-            <span className="text-[#4ebe96] font-mono text-xs sm:text-sm block mt-1">{growthRate.toFixed(0)}%</span>
+            <span className="text-[#4ebe96] font-mono tabular-nums text-xs sm:text-sm block mt-1">{growthRate.toFixed(0)}%</span>
           </div>
           <div>
             <label className="text-xs sm:text-sm text-[#868f97] block mb-1">Terminal Growth</label>
@@ -457,9 +457,9 @@ export default function DCFCalculator({
               step="0.25"
               value={terminalGrowth}
               onChange={(e) => setTerminalGrowth(parseFloat(e.target.value))}
-              className="w-full accent-[#4ebe96]"
+              className="w-full accent-[#4ebe96] bg-white/[0.04] border border-white/[0.08] rounded-lg motion-safe:transition motion-safe:duration-150"
             />
-            <span className="text-[#4ebe96] font-mono text-xs sm:text-sm block mt-1">{terminalGrowth.toFixed(2)}%</span>
+            <span className="text-[#4ebe96] font-mono tabular-nums text-xs sm:text-sm block mt-1">{terminalGrowth.toFixed(2)}%</span>
           </div>
           <div>
             <label className="text-xs sm:text-sm text-[#868f97] block mb-1">Projection Years</label>
@@ -470,9 +470,9 @@ export default function DCFCalculator({
               step="1"
               value={years}
               onChange={(e) => setYears(parseInt(e.target.value))}
-              className="w-full accent-[#4ebe96]"
+              className="w-full accent-[#4ebe96] bg-white/[0.04] border border-white/[0.08] rounded-lg motion-safe:transition motion-safe:duration-150"
             />
-            <span className="text-[#4ebe96] font-mono text-xs sm:text-sm block mt-1">{years} years</span>
+            <span className="text-[#4ebe96] font-mono tabular-nums text-xs sm:text-sm block mt-1">{years} years</span>
           </div>
           <div>
             <label className="text-xs sm:text-sm text-[#868f97] block mb-1">Margin of Safety</label>
@@ -483,71 +483,71 @@ export default function DCFCalculator({
               step="5"
               value={marginOfSafety}
               onChange={(e) => setMarginOfSafety(parseInt(e.target.value))}
-              className="w-full accent-yellow-500"
+              className="w-full accent-[#4ebe96] bg-white/[0.04] border border-white/[0.08] rounded-lg motion-safe:transition motion-safe:duration-150"
             />
-            <span className="text-yellow-500 font-mono text-xs sm:text-sm block mt-1">{marginOfSafety}%</span>
+            <span className="text-[#4ebe96] font-mono tabular-nums text-xs sm:text-sm block mt-1">{marginOfSafety}%</span>
           </div>
         </div>
 
         {/* Main Results */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          <div className="bg-white/[0.05] p-3 sm:p-4 rounded-lg text-center border border-white/[0.08]">
+          <div className="bg-white/[0.04] p-3 sm:p-4 rounded-lg text-center border border-white/[0.08]">
             <p className="text-[#868f97] text-xs sm:text-sm">Current Price</p>
-            <p className="text-xl sm:text-2xl font-bold font-mono">${currentPrice.toFixed(2)}</p>
+            <p className="text-xl sm:text-2xl font-bold font-mono tabular-nums">${currentPrice.toFixed(2)}</p>
           </div>
-          <div className="bg-white/[0.05] p-3 sm:p-4 rounded-lg text-center border border-white/[0.08]">
+          <div className="bg-white/[0.04] p-3 sm:p-4 rounded-lg text-center border border-white/[0.08]">
             <p className="text-[#868f97] text-xs sm:text-sm">DCF Fair Value</p>
-            <p className={`text-xl sm:text-2xl font-bold font-mono ${dcfResults.fairValuePerShare > currentPrice ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
+            <p className={`text-xl sm:text-2xl font-bold font-mono tabular-nums ${dcfResults.fairValuePerShare > currentPrice ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
               ${dcfResults.fairValuePerShare.toFixed(2)}
             </p>
           </div>
-          <div className="bg-white/[0.05] p-3 sm:p-4 rounded-lg text-center border border-white/[0.08]">
+          <div className="bg-white/[0.04] p-3 sm:p-4 rounded-lg text-center border border-white/[0.08]">
             <p className="text-[#868f97] text-xs sm:text-sm">With {marginOfSafety}% MOS</p>
-            <p className={`text-xl sm:text-2xl font-bold font-mono ${dcfResults.withMarginOfSafety > currentPrice ? 'text-yellow-500' : 'text-[#e15241]'}`}>
+            <p className={`text-xl sm:text-2xl font-bold font-mono tabular-nums ${dcfResults.withMarginOfSafety > currentPrice ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
               ${dcfResults.withMarginOfSafety.toFixed(2)}
             </p>
           </div>
-          <div className="bg-white/[0.05] p-3 sm:p-4 rounded-lg text-center border border-white/[0.08]">
+          <div className="bg-white/[0.04] p-3 sm:p-4 rounded-lg text-center border border-white/[0.08]">
             <p className="text-[#868f97] text-xs sm:text-sm">Upside/Downside</p>
-            <p className={`text-xl sm:text-2xl font-bold font-mono ${dcfResults.upside > 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
+            <p className={`text-xl sm:text-2xl font-bold font-mono tabular-nums ${dcfResults.upside > 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
               {formatPercent(dcfResults.upside)}
             </p>
           </div>
         </div>
 
         {/* Enterprise Value Breakdown */}
-        <div className="bg-white/[0.05] p-3 sm:p-4 rounded-lg border border-white/[0.08]">
+        <div className="bg-white/[0.04] p-3 sm:p-4 rounded-lg border border-white/[0.08]">
           <h3 className="text-base sm:text-lg font-bold mb-3 sm:mb-4">Enterprise Value Breakdown</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 text-center text-xs sm:text-sm">
-            <div className="bg-white/[0.05] p-2 sm:p-3 rounded">
+            <div className="bg-white/[0.04] p-2 sm:p-3 rounded">
               <p className="text-[#868f97] text-xs">PV of FCF</p>
-              <p className="text-[#4ebe96] font-mono font-bold text-xs sm:text-sm">{formatNumber(dcfResults.pvOfFCF)}</p>
-              <p className="text-[#868f97]/60 text-xs">{(100 - dcfResults.terminalValuePercent).toFixed(1)}%</p>
+              <p className="text-[#4ebe96] font-mono tabular-nums font-bold text-xs sm:text-sm">{formatNumber(dcfResults.pvOfFCF)}</p>
+              <p className="text-[#868f97]/60 text-xs tabular-nums">{(100 - dcfResults.terminalValuePercent).toFixed(1)}%</p>
             </div>
-            <div className="bg-white/[0.05] p-2 sm:p-3 rounded">
+            <div className="bg-white/[0.04] p-2 sm:p-3 rounded">
               <p className="text-[#868f97] text-xs">Terminal Value PV</p>
-              <p className="text-[#479ffa] font-mono font-bold text-xs sm:text-sm">{formatNumber(dcfResults.terminalPV)}</p>
-              <p className="text-[#868f97]/60 text-xs">{dcfResults.terminalValuePercent.toFixed(1)}%</p>
+              <p className="text-[#479ffa] font-mono tabular-nums font-bold text-xs sm:text-sm">{formatNumber(dcfResults.terminalPV)}</p>
+              <p className="text-[#868f97]/60 text-xs tabular-nums">{dcfResults.terminalValuePercent.toFixed(1)}%</p>
             </div>
-            <div className="bg-white/[0.05] p-2 sm:p-3 rounded">
+            <div className="bg-white/[0.04] p-2 sm:p-3 rounded">
               <p className="text-[#868f97] text-xs">Enterprise Value</p>
-              <p className="text-white font-mono font-bold text-xs sm:text-sm">{formatNumber(dcfResults.enterpriseValue)}</p>
+              <p className="text-white font-mono tabular-nums font-bold text-xs sm:text-sm">{formatNumber(dcfResults.enterpriseValue)}</p>
             </div>
-            <div className="bg-white/[0.05] p-2 sm:p-3 rounded">
+            <div className="bg-white/[0.04] p-2 sm:p-3 rounded">
               <p className="text-[#868f97] text-xs">Net Debt</p>
-              <p className={`font-mono font-bold text-xs sm:text-sm ${dcfResults.netDebt > 0 ? 'text-[#e15241]' : 'text-[#4ebe96]'}`}>
+              <p className={`font-mono tabular-nums font-bold text-xs sm:text-sm ${dcfResults.netDebt > 0 ? 'text-[#e15241]' : 'text-[#4ebe96]'}`}>
                 {dcfResults.netDebt > 0 ? '-' : '+'}{formatNumber(Math.abs(dcfResults.netDebt))}
               </p>
             </div>
             <div className="bg-[#4ebe96]/20 p-2 sm:p-3 rounded border border-[#4ebe96]/50">
               <p className="text-white text-xs font-bold">Equity Value</p>
-              <p className="text-[#4ebe96] font-mono font-bold text-xs sm:text-sm">{formatNumber(dcfResults.equityValue)}</p>
+              <p className="text-[#4ebe96] font-mono tabular-nums font-bold text-xs sm:text-sm">{formatNumber(dcfResults.equityValue)}</p>
             </div>
           </div>
         </div>
 
         {/* Verdict */}
-        <div className={`p-3 sm:p-4 rounded-lg ${
+        <div className={`p-3 sm:p-4 rounded-lg motion-safe:transition motion-safe:duration-150 ${
           dcfResults.upside > 30 ? 'bg-[#4ebe96]/20 border border-[#4ebe96]/50' :
           dcfResults.upside > 10 ? 'bg-[#4ebe96]/10 border border-[#4ebe96]/30' :
           dcfResults.upside > -10 ? 'bg-yellow-500/20 border border-yellow-500/50' :
@@ -569,7 +569,7 @@ export default function DCFCalculator({
               : `${ticker} appears overvalued by ${Math.abs(dcfResults.upside).toFixed(1)}%. Exercise caution.`
             }
           </p>
-          <p className="text-[#868f97]/70 text-xs mt-2">
+          <p className="text-[#868f97]/70 text-xs mt-2 tabular-nums">
             Terminal value represents {dcfResults.terminalValuePercent.toFixed(1)}% of total value.
             {dcfResults.terminalValuePercent > 75 && " Warning: High terminal value dependence increases uncertainty."}
           </p>
@@ -577,38 +577,38 @@ export default function DCFCalculator({
 
         {/* Monte Carlo Results */}
         {monteCarloResults && (
-          <div className="bg-white/[0.05] p-3 sm:p-4 rounded-lg border border-white/[0.08]">
+          <div className="bg-white/[0.04] p-3 sm:p-4 rounded-lg border border-white/[0.08]">
             <h3 className="text-base sm:text-lg font-bold mb-3 sm:mb-4 flex items-center gap-2">
               <span className="text-purple-500">🎲</span> Monte Carlo Simulation ({monteCarloRuns} runs)
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2 text-center text-xs sm:text-sm mb-4">
-              <div className="bg-white/[0.05] p-2 rounded">
+              <div className="bg-white/[0.04] p-2 rounded">
                 <p className="text-[#868f97] text-xs">10th %ile</p>
-                <p className="text-[#e15241] font-mono text-xs sm:text-sm">${monteCarloResults.p10.toFixed(2)}</p>
+                <p className="text-[#e15241] font-mono tabular-nums text-xs sm:text-sm">${monteCarloResults.p10.toFixed(2)}</p>
               </div>
-              <div className="bg-white/[0.05] p-2 rounded">
+              <div className="bg-white/[0.04] p-2 rounded">
                 <p className="text-[#868f97] text-xs">25th %ile</p>
-                <p className="text-orange-500 font-mono text-xs sm:text-sm">${monteCarloResults.p25.toFixed(2)}</p>
+                <p className="text-orange-500 font-mono tabular-nums text-xs sm:text-sm">${monteCarloResults.p25.toFixed(2)}</p>
               </div>
-              <div className="bg-white/[0.05] p-2 rounded">
+              <div className="bg-white/[0.04] p-2 rounded">
                 <p className="text-[#868f97] text-xs">Median</p>
-                <p className="text-yellow-500 font-mono text-xs sm:text-sm">${monteCarloResults.median.toFixed(2)}</p>
+                <p className="text-yellow-500 font-mono tabular-nums text-xs sm:text-sm">${monteCarloResults.median.toFixed(2)}</p>
               </div>
               <div className="bg-purple-500/20 p-2 rounded border border-purple-500/50">
                 <p className="text-white text-xs font-bold">Mean</p>
-                <p className="text-purple-500 font-mono font-bold text-xs sm:text-sm">${monteCarloResults.mean.toFixed(2)}</p>
+                <p className="text-purple-500 font-mono tabular-nums font-bold text-xs sm:text-sm">${monteCarloResults.mean.toFixed(2)}</p>
               </div>
-              <div className="bg-white/[0.05] p-2 rounded">
+              <div className="bg-white/[0.04] p-2 rounded">
                 <p className="text-[#868f97] text-xs">75th %ile</p>
-                <p className="text-lime-500 font-mono text-xs sm:text-sm">${monteCarloResults.p75.toFixed(2)}</p>
+                <p className="text-lime-500 font-mono tabular-nums text-xs sm:text-sm">${monteCarloResults.p75.toFixed(2)}</p>
               </div>
-              <div className="bg-white/[0.05] p-2 rounded">
+              <div className="bg-white/[0.04] p-2 rounded">
                 <p className="text-[#868f97] text-xs">90th %ile</p>
-                <p className="text-[#4ebe96] font-mono text-xs sm:text-sm">${monteCarloResults.p90.toFixed(2)}</p>
+                <p className="text-[#4ebe96] font-mono tabular-nums text-xs sm:text-sm">${monteCarloResults.p90.toFixed(2)}</p>
               </div>
-              <div className="bg-white/[0.05] p-2 rounded">
+              <div className="bg-white/[0.04] p-2 rounded">
                 <p className="text-[#868f97] text-xs">Range</p>
-                <p className="text-[#868f97] font-mono text-xs">${monteCarloResults.min.toFixed(0)}-${monteCarloResults.max.toFixed(0)}</p>
+                <p className="text-[#868f97] font-mono tabular-nums text-xs">${monteCarloResults.min.toFixed(0)}-${monteCarloResults.max.toFixed(0)}</p>
               </div>
             </div>
             <div className="h-48 sm:h-56">
@@ -626,7 +626,7 @@ export default function DCFCalculator({
                 </ComposedChart>
               </ResponsiveContainer>
             </div>
-            <p className="text-[#868f97]/70 text-xs mt-2 text-center">
+            <p className="text-[#868f97]/70 text-xs mt-2 text-center tabular-nums">
               Probability current price is undervalued: {((monteCarloResults.distribution.filter(v => v > currentPrice).length / monteCarloResults.distribution.length) * 100).toFixed(1)}%
             </p>
           </div>
@@ -652,17 +652,17 @@ export default function DCFCalculator({
 
         {/* Alternative Valuations */}
         {alternativeValuations.length > 0 && (
-          <div className="bg-white/[0.05] p-3 sm:p-4 rounded-lg border border-white/[0.08]">
+          <div className="bg-white/[0.04] p-3 sm:p-4 rounded-lg border border-white/[0.08]">
             <h3 className="text-base sm:text-lg font-bold mb-3 sm:mb-4">Alternative Valuation Methods</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               {alternativeValuations.map((alt) => (
-                <div key={alt.method} className="bg-white/[0.05] p-3 rounded text-center">
+                <div key={alt.method} className="bg-white/[0.04] p-3 rounded text-center motion-safe:transition motion-safe:duration-150 hover:bg-white/[0.08]">
                   <p className="text-[#868f97] text-xs">{alt.method}</p>
-                  <p className={`text-lg sm:text-xl font-bold font-mono ${alt.value > currentPrice ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
+                  <p className={`text-lg sm:text-xl font-bold font-mono tabular-nums ${alt.value > currentPrice ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
                     ${alt.value.toFixed(2)}
                   </p>
                   <p className="text-[#868f97]/60 text-xs">{alt.description}</p>
-                  <p className={`text-xs ${alt.value > currentPrice ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
+                  <p className={`text-xs tabular-nums ${alt.value > currentPrice ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
                     {formatPercent(((alt.value - currentPrice) / currentPrice) * 100)}
                   </p>
                 </div>
@@ -680,14 +680,14 @@ export default function DCFCalculator({
                 <tr className="border-b border-white/[0.08]">
                   <th className="p-2 text-left whitespace-nowrap">WACC \ Growth</th>
                   {[terminalGrowth - 1, terminalGrowth - 0.5, terminalGrowth, terminalGrowth + 0.5, terminalGrowth + 1].map(g => (
-                    <th key={g} className="p-2 text-center whitespace-nowrap">{g.toFixed(1)}%</th>
+                    <th key={g} className="p-2 text-center whitespace-nowrap tabular-nums">{g.toFixed(1)}%</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {[waccCalculation.wacc - 2, waccCalculation.wacc - 1, waccCalculation.wacc, waccCalculation.wacc + 1, waccCalculation.wacc + 2].map(w => (
                   <tr key={w} className="border-b border-white/[0.08]/50">
-                    <td className="p-2 font-medium whitespace-nowrap">{w.toFixed(1)}%</td>
+                    <td className="p-2 font-medium whitespace-nowrap tabular-nums">{w.toFixed(1)}%</td>
                     {[terminalGrowth - 1, terminalGrowth - 0.5, terminalGrowth, terminalGrowth + 0.5, terminalGrowth + 1].map(g => {
                       const match = sensitivityData.find(s => Math.abs(s.wacc - w) < 0.01 && Math.abs(s.growth - g) < 0.01)
                       const fv = match?.value || 0
@@ -695,7 +695,7 @@ export default function DCFCalculator({
                       return (
                         <td
                           key={`${w}-${g}`}
-                          className={`p-2 text-center font-mono whitespace-nowrap ${isHighlight ? 'bg-[#4ebe96]/20 font-bold' : ''} ${fv > currentPrice ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}
+                          className={`p-2 text-center font-mono tabular-nums whitespace-nowrap ${isHighlight ? 'bg-[#4ebe96]/20 font-bold' : ''} ${fv > currentPrice ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}
                         >
                           ${fv.toFixed(2)}
                         </td>

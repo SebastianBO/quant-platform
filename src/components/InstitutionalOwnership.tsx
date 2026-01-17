@@ -244,15 +244,15 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
 
   const getTypeColor = (type: string) => {
     const colors: Record<string, string> = {
-      'Index Fund': 'bg-[#479ffa]/20 text-blue-400',
+      'Index Fund': 'bg-[#479ffa]/20 text-[#479ffa]',
       'Hedge Fund': 'bg-purple-500/20 text-purple-400',
-      'Pension Fund': 'bg-orange-500/20 text-orange-400',
-      'Bank': 'bg-emerald-500/20 text-emerald-400',
+      'Pension Fund': 'bg-[#ffa16c]/20 text-[#ffa16c]',
+      'Bank': 'bg-[#4ebe96]/20 text-[#4ebe96]',
       'Mutual Fund': 'bg-cyan-500/20 text-cyan-400',
       'Insurance': 'bg-yellow-500/20 text-yellow-400',
-      'Conglomerate': 'bg-[#e15241]/20 text-red-400',
-      'Sovereign Wealth': 'bg-pink-500/20 text-pink-400',
-      'Investment Manager': 'bg-gray-500/20 text-gray-400'
+      'Conglomerate': 'bg-[#ff5c5c]/20 text-[#ff5c5c]',
+      'Sovereign Wealth': 'bg-[#e75ece]/20 text-[#e75ece]',
+      'Investment Manager': 'bg-white/[0.05] text-[#868f97]'
     }
     return colors[type] || 'bg-white/[0.05] text-white'
   }
@@ -274,7 +274,7 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
     const hasData = selectedInvestor.holdings && selectedInvestor.holdings.length > 0
 
     return (
-      <Card className="bg-[#1a1a1a] border-white/[0.08]">
+      <Card className="bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div>
@@ -381,19 +381,19 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
               {/* Investor Summary */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
                 <div className="p-3 bg-white/[0.03] rounded-lg text-center">
-                  <p className="text-xl font-bold">{formatValue(selectedInvestor.summary.totalAUM)}</p>
+                  <p className="text-xl font-bold tabular-nums">{formatValue(selectedInvestor.summary.totalAUM)}</p>
                   <p className="text-xs text-[#868f97]">Total 13F AUM</p>
                 </div>
                 <div className="p-3 bg-white/[0.03] rounded-lg text-center">
-                  <p className="text-xl font-bold">{selectedInvestor.summary.totalPositions}</p>
+                  <p className="text-xl font-bold tabular-nums">{selectedInvestor.summary.totalPositions}</p>
                   <p className="text-xs text-[#868f97]">Positions</p>
                 </div>
                 <div className="p-3 bg-[#4ebe96]/10 rounded-lg text-center">
-                  <p className="text-xl font-bold text-[#4ebe96]">{selectedInvestor.summary.increasedPositions}</p>
+                  <p className="text-xl font-bold text-[#4ebe96] tabular-nums">{selectedInvestor.summary.increasedPositions}</p>
                   <p className="text-xs text-[#868f97]">Increased</p>
                 </div>
-                <div className="p-3 bg-[#e15241]/10 rounded-lg text-center">
-                  <p className="text-xl font-bold text-[#e15241]">{selectedInvestor.summary.decreasedPositions}</p>
+                <div className="p-3 bg-[#ff5c5c]/10 rounded-lg text-center">
+                  <p className="text-xl font-bold text-[#ff5c5c] tabular-nums">{selectedInvestor.summary.decreasedPositions}</p>
                   <p className="text-xs text-[#868f97]">Decreased</p>
                 </div>
               </div>
@@ -416,14 +416,14 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                     return (
                       <div
                         key={i}
-                        className="grid grid-cols-12 gap-2 px-2 py-2 text-sm rounded hover:bg-white/[0.08] transition-colors duration-100"
+                        className="grid grid-cols-12 gap-2 px-2 py-2 text-sm rounded hover:bg-white/[0.08] motion-safe:transition-colors motion-safe:duration-150"
                       >
                         <div className="col-span-4 font-medium">
                           <div className="flex items-center gap-2">
                             {tickerSymbol ? (
                               <Link
                                 href={`/stock/${tickerSymbol}`}
-                                className="text-primary hover:underline truncate"
+                                className="text-[#479ffa] hover:opacity-80 motion-safe:transition-opacity motion-safe:duration-150 truncate"
                               >
                                 {tickerSymbol}
                               </Link>
@@ -431,7 +431,7 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                               <span className="truncate">{displayName}</span>
                             )}
                             {h.isNew && (
-                              <span className="px-1 py-0.5 bg-[#479ffa]/20 text-blue-400 text-[10px] rounded shrink-0">NEW</span>
+                              <span className="px-1 py-0.5 bg-[#479ffa]/20 text-[#479ffa] text-[10px] rounded shrink-0">NEW</span>
                             )}
                           </div>
                           {/* Show issuer name below ticker if available */}
@@ -442,14 +442,14 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                             <span className="text-xs text-[#868f97]">{h.titleOfClass}</span>
                           )}
                         </div>
-                        <div className="col-span-2 text-right">{formatValue(h.value)}</div>
-                        <div className="col-span-2 text-right">
+                        <div className="col-span-2 text-right tabular-nums">{formatValue(h.value)}</div>
+                        <div className="col-span-2 text-right tabular-nums">
                           <span className="text-primary">{h.portfolioPercent?.toFixed(2)}%</span>
                         </div>
-                        <div className="col-span-2 text-right text-[#868f97]">{formatShares(h.shares)}</div>
-                        <div className={`col-span-2 text-right flex items-center justify-end gap-1 ${
+                        <div className="col-span-2 text-right text-[#868f97] tabular-nums">{formatShares(h.shares)}</div>
+                        <div className={`col-span-2 text-right flex items-center justify-end gap-1 tabular-nums ${
                           h.changeInShares > 0 ? 'text-[#4ebe96]' :
-                          h.changeInShares < 0 ? 'text-[#e15241]' : 'text-[#868f97]'
+                          h.changeInShares < 0 ? 'text-[#ff5c5c]' : 'text-[#868f97]'
                         }`}>
                           {!isSECData && h.changeInShares > 0 ? <ArrowUpRight className="w-3 h-3" /> :
                            !isSECData && h.changeInShares < 0 ? <ArrowDownRight className="w-3 h-3" /> : null}
@@ -468,7 +468,7 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
   }
 
   return (
-    <Card className="bg-[#1a1a1a] border-white/[0.08]">
+    <Card className="bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
@@ -506,7 +506,7 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
               </Button>
             )}
             {searchResults.length > 0 && (
-              <div className="absolute z-50 w-full mt-1 bg-[#1a1a1a] border border-white/[0.08] rounded-lg shadow-lg max-h-64 overflow-y-auto">
+              <div className="absolute z-50 w-full mt-1 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-lg shadow-lg max-h-64 overflow-y-auto">
                 {searchResults.map((inv, i) => (
                   <button
                     key={i}
@@ -515,7 +515,7 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                       setShowSearch(false)
                       setSearchQuery("")
                     }}
-                    className="w-full px-3 py-2 text-left hover:bg-white/[0.08] flex items-center justify-between"
+                    className="w-full px-3 py-2 text-left hover:bg-white/[0.08] motion-safe:transition-colors motion-safe:duration-150 flex items-center justify-between"
                   >
                     <span className="text-sm">{inv.name}</span>
                     <span className={`text-xs px-2 py-0.5 rounded ${getTypeColor(inv.type)}`}>
@@ -526,7 +526,7 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
               </div>
             )}
             {searchLoading && (
-              <div className="absolute z-50 w-full mt-1 bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-4 text-center">
+              <div className="absolute z-50 w-full mt-1 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-lg p-4 text-center">
                 <Loader2 className="w-4 h-4 animate-spin mx-auto" />
               </div>
             )}
@@ -554,19 +554,19 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
             <div className="grid grid-cols-4 gap-3 mb-4">
               <div className="p-3 bg-white/[0.03] rounded-lg text-center">
                 <p className="text-sm text-[#868f97]">Total Institutional Value</p>
-                <p className="text-xl font-bold text-emerald-500">{formatValue(data?.summary.totalValue || 0)}</p>
+                <p className="text-xl font-bold text-[#4ebe96] tabular-nums">{formatValue(data?.summary.totalValue || 0)}</p>
               </div>
               <div className="p-3 bg-white/[0.03] rounded-lg text-center">
                 <p className="text-sm text-[#868f97]">Total Shares Held</p>
-                <p className="text-xl font-bold">{formatShares(data?.summary.totalShares || 0)}</p>
+                <p className="text-xl font-bold tabular-nums">{formatShares(data?.summary.totalShares || 0)}</p>
               </div>
               <div className="p-3 bg-white/[0.03] rounded-lg text-center">
                 <p className="text-sm text-[#868f97]">Number of Holders</p>
-                <p className="text-xl font-bold">{data?.summary.totalInstitutionalHolders || 0}+</p>
+                <p className="text-xl font-bold tabular-nums">{data?.summary.totalInstitutionalHolders || 0}+</p>
               </div>
               <div className="p-3 bg-white/[0.03] rounded-lg text-center">
                 <p className="text-sm text-[#868f97]">Avg Position</p>
-                <p className="text-xl font-bold">{formatValue(data?.summary.avgPosition || 0)}</p>
+                <p className="text-xl font-bold tabular-nums">{formatValue(data?.summary.avgPosition || 0)}</p>
               </div>
             </div>
 
@@ -576,10 +576,10 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                 {/* Flow Score */}
                 {data?.summary.flowScore !== undefined && (
                   <div className={`p-3 rounded-lg border ${
-                    data.summary.flowSignal === 'STRONG_BUY' ? 'bg-emerald-500/10 border-emerald-500/30' :
+                    data.summary.flowSignal === 'STRONG_BUY' ? 'bg-[#4ebe96]/10 border-[#4ebe96]/30' :
                     data.summary.flowSignal === 'BUY' ? 'bg-[#4ebe96]/10 border-[#4ebe96]/30' :
-                    data.summary.flowSignal === 'SELL' ? 'bg-orange-500/10 border-orange-500/30' :
-                    data.summary.flowSignal === 'STRONG_SELL' ? 'bg-[#e15241]/10 border-[#e15241]/30' :
+                    data.summary.flowSignal === 'SELL' ? 'bg-[#ffa16c]/10 border-[#ffa16c]/30' :
+                    data.summary.flowSignal === 'STRONG_SELL' ? 'bg-[#ff5c5c]/10 border-[#ff5c5c]/30' :
                     'bg-white/[0.03] border-white/[0.08]'
                   }`}>
                     <div className="flex items-center justify-between mb-2">
@@ -588,24 +588,24 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                         <span className="text-sm font-medium">Institutional Flow</span>
                       </div>
                       <span className={`text-xs px-2 py-0.5 rounded font-bold ${
-                        data.summary.flowSignal === 'STRONG_BUY' ? 'bg-emerald-500 text-white' :
+                        data.summary.flowSignal === 'STRONG_BUY' ? 'bg-[#4ebe96] text-white' :
                         data.summary.flowSignal === 'BUY' ? 'bg-[#4ebe96] text-white' :
-                        data.summary.flowSignal === 'SELL' ? 'bg-orange-500 text-white' :
-                        data.summary.flowSignal === 'STRONG_SELL' ? 'bg-[#e15241] text-white' :
+                        data.summary.flowSignal === 'SELL' ? 'bg-[#ffa16c] text-white' :
+                        data.summary.flowSignal === 'STRONG_SELL' ? 'bg-[#ff5c5c] text-white' :
                         'bg-white/[0.05] text-[#868f97]'
                       }`}>
                         {data.summary.flowSignal?.replace('_', ' ')}
                       </span>
                     </div>
                     <div className="flex items-end gap-2">
-                      <span className="text-2xl font-bold">{data.summary.flowScore.toFixed(0)}</span>
+                      <span className="text-2xl font-bold tabular-nums">{data.summary.flowScore.toFixed(0)}</span>
                       <span className="text-xs text-[#868f97] mb-1">/100</span>
                     </div>
                     <div className="w-full h-2 bg-white/[0.05] rounded-full mt-2 overflow-hidden">
                       <div
-                        className={`h-full transition-all ${
+                        className={`h-full motion-safe:transition-all motion-safe:duration-150 ${
                           data.summary.flowScore >= 60 ? 'bg-[#4ebe96]' :
-                          data.summary.flowScore >= 40 ? 'bg-yellow-500' : 'bg-[#e15241]'
+                          data.summary.flowScore >= 40 ? 'bg-[#ffa16c]' : 'bg-[#ff5c5c]'
                         }`}
                         style={{ width: `${data.summary.flowScore}%` }}
                       />
@@ -616,9 +616,9 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                 {/* Concentration Analysis */}
                 {data?.summary.concentration && (
                   <div className={`p-3 rounded-lg border ${
-                    data.summary.concentration.rating === 'VERY_HIGH' ? 'bg-[#e15241]/10 border-[#e15241]/30' :
-                    data.summary.concentration.rating === 'HIGH' ? 'bg-orange-500/10 border-orange-500/30' :
-                    data.summary.concentration.rating === 'MODERATE' ? 'bg-yellow-500/10 border-yellow-500/30' :
+                    data.summary.concentration.rating === 'VERY_HIGH' ? 'bg-[#ff5c5c]/10 border-[#ff5c5c]/30' :
+                    data.summary.concentration.rating === 'HIGH' ? 'bg-[#ffa16c]/10 border-[#ffa16c]/30' :
+                    data.summary.concentration.rating === 'MODERATE' ? 'bg-[#ffa16c]/10 border-[#ffa16c]/30' :
                     'bg-white/[0.03] border-white/[0.08]'
                   }`}>
                     <div className="flex items-center justify-between mb-2">
@@ -627,7 +627,7 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                         <span className="text-sm font-medium">Concentration (HHI)</span>
                       </div>
                       {data.summary.concentration.rating === 'VERY_HIGH' || data.summary.concentration.rating === 'HIGH' ? (
-                        <span className="text-xs px-2 py-0.5 rounded bg-orange-500/20 text-orange-500 flex items-center gap-1">
+                        <span className="text-xs px-2 py-0.5 rounded bg-[#ffa16c]/20 text-[#ffa16c] flex items-center gap-1">
                           <AlertTriangle className="w-3 h-3" />
                           {data.summary.concentration.rating.replace('_', ' ')}
                         </span>
@@ -640,15 +640,15 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                     <div className="grid grid-cols-2 gap-2 text-sm">
                       <div>
                         <span className="text-[#868f97]">Top 5:</span>
-                        <span className="ml-1 font-medium">{data.summary.concentration.top5Percent.toFixed(1)}%</span>
+                        <span className="ml-1 font-medium tabular-nums">{data.summary.concentration.top5Percent.toFixed(1)}%</span>
                       </div>
                       <div>
                         <span className="text-[#868f97]">Top 10:</span>
-                        <span className="ml-1 font-medium">{data.summary.concentration.top10Percent.toFixed(1)}%</span>
+                        <span className="ml-1 font-medium tabular-nums">{data.summary.concentration.top10Percent.toFixed(1)}%</span>
                       </div>
                     </div>
                     <p className="text-xs text-[#868f97] mt-2">
-                      ~{Math.round(data.summary.concentration.effectiveHolders)} effective equal-sized holders
+                      ~<span className="tabular-nums">{Math.round(data.summary.concentration.effectiveHolders)}</span> effective equal-sized holders
                     </p>
                   </div>
                 )}
@@ -659,17 +659,17 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
             <div className="flex gap-3 mb-4">
               <div className="flex-1 p-2 bg-[#4ebe96]/10 rounded-lg flex items-center justify-center gap-2">
                 <TrendingUp className="w-4 h-4 text-[#4ebe96]" />
-                <span className="text-[#4ebe96] font-bold">{data?.summary.increasedPositions || 0}</span>
+                <span className="text-[#4ebe96] font-bold tabular-nums">{data?.summary.increasedPositions || 0}</span>
                 <span className="text-xs text-[#868f97]">Increased</span>
               </div>
-              <div className="flex-1 p-2 bg-[#e15241]/10 rounded-lg flex items-center justify-center gap-2">
-                <TrendingDown className="w-4 h-4 text-[#e15241]" />
-                <span className="text-[#e15241] font-bold">{data?.summary.decreasedPositions || 0}</span>
+              <div className="flex-1 p-2 bg-[#ff5c5c]/10 rounded-lg flex items-center justify-center gap-2">
+                <TrendingDown className="w-4 h-4 text-[#ff5c5c]" />
+                <span className="text-[#ff5c5c] font-bold tabular-nums">{data?.summary.decreasedPositions || 0}</span>
                 <span className="text-xs text-[#868f97]">Decreased</span>
               </div>
               <div className="flex-1 p-2 bg-[#479ffa]/10 rounded-lg flex items-center justify-center gap-2">
                 <Plus className="w-4 h-4 text-[#479ffa]" />
-                <span className="text-[#479ffa] font-bold">{data?.summary.newPositions || 0}</span>
+                <span className="text-[#479ffa] font-bold tabular-nums">{data?.summary.newPositions || 0}</span>
                 <span className="text-xs text-[#868f97]">New</span>
               </div>
             </div>
@@ -679,7 +679,7 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
               <TabsList className="grid grid-cols-3 w-full">
                 <TabsTrigger value="all">All Holders</TabsTrigger>
                 <TabsTrigger value="increased" className="text-[#4ebe96]">Increased</TabsTrigger>
-                <TabsTrigger value="decreased" className="text-[#e15241]">Decreased</TabsTrigger>
+                <TabsTrigger value="decreased" className="text-[#ff5c5c]">Decreased</TabsTrigger>
               </TabsList>
             </Tabs>
 
@@ -702,13 +702,13 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                   <button
                     key={i}
                     onClick={() => fetchInvestorDetails(holder.investor.toUpperCase().replace(/ /g, '_'))}
-                    className="w-full grid grid-cols-12 gap-2 px-3 py-3 text-sm border-b border-white/[0.04] hover:bg-white/[0.08] transition-colors duration-100 text-left"
+                    className="w-full grid grid-cols-12 gap-2 px-3 py-3 text-sm border-b border-white/[0.04] hover:bg-white/[0.08] motion-safe:transition-colors motion-safe:duration-150 text-left"
                   >
                     <div className="col-span-4">
                       <div className="flex items-center gap-2">
                         <span className="font-medium truncate">{holder.investor}</span>
                         {holder.isNew && (
-                          <span className="px-1.5 py-0.5 bg-[#479ffa]/20 text-blue-400 text-[10px] rounded shrink-0">NEW</span>
+                          <span className="px-1.5 py-0.5 bg-[#479ffa]/20 text-[#479ffa] text-[10px] rounded shrink-0">NEW</span>
                         )}
                       </div>
                       <span className={`text-[10px] px-1.5 py-0.5 rounded mt-1 inline-block ${getTypeColor(holder.investorType)}`}>
@@ -716,10 +716,10 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                       </span>
                     </div>
                     <div className="col-span-2 text-right">
-                      <p>{formatShares(holder.shares)}</p>
-                      <p className={`text-xs flex items-center justify-end gap-0.5 ${
+                      <p className="tabular-nums">{formatShares(holder.shares)}</p>
+                      <p className={`text-xs flex items-center justify-end gap-0.5 tabular-nums ${
                         holder.changeInShares > 0 ? 'text-[#4ebe96]' :
-                        holder.changeInShares < 0 ? 'text-[#e15241]' : 'text-[#868f97]'
+                        holder.changeInShares < 0 ? 'text-[#ff5c5c]' : 'text-[#868f97]'
                       }`}>
                         {holder.changeInShares > 0 ? <ArrowUpRight className="w-3 h-3" /> :
                          holder.changeInShares < 0 ? <ArrowDownRight className="w-3 h-3" /> : null}
@@ -727,13 +727,13 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                       </p>
                     </div>
                     <div className="col-span-2 text-right">
-                      <p className="text-emerald-500">{formatValue(holder.value)}</p>
+                      <p className="text-[#4ebe96] tabular-nums">{formatValue(holder.value)}</p>
                     </div>
                     <div className="col-span-2 text-right">
                       {holder.portfolioPercent ? (
                         <div className="flex items-center justify-end gap-1">
                           <PieChart className="w-3 h-3 text-primary" />
-                          <span className="text-primary">{holder.portfolioPercent.toFixed(2)}%</span>
+                          <span className="text-primary tabular-nums">{holder.portfolioPercent.toFixed(2)}%</span>
                         </div>
                       ) : (
                         <span className="text-[#868f97]">-</span>
@@ -763,7 +763,7 @@ export default function InstitutionalOwnership({ ticker }: { ticker: string }) {
                         className={`px-3 py-2 rounded-lg ${getTypeColor(type)} flex items-center gap-2`}
                       >
                         <span className="text-sm font-medium">{type}</span>
-                        <span className="text-xs opacity-80">{stats.count}</span>
+                        <span className="text-xs opacity-80 tabular-nums">{stats.count}</span>
                       </div>
                     ))}
                 </div>

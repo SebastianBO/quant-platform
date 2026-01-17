@@ -66,10 +66,10 @@ interface BiotechCatalystsProps {
 
 const catalystTypeConfig: Record<string, { icon: typeof Beaker; label: string; color: string }> = {
   TRIAL_RESULT: { icon: Beaker, label: 'Trial Result', color: 'text-[#479ffa]' },
-  DATA_READOUT: { icon: Activity, label: 'Data Readout', color: 'text-purple-500' },
+  DATA_READOUT: { icon: Activity, label: 'Data Readout', color: 'text-[#e75ece]' },
   FDA_DECISION: { icon: FileText, label: 'FDA Decision', color: 'text-[#4ebe96]' },
-  PDUFA_DATE: { icon: Calendar, label: 'PDUFA Date', color: 'text-orange-500' },
-  PHASE_TRANSITION: { icon: TrendingUp, label: 'Phase Transition', color: 'text-cyan-500' },
+  PDUFA_DATE: { icon: Calendar, label: 'PDUFA Date', color: 'text-[#ffa16c]' },
+  PHASE_TRANSITION: { icon: TrendingUp, label: 'Phase Transition', color: 'text-[#479ffa]' },
 }
 
 const importanceConfig: Record<string, { label: string; variant: 'default' | 'secondary' | 'outline' }> = {
@@ -79,13 +79,13 @@ const importanceConfig: Record<string, { label: string; variant: 'default' | 'se
 }
 
 const phaseConfig: Record<string, { label: string; color: string }> = {
-  PHASE1: { label: 'Phase 1', color: 'bg-gray-500' },
-  EARLY_PHASE1: { label: 'Phase 1', color: 'bg-gray-500' },
+  PHASE1: { label: 'Phase 1', color: 'bg-[#868f97]' },
+  EARLY_PHASE1: { label: 'Phase 1', color: 'bg-[#868f97]' },
   PHASE2: { label: 'Phase 2', color: 'bg-[#479ffa]' },
-  'PHASE2/PHASE3': { label: 'Phase 2/3', color: 'bg-indigo-500' },
-  PHASE3: { label: 'Phase 3', color: 'bg-purple-500' },
+  'PHASE2/PHASE3': { label: 'Phase 2/3', color: 'bg-[#e75ece]' },
+  PHASE3: { label: 'Phase 3', color: 'bg-[#ffa16c]' },
   PHASE4: { label: 'Phase 4', color: 'bg-[#4ebe96]' },
-  NA: { label: 'N/A', color: 'bg-gray-400' },
+  NA: { label: 'N/A', color: 'bg-[#868f97]/50' },
 }
 
 function formatDate(dateStr: string | null): string {
@@ -112,9 +112,11 @@ function CatalystCard({ catalyst }: { catalyst: Catalyst }) {
 
   return (
     <div className={cn(
-      "border rounded-lg p-4 hover:bg-white/[0.08] transition-colors duration-100",
-      catalyst.status === 'IMMINENT' && "border-orange-500/50 bg-orange-500/5",
-      catalyst.importance === 'HIGH' && "border-purple-500/30"
+      "rounded-2xl p-4 transition-colors motion-safe:duration-150",
+      "bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08]",
+      "hover:bg-white/[0.05] hover:border-white/[0.15]",
+      catalyst.status === 'IMMINENT' && "border-[#ffa16c]/50 bg-[#ffa16c]/5",
+      catalyst.importance === 'HIGH' && "border-[#e75ece]/30"
     )}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3 flex-1 min-w-0">
@@ -161,13 +163,13 @@ function CatalystCard({ catalyst }: { catalyst: Catalyst }) {
           </div>
         </div>
         <div className="text-right shrink-0">
-          <div className="text-sm font-medium">
+          <div className="text-sm font-medium tabular-nums">
             {formatDate(catalyst.expectedDate)}
           </div>
           <div className={cn(
-            "text-xs mt-1",
-            catalyst.daysUntil !== null && catalyst.daysUntil <= 30 ? "text-orange-500 font-medium" :
-            catalyst.daysUntil !== null && catalyst.daysUntil <= 90 ? "text-[#f4a623]" :
+            "text-xs mt-1 tabular-nums",
+            catalyst.daysUntil !== null && catalyst.daysUntil <= 30 ? "text-[#ffa16c] font-medium" :
+            catalyst.daysUntil !== null && catalyst.daysUntil <= 90 ? "text-[#ffa16c]/70" :
             "text-[#868f97]"
           )}>
             {formatDaysUntil(catalyst.daysUntil)}
@@ -175,7 +177,7 @@ function CatalystCard({ catalyst }: { catalyst: Catalyst }) {
         </div>
       </div>
       {catalyst.sourceId && (
-        <div className="mt-3 pt-3 border-t flex items-center justify-between text-xs text-[#868f97]">
+        <div className="mt-3 pt-3 border-t border-white/[0.08] flex items-center justify-between text-xs text-[#868f97]">
           <span>{catalyst.sourceType === 'CLINICAL_TRIAL' ? 'ClinicalTrials.gov' : 'FDA'}</span>
           <a
             href={catalyst.sourceType === 'CLINICAL_TRIAL'
@@ -184,7 +186,7 @@ function CatalystCard({ catalyst }: { catalyst: Catalyst }) {
             }
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 hover:text-white transition-colors duration-100"
+            className="flex items-center gap-1 hover:text-white transition-colors motion-safe:duration-150"
           >
             {catalyst.sourceId}
             <ExternalLink className="h-3 w-3" />
@@ -229,7 +231,7 @@ export function BiotechCatalysts({ ticker, className }: BiotechCatalystsProps) {
 
   if (loading) {
     return (
-      <Card className={className}>
+      <Card className={cn("bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]", className)}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Beaker className="h-5 w-5" />
@@ -239,7 +241,7 @@ export function BiotechCatalysts({ ticker, className }: BiotechCatalystsProps) {
         <CardContent>
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-24 bg-white/[0.05] animate-pulse rounded-lg" />
+              <div key={i} className="h-24 bg-white/[0.05] animate-pulse rounded-2xl" />
             ))}
           </div>
         </CardContent>
@@ -249,7 +251,7 @@ export function BiotechCatalysts({ ticker, className }: BiotechCatalystsProps) {
 
   if (error || !data || !data.summary) {
     return (
-      <Card className={className}>
+      <Card className={cn("bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]", className)}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Beaker className="h-5 w-5" />
@@ -270,7 +272,7 @@ export function BiotechCatalysts({ ticker, className }: BiotechCatalystsProps) {
   const displayCatalysts = showAll ? data.catalysts : data.catalysts.slice(0, 5)
 
   return (
-    <Card className={className}>
+    <Card className={cn("bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]", className)}>
       <CardHeader>
         <div className="flex items-start justify-between">
           <div>
@@ -294,20 +296,20 @@ export function BiotechCatalysts({ ticker, className }: BiotechCatalystsProps) {
       <CardContent>
         {/* Summary Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="text-center p-3 bg-white/[0.05] rounded-lg">
-            <div className="text-2xl font-bold">{data.summary.upcoming}</div>
+          <div className="text-center p-3 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
+            <div className="text-2xl font-bold tabular-nums">{data.summary.upcoming}</div>
             <div className="text-xs text-[#868f97]">Upcoming</div>
           </div>
-          <div className="text-center p-3 bg-orange-500/10 rounded-lg">
-            <div className="text-2xl font-bold text-orange-500">{data.summary.imminent}</div>
+          <div className="text-center p-3 bg-[#ffa16c]/10 border border-[#ffa16c]/20 rounded-2xl">
+            <div className="text-2xl font-bold text-[#ffa16c] tabular-nums">{data.summary.imminent}</div>
             <div className="text-xs text-[#868f97]">Within 90 Days</div>
           </div>
-          <div className="text-center p-3 bg-purple-500/10 rounded-lg">
-            <div className="text-2xl font-bold text-purple-500">{data.summary.highImportance}</div>
+          <div className="text-center p-3 bg-[#e75ece]/10 border border-[#e75ece]/20 rounded-2xl">
+            <div className="text-2xl font-bold text-[#e75ece] tabular-nums">{data.summary.highImportance}</div>
             <div className="text-xs text-[#868f97]">High Impact</div>
           </div>
-          <div className="text-center p-3 bg-[#479ffa]/10 rounded-lg">
-            <div className="text-2xl font-bold text-[#479ffa]">{data.summary.phase3Trials}</div>
+          <div className="text-center p-3 bg-[#479ffa]/10 border border-[#479ffa]/20 rounded-2xl">
+            <div className="text-2xl font-bold text-[#479ffa] tabular-nums">{data.summary.phase3Trials}</div>
             <div className="text-xs text-[#868f97]">Phase 3</div>
           </div>
         </div>
@@ -330,24 +332,24 @@ export function BiotechCatalysts({ ticker, className }: BiotechCatalystsProps) {
         {data.catalysts.length > 5 && (
           <Button
             variant="ghost"
-            className="w-full mt-4"
+            className="w-full mt-4 hover:bg-white/[0.05] transition-colors motion-safe:duration-150"
             onClick={() => setShowAll(!showAll)}
           >
             {showAll ? 'Show Less' : `Show All ${data.catalysts.length} Catalysts`}
             <ChevronRight className={cn(
-              "h-4 w-4 ml-1 transition-transform",
+              "h-4 w-4 ml-1 transition-transform motion-safe:duration-150",
               showAll && "rotate-90"
             )} />
           </Button>
         )}
 
         {/* Link to ClinicalTrials.gov */}
-        <div className="mt-4 pt-4 border-t text-center">
+        <div className="mt-4 pt-4 border-t border-white/[0.08] text-center">
           <a
             href={`https://clinicaltrials.gov/search?spons=${encodeURIComponent(data.companyName)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-[#868f97] hover:text-white inline-flex items-center gap-1 transition-colors duration-100"
+            className="text-sm text-[#868f97] hover:text-white inline-flex items-center gap-1 transition-colors motion-safe:duration-150"
           >
             View all trials on ClinicalTrials.gov
             <ExternalLink className="h-3 w-3" />
