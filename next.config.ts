@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Set output file tracing root to avoid lockfile detection issues
+  outputFileTracingRoot: __dirname,
+
   // Experimental performance optimizations
   experimental: {
     // Optimize CSS for better performance

@@ -43,3 +43,6 @@ next-env.d.ts
 data/
 packages/*/node_modules/
 packages/*/dist/
+.mcpregistry_github_token
+.mcpregistry_registry_token
+mcp-server/node_modules/
