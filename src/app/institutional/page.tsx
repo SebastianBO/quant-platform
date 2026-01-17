@@ -10,6 +10,9 @@ import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import SEOSidebar from '@/components/SEOSidebar'
 
+export const revalidate = 3600
+export const dynamic = 'force-dynamic' // Prevent build-time timeout
+
 export const metadata: Metadata = {
   title: '13F Filings & Institutional Ownership - What Stocks Are Hedge Funds Buying?',
   description: 'Track institutional ownership and 13F filings from top hedge funds. See what stocks Berkshire Hathaway, Bridgewater, Citadel, and other elite investors are buying and selling.',

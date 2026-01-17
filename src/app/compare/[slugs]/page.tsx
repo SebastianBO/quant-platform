@@ -322,7 +322,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 // Allow dynamic paths beyond the static ones
 export const dynamicParams = true
 
-// ISR: Cache pages for 1 hour - critical for Google indexing at scale
+// Force dynamic rendering to avoid build timeouts (100+ comparison pages)
+// ISR via revalidate still applies for CDN caching
+export const dynamic = 'force-dynamic'
 export const revalidate = 3600
 
 async function getStockData(ticker: string) {

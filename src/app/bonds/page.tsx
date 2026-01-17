@@ -12,6 +12,7 @@ import SEOSidebar from '@/components/SEOSidebar'
 
 // Force dynamic rendering since we fetch data
 export const revalidate = 3600
+export const dynamic = 'force-dynamic' // Prevent build-time timeout
 
 export const metadata: Metadata = {
   title: '10 Year Treasury Rate Today - US Treasury Yields & Bond Rates 2025',

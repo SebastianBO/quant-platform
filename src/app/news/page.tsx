@@ -13,6 +13,7 @@ import NewsArticleCard from './NewsArticleCard'
 import NewsCategories from './NewsCategories'
 
 export const revalidate = 3600
+export const dynamic = 'force-dynamic' // Prevent build-time timeout
 
 export const metadata: Metadata = {
   title: 'Stock Market News Today - Latest Financial & Investing News | Lician',
