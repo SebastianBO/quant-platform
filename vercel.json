@@ -1,6 +1,6 @@
 {
   "installCommand": "npm install --legacy-peer-deps",
-  "buildCommand": "next build --webpack",
+  "buildCommand": "next build",
   "env": {
     "VERCEL_BYPASS_FALLBACK_OVERSIZED_ERROR": "1"
   },

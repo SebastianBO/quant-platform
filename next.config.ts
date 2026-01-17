@@ -6,8 +6,8 @@ const nextConfig: NextConfig = {
 
   // Experimental performance optimizations
   experimental: {
-    // Optimize CSS for better performance
-    optimizeCss: true,
+    // Disable optimizeCss on Vercel - causes build issues
+    // optimizeCss: true,
     // Tree-shake large packages automatically
     optimizePackageImports: [
       'lucide-react',
