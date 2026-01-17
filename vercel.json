@@ -1,6 +1,6 @@
 {
   "installCommand": "npm install --legacy-peer-deps",
-  "buildCommand": "next build",
+  "buildCommand": "echo 'Starting build...' && node --version && npm --version && next build 2>&1 || (echo 'Build failed' && exit 1)",
   "env": {
     "VERCEL_BYPASS_FALLBACK_OVERSIZED_ERROR": "1"
   },
