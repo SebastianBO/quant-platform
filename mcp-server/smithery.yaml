@@ -1,0 +1,70 @@
+# Smithery MCP Server Configuration
+# https://smithery.ai/docs/build
+
+name: "@lician/financial-data"
+description: "Access real-time stock prices, financial statements, insider trades, and institutional holdings for 141,000+ companies. Free tier available."
+
+# Server type - external means hosted elsewhere (npm)
+type: external
+
+# NPM package info
+package:
+  name: "@lician/mcp-server"
+  version: "1.0.0"
+
+# How to run the server
+runtime:
+  command: "npx"
+  args: ["-y", "@lician/mcp-server"]
+
+# Optional environment variables
+env:
+  LICIAN_API_KEY:
+    description: "API key for higher rate limits (optional). Get one at https://lician.com/developers/signup"
+    required: false
+
+# Metadata
+author: "Lician"
+homepage: "https://lician.com/developers"
+repository: "https://github.com/lician/mcp-server"
+license: "MIT"
+
+# Categories for discovery
+categories:
+  - finance
+  - data
+  - stocks
+  - investing
+
+# Tools provided
+tools:
+  - name: get_stock_price
+    description: "Get current stock price, daily change, volume, market cap"
+  - name: get_income_statement
+    description: "Get income statement (revenue, profit, EPS)"
+  - name: get_balance_sheet
+    description: "Get balance sheet (assets, liabilities, equity)"
+  - name: get_cash_flow
+    description: "Get cash flow statement data"
+  - name: get_financial_metrics
+    description: "Get P/E, ROE, margins, dividend yield"
+  - name: get_insider_trades
+    description: "Get SEC Form 4 insider trading activity"
+  - name: get_institutional_holders
+    description: "Get 13F institutional ownership"
+  - name: get_investor_portfolio
+    description: "Get all holdings for a specific investor"
+  - name: get_analyst_ratings
+    description: "Get buy/hold/sell ratings and price targets"
+  - name: get_analyst_estimates
+    description: "Get EPS and revenue estimates"
+  - name: get_company_info
+    description: "Get company profile information"
+  - name: get_stock_news
+    description: "Get market news articles"
+  - name: get_sec_filings
+    description: "Get 10-K, 10-Q, 8-K SEC filings"
+  - name: get_crypto_prices
+    description: "Get cryptocurrency prices"
+  - name: get_interest_rates
+    description: "Get Treasury yields and fed funds rate"

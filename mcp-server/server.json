@@ -1,0 +1,29 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.SebastianBO/financial-data",
+  "description": "Stock prices, financials, insider trades, institutional holdings for 141K+ companies",
+  "repository": {
+    "url": "https://github.com/SebastianBO/quant-platform",
+    "source": "github"
+  },
+  "version": "1.0.1",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@lician/mcp-server",
+      "version": "1.0.1",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "description": "Optional API key for higher rate limits. Get one at https://lician.com/developers/signup",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": true,
+          "name": "LICIAN_API_KEY"
+        }
+      ]
+    }
+  ]
+}
