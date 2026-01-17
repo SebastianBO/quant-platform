@@ -5,37 +5,40 @@ import { logger } from "@/lib/logger"
 // Direct checkout without requiring login
 // User creates account after payment or during Stripe checkout
 
-function getStripe() {
-  const stripeKey = process.env.STRIPE_SECRET_KEY
-  if (!stripeKey) {
-    throw new Error('STRIPE_SECRET_KEY environment variable is not set')
-  }
-  return new Stripe(stripeKey)
-}
-
-function getPriceId(plan: string): string {
-  // Read env vars at runtime, not build time
-  const priceIds: Record<string, string> = {
-    monthly: process.env.STRIPE_MONTHLY_PRICE_ID || "",
-    annual: process.env.STRIPE_ANNUAL_PRICE_ID || ""
-  }
-  return priceIds[plan] || ""
-}
+// Initialize Stripe once with timeout
+const stripe = process.env.STRIPE_SECRET_KEY
+  ? new Stripe(process.env.STRIPE_SECRET_KEY, { timeout: 10000 })
+  : null
 
 export async function GET(request: NextRequest) {
+  const startTime = Date.now()
+
   try {
+    if (!stripe) {
+      logger.error('Stripe not configured - missing STRIPE_SECRET_KEY')
+      return NextResponse.redirect(new URL("/premium?error=stripe_not_configured", request.url))
+    }
+
     const { searchParams } = new URL(request.url)
     const plan = searchParams.get("plan") || "annual"
 
-    const priceId = getPriceId(plan)
+    logger.info('Quick checkout started', { plan })
+
+    // Read env vars at runtime
+    const priceIds: Record<string, string | undefined> = {
+      monthly: process.env.STRIPE_MONTHLY_PRICE_ID,
+      annual: process.env.STRIPE_ANNUAL_PRICE_ID
+    }
+
+    const priceId = priceIds[plan]
 
     if (!priceId) {
-      // If no price configured, redirect to premium page
-      return NextResponse.redirect(new URL("/premium", request.url))
+      logger.error('Price ID not configured', { plan })
+      return NextResponse.redirect(new URL(`/premium?error=price_not_configured&plan=${plan}`, request.url))
     }
 
     // Create Stripe checkout session
-    const session = await getStripe().checkout.sessions.create({
+    const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       payment_method_types: ["card"],
       line_items: [
@@ -52,27 +55,32 @@ export async function GET(request: NextRequest) {
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || "https://lician.com"}/?canceled=true`,
       allow_promotion_codes: true,
       billing_address_collection: "auto",
-      // Note: customer_creation is not needed for subscription mode - customers are created automatically
       tax_id_collection: {
         enabled: true
       }
     })
 
-    // Redirect directly to Stripe checkout
+    const elapsed = Date.now() - startTime
+    logger.info('Stripe session created', { sessionId: session.id, elapsed })
+
     if (session.url) {
       return NextResponse.redirect(session.url)
     }
 
-    return NextResponse.redirect(new URL("/premium", request.url))
+    logger.error('No session URL returned from Stripe')
+    return NextResponse.redirect(new URL("/premium?error=no_session_url", request.url))
   } catch (error) {
-    logger.error("Quick checkout error", {
-      error: error instanceof Error ? error.message : "Unknown",
-      stripeKeySet: !!process.env.STRIPE_SECRET_KEY,
-      annualPriceId: process.env.STRIPE_ANNUAL_PRICE_ID,
-      monthlyPriceId: process.env.STRIPE_MONTHLY_PRICE_ID
-    })
-    // On error, redirect to premium page with error details
+    const elapsed = Date.now() - startTime
     const errorMsg = error instanceof Error ? error.message : 'Unknown error'
+    const errorCode = error instanceof Stripe.errors.StripeError ? error.code : undefined
+
+    logger.error("Quick checkout error", {
+      error: errorMsg,
+      code: errorCode,
+      elapsed,
+      type: error instanceof Stripe.errors.StripeError ? error.type : 'unknown'
+    })
+
     return NextResponse.redirect(new URL(`/premium?error=checkout_failed&details=${encodeURIComponent(errorMsg)}`, request.url))
   }
 }

@@ -4,31 +4,37 @@ import { logger } from '@/lib/logger'
 
 // Premium Newsletter checkout - Insider Trade Alerts subscription
 
-function getStripe() {
-  const stripeKey = process.env.STRIPE_SECRET_KEY
-  if (!stripeKey) {
-    throw new Error('STRIPE_SECRET_KEY environment variable is not set')
-  }
-  return new Stripe(stripeKey)
-}
+// Initialize Stripe once with timeout
+const stripe = process.env.STRIPE_SECRET_KEY
+  ? new Stripe(process.env.STRIPE_SECRET_KEY, { timeout: 10000 })
+  : null
 
 export async function GET(request: NextRequest) {
+  const startTime = Date.now()
+
   try {
+    if (!stripe) {
+      logger.error('Stripe not configured - missing STRIPE_SECRET_KEY')
+      return NextResponse.redirect(new URL("/newsletter?error=stripe_not_configured", request.url))
+    }
+
     const { searchParams } = new URL(request.url)
     const plan = searchParams.get("plan") || "monthly"
     const email = searchParams.get("email") // Optional pre-fill
 
+    logger.info('Newsletter checkout started', { plan, email: email ? 'provided' : 'none' })
+
     // Newsletter price IDs from env
-    const priceIds: Record<string, string> = {
-      monthly: process.env.STRIPE_NEWSLETTER_MONTHLY_PRICE_ID || "",
-      annual: process.env.STRIPE_NEWSLETTER_ANNUAL_PRICE_ID || ""
+    const priceIds: Record<string, string | undefined> = {
+      monthly: process.env.STRIPE_NEWSLETTER_MONTHLY_PRICE_ID,
+      annual: process.env.STRIPE_NEWSLETTER_ANNUAL_PRICE_ID
     }
 
     const priceId = priceIds[plan]
 
     if (!priceId) {
-      // If no price configured, redirect to newsletter page with message
-      return NextResponse.redirect(new URL("/newsletter?error=not_configured", request.url))
+      logger.error('Price ID not configured', { plan })
+      return NextResponse.redirect(new URL(`/newsletter?error=price_not_configured&plan=${plan}`, request.url))
     }
 
     // Create Stripe checkout session
@@ -59,17 +65,29 @@ export async function GET(request: NextRequest) {
       sessionParams.customer_email = email
     }
 
-    const session = await getStripe().checkout.sessions.create(sessionParams)
+    const session = await stripe.checkout.sessions.create(sessionParams)
 
-    // Redirect directly to Stripe checkout
+    const elapsed = Date.now() - startTime
+    logger.info('Stripe session created', { sessionId: session.id, elapsed })
+
     if (session.url) {
       return NextResponse.redirect(session.url)
     }
 
-    return NextResponse.redirect(new URL("/newsletter", request.url))
+    logger.error('No session URL returned from Stripe')
+    return NextResponse.redirect(new URL("/newsletter?error=no_session_url", request.url))
   } catch (error) {
-    logger.error('Newsletter checkout error', { error: error instanceof Error ? error.message : 'Unknown' })
+    const elapsed = Date.now() - startTime
     const errorMsg = error instanceof Error ? error.message : 'Unknown error'
+    const errorCode = error instanceof Stripe.errors.StripeError ? error.code : undefined
+
+    logger.error('Newsletter checkout error', {
+      error: errorMsg,
+      code: errorCode,
+      elapsed,
+      type: error instanceof Stripe.errors.StripeError ? error.type : 'unknown'
+    })
+
     return NextResponse.redirect(new URL(`/newsletter?error=checkout_failed&details=${encodeURIComponent(errorMsg)}`, request.url))
   }
 }
