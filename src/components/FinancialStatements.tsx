@@ -302,7 +302,7 @@ function FinancialStatementsComponent({
           </CardTitle>
           <button
             onClick={exportToCSV}
-            className="px-4 py-2 bg-[#4ebe96] hover:bg-[#4ebe96] rounded-lg font-medium text-sm transition-colors duration-100 flex items-center justify-center gap-2 w-full sm:w-auto"
+            className="px-4 py-2 bg-[#4ebe96] hover:bg-[#4ebe96]/90 rounded-lg font-medium text-sm motion-safe:transition-colors motion-safe:duration-150 flex items-center justify-center gap-2 w-full sm:w-auto"
           >
             <span>📥</span> Export CSV
           </button>
@@ -311,18 +311,18 @@ function FinancialStatementsComponent({
       <CardContent>
         {/* Company Info Bar */}
         {companyFacts && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 mb-6 p-3 sm:p-4 bg-white/[0.015] rounded-lg">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 mb-6 p-3 sm:p-4 bg-white/[0.03] backdrop-blur-[10px] rounded-lg border border-white/[0.08]">
             <div className="text-center">
               <p className="text-[#868f97] text-xs">Exchange</p>
-              <p className="font-bold text-sm">{companyFacts.exchange}</p>
+              <p className="font-bold text-sm tabular-nums">{companyFacts.exchange}</p>
             </div>
             <div className="text-center">
               <p className="text-[#868f97] text-xs">Employees</p>
-              <p className="font-bold text-sm">{companyFacts.number_of_employees?.toLocaleString()}</p>
+              <p className="font-bold text-sm tabular-nums">{companyFacts.number_of_employees?.toLocaleString()}</p>
             </div>
             <div className="text-center">
               <p className="text-[#868f97] text-xs">Listed</p>
-              <p className="font-bold text-sm">{companyFacts.listing_date}</p>
+              <p className="font-bold text-sm tabular-nums">{companyFacts.listing_date}</p>
             </div>
             <div className="text-center">
               <p className="text-[#868f97] text-xs">Location</p>
@@ -334,7 +334,7 @@ function FinancialStatementsComponent({
             </div>
             <div className="text-center">
               <p className="text-[#868f97] text-xs">Website</p>
-              <a href={companyFacts.website_url} target="_blank" rel="noopener noreferrer" className="font-bold text-[#4ebe96] text-xs hover:underline">
+              <a href={companyFacts.website_url} target="_blank" rel="noopener noreferrer" className="font-bold text-[#479ffa] text-xs hover:opacity-80 motion-safe:transition-opacity motion-safe:duration-150">
                 {companyFacts.website_url?.replace('https://', '').replace('www.', '')}
               </a>
             </div>
@@ -353,10 +353,10 @@ function FinancialStatementsComponent({
             <button
               key={tab.key}
               onClick={() => setActiveStatement(tab.key as StatementType)}
-              className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors duration-100 ${
+              className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium motion-safe:transition-colors motion-safe:duration-150 ${
                 activeStatement === tab.key
                   ? 'bg-[#4ebe96] text-white'
-                  : 'bg-white/[0.05] hover:bg-white/[0.064]'
+                  : 'bg-white/[0.03] hover:bg-white/[0.05] border border-white/[0.08]'
               }`}
             >
               {tab.label}
@@ -370,13 +370,13 @@ function FinancialStatementsComponent({
             <div className="flex gap-2">
               <button
                 onClick={() => setPeriod('annual')}
-                className={`px-3 py-1 rounded text-xs sm:text-sm ${period === 'annual' ? 'bg-white/[0.05]' : 'bg-white/[0.025]'}`}
+                className={`px-3 py-1 rounded text-xs sm:text-sm motion-safe:transition-colors motion-safe:duration-150 ${period === 'annual' ? 'bg-white/[0.08] border border-white/[0.08]' : 'bg-white/[0.03] border border-white/[0.08] hover:bg-white/[0.05]'}`}
               >
                 Annual
               </button>
               <button
                 onClick={() => setPeriod('quarterly')}
-                className={`px-3 py-1 rounded text-xs sm:text-sm ${period === 'quarterly' ? 'bg-white/[0.05]' : 'bg-white/[0.025]'}`}
+                className={`px-3 py-1 rounded text-xs sm:text-sm motion-safe:transition-colors motion-safe:duration-150 ${period === 'quarterly' ? 'bg-white/[0.08] border border-white/[0.08]' : 'bg-white/[0.03] border border-white/[0.08] hover:bg-white/[0.05]'}`}
               >
                 Quarterly
               </button>
@@ -389,7 +389,7 @@ function FinancialStatementsComponent({
                 <select
                   value={sourceOverride}
                   onChange={(e) => onSourceChange(e.target.value as SourceOverride)}
-                  className="px-2 py-1 rounded text-xs sm:text-sm bg-white/[0.05] border border-white/[0.08] focus:outline-none focus:ring-1 focus:ring-[#4ebe96]"
+                  className="px-2 py-1 rounded text-xs sm:text-sm bg-white/[0.03] border border-white/[0.08] focus:outline-none focus:ring-1 focus:ring-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150"
                 >
                   <option value="auto">Auto (Cascade)</option>
                   <option value="financialdatasets">Financial Datasets</option>
@@ -434,12 +434,12 @@ function FinancialStatementsComponent({
                 </div>
                 <div className="space-y-2 mt-4">
                   {productSegments.map((seg, i) => (
-                    <div key={i} className="flex items-center justify-between p-2 bg-white/[0.015] rounded">
+                    <div key={i} className="flex items-center justify-between p-2 bg-white/[0.03] rounded border border-white/[0.08] motion-safe:transition-colors motion-safe:duration-150 hover:bg-white/[0.05]">
                       <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
                         <span className="text-xs sm:text-sm">{seg.name}</span>
                       </div>
-                      <span className="font-bold text-xs sm:text-sm">{formatCurrency(seg.revenue)}</span>
+                      <span className="font-bold text-xs sm:text-sm tabular-nums">{formatCurrency(seg.revenue)}</span>
                     </div>
                   ))}
                 </div>
@@ -465,9 +465,9 @@ function FinancialStatementsComponent({
                 </div>
                 <div className="space-y-2 mt-4">
                   {geoSegments.map((seg, i) => (
-                    <div key={i} className="flex items-center justify-between p-2 bg-white/[0.015] rounded">
+                    <div key={i} className="flex items-center justify-between p-2 bg-white/[0.03] rounded border border-white/[0.08] motion-safe:transition-colors motion-safe:duration-150 hover:bg-white/[0.05]">
                       <span className="text-xs sm:text-sm">{seg.name}</span>
-                      <span className="font-bold text-xs sm:text-sm">{formatCurrency(seg.revenue)}</span>
+                      <span className="font-bold text-xs sm:text-sm tabular-nums">{formatCurrency(seg.revenue)}</span>
                     </div>
                   ))}
                 </div>
@@ -484,46 +484,48 @@ function FinancialStatementsComponent({
           /* Statement Table */
           <div className="overflow-x-auto -mx-4 sm:mx-0">
             <div className="min-w-full inline-block align-middle">
-              <table className="w-full text-xs sm:text-sm">
-                <thead>
-                  <tr className="border-b border-white/[0.08]">
-                    <th className="p-2 sm:p-3 text-left sticky left-0 bg-[#1a1a1a] min-w-36 sm:min-w-56 z-10">{title}</th>
-                    {(data as Array<Record<string, unknown>>)?.map((period, i: number) => (
-                      <th key={i} className="p-2 sm:p-3 text-right min-w-24 sm:min-w-28 whitespace-nowrap">
-                        {String(period.fiscal_period || period.report_period || `Period ${i + 1}`)}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {rows.map((row: RowConfig, i: number) => {
-                    const dataRecords = data as Array<Record<string, unknown>>
-                    return (
-                      <tr key={i} className={`border-b border-white/[0.04] ${row.highlight ? 'bg-white/[0.015]' : ''}`}>
-                        <td className={`p-2 sm:p-3 sticky left-0 bg-[#1a1a1a] z-10 ${row.highlight ? 'font-bold text-[#4ebe96]' : ''}`}>
-                          {row.label}
-                        </td>
-                        {dataRecords?.map((period, j: number) => {
-                          const value = period[row.key] as number | undefined
-                          const prevValue = dataRecords[j + 1]?.[row.key] as number | undefined
-                          const yoy = j < dataRecords.length - 1 && !row.isRatio && !row.isPercent && value !== undefined && prevValue !== undefined ? getYoYChange(value, prevValue) : null
+              <div className="bg-white/[0.03] backdrop-blur-[10px] rounded-lg border border-white/[0.08]">
+                <table className="w-full text-xs sm:text-sm">
+                  <thead>
+                    <tr className="border-b border-white/[0.08]">
+                      <th className="p-2 sm:p-3 text-left sticky left-0 bg-[#0a0a0a] min-w-36 sm:min-w-56 z-10">{title}</th>
+                      {(data as Array<Record<string, unknown>>)?.map((period, i: number) => (
+                        <th key={i} className="p-2 sm:p-3 text-right min-w-24 sm:min-w-28 whitespace-nowrap tabular-nums">
+                          {String(period.fiscal_period || period.report_period || `Period ${i + 1}`)}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.map((row: RowConfig, i: number) => {
+                      const dataRecords = data as Array<Record<string, unknown>>
+                      return (
+                        <tr key={i} className={`border-b border-white/[0.08] motion-safe:transition-colors motion-safe:duration-150 hover:bg-white/[0.05] ${row.highlight ? 'bg-white/[0.03]' : ''}`}>
+                          <td className={`p-2 sm:p-3 sticky left-0 bg-[#0a0a0a] z-10 ${row.highlight ? 'font-bold text-[#4ebe96]' : ''}`}>
+                            {row.label}
+                          </td>
+                          {dataRecords?.map((period, j: number) => {
+                            const value = period[row.key] as number | undefined
+                            const prevValue = dataRecords[j + 1]?.[row.key] as number | undefined
+                            const yoy = j < dataRecords.length - 1 && !row.isRatio && !row.isPercent && value !== undefined && prevValue !== undefined ? getYoYChange(value, prevValue) : null
 
-                          return (
-                            <td key={j} className={`p-2 sm:p-3 text-right ${row.highlight ? 'font-bold' : ''}`}>
-                              <div>{formatValue(value, row)}</div>
-                              {yoy && (
-                                <div className={`text-xs ${yoy.startsWith('+') ? 'text-[#4ebe96]' : 'text-red-500'}`}>
-                                  {yoy}
-                                </div>
-                              )}
-                            </td>
-                          )
-                        })}
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
+                            return (
+                              <td key={j} className={`p-2 sm:p-3 text-right tabular-nums ${row.highlight ? 'font-bold' : ''}`}>
+                                <div>{formatValue(value, row)}</div>
+                                {yoy && (
+                                  <div className={`text-xs tabular-nums ${yoy.startsWith('+') ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
+                                    {yoy}
+                                  </div>
+                                )}
+                              </td>
+                            )
+                          })}
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}
@@ -535,7 +537,7 @@ function FinancialStatementsComponent({
         )}
 
         {/* Data Source Note */}
-        <div className="mt-6 p-3 bg-white/[0.01] rounded text-xs flex flex-col sm:flex-row items-start sm:items-center gap-2 text-[#868f97]">
+        <div className="mt-6 p-3 bg-white/[0.03] backdrop-blur-[10px] rounded border border-white/[0.08] text-xs flex flex-col sm:flex-row items-start sm:items-center gap-2 text-[#868f97]">
           <span>Data source:</span>
           <DynamicSourceBadge source={source} />
           <span>

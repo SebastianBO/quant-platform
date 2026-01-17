@@ -95,31 +95,33 @@ export default function EarningsCalendar() {
   const missCount = reported.filter(e => (e.estimate || 0) > 0 && (e.actual || 0) < (e.estimate || 0)).length
 
   return (
-    <Card className="w-full">
+    <Card className="w-full bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]">
       <CardHeader className="space-y-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-white">
             <Calendar className="w-6 h-6 text-[#4ebe96]" />
             Earnings Calendar
           </CardTitle>
           <div className="flex gap-2">
             <button
               onClick={() => setSelectedWeek(w => w - 1)}
-              className="px-3 py-1.5 bg-white/[0.05] hover:bg-white/[0.08] rounded-lg text-sm font-medium"
+              className="px-3 py-1.5 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:bg-white/[0.08] hover:border-white/[0.15] rounded-lg text-sm font-medium text-white motion-safe:transition-all motion-safe:duration-150"
             >
               <ChevronLeft className="w-4 h-4 inline" /> Prev
             </button>
             <button
               onClick={() => setSelectedWeek(0)}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium ${
-                selectedWeek === 0 ? 'bg-[#4ebe96] text-white' : 'bg-white/[0.05] hover:bg-white/[0.08]'
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium border motion-safe:transition-all motion-safe:duration-150 ${
+                selectedWeek === 0
+                  ? 'bg-[#4ebe96] text-white border-[#4ebe96]'
+                  : 'bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08] hover:bg-white/[0.08] hover:border-white/[0.15] text-white'
               }`}
             >
               This Week
             </button>
             <button
               onClick={() => setSelectedWeek(w => w + 1)}
-              className="px-3 py-1.5 bg-white/[0.05] hover:bg-white/[0.08] rounded-lg text-sm font-medium"
+              className="px-3 py-1.5 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:bg-white/[0.08] hover:border-white/[0.15] rounded-lg text-sm font-medium text-white motion-safe:transition-all motion-safe:duration-150"
             >
               Next <ChevronRight className="w-4 h-4 inline" />
             </button>
@@ -128,24 +130,24 @@ export default function EarningsCalendar() {
 
         {/* Statistics Bar */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          <div className="bg-white/[0.05] rounded-lg p-3 text-center">
-            <p className="text-2xl font-bold">{totalEarnings}</p>
+          <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-lg p-3 text-center">
+            <p className="text-2xl font-bold text-white tabular-nums">{totalEarnings}</p>
             <p className="text-xs text-[#868f97]">Total Reports</p>
           </div>
-          <div className="bg-white/[0.05] rounded-lg p-3 text-center">
-            <p className="text-2xl font-bold text-amber-500">{notableEarnings.length}</p>
+          <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-lg p-3 text-center">
+            <p className="text-2xl font-bold text-[#ffa16c] tabular-nums">{notableEarnings.length}</p>
             <p className="text-xs text-[#868f97]">Notable</p>
           </div>
-          <div className="bg-white/[0.05] rounded-lg p-3 text-center">
-            <p className="text-2xl font-bold text-[#4ebe96]">{beatCount}</p>
+          <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-lg p-3 text-center">
+            <p className="text-2xl font-bold text-[#4ebe96] tabular-nums">{beatCount}</p>
             <p className="text-xs text-[#868f97]">Beat</p>
           </div>
-          <div className="bg-white/[0.05] rounded-lg p-3 text-center">
-            <p className="text-2xl font-bold text-red-500">{missCount}</p>
+          <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-lg p-3 text-center">
+            <p className="text-2xl font-bold text-[#ff5c5c] tabular-nums">{missCount}</p>
             <p className="text-xs text-[#868f97]">Missed</p>
           </div>
-          <div className="bg-white/[0.05] rounded-lg p-3 text-center">
-            <p className="text-2xl font-bold text-[#868f97]">{totalEarnings - reported.length}</p>
+          <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-lg p-3 text-center">
+            <p className="text-2xl font-bold text-[#868f97] tabular-nums">{totalEarnings - reported.length}</p>
             <p className="text-xs text-[#868f97]">Pending</p>
           </div>
         </div>
@@ -154,30 +156,30 @@ export default function EarningsCalendar() {
         <div className="flex gap-2">
           <button
             onClick={() => setFilter('all')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-100 ${
+            className={`px-4 py-2 rounded-lg text-sm font-medium border motion-safe:transition-all motion-safe:duration-150 ${
               filter === 'all'
-                ? 'bg-[#4ebe96] text-white'
-                : 'bg-white/[0.05] text-[#868f97] hover:text-white'
+                ? 'bg-[#4ebe96] text-white border-[#4ebe96]'
+                : 'bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08] text-[#868f97] hover:text-white hover:bg-white/[0.08] hover:border-white/[0.15]'
             }`}
           >
-            All Earnings ({totalEarnings})
+            All Earnings (<span className="tabular-nums">{totalEarnings}</span>)
           </button>
           <button
             onClick={() => setFilter('notable')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-100 ${
+            className={`px-4 py-2 rounded-lg text-sm font-medium border motion-safe:transition-all motion-safe:duration-150 ${
               filter === 'notable'
-                ? 'bg-amber-500 text-white'
-                : 'bg-white/[0.05] text-[#868f97] hover:text-white'
+                ? 'bg-[#ffa16c] text-white border-[#ffa16c]'
+                : 'bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08] text-[#868f97] hover:text-white hover:bg-white/[0.08] hover:border-white/[0.15]'
             }`}
           >
-            Notable Only ({notableEarnings.length})
+            Notable Only (<span className="tabular-nums">{notableEarnings.length}</span>)
           </button>
         </div>
       </CardHeader>
       <CardContent>
         {loading ? (
           <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-emerald-500"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-[#4ebe96]"></div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
@@ -193,24 +195,24 @@ export default function EarningsCalendar() {
               const isToday = dateStr === new Date().toISOString().split('T')[0]
 
               return (
-                <div key={dayIndex} className={`bg-white/[0.05] rounded-lg p-3 ${isToday ? 'ring-2 ring-emerald-500' : ''}`}>
+                <div key={dayIndex} className={`bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-lg p-3 ${isToday ? 'ring-2 ring-[#4ebe96]' : ''}`}>
                   <div className="text-center mb-3 pb-2 border-b border-white/[0.08]">
-                    <p className="font-bold text-lg">{weekDays[dayIndex]}</p>
+                    <p className="font-bold text-lg text-white">{weekDays[dayIndex]}</p>
                     <p className="text-[#868f97] text-sm">
                       {currentDay.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </p>
-                    {isToday && <span className="text-xs text-emerald-500">TODAY</span>}
+                    {isToday && <span className="text-xs text-[#4ebe96]">TODAY</span>}
                   </div>
 
                   {/* Before Market Open */}
                   {dayData.bmo.length > 0 && (
                     <div className="mb-3">
-                      <p className="text-xs text-amber-400 font-medium mb-1">🌅 BEFORE MARKET</p>
+                      <p className="text-xs text-[#ffa16c] font-medium mb-1">BEFORE MARKET</p>
                       {dayData.bmo.slice(0, 8).map((e, i) => (
                         <EarningsCard key={i} event={e} />
                       ))}
                       {dayData.bmo.length > 8 && (
-                        <p className="text-xs text-[#868f97]">+{dayData.bmo.length - 8} more</p>
+                        <p className="text-xs text-[#868f97] tabular-nums">+{dayData.bmo.length - 8} more</p>
                       )}
                     </div>
                   )}
@@ -218,12 +220,12 @@ export default function EarningsCalendar() {
                   {/* After Market Close */}
                   {dayData.amc.length > 0 && (
                     <div>
-                      <p className="text-xs text-indigo-400 font-medium mb-1">🌙 AFTER MARKET</p>
+                      <p className="text-xs text-[#479ffa] font-medium mb-1">AFTER MARKET</p>
                       {dayData.amc.slice(0, 8).map((e, i) => (
                         <EarningsCard key={i} event={e} />
                       ))}
                       {dayData.amc.length > 8 && (
-                        <p className="text-xs text-[#868f97]">+{dayData.amc.length - 8} more</p>
+                        <p className="text-xs text-[#868f97] tabular-nums">+{dayData.amc.length - 8} more</p>
                       )}
                     </div>
                   )}
@@ -240,11 +242,11 @@ export default function EarningsCalendar() {
         {/* Legend */}
         <div className="mt-6 flex flex-wrap gap-4 text-sm text-[#868f97]">
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded bg-emerald-500"></span>
+            <span className="w-3 h-3 rounded bg-[#4ebe96]"></span>
             <span>Beat Estimates</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded bg-red-500"></span>
+            <span className="w-3 h-3 rounded bg-[#ff5c5c]"></span>
             <span>Missed Estimates</span>
           </div>
           <div className="flex items-center gap-2">
@@ -267,11 +269,11 @@ function EarningsCard({ event }: { event: EarningsEvent }) {
   const isNotable = NOTABLE_TICKERS.includes(ticker)
 
   return (
-    <div className={`p-2 mb-1.5 rounded-lg text-xs transition-all hover:scale-[1.02] cursor-pointer ${
-      beat ? 'bg-emerald-500/20 border border-emerald-500/30' :
-      miss ? 'bg-red-500/20 border border-red-500/30' :
-      isNotable ? 'bg-amber-500/10 border border-amber-500/30' :
-      'bg-white/[0.05] border border-transparent hover:border-white/[0.08]'
+    <div className={`p-2 mb-1.5 rounded-lg text-xs motion-safe:transition-all motion-safe:duration-150 hover:scale-[1.02] cursor-pointer ${
+      beat ? 'bg-[#4ebe96]/20 border border-[#4ebe96]/30' :
+      miss ? 'bg-[#ff5c5c]/20 border border-[#ff5c5c]/30' :
+      isNotable ? 'bg-[#ffa16c]/10 border border-[#ffa16c]/30' :
+      'bg-white/[0.03] border border-white/[0.08] hover:border-white/[0.15] hover:bg-white/[0.05]'
     }`}>
       <div className="flex items-center gap-2">
         <StockLogo symbol={ticker} size="sm" />
@@ -280,16 +282,16 @@ function EarningsCard({ event }: { event: EarningsEvent }) {
             <div className="flex items-center gap-1">
               <span className="font-bold text-white">{ticker}</span>
               {isNotable && !hasResults && (
-                <span className="text-[9px] px-1 py-0.5 bg-amber-500/20 text-amber-500 rounded">Notable</span>
+                <span className="text-[9px] px-1 py-0.5 bg-[#ffa16c]/20 text-[#ffa16c] rounded">Notable</span>
               )}
             </div>
             {hasResults ? (
-              <span className={`flex items-center gap-0.5 ${beat ? 'text-emerald-500' : 'text-red-500'}`}>
+              <span className={`flex items-center gap-0.5 tabular-nums ${beat ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                 {beat ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
                 {((actual - estimate) / Math.abs(estimate || 1) * 100).toFixed(0)}%
               </span>
             ) : (
-              <span className="text-[#868f97]">Est: ${estimate?.toFixed(2) || 'N/A'}</span>
+              <span className="text-[#868f97] tabular-nums">Est: ${estimate?.toFixed(2) || 'N/A'}</span>
             )}
           </div>
           {event.name && (

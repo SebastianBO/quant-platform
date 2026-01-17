@@ -48,7 +48,7 @@ function MiniSparkline({ data, isPositive }: { data: number[], isPositive: boole
       <polyline
         points={points}
         fill="none"
-        stroke={isPositive ? '#4ebe96' : '#ef4444'}
+        stroke={isPositive ? '#4ebe96' : '#ff5c5c'}
         strokeWidth="1.5"
       />
     </svg>
@@ -77,13 +77,13 @@ export default function MarketOverview() {
   }
 
   return (
-    <Card className="bg-[#1a1a1a] border-white/[0.08]">
+    <Card className="bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]">
       <CardContent className="py-4">
         {/* Market Status Header */}
         <div className="flex items-center justify-center gap-2 mb-4 text-sm">
           <div className={`w-2 h-2 rounded-full ${
             data?.marketStatus === 'open' ? 'bg-[#4ebe96] animate-pulse' :
-            data?.marketStatus === 'premarket' || data?.marketStatus === 'afterhours' ? 'bg-yellow-500' :
+            data?.marketStatus === 'premarket' || data?.marketStatus === 'afterhours' ? 'bg-[#ffa16c]' :
             'bg-[#868f97]'
           }`} />
           <span className="text-[#868f97]">{data?.statusMessage || 'Loading...'}</span>
@@ -97,7 +97,7 @@ export default function MarketOverview() {
               variant={activeRegion === region.id ? "default" : "ghost"}
               size="sm"
               onClick={() => setActiveRegion(region.id)}
-              className={activeRegion === region.id ? "bg-primary text-primary-foreground" : "text-[#868f97]"}
+              className={`motion-safe:transition-colors duration-150 ${activeRegion === region.id ? "bg-primary text-primary-foreground" : "text-[#868f97] hover:text-white"}`}
             >
               {region.label}
             </Button>
@@ -108,7 +108,7 @@ export default function MarketOverview() {
         {loading ? (
           <div className="grid grid-cols-3 gap-4">
             {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="p-3 bg-white/[0.015] rounded-lg animate-pulse">
+              <div key={i} className="p-3 bg-white/[0.03] rounded-lg animate-pulse">
                 <div className="h-4 w-20 bg-white/[0.05] rounded mb-2" />
                 <div className="h-6 w-16 bg-white/[0.05] rounded mb-2" />
                 <div className="h-6 w-14 bg-white/[0.05] rounded" />
@@ -122,16 +122,16 @@ export default function MarketOverview() {
               return (
                 <div
                   key={index.symbol}
-                  className="p-3 bg-white/[0.015] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 cursor-pointer"
+                  className="p-3 bg-white/[0.03] rounded-lg hover:bg-white/[0.08] hover:border-white/[0.15] motion-safe:transition-colors duration-150 cursor-pointer border border-transparent"
                 >
-                  <p className="text-primary text-sm font-medium truncate">{index.name}</p>
-                  <p className="text-lg font-bold tabular-nums">
+                  <p className="text-white text-sm font-medium truncate">{index.name}</p>
+                  <p className="text-white text-lg font-bold tabular-nums">
                     {index.price.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                   </p>
                   <div className="flex items-center gap-2 mt-1">
                     <MiniSparkline data={index.sparkline} isPositive={isPositive} />
                   </div>
-                  <div className={`text-sm ${isPositive ? 'text-[#4ebe96]' : 'text-red-500'}`}>
+                  <div className={`text-sm tabular-nums ${isPositive ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                     <span>{isPositive ? '+' : ''}{typeof index.change === 'number' ? index.change.toFixed(2) : '0.00'}</span>
                     <span className="ml-1">({isPositive ? '+' : ''}{typeof index.changePercent === 'number' ? index.changePercent.toFixed(2) : '0.00'}%)</span>
                   </div>
@@ -143,10 +143,10 @@ export default function MarketOverview() {
 
         {/* Navigation */}
         <div className="flex justify-center gap-2 mt-4">
-          <Button variant="ghost" size="icon" className="h-6 w-6" aria-label="Previous">
+          <Button variant="ghost" size="icon" className="h-6 w-6 text-[#868f97] hover:text-white motion-safe:transition-colors duration-150" aria-label="Previous">
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-6 w-6" aria-label="Next">
+          <Button variant="ghost" size="icon" className="h-6 w-6 text-[#868f97] hover:text-white motion-safe:transition-colors duration-150" aria-label="Next">
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>

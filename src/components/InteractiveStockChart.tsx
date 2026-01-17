@@ -107,7 +107,8 @@ export default function InteractiveStockChart({
   }
 
   const isPositive = (data?.periodChangePercent || 0) >= 0
-  const chartColor = isPositive ? '#4ebe96' : '#e15241'
+  // Fey Design System colors: #4ebe96 for gains, #ff5c5c for losses
+  const chartColor = isPositive ? '#4ebe96' : '#ff5c5c'
 
   // Format chart data
   const chartData = useMemo(() => {
@@ -152,7 +153,7 @@ export default function InteractiveStockChart({
 
     const point = payload[0].payload
     return (
-      <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-3 shadow-lg">
+      <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-3 shadow-lg">
         <p className="text-sm font-medium">{point.displayDate}</p>
         <div className="grid grid-cols-2 gap-x-4 gap-y-1 mt-2 text-sm">
           <span className="text-[#868f97]">Open:</span>
@@ -175,14 +176,14 @@ export default function InteractiveStockChart({
   }
 
   return (
-    <Card className="bg-[#1a1a1a] border-white/[0.08]">
+    <Card className="bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]">
       <CardContent className="py-4">
         {/* Header with period change */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-4">
             {/* Period Change Badge */}
-            <div className={`px-3 py-1 rounded-lg ${isPositive ? 'bg-[#4ebe96]/20' : 'bg-[#e15241]/20'}`}>
-              <span className={`font-bold ${isPositive ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
+            <div className={`px-3 py-1 rounded-lg motion-safe:transition-colors motion-safe:duration-150 ${isPositive ? 'bg-[#4ebe96]/20' : 'bg-[#ff5c5c]/20'}`}>
+              <span className={`font-bold ${isPositive ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                 {isPositive ? '+' : ''}{data?.periodChangePercent?.toFixed(2)}%
               </span>
             </div>
@@ -194,7 +195,7 @@ export default function InteractiveStockChart({
               variant={showKeyEvents ? "default" : "outline"}
               size="sm"
               onClick={() => setShowKeyEvents(!showKeyEvents)}
-              className="text-xs"
+              className="text-xs motion-safe:transition-all motion-safe:duration-150"
             >
               Key Events
             </Button>
@@ -202,7 +203,7 @@ export default function InteractiveStockChart({
               variant={showVolume ? "default" : "outline"}
               size="sm"
               onClick={() => setShowVolume(!showVolume)}
-              className="text-xs"
+              className="text-xs motion-safe:transition-all motion-safe:duration-150"
             >
               Volume
             </Button>
@@ -212,22 +213,30 @@ export default function InteractiveStockChart({
         {/* Time Period Selector */}
         <div className="flex items-center gap-1 mb-4">
           {TIME_PERIODS.map(p => (
-            <Button
+            <button
               key={p.id}
-              variant={period === p.id ? 'default' : 'ghost'}
-              size="sm"
               onClick={() => setPeriod(p.id)}
-              className={`px-3 ${period === p.id ? 'bg-primary text-primary-foreground' : 'text-[#868f97]'}`}
+              className={`
+                px-3 py-1.5 text-sm font-medium rounded-full
+                motion-safe:transition-all motion-safe:duration-150 ease-out
+                ${period === p.id
+                  ? 'bg-white text-black'
+                  : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
+                }
+              `}
             >
               {p.label}
-            </Button>
+            </button>
           ))}
         </div>
 
         {/* Chart */}
         {loading ? (
           <div className="h-64 flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-primary"></div>
+            <div className="motion-safe:animate-pulse flex flex-col items-center gap-3">
+              <div className="h-8 w-8 rounded-full border-2 border-white/[0.15] border-t-[#4ebe96] motion-safe:animate-spin"></div>
+              <span className="text-sm text-[#868f97]">Loading chart...</span>
+            </div>
           </div>
         ) : (
           <div className="h-64">
@@ -298,8 +307,8 @@ export default function InteractiveStockChart({
                     x={point.x}
                     y={point.y}
                     r={6}
-                    fill="#f59e0b"
-                    stroke="#f59e0b"
+                    fill="#ffa16c"
+                    stroke="#ffa16c"
                     yAxisId="price"
                   />
                 ))}
@@ -312,8 +321,8 @@ export default function InteractiveStockChart({
         {data && (
           <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/[0.08]">
             <div>
-              <span className="text-2xl font-bold">${data.currentPrice?.toFixed(2)}</span>
-              <div className={`flex items-center gap-1 ${isPositive ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
+              <span className="text-2xl font-bold tracking-[-0.02em]">${data.currentPrice?.toFixed(2)}</span>
+              <div className={`flex items-center gap-1 motion-safe:transition-colors motion-safe:duration-150 ${isPositive ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                 {isPositive ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
                 <span className="text-sm font-medium">
                   {isPositive ? '+' : ''}{data.dayChange?.toFixed(2)} ({isPositive ? '+' : ''}{data.dayChangePercent?.toFixed(2)}%) today

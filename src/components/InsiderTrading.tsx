@@ -58,7 +58,7 @@ function InsiderTradingComponent({ ticker }: InsiderTradingProps) {
 
   if (loading) {
     return (
-      <Card className="w-full">
+      <Card className="w-full bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]">
         <CardContent className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-[#4ebe96]"></div>
         </CardContent>
@@ -87,7 +87,7 @@ function InsiderTradingComponent({ ticker }: InsiderTradingProps) {
     return {
       netShares: net,
       sentiment: sent,
-      sentimentColor: sent === 'BULLISH' ? 'text-[#4ebe96]' : sent === 'BEARISH' ? 'text-[#e15241]' : 'text-yellow-500',
+      sentimentColor: sent === 'BULLISH' ? 'text-[#4ebe96]' : sent === 'BEARISH' ? 'text-[#ff5c5c]' : 'text-yellow-500',
       uniqueInsiders: new Set(trades.map(t => t.name)).size,
     }
   }, [buys.length, sells.length, totalBuyShares, totalSellShares, trades])
@@ -143,7 +143,7 @@ function InsiderTradingComponent({ ticker }: InsiderTradingProps) {
   return (
     <div className="space-y-6">
       {/* Header Stats */}
-      <Card>
+      <Card className="bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <UserCheck className="w-6 h-6 text-[#4ebe96]" />
@@ -158,20 +158,20 @@ function InsiderTradingComponent({ ticker }: InsiderTradingProps) {
                 <ShoppingCart className="w-5 h-5 text-[#4ebe96]" />
                 <span className="text-sm text-[#868f97]">Insider Buys</span>
               </div>
-              <p className="text-3xl font-bold text-[#4ebe96]">{buys.length}</p>
-              <p className="text-sm text-[#868f97]">
+              <p className="text-3xl font-bold text-[#4ebe96] tabular-nums">{buys.length}</p>
+              <p className="text-sm text-[#868f97] tabular-nums">
                 {totalBuyShares.toLocaleString()} shares
               </p>
             </div>
 
             {/* Total Sells */}
-            <div className="p-4 bg-[#e15241]/10 rounded-xl border border-[#e15241]/30">
+            <div className="p-4 bg-[#ff5c5c]/10 rounded-xl border border-[#ff5c5c]/30">
               <div className="flex items-center gap-2 mb-2">
-                <DollarSign className="w-5 h-5 text-[#e15241]" />
+                <DollarSign className="w-5 h-5 text-[#ff5c5c]" />
                 <span className="text-sm text-[#868f97]">Insider Sells</span>
               </div>
-              <p className="text-3xl font-bold text-[#e15241]">{sells.length}</p>
-              <p className="text-sm text-[#868f97]">
+              <p className="text-3xl font-bold text-[#ff5c5c] tabular-nums">{sells.length}</p>
+              <p className="text-sm text-[#868f97] tabular-nums">
                 {totalSellShares.toLocaleString()} shares
               </p>
             </div>
@@ -182,11 +182,11 @@ function InsiderTradingComponent({ ticker }: InsiderTradingProps) {
                 {netShares >= 0 ? (
                   <TrendingUp className="w-5 h-5 text-[#4ebe96]" />
                 ) : (
-                  <TrendingDown className="w-5 h-5 text-[#e15241]" />
+                  <TrendingDown className="w-5 h-5 text-[#ff5c5c]" />
                 )}
                 <span className="text-sm text-[#868f97]">Net Activity</span>
               </div>
-              <p className={`text-3xl font-bold ${netShares >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
+              <p className={`text-3xl font-bold tabular-nums ${netShares >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                 {netShares >= 0 ? '+' : ''}{netShares.toLocaleString()}
               </p>
               <p className="text-sm text-[#868f97]">shares</p>
@@ -199,7 +199,7 @@ function InsiderTradingComponent({ ticker }: InsiderTradingProps) {
                 <span className="text-sm text-[#868f97]">Signal</span>
               </div>
               <p className={`text-3xl font-bold ${sentimentColor}`}>{sentiment}</p>
-              <p className="text-sm text-[#868f97]">
+              <p className="text-sm text-[#868f97] tabular-nums">
                 {uniqueInsiders} insiders active
               </p>
             </div>
@@ -210,7 +210,7 @@ function InsiderTradingComponent({ ticker }: InsiderTradingProps) {
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Monthly Activity Chart */}
-        <Card>
+        <Card className="bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]">
           <CardHeader>
             <CardTitle className="text-lg">Monthly Transaction Volume</CardTitle>
           </CardHeader>
@@ -229,7 +229,7 @@ function InsiderTradingComponent({ ticker }: InsiderTradingProps) {
                     formatter={(value: number) => [value.toLocaleString() + ' shares', '']}
                   />
                   <Bar dataKey="buys" fill="#4ebe96" name="Buys" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="sells" fill="#e15241" name="Sells" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="sells" fill="#ff5c5c" name="Sells" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -237,7 +237,7 @@ function InsiderTradingComponent({ ticker }: InsiderTradingProps) {
         </Card>
 
         {/* Buy/Sell Ratio Visual */}
-        <Card>
+        <Card className="bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]">
           <CardHeader>
             <CardTitle className="text-lg">Buy vs Sell Distribution</CardTitle>
           </CardHeader>
@@ -248,19 +248,19 @@ function InsiderTradingComponent({ ticker }: InsiderTradingProps) {
                 <p className="text-sm text-[#868f97] mb-2">By Transaction Count</p>
                 <div className="flex h-8 rounded-full overflow-hidden">
                   <div
-                    className="bg-[#4ebe96] flex items-center justify-center text-white text-sm font-medium"
+                    className="bg-[#4ebe96] flex items-center justify-center text-white text-sm font-medium tabular-nums"
                     style={{ width: `${(buys.length / (buys.length + sells.length)) * 100 || 50}%` }}
                   >
                     {buys.length}
                   </div>
                   <div
-                    className="bg-[#e15241] flex items-center justify-center text-white text-sm font-medium"
+                    className="bg-[#ff5c5c] flex items-center justify-center text-white text-sm font-medium tabular-nums"
                     style={{ width: `${(sells.length / (buys.length + sells.length)) * 100 || 50}%` }}
                   >
                     {sells.length}
                   </div>
                 </div>
-                <div className="flex justify-between mt-1 text-xs text-[#868f97]">
+                <div className="flex justify-between mt-1 text-xs text-[#868f97] tabular-nums">
                   <span>Buys ({((buys.length / (buys.length + sells.length)) * 100 || 0).toFixed(0)}%)</span>
                   <span>Sells ({((sells.length / (buys.length + sells.length)) * 100 || 0).toFixed(0)}%)</span>
                 </div>
@@ -271,13 +271,13 @@ function InsiderTradingComponent({ ticker }: InsiderTradingProps) {
                 <p className="text-sm text-[#868f97] mb-2">By Share Volume</p>
                 <div className="flex h-8 rounded-full overflow-hidden">
                   <div
-                    className="bg-[#4ebe96] flex items-center justify-center text-white text-sm font-medium"
+                    className="bg-[#4ebe96] flex items-center justify-center text-white text-sm font-medium tabular-nums"
                     style={{ width: `${(totalBuyShares / (totalBuyShares + totalSellShares)) * 100 || 50}%` }}
                   >
                     {(totalBuyShares / 1000).toFixed(0)}K
                   </div>
                   <div
-                    className="bg-[#e15241] flex items-center justify-center text-white text-sm font-medium"
+                    className="bg-[#ff5c5c] flex items-center justify-center text-white text-sm font-medium tabular-nums"
                     style={{ width: `${(totalSellShares / (totalBuyShares + totalSellShares)) * 100 || 50}%` }}
                   >
                     {(totalSellShares / 1000).toFixed(0)}K
@@ -295,13 +295,13 @@ function InsiderTradingComponent({ ticker }: InsiderTradingProps) {
                   <p className="text-sm text-[#868f97] mb-2">By Dollar Value</p>
                   <div className="flex h-8 rounded-full overflow-hidden">
                     <div
-                      className="bg-[#4ebe96] flex items-center justify-center text-white text-sm font-medium"
+                      className="bg-[#4ebe96] flex items-center justify-center text-white text-sm font-medium tabular-nums"
                       style={{ width: `${(totalBuyValue / (totalBuyValue + totalSellValue)) * 100 || 50}%` }}
                     >
                       ${(totalBuyValue / 1000000).toFixed(1)}M
                     </div>
                     <div
-                      className="bg-[#e15241] flex items-center justify-center text-white text-sm font-medium"
+                      className="bg-[#ff5c5c] flex items-center justify-center text-white text-sm font-medium tabular-nums"
                       style={{ width: `${(totalSellValue / (totalBuyValue + totalSellValue)) * 100 || 50}%` }}
                     >
                       ${(totalSellValue / 1000000).toFixed(1)}M
@@ -315,14 +315,14 @@ function InsiderTradingComponent({ ticker }: InsiderTradingProps) {
       </div>
 
       {/* Top Insiders */}
-      <Card>
+      <Card className="bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]">
         <CardHeader>
           <CardTitle className="text-lg">Most Active Insiders</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
             {topInsiders.map((insider, i) => (
-              <div key={i} className="flex items-center justify-between p-3 bg-white/[0.05] rounded-lg">
+              <div key={i} className="flex items-center justify-between p-3 bg-white/[0.05] rounded-lg hover:bg-white/[0.05] motion-safe:transition-colors motion-safe:duration-150">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#4ebe96] to-[#479ffa] flex items-center justify-center text-white font-bold">
                     {insider.name.charAt(0)}
@@ -334,11 +334,11 @@ function InsiderTradingComponent({ ticker }: InsiderTradingProps) {
                 </div>
                 <div className="flex gap-4 text-right">
                   <div>
-                    <p className="text-[#4ebe96] font-medium">+{insider.buys.toLocaleString()}</p>
+                    <p className="text-[#4ebe96] font-medium tabular-nums">+{insider.buys.toLocaleString()}</p>
                     <p className="text-xs text-[#868f97]">Bought</p>
                   </div>
                   <div>
-                    <p className="text-[#e15241] font-medium">-{insider.sells.toLocaleString()}</p>
+                    <p className="text-[#ff5c5c] font-medium tabular-nums">-{insider.sells.toLocaleString()}</p>
                     <p className="text-xs text-[#868f97]">Sold</p>
                   </div>
                 </div>
@@ -349,17 +349,17 @@ function InsiderTradingComponent({ ticker }: InsiderTradingProps) {
       </Card>
 
       {/* Recent Transactions */}
-      <Card>
+      <Card className="bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]">
         <CardHeader>
           <CardTitle className="text-lg">Recent Transactions</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2 max-h-96 overflow-y-auto">
             {trades.slice(0, 20).map((trade, i) => (
-              <div key={i} className="flex items-center justify-between p-3 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100">
+              <div key={i} className="flex items-center justify-between p-3 bg-white/[0.05] rounded-lg hover:bg-white/[0.05] motion-safe:transition-colors motion-safe:duration-150">
                 <div className="flex items-center gap-3">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    trade.transaction_shares > 0 ? 'bg-[#4ebe96]/20 text-[#4ebe96]' : 'bg-[#e15241]/20 text-[#e15241]'
+                    trade.transaction_shares > 0 ? 'bg-[#4ebe96]/20 text-[#4ebe96]' : 'bg-[#ff5c5c]/20 text-[#ff5c5c]'
                   }`}>
                     {trade.transaction_shares > 0 ? (
                       <ArrowUpRight className="w-4 h-4" />
@@ -373,10 +373,10 @@ function InsiderTradingComponent({ ticker }: InsiderTradingProps) {
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className={`font-bold ${trade.transaction_shares > 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
+                  <p className={`font-bold tabular-nums ${trade.transaction_shares > 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                     {trade.transaction_shares > 0 ? '+' : ''}{trade.transaction_shares.toLocaleString()} shares
                   </p>
-                  <div className="flex items-center gap-2 text-xs text-[#868f97] justify-end">
+                  <div className="flex items-center gap-2 text-xs text-[#868f97] justify-end tabular-nums">
                     <Calendar className="w-3 h-3" />
                     {trade.transaction_date}
                     {trade.transaction_price_per_share && (

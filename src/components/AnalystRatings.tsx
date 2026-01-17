@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { formatCurrency } from "@/lib/utils"
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend } from "recharts"
 import { Target, TrendingUp, TrendingDown, ArrowUpRight, ArrowDownRight, Minus } from "lucide-react"
@@ -36,42 +35,42 @@ export default function AnalystRatings({ ticker, currentPrice: rawPrice }: Analy
 
   if (loading) {
     return (
-      <Card className="w-full">
-        <CardContent className="flex items-center justify-center h-64">
+      <div className="w-full bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
+        <div className="flex items-center justify-center h-64 p-6">
           <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-[#4ebe96]"></div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     )
   }
 
   if (!data) {
     return (
-      <Card className="w-full">
-        <CardContent className="text-center py-12 text-[#868f97]">
+      <div className="w-full bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
+        <div className="text-center py-12 px-6 text-[#868f97]">
           Unable to load analyst data for {ticker}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     )
   }
 
   const { analystRatings } = data
 
-  // Rating distribution for pie chart
+  // Rating distribution for pie chart - Fey colors: success #4ebe96, warning #ffa16c, error #ff5c5c
   const ratingData = analystRatings ? [
     { name: 'Strong Buy', value: analystRatings.strongBuy, color: '#4ebe96' },
     { name: 'Buy', value: analystRatings.buy, color: '#4ebe96' },
-    { name: 'Hold', value: analystRatings.hold, color: '#f4a623' },
-    { name: 'Sell', value: analystRatings.sell, color: '#e15241' },
-    { name: 'Strong Sell', value: analystRatings.strongSell, color: '#e15241' },
+    { name: 'Hold', value: analystRatings.hold, color: '#ffa16c' },
+    { name: 'Sell', value: analystRatings.sell, color: '#ff5c5c' },
+    { name: 'Strong Sell', value: analystRatings.strongSell, color: '#ff5c5c' },
   ].filter(d => d.value > 0) : []
 
-  // Bar chart data
+  // Bar chart data - Fey colors
   const barData = analystRatings ? [
     { name: 'Strong Buy', count: analystRatings.strongBuy, fill: '#4ebe96' },
     { name: 'Buy', count: analystRatings.buy, fill: '#4ebe96' },
-    { name: 'Hold', count: analystRatings.hold, fill: '#f4a623' },
-    { name: 'Sell', count: analystRatings.sell, fill: '#e15241' },
-    { name: 'Strong Sell', count: analystRatings.strongSell, fill: '#e15241' },
+    { name: 'Hold', count: analystRatings.hold, fill: '#ffa16c' },
+    { name: 'Sell', count: analystRatings.sell, fill: '#ff5c5c' },
+    { name: 'Strong Sell', count: analystRatings.strongSell, fill: '#ff5c5c' },
   ] : []
 
   // Price calculations
@@ -88,9 +87,9 @@ export default function AnalystRatings({ ticker, currentPrice: rawPrice }: Analy
 
     if (bullish > bearish * 2) return { label: 'Strong Buy', color: 'text-[#4ebe96]' }
     if (bullish > bearish) return { label: 'Buy', color: 'text-[#4ebe96]' }
-    if (bearish > bullish * 2) return { label: 'Strong Sell', color: 'text-[#e15241]' }
-    if (bearish > bullish) return { label: 'Sell', color: 'text-[#e15241]' }
-    return { label: 'Hold', color: 'text-[#f4a623]' }
+    if (bearish > bullish * 2) return { label: 'Strong Sell', color: 'text-[#ff5c5c]' }
+    if (bearish > bullish) return { label: 'Sell', color: 'text-[#ff5c5c]' }
+    return { label: 'Hold', color: 'text-[#ffa16c]' }
   }
 
   const consensus = getConsensus()
@@ -107,30 +106,30 @@ export default function AnalystRatings({ ticker, currentPrice: rawPrice }: Analy
   return (
     <div className="space-y-6">
       {/* Header Card */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+      <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl motion-safe:transition-all motion-safe:duration-150 hover:border-white/[0.15] focus-within:ring-2 focus-within:ring-[#479ffa]">
+        <div className="p-6 border-b border-white/[0.08]">
+          <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
             <Target className="w-6 h-6 text-[#4ebe96]" />
             Analyst Ratings & Price Targets - {ticker}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+          </h3>
+        </div>
+        <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Consensus Rating */}
-            <div className="text-center p-6 bg-white/[0.015] rounded-xl">
+            <div className="text-center p-6 bg-white/[0.04] rounded-xl motion-safe:transition-all motion-safe:duration-150 hover:bg-white/[0.06]">
               <p className="text-[#868f97] text-sm mb-2">Consensus Rating</p>
-              <p className={`text-4xl font-bold ${consensus.color}`}>
+              <p className={`text-4xl font-bold tracking-[-0.02em] ${consensus.color}`}>
                 {consensus.label}
               </p>
-              <p className="text-[#868f97] text-sm mt-2">
+              <p className="text-[#868f97] text-sm mt-2 tabular-nums">
                 Based on {analystRatings?.totalAnalysts || 0} analysts
               </p>
             </div>
 
             {/* Rating Score */}
-            <div className="text-center p-6 bg-white/[0.015] rounded-xl">
+            <div className="text-center p-6 bg-white/[0.04] rounded-xl motion-safe:transition-all motion-safe:duration-150 hover:bg-white/[0.06]">
               <p className="text-[#868f97] text-sm mb-2">Average Rating</p>
-              <p className="text-4xl font-bold text-white">
+              <p className="text-4xl font-bold text-white tabular-nums tracking-[-0.02em]">
                 {analystRatings?.rating?.toFixed(2) || 'N/A'}
               </p>
               <p className="text-[#868f97] text-sm mt-2">
@@ -139,12 +138,12 @@ export default function AnalystRatings({ ticker, currentPrice: rawPrice }: Analy
             </div>
 
             {/* Price Target */}
-            <div className="text-center p-6 bg-gradient-to-br from-[#4ebe96]/20 to-[#4ebe96]/5 rounded-xl border border-[#4ebe96]/30">
+            <div className="text-center p-6 bg-gradient-to-br from-[#4ebe96]/20 to-[#4ebe96]/5 rounded-xl border border-[#4ebe96]/30 motion-safe:transition-all motion-safe:duration-150 hover:border-[#4ebe96]/50">
               <p className="text-[#868f97] text-sm mb-2">Target Price</p>
-              <p className="text-4xl font-bold text-[#4ebe96]">
+              <p className="text-4xl font-bold text-[#4ebe96] tabular-nums tracking-[-0.02em]">
                 ${targetPrice.toFixed(2)}
               </p>
-              <div className={`flex items-center justify-center gap-1 mt-2 ${upside >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
+              <div className={`flex items-center justify-center gap-1 mt-2 tabular-nums ${upside >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                 {upside >= 0 ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
                 <span className="font-medium">
                   {upside >= 0 ? '+' : ''}{upside.toFixed(1)}% {upside >= 0 ? 'Upside' : 'Downside'}
@@ -152,17 +151,17 @@ export default function AnalystRatings({ ticker, currentPrice: rawPrice }: Analy
               </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Price Analysis */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Rating Distribution Pie */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Analyst Recommendation Distribution</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl motion-safe:transition-all motion-safe:duration-150 hover:border-white/[0.15]">
+          <div className="p-6 border-b border-white/[0.08]">
+            <h3 className="text-lg font-semibold text-white">Analyst Recommendation Distribution</h3>
+          </div>
+          <div className="p-6">
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -182,25 +181,28 @@ export default function AnalystRatings({ ticker, currentPrice: rawPrice }: Analy
                   </Pie>
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: '#1a1a1a',
-                      border: '1px solid rgba(255, 255, 255, 0.08)'
+                      backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                      backdropFilter: 'blur(10px)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      borderRadius: '8px',
+                      color: '#fff'
                     }}
                   />
                 </PieChart>
               </ResponsiveContainer>
             </div>
             <div className="text-center mt-4">
-              <p className="text-[#868f97]">{analystRatings?.totalAnalysts} Total Analysts</p>
+              <p className="text-[#868f97] tabular-nums">{analystRatings?.totalAnalysts} Total Analysts</p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Rating Bar Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Ratings Breakdown</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl motion-safe:transition-all motion-safe:duration-150 hover:border-white/[0.15]">
+          <div className="p-6 border-b border-white/[0.08]">
+            <h3 className="text-lg font-semibold text-white">Ratings Breakdown</h3>
+          </div>
+          <div className="p-6">
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={barData} layout="vertical">
@@ -209,8 +211,11 @@ export default function AnalystRatings({ ticker, currentPrice: rawPrice }: Analy
                   <YAxis dataKey="name" type="category" width={80} stroke="#868f97" />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: '#1a1a1a',
-                      border: '1px solid rgba(255, 255, 255, 0.08)'
+                      backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                      backdropFilter: 'blur(10px)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      borderRadius: '8px',
+                      color: '#fff'
                     }}
                   />
                   <Bar dataKey="count" radius={[0, 4, 4, 0]}>
@@ -221,34 +226,34 @@ export default function AnalystRatings({ ticker, currentPrice: rawPrice }: Analy
                 </BarChart>
               </ResponsiveContainer>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
       {/* Price Target Details */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Price Target Analysis</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl motion-safe:transition-all motion-safe:duration-150 hover:border-white/[0.15]">
+        <div className="p-6 border-b border-white/[0.08]">
+          <h3 className="text-lg font-semibold text-white">Price Target Analysis</h3>
+        </div>
+        <div className="p-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="p-4 bg-white/[0.025] rounded-lg text-center">
+            <div className="p-4 bg-white/[0.04] rounded-lg text-center motion-safe:transition-all motion-safe:duration-150 hover:bg-white/[0.06]">
               <p className="text-[#868f97] text-sm">Current Price</p>
-              <p className="text-2xl font-bold">${currentPrice.toFixed(2)}</p>
+              <p className="text-2xl font-bold tabular-nums tracking-[-0.02em]">${currentPrice.toFixed(2)}</p>
             </div>
-            <div className="p-4 bg-white/[0.025] rounded-lg text-center">
+            <div className="p-4 bg-white/[0.04] rounded-lg text-center motion-safe:transition-all motion-safe:duration-150 hover:bg-white/[0.06]">
               <p className="text-[#868f97] text-sm">Target Price</p>
-              <p className="text-2xl font-bold text-[#4ebe96]">${targetPrice.toFixed(2)}</p>
+              <p className="text-2xl font-bold text-[#4ebe96] tabular-nums tracking-[-0.02em]">${targetPrice.toFixed(2)}</p>
             </div>
-            <div className="p-4 bg-white/[0.025] rounded-lg text-center">
+            <div className="p-4 bg-white/[0.04] rounded-lg text-center motion-safe:transition-all motion-safe:duration-150 hover:bg-white/[0.06]">
               <p className="text-[#868f97] text-sm">Price Difference</p>
-              <p className={`text-2xl font-bold ${priceDiff >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
+              <p className={`text-2xl font-bold tabular-nums tracking-[-0.02em] ${priceDiff >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                 {priceDiff >= 0 ? '+' : ''}${priceDiff.toFixed(2)}
               </p>
             </div>
-            <div className="p-4 bg-white/[0.025] rounded-lg text-center">
+            <div className="p-4 bg-white/[0.04] rounded-lg text-center motion-safe:transition-all motion-safe:duration-150 hover:bg-white/[0.06]">
               <p className="text-[#868f97] text-sm">Potential Return</p>
-              <p className={`text-2xl font-bold ${upside >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
+              <p className={`text-2xl font-bold tabular-nums tracking-[-0.02em] ${upside >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                 {upside >= 0 ? '+' : ''}{upside.toFixed(1)}%
               </p>
             </div>
@@ -261,7 +266,7 @@ export default function AnalystRatings({ ticker, currentPrice: rawPrice }: Analy
               {upside >= 0 ? (
                 <>
                   <div
-                    className="absolute h-full bg-gradient-to-r from-[#4ebe96] to-[#4ebe96]"
+                    className="absolute h-full bg-gradient-to-r from-[#4ebe96] to-[#4ebe96] motion-safe:transition-all motion-safe:duration-150"
                     style={{ width: `${Math.min((currentPrice / targetPrice) * 100, 100)}%` }}
                   />
                   <div className="absolute h-full w-1 bg-white/50" style={{ left: `${Math.min((currentPrice / targetPrice) * 100, 100)}%` }} />
@@ -269,49 +274,49 @@ export default function AnalystRatings({ ticker, currentPrice: rawPrice }: Analy
               ) : (
                 <>
                   <div
-                    className="absolute h-full bg-gradient-to-r from-[#e15241] to-[#e15241]"
+                    className="absolute h-full bg-gradient-to-r from-[#ff5c5c] to-[#ff5c5c] motion-safe:transition-all motion-safe:duration-150"
                     style={{ width: `${Math.min((targetPrice / currentPrice) * 100, 100)}%` }}
                   />
                   <div className="absolute h-full w-1 bg-white/50" style={{ left: `${Math.min((targetPrice / currentPrice) * 100, 100)}%` }} />
                 </>
               )}
             </div>
-            <div className="flex justify-between mt-2 text-sm text-[#868f97]">
+            <div className="flex justify-between mt-2 text-sm text-[#868f97] tabular-nums">
               <span>${Math.min(currentPrice, targetPrice).toFixed(2)}</span>
               <span>${Math.max(currentPrice, targetPrice).toFixed(2)}</span>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Investment Signal */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Investment Signal Summary</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl motion-safe:transition-all motion-safe:duration-150 hover:border-white/[0.15]">
+        <div className="p-6 border-b border-white/[0.08]">
+          <h3 className="text-lg font-semibold text-white">Investment Signal Summary</h3>
+        </div>
+        <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="flex items-center gap-3 p-4 bg-white/[0.015] rounded-lg">
+            <button className="flex items-center gap-3 p-4 bg-white/[0.04] rounded-lg motion-safe:transition-all motion-safe:duration-150 hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#479ffa] focus-visible:ring-offset-2 focus-visible:ring-offset-black text-left">
               {upside > 15 ? (
                 <TrendingUp className="w-8 h-8 text-[#4ebe96]" />
               ) : upside < -15 ? (
-                <TrendingDown className="w-8 h-8 text-[#e15241]" />
+                <TrendingDown className="w-8 h-8 text-[#ff5c5c]" />
               ) : (
-                <Minus className="w-8 h-8 text-[#f4a623]" />
+                <Minus className="w-8 h-8 text-[#ffa16c]" />
               )}
               <div>
                 <p className="text-sm text-[#868f97]">Upside Potential</p>
-                <p className={`font-bold ${upside > 15 ? 'text-[#4ebe96]' : upside < -15 ? 'text-[#e15241]' : 'text-[#f4a623]'}`}>
+                <p className={`font-bold ${upside > 15 ? 'text-[#4ebe96]' : upside < -15 ? 'text-[#ff5c5c]' : 'text-[#ffa16c]'}`}>
                   {upside > 15 ? 'Strong' : upside > 0 ? 'Moderate' : upside > -15 ? 'Limited' : 'Negative'}
                 </p>
               </div>
-            </div>
+            </button>
 
-            <div className="flex items-center gap-3 p-4 bg-white/[0.015] rounded-lg">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+            <button className="flex items-center gap-3 p-4 bg-white/[0.04] rounded-lg motion-safe:transition-all motion-safe:duration-150 hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#479ffa] focus-visible:ring-offset-2 focus-visible:ring-offset-black text-left">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center tabular-nums ${
                 (analystRatings?.strongBuy || 0) + (analystRatings?.buy || 0) > (analystRatings?.sell || 0) + (analystRatings?.strongSell || 0)
                   ? 'bg-[#4ebe96]/20 text-[#4ebe96]'
-                  : 'bg-[#e15241]/20 text-[#e15241]'
+                  : 'bg-[#ff5c5c]/20 text-[#ff5c5c]'
               }`}>
                 <span className="text-lg font-bold">
                   {(analystRatings?.strongBuy || 0) + (analystRatings?.buy || 0)}
@@ -319,24 +324,24 @@ export default function AnalystRatings({ ticker, currentPrice: rawPrice }: Analy
               </div>
               <div>
                 <p className="text-sm text-[#868f97]">Buy Ratings</p>
-                <p className="font-bold">
+                <p className="font-bold tabular-nums">
                   vs {(analystRatings?.sell || 0) + (analystRatings?.strongSell || 0)} Sell
                 </p>
               </div>
-            </div>
+            </button>
 
-            <div className="flex items-center gap-3 p-4 bg-white/[0.015] rounded-lg">
-              <div className="w-8 h-8 rounded-full bg-[#479ffa]/20 text-[#479ffa] flex items-center justify-center">
+            <button className="flex items-center gap-3 p-4 bg-white/[0.04] rounded-lg motion-safe:transition-all motion-safe:duration-150 hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#479ffa] focus-visible:ring-offset-2 focus-visible:ring-offset-black text-left">
+              <div className="w-8 h-8 rounded-full bg-[#479ffa]/20 text-[#479ffa] flex items-center justify-center tabular-nums">
                 <span className="text-lg font-bold">{analystRatings?.hold || 0}</span>
               </div>
               <div>
                 <p className="text-sm text-[#868f97]">Hold Ratings</p>
                 <p className="font-bold text-[#868f97]">Neutral</p>
               </div>
-            </div>
+            </button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   )
 }
