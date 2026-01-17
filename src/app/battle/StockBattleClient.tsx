@@ -151,11 +151,11 @@ export default function StockBattleClient() {
     <div className="space-y-6">
       {/* Stats Bar */}
       <div className="flex justify-center gap-6 text-sm">
-        <div className="flex items-center gap-2 bg-[#1a1a1a] px-4 py-2 rounded-full border border-white/[0.08]">
+        <div className="flex items-center gap-2 bg-white/[0.03] backdrop-blur-[10px] px-4 py-2 rounded-full border border-white/[0.08]">
           <Trophy className="w-4 h-4 text-yellow-500" />
           <span>Streak: <strong className="text-[#4ebe96]">{streak}</strong></span>
         </div>
-        <div className="flex items-center gap-2 bg-[#1a1a1a] px-4 py-2 rounded-full border border-white/[0.08]">
+        <div className="flex items-center gap-2 bg-white/[0.03] backdrop-blur-[10px] px-4 py-2 rounded-full border border-white/[0.08]">
           <Zap className="w-4 h-4 text-[#479ffa]" />
           <span>Votes: <strong>{totalVotes}</strong></span>
         </div>
@@ -167,7 +167,7 @@ export default function StockBattleClient() {
         <button
           onClick={() => handleVote(stock1)}
           disabled={voted || loading}
-          className={`relative group bg-[#1a1a1a] p-8 rounded-2xl border-2 transition-all duration-300 ${
+          className={`relative group bg-white/[0.03] backdrop-blur-[10px] p-8 rounded-2xl border-2 motion-safe:transition-all motion-safe:duration-150 ease-out ${
             voted
               ? result?.winner.ticker === stock1.ticker
                 ? 'border-[#4ebe96] bg-[#4ebe96]/10'
@@ -191,12 +191,12 @@ export default function StockBattleClient() {
             <div className="mt-6">
               <div className="flex justify-between text-sm mb-2">
                 <span>{result.stock1Votes.toLocaleString()} votes</span>
-                <span className="font-bold">{getVotePercentage(result.stock1Votes, totalVotesInBattle)}%</span>
+                <span className="font-bold tabular-nums">{getVotePercentage(result.stock1Votes, totalVotesInBattle)}%</span>
               </div>
               <div className="h-3 bg-white/[0.05] rounded-full overflow-hidden">
                 <div
-                  className={`h-full transition-all duration-1000 ${
-                    result.winner.ticker === stock1.ticker ? 'bg-[#4ebe96]' : 'bg-gray-500'
+                  className={`h-full motion-safe:transition-all motion-safe:duration-1000 ease-out ${
+                    result.winner.ticker === stock1.ticker ? 'bg-[#4ebe96]' : 'bg-[#868f97]'
                   }`}
                   style={{ width: `${getVotePercentage(result.stock1Votes, totalVotesInBattle)}%` }}
                 />
@@ -206,7 +206,7 @@ export default function StockBattleClient() {
 
           {!voted && (
             <div className="mt-6 flex justify-center">
-              <span className="text-sm text-[#868f97] group-hover:text-[#4ebe96] transition-colors duration-100">
+              <span className="text-sm text-[#868f97] group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out">
                 Click to vote
               </span>
             </div>
@@ -215,12 +215,12 @@ export default function StockBattleClient() {
 
         {/* VS Divider */}
         <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-          <div className="w-16 h-16 bg-background border-2 border-white/[0.08] rounded-full flex items-center justify-center font-bold text-xl">
+          <div className="w-16 h-16 bg-black border-2 border-white/[0.08] rounded-full flex items-center justify-center font-bold text-xl">
             VS
           </div>
         </div>
         <div className="md:hidden flex justify-center -my-2">
-          <div className="w-12 h-12 bg-background border-2 border-white/[0.08] rounded-full flex items-center justify-center font-bold">
+          <div className="w-12 h-12 bg-black border-2 border-white/[0.08] rounded-full flex items-center justify-center font-bold">
             VS
           </div>
         </div>
@@ -229,7 +229,7 @@ export default function StockBattleClient() {
         <button
           onClick={() => handleVote(stock2)}
           disabled={voted || loading}
-          className={`relative group bg-[#1a1a1a] p-8 rounded-2xl border-2 transition-all duration-300 ${
+          className={`relative group bg-white/[0.03] backdrop-blur-[10px] p-8 rounded-2xl border-2 motion-safe:transition-all motion-safe:duration-150 ease-out ${
             voted
               ? result?.winner.ticker === stock2.ticker
                 ? 'border-[#4ebe96] bg-[#4ebe96]/10'
@@ -253,12 +253,12 @@ export default function StockBattleClient() {
             <div className="mt-6">
               <div className="flex justify-between text-sm mb-2">
                 <span>{result.stock2Votes.toLocaleString()} votes</span>
-                <span className="font-bold">{getVotePercentage(result.stock2Votes, totalVotesInBattle)}%</span>
+                <span className="font-bold tabular-nums">{getVotePercentage(result.stock2Votes, totalVotesInBattle)}%</span>
               </div>
               <div className="h-3 bg-white/[0.05] rounded-full overflow-hidden">
                 <div
-                  className={`h-full transition-all duration-1000 ${
-                    result.winner.ticker === stock2.ticker ? 'bg-[#4ebe96]' : 'bg-gray-500'
+                  className={`h-full motion-safe:transition-all motion-safe:duration-1000 ease-out ${
+                    result.winner.ticker === stock2.ticker ? 'bg-[#4ebe96]' : 'bg-[#868f97]'
                   }`}
                   style={{ width: `${getVotePercentage(result.stock2Votes, totalVotesInBattle)}%` }}
                 />
@@ -268,7 +268,7 @@ export default function StockBattleClient() {
 
           {!voted && (
             <div className="mt-6 flex justify-center">
-              <span className="text-sm text-[#868f97] group-hover:text-[#479ffa] transition-colors duration-100">
+              <span className="text-sm text-[#868f97] group-hover:text-[#479ffa] motion-safe:transition-colors motion-safe:duration-150 ease-out">
                 Click to vote
               </span>
             </div>
@@ -284,14 +284,14 @@ export default function StockBattleClient() {
             <div className="flex flex-wrap justify-center gap-3">
               <button
                 onClick={shareOnTwitter}
-                className="flex items-center gap-2 px-4 py-2 bg-[#1DA1F2]/20 text-[#1DA1F2] rounded-lg hover:bg-[#1DA1F2]/30 transition-colors duration-100"
+                className="flex items-center gap-2 px-4 py-2 bg-[#1DA1F2]/20 text-[#1DA1F2] rounded-lg hover:bg-[#1DA1F2]/30 motion-safe:transition-colors motion-safe:duration-150 ease-out"
               >
                 <Twitter className="w-4 h-4" />
                 Share on X
               </button>
               <button
                 onClick={copyLink}
-                className="flex items-center gap-2 px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
+                className="flex items-center gap-2 px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] motion-safe:transition-colors motion-safe:duration-150 ease-out"
               >
                 <Share2 className="w-4 h-4" />
                 Copy Link
@@ -302,7 +302,7 @@ export default function StockBattleClient() {
           {/* Next battle */}
           <button
             onClick={getNewBattle}
-            className="flex items-center gap-2 px-6 py-3 bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black rounded-lg font-medium transition-colors duration-100"
+            className="flex items-center gap-2 px-6 py-3 bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black rounded-lg font-medium motion-safe:transition-colors motion-safe:duration-150 ease-out"
           >
             <RefreshCw className="w-4 h-4" />
             Next Battle
@@ -312,7 +312,7 @@ export default function StockBattleClient() {
           <div className="flex gap-4 text-sm">
             <Link
               href={`/compare/${stock1.ticker.toLowerCase()}-vs-${stock2.ticker.toLowerCase()}`}
-              className="text-[#868f97] hover:text-[#4ebe96] transition-colors duration-100"
+              className="text-[#868f97] hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out"
             >
               Compare {stock1.ticker} vs {stock2.ticker} →
             </Link>

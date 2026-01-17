@@ -97,7 +97,7 @@ const catalystIcons: Record<CatalystType, typeof Calendar> = {
 
 // Color mapping for catalyst types
 const catalystColors: Record<CatalystType, string> = {
-  earnings: 'text-[#f4a623] bg-[#f4a623]/10',
+  earnings: 'text-[#ffa16c] bg-[#ffa16c]/10',
   dividend: 'text-[#4ebe96] bg-[#4ebe96]/10',
   ex_dividend: 'text-emerald-500 bg-emerald-500/10',
   conference: 'text-[#479ffa] bg-[#479ffa]/10',
@@ -174,15 +174,15 @@ function CatalystEventCard({ event }: { event: CatalystEvent }) {
 
   return (
     <div className={cn(
-      "relative flex items-start gap-4 p-4 rounded-lg border transition-all",
+      "relative flex items-start gap-4 p-4 rounded-2xl border motion-safe:transition-all motion-safe:duration-150 ease-out",
       isPast && "opacity-60",
-      isImminent && !isPast && "border-[#f4a623]/50 bg-[#f4a623]/5",
+      isImminent && !isPast && "border-[#ffa16c]/50 bg-[#ffa16c]/5",
       event.importance === 'high' && !isPast && "border-primary/30",
-      !isPast && !isImminent && "border-white/[0.08] hover:border-white/[0.08]/80 hover:bg-white/[0.05]/30"
+      !isPast && !isImminent && "border-white/[0.08] hover:border-white/[0.12] hover:bg-white/[0.03]"
     )}>
       {/* Icon */}
       <div className={cn(
-        "shrink-0 p-2.5 rounded-lg",
+        "shrink-0 p-2.5 rounded-2xl",
         colorClasses
       )}>
         <Icon className="h-5 w-5" />
@@ -227,7 +227,7 @@ function CatalystEventCard({ event }: { event: CatalystEvent }) {
             href={event.sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs text-[#868f97] hover:text-white mt-2"
+            className="inline-flex items-center gap-1 text-xs text-[#868f97] hover:text-white mt-2 motion-safe:transition-all motion-safe:duration-150 ease-out"
           >
             {event.source || 'Source'}
             <ExternalLink className="h-3 w-3" />
@@ -247,7 +247,7 @@ function CatalystEventCard({ event }: { event: CatalystEvent }) {
         )}
         <div className={cn(
           "text-xs mt-1 font-medium",
-          isImminent && !isPast && "text-[#f4a623]",
+          isImminent && !isPast && "text-[#ffa16c]",
           isPast && "text-[#868f97]"
         )}>
           {formatDaysUntil(daysUntil)}
@@ -295,8 +295,8 @@ function CatalystTimeline({ events }: { events: CatalystEvent[] }) {
             <div
               key={i}
               className={cn(
-                "flex-1 h-2 rounded-full transition-all",
-                hasHighImportance ? "bg-[#f4a623]" :
+                "flex-1 h-2 rounded-full motion-safe:transition-all motion-safe:duration-150 ease-out",
+                hasHighImportance ? "bg-[#ffa16c]" :
                 hasEvents ? "bg-[#4ebe96]" :
                 "bg-white/[0.05]"
               )}
@@ -504,7 +504,7 @@ export function UpcomingCatalysts({
         <CardContent>
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-20 bg-white/[0.05] animate-pulse rounded-lg" />
+              <div key={i} className="h-20 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] animate-pulse rounded-2xl" />
             ))}
           </div>
         </CardContent>
@@ -526,7 +526,7 @@ export function UpcomingCatalysts({
             </p>
           </div>
           {highImportanceCount > 0 && (
-            <Badge variant="default" className="bg-[#f4a623]">
+            <Badge variant="default" className="bg-[#ffa16c]">
               {highImportanceCount} High Impact
             </Badge>
           )}
@@ -547,7 +547,7 @@ export function UpcomingCatalysts({
               return (
                 <div
                   key={type}
-                  className="flex items-center gap-1.5 px-2.5 py-1 bg-white/[0.05] rounded-full text-xs"
+                  className="flex items-center gap-1.5 px-2.5 py-1 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-full text-xs"
                 >
                   <Icon className={cn("h-3.5 w-3.5", colorClass)} />
                   <span>{count} {catalystLabels[type as CatalystType]}</span>
@@ -578,11 +578,11 @@ export function UpcomingCatalysts({
         {filteredEvents.length > 5 && (
           <button
             onClick={() => setShowAll(!showAll)}
-            className="w-full py-2 text-sm text-[#868f97] hover:text-white flex items-center justify-center gap-1 transition-colors duration-100"
+            className="w-full py-2 text-sm text-[#868f97] hover:text-white flex items-center justify-center gap-1 motion-safe:transition-all motion-safe:duration-150 ease-out"
           >
             {showAll ? 'Show Less' : `Show All ${filteredEvents.length} Events`}
             <ChevronRight className={cn(
-              "h-4 w-4 transition-transform",
+              "h-4 w-4 motion-safe:transition-transform motion-safe:duration-150 ease-out",
               showAll && "rotate-90"
             )} />
           </button>

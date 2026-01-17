@@ -120,7 +120,7 @@ export default function SEOSidebar({ className }: SEOSidebarProps) {
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      "flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors duration-100",
+                      "flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm motion-safe:transition-colors motion-safe:duration-100 ease-out",
                       isActive
                         ? "bg-[#4ebe96]/10 text-[#4ebe96] font-medium"
                         : "text-[#868f97] hover:text-white hover:bg-white/[0.08]"
@@ -136,14 +136,14 @@ export default function SEOSidebar({ className }: SEOSidebarProps) {
         ))}
 
         {/* CTA */}
-        <div className="bg-gradient-to-br from-[#4ebe96]/10 to-[#4ebe96]/5 border border-[#4ebe96]/20 rounded-xl p-4">
+        <div className="bg-gradient-to-br from-[#4ebe96]/10 to-[#4ebe96]/5 border border-[#4ebe96]/20 rounded-2xl p-4">
           <h4 className="font-semibold text-sm mb-2">Get Full Analysis</h4>
           <p className="text-xs text-[#868f97] mb-3">
             Access AI-powered stock analysis, DCF valuations, and institutional data.
           </p>
           <Link
             href="/dashboard"
-            className="block w-full text-center bg-[#4ebe96] hover:bg-[#4ebe96] text-white text-sm py-2 rounded-lg font-medium transition-colors duration-100"
+            className="block w-full text-center bg-[#4ebe96] hover:bg-[#4ebe96] text-white text-sm py-2 rounded-lg font-medium motion-safe:transition-colors motion-safe:duration-100 ease-out"
           >
             Open Dashboard
           </Link>

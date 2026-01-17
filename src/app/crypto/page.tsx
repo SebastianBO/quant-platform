@@ -324,13 +324,13 @@ export default async function CryptoPage() {
               <nav className="flex items-center gap-1">
                 <Link
                   href="/dashboard"
-                  className="px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-100 text-[#868f97] hover:text-white hover:bg-white/[0.05]"
+                  className="px-4 py-2 text-sm font-medium rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out text-[#868f97] hover:text-white hover:bg-white/[0.05]"
                 >
                   Market
                 </Link>
                 <Link
                   href="/crypto"
-                  className="px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-100 bg-[#4ebe96] text-white"
+                  className="px-4 py-2 text-sm font-medium rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out bg-[#4ebe96] text-white"
                 >
                   Crypto
                 </Link>
@@ -345,7 +345,7 @@ export default async function CryptoPage() {
             <div className="flex-1 min-w-0">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-[#868f97] mb-6">
-            <Link href="/" className="hover:text-white transition-colors duration-100">
+            <Link href="/" className="hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out">
               Home
             </Link>
             <ChevronRight className="w-4 h-4" />
@@ -397,19 +397,19 @@ export default async function CryptoPage() {
               </CardContent>
             </Card>
 
-            <Card className={`bg-gradient-to-br ${avgChange >= 0 ? 'from-[#4ebe96]/10 to-[#4ebe96]/5 border-[#4ebe96]/20' : 'from-[#e15241]/10 to-[#e15241]/5 border-[#e15241]/20'}`}>
+            <Card className={`bg-gradient-to-br ${avgChange >= 0 ? 'from-[#4ebe96]/10 to-[#4ebe96]/5 border-[#4ebe96]/20' : 'from-[#ff5c5c]/10 to-[#ff5c5c]/5 border-[#ff5c5c]/20'}`}>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     {avgChange >= 0 ? (
                       <TrendingUp className="w-5 h-5 text-[#4ebe96]" />
                     ) : (
-                      <TrendingDown className="w-5 h-5 text-[#e15241]" />
+                      <TrendingDown className="w-5 h-5 text-[#ff5c5c]" />
                     )}
                     <h3 className="text-sm font-medium text-[#868f97]">Market Trend</h3>
                   </div>
                 </div>
-                <p className={`text-3xl font-bold ${avgChange >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
+                <p className={`text-3xl font-bold ${avgChange >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                   {avgChange >= 0 ? '+' : ''}{avgChange.toFixed(2)}%
                 </p>
                 <p className="text-sm text-[#868f97] mt-1">
@@ -441,7 +441,7 @@ export default async function CryptoPage() {
                     {cryptoPrices.map((crypto, index) => (
                       <tr
                         key={crypto.symbol}
-                        className="border-b border-white/[0.08]/50 hover:bg-white/[0.05] transition-colors duration-100"
+                        className="border-b border-white/[0.08]/50 hover:bg-white/[0.05] motion-safe:transition-colors motion-safe:duration-150 ease-out"
                       >
                         <td className="py-4 px-4 text-[#868f97]">{index + 1}</td>
                         <td className="py-4 px-4">
@@ -455,7 +455,7 @@ export default async function CryptoPage() {
                         </td>
                         <td className="py-4 px-4 text-right">
                           <div className={`flex items-center justify-end gap-1 ${
-                            crypto.changePercent24h >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'
+                            crypto.changePercent24h >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'
                           }`}>
                             {crypto.changePercent24h >= 0 ? (
                               <TrendingUp className="w-4 h-4" />
@@ -499,11 +499,11 @@ export default async function CryptoPage() {
                   Bitcoin has a fixed supply of 21 million coins, making it a deflationary asset often compared to digital gold. It uses blockchain technology to ensure transparency and security through cryptographic proof.
                 </p>
                 <div className="grid grid-cols-2 gap-4 pt-4">
-                  <div className="p-4 bg-white/[0.05] rounded-lg">
+                  <div className="p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
                     <p className="text-sm text-[#868f97] mb-1">Market Dominance</p>
                     <p className="text-xl font-bold">~40-50%</p>
                   </div>
-                  <div className="p-4 bg-white/[0.05] rounded-lg">
+                  <div className="p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
                     <p className="text-sm text-[#868f97] mb-1">Max Supply</p>
                     <p className="text-xl font-bold">21M BTC</p>
                   </div>
@@ -526,11 +526,11 @@ export default async function CryptoPage() {
                   Ethereum transitioned to Proof of Stake in 2022, making it more energy-efficient. The platform powers thousands of tokens and applications, from decentralized exchanges to lending protocols and digital collectibles.
                 </p>
                 <div className="grid grid-cols-2 gap-4 pt-4">
-                  <div className="p-4 bg-white/[0.05] rounded-lg">
+                  <div className="p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
                     <p className="text-sm text-[#868f97] mb-1">Smart Contracts</p>
                     <p className="text-xl font-bold">1000s+</p>
                   </div>
-                  <div className="p-4 bg-white/[0.05] rounded-lg">
+                  <div className="p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
                     <p className="text-sm text-[#868f97] mb-1">Network Type</p>
                     <p className="text-xl font-bold">Proof of Stake</p>
                   </div>
@@ -551,7 +551,7 @@ export default async function CryptoPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-[#4ebe96] rounded-lg flex items-center justify-center text-white font-bold">
+                    <div className="w-8 h-8 bg-[#4ebe96] rounded-full flex items-center justify-center text-white font-bold">
                       1
                     </div>
                     <h3 className="font-semibold">Research First</h3>
@@ -563,7 +563,7 @@ export default async function CryptoPage() {
 
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-[#479ffa] rounded-lg flex items-center justify-center text-white font-bold">
+                    <div className="w-8 h-8 bg-[#479ffa] rounded-full flex items-center justify-center text-white font-bold">
                       2
                     </div>
                     <h3 className="font-semibold">Start Small</h3>
@@ -575,7 +575,7 @@ export default async function CryptoPage() {
 
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center text-white font-bold">
+                    <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold">
                       3
                     </div>
                     <h3 className="font-semibold">Secure Storage</h3>
@@ -668,7 +668,7 @@ export default async function CryptoPage() {
                 <details className="group">
                   <summary className="flex items-center justify-between cursor-pointer font-semibold text-lg py-2">
                     What is the current Bitcoin price?
-                    <ChevronRight className="w-5 h-5 group-open:rotate-90 transition-transform" />
+                    <ChevronRight className="w-5 h-5 group-open:rotate-90 motion-safe:transition-transform motion-safe:duration-150 ease-out" />
                   </summary>
                   <p className="text-[#868f97] mt-2 pl-2">
                     Bitcoin (BTC) is currently trading at {cryptoPrices.find(c => c.symbol === 'BTC') ? formatPrice(cryptoPrices.find(c => c.symbol === 'BTC')!.price) : 'loading'}. Bitcoin is the world's first and largest cryptocurrency by market capitalization, operating on a decentralized peer-to-peer network. Prices are updated in real-time from multiple exchanges.
@@ -678,7 +678,7 @@ export default async function CryptoPage() {
                 <details className="group">
                   <summary className="flex items-center justify-between cursor-pointer font-semibold text-lg py-2 border-t border-white/[0.08] pt-4">
                     What is the current Ethereum price?
-                    <ChevronRight className="w-5 h-5 group-open:rotate-90 transition-transform" />
+                    <ChevronRight className="w-5 h-5 group-open:rotate-90 motion-safe:transition-transform motion-safe:duration-150 ease-out" />
                   </summary>
                   <p className="text-[#868f97] mt-2 pl-2">
                     Ethereum (ETH) is currently trading at {cryptoPrices.find(c => c.symbol === 'ETH') ? formatPrice(cryptoPrices.find(c => c.symbol === 'ETH')!.price) : 'loading'}. Ethereum is the leading smart contract platform and the second-largest cryptocurrency by market cap. It enables decentralized applications, DeFi protocols, and NFTs.
@@ -688,7 +688,7 @@ export default async function CryptoPage() {
                 <details className="group">
                   <summary className="flex items-center justify-between cursor-pointer font-semibold text-lg py-2 border-t border-white/[0.08] pt-4">
                     How do I invest in cryptocurrency?
-                    <ChevronRight className="w-5 h-5 group-open:rotate-90 transition-transform" />
+                    <ChevronRight className="w-5 h-5 group-open:rotate-90 motion-safe:transition-transform motion-safe:duration-150 ease-out" />
                   </summary>
                   <div className="text-muted-foreground mt-2 pl-2 space-y-2">
                     <p>To invest in cryptocurrency, follow these steps:</p>
@@ -708,7 +708,7 @@ export default async function CryptoPage() {
                 <details className="group">
                   <summary className="flex items-center justify-between cursor-pointer font-semibold text-lg py-2 border-t border-white/[0.08] pt-4">
                     What is cryptocurrency market cap?
-                    <ChevronRight className="w-5 h-5 group-open:rotate-90 transition-transform" />
+                    <ChevronRight className="w-5 h-5 group-open:rotate-90 motion-safe:transition-transform motion-safe:duration-150 ease-out" />
                   </summary>
                   <p className="text-[#868f97] mt-2 pl-2">
                     Cryptocurrency market capitalization is calculated by multiplying the current price by the circulating supply of coins. For example, if a cryptocurrency has 10 million coins in circulation and trades at $100, its market cap is $1 billion. Market cap is used to rank cryptocurrencies by size and gives investors an idea of a project's relative value and adoption.
@@ -718,7 +718,7 @@ export default async function CryptoPage() {
                 <details className="group">
                   <summary className="flex items-center justify-between cursor-pointer font-semibold text-lg py-2 border-t border-white/[0.08] pt-4">
                     Is cryptocurrency a good investment?
-                    <ChevronRight className="w-5 h-5 group-open:rotate-90 transition-transform" />
+                    <ChevronRight className="w-5 h-5 group-open:rotate-90 motion-safe:transition-transform motion-safe:duration-150 ease-out" />
                   </summary>
                   <p className="text-[#868f97] mt-2 pl-2">
                     Cryptocurrency can be a high-risk, high-reward investment. While some investors have seen significant returns, crypto markets are highly volatile and unpredictable. Before investing: research thoroughly, understand blockchain technology, only invest what you can afford to lose, diversify your portfolio, and consider your risk tolerance and investment timeline. Cryptocurrencies are speculative assets and not suitable for everyone.
@@ -728,7 +728,7 @@ export default async function CryptoPage() {
                 <details className="group">
                   <summary className="flex items-center justify-between cursor-pointer font-semibold text-lg py-2 border-t border-white/[0.08] pt-4">
                     What affects cryptocurrency prices?
-                    <ChevronRight className="w-5 h-5 group-open:rotate-90 transition-transform" />
+                    <ChevronRight className="w-5 h-5 group-open:rotate-90 motion-safe:transition-transform motion-safe:duration-150 ease-out" />
                   </summary>
                   <div className="text-[#868f97] mt-2 pl-2">
                     <p className="mb-2">Cryptocurrency prices are influenced by multiple factors:</p>
@@ -750,7 +750,7 @@ export default async function CryptoPage() {
                 <details className="group">
                   <summary className="flex items-center justify-between cursor-pointer font-semibold text-lg py-2 border-t border-white/[0.08] pt-4">
                     How is crypto different from stocks?
-                    <ChevronRight className="w-5 h-5 group-open:rotate-90 transition-transform" />
+                    <ChevronRight className="w-5 h-5 group-open:rotate-90 motion-safe:transition-transform motion-safe:duration-150 ease-out" />
                   </summary>
                   <div className="text-[#868f97] mt-2 pl-2">
                     <p className="mb-2">Key differences between cryptocurrency and stocks:</p>
@@ -769,7 +769,7 @@ export default async function CryptoPage() {
                 <details className="group">
                   <summary className="flex items-center justify-between cursor-pointer font-semibold text-lg py-2 border-t border-white/[0.08] pt-4">
                     What is Bitcoin and why is it valuable?
-                    <ChevronRight className="w-5 h-5 group-open:rotate-90 transition-transform" />
+                    <ChevronRight className="w-5 h-5 group-open:rotate-90 motion-safe:transition-transform motion-safe:duration-150 ease-out" />
                   </summary>
                   <div className="text-[#868f97] mt-2 pl-2">
                     <p className="mb-2">Bitcoin is a decentralized digital currency created in 2009 by Satoshi Nakamoto. It operates without a central bank or single administrator. Bitcoin is valuable because of:</p>
@@ -789,7 +789,7 @@ export default async function CryptoPage() {
                 <details className="group">
                   <summary className="flex items-center justify-between cursor-pointer font-semibold text-lg py-2 border-t border-white/[0.08] pt-4">
                     What is Ethereum and smart contracts?
-                    <ChevronRight className="w-5 h-5 group-open:rotate-90 transition-transform" />
+                    <ChevronRight className="w-5 h-5 group-open:rotate-90 motion-safe:transition-transform motion-safe:duration-150 ease-out" />
                   </summary>
                   <p className="text-[#868f97] mt-2 pl-2">
                     Ethereum is a blockchain platform that enables smart contracts and decentralized applications (dApps). Smart contracts are self-executing programs that automatically enforce agreements when predefined conditions are met, without intermediaries. Ethereum powers DeFi (decentralized finance), NFTs (non-fungible tokens), DAOs (decentralized autonomous organizations), and thousands of tokens. It transitioned to Proof of Stake in 2022 for greater efficiency and scalability. Ethereum's programmability makes it the foundation for Web3 innovation.
@@ -799,7 +799,7 @@ export default async function CryptoPage() {
                 <details className="group">
                   <summary className="flex items-center justify-between cursor-pointer font-semibold text-lg py-2 border-t border-white/[0.08] pt-4">
                     How do I store cryptocurrency safely?
-                    <ChevronRight className="w-5 h-5 group-open:rotate-90 transition-transform" />
+                    <ChevronRight className="w-5 h-5 group-open:rotate-90 motion-safe:transition-transform motion-safe:duration-150 ease-out" />
                   </summary>
                   <div className="text-[#868f97] mt-2 pl-2">
                     <p className="mb-2">Safe cryptocurrency storage options:</p>
@@ -825,7 +825,7 @@ export default async function CryptoPage() {
                 <details className="group">
                   <summary className="flex items-center justify-between cursor-pointer font-semibold text-lg py-2 border-t border-white/[0.08] pt-4">
                     What are the risks of cryptocurrency investing?
-                    <ChevronRight className="w-5 h-5 group-open:rotate-90 transition-transform" />
+                    <ChevronRight className="w-5 h-5 group-open:rotate-90 motion-safe:transition-transform motion-safe:duration-150 ease-out" />
                   </summary>
                   <div className="text-[#868f97] mt-2 pl-2">
                     <p className="mb-2">Major cryptocurrency risks include:</p>
@@ -848,7 +848,7 @@ export default async function CryptoPage() {
                 <details className="group">
                   <summary className="flex items-center justify-between cursor-pointer font-semibold text-lg py-2 border-t border-white/[0.08] pt-4">
                     What is the best cryptocurrency to invest in?
-                    <ChevronRight className="w-5 h-5 group-open:rotate-90 transition-transform" />
+                    <ChevronRight className="w-5 h-5 group-open:rotate-90 motion-safe:transition-transform motion-safe:duration-150 ease-out" />
                   </summary>
                   <div className="text-[#868f97] mt-2 pl-2">
                     <p className="mb-2">There is no single "best" cryptocurrency - it depends on your investment goals, risk tolerance, and thorough research. However, some considerations:</p>
@@ -882,7 +882,7 @@ export default async function CryptoPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Link
                   href="/dashboard"
-                  className="p-4 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
+                  className="p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out"
                 >
                   <h3 className="font-semibold mb-2">Stock Market Dashboard</h3>
                   <p className="text-sm text-[#868f97]">
@@ -891,7 +891,7 @@ export default async function CryptoPage() {
                 </Link>
                 <Link
                   href="/dashboard"
-                  className="p-4 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
+                  className="p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out"
                 >
                   <h3 className="font-semibold mb-2">Portfolio Tracker</h3>
                   <p className="text-sm text-[#868f97]">
@@ -900,7 +900,7 @@ export default async function CryptoPage() {
                 </Link>
                 <Link
                   href="/dashboard"
-                  className="p-4 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
+                  className="p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out"
                 >
                   <h3 className="font-semibold mb-2">Market News</h3>
                   <p className="text-sm text-[#868f97]">
@@ -912,7 +912,7 @@ export default async function CryptoPage() {
           </Card>
 
           {/* Disclaimer */}
-          <div className="mt-8 p-6 bg-yellow-500/10 border border-yellow-500/20 rounded-xl">
+          <div className="mt-8 p-6 bg-yellow-500/10 border border-yellow-500/20 rounded-2xl">
             <p className="text-sm text-[#868f97]">
               <strong className="text-white">Disclaimer:</strong> Cryptocurrency prices are highly volatile and subject to market risks. The information provided is for educational purposes only and should not be considered financial advice. Always conduct your own research and consider consulting with a qualified financial advisor before making investment decisions. Past performance is not indicative of future results. You may lose all or part of your investment.
             </p>

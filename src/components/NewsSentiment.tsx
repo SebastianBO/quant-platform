@@ -83,8 +83,8 @@ export default function NewsSentiment({ ticker }: NewsSentimentProps) {
     if (sentiment >= 0.3) return { label: 'Bullish', color: 'text-[#4ebe96]', emoji: '🐂' }
     if (sentiment >= 0.1) return { label: 'Slightly Positive', color: 'text-[#4ebe96]', emoji: '📈' }
     if (sentiment > -0.1) return { label: 'Neutral', color: 'text-[#868f97]', emoji: '➖' }
-    if (sentiment > -0.3) return { label: 'Slightly Negative', color: 'text-[#f4a623]', emoji: '📉' }
-    return { label: 'Bearish', color: 'text-[#e15241]', emoji: '🐻' }
+    if (sentiment > -0.3) return { label: 'Slightly Negative', color: 'text-[#ffa16c]', emoji: '📉' }
+    return { label: 'Bearish', color: 'text-[#ff5c5c]', emoji: '🐻' }
   }
 
   const sentimentInfo = getSentimentLabel(overallSentiment)
@@ -99,8 +99,8 @@ export default function NewsSentiment({ ticker }: NewsSentimentProps) {
   const getSentimentColor = (sentiment: number): string => {
     if (sentiment >= 0.2) return '#4ebe96'
     if (sentiment >= 0) return '#4ebe96'
-    if (sentiment >= -0.2) return '#f4a623'
-    return '#e15241'
+    if (sentiment >= -0.2) return '#ffa16c'
+    return '#ff5c5c'
   }
 
   return (
@@ -119,7 +119,7 @@ export default function NewsSentiment({ ticker }: NewsSentimentProps) {
         ) : (
           <>
             {/* Overall Sentiment */}
-            <div className="p-4 bg-white/[0.05] rounded-lg mb-6">
+            <div className="p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl mb-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-[#868f97] text-sm">Overall News Sentiment</p>
@@ -129,7 +129,7 @@ export default function NewsSentiment({ ticker }: NewsSentimentProps) {
                 </div>
                 <div className="text-right">
                   <p className="text-[#868f97] text-sm">Sentiment Score</p>
-                  <p className={`text-2xl font-bold ${overallSentiment >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
+                  <p className={`text-2xl font-bold ${overallSentiment >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                     {overallSentiment >= 0 ? '+' : ''}{(overallSentiment * 100).toFixed(0)}%
                   </p>
                 </div>
@@ -145,7 +145,7 @@ export default function NewsSentiment({ ticker }: NewsSentimentProps) {
                     <XAxis type="number" domain={[-1, 1]} stroke="#868f97" />
                     <YAxis type="category" dataKey="name" stroke="#868f97" width={70} tick={{ fontSize: 11 }} />
                     <Tooltip
-                      contentStyle={{ backgroundColor: '#1a1a1a', border: '1px solid rgba(255, 255, 255, 0.08)' }}
+                      contentStyle={{ backgroundColor: '#000000', border: '1px solid rgba(255, 255, 255, 0.08)' }}
                       formatter={(value: number) => [`${(value * 100).toFixed(0)}%`, 'Sentiment']}
                       labelFormatter={(label: string) => chartData.find(d => d.name === label)?.title || label}
                     />
@@ -171,7 +171,7 @@ export default function NewsSentiment({ ticker }: NewsSentimentProps) {
                       href={article.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block p-3 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
+                      className="block p-3 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1">

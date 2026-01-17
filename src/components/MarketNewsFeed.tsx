@@ -102,16 +102,16 @@ export default function MarketNewsFeed({
   }
 
   const getSentimentColor = (polarity: number): string => {
-    if (polarity >= 0.3) return 'text-emerald-500'
+    if (polarity >= 0.3) return 'text-[#4ebe96]'
     if (polarity >= 0) return 'text-[#4ebe96]'
-    if (polarity >= -0.3) return 'text-orange-500'
-    return 'text-[#e15241]'
+    if (polarity >= -0.3) return 'text-[#ffa16c]'
+    return 'text-[#ff5c5c]'
   }
 
   const getTickerColor = (change?: number): string => {
     if (change === undefined) return 'bg-white/[0.05] text-[#868f97]'
-    if (change > 0) return 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
-    if (change < 0) return 'bg-[#e15241]/10 text-[#e15241] border-[#e15241]/20'
+    if (change > 0) return 'bg-[#4ebe96]/10 text-[#4ebe96] border-[#4ebe96]/20'
+    if (change < 0) return 'bg-[#ff5c5c]/10 text-[#ff5c5c] border-[#ff5c5c]/20'
     return 'bg-white/[0.05] text-[#868f97]'
   }
 
@@ -173,7 +173,7 @@ export default function MarketNewsFeed({
               href={article.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="block p-2 -mx-2 rounded-lg hover:bg-white/[0.04] transition-colors duration-100"
+              className="block p-2 -mx-2 rounded-lg hover:bg-white/[0.04] motion-safe:transition-colors motion-safe:duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:rounded-lg"
             >
               <p className="text-sm font-medium line-clamp-2 leading-tight">
                 {article.title.replace(/&amp;/g, '&').replace(/&#39;/g, "'")}
@@ -213,16 +213,16 @@ export default function MarketNewsFeed({
               href={featuredNews.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="block group"
+              className="block group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:rounded-2xl"
             >
-              <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+              <Card className="overflow-hidden hover:shadow-lg motion-safe:transition-shadow motion-safe:duration-150">
                 {/* Featured image */}
                 {getArticleImage(featuredNews) && (
                   <div className="relative h-64 bg-white/[0.05] overflow-hidden">
                     <img
                       src={getArticleImage(featuredNews)!}
                       alt=""
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-cover group-hover:scale-105 motion-safe:transition-transform motion-safe:duration-300 ease-out"
                       onError={(e) => {
                         // Hide image on error
                         (e.target as HTMLImageElement).style.display = 'none'
@@ -238,7 +238,7 @@ export default function MarketNewsFeed({
                 )}
                 <div className="p-4">
                   {!getArticleImage(featuredNews) && (
-                    <h3 className="text-xl font-bold leading-tight group-hover:text-primary transition-colors duration-100 line-clamp-3 mb-3">
+                    <h3 className="text-xl font-bold leading-tight group-hover:text-primary motion-safe:transition-colors motion-safe:duration-150 ease-out line-clamp-3 mb-3">
                       {featuredNews.title.replace(/&amp;/g, '&').replace(/&#39;/g, "'")}
                     </h3>
                   )}
@@ -254,7 +254,7 @@ export default function MarketNewsFeed({
                         <span
                           key={i}
                           className={cn(
-                            "text-xs font-medium px-2 py-0.5 rounded border border-white/[0.08]",
+                            "text-xs font-medium px-2 py-0.5 rounded-full border border-white/[0.08]",
                             getSentimentColor(featuredNews.sentiment.polarity)
                           )}
                         >
@@ -278,15 +278,15 @@ export default function MarketNewsFeed({
                   href={article.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block group"
+                  className="block group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:rounded-2xl"
                 >
-                  <Card className="h-full hover:shadow-md transition-shadow overflow-hidden">
+                  <Card className="h-full hover:shadow-md motion-safe:transition-shadow motion-safe:duration-150 ease-out overflow-hidden">
                     {articleImage && (
                       <div className="relative h-32 bg-white/[0.05] overflow-hidden">
                         <img
                           src={articleImage}
                           alt=""
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="w-full h-full object-cover group-hover:scale-105 motion-safe:transition-transform motion-safe:duration-300 ease-out"
                           onError={(e) => {
                             (e.target as HTMLImageElement).style.display = 'none'
                           }}
@@ -294,7 +294,7 @@ export default function MarketNewsFeed({
                       </div>
                     )}
                     <CardContent className="p-4">
-                      <h4 className="font-semibold text-sm leading-tight group-hover:text-primary transition-colors duration-100 line-clamp-2">
+                      <h4 className="font-semibold text-sm leading-tight group-hover:text-primary motion-safe:transition-colors motion-safe:duration-150 ease-out line-clamp-2">
                         {article.title.replace(/&amp;/g, '&').replace(/&#39;/g, "'")}
                       </h4>
                       <div className="flex items-center flex-wrap gap-2 mt-2">
@@ -307,9 +307,9 @@ export default function MarketNewsFeed({
                             href={`/stock/${symbol}`}
                             onClick={(e) => e.stopPropagation()}
                             className={cn(
-                              "text-xs px-1.5 py-0.5 rounded border",
+                              "text-xs px-1.5 py-0.5 rounded-full border",
                               getSentimentColor(article.sentiment.polarity),
-                              "hover:bg-white/[0.04]"
+                              "hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                             )}
                           >
                             {symbol}
@@ -335,7 +335,7 @@ export default function MarketNewsFeed({
               href={article.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="block py-3 border-b border-white/[0.08] last:border-0 hover:bg-white/[0.024] -mx-2 px-2 rounded transition-colors duration-100"
+              className="block py-3 border-b border-white/[0.08] last:border-0 hover:bg-white/[0.024] -mx-2 px-2 rounded-2xl motion-safe:transition-colors motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
             >
               <p className="text-sm font-medium leading-tight line-clamp-2">
                 {article.title.replace(/&amp;/g, '&').replace(/&#39;/g, "'")}
@@ -351,7 +351,7 @@ export default function MarketNewsFeed({
                     <span
                       key={j}
                       className={cn(
-                        "text-xs px-2 py-0.5 rounded border border-white/[0.08]",
+                        "text-xs px-2 py-0.5 rounded-full border border-white/[0.08]",
                         getSentimentColor(article.sentiment.polarity)
                       )}
                     >

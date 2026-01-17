@@ -15,7 +15,7 @@ export default function ConnectBrokerage({ userId, onConnectionSuccess }: Connec
   const [activeTab, setActiveTab] = useState<'us' | 'europe'>('us')
 
   return (
-    <Card className="bg-[#1a1a1a] border-white/[0.08]">
+    <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           Connect Your Brokerage
@@ -27,11 +27,11 @@ export default function ConnectBrokerage({ userId, onConnectionSuccess }: Connec
       <CardContent>
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'us' | 'europe')}>
           <TabsList className="grid w-full grid-cols-2 mb-6">
-            <TabsTrigger value="us" className="flex items-center gap-2">
+            <TabsTrigger value="us" className="flex items-center gap-2 rounded-full motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
               <span>🇺🇸</span>
               United States
             </TabsTrigger>
-            <TabsTrigger value="europe" className="flex items-center gap-2">
+            <TabsTrigger value="europe" className="flex items-center gap-2 rounded-full motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
               <span>🇪🇺</span>
               Europe
             </TabsTrigger>

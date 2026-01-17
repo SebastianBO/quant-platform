@@ -20,14 +20,14 @@ export function Hero() {
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
           <Button
             variant="outline"
-            className="border-white/[0.08] text-white hover:bg-white/[0.08] px-6 py-6 text-base bg-transparent transition-colors duration-100"
+            className="border-white/[0.08] text-white hover:bg-white/[0.08] px-6 py-6 text-base bg-transparent rounded-full motion-safe:transition-colors motion-safe:duration-150 ease-out"
           >
             Find your plan
           </Button>
           <Link href="/dashboard">
-            <Button className="bg-white/[0.05] text-white hover:bg-white/[0.08] px-6 py-6 text-base group transition-colors duration-100">
+            <Button className="bg-white/[0.05] text-white hover:bg-white/[0.08] px-6 py-6 text-base group rounded-full motion-safe:transition-colors motion-safe:duration-150 ease-out">
               Open Dashboard
-              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-100" />
+              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 motion-safe:transition-transform motion-safe:duration-150 ease-out" />
             </Button>
           </Link>
         </div>
@@ -36,7 +36,7 @@ export function Hero() {
       <div className="relative z-10 mt-16 w-full max-w-6xl mx-auto">
         <div className="relative">
           <div className="absolute -inset-4 bg-gradient-to-b from-muted/30 to-transparent rounded-3xl blur-2xl" />
-          <div className="relative bg-[#1a1a1a]/50 backdrop-blur border border-white/[0.08] rounded-2xl overflow-hidden shadow-2xl">
+          <div className="relative bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl overflow-hidden shadow-2xl">
             <div className="flex items-center gap-2 px-4 py-3 border-b border-white/[0.08] bg-white/[0.05]">
               <div className="flex gap-1.5">
                 <div className="w-3 h-3 rounded-full bg-[#e15241]/80" />
@@ -93,7 +93,7 @@ export function Hero() {
             </div>
           </div>
 
-          <div className="absolute -left-8 top-1/2 -translate-y-1/4 w-48 bg-[#1a1a1a] border border-white/[0.08] rounded-2xl p-4 shadow-xl hidden lg:block">
+          <div className="absolute -left-8 top-1/2 -translate-y-1/4 w-48 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 shadow-xl hidden lg:block">
             <div className="flex items-center gap-2 mb-3">
               <div className="w-6 h-6 rounded-full bg-muted" />
               <span className="text-xs text-[#868f97]">9:41</span>

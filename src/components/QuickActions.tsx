@@ -133,7 +133,7 @@ export default function QuickActions() {
             </div>
             <Link
               href="/dashboard/portfolios"
-              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors duration-100"
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 motion-safe:transition-colors motion-safe:duration-100"
             >
               Create Portfolio
             </Link>
@@ -148,7 +148,7 @@ export default function QuickActions() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Portfolio Summary */}
         {portfolios.slice(0, 1).map((portfolio) => (
-          <div key={portfolio.id} className="bg-[#1a1a1a] rounded-xl border border-white/[0.08] p-4">
+          <div key={portfolio.id} className="bg-white/[0.03] backdrop-blur-[10px] rounded-2xl border border-white/[0.08] p-4">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <Briefcase className="w-4 h-4 text-primary" />
@@ -166,7 +166,7 @@ export default function QuickActions() {
                 <Link
                   key={holding.symbol}
                   href={`/${holding.symbol}`}
-                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
+                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/[0.08] motion-safe:transition-colors motion-safe:duration-100"
                 >
                   <StockLogo symbol={holding.symbol} size="sm" />
                   <span className="font-medium text-sm flex-1">{holding.symbol}</span>
@@ -183,7 +183,7 @@ export default function QuickActions() {
         ))}
 
         {/* Quick Links */}
-        <div className="bg-[#1a1a1a] rounded-xl border border-white/[0.08] p-4">
+        <div className="bg-white/[0.03] backdrop-blur-[10px] rounded-2xl border border-white/[0.08] p-4">
           <h3 className="font-medium text-sm mb-3 flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-primary" />
             Quick Actions
@@ -217,7 +217,7 @@ export default function QuickActions() {
         </div>
 
         {/* Upcoming Earnings (if any in watchlist) */}
-        <div className="bg-[#1a1a1a] rounded-xl border border-white/[0.08] p-4">
+        <div className="bg-white/[0.03] backdrop-blur-[10px] rounded-2xl border border-white/[0.08] p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-primary" />
@@ -277,7 +277,7 @@ function QuickLink({
   return (
     <Link
       href={href}
-      className="flex items-center gap-2 p-2 rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
+      className="flex items-center gap-2 p-2 rounded-lg hover:bg-white/[0.08] motion-safe:transition-colors motion-safe:duration-100"
     >
       <div className="w-8 h-8 rounded-lg bg-white/[0.05] flex items-center justify-center">
         <Icon className="w-4 h-4 text-[#868f97]" />

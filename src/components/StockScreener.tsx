@@ -160,7 +160,7 @@ function StockScreenerComponent() {
               <button
                 key={i}
                 onClick={() => applyPreset(preset)}
-                className="px-3 py-2 bg-white/[0.05] hover:bg-white/[0.08] rounded-lg text-sm transition-colors duration-100"
+                className="px-3 py-2 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:bg-white/[0.08] rounded-full text-sm motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                 title={preset.description}
               >
                 {preset.name}
@@ -170,12 +170,12 @@ function StockScreenerComponent() {
         </div>
 
         {/* Custom Criteria */}
-        <div className="mb-6 p-4 bg-white/[0.015] rounded-lg">
+        <div className="mb-6 p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
           <div className="flex items-center justify-between mb-4">
             <p className="font-medium">Custom Criteria</p>
             <button
               onClick={addCriteria}
-              className="px-3 py-1 bg-[#4ebe96] hover:bg-[#4ebe96]/80 rounded text-sm transition-colors duration-100"
+              className="px-3 py-1 bg-[#4ebe96] hover:bg-[#4ebe96]/80 rounded-full text-sm motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
             >
               + Add Filter
             </button>
@@ -186,7 +186,7 @@ function StockScreenerComponent() {
               <select
                 value={c.metric}
                 onChange={(e) => updateCriteria(i, 'metric', e.target.value)}
-                className="bg-[#1a1a1a] border border-white/[0.08] rounded px-2 py-1 text-sm"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-lg px-2 py-1 text-sm focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 {METRICS.map(m => (
                   <option key={m.key} value={m.key}>{m.name}</option>
@@ -196,7 +196,7 @@ function StockScreenerComponent() {
               <select
                 value={c.operator}
                 onChange={(e) => updateCriteria(i, 'operator', e.target.value)}
-                className="bg-[#1a1a1a] border border-white/[0.08] rounded px-2 py-1 text-sm"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-lg px-2 py-1 text-sm focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <option value="gt">Greater than</option>
                 <option value="lt">Less than</option>
@@ -207,7 +207,7 @@ function StockScreenerComponent() {
                 type="number"
                 value={c.value}
                 onChange={(e) => updateCriteria(i, 'value', parseFloat(e.target.value))}
-                className="bg-[#1a1a1a] border border-white/[0.08] rounded px-2 py-1 text-sm w-24"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-lg px-2 py-1 text-sm w-24 tabular-nums focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                 step="0.01"
               />
 
@@ -218,7 +218,7 @@ function StockScreenerComponent() {
                     type="number"
                     value={c.value2 || ''}
                     onChange={(e) => updateCriteria(i, 'value2', parseFloat(e.target.value))}
-                    className="bg-[#1a1a1a] border border-white/[0.08] rounded px-2 py-1 text-sm w-24"
+                    className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-lg px-2 py-1 text-sm w-24 tabular-nums focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                     step="0.01"
                   />
                 </>
@@ -226,7 +226,7 @@ function StockScreenerComponent() {
 
               <button
                 onClick={() => removeCriteria(i)}
-                className="text-[#e15241] hover:text-[#e15241]/80 transition-colors duration-100"
+                className="text-[#ff5c5c] hover:text-[#ff5c5c]/80 motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 ✕
               </button>
@@ -235,7 +235,7 @@ function StockScreenerComponent() {
 
           <button
             onClick={() => applyScreen()}
-            className="mt-4 px-4 py-2 bg-[#4ebe96] hover:bg-[#4ebe96]/80 rounded font-medium transition-colors duration-100"
+            className="mt-4 px-4 py-2 bg-[#4ebe96] hover:bg-[#4ebe96]/80 rounded-full font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
           >
             Run Screen
           </button>
@@ -251,7 +251,7 @@ function StockScreenerComponent() {
                 <select
                   value={sortBy}
                   onChange={(e) => { setSortBy(e.target.value); applyScreen(); }}
-                  className="bg-[#1a1a1a] border border-white/[0.08] rounded px-2 py-1 text-sm"
+                  className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-lg px-2 py-1 text-sm focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                 >
                   {METRICS.map(m => (
                     <option key={m.key} value={m.key}>{m.name}</option>
@@ -259,7 +259,7 @@ function StockScreenerComponent() {
                 </select>
                 <button
                   onClick={() => { setSortOrder(o => o === 'asc' ? 'desc' : 'asc'); applyScreen(); }}
-                  className="px-2 py-1 bg-white/[0.05] rounded text-sm transition-colors duration-100 hover:bg-white/[0.08]"
+                  className="px-2 py-1 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-full text-sm motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.08] focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                 >
                   {sortOrder === 'asc' ? '↑' : '↓'}
                 </button>
@@ -283,16 +283,16 @@ function StockScreenerComponent() {
                 </thead>
                 <tbody>
                   {results.map((stock) => (
-                    <tr key={stock.ticker} className="border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors duration-100">
+                    <tr key={stock.ticker} className="border-b border-white/[0.04] hover:bg-white/[0.03] motion-safe:transition-all motion-safe:duration-150 ease-out">
                       <td className="p-3 font-bold text-[#4ebe96]">{stock.ticker}</td>
                       <td className="p-3">{stock.name}</td>
-                      <td className="p-3 text-right">${typeof stock.price === 'number' ? stock.price.toFixed(2) : '—'}</td>
-                      <td className="p-3 text-right">{formatCurrency(stock.marketCap)}</td>
-                      <td className="p-3 text-right">{typeof stock.pe === 'number' ? stock.pe.toFixed(1) : '—'}</td>
-                      <td className="p-3 text-right text-[#4ebe96]">{formatPercent(stock.roic)}</td>
-                      <td className="p-3 text-right">{formatPercent(stock.revenueGrowth)}</td>
-                      <td className="p-3 text-right">{formatPercent(stock.grossMargin)}</td>
-                      <td className="p-3 text-right">{formatPercent(stock.freeCashFlowYield)}</td>
+                      <td className="p-3 text-right tabular-nums">${typeof stock.price === 'number' ? stock.price.toFixed(2) : '—'}</td>
+                      <td className="p-3 text-right tabular-nums">{formatCurrency(stock.marketCap)}</td>
+                      <td className="p-3 text-right tabular-nums">{typeof stock.pe === 'number' ? stock.pe.toFixed(1) : '—'}</td>
+                      <td className="p-3 text-right text-[#4ebe96] tabular-nums">{formatPercent(stock.roic)}</td>
+                      <td className="p-3 text-right tabular-nums">{formatPercent(stock.revenueGrowth)}</td>
+                      <td className="p-3 text-right tabular-nums">{formatPercent(stock.grossMargin)}</td>
+                      <td className="p-3 text-right tabular-nums">{formatPercent(stock.freeCashFlowYield)}</td>
                     </tr>
                   ))}
                 </tbody>

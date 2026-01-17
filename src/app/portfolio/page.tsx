@@ -140,7 +140,7 @@ export default function PortfolioPage() {
             <h2 className="text-2xl font-bold mb-8 text-center">Why Use Lician Portfolio Tracker?</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {features.map((feature, i) => (
-                <div key={i} className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+                <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                   <span className="text-3xl mb-4 block">{feature.icon}</span>
                   <h3 className="font-bold mb-2">{feature.title}</h3>
                   <p className="text-sm text-[#868f97]">{feature.description}</p>
@@ -154,10 +154,10 @@ export default function PortfolioPage() {
             <h2 className="text-2xl font-bold mb-8 text-center">Frequently Asked Questions</h2>
             <div className="max-w-3xl mx-auto space-y-4">
               {faqs.map((faq, i) => (
-                <details key={i} className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] group">
+                <details key={i} className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] group">
                   <summary className="font-bold cursor-pointer list-none flex items-center justify-between">
                     <span>{faq.question}</span>
-                    <span className="text-[#4ebe96] group-open:rotate-180 transition-transform duration-100">▼</span>
+                    <span className="text-[#4ebe96] group-open:rotate-180 motion-safe:transition-transform motion-safe:duration-150 ease-out">▼</span>
                   </summary>
                   <p className="text-[#868f97] mt-4">
                     {faq.answer}
@@ -171,16 +171,16 @@ export default function PortfolioPage() {
           <section className="border-t border-white/[0.08] pt-8">
             <h3 className="text-lg font-bold mb-4 text-center">Explore More Tools</h3>
             <div className="flex flex-wrap justify-center gap-3">
-              <Link href="/markets" className="px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 text-sm">
+              <Link href="/markets" className="px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-colors motion-safe:duration-150 ease-out text-sm">
                 Live Markets
               </Link>
-              <Link href="/screener" className="px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 text-sm">
+              <Link href="/screener" className="px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-colors motion-safe:duration-150 ease-out text-sm">
                 Stock Screener
               </Link>
-              <Link href="/newsletter" className="px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 text-sm">
+              <Link href="/newsletter" className="px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-colors motion-safe:duration-150 ease-out text-sm">
                 Newsletter
               </Link>
-              <Link href="/battle" className="px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 text-sm">
+              <Link href="/battle" className="px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-colors motion-safe:duration-150 ease-out text-sm">
                 Stock Battle
               </Link>
             </div>

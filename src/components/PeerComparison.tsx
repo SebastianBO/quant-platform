@@ -156,7 +156,7 @@ function MetricIndicator({ value, avg, higherIsBetter = true }: { value: number,
   }
 
   return (
-    <span className={cn("text-xs font-medium ml-1", isGood ? "text-[#4ebe96]" : "text-[#e15241]")}>
+    <span className={cn("text-xs font-medium ml-1 tabular-nums", isGood ? "text-[#4ebe96]" : "text-[#ff5c5c]")}>
       {isGood ? "+" : ""}{diff.toFixed(0)}%
     </span>
   )
@@ -389,7 +389,7 @@ function PeerComparisonComponent({
                 <Link
                   key={peer.ticker}
                   href={`/compare/${symbol.toLowerCase()}-vs-${peer.ticker.toLowerCase()}`}
-                  className="text-xs px-2 py-1 bg-white/[0.05] hover:bg-white/[0.08] rounded transition-colors duration-100"
+                  className="text-xs px-2 py-1 bg-white/[0.05] hover:bg-white/[0.08] rounded-full motion-safe:transition-colors motion-safe:duration-150 ease-out"
                 >
                   vs {peer.ticker}
                 </Link>
@@ -410,7 +410,7 @@ function PeerComparisonComponent({
         </h2>
 
         {insights.length > 0 && (
-          <div className="bg-[#479ffa]/10 border border-[#479ffa]/20 rounded-lg p-4 mb-6">
+          <div className="bg-[#479ffa]/10 border border-[#479ffa]/20 rounded-2xl p-4 mb-6">
             <ul className="space-y-2">
               {insights.map((insight, i) => (
                 <li key={i} className="flex items-start gap-2 text-white">
@@ -422,7 +422,7 @@ function PeerComparisonComponent({
           </div>
         )}
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
@@ -438,14 +438,14 @@ function PeerComparisonComponent({
                   <span className="font-bold text-[#4ebe96]">{symbol}</span>
                   <span className="text-[#868f97] ml-2 text-xs">(This stock)</span>
                 </td>
-                <td className="text-right p-3 font-medium">
+                <td className="text-right p-3 font-medium tabular-nums">
                   {pe > 0 ? pe.toFixed(1) + 'x' : 'N/A'}
                 </td>
-                <td className="text-right p-3 font-medium">
+                <td className="text-right p-3 font-medium tabular-nums">
                   {profitMargin ? (profitMargin * 100).toFixed(1) + '%' : 'N/A'}
                 </td>
-                <td className="text-right p-3 font-medium">
-                  <span className={revenueGrowth >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}>
+                <td className="text-right p-3 font-medium tabular-nums">
+                  <span className={revenueGrowth >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}>
                     {revenueGrowth ? (revenueGrowth * 100).toFixed(1) + '%' : 'N/A'}
                   </span>
                 </td>
@@ -455,20 +455,20 @@ function PeerComparisonComponent({
                   <td className="p-3">
                     <Link
                       href={`/valuation/${peer.ticker.toLowerCase()}`}
-                      className="font-medium hover:text-[#4ebe96] transition-colors duration-100"
+                      className="font-medium hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out"
                     >
                       {peer.ticker}
                     </Link>
                     <span className="text-[#868f97] ml-2 text-xs truncate">{peer.name.split(' ')[0]}</span>
                   </td>
-                  <td className="text-right p-3">
+                  <td className="text-right p-3 tabular-nums">
                     {peer.pe > 0 ? peer.pe.toFixed(1) + 'x' : 'N/A'}
                   </td>
-                  <td className="text-right p-3">
+                  <td className="text-right p-3 tabular-nums">
                     {peer.profitMargin ? (peer.profitMargin * 100).toFixed(1) + '%' : 'N/A'}
                   </td>
-                  <td className="text-right p-3">
-                    <span className={peer.revenueGrowth >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}>
+                  <td className="text-right p-3 tabular-nums">
+                    <span className={peer.revenueGrowth >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}>
                       {peer.revenueGrowth ? (peer.revenueGrowth * 100).toFixed(1) + '%' : 'N/A'}
                     </span>
                   </td>
@@ -483,7 +483,7 @@ function PeerComparisonComponent({
             <Link
               key={peer.ticker}
               href={`/compare/${symbol.toLowerCase()}-vs-${peer.ticker.toLowerCase()}`}
-              className="text-sm px-3 py-1.5 bg-white/[0.05] hover:bg-white/[0.08] rounded-lg transition-colors duration-100 text-white"
+              className="text-sm px-3 py-1.5 bg-white/[0.05] hover:bg-white/[0.08] rounded-2xl motion-safe:transition-colors motion-safe:duration-150 ease-out text-white"
             >
               See full {symbol} vs {peer.ticker} comparison
             </Link>
@@ -514,8 +514,8 @@ function PeerComparisonComponent({
               <div
                 key={i}
                 className={cn(
-                  "flex items-center gap-3 p-3 rounded-lg",
-                  i === 0 ? "bg-[#4ebe96]/10 border border-[#4ebe96]/20" : "bg-white/[0.025]"
+                  "flex items-center gap-3 p-3 rounded-2xl",
+                  i === 0 ? "bg-[#4ebe96]/10 border border-[#4ebe96]/20" : "bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08]"
                 )}
               >
                 <span className={cn(
@@ -535,55 +535,55 @@ function PeerComparisonComponent({
         {/* Ranking Cards */}
         {rankings && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-            <div className="bg-white/[0.025] p-4 rounded-lg text-center">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl text-center">
               <p className="text-[#868f97] text-xs mb-1">P/E Rank</p>
-              <p className="text-2xl font-bold">
+              <p className="text-2xl font-bold tabular-nums">
                 {rankings.pe.rank > 0 ? `#${rankings.pe.rank}` : 'N/A'}
               </p>
               {rankings.pe.total > 0 && (
                 <p className={cn(
-                  "text-xs",
+                  "text-xs tabular-nums",
                   rankings.pe.rank <= 2 ? 'text-[#4ebe96]' : 'text-[#868f97]'
                 )}>
                   of {rankings.pe.total} (lower = better value)
                 </p>
               )}
             </div>
-            <div className="bg-white/[0.025] p-4 rounded-lg text-center">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl text-center">
               <p className="text-[#868f97] text-xs mb-1">Margin Rank</p>
-              <p className="text-2xl font-bold">
+              <p className="text-2xl font-bold tabular-nums">
                 {rankings.margin.rank > 0 ? `#${rankings.margin.rank}` : 'N/A'}
               </p>
               {rankings.margin.total > 0 && (
                 <p className={cn(
-                  "text-xs",
+                  "text-xs tabular-nums",
                   rankings.margin.rank <= 2 ? 'text-[#4ebe96]' : 'text-[#868f97]'
                 )}>
                   of {rankings.margin.total}
                 </p>
               )}
             </div>
-            <div className="bg-white/[0.025] p-4 rounded-lg text-center">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl text-center">
               <p className="text-[#868f97] text-xs mb-1">Growth Rank</p>
-              <p className="text-2xl font-bold">
+              <p className="text-2xl font-bold tabular-nums">
                 {rankings.growth.rank > 0 ? `#${rankings.growth.rank}` : 'N/A'}
               </p>
               {rankings.growth.total > 0 && (
                 <p className={cn(
-                  "text-xs",
+                  "text-xs tabular-nums",
                   rankings.growth.rank <= 2 ? 'text-[#4ebe96]' : 'text-[#868f97]'
                 )}>
                   of {rankings.growth.total}
                 </p>
               )}
             </div>
-            <div className="bg-white/[0.025] p-4 rounded-lg text-center">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl text-center">
               <p className="text-[#868f97] text-xs mb-1">Size Rank</p>
-              <p className="text-2xl font-bold">
+              <p className="text-2xl font-bold tabular-nums">
                 {rankings.size.rank > 0 ? `#${rankings.size.rank}` : 'N/A'}
               </p>
               {rankings.size.total > 0 && (
-                <p className="text-xs text-[#868f97]">of {rankings.size.total}</p>
+                <p className="text-xs text-[#868f97] tabular-nums">of {rankings.size.total}</p>
               )}
             </div>
           </div>
@@ -609,20 +609,20 @@ function PeerComparisonComponent({
                   <span className="font-bold text-[#4ebe96]">{symbol}</span>
                   <span className="text-[#868f97] ml-2 text-xs">(This stock)</span>
                 </td>
-                <td className="p-3 text-right font-medium">{formatCurrency(marketCap)}</td>
-                <td className="p-3 text-right">
+                <td className="p-3 text-right font-medium tabular-nums">{formatCurrency(marketCap)}</td>
+                <td className="p-3 text-right tabular-nums">
                   {pe > 0 ? pe.toFixed(1) : 'N/A'}
                   {pe > 0 && averages?.pe && <MetricIndicator value={pe} avg={averages.pe} higherIsBetter={false} />}
                 </td>
-                <td className="p-3 text-right">
-                  <span className={revenueGrowth >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}>
+                <td className="p-3 text-right tabular-nums">
+                  <span className={revenueGrowth >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}>
                     {formatPercent(revenueGrowth)}
                   </span>
                   {averages?.revenueGrowth !== undefined && (
                     <MetricIndicator value={revenueGrowth} avg={averages.revenueGrowth} />
                   )}
                 </td>
-                <td className="p-3 text-right">
+                <td className="p-3 text-right tabular-nums">
                   {formatPercent(profitMargin)}
                   {averages?.profitMargin !== undefined && (
                     <MetricIndicator value={profitMargin} avg={averages.profitMargin} />
@@ -637,26 +637,26 @@ function PeerComparisonComponent({
                   <td className="p-3">
                     <Link
                       href={`/stock/${peer.ticker.toLowerCase()}`}
-                      className="font-medium hover:text-[#4ebe96] transition-colors duration-100"
+                      className="font-medium hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out"
                     >
                       {peer.ticker}
                     </Link>
                     <span className="text-[#868f97] ml-2 text-xs">{peer.name.split(' ').slice(0, 2).join(' ')}</span>
                   </td>
-                  <td className="p-3 text-right">{formatCurrency(peer.marketCap)}</td>
-                  <td className="p-3 text-right">
+                  <td className="p-3 text-right tabular-nums">{formatCurrency(peer.marketCap)}</td>
+                  <td className="p-3 text-right tabular-nums">
                     {peer.pe > 0 ? peer.pe.toFixed(1) : 'N/A'}
                   </td>
-                  <td className="p-3 text-right">
-                    <span className={peer.revenueGrowth >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}>
+                  <td className="p-3 text-right tabular-nums">
+                    <span className={peer.revenueGrowth >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}>
                       {formatPercent(peer.revenueGrowth)}
                     </span>
                   </td>
-                  <td className="p-3 text-right">{formatPercent(peer.profitMargin)}</td>
+                  <td className="p-3 text-right tabular-nums">{formatPercent(peer.profitMargin)}</td>
                   <td className="p-3 text-center">
                     <Link
                       href={`/compare/${symbol.toLowerCase()}-vs-${peer.ticker.toLowerCase()}`}
-                      className="text-xs px-2 py-1 bg-white/[0.05] hover:bg-[#4ebe96]/20 hover:text-[#4ebe96] rounded transition-colors duration-100"
+                      className="text-xs px-2 py-1 bg-white/[0.05] hover:bg-[#4ebe96]/20 hover:text-[#4ebe96] rounded-full motion-safe:transition-colors motion-safe:duration-150 ease-out"
                     >
                       vs {peer.ticker}
                     </Link>
@@ -669,24 +669,24 @@ function PeerComparisonComponent({
 
         {/* Peer Average Summary */}
         {averages && (
-          <div className="mt-4 p-4 bg-white/[0.015] rounded-lg">
+          <div className="mt-4 p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
             <p className="font-medium mb-2 text-sm">Peer Group Averages ({industry || sector || 'Industry'})</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
               <div>
                 <span className="text-[#868f97]">Avg P/E:</span>
-                <span className="ml-2 font-bold">{averages.pe > 0 ? averages.pe.toFixed(1) : 'N/A'}</span>
+                <span className="ml-2 font-bold tabular-nums">{averages.pe > 0 ? averages.pe.toFixed(1) : 'N/A'}</span>
               </div>
               <div>
                 <span className="text-[#868f97]">Avg Growth:</span>
-                <span className="ml-2 font-bold">{formatPercent(averages.revenueGrowth)}</span>
+                <span className="ml-2 font-bold tabular-nums">{formatPercent(averages.revenueGrowth)}</span>
               </div>
               <div>
                 <span className="text-[#868f97]">Avg Margin:</span>
-                <span className="ml-2 font-bold">{formatPercent(averages.profitMargin)}</span>
+                <span className="ml-2 font-bold tabular-nums">{formatPercent(averages.profitMargin)}</span>
               </div>
               <div>
                 <span className="text-[#868f97]">Avg Market Cap:</span>
-                <span className="ml-2 font-bold">{formatCurrency(averages.marketCap)}</span>
+                <span className="ml-2 font-bold tabular-nums">{formatCurrency(averages.marketCap)}</span>
               </div>
             </div>
           </div>
@@ -700,7 +700,7 @@ function PeerComparisonComponent({
               <Link
                 key={peer.ticker}
                 href={`/compare/${symbol.toLowerCase()}-vs-${peer.ticker.toLowerCase()}`}
-                className="px-3 py-1.5 bg-white/[0.05] hover:bg-[#4ebe96]/20 hover:text-[#4ebe96] rounded-lg text-sm transition-colors duration-100"
+                className="px-3 py-1.5 bg-white/[0.05] hover:bg-[#4ebe96]/20 hover:text-[#4ebe96] rounded-full text-sm motion-safe:transition-all motion-safe:duration-150 ease-out"
               >
                 {symbol} vs {peer.ticker}
               </Link>
@@ -790,7 +790,7 @@ export function PeerComparisonSSR({
       {insights.length > 0 && (
         <div className="mb-4 space-y-2">
           {insights.slice(0, 3).map((insight, i) => (
-            <div key={i} className="flex items-center gap-2 p-2 bg-[#4ebe96]/10 rounded-lg text-sm">
+            <div key={i} className="flex items-center gap-2 p-2 bg-[#4ebe96]/10 rounded-2xl text-sm">
               <span className="w-1.5 h-1.5 rounded-full bg-[#4ebe96]" />
               {insight}
             </div>
@@ -799,7 +799,7 @@ export function PeerComparisonSSR({
       )}
 
       {/* Simple comparison table */}
-      <div className="overflow-x-auto bg-[#1a1a1a] border border-white/[0.08] rounded-lg">
+      <div className="overflow-x-auto bg-black border border-white/[0.08] rounded-2xl">
         <table className="w-full text-sm">
           <thead className="bg-white/[0.05]">
             <tr>
@@ -813,29 +813,29 @@ export function PeerComparisonSSR({
           <tbody className="divide-y divide-white/[0.08]">
             <tr className="bg-[#4ebe96]/10">
               <td className="p-3 font-bold text-[#4ebe96]">{symbol}</td>
-              <td className="p-3 text-right">{pe > 0 ? pe.toFixed(1) : 'N/A'}</td>
-              <td className="p-3 text-right">
-                <span className={revenueGrowth >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}>
+              <td className="p-3 text-right tabular-nums">{pe > 0 ? pe.toFixed(1) : 'N/A'}</td>
+              <td className="p-3 text-right tabular-nums">
+                <span className={revenueGrowth >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}>
                   {(revenueGrowth * 100).toFixed(1)}%
                 </span>
               </td>
-              <td className="p-3 text-right">{(profitMargin * 100).toFixed(1)}%</td>
+              <td className="p-3 text-right tabular-nums">{(profitMargin * 100).toFixed(1)}%</td>
               <td className="p-3 text-center">-</td>
             </tr>
             {peers.slice(0, 5).map(peer => (
               <tr key={peer.ticker}>
                 <td className="p-3">
-                  <Link href={`/stock/${peer.ticker.toLowerCase()}`} className="font-medium hover:text-[#4ebe96] transition-colors duration-100">
+                  <Link href={`/stock/${peer.ticker.toLowerCase()}`} className="font-medium hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out">
                     {peer.ticker}
                   </Link>
                 </td>
-                <td className="p-3 text-right">{peer.pe > 0 ? peer.pe.toFixed(1) : 'N/A'}</td>
-                <td className="p-3 text-right">
-                  <span className={peer.revenueGrowth >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}>
+                <td className="p-3 text-right tabular-nums">{peer.pe > 0 ? peer.pe.toFixed(1) : 'N/A'}</td>
+                <td className="p-3 text-right tabular-nums">
+                  <span className={peer.revenueGrowth >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}>
                     {(peer.revenueGrowth * 100).toFixed(1)}%
                   </span>
                 </td>
-                <td className="p-3 text-right">{(peer.profitMargin * 100).toFixed(1)}%</td>
+                <td className="p-3 text-right tabular-nums">{(peer.profitMargin * 100).toFixed(1)}%</td>
                 <td className="p-3 text-center">
                   <Link
                     href={`/compare/${symbol.toLowerCase()}-vs-${peer.ticker.toLowerCase()}`}
@@ -856,7 +856,7 @@ export function PeerComparisonSSR({
           <Link
             key={peer.ticker}
             href={`/compare/${symbol.toLowerCase()}-vs-${peer.ticker.toLowerCase()}`}
-            className="text-sm px-3 py-1 bg-white/[0.05] hover:bg-white/[0.08] rounded-lg transition-colors duration-100"
+            className="text-sm px-3 py-1 bg-white/[0.05] hover:bg-white/[0.08] rounded-full motion-safe:transition-all motion-safe:duration-150 ease-out"
           >
             {symbol} vs {peer.ticker}
           </Link>

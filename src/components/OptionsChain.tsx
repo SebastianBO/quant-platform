@@ -143,7 +143,7 @@ export default function OptionsChain({ ticker }: OptionsChainProps) {
 
   if (loading) {
     return (
-      <Card className="bg-[#1a1a1a] border-white/[0.08]">
+      <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08]">
         <CardHeader>
           <CardTitle>Options Chain</CardTitle>
         </CardHeader>
@@ -158,7 +158,7 @@ export default function OptionsChain({ ticker }: OptionsChainProps) {
 
   if (error || !data || !data.data || data.data.length === 0) {
     return (
-      <Card className="bg-[#1a1a1a] border-white/[0.08]">
+      <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08]">
         <CardHeader>
           <CardTitle>Options Chain</CardTitle>
         </CardHeader>
@@ -172,13 +172,13 @@ export default function OptionsChain({ ticker }: OptionsChainProps) {
   const currentPrice = data.lastTradePrice || 0
 
   return (
-    <Card className="bg-[#1a1a1a] border-white/[0.08]">
+    <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
       <CardHeader className="space-y-4">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             Options Chain - {ticker}
           </CardTitle>
-          <div className="text-sm text-[#868f97]">
+          <div className="text-sm text-[#868f97] tabular-nums">
             {data.lastTradeDate && (
               <>At close: {formatDate(data.lastTradeDate)} | </>
             )}
@@ -192,13 +192,13 @@ export default function OptionsChain({ ticker }: OptionsChainProps) {
           <div className="relative">
             <button
               onClick={() => setShowExpirationDropdown(!showExpirationDropdown)}
-              className="flex items-center gap-2 px-4 py-2 bg-white/[0.05] rounded-lg text-sm font-medium hover:bg-white/[0.08] transition-colors duration-100"
+              className="flex items-center gap-2 px-4 py-2 bg-white/[0.05] rounded-full text-sm font-medium hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none"
             >
               {selectedExpiration ? formatDate(selectedExpiration) : "Select Date"}
               <ChevronDown className="w-4 h-4" />
             </button>
             {showExpirationDropdown && data?.data && Array.isArray(data.data) && (
-              <div className="absolute top-full left-0 mt-1 w-48 bg-[#1a1a1a] border border-white/[0.08] rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto">
+              <div className="absolute top-full left-0 mt-1 w-48 bg-black border border-white/[0.08] rounded-2xl shadow-lg z-50 max-h-64 overflow-y-auto">
                 {data.data.map(exp => (
                   <button
                     key={exp.expirationDate}
@@ -206,7 +206,7 @@ export default function OptionsChain({ ticker }: OptionsChainProps) {
                       setSelectedExpiration(exp.expirationDate)
                       setShowExpirationDropdown(false)
                     }}
-                    className={`w-full px-4 py-2 text-left text-sm hover:bg-white/[0.08] transition-colors duration-100 ${
+                    className={`w-full px-4 py-2 text-left text-sm hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none ${
                       selectedExpiration === exp.expirationDate ? "bg-[#4ebe96]/20 text-[#4ebe96]" : ""
                     }`}
                   >
@@ -222,7 +222,7 @@ export default function OptionsChain({ ticker }: OptionsChainProps) {
             <select
               value={strikeFilter}
               onChange={(e) => setStrikeFilter(e.target.value as typeof strikeFilter)}
-              className="px-4 py-2 bg-white/[0.05] rounded-lg text-sm font-medium appearance-none pr-8 cursor-pointer hover:bg-white/[0.08] transition-colors duration-100"
+              className="px-4 py-2 bg-white/[0.05] rounded-full text-sm font-medium appearance-none pr-8 cursor-pointer hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none"
             >
               <option value="all">All Strikes</option>
               <option value="near">Near the Money</option>
@@ -233,12 +233,12 @@ export default function OptionsChain({ ticker }: OptionsChainProps) {
           </div>
 
           {/* View Mode */}
-          <div className="flex bg-white/[0.05] rounded-lg p-1">
+          <div className="flex bg-white/[0.05] rounded-full p-1">
             {(["straddle", "calls", "puts"] as ViewMode[]).map(mode => (
               <button
                 key={mode}
                 onClick={() => setViewMode(mode)}
-                className={`px-4 py-1.5 text-sm font-medium rounded-md capitalize transition-colors duration-100 ${
+                className={`px-4 py-1.5 text-sm font-medium rounded-full capitalize motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none ${
                   viewMode === mode
                     ? "bg-[#4ebe96] text-white"
                     : "text-[#868f97] hover:text-white"
@@ -312,20 +312,20 @@ function StraddleView({
           <tr className="border-b border-white/[0.08]">
             <th colSpan={5} className="text-left py-2 px-2 font-semibold text-[#4ebe96]">Calls</th>
             <th className="py-2 px-4 font-semibold"></th>
-            <th colSpan={5} className="text-right py-2 px-2 font-semibold text-[#e15241]">Puts</th>
+            <th colSpan={5} className="text-right py-2 px-2 font-semibold text-[#ff5c5c]">Puts</th>
           </tr>
           <tr className="border-b border-white/[0.08] text-[#868f97] text-xs">
-            <th className="py-2 px-2 text-left">Last</th>
-            <th className="py-2 px-2 text-left">Chg</th>
-            <th className="py-2 px-2 text-left">%Chg</th>
-            <th className="py-2 px-2 text-right">Vol</th>
-            <th className="py-2 px-2 text-right">OI</th>
-            <th className="py-2 px-4 text-center font-semibold text-white">Strike</th>
-            <th className="py-2 px-2 text-left">Last</th>
-            <th className="py-2 px-2 text-left">Chg</th>
-            <th className="py-2 px-2 text-left">%Chg</th>
-            <th className="py-2 px-2 text-right">Vol</th>
-            <th className="py-2 px-2 text-right">OI</th>
+            <th className="py-2 px-2 text-left tabular-nums">Last</th>
+            <th className="py-2 px-2 text-left tabular-nums">Chg</th>
+            <th className="py-2 px-2 text-left tabular-nums">%Chg</th>
+            <th className="py-2 px-2 text-right tabular-nums">Vol</th>
+            <th className="py-2 px-2 text-right tabular-nums">OI</th>
+            <th className="py-2 px-4 text-center font-semibold text-white tabular-nums">Strike</th>
+            <th className="py-2 px-2 text-left tabular-nums">Last</th>
+            <th className="py-2 px-2 text-left tabular-nums">Chg</th>
+            <th className="py-2 px-2 text-left tabular-nums">%Chg</th>
+            <th className="py-2 px-2 text-right tabular-nums">Vol</th>
+            <th className="py-2 px-2 text-right tabular-nums">OI</th>
           </tr>
         </thead>
         <tbody>
@@ -339,54 +339,54 @@ function StraddleView({
             return (
               <tr
                 key={strike}
-                className={`border-b border-white/[0.08]/50 hover:bg-white/[0.05]/30 transition-colors duration-100 ${
-                  isATM ? "bg-yellow-500/10" : ""
+                className={`border-b border-white/[0.08]/50 hover:bg-white/[0.05]/30 motion-safe:transition-all motion-safe:duration-150 ease-out ${
+                  isATM ? "bg-[#ffa16c]/10" : ""
                 }`}
               >
                 {/* Calls */}
-                <td className={`py-2 px-2 ${isITMCall ? "bg-[#4ebe96]/5" : ""}`}>
+                <td className={`py-2 px-2 tabular-nums ${isITMCall ? "bg-[#4ebe96]/5" : ""}`}>
                   {call ? formatPrice(call.lastPrice) : "-"}
                 </td>
-                <td className={`py-2 px-2 ${isITMCall ? "bg-[#4ebe96]/5" : ""} ${
-                  call && call.change > 0 ? "text-[#4ebe96]" : call && call.change < 0 ? "text-[#e15241]" : ""
+                <td className={`py-2 px-2 tabular-nums ${isITMCall ? "bg-[#4ebe96]/5" : ""} ${
+                  call && call.change > 0 ? "text-[#4ebe96]" : call && call.change < 0 ? "text-[#ff5c5c]" : ""
                 }`}>
                   {call ? formatChange(call.change) : "-"}
                 </td>
-                <td className={`py-2 px-2 ${isITMCall ? "bg-[#4ebe96]/5" : ""} ${
-                  call && call.changePercent > 0 ? "text-[#4ebe96]" : call && call.changePercent < 0 ? "text-[#e15241]" : ""
+                <td className={`py-2 px-2 tabular-nums ${isITMCall ? "bg-[#4ebe96]/5" : ""} ${
+                  call && call.changePercent > 0 ? "text-[#4ebe96]" : call && call.changePercent < 0 ? "text-[#ff5c5c]" : ""
                 }`}>
                   {call ? formatPercent(call.changePercent) : "-"}
                 </td>
-                <td className={`py-2 px-2 text-right ${isITMCall ? "bg-[#4ebe96]/5" : ""}`}>
+                <td className={`py-2 px-2 text-right tabular-nums ${isITMCall ? "bg-[#4ebe96]/5" : ""}`}>
                   {call ? formatVolume(call.volume) : "-"}
                 </td>
-                <td className={`py-2 px-2 text-right ${isITMCall ? "bg-[#4ebe96]/5" : ""}`}>
+                <td className={`py-2 px-2 text-right tabular-nums ${isITMCall ? "bg-[#4ebe96]/5" : ""}`}>
                   {call ? formatVolume(call.openInterest) : "-"}
                 </td>
 
                 {/* Strike */}
-                <td className={`py-2 px-4 text-center font-semibold ${isATM ? "text-yellow-500" : ""}`}>
+                <td className={`py-2 px-4 text-center font-semibold tabular-nums ${isATM ? "text-[#ffa16c]" : ""}`}>
                   {strike.toFixed(2)}
                 </td>
 
                 {/* Puts */}
-                <td className={`py-2 px-2 ${isITMPut ? "bg-[#e15241]/5" : ""}`}>
+                <td className={`py-2 px-2 tabular-nums ${isITMPut ? "bg-[#ff5c5c]/5" : ""}`}>
                   {put ? formatPrice(put.lastPrice) : "-"}
                 </td>
-                <td className={`py-2 px-2 ${isITMPut ? "bg-[#e15241]/5" : ""} ${
-                  put && put.change > 0 ? "text-[#4ebe96]" : put && put.change < 0 ? "text-[#e15241]" : ""
+                <td className={`py-2 px-2 tabular-nums ${isITMPut ? "bg-[#ff5c5c]/5" : ""} ${
+                  put && put.change > 0 ? "text-[#4ebe96]" : put && put.change < 0 ? "text-[#ff5c5c]" : ""
                 }`}>
                   {put ? formatChange(put.change) : "-"}
                 </td>
-                <td className={`py-2 px-2 ${isITMPut ? "bg-[#e15241]/5" : ""} ${
-                  put && put.changePercent > 0 ? "text-[#4ebe96]" : put && put.changePercent < 0 ? "text-[#e15241]" : ""
+                <td className={`py-2 px-2 tabular-nums ${isITMPut ? "bg-[#ff5c5c]/5" : ""} ${
+                  put && put.changePercent > 0 ? "text-[#4ebe96]" : put && put.changePercent < 0 ? "text-[#ff5c5c]" : ""
                 }`}>
                   {put ? formatPercent(put.changePercent) : "-"}
                 </td>
-                <td className={`py-2 px-2 text-right ${isITMPut ? "bg-[#e15241]/5" : ""}`}>
+                <td className={`py-2 px-2 text-right tabular-nums ${isITMPut ? "bg-[#ff5c5c]/5" : ""}`}>
                   {put ? formatVolume(put.volume) : "-"}
                 </td>
-                <td className={`py-2 px-2 text-right ${isITMPut ? "bg-[#e15241]/5" : ""}`}>
+                <td className={`py-2 px-2 text-right tabular-nums ${isITMPut ? "bg-[#ff5c5c]/5" : ""}`}>
                   {put ? formatVolume(put.openInterest) : "-"}
                 </td>
               </tr>
@@ -430,16 +430,16 @@ function ListView({
         <thead>
           <tr className="border-b border-white/[0.08] text-[#868f97] text-xs">
             <th className="py-2 px-2 text-left">Contract</th>
-            <th className="py-2 px-2 text-center">Strike</th>
-            <th className="py-2 px-2 text-right">Last</th>
-            <th className="py-2 px-2 text-right">Bid</th>
-            <th className="py-2 px-2 text-right">Ask</th>
-            <th className="py-2 px-2 text-right">Chg</th>
-            <th className="py-2 px-2 text-right">%Chg</th>
-            <th className="py-2 px-2 text-right">Vol</th>
-            <th className="py-2 px-2 text-right">OI</th>
-            <th className="py-2 px-2 text-right">IV</th>
-            <th className="py-2 px-2 text-right">Delta</th>
+            <th className="py-2 px-2 text-center tabular-nums">Strike</th>
+            <th className="py-2 px-2 text-right tabular-nums">Last</th>
+            <th className="py-2 px-2 text-right tabular-nums">Bid</th>
+            <th className="py-2 px-2 text-right tabular-nums">Ask</th>
+            <th className="py-2 px-2 text-right tabular-nums">Chg</th>
+            <th className="py-2 px-2 text-right tabular-nums">%Chg</th>
+            <th className="py-2 px-2 text-right tabular-nums">Vol</th>
+            <th className="py-2 px-2 text-right tabular-nums">OI</th>
+            <th className="py-2 px-2 text-right tabular-nums">IV</th>
+            <th className="py-2 px-2 text-right tabular-nums">Delta</th>
           </tr>
         </thead>
         <tbody>
@@ -450,33 +450,33 @@ function ListView({
             return (
               <tr
                 key={option.contractName}
-                className={`border-b border-white/[0.08]/50 hover:bg-white/[0.05]/30 cursor-pointer transition-colors duration-100 ${
-                  isATM ? "bg-yellow-500/10" : isITM ? (type === "CALL" ? "bg-[#4ebe96]/5" : "bg-[#e15241]/5") : ""
+                className={`border-b border-white/[0.08]/50 hover:bg-white/[0.05]/30 cursor-pointer motion-safe:transition-all motion-safe:duration-150 ease-out ${
+                  isATM ? "bg-[#ffa16c]/10" : isITM ? (type === "CALL" ? "bg-[#4ebe96]/5" : "bg-[#ff5c5c]/5") : ""
                 }`}
               >
                 <td className="py-2 px-2 font-mono text-xs">{option.contractName}</td>
-                <td className={`py-2 px-2 text-center font-semibold ${isATM ? "text-yellow-500" : ""}`}>
+                <td className={`py-2 px-2 text-center font-semibold tabular-nums ${isATM ? "text-[#ffa16c]" : ""}`}>
                   ${option.strike.toFixed(2)}
                 </td>
-                <td className="py-2 px-2 text-right">{formatPrice(option.lastPrice)}</td>
-                <td className="py-2 px-2 text-right text-[#868f97]">{formatPrice(option.bid)}</td>
-                <td className="py-2 px-2 text-right text-[#868f97]">{formatPrice(option.ask)}</td>
-                <td className={`py-2 px-2 text-right ${
-                  option.change > 0 ? "text-[#4ebe96]" : option.change < 0 ? "text-[#e15241]" : ""
+                <td className="py-2 px-2 text-right tabular-nums">{formatPrice(option.lastPrice)}</td>
+                <td className="py-2 px-2 text-right text-[#868f97] tabular-nums">{formatPrice(option.bid)}</td>
+                <td className="py-2 px-2 text-right text-[#868f97] tabular-nums">{formatPrice(option.ask)}</td>
+                <td className={`py-2 px-2 text-right tabular-nums ${
+                  option.change > 0 ? "text-[#4ebe96]" : option.change < 0 ? "text-[#ff5c5c]" : ""
                 }`}>
                   {formatChange(option.change)}
                 </td>
-                <td className={`py-2 px-2 text-right ${
-                  option.changePercent > 0 ? "text-[#4ebe96]" : option.changePercent < 0 ? "text-[#e15241]" : ""
+                <td className={`py-2 px-2 text-right tabular-nums ${
+                  option.changePercent > 0 ? "text-[#4ebe96]" : option.changePercent < 0 ? "text-[#ff5c5c]" : ""
                 }`}>
                   {formatPercent(option.changePercent)}
                 </td>
-                <td className="py-2 px-2 text-right">{formatVolume(option.volume)}</td>
-                <td className="py-2 px-2 text-right">{formatVolume(option.openInterest)}</td>
-                <td className="py-2 px-2 text-right">
+                <td className="py-2 px-2 text-right tabular-nums">{formatVolume(option.volume)}</td>
+                <td className="py-2 px-2 text-right tabular-nums">{formatVolume(option.openInterest)}</td>
+                <td className="py-2 px-2 text-right tabular-nums">
                   {option.impliedVolatility ? `${option.impliedVolatility.toFixed(1)}%` : "-"}
                 </td>
-                <td className="py-2 px-2 text-right">
+                <td className="py-2 px-2 text-right tabular-nums">
                   {option.delta ? option.delta.toFixed(3) : "-"}
                 </td>
               </tr>

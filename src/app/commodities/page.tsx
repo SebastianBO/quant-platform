@@ -219,7 +219,7 @@ export default async function CommoditiesPage() {
             <div className="flex-1 min-w-0">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-[#868f97] mb-6" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-white transition-colors duration-100">
+            <Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">
               Home
             </Link>
             <ChevronRight className="w-4 h-4" />
@@ -362,7 +362,7 @@ export default async function CommoditiesPage() {
             <h2 className="text-3xl font-bold mb-6">Frequently Asked Questions About Commodity Investing</h2>
             <div className="space-y-4">
               {commodityFAQs.map((faq, index) => (
-                <Card key={index} className="bg-[#1a1a1a] border-white/[0.08]">
+                <Card key={index} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
                   <CardHeader>
                     <CardTitle className="text-lg font-semibold">{faq.question}</CardTitle>
                   </CardHeader>
@@ -376,7 +376,7 @@ export default async function CommoditiesPage() {
 
           {/* Related Links */}
           <section className="mb-8">
-            <Card className="bg-[#1a1a1a] border-white/[0.08]">
+            <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
               <CardHeader>
                 <CardTitle>Related Resources</CardTitle>
               </CardHeader>
@@ -384,7 +384,7 @@ export default async function CommoditiesPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Link
                     href="/"
-                    className="p-4 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
+                    className="p-4 bg-white/[0.05] rounded-2xl hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out"
                   >
                     <h3 className="font-semibold mb-2">Stock Market</h3>
                     <p className="text-sm text-[#868f97]">
@@ -393,7 +393,7 @@ export default async function CommoditiesPage() {
                   </Link>
                   <Link
                     href="/dashboard?tab=screener"
-                    className="p-4 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
+                    className="p-4 bg-white/[0.05] rounded-2xl hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out"
                   >
                     <h3 className="font-semibold mb-2">Stock Screener</h3>
                     <p className="text-sm text-[#868f97]">
@@ -402,7 +402,7 @@ export default async function CommoditiesPage() {
                   </Link>
                   <Link
                     href="/dashboard?tab=portfolio"
-                    className="p-4 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
+                    className="p-4 bg-white/[0.05] rounded-2xl hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out"
                   >
                     <h3 className="font-semibold mb-2">Portfolio Analyzer</h3>
                     <p className="text-sm text-[#868f97]">
@@ -435,7 +435,7 @@ export default async function CommoditiesPage() {
 function CommodityCard({ commodity, compact = false }: { commodity?: CommodityData; compact?: boolean }) {
   if (!commodity || commodity.error) {
     return (
-      <Card className="bg-[#1a1a1a] border-white/[0.08]">
+      <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
         <CardContent className="p-6">
           <div className="text-center text-[#868f97]">
             <p className="text-sm">Data temporarily unavailable</p>
@@ -453,7 +453,7 @@ function CommodityCard({ commodity, compact = false }: { commodity?: CommodityDa
   const absChange = Math.abs(commodity.change)
 
   return (
-    <Card className="bg-[#1a1a1a] border-white/[0.08] hover:border-[#4ebe96]/50 transition-colors duration-100">
+    <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out">
       <CardContent className={compact ? 'p-4' : 'p-6'}>
         <div className="space-y-3">
           {/* Header */}
@@ -469,7 +469,7 @@ function CommodityCard({ commodity, compact = false }: { commodity?: CommodityDa
             <div className={`font-bold tabular-nums ${compact ? 'text-2xl' : 'text-3xl'}`}>
               ${commodity.price.toFixed(2)}
             </div>
-            <div className={`flex items-center gap-2 mt-1 ${isPositive ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
+            <div className={`flex items-center gap-2 mt-1 ${isPositive ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
               {isPositive ? (
                 <TrendingUp className="w-4 h-4" />
               ) : (
@@ -491,7 +491,7 @@ function CommodityCard({ commodity, compact = false }: { commodity?: CommodityDa
               </div>
               <div className="h-2 bg-white/[0.05] rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-[#e15241] via-yellow-500 to-[#4ebe96]"
+                  className="h-full bg-gradient-to-r from-[#ff5c5c] via-yellow-500 to-[#4ebe96]"
                   style={{
                     width: `${
                       ((commodity.price - commodity.week52Low) /

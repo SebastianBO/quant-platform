@@ -493,9 +493,9 @@ export default async function ComparePage({ params }: Props) {
             <SEOSidebar />
             <div className="flex-1 min-w-0">
           <nav className="text-sm text-[#868f97] mb-6">
-            <Link href="/" className="hover:text-white transition-colors duration-100">Home</Link>
+            <Link href="/" className="hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out">Home</Link>
             {' / '}
-            <Link href="/dashboard" className="hover:text-white transition-colors duration-100">Stocks</Link>
+            <Link href="/dashboard" className="hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out">Stocks</Link>
             {' / '}
             <span>{ticker1} vs {ticker2}</span>
           </nav>
@@ -516,12 +516,12 @@ export default async function ComparePage({ params }: Props) {
 
           {/* Header Cards */}
           <div className="grid grid-cols-2 gap-6 mb-8">
-            <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] text-center">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl text-center">
               <h2 className="text-2xl font-bold text-[#4ebe96] mb-2">{stock1.symbol}</h2>
               <p className="text-[#868f97] mb-4">{stock1.name}</p>
               <p className="text-3xl font-bold">{stock1.price && stock1.price > 0 ? `$${stock1.price.toFixed(2)}` : '—'}</p>
             </div>
-            <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] text-center">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl text-center">
               <h2 className="text-2xl font-bold text-[#479ffa] mb-2">{stock2.symbol}</h2>
               <p className="text-[#868f97] mb-4">{stock2.name}</p>
               <p className="text-3xl font-bold">{stock2.price && stock2.price > 0 ? `$${stock2.price.toFixed(2)}` : '—'}</p>
@@ -531,7 +531,7 @@ export default async function ComparePage({ params }: Props) {
           {/* Comparison Table */}
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-4">Key Metrics Comparison</h2>
-            <div className="bg-[#1a1a1a] rounded-xl border border-white/[0.08] overflow-hidden">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl overflow-hidden">
               <table className="w-full">
                 <thead className="bg-white/[0.05]">
                   <tr>
@@ -601,14 +601,14 @@ export default async function ComparePage({ params }: Props) {
           <section className="grid grid-cols-2 gap-6">
             <Link
               href={`/dashboard?ticker=${stock1.symbol}&tab=quant`}
-              className="bg-[#4ebe96]/20 hover:bg-[#4ebe96]/30 border border-[#4ebe96]/30 p-6 rounded-xl text-center transition-colors duration-100"
+              className="bg-[#4ebe96]/20 hover:bg-[#4ebe96]/30 border border-[#4ebe96]/30 p-6 rounded-2xl text-center motion-safe:transition-all motion-safe:duration-150 ease-out"
             >
               <p className="font-bold text-[#4ebe96] mb-2">Analyze {stock1.symbol}</p>
               <p className="text-sm text-[#868f97]">Full quant analysis</p>
             </Link>
             <Link
               href={`/dashboard?ticker=${stock2.symbol}&tab=quant`}
-              className="bg-[#479ffa]/20 hover:bg-[#479ffa]/30 border border-[#479ffa]/30 p-6 rounded-xl text-center transition-colors duration-100"
+              className="bg-[#479ffa]/20 hover:bg-[#479ffa]/30 border border-[#479ffa]/30 p-6 rounded-2xl text-center motion-safe:transition-all motion-safe:duration-150 ease-out"
             >
               <p className="font-bold text-[#479ffa] mb-2">Analyze {stock2.symbol}</p>
               <p className="text-sm text-[#868f97]">Full quant analysis</p>
@@ -622,10 +622,10 @@ export default async function ComparePage({ params }: Props) {
               <div className="space-y-2">
                 <h4 className="font-medium text-[#4ebe96]">{stock1.symbol}</h4>
                 <div className="flex flex-wrap gap-2">
-                  <Link href={`/should-i-buy/${stock1.symbol.toLowerCase()}`} className="text-sm text-[#868f97] hover:text-white transition-colors duration-100">
+                  <Link href={`/should-i-buy/${stock1.symbol.toLowerCase()}`} className="text-sm text-[#868f97] hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out">
                     Should I Buy {stock1.symbol}?
                   </Link>
-                  <Link href={`/prediction/${stock1.symbol.toLowerCase()}`} className="text-sm text-[#868f97] hover:text-white transition-colors duration-100">
+                  <Link href={`/prediction/${stock1.symbol.toLowerCase()}`} className="text-sm text-[#868f97] hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out">
                     {stock1.symbol} Prediction
                   </Link>
                 </div>
@@ -633,10 +633,10 @@ export default async function ComparePage({ params }: Props) {
               <div className="space-y-2">
                 <h4 className="font-medium text-[#479ffa]">{stock2.symbol}</h4>
                 <div className="flex flex-wrap gap-2">
-                  <Link href={`/should-i-buy/${stock2.symbol.toLowerCase()}`} className="text-sm text-[#868f97] hover:text-white transition-colors duration-100">
+                  <Link href={`/should-i-buy/${stock2.symbol.toLowerCase()}`} className="text-sm text-[#868f97] hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out">
                     Should I Buy {stock2.symbol}?
                   </Link>
-                  <Link href={`/prediction/${stock2.symbol.toLowerCase()}`} className="text-sm text-[#868f97] hover:text-white transition-colors duration-100">
+                  <Link href={`/prediction/${stock2.symbol.toLowerCase()}`} className="text-sm text-[#868f97] hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out">
                     {stock2.symbol} Prediction
                   </Link>
                 </div>
@@ -649,7 +649,7 @@ export default async function ComparePage({ params }: Props) {
             <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {comparisonFaqs.map((faq, index) => (
-                <div key={index} className="bg-[#1a1a1a] p-5 rounded-lg border border-white/[0.08]">
+                <div key={index} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-5 rounded-2xl">
                   <h3 className="font-bold text-lg mb-2">{faq.question}</h3>
                   <p className="text-[#868f97]">{faq.answer}</p>
                 </div>

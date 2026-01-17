@@ -526,7 +526,7 @@ export default function QuantAnalysis({ ticker, metrics, currentPrice, dataSourc
     if (grade.startsWith('B')) return 'text-[#479ffa]'
     if (grade.startsWith('C')) return 'text-[#f4a623]'
     if (grade.startsWith('D')) return 'text-orange-400'
-    return 'text-[#e15241]'
+    return 'text-[#ff5c5c]'
   }
 
   return (
@@ -552,7 +552,7 @@ export default function QuantAnalysis({ ticker, metrics, currentPrice, dataSourc
             <button
               onClick={runAnalysis}
               disabled={isAnalyzing}
-              className="px-4 py-2 bg-[#4ebe96] hover:bg-white/[0.08] disabled:bg-white/[0.05] rounded-lg font-medium transition-colors duration-100 text-sm sm:text-base w-full sm:w-auto"
+              className="px-4 py-2 bg-[#4ebe96] hover:bg-white/[0.03] hover:backdrop-blur-[10px] disabled:bg-white/[0.03] disabled:opacity-50 rounded-2xl font-medium motion-safe:transition-all motion-safe:duration-150 ease-out text-sm sm:text-base w-full sm:w-auto"
             >
               {isAnalyzing ? 'Analyzing...' : 'Run Analysis'}
             </button>
@@ -585,14 +585,14 @@ export default function QuantAnalysis({ ticker, metrics, currentPrice, dataSourc
           {stages.map((stage, i) => (
             <div
               key={i}
-              className={`p-3 sm:p-4 rounded-lg border ${
+              className={`p-3 sm:p-4 rounded-2xl border ${
                 stage.stage === 7
                   ? stage.grade === 'STRONG BUY' || stage.grade === 'BUY'
                     ? 'bg-[#4ebe96]/10 border-[#4ebe96]/30'
                     : stage.grade === 'HOLD'
                     ? 'bg-[#f4a623]/10 border-[#f4a623]/30'
-                    : 'bg-[#e15241]/10 border-[#e15241]/30'
-                  : 'bg-white/[0.05] border-white/[0.08]'
+                    : 'bg-[#ff5c5c]/10 border-[#ff5c5c]/30'
+                  : 'bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]'
               }`}
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 gap-2">
@@ -607,10 +607,10 @@ export default function QuantAnalysis({ ticker, metrics, currentPrice, dataSourc
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                 {stage.ratings.map((r, j) => (
-                  <div key={j} className="flex items-center justify-between p-2 bg-white/[0.05] rounded text-xs sm:text-sm">
+                  <div key={j} className="flex items-center justify-between p-2 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-lg text-xs sm:text-sm">
                     <span className="text-[#868f97]">{r.metric}</span>
                     <span className="flex items-center gap-1">
-                      <span className="font-medium">{r.value}</span>
+                      <span className="font-medium tabular-nums">{r.value}</span>
                       <span>{r.emoji}</span>
                     </span>
                   </div>
@@ -619,7 +619,7 @@ export default function QuantAnalysis({ ticker, metrics, currentPrice, dataSourc
 
               {stage.flags.length > 0 && (
                 <div className="mt-3 pt-3 border-t border-white/[0.08]">
-                  <p className="text-[#e15241] text-xs sm:text-sm font-medium">Red Flags:</p>
+                  <p className="text-[#ff5c5c] text-xs sm:text-sm font-medium">Red Flags:</p>
                   <ul className="text-xs sm:text-sm text-[#868f97] mt-1">
                     {stage.flags.map((flag, j) => (
                       <li key={j}>🚨 {flag}</li>

@@ -105,12 +105,12 @@ export function EarningsAlertSignup({
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email for alerts"
               disabled={status === "loading"}
-              className="px-3 py-1.5 text-sm bg-white/[0.05] border border-white/[0.08] rounded focus:ring-2 focus:ring-[#4ebe96] focus:border-transparent"
+              className="px-3 py-1.5 text-sm bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-full focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:border-transparent motion-safe:transition-all motion-safe:duration-150 ease-out"
             />
             <button
               type="submit"
               disabled={status === "loading"}
-              className="px-3 py-1.5 text-sm font-medium bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black rounded disabled:opacity-50"
+              className="px-3 py-1.5 text-sm font-medium bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black rounded-full disabled:opacity-50 motion-safe:transition-all motion-safe:duration-150 ease-out"
             >
               {status === "loading" ? <Spinner /> : <BellIcon />}
             </button>
@@ -124,12 +124,12 @@ export function EarningsAlertSignup({
   if (variant === "banner") {
     return (
       <div className={cn(
-        "bg-gradient-to-r from-[#4ebe96]/20 to-[#479ffa]/20 border border-[#4ebe96]/30 rounded-lg p-4",
+        "bg-gradient-to-r from-[#4ebe96]/20 to-[#479ffa]/20 border border-[#4ebe96]/30 rounded-2xl p-4",
         className
       )}>
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#4ebe96]/20 rounded-lg">
+            <div className="p-2 bg-[#4ebe96]/20 rounded-2xl">
               <BellIcon />
             </div>
             <div>
@@ -156,12 +156,12 @@ export function EarningsAlertSignup({
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
                 disabled={status === "loading"}
-                className="flex-1 sm:w-48 px-3 py-2 text-sm bg-[#1a1a1a] border border-white/[0.08] rounded-lg focus:ring-2 focus:ring-[#4ebe96] focus:border-transparent"
+                className="flex-1 sm:w-48 px-3 py-2 text-sm bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-full focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:border-transparent motion-safe:transition-all motion-safe:duration-150 ease-out"
               />
               <button
                 type="submit"
                 disabled={status === "loading"}
-                className="px-4 py-2 text-sm font-medium bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black rounded-lg disabled:opacity-50 whitespace-nowrap"
+                className="px-4 py-2 text-sm font-medium bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black rounded-full disabled:opacity-50 whitespace-nowrap motion-safe:transition-all motion-safe:duration-150 ease-out"
               >
                 {status === "loading" ? <Spinner /> : "Notify Me"}
               </button>
@@ -169,7 +169,7 @@ export function EarningsAlertSignup({
           )}
         </div>
         {status === "error" && (
-          <p className="mt-2 text-sm text-red-400">{message}</p>
+          <p className="mt-2 text-sm text-[#ff5c5c]">{message}</p>
         )}
       </div>
     )
@@ -178,11 +178,11 @@ export function EarningsAlertSignup({
   // Card variant (default - for sidebar/standalone use)
   return (
     <div className={cn(
-      "bg-[#1a1a1a]/50 border border-white/[0.08] rounded-xl p-5",
+      "bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5",
       className
     )}>
       <div className="flex items-center gap-3 mb-4">
-        <div className="p-2 bg-[#4ebe96]/20 rounded-lg text-[#4ebe96]">
+        <div className="p-2 bg-[#4ebe96]/20 rounded-2xl text-[#4ebe96]">
           <BellIcon />
         </div>
         <div>
@@ -196,7 +196,7 @@ export function EarningsAlertSignup({
       </div>
 
       {ticker && companyName && (
-        <div className="mb-4 p-3 bg-white/[0.05] rounded-lg">
+        <div className="mb-4 p-3 bg-white/[0.03] rounded-2xl">
           <p className="text-sm text-[#868f97]">
             <span className="font-medium text-white">{companyName}</span>
             {earningsDate && (
@@ -207,7 +207,7 @@ export function EarningsAlertSignup({
       )}
 
       {status === "success" ? (
-        <div className="flex items-center gap-2 p-3 bg-[#4ebe96]/10 rounded-lg text-[#4ebe96]">
+        <div className="flex items-center gap-2 p-3 bg-[#4ebe96]/10 rounded-2xl text-[#4ebe96]">
           <CheckIcon />
           <span>{message}</span>
         </div>
@@ -219,12 +219,12 @@ export function EarningsAlertSignup({
             onChange={(e) => setEmail(e.target.value)}
             placeholder="your@email.com"
             disabled={status === "loading"}
-            className="w-full px-4 py-2.5 bg-white/[0.05] border border-white/[0.08] rounded-lg focus:ring-2 focus:ring-[#4ebe96] focus:border-transparent placeholder-[#868f97]"
+            className="w-full px-4 py-2.5 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-full focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:border-transparent placeholder-[#868f97] motion-safe:transition-all motion-safe:duration-150 ease-out"
           />
           <button
             type="submit"
             disabled={status === "loading"}
-            className="w-full px-4 py-2.5 font-medium bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black rounded-lg disabled:opacity-50 transition-colors duration-100 flex items-center justify-center gap-2"
+            className="w-full px-4 py-2.5 font-medium bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black rounded-full disabled:opacity-50 motion-safe:transition-all motion-safe:duration-150 ease-out flex items-center justify-center gap-2"
           >
             {status === "loading" ? (
               <Spinner />
@@ -236,7 +236,7 @@ export function EarningsAlertSignup({
             )}
           </button>
           {status === "error" && (
-            <p className="text-sm text-red-400">{message}</p>
+            <p className="text-sm text-[#ff5c5c]">{message}</p>
           )}
         </form>
       )}
@@ -308,19 +308,19 @@ export function EarningsAlertButton({
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
           autoFocus
-          className="px-2 py-1 text-sm bg-white/[0.05] border border-white/[0.08] rounded w-32"
+          className="px-2 py-1 text-sm bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-full w-32 focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:border-transparent motion-safe:transition-all motion-safe:duration-150 ease-out"
         />
         <button
           type="submit"
           disabled={status === "loading"}
-          className="px-2 py-1 text-sm bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black rounded"
+          className="px-2 py-1 text-sm bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black rounded-full motion-safe:transition-all motion-safe:duration-150 ease-out"
         >
           {status === "loading" ? "..." : "Go"}
         </button>
         <button
           type="button"
           onClick={() => setShowForm(false)}
-          className="text-[#868f97] hover:text-white transition-colors duration-100"
+          className="text-[#868f97] hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out"
         >
           ×
         </button>
@@ -333,7 +333,7 @@ export function EarningsAlertButton({
       onClick={() => setShowForm(true)}
       className={cn(
         "flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium",
-        "bg-[#4ebe96]/20 text-[#4ebe96] hover:bg-white/[0.08] rounded-lg transition-colors duration-100",
+        "bg-[#4ebe96]/20 text-[#4ebe96] hover:bg-white/[0.08] rounded-full motion-safe:transition-all motion-safe:duration-150 ease-out",
         className
       )}
     >

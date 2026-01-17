@@ -55,12 +55,12 @@ interface CalendarData {
 const importanceColors: Record<string, string> = {
   HIGH: 'bg-purple-500 text-white',
   MEDIUM: 'bg-[#479ffa] text-white',
-  LOW: 'bg-gray-400 text-white'
+  LOW: 'bg-[#868f97] text-white'
 }
 
 const phaseColors: Record<string, string> = {
-  PHASE1: 'bg-gray-500',
-  EARLY_PHASE1: 'bg-gray-500',
+  PHASE1: 'bg-[#868f97]',
+  EARLY_PHASE1: 'bg-[#868f97]',
   PHASE2: 'bg-[#479ffa]',
   'PHASE2/PHASE3': 'bg-indigo-500',
   PHASE3: 'bg-purple-600',
@@ -162,7 +162,7 @@ function MonthView({ catalysts, month }: MonthViewProps) {
             <div
               key={index}
               className={cn(
-                "min-h-[80px] border rounded-lg p-1 transition-colors duration-100",
+                "min-h-[80px] border rounded-2xl p-1 motion-safe:transition-colors motion-safe:duration-150 ease-out",
                 isToday(day) && "border-primary bg-primary/5",
                 dayCatalysts.length > 0 && "bg-muted/50",
                 hasHighImportance && "border-purple-500/50"
@@ -179,7 +179,7 @@ function MonthView({ catalysts, month }: MonthViewProps) {
                   <div
                     key={catalyst.id}
                     className={cn(
-                      "text-xs px-1 py-0.5 rounded truncate cursor-pointer hover:opacity-80",
+                      "text-xs px-1 py-0.5 rounded-full truncate cursor-pointer hover:opacity-80 motion-safe:transition-all motion-safe:duration-150 ease-out",
                       importanceColors[catalyst.importance]
                     )}
                     title={`${catalyst.ticker}: ${catalyst.title}`}
@@ -206,11 +206,11 @@ interface CatalystListItemProps {
 }
 
 function CatalystListItem({ catalyst }: CatalystListItemProps) {
-  const phaseColor = catalyst.phase ? phaseColors[catalyst.phase] : 'bg-gray-400'
+  const phaseColor = catalyst.phase ? phaseColors[catalyst.phase] : 'bg-[#868f97]'
 
   return (
     <div className={cn(
-      "flex items-center gap-3 p-3 border rounded-lg hover:bg-white/[0.08] transition-colors duration-100",
+      "flex items-center gap-3 p-3 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out",
       catalyst.importance === 'HIGH' && "border-purple-500/30"
     )}>
       <div className={cn(
@@ -249,8 +249,8 @@ function CatalystListItem({ catalyst }: CatalystListItemProps) {
         {catalyst.daysUntil !== null && (
           <div className={cn(
             "text-xs",
-            catalyst.daysUntil <= 30 ? "text-orange-500 font-medium" :
-            catalyst.daysUntil <= 90 ? "text-[#f4a623]" :
+            catalyst.daysUntil <= 30 ? "text-[#ff5c5c] font-medium" :
+            catalyst.daysUntil <= 90 ? "text-[#ffa16c]" :
             "text-[#868f97]"
           )}>
             {catalyst.daysUntil <= 0 ? 'Now' : `${catalyst.daysUntil}d`}
@@ -319,7 +319,7 @@ export function BiotechCatalystCalendar() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-64 bg-muted animate-pulse rounded-lg" />
+          <div className="h-64 bg-muted animate-pulse rounded-2xl" />
         </CardContent>
       </Card>
     )
@@ -363,19 +363,19 @@ export function BiotechCatalystCalendar() {
 
         {/* Summary Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
-          <div className="text-center p-2 bg-orange-500/10 rounded-lg">
-            <div className="text-xl font-bold text-orange-500">{data.summary.imminent}</div>
+          <div className="text-center p-2 bg-[#ffa16c]/10 rounded-2xl motion-safe:transition-all motion-safe:duration-150 ease-out">
+            <div className="text-xl font-bold text-[#ffa16c]">{data.summary.imminent}</div>
             <div className="text-xs text-[#868f97]">Within 90 Days</div>
           </div>
-          <div className="text-center p-2 bg-purple-500/10 rounded-lg">
+          <div className="text-center p-2 bg-purple-500/10 rounded-2xl motion-safe:transition-all motion-safe:duration-150 ease-out">
             <div className="text-xl font-bold text-purple-500">{data.summary.highImportance}</div>
             <div className="text-xs text-[#868f97]">High Impact</div>
           </div>
-          <div className="text-center p-2 bg-[#479ffa]/10 rounded-lg">
+          <div className="text-center p-2 bg-[#479ffa]/10 rounded-2xl motion-safe:transition-all motion-safe:duration-150 ease-out">
             <div className="text-xl font-bold text-[#479ffa]">{data.summary.phase3Trials}</div>
             <div className="text-xs text-[#868f97]">Phase 3 Trials</div>
           </div>
-          <div className="text-center p-2 bg-muted rounded-lg">
+          <div className="text-center p-2 bg-muted rounded-2xl motion-safe:transition-all motion-safe:duration-150 ease-out">
             <div className="text-xl font-bold">{data.summary.upcoming}</div>
             <div className="text-xs text-[#868f97]">Total Upcoming</div>
           </div>

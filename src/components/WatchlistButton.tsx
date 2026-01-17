@@ -107,8 +107,8 @@ export function WatchlistButton({ ticker, variant = "default", className }: Watc
   const StarIcon = ({ filled }: { filled: boolean }) => (
     <svg
       className={cn(
-        "w-5 h-5 transition-all duration-100",
-        filled ? "text-[#f4a623] fill-[#f4a623]" : "text-zinc-400"
+        "w-5 h-5 motion-safe:transition-all motion-safe:duration-150 ease-out",
+        filled ? "text-[#f4a623] fill-[#f4a623]" : "text-[#868f97]"
       )}
       viewBox="0 0 20 20"
       fill={filled ? "currentColor" : "none"}
@@ -133,12 +133,12 @@ export function WatchlistButton({ ticker, variant = "default", className }: Watc
 
   // Login prompt popup
   const LoginPromptPopup = () => (
-    <div className="absolute top-full left-0 mt-2 z-50 animate-in fade-in-0 slide-in-from-top-2 duration-200">
-      <div className="bg-zinc-800 border border-zinc-700 rounded-lg p-3 shadow-lg min-w-[200px]">
-        <p className="text-sm text-zinc-200 mb-2">Sign in to track stocks</p>
+    <div className="absolute top-full left-0 mt-2 z-50 animate-in fade-in-0 slide-in-from-top-2 motion-safe:duration-200 ease-out">
+      <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-lg p-3 shadow-lg min-w-[200px]">
+        <p className="text-sm text-white/90 mb-2">Sign in to track stocks</p>
         <Link
           href={`/login?redirect=/stock/${ticker.toLowerCase()}`}
-          className="block w-full bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white text-sm font-medium py-2 px-3 rounded text-center transition-colors duration-100"
+          className="block w-full bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white text-sm font-medium py-2 px-3 rounded-full text-center motion-safe:transition-colors motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
         >
           Sign In
         </Link>
@@ -154,10 +154,10 @@ export function WatchlistButton({ ticker, variant = "default", className }: Watc
           onClick={toggleWatchlist}
           disabled={isLoading || isChecking}
           className={cn(
-            "p-2 rounded-full transition-all duration-100",
+            "p-2 rounded-full motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]",
             isInWatchlist
               ? "bg-[#f4a623]/20 hover:bg-[#f4a623]/30"
-              : "bg-zinc-800 hover:bg-zinc-700",
+              : "bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:bg-white/[0.05]",
             "disabled:opacity-50 disabled:cursor-not-allowed",
             className
           )}
@@ -178,10 +178,10 @@ export function WatchlistButton({ ticker, variant = "default", className }: Watc
           onClick={toggleWatchlist}
           disabled={isLoading || isChecking}
           className={cn(
-            "flex items-center gap-1.5 px-2 py-1 rounded text-sm transition-all duration-100",
+            "flex items-center gap-1.5 px-2 py-1 rounded-full text-sm motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]",
             isInWatchlist
               ? "bg-[#f4a623]/20 text-[#f4a623] hover:bg-[#f4a623]/30"
-              : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-200",
+              : "bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] text-[#868f97] hover:bg-white/[0.05]",
             "disabled:opacity-50 disabled:cursor-not-allowed",
             className
           )}
@@ -207,7 +207,7 @@ export function WatchlistButton({ ticker, variant = "default", className }: Watc
         onClick={toggleWatchlist}
         disabled={isLoading || isChecking}
         className={cn(
-          "flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-100",
+          "flex items-center gap-2 px-4 py-2 rounded-full font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]",
           isInWatchlist
             ? "bg-[#f4a623]/20 text-[#f4a623] border border-[#f4a623]/30 hover:bg-[#f4a623]/30"
             : "bg-[#4ebe96] text-white hover:bg-[#4ebe96]/90",
@@ -260,7 +260,7 @@ export function WatchlistCount({
   if (watcherCount === null) return null
 
   return (
-    <div className={cn("flex items-center gap-1.5 text-sm text-zinc-400", className)}>
+    <div className={cn("flex items-center gap-1.5 text-sm text-[#868f97]", className)}>
       <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
         <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
         <path

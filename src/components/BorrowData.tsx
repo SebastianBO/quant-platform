@@ -78,7 +78,7 @@ export default function BorrowData({ ticker, compact = false }: BorrowDataProps)
 
   if (loading) {
     return (
-      <Card className="bg-[#1a1a1a] border-white/[0.08]">
+      <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
         <CardHeader className="py-3">
           <CardTitle className="text-sm flex items-center gap-2">
             Borrow Availability
@@ -95,7 +95,7 @@ export default function BorrowData({ ticker, compact = false }: BorrowDataProps)
 
   if (error || !data?.available) {
     return (
-      <Card className="bg-[#1a1a1a] border-white/[0.08]">
+      <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
         <CardHeader className="py-3">
           <CardTitle className="text-sm flex items-center gap-2">
             Borrow Availability
@@ -113,16 +113,16 @@ export default function BorrowData({ ticker, compact = false }: BorrowDataProps)
   // Compact sidebar view
   if (compact) {
     return (
-      <Card className="bg-[#1a1a1a] border-white/[0.08]">
+      <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
         <CardHeader className="py-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-sm flex items-center gap-2">
               <span>Borrow Data</span>
               {data.stats.isHardToBorrow && (
-                <span className="text-xs px-1.5 py-0.5 rounded bg-[#e15241]/20 text-[#e15241]">HTB</span>
+                <span className="text-xs px-1.5 py-0.5 rounded-full bg-[#ff5c5c]/20 text-[#ff5c5c]">HTB</span>
               )}
             </CardTitle>
-            <button onClick={fetchData} className="p-1 hover:bg-white/[0.08] rounded transition-colors duration-100">
+            <button onClick={fetchData} className="p-1 hover:bg-white/[0.08] rounded motion-safe:transition-colors motion-safe:duration-150 ease-out">
               <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
             </button>
           </div>
@@ -131,8 +131,8 @@ export default function BorrowData({ ticker, compact = false }: BorrowDataProps)
           {/* Current Fee */}
           <div className="flex items-center justify-between">
             <span className="text-xs text-[#868f97]">Borrow Fee</span>
-            <span className={`text-sm font-bold ${
-              data.latest && data.latest.fee > 50 ? 'text-[#e15241]' :
+            <span className={`text-sm font-bold tabular-nums ${
+              data.latest && data.latest.fee > 50 ? 'text-[#ff5c5c]' :
               data.latest && data.latest.fee > 10 ? 'text-amber-500' :
               'text-[#4ebe96]'
             }`}>
@@ -143,7 +143,7 @@ export default function BorrowData({ ticker, compact = false }: BorrowDataProps)
           {/* Available Shares */}
           <div className="flex items-center justify-between">
             <span className="text-xs text-[#868f97]">Available</span>
-            <span className="text-sm font-medium">
+            <span className="text-sm font-medium tabular-nums">
               {data.latest?.available ? formatNumber(data.latest.available) : '-'}
             </span>
           </div>
@@ -151,8 +151,8 @@ export default function BorrowData({ ticker, compact = false }: BorrowDataProps)
           {/* Fee Trend */}
           <div className="flex items-center justify-between">
             <span className="text-xs text-[#868f97]">Fee Trend</span>
-            <div className={`flex items-center gap-1 text-sm ${
-              parseFloat(data.stats.feeTrend) > 0 ? 'text-[#e15241]' :
+            <div className={`flex items-center gap-1 text-sm tabular-nums ${
+              parseFloat(data.stats.feeTrend) > 0 ? 'text-[#ff5c5c]' :
               parseFloat(data.stats.feeTrend) < 0 ? 'text-[#4ebe96]' :
               'text-[#868f97]'
             }`}>
@@ -167,15 +167,15 @@ export default function BorrowData({ ticker, compact = false }: BorrowDataProps)
 
           {/* Fee Range */}
           <div className="pt-2 border-t border-white/[0.08]">
-            <div className="flex justify-between text-xs text-[#868f97] mb-1">
+            <div className="flex justify-between text-xs text-[#868f97] mb-1 tabular-nums">
               <span>Min: {data.stats.minFee}%</span>
               <span>Avg: {data.stats.avgFee}%</span>
               <span>Max: {data.stats.maxFee}%</span>
             </div>
             <div className="h-1.5 bg-white/[0.05] rounded-full overflow-hidden">
               <div
-                className={`h-full ${
-                  data.latest && data.latest.fee > 50 ? 'bg-[#e15241]' :
+                className={`h-full motion-safe:transition-all motion-safe:duration-150 ease-out ${
+                  data.latest && data.latest.fee > 50 ? 'bg-[#ff5c5c]' :
                   data.latest && data.latest.fee > 10 ? 'bg-amber-500' :
                   'bg-[#4ebe96]'
                 }`}
@@ -188,7 +188,7 @@ export default function BorrowData({ ticker, compact = false }: BorrowDataProps)
 
           {/* Hard to Borrow Warning */}
           {data.stats.isHardToBorrow && (
-            <div className="flex items-center gap-2 p-2 bg-[#e15241]/10 rounded text-xs text-[#e15241]">
+            <div className="flex items-center gap-2 p-2 bg-[#ff5c5c]/10 rounded text-xs text-[#ff5c5c]">
               <AlertTriangle className="w-3 h-3" />
               <span>Hard to Borrow</span>
             </div>
@@ -199,7 +199,7 @@ export default function BorrowData({ ticker, compact = false }: BorrowDataProps)
             href={`https://iborrowdesk.com/report/${ticker}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 text-xs text-[#868f97] hover:text-white transition-colors duration-100"
+            className="flex items-center gap-1 text-xs text-[#868f97] hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out"
           >
             <span>via Interactive Brokers</span>
             <ExternalLink className="w-3 h-3" />
@@ -217,13 +217,13 @@ export default function BorrowData({ ticker, compact = false }: BorrowDataProps)
   }))
 
   return (
-    <Card className="bg-[#1a1a1a] border-white/[0.08]">
+    <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             <span>Borrow Availability - {ticker}</span>
             {data.stats.isHardToBorrow && (
-              <span className="text-xs px-2 py-0.5 rounded bg-[#e15241]/20 text-[#e15241]">Hard to Borrow</span>
+              <span className="text-xs px-2 py-0.5 rounded-full bg-[#ff5c5c]/20 text-[#ff5c5c]">Hard to Borrow</span>
             )}
           </CardTitle>
           <div className="flex items-center gap-2">
@@ -231,11 +231,11 @@ export default function BorrowData({ ticker, compact = false }: BorrowDataProps)
               href={`https://iborrowdesk.com/report/${ticker}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-[#868f97] hover:text-white flex items-center gap-1 transition-colors duration-100"
+              className="text-xs text-[#868f97] hover:text-white flex items-center gap-1 motion-safe:transition-colors motion-safe:duration-150 ease-out"
             >
               iBorrowDesk <ExternalLink className="w-3 h-3" />
             </a>
-            <button onClick={fetchData} className="p-1.5 hover:bg-white/[0.08] rounded transition-colors duration-100">
+            <button onClick={fetchData} className="p-1.5 hover:bg-white/[0.08] rounded motion-safe:transition-colors motion-safe:duration-150 ease-out">
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             </button>
           </div>
@@ -244,13 +244,13 @@ export default function BorrowData({ ticker, compact = false }: BorrowDataProps)
       <CardContent>
         {/* Current Stats */}
         <div className="grid grid-cols-4 gap-4 mb-6">
-          <div className={`p-4 rounded-lg text-center ${
-            data.latest && data.latest.fee > 50 ? 'bg-[#e15241]/20' :
+          <div className={`p-4 rounded-2xl text-center ${
+            data.latest && data.latest.fee > 50 ? 'bg-[#ff5c5c]/20' :
             data.latest && data.latest.fee > 10 ? 'bg-amber-500/20' :
             'bg-[#4ebe96]/20'
           }`}>
-            <p className={`text-2xl font-bold ${
-              data.latest && data.latest.fee > 50 ? 'text-[#e15241]' :
+            <p className={`text-2xl font-bold tabular-nums ${
+              data.latest && data.latest.fee > 50 ? 'text-[#ff5c5c]' :
               data.latest && data.latest.fee > 10 ? 'text-amber-500' :
               'text-[#4ebe96]'
             }`}>
@@ -258,21 +258,21 @@ export default function BorrowData({ ticker, compact = false }: BorrowDataProps)
             </p>
             <p className="text-xs text-[#868f97]">Current Fee</p>
           </div>
-          <div className="bg-white/5 p-4 rounded-lg text-center">
-            <p className="text-2xl font-bold">
+          <div className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-2xl text-center">
+            <p className="text-2xl font-bold tabular-nums">
               {data.latest?.available ? formatNumber(data.latest.available) : '-'}
             </p>
             <p className="text-xs text-[#868f97]">Shares Available</p>
           </div>
-          <div className="bg-white/5 p-4 rounded-lg text-center">
-            <p className="text-2xl font-bold">{data.stats.avgFee}%</p>
+          <div className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-2xl text-center">
+            <p className="text-2xl font-bold tabular-nums">{data.stats.avgFee}%</p>
             <p className="text-xs text-[#868f97]">Avg Fee</p>
           </div>
-          <div className={`p-4 rounded-lg text-center ${
-            parseFloat(data.stats.feeTrend) > 0 ? 'bg-[#e15241]/20' : 'bg-[#4ebe96]/20'
+          <div className={`p-4 rounded-2xl text-center ${
+            parseFloat(data.stats.feeTrend) > 0 ? 'bg-[#ff5c5c]/20' : 'bg-[#4ebe96]/20'
           }`}>
-            <div className={`text-2xl font-bold flex items-center justify-center gap-1 ${
-              parseFloat(data.stats.feeTrend) > 0 ? 'text-[#e15241]' : 'text-[#4ebe96]'
+            <div className={`text-2xl font-bold tabular-nums flex items-center justify-center gap-1 ${
+              parseFloat(data.stats.feeTrend) > 0 ? 'text-[#ff5c5c]' : 'text-[#4ebe96]'
             }`}>
               {parseFloat(data.stats.feeTrend) > 0 ? (
                 <TrendingUp className="w-5 h-5" />
@@ -317,9 +317,9 @@ export default function BorrowData({ ticker, compact = false }: BorrowDataProps)
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#1a1a1a',
+                    backgroundColor: '#000000',
                     border: '1px solid rgba(255, 255, 255, 0.08)',
-                    borderRadius: '8px',
+                    borderRadius: '16px',
                     color: '#ffffff'
                   }}
                   formatter={(value: number, name: string) => {
@@ -352,7 +352,7 @@ export default function BorrowData({ ticker, compact = false }: BorrowDataProps)
         )}
 
         {/* Disclaimer */}
-        <div className="p-2 bg-white/[0.03] rounded text-xs text-[#868f97] flex items-start gap-2">
+        <div className="p-2 bg-white/[0.03] backdrop-blur-[10px] rounded-2xl text-xs text-[#868f97] flex items-start gap-2">
           <Info className="w-4 h-4 flex-shrink-0 mt-0.5" />
           <span>{data.disclaimer}</span>
         </div>

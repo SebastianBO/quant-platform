@@ -106,7 +106,7 @@ export default function ShortVolume({ ticker }: ShortVolumeProps) {
 
   if (loading && !data) {
     return (
-      <Card className="bg-[#1a1a1a] border-white/[0.08]">
+      <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08]">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <AlertTriangle className="w-5 h-5" />
@@ -124,7 +124,7 @@ export default function ShortVolume({ ticker }: ShortVolumeProps) {
 
   if (error || !data) {
     return (
-      <Card className="bg-[#1a1a1a] border-white/[0.08]">
+      <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08]">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <AlertTriangle className="w-5 h-5" />
@@ -157,7 +157,7 @@ export default function ShortVolume({ ticker }: ShortVolumeProps) {
   return (
     <div className="space-y-6">
       {/* Short Interest Summary */}
-      <Card className="bg-[#1a1a1a] border-white/[0.08]">
+      <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08]">
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -168,7 +168,7 @@ export default function ShortVolume({ ticker }: ShortVolumeProps) {
               href="https://www.finra.org/finra-data/browse-catalog/short-sale-volume-data"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-[#868f97] hover:text-white flex items-center gap-1"
+              className="text-xs text-[#868f97] hover:text-white flex items-center gap-1 motion-safe:transition-all motion-safe:duration-150 ease-out"
             >
               FINRA Data <ExternalLink className="w-3 h-3" />
             </a>
@@ -177,24 +177,24 @@ export default function ShortVolume({ ticker }: ShortVolumeProps) {
         <CardContent>
           {data.shortInterest ? (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-white/[0.025] rounded-lg p-4 text-center">
-                <p className="text-2xl font-bold">{formatVolume(data.shortInterest.shortInterest)}</p>
+              <div className="bg-white/[0.025] rounded-2xl p-4 text-center">
+                <p className="text-2xl font-bold tabular-nums">{formatVolume(data.shortInterest.shortInterest)}</p>
                 <p className="text-xs text-[#868f97]">Short Interest</p>
               </div>
-              <div className={`rounded-lg p-4 text-center ${isBearish ? 'bg-[#e15241]/20' : 'bg-white/[0.025]'}`}>
-                <p className={`text-2xl font-bold ${isBearish ? 'text-[#e15241]' : ''}`}>
+              <div className={`rounded-2xl p-4 text-center ${isBearish ? 'bg-[#ff5c5c]/20' : 'bg-white/[0.025]'}`}>
+                <p className={`text-2xl font-bold tabular-nums ${isBearish ? 'text-[#ff5c5c]' : ''}`}>
                   {data.shortInterest.percentFloat.toFixed(2)}%
                 </p>
                 <p className="text-xs text-[#868f97]">% of Float</p>
               </div>
-              <div className={`rounded-lg p-4 text-center ${isHighShort ? 'bg-amber-500/20' : 'bg-white/[0.025]'}`}>
-                <p className={`text-2xl font-bold ${isHighShort ? 'text-amber-500' : ''}`}>
+              <div className={`rounded-2xl p-4 text-center ${isHighShort ? 'bg-amber-500/20' : 'bg-white/[0.025]'}`}>
+                <p className={`text-2xl font-bold tabular-nums ${isHighShort ? 'text-amber-500' : ''}`}>
                   {data.shortInterest.daysToCover.toFixed(1)}
                 </p>
                 <p className="text-xs text-[#868f97]">Days to Cover</p>
               </div>
-              <div className="bg-white/[0.025] rounded-lg p-4 text-center">
-                <p className="text-2xl font-bold">{formatVolume(data.shortInterest.avgDailyVolume)}</p>
+              <div className="bg-white/[0.025] rounded-2xl p-4 text-center">
+                <p className="text-2xl font-bold tabular-nums">{formatVolume(data.shortInterest.avgDailyVolume)}</p>
                 <p className="text-xs text-[#868f97]">Avg Daily Volume</p>
               </div>
             </div>
@@ -204,7 +204,7 @@ export default function ShortVolume({ ticker }: ShortVolumeProps) {
 
           {/* Short Squeeze Indicator */}
           {data.shortInterest && data.shortInterest.percentFloat > 20 && (
-            <div className="mt-4 p-3 bg-amber-500/20 border border-amber-500/30 rounded-lg">
+            <div className="mt-4 p-3 bg-amber-500/20 border border-amber-500/30 rounded-2xl">
               <div className="flex items-center gap-2">
                 <AlertTriangle className="w-5 h-5 text-amber-500" />
                 <span className="font-medium text-amber-500">High Short Interest Alert</span>
@@ -218,12 +218,12 @@ export default function ShortVolume({ ticker }: ShortVolumeProps) {
       </Card>
 
       {/* Daily Short Volume Chart */}
-      <Card className="bg-[#1a1a1a] border-white/[0.08]">
+      <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08]">
         <CardHeader className="space-y-4">
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2">
               Daily Short Volume
-              <span className={`text-xs px-2 py-0.5 rounded ${
+              <span className={`text-xs px-2 py-0.5 rounded-full ${
                 data.summary.dataSource.includes('FINRA') ? 'bg-[#4ebe96]/20 text-[#4ebe96]' : 'bg-amber-500/20 text-amber-500'
               }`}>
                 {data.summary.dataSource}
@@ -232,13 +232,13 @@ export default function ShortVolume({ ticker }: ShortVolumeProps) {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => fetchData(selectedPeriod)}
-                className="p-1.5 hover:bg-white/[0.08] rounded"
+                className="p-1.5 hover:bg-white/[0.08] rounded-full motion-safe:transition-all motion-safe:duration-150 ease-out"
                 title="Refresh"
               >
                 <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
               </button>
-              <span className={`text-sm px-2 py-1 rounded ${
-                data.summary.recentTrend === 'Increasing' ? 'bg-[#e15241]/20 text-[#e15241]' :
+              <span className={`text-sm px-2 py-1 rounded-full ${
+                data.summary.recentTrend === 'Increasing' ? 'bg-[#ff5c5c]/20 text-[#ff5c5c]' :
                 data.summary.recentTrend === 'Decreasing' ? 'bg-[#4ebe96]/20 text-[#4ebe96]' :
                 'bg-white/[0.05] text-[#868f97]'
               }`}>
@@ -256,7 +256,7 @@ export default function ShortVolume({ ticker }: ShortVolumeProps) {
                 <button
                   key={period.days}
                   onClick={() => setSelectedPeriod(period.days)}
-                  className={`px-3 py-1.5 text-xs font-medium rounded transition-colors duration-100 ${
+                  className={`px-3 py-1.5 text-xs font-medium rounded-full motion-safe:transition-all motion-safe:duration-150 ease-out ${
                     selectedPeriod === period.days
                       ? 'bg-[#4ebe96] text-white'
                       : 'bg-white/[0.05] text-[#868f97] hover:text-white'
@@ -268,7 +268,7 @@ export default function ShortVolume({ ticker }: ShortVolumeProps) {
             </div>
             <button
               onClick={() => setShowPrice(!showPrice)}
-              className={`px-3 py-1.5 text-xs font-medium rounded transition-colors duration-100 ${
+              className={`px-3 py-1.5 text-xs font-medium rounded-full motion-safe:transition-all motion-safe:duration-150 ease-out ${
                 showPrice ? 'bg-[#479ffa] text-white' : 'bg-white/[0.05] text-[#868f97]'
               }`}
             >
@@ -341,7 +341,7 @@ export default function ShortVolume({ ticker }: ShortVolumeProps) {
                 <Bar
                   yAxisId="volume"
                   dataKey="shortVolumeM"
-                  fill="#e15241"
+                  fill="#ff5c5c"
                   fillOpacity={0.85}
                   name="Short Volume"
                   radius={[2, 2, 0, 0]}
@@ -374,21 +374,21 @@ export default function ShortVolume({ ticker }: ShortVolumeProps) {
           {/* Summary Stats */}
           <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-white/[0.08]">
             <div className="text-center">
-              <p className="text-lg font-bold">{data.summary.avgShortPercent}%</p>
+              <p className="text-lg font-bold tabular-nums">{data.summary.avgShortPercent}%</p>
               <p className="text-xs text-[#868f97]">Avg Short %</p>
             </div>
             <div className="text-center">
-              <p className="text-lg font-bold">{formatVolume(data.summary.sharesFloat)}</p>
+              <p className="text-lg font-bold tabular-nums">{formatVolume(data.summary.sharesFloat)}</p>
               <p className="text-xs text-[#868f97]">Float</p>
             </div>
             <div className="text-center">
-              <p className="text-lg font-bold">{formatVolume(data.summary.sharesOutstanding)}</p>
+              <p className="text-lg font-bold tabular-nums">{formatVolume(data.summary.sharesOutstanding)}</p>
               <p className="text-xs text-[#868f97]">Shares Out</p>
             </div>
           </div>
 
           {/* Disclaimer */}
-          <div className="mt-4 p-2 bg-white/[0.015] rounded text-xs text-[#868f97] flex items-start gap-2">
+          <div className="mt-4 p-2 bg-white/[0.015] rounded-2xl text-xs text-[#868f97] flex items-start gap-2">
             <Info className="w-4 h-4 flex-shrink-0 mt-0.5" />
             <span>{data.disclaimer}</span>
           </div>

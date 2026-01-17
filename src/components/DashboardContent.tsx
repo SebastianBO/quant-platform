@@ -220,7 +220,7 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 hover:bg-white/[0.08] rounded-lg transition-colors duration-100"
+              className="lg:hidden p-2 hover:bg-white/[0.08] rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out"
             >
               {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
             </button>
@@ -229,7 +229,7 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
             <nav className="hidden lg:flex items-center gap-1">
               <button
                 onClick={() => setActiveTab('market')}
-                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-100 ${
+                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out ${
                   activeTab === 'market' || activeTab === 'overview'
                     ? 'bg-[#4ebe96] text-black'
                     : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
@@ -239,7 +239,7 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
               </button>
               <button
                 onClick={() => setActiveTab('watchlist')}
-                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-100 ${
+                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out ${
                   activeTab === 'watchlist'
                     ? 'bg-[#4ebe96] text-black'
                     : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
@@ -249,7 +249,7 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
               </button>
               <button
                 onClick={() => setActiveTab('myportfolios')}
-                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-100 ${
+                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out ${
                   activeTab === 'myportfolios'
                     ? 'bg-[#4ebe96] text-black'
                     : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
@@ -259,7 +259,7 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
               </button>
               <button
                 onClick={() => setActiveTab('advisor')}
-                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-100 ${
+                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out ${
                   activeTab === 'advisor' || activeTab === 'screener' || activeTab === 'dcf'
                     ? 'bg-[#4ebe96] text-black'
                     : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
@@ -269,7 +269,7 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
               </button>
               <button
                 onClick={() => setActiveTab('earnings')}
-                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-100 ${
+                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out ${
                   activeTab === 'earnings'
                     ? 'bg-[#4ebe96] text-black'
                     : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
@@ -304,7 +304,7 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
                   setActiveTab('market')
                   setMobileMenuOpen(false)
                 }}
-                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-100 ${
+                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out ${
                   activeTab === 'market' || activeTab === 'overview'
                     ? 'bg-[#4ebe96] text-black'
                     : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
@@ -317,7 +317,7 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
                   setActiveTab('watchlist')
                   setMobileMenuOpen(false)
                 }}
-                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-100 ${
+                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out ${
                   activeTab === 'watchlist'
                     ? 'bg-[#4ebe96] text-black'
                     : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
@@ -330,7 +330,7 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
                   setActiveTab('myportfolios')
                   setMobileMenuOpen(false)
                 }}
-                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-100 ${
+                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out ${
                   activeTab === 'myportfolios'
                     ? 'bg-[#4ebe96] text-black'
                     : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
@@ -343,7 +343,7 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
                   setActiveTab('advisor')
                   setMobileMenuOpen(false)
                 }}
-                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-100 ${
+                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out ${
                   activeTab === 'advisor' || activeTab === 'screener' || activeTab === 'dcf'
                     ? 'bg-[#4ebe96] text-black'
                     : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
@@ -356,7 +356,7 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
                   setActiveTab('earnings')
                   setMobileMenuOpen(false)
                 }}
-                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-100 ${
+                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out ${
                   activeTab === 'earnings'
                     ? 'bg-[#4ebe96] text-black'
                     : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
@@ -445,7 +445,7 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
             </div>
 
             {/* Key Statistics Grid - Responsive */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4 mt-4 sm:mt-6 p-3 sm:p-4 bg-white/[0.05]/30 rounded-xl overflow-x-auto">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4 mt-4 sm:mt-6 p-3 sm:p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl overflow-x-auto">
               <KeyStat label="Previous Close" value={Number(stockData.snapshot.previousClose || stockData.snapshot.price || 0).toFixed(2)} />
               <KeyStat label="Day's Range" value={stockData.snapshot.dayLow && stockData.snapshot.dayHigh ? `${stockData.snapshot.dayLow.toFixed(2)} - ${stockData.snapshot.dayHigh.toFixed(2)}` : '-'} />
               <KeyStat label="Market Cap" value={formatMarketCap(stockData.snapshot.market_cap)} />
@@ -714,7 +714,7 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
 
               {/* Watchlist Tab */}
               <TabsContent value="watchlist">
-                <Card className="bg-[#1a1a1a] border-white/[0.08]">
+                <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08]">
                   <CardHeader>
                     <CardTitle className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                       <span>Your Watchlist</span>
@@ -762,31 +762,31 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
                   </div>
 
                   {/* Quick Research Tips */}
-                  <Card className="bg-[#1a1a1a] border-white/[0.08]">
+                  <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08]">
                     <CardHeader>
                       <CardTitle>Research Tips</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                        <div className="p-3 sm:p-4 bg-white/[0.05]/30 rounded-lg">
+                        <div className="p-3 sm:p-4 bg-white/[0.03] backdrop-blur-[10px] rounded-2xl">
                           <p className="font-medium mb-2 text-sm sm:text-base">Stock Screener</p>
                           <p className="text-xs sm:text-sm text-[#868f97]">
                             Filter stocks by market cap, P/E ratio, revenue growth, and more.
                           </p>
                         </div>
-                        <div className="p-3 sm:p-4 bg-white/[0.05]/30 rounded-lg">
+                        <div className="p-3 sm:p-4 bg-white/[0.03] backdrop-blur-[10px] rounded-2xl">
                           <p className="font-medium mb-2 text-sm sm:text-base">DCF Calculator</p>
                           <p className="text-xs sm:text-sm text-[#868f97]">
                             Calculate intrinsic value using discounted cash flow analysis.
                           </p>
                         </div>
-                        <div className="p-3 sm:p-4 bg-white/[0.05]/30 rounded-lg">
+                        <div className="p-3 sm:p-4 bg-white/[0.03] backdrop-blur-[10px] rounded-2xl">
                           <p className="font-medium mb-2 text-sm sm:text-base">Portfolio Analyzer</p>
                           <p className="text-xs sm:text-sm text-[#868f97]">
                             Upload a screenshot of your portfolio for AI analysis.
                           </p>
                         </div>
-                        <div className="p-3 sm:p-4 bg-white/[0.05]/30 rounded-lg">
+                        <div className="p-3 sm:p-4 bg-white/[0.03] backdrop-blur-[10px] rounded-2xl">
                           <p className="font-medium mb-2 text-sm sm:text-base">AI Summary</p>
                           <p className="text-xs sm:text-sm text-[#868f97]">
                             Search for any stock and click "AI" tab for instant analysis.
@@ -842,7 +842,7 @@ function MetricBar({ label, value, max, threshold }: { label: string, value: num
       </div>
       <div className="h-2 bg-white/[0.05] rounded-full overflow-hidden">
         <div
-          className={`h-full rounded-full transition-all ${isGood ? 'bg-[#4ebe96]' : 'bg-[#868f97]/30'}`}
+          className={`h-full rounded-full motion-safe:transition-all motion-safe:duration-150 ease-out ${isGood ? 'bg-[#4ebe96]' : 'bg-[#868f97]/30'}`}
           style={{ width: `${percentage}%` }}
         />
       </div>
@@ -853,7 +853,7 @@ function MetricBar({ label, value, max, threshold }: { label: string, value: num
 function LoadingState() {
   return (
     <div className="flex items-center justify-center h-64">
-      <div className="animate-spin rounded-full size-12 border-t-2 border-[#4ebe96]"></div>
+      <div className="motion-safe:animate-spin rounded-full size-12 border-t-2 border-[#4ebe96]"></div>
     </div>
   )
 }

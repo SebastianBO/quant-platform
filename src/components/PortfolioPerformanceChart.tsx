@@ -139,7 +139,7 @@ export default function PortfolioPerformanceChart({
 
   if (loading) {
     return (
-      <Card className="bg-[#1a1a1a] border-white/[0.08]">
+      <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
         <CardHeader>
           <CardTitle>Performance vs Market</CardTitle>
         </CardHeader>
@@ -154,7 +154,7 @@ export default function PortfolioPerformanceChart({
 
   if (error) {
     return (
-      <Card className="bg-[#1a1a1a] border-white/[0.08]">
+      <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
         <CardHeader>
           <CardTitle>Performance vs Market</CardTitle>
         </CardHeader>
@@ -166,7 +166,7 @@ export default function PortfolioPerformanceChart({
   }
 
   return (
-    <Card className="bg-[#1a1a1a] border-white/[0.08]">
+    <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
       <CardHeader className="space-y-4">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
@@ -174,12 +174,12 @@ export default function PortfolioPerformanceChart({
           </CardTitle>
           <div className="flex items-center gap-2">
             {outperformance >= 0 ? (
-              <span className="text-sm text-[#4ebe96] flex items-center gap-1">
+              <span className="text-sm text-[#4ebe96] flex items-center gap-1 tabular-nums">
                 <TrendingUp className="w-4 h-4" />
                 +{outperformance.toFixed(1)}% vs S&P 500
               </span>
             ) : (
-              <span className="text-sm text-[#e15241] flex items-center gap-1">
+              <span className="text-sm text-[#ff5c5c] flex items-center gap-1 tabular-nums">
                 <TrendingDown className="w-4 h-4" />
                 {outperformance.toFixed(1)}% vs S&P 500
               </span>
@@ -193,7 +193,7 @@ export default function PortfolioPerformanceChart({
             <button
               key={period.label}
               onClick={() => setSelectedPeriod(period.days)}
-              className={`px-3 py-1.5 text-xs font-medium rounded transition-colors duration-100 ${
+              className={`px-3 py-1.5 text-xs font-medium rounded-full motion-safe:transition-colors motion-safe:duration-150 ease-out ${
                 selectedPeriod === period.days
                   ? 'bg-[#4ebe96] text-white'
                   : 'bg-white/[0.05] text-[#868f97] hover:text-white hover:bg-white/[0.08]'
@@ -231,17 +231,19 @@ export default function PortfolioPerformanceChart({
                 tickLine={false}
                 tickFormatter={(v) => `${v.toFixed(0)}%`}
                 domain={['auto', 'auto']}
+                className="tabular-nums"
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#1a1a1a',
+                  backgroundColor: '#000000',
                   border: '1px solid rgba(255, 255, 255, 0.08)',
-                  borderRadius: '8px'
+                  borderRadius: '12px'
                 }}
                 formatter={(value: number, name: string) => {
                   const label = name === 'portfolio' ? portfolioName : 'S&P 500'
                   return [`${(value - 100).toFixed(2)}%`, label]
                 }}
+                wrapperClassName="tabular-nums"
               />
               <Legend
                 formatter={(value) => value === 'portfolio' ? portfolioName : 'S&P 500'}
@@ -269,19 +271,19 @@ export default function PortfolioPerformanceChart({
         {/* Performance Summary */}
         <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-white/[0.08]">
           <div className="text-center">
-            <p className={`text-lg font-bold ${portfolioReturn >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
+            <p className={`text-lg font-bold tabular-nums ${portfolioReturn >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
               {portfolioReturn >= 0 ? '+' : ''}{portfolioReturn.toFixed(2)}%
             </p>
             <p className="text-xs text-[#868f97]">Portfolio</p>
           </div>
           <div className="text-center">
-            <p className={`text-lg font-bold ${spyReturn >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
+            <p className={`text-lg font-bold tabular-nums ${spyReturn >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
               {spyReturn >= 0 ? '+' : ''}{spyReturn.toFixed(2)}%
             </p>
             <p className="text-xs text-[#868f97]">S&P 500</p>
           </div>
           <div className="text-center">
-            <p className={`text-lg font-bold ${outperformance >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
+            <p className={`text-lg font-bold tabular-nums ${outperformance >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
               {outperformance >= 0 ? '+' : ''}{outperformance.toFixed(2)}%
             </p>
             <p className="text-xs text-[#868f97]">Alpha</p>

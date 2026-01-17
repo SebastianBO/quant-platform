@@ -105,7 +105,7 @@ function MiniSparkline({ data, positive }: { data: number[], positive: boolean }
       <polyline
         points={points}
         fill="none"
-        stroke={positive ? "#4ebe96" : "#e15241"}
+        stroke={positive ? "#4ebe96" : "#ff5c5c"}
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -119,7 +119,7 @@ function MarketCard({ index }: { index: MarketIndex }) {
   const isPositive = index.changePercent >= 0
 
   return (
-    <div className="p-3 bg-white/[0.03] rounded-lg hover:bg-white/[0.05] transition-colors duration-100 cursor-pointer">
+    <div className="p-3 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] motion-safe:transition-colors motion-safe:duration-150 ease-out cursor-pointer">
       <div className="flex items-center justify-between mb-1">
         <span className="text-xs text-[#868f97] truncate">{index.name}</span>
         <MiniSparkline data={index.sparkline || []} positive={isPositive} />
@@ -128,7 +128,7 @@ function MarketCard({ index }: { index: MarketIndex }) {
         <span className="font-semibold tabular-nums">{index.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
         <span className={cn(
           "text-xs tabular-nums",
-          isPositive ? "text-[#4ebe96]" : "text-[#e15241]"
+          isPositive ? "text-[#4ebe96]" : "text-[#ff5c5c]"
         )}>
           {isPositive ? "+" : ""}{typeof index.changePercent === 'number' ? index.changePercent.toFixed(2) : '0.00'}%
         </span>
@@ -144,18 +144,18 @@ function TrendingRow({ stock, onSelect }: { stock: TrendingStock, onSelect: (sym
   return (
     <button
       onClick={() => onSelect(stock.symbol)}
-      className="w-full py-2.5 px-2 hover:bg-white/[0.05] rounded transition-colors duration-100 group text-left"
+      className="w-full py-2.5 px-2 hover:bg-white/[0.05] rounded motion-safe:transition-colors motion-safe:duration-150 ease-out group text-left"
     >
       <div className="flex items-center justify-between">
         <div className="flex-1 min-w-0">
-          <p className="font-medium text-sm group-hover:text-[#4ebe96] transition-colors duration-100">{stock.symbol}</p>
+          <p className="font-medium text-sm group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out">{stock.symbol}</p>
           <p className="text-xs text-[#868f97] truncate">{stock.name}</p>
         </div>
         <div className="text-right ml-3">
           <p className="font-medium tabular-nums text-sm">{typeof stock.price === 'number' ? stock.price.toFixed(2) : '—'}</p>
           <p className={cn(
             "text-xs tabular-nums",
-            isPositive ? "text-[#4ebe96]" : "text-[#e15241]"
+            isPositive ? "text-[#4ebe96]" : "text-[#ff5c5c]"
           )}>
             {isPositive ? "+" : ""}{typeof stock.changePercent === 'number' ? stock.changePercent.toFixed(2) : '0.00'}%
           </p>
@@ -167,7 +167,7 @@ function TrendingRow({ stock, onSelect }: { stock: TrendingStock, onSelect: (sym
           {stock.signals.slice(0, 3).map((signal, i) => (
             <span
               key={i}
-              className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.05] text-[#868f97]"
+              className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/[0.05] text-[#868f97]"
             >
               {signal}
             </span>
@@ -185,17 +185,17 @@ function RecentRow({ stock, onSelect }: { stock: RecentStock, onSelect: (symbol:
   return (
     <button
       onClick={() => onSelect(stock.symbol)}
-      className="w-full flex items-center justify-between py-2 px-1 hover:bg-white/[0.05] rounded transition-colors duration-100 group"
+      className="w-full flex items-center justify-between py-2 px-1 hover:bg-white/[0.05] rounded motion-safe:transition-colors motion-safe:duration-150 ease-out group"
     >
       <div className="flex-1 min-w-0">
-        <p className="font-medium text-sm group-hover:text-[#4ebe96] transition-colors duration-100">{stock.symbol}</p>
+        <p className="font-medium text-sm group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out">{stock.symbol}</p>
         <p className="text-xs text-[#868f97] truncate">{stock.name}</p>
       </div>
       <div className="text-right ml-3">
         <p className="font-medium tabular-nums text-sm">{typeof stock.price === 'number' ? stock.price.toFixed(2) : '—'}</p>
         <p className={cn(
           "text-xs tabular-nums",
-          isPositive ? "text-[#4ebe96]" : "text-[#e15241]"
+          isPositive ? "text-[#4ebe96]" : "text-[#ff5c5c]"
         )}>
           {isPositive ? "+" : ""}{typeof stock.changePercent === 'number' ? stock.changePercent.toFixed(2) : '0.00'}%
         </p>
@@ -472,14 +472,14 @@ export default function MarketSidebar({ onSelectTicker, currentTicker }: MarketS
                 <button
                   onClick={() => setMarketPage(p => Math.max(0, p - 1))}
                   disabled={marketPage === 0}
-                  className="p-1 rounded hover:bg-white/[0.08] disabled:opacity-30 transition-colors duration-100"
+                  className="p-1 rounded hover:bg-white/[0.08] disabled:opacity-30 motion-safe:transition-colors motion-safe:duration-150 ease-out"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setMarketPage(p => Math.min(totalPages - 1, p + 1))}
                   disabled={marketPage >= totalPages - 1}
-                  className="p-1 rounded hover:bg-white/[0.08] disabled:opacity-30 transition-colors duration-100"
+                  className="p-1 rounded hover:bg-white/[0.08] disabled:opacity-30 motion-safe:transition-colors motion-safe:duration-150 ease-out"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
@@ -489,7 +489,7 @@ export default function MarketSidebar({ onSelectTicker, currentTicker }: MarketS
           <div className="grid grid-cols-2 gap-2">
             {loading ? (
               Array(6).fill(0).map((_, i) => (
-                <div key={i} className="h-16 bg-white/[0.03] rounded-lg animate-pulse" />
+                <div key={i} className="h-16 bg-white/[0.03] rounded-2xl animate-pulse" />
               ))
             ) : (
               visibleIndices.map((index) => (
@@ -518,12 +518,12 @@ export default function MarketSidebar({ onSelectTicker, currentTicker }: MarketS
         </section>
 
         {/* Portfolio */}
-        <section className="bg-white/[0.02] rounded-xl p-4">
+        <section className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4">
           <h3 className="text-sm font-semibold text-[#868f97] uppercase tracking-wider mb-3">Portfolio</h3>
           {portfolioLoading ? (
             <div className="space-y-2">
               {[1, 2].map(i => (
-                <div key={i} className="h-16 bg-white/[0.03] rounded-lg animate-pulse" />
+                <div key={i} className="h-16 bg-white/[0.03] rounded-2xl animate-pulse" />
               ))}
             </div>
           ) : user ? (
@@ -537,11 +537,11 @@ export default function MarketSidebar({ onSelectTicker, currentTicker }: MarketS
                     <button
                       key={portfolio.id}
                       onClick={() => router.push(`/dashboard/portfolio/${portfolio.id}`)}
-                      className="w-full p-3 bg-white/[0.03] hover:bg-white/[0.08] rounded-lg transition-all duration-100 group text-left"
+                      className="w-full p-3 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:bg-white/[0.08] rounded-2xl motion-safe:transition-all motion-safe:duration-150 ease-out group text-left"
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium text-sm truncate group-hover:text-[#4ebe96] transition-colors duration-100">
+                          <p className="font-medium text-sm truncate group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out">
                             {portfolio.name}
                           </p>
                           <p className="text-xs text-[#868f97]">
@@ -554,7 +554,7 @@ export default function MarketSidebar({ onSelectTicker, currentTicker }: MarketS
                           </p>
                           <p className={cn(
                             "text-xs font-medium tabular-nums flex items-center justify-end gap-0.5",
-                            isPositive ? "text-[#4ebe96]" : "text-[#e15241]"
+                            isPositive ? "text-[#4ebe96]" : "text-[#ff5c5c]"
                           )}>
                             {isPositive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
                             {isPositive ? '+' : ''}{typeof portfolio.changePercent === 'number' ? portfolio.changePercent.toFixed(1) : '0.0'}%
@@ -566,7 +566,7 @@ export default function MarketSidebar({ onSelectTicker, currentTicker }: MarketS
                 })}
                 {portfolios.length > 3 && (
                   <Link href="/dashboard" className="block text-center py-2">
-                    <span className="text-xs text-[#868f97] hover:text-[#4ebe96] transition-colors duration-100">
+                    <span className="text-xs text-[#868f97] hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out">
                       +{portfolios.length - 3} more portfolios
                     </span>
                   </Link>
@@ -623,7 +623,7 @@ export default function MarketSidebar({ onSelectTicker, currentTicker }: MarketS
         {/* Top Losers */}
         {topLosers.length > 0 && (
           <section>
-            <h3 className="text-sm font-semibold text-[#e15241]/80 uppercase tracking-wider mb-3">Top losers</h3>
+            <h3 className="text-sm font-semibold text-[#ff5c5c]/80 uppercase tracking-wider mb-3">Top losers</h3>
             <div className="space-y-0.5">
               {topLosers.map((stock) => (
                 <TrendingRow key={stock.symbol} stock={stock} onSelect={onSelectTicker} />

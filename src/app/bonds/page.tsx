@@ -193,7 +193,7 @@ export default async function BondsPage() {
             <div className="flex-1 min-w-0">
           {/* Breadcrumbs */}
           <nav className="text-sm text-[#868f97] mb-4 sm:mb-6" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-white transition-colors duration-100">
+            <Link href="/" className="hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out">
               Home
             </Link>
             {' / '}
@@ -228,7 +228,7 @@ export default async function BondsPage() {
               ].map((item, idx) => (
                 <div
                   key={idx}
-                  className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]"
+                  className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 sm:p-6 rounded-2xl"
                 >
                   <div className="text-xs sm:text-sm text-[#868f97] mb-2">
                     {item.label}
@@ -240,7 +240,7 @@ export default async function BondsPage() {
                     <div
                       className={`text-xs mt-2 font-medium ${
                         treasuryData.inverted
-                          ? 'text-[#e15241]'
+                          ? 'text-[#ff5c5c]'
                           : 'text-[#4ebe96]'
                       }`}
                     >
@@ -257,7 +257,7 @@ export default async function BondsPage() {
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
               Current Treasury Yield Curve
             </h2>
-            <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 sm:p-6 rounded-2xl">
               {/* Yield Curve Visualization */}
               <div className="mb-6">
                 <div className="relative h-48 sm:h-64 flex items-end justify-around gap-1 sm:gap-2">
@@ -273,7 +273,7 @@ export default async function BondsPage() {
                           {item.yield.toFixed(2)}%
                         </div>
                         <div
-                          className="w-full bg-gradient-to-t from-[#4ebe96] to-[#4ebe96]/70 rounded-t-lg transition-all hover:from-[#4ebe96]/90 hover:to-[#4ebe96]/60"
+                          className="w-full bg-gradient-to-t from-[#4ebe96] to-[#4ebe96]/70 rounded-t-lg motion-safe:transition-all motion-safe:duration-150 ease-out hover:from-[#4ebe96]/90 hover:to-[#4ebe96]/60"
                           style={{ height: `${Math.max(heightPercent, 10)}%` }}
                         />
                         <div className="text-xs font-medium mt-2">
@@ -301,11 +301,11 @@ export default async function BondsPage() {
               </div>
 
               {treasuryData.inverted && (
-                <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-[#e15241]/10 border border-[#e15241]/20 rounded-lg">
+                <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-[#ff5c5c]/10 border border-[#ff5c5c]/20 rounded-lg">
                   <div className="flex items-start gap-3">
                     <span className="text-xl sm:text-2xl">⚠️</span>
                     <div>
-                      <h3 className="font-bold text-[#e15241] mb-1 text-sm sm:text-base">
+                      <h3 className="font-bold text-[#ff5c5c] mb-1 text-sm sm:text-base">
                         Inverted Yield Curve
                       </h3>
                       <p className="text-xs sm:text-sm text-[#868f97]">
@@ -327,7 +327,7 @@ export default async function BondsPage() {
               Understanding US Treasury Bonds
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 sm:p-6 rounded-2xl">
                 <h3 className="text-lg sm:text-xl font-bold mb-3 text-[#4ebe96]">
                   What Are Treasury Yields?
                 </h3>
@@ -346,7 +346,7 @@ export default async function BondsPage() {
                 </ul>
               </div>
 
-              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 sm:p-6 rounded-2xl">
                 <h3 className="text-lg sm:text-xl font-bold mb-3 text-[#4ebe96]">
                   Types of Treasury Securities
                 </h3>
@@ -386,7 +386,7 @@ export default async function BondsPage() {
               Why Treasury Yields Matter for Investors
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 sm:p-6 rounded-2xl">
                 <div className="text-2xl sm:text-3xl mb-3">📈</div>
                 <h3 className="text-base sm:text-lg font-bold mb-2">Stock Valuations</h3>
                 <p className="text-xs sm:text-sm text-[#868f97]">
@@ -396,7 +396,7 @@ export default async function BondsPage() {
                 </p>
               </div>
 
-              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 sm:p-6 rounded-2xl">
                 <div className="text-2xl sm:text-3xl mb-3">🏠</div>
                 <h3 className="text-base sm:text-lg font-bold mb-2">Mortgage Rates</h3>
                 <p className="text-xs sm:text-sm text-[#868f97]">
@@ -406,7 +406,7 @@ export default async function BondsPage() {
                 </p>
               </div>
 
-              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 sm:p-6 rounded-2xl">
                 <div className="text-2xl sm:text-3xl mb-3">💼</div>
                 <h3 className="text-base sm:text-lg font-bold mb-2">Corporate Bonds</h3>
                 <p className="text-xs sm:text-sm text-[#868f97]">
@@ -416,7 +416,7 @@ export default async function BondsPage() {
                 </p>
               </div>
 
-              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 sm:p-6 rounded-2xl">
                 <div className="text-2xl sm:text-3xl mb-3">🌍</div>
                 <h3 className="text-base sm:text-lg font-bold mb-2">Dollar Strength</h3>
                 <p className="text-xs sm:text-sm text-[#868f97]">
@@ -426,7 +426,7 @@ export default async function BondsPage() {
                 </p>
               </div>
 
-              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 sm:p-6 rounded-2xl">
                 <div className="text-2xl sm:text-3xl mb-3">📊</div>
                 <h3 className="text-base sm:text-lg font-bold mb-2">Economic Indicator</h3>
                 <p className="text-xs sm:text-sm text-[#868f97]">
@@ -436,7 +436,7 @@ export default async function BondsPage() {
                 </p>
               </div>
 
-              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 sm:p-6 rounded-2xl">
                 <div className="text-2xl sm:text-3xl mb-3">💰</div>
                 <h3 className="text-base sm:text-lg font-bold mb-2">Alternative to Stocks</h3>
                 <p className="text-xs sm:text-sm text-[#868f97]">
@@ -449,7 +449,7 @@ export default async function BondsPage() {
           </section>
 
           {/* How to Interpret the Yield Curve */}
-          <section className="mb-8 sm:mb-12 bg-[#1a1a1a] p-4 sm:p-6 lg:p-8 rounded-xl border border-white/[0.08]">
+          <section className="mb-8 sm:mb-12 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 sm:p-6 lg:p-8 rounded-2xl">
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
               How to Interpret the Yield Curve
             </h2>
@@ -488,7 +488,7 @@ export default async function BondsPage() {
 
               <div>
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#e15241] flex items-center justify-center text-white font-bold text-lg sm:text-xl">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#ff5c5c] flex items-center justify-center text-white font-bold text-lg sm:text-xl">
                     ↘
                   </div>
                   <h3 className="text-base sm:text-xl font-bold">Inverted Yield Curve</h3>
@@ -510,7 +510,7 @@ export default async function BondsPage() {
               Bond Investment Strategies
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 sm:p-6 rounded-2xl">
                 <div className="text-2xl sm:text-3xl mb-3">🎯</div>
                 <h3 className="text-base sm:text-lg font-bold mb-2">Buy and Hold</h3>
                 <p className="text-xs sm:text-sm text-[#868f97]">
@@ -520,7 +520,7 @@ export default async function BondsPage() {
                 </p>
               </div>
 
-              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 sm:p-6 rounded-2xl">
                 <div className="text-2xl sm:text-3xl mb-3">⏰</div>
                 <h3 className="text-base sm:text-lg font-bold mb-2">Laddering</h3>
                 <p className="text-xs sm:text-sm text-[#868f97]">
@@ -530,7 +530,7 @@ export default async function BondsPage() {
                 </p>
               </div>
 
-              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 sm:p-6 rounded-2xl">
                 <div className="text-2xl sm:text-3xl mb-3">📊</div>
                 <h3 className="text-base sm:text-lg font-bold mb-2">Duration Targeting</h3>
                 <p className="text-xs sm:text-sm text-[#868f97]">
@@ -540,7 +540,7 @@ export default async function BondsPage() {
                 </p>
               </div>
 
-              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 sm:p-6 rounded-2xl">
                 <div className="text-2xl sm:text-3xl mb-3">🔄</div>
                 <h3 className="text-base sm:text-lg font-bold mb-2">Bond ETFs</h3>
                 <p className="text-xs sm:text-sm text-[#868f97]">
@@ -561,11 +561,11 @@ export default async function BondsPage() {
               {bondFAQs.map((faq, index) => (
                 <details
                   key={index}
-                  className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08] group"
+                  className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 sm:p-6 rounded-2xl group"
                 >
                   <summary className="text-base sm:text-lg font-bold cursor-pointer list-none flex items-center justify-between gap-4">
                     <span className="flex-1">{faq.question}</span>
-                    <span className="text-[#4ebe96] group-open:rotate-180 transition-transform duration-100 flex-shrink-0">
+                    <span className="text-[#4ebe96] group-open:rotate-180 motion-safe:transition-transform motion-safe:duration-150 ease-out flex-shrink-0">
                       ▼
                     </span>
                   </summary>
@@ -585,10 +585,10 @@ export default async function BondsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               <Link
                 href="/markets"
-                className="bg-[#1a1a1a] p-4 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all duration-100 group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out p-4 rounded-2xl group"
               >
                 <div className="text-xl sm:text-2xl mb-2">📊</div>
-                <h3 className="font-bold group-hover:text-[#4ebe96] transition-colors duration-100 text-sm sm:text-base">
+                <h3 className="font-bold group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out text-sm sm:text-base">
                   Market Movers
                 </h3>
                 <p className="text-xs sm:text-sm text-[#868f97]">
@@ -598,10 +598,10 @@ export default async function BondsPage() {
 
               <Link
                 href="/sectors"
-                className="bg-[#1a1a1a] p-4 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all duration-100 group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out p-4 rounded-2xl group"
               >
                 <div className="text-xl sm:text-2xl mb-2">🏢</div>
-                <h3 className="font-bold group-hover:text-[#4ebe96] transition-colors duration-100 text-sm sm:text-base">
+                <h3 className="font-bold group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out text-sm sm:text-base">
                   Sectors
                 </h3>
                 <p className="text-xs sm:text-sm text-[#868f97]">
@@ -611,10 +611,10 @@ export default async function BondsPage() {
 
               <Link
                 href="/earnings"
-                className="bg-[#1a1a1a] p-4 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all duration-100 group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out p-4 rounded-2xl group"
               >
                 <div className="text-xl sm:text-2xl mb-2">📅</div>
-                <h3 className="font-bold group-hover:text-[#4ebe96] transition-colors duration-100 text-sm sm:text-base">
+                <h3 className="font-bold group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out text-sm sm:text-base">
                   Earnings Calendar
                 </h3>
                 <p className="text-xs sm:text-sm text-[#868f97]">
@@ -624,10 +624,10 @@ export default async function BondsPage() {
 
               <Link
                 href="/dashboard"
-                className="bg-[#1a1a1a] p-4 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all duration-100 group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out p-4 rounded-2xl group"
               >
                 <div className="text-xl sm:text-2xl mb-2">🔍</div>
-                <h3 className="font-bold group-hover:text-[#4ebe96] transition-colors duration-100 text-sm sm:text-base">
+                <h3 className="font-bold group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out text-sm sm:text-base">
                   Stock Analysis
                 </h3>
                 <p className="text-xs sm:text-sm text-[#868f97]">
@@ -649,7 +649,7 @@ export default async function BondsPage() {
             </p>
             <Link
               href="/dashboard"
-              className="inline-block w-full sm:w-auto bg-white text-[#4ebe96] hover:bg-gray-100 px-6 sm:px-8 py-3 rounded-lg font-bold transition-colors duration-100"
+              className="inline-block w-full sm:w-auto bg-white text-[#4ebe96] hover:bg-gray-100 px-6 sm:px-8 py-3 rounded-lg font-bold motion-safe:transition-colors motion-safe:duration-150 ease-out"
             >
               Start Analyzing Stocks Free
             </Link>

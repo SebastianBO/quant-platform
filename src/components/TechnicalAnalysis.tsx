@@ -118,11 +118,11 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
 
   // Analyst rating distribution for pie chart
   const ratingData = analystRatings ? [
-    { name: 'Strong Buy', value: analystRatings.strongBuy, color: '#10b981' },
+    { name: 'Strong Buy', value: analystRatings.strongBuy, color: '#4ebe96' },
     { name: 'Buy', value: analystRatings.buy, color: '#6ee7b7' },
     { name: 'Hold', value: analystRatings.hold, color: '#fbbf24' },
     { name: 'Sell', value: analystRatings.sell, color: '#f97316' },
-    { name: 'Strong Sell', value: analystRatings.strongSell, color: '#ef4444' },
+    { name: 'Strong Sell', value: analystRatings.strongSell, color: '#ff5c5c' },
   ].filter(d => (d.value || 0) > 0) : []
 
   // Price upside/downside
@@ -155,7 +155,7 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
             <p className="text-xs sm:text-sm text-[#868f97] mb-2">52-Week Price Range</p>
             <div className="relative h-8 bg-white/[0.05] rounded-full overflow-hidden">
               <div
-                className="absolute h-full bg-gradient-to-r from-[#e15241] via-[#f4a623] to-[#4ebe96] opacity-30"
+                className="absolute h-full bg-gradient-to-r from-[#ff5c5c] via-[#f4a623] to-[#4ebe96] opacity-30"
                 style={{ width: '100%' }}
               />
               <div
@@ -164,9 +164,9 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
               />
             </div>
             <div className="flex justify-between text-xs text-[#868f97] mt-1">
-              <span>${technicals?.fiftyTwoWeekLow?.toFixed(2)}</span>
-              <span className="font-bold text-white">${currentPrice.toFixed(2)} ({pricePositionPct.toFixed(0)}%)</span>
-              <span>${technicals?.fiftyTwoWeekHigh?.toFixed(2)}</span>
+              <span className="tabular-nums">${technicals?.fiftyTwoWeekLow?.toFixed(2)}</span>
+              <span className="font-bold text-white tabular-nums">${currentPrice.toFixed(2)} ({pricePositionPct.toFixed(0)}%)</span>
+              <span className="tabular-nums">${technicals?.fiftyTwoWeekHigh?.toFixed(2)}</span>
             </div>
           </div>
 
@@ -199,21 +199,21 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 text-xs sm:text-sm">
                 <div>
                   <p className="text-[#868f97]">Shares Short</p>
-                  <p className="font-bold">{(technicals.sharesShort / 1e6).toFixed(2)}M</p>
+                  <p className="font-bold tabular-nums">{(technicals.sharesShort / 1e6).toFixed(2)}M</p>
                 </div>
                 <div>
                   <p className="text-[#868f97]">Short Ratio</p>
-                  <p className="font-bold">{technicals.shortRatio?.toFixed(2)} days</p>
+                  <p className="font-bold tabular-nums">{technicals.shortRatio?.toFixed(2)} days</p>
                 </div>
                 <div>
                   <p className="text-[#868f97]">Short % of Float</p>
-                  <p className={`font-bold ${(technicals.shortPercent || 0) > 0.1 ? 'text-[#e15241]' : ''}`}>
+                  <p className={`font-bold tabular-nums ${(technicals.shortPercent || 0) > 0.1 ? 'text-[#ff5c5c]' : ''}`}>
                     {formatPercent(technicals.shortPercent || 0)}
                   </p>
                 </div>
                 <div>
                   <p className="text-[#868f97]">MoM Change</p>
-                  <p className={`font-bold ${(technicals.sharesShort || 0) < (technicals.sharesShortPriorMonth || 0) ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
+                  <p className={`font-bold ${(technicals.sharesShort || 0) < (technicals.sharesShortPriorMonth || 0) ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                     {(technicals.sharesShort || 0) < (technicals.sharesShortPriorMonth || 0) ? 'Decreasing' : 'Increasing'}
                   </p>
                 </div>
@@ -258,8 +258,8 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
                 </ResponsiveContainer>
               </div>
               <div className="text-center mt-2">
-                <p className="text-[#868f97] text-xs sm:text-sm">{analystRatings?.totalAnalysts} Analysts</p>
-                <p className="text-xl sm:text-2xl font-bold">
+                <p className="text-[#868f97] text-xs sm:text-sm tabular-nums">{analystRatings?.totalAnalysts} Analysts</p>
+                <p className="text-xl sm:text-2xl font-bold tabular-nums">
                   {analystRatings?.rating?.toFixed(2)} / 5
                 </p>
               </div>
@@ -271,8 +271,8 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
               <div className="space-y-4">
                 <div className="p-4 bg-gradient-to-br from-[#4ebe96]/20 to-[#4ebe96]/5 rounded-lg border border-[#4ebe96]/30 text-center">
                   <p className="text-[#868f97] text-xs sm:text-sm">Wall Street Target Price</p>
-                  <p className="text-2xl sm:text-3xl font-bold text-[#4ebe96]">${targetPrice.toFixed(2)}</p>
-                  <p className={`text-base sm:text-lg ${upside >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
+                  <p className="text-2xl sm:text-3xl font-bold text-[#4ebe96] tabular-nums">${targetPrice.toFixed(2)}</p>
+                  <p className={`text-base sm:text-lg tabular-nums ${upside >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                     {upside >= 0 ? '+' : ''}{upside.toFixed(1)}% {upside >= 0 ? 'Upside' : 'Downside'}
                   </p>
                 </div>
@@ -280,11 +280,11 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
                 <div className="grid grid-cols-2 gap-4">
                   <div className="p-3 bg-white/[0.05] rounded-lg text-center">
                     <p className="text-[#868f97] text-xs">Current Price</p>
-                    <p className="font-bold text-sm sm:text-base">${currentPrice.toFixed(2)}</p>
+                    <p className="font-bold text-sm sm:text-base tabular-nums">${currentPrice.toFixed(2)}</p>
                   </div>
                   <div className="p-3 bg-white/[0.05] rounded-lg text-center">
                     <p className="text-[#868f97] text-xs">To Target</p>
-                    <p className={`font-bold text-sm sm:text-base ${upside >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
+                    <p className={`font-bold text-sm sm:text-base tabular-nums ${upside >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                       ${Math.abs(targetPrice - currentPrice).toFixed(2)}
                     </p>
                   </div>
@@ -311,19 +311,19 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
                 label="Annualized Volatility"
                 value={riskMetrics?.volatility ? formatPercent(riskMetrics.volatility) : 'N/A'}
                 interpretation={(riskMetrics?.volatility || 0) > 0.4 ? 'High Risk' : (riskMetrics?.volatility || 0) > 0.2 ? 'Moderate' : 'Low Risk'}
-                color={(riskMetrics?.volatility || 0) > 0.4 ? 'text-[#e15241]' : (riskMetrics?.volatility || 0) > 0.2 ? 'text-[#f4a623]' : 'text-[#4ebe96]'}
+                color={(riskMetrics?.volatility || 0) > 0.4 ? 'text-[#ff5c5c]' : (riskMetrics?.volatility || 0) > 0.2 ? 'text-[#f4a623]' : 'text-[#4ebe96]'}
               />
               <RiskMetric
                 label="Sharpe Ratio"
                 value={riskMetrics?.sharpeRatio?.toFixed(2) || 'N/A'}
                 interpretation={(riskMetrics?.sharpeRatio || 0) > 1 ? 'Good Risk-Adjusted Returns' : (riskMetrics?.sharpeRatio || 0) > 0 ? 'Positive' : 'Negative'}
-                color={(riskMetrics?.sharpeRatio || 0) > 1 ? 'text-[#4ebe96]' : (riskMetrics?.sharpeRatio || 0) > 0 ? 'text-[#f4a623]' : 'text-[#e15241]'}
+                color={(riskMetrics?.sharpeRatio || 0) > 1 ? 'text-[#4ebe96]' : (riskMetrics?.sharpeRatio || 0) > 0 ? 'text-[#f4a623]' : 'text-[#ff5c5c]'}
               />
               <RiskMetric
                 label="Max Drawdown"
                 value={riskMetrics?.maxDrawdown ? formatPercent(riskMetrics.maxDrawdown) : 'N/A'}
                 interpretation={(riskMetrics?.maxDrawdown || 0) > 0.3 ? 'Significant Drawdown' : (riskMetrics?.maxDrawdown || 0) > 0.15 ? 'Moderate' : 'Low Drawdown'}
-                color={(riskMetrics?.maxDrawdown || 0) > 0.3 ? 'text-[#e15241]' : (riskMetrics?.maxDrawdown || 0) > 0.15 ? 'text-[#f4a623]' : 'text-[#4ebe96]'}
+                color={(riskMetrics?.maxDrawdown || 0) > 0.3 ? 'text-[#ff5c5c]' : (riskMetrics?.maxDrawdown || 0) > 0.15 ? 'text-[#f4a623]' : 'text-[#4ebe96]'}
               />
               <RiskMetric
                 label="Beta"
@@ -349,9 +349,9 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <p className="font-medium text-sm sm:text-base">Piotroski F-Score</p>
-                  <p className={`text-xl sm:text-2xl font-bold ${
+                  <p className={`text-xl sm:text-2xl font-bold tabular-nums ${
                     (qualityScores?.piotroskiFScore || 0) >= 7 ? 'text-[#4ebe96]' :
-                    (qualityScores?.piotroskiFScore || 0) >= 4 ? 'text-[#f4a623]' : 'text-[#e15241]'
+                    (qualityScores?.piotroskiFScore || 0) >= 4 ? 'text-[#f4a623]' : 'text-[#ff5c5c]'
                   }`}>
                     {qualityScores?.piotroskiFScore || 0}/9
                   </p>
@@ -360,7 +360,7 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
                   <div
                     className={`h-full rounded-full ${
                       (qualityScores?.piotroskiFScore || 0) >= 7 ? 'bg-[#4ebe96]' :
-                      (qualityScores?.piotroskiFScore || 0) >= 4 ? 'bg-[#f4a623]' : 'bg-[#e15241]'
+                      (qualityScores?.piotroskiFScore || 0) >= 4 ? 'bg-[#f4a623]' : 'bg-[#ff5c5c]'
                     }`}
                     style={{ width: `${((qualityScores?.piotroskiFScore || 0) / 9) * 100}%` }}
                   />
@@ -372,16 +372,16 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <p className="font-medium text-sm sm:text-base">Altman Z-Score</p>
-                  <p className={`text-xl sm:text-2xl font-bold ${
+                  <p className={`text-xl sm:text-2xl font-bold tabular-nums ${
                     qualityScores?.altmanInterpretation === 'Safe' ? 'text-[#4ebe96]' :
-                    qualityScores?.altmanInterpretation === 'Grey Zone' ? 'text-[#f4a623]' : 'text-[#e15241]'
+                    qualityScores?.altmanInterpretation === 'Grey Zone' ? 'text-[#f4a623]' : 'text-[#ff5c5c]'
                   }`}>
                     {qualityScores?.altmanZScore?.toFixed(2) || 'N/A'}
                   </p>
                 </div>
                 <p className={`text-xs sm:text-sm ${
                   qualityScores?.altmanInterpretation === 'Safe' ? 'text-[#4ebe96]' :
-                  qualityScores?.altmanInterpretation === 'Grey Zone' ? 'text-[#f4a623]' : 'text-[#e15241]'
+                  qualityScores?.altmanInterpretation === 'Grey Zone' ? 'text-[#f4a623]' : 'text-[#ff5c5c]'
                 }`}>
                   {qualityScores?.altmanInterpretation === 'Safe' ? 'Low Bankruptcy Risk' :
                    qualityScores?.altmanInterpretation === 'Grey Zone' ? 'Moderate Risk - Monitor' : 'High Bankruptcy Risk'}
@@ -417,19 +417,19 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6">
               <div className="p-3 bg-white/[0.05] rounded-lg text-center">
                 <p className="text-[#868f97] text-xs">Total Institutional Value</p>
-                <p className="font-bold text-[#4ebe96] text-sm sm:text-base">{formatCurrency(institutionalOwnership?.totalValue || 0)}</p>
+                <p className="font-bold text-[#4ebe96] text-sm sm:text-base tabular-nums">{formatCurrency(institutionalOwnership?.totalValue || 0)}</p>
               </div>
               <div className="p-3 bg-white/[0.05] rounded-lg text-center">
                 <p className="text-[#868f97] text-xs">Total Shares Held</p>
-                <p className="font-bold text-sm sm:text-base">{((institutionalOwnership?.totalShares || 0) / 1e6).toFixed(2)}M</p>
+                <p className="font-bold text-sm sm:text-base tabular-nums">{((institutionalOwnership?.totalShares || 0) / 1e6).toFixed(2)}M</p>
               </div>
               <div className="p-3 bg-white/[0.05] rounded-lg text-center">
                 <p className="text-[#868f97] text-xs">Number of Holders</p>
-                <p className="font-bold text-sm sm:text-base">{institutionalOwnership?.topHolders?.length || 0}+</p>
+                <p className="font-bold text-sm sm:text-base tabular-nums">{institutionalOwnership?.topHolders?.length || 0}+</p>
               </div>
               <div className="p-3 bg-white/[0.05] rounded-lg text-center">
                 <p className="text-[#868f97] text-xs">Avg Position</p>
-                <p className="font-bold text-sm sm:text-base">{formatCurrency((institutionalOwnership?.totalValue || 0) / (institutionalOwnership?.topHolders?.length || 1))}</p>
+                <p className="font-bold text-sm sm:text-base tabular-nums">{formatCurrency((institutionalOwnership?.totalValue || 0) / (institutionalOwnership?.topHolders?.length || 1))}</p>
               </div>
             </div>
 
@@ -438,8 +438,8 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
                 <thead>
                   <tr className="border-b border-white/[0.08]">
                     <th className="p-2 text-left">Investor</th>
-                    <th className="p-2 text-right">Shares</th>
-                    <th className="p-2 text-right">Value</th>
+                    <th className="p-2 text-right tabular-nums">Shares</th>
+                    <th className="p-2 text-right tabular-nums">Value</th>
                     <th className="p-2 text-right hidden sm:table-cell">Report Date</th>
                   </tr>
                 </thead>
@@ -447,8 +447,8 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
                   {(institutionalOwnership?.topHolders || []).slice(0, 10).map((holder: InstitutionalHolder, i: number) => (
                     <tr key={i} className="border-b border-white/[0.08]">
                       <td className="p-2 font-medium">{holder.investor?.replace(/_/g, ' ')}</td>
-                      <td className="p-2 text-right">{(holder.shares / 1e6).toFixed(2)}M</td>
-                      <td className="p-2 text-right text-[#4ebe96]">{formatCurrency(holder.market_value)}</td>
+                      <td className="p-2 text-right tabular-nums">{(holder.shares / 1e6).toFixed(2)}M</td>
+                      <td className="p-2 text-right text-[#4ebe96] tabular-nums">{formatCurrency(holder.market_value)}</td>
                       <td className="p-2 text-right text-[#868f97] hidden sm:table-cell">{holder.report_period}</td>
                     </tr>
                   ))}
@@ -464,18 +464,18 @@ export default function TechnicalAnalysis({ ticker, currentPrice }: TechnicalAna
 
 function MetricCard({ label, value, highlight, positive }: { label: string; value: string | undefined; highlight?: boolean; positive?: boolean }) {
   return (
-    <div className={`p-2 sm:p-3 rounded-lg text-center transition-colors duration-100 ${highlight ? (positive ? 'bg-[#4ebe96]/10 border border-[#4ebe96]/30' : 'bg-[#e15241]/10 border border-[#e15241]/30') : 'bg-white/[0.05]'}`}>
+    <div className={`p-2 sm:p-3 rounded-lg text-center motion-safe:transition-colors motion-safe:duration-100 ease-out ${highlight ? (positive ? 'bg-[#4ebe96]/10 border border-[#4ebe96]/30' : 'bg-[#ff5c5c]/10 border border-[#ff5c5c]/30') : 'bg-white/[0.05]'}`}>
       <p className="text-[#868f97] text-xs">{label}</p>
-      <p className={`font-bold text-sm sm:text-base ${highlight ? (positive ? 'text-[#4ebe96]' : 'text-[#e15241]') : ''}`}>{value || 'N/A'}</p>
+      <p className={`font-bold text-sm sm:text-base tabular-nums ${highlight ? (positive ? 'text-[#4ebe96]' : 'text-[#ff5c5c]') : ''}`}>{value || 'N/A'}</p>
     </div>
   )
 }
 
 function SignalCard({ label, signal, positive, detail }: { label: string; signal: string; positive: boolean; detail: string }) {
   return (
-    <div className={`p-3 sm:p-4 rounded-lg transition-colors duration-100 ${positive ? 'bg-[#4ebe96]/10 border border-[#4ebe96]/30' : 'bg-[#e15241]/10 border border-[#e15241]/30'}`}>
+    <div className={`p-3 sm:p-4 rounded-lg motion-safe:transition-colors motion-safe:duration-100 ease-out ${positive ? 'bg-[#4ebe96]/10 border border-[#4ebe96]/30' : 'bg-[#ff5c5c]/10 border border-[#ff5c5c]/30'}`}>
       <p className="text-[#868f97] text-xs sm:text-sm">{label}</p>
-      <p className={`text-lg sm:text-xl font-bold ${positive ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
+      <p className={`text-lg sm:text-xl font-bold ${positive ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
         {positive ? '🟢' : '🔴'} {signal}
       </p>
       <p className="text-xs text-[#868f97] mt-1">{detail}</p>
@@ -485,12 +485,12 @@ function SignalCard({ label, signal, positive, detail }: { label: string; signal
 
 function RiskMetric({ label, value, interpretation, color }: { label: string; value: string; interpretation: string; color: string }) {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-2 sm:p-3 bg-white/[0.05] rounded-lg gap-2 transition-colors duration-100">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-2 sm:p-3 bg-white/[0.05] rounded-lg gap-2 motion-safe:transition-colors motion-safe:duration-100 ease-out">
       <div>
         <p className="font-medium text-sm sm:text-base">{label}</p>
         <p className={`text-xs sm:text-sm ${color}`}>{interpretation}</p>
       </div>
-      <p className={`text-lg sm:text-xl font-bold ${color}`}>{value}</p>
+      <p className={`text-lg sm:text-xl font-bold tabular-nums ${color}`}>{value}</p>
     </div>
   )
 }

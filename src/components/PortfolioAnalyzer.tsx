@@ -241,7 +241,7 @@ export default function PortfolioAnalyzer() {
   return (
     <div className="space-y-6">
       {/* Upload Section */}
-      <Card className="bg-[#1a1a1a] border-white/[0.08]">
+      <Card className="bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <span className="text-2xl">📸</span>
@@ -254,7 +254,7 @@ export default function PortfolioAnalyzer() {
         <CardContent>
           {/* Drop Zone */}
           <div
-            className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-all duration-100 ${
+            className={`relative border-2 border-dashed rounded-2xl p-8 text-center motion-safe:transition-all motion-safe:duration-150 ease-out ${
               dragActive
                 ? 'border-[#4ebe96] bg-[#4ebe96]/10'
                 : 'border-white/[0.08] hover:border-[#868f97]'
@@ -274,7 +274,7 @@ export default function PortfolioAnalyzer() {
                 <img
                   src={imagePreview}
                   alt="Portfolio screenshot"
-                  className="max-h-48 mx-auto rounded-lg border border-white/[0.08]"
+                  className="max-h-48 mx-auto rounded-2xl border border-white/[0.08]"
                 />
                 <button
                   onClick={() => {
@@ -282,7 +282,7 @@ export default function PortfolioAnalyzer() {
                     setPositions([])
                     setAnalysis(null)
                   }}
-                  className="px-4 py-2 bg-white/[0.05] hover:bg-white/[0.08] rounded-lg text-sm transition-colors duration-100"
+                  className="px-4 py-2 bg-white/[0.05] hover:bg-white/[0.08] rounded-2xl text-sm motion-safe:transition-colors motion-safe:duration-150 ease-out"
                 >
                   Upload Different Image
                 </button>
@@ -310,7 +310,7 @@ export default function PortfolioAnalyzer() {
           <div className="mt-4">
             <button
               onClick={() => setManualEntry(!manualEntry)}
-              className="text-sm text-[#4ebe96] hover:text-[#4ebe96]/80 transition-colors duration-100"
+              className="text-sm text-[#4ebe96] hover:text-[#4ebe96]/80 motion-safe:transition-colors motion-safe:duration-150 ease-out"
             >
               {manualEntry ? 'Hide manual entry' : 'Or add positions manually'}
             </button>
@@ -318,7 +318,7 @@ export default function PortfolioAnalyzer() {
 
           {/* Manual Entry Form */}
           {manualEntry && (
-            <div className="mt-4 p-4 bg-white/[0.025] rounded-lg">
+            <div className="mt-4 p-4 bg-white/[0.025] rounded-2xl">
               <div className="grid grid-cols-4 gap-3">
                 <input
                   type="text"
@@ -343,7 +343,7 @@ export default function PortfolioAnalyzer() {
                 />
                 <button
                   onClick={addPosition}
-                  className="bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-white rounded px-3 py-2 text-sm font-medium transition-colors duration-100"
+                  className="bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-white rounded-2xl px-3 py-2 text-sm font-medium motion-safe:transition-colors motion-safe:duration-150 ease-out"
                 >
                   Add
                 </button>
@@ -355,7 +355,7 @@ export default function PortfolioAnalyzer() {
 
       {/* Positions List */}
       {positions.length > 0 && (
-        <Card className="bg-[#1a1a1a] border-white/[0.08]">
+        <Card className="bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2">
@@ -366,13 +366,13 @@ export default function PortfolioAnalyzer() {
                 <button
                   onClick={() => analyzePortfolio()}
                   disabled={loading === 'analyze'}
-                  className="px-4 py-2 bg-[#4ebe96] hover:bg-[#4ebe96]/80 disabled:bg-white/[0.05] text-white rounded-lg text-sm font-medium transition-colors duration-100"
+                  className="px-4 py-2 bg-[#4ebe96] hover:bg-[#4ebe96]/80 disabled:bg-white/[0.05] text-white rounded-2xl text-sm font-medium motion-safe:transition-colors motion-safe:duration-150 ease-out"
                 >
                   {loading === 'analyze' ? 'Analyzing...' : 'Analyze Portfolio'}
                 </button>
                 <button
                   onClick={clearAll}
-                  className="px-4 py-2 bg-white/[0.05] hover:bg-white/[0.08] rounded-lg text-sm transition-colors duration-100"
+                  className="px-4 py-2 bg-white/[0.05] hover:bg-white/[0.08] rounded-2xl text-sm motion-safe:transition-colors motion-safe:duration-150 ease-out"
                 >
                   Clear All
                 </button>
@@ -396,20 +396,20 @@ export default function PortfolioAnalyzer() {
                 </thead>
                 <tbody>
                   {positions.map((pos, i) => (
-                    <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.025] transition-colors duration-100">
+                    <tr key={i} className="border-b border-white/[0.04] hover:bg-white/[0.025] motion-safe:transition-colors motion-safe:duration-150 ease-out">
                       <td className="p-2 font-bold">{pos.ticker || '-'}</td>
-                      <td className="p-2 text-right">{pos.shares?.toLocaleString() || '-'}</td>
-                      <td className="p-2 text-right">{pos.avgCost ? `$${pos.avgCost.toFixed(2)}` : '-'}</td>
-                      <td className="p-2 text-right">{pos.currentPrice ? `$${pos.currentPrice.toFixed(2)}` : '-'}</td>
-                      <td className="p-2 text-right">{pos.marketValue ? formatCurrency(pos.marketValue) : '-'}</td>
-                      <td className={`p-2 text-right ${(pos.gainLossPercent || 0) >= 0 ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
+                      <td className="p-2 text-right tabular-nums">{pos.shares?.toLocaleString() || '-'}</td>
+                      <td className="p-2 text-right tabular-nums">{pos.avgCost ? `$${pos.avgCost.toFixed(2)}` : '-'}</td>
+                      <td className="p-2 text-right tabular-nums">{pos.currentPrice ? `$${pos.currentPrice.toFixed(2)}` : '-'}</td>
+                      <td className="p-2 text-right tabular-nums">{pos.marketValue ? formatCurrency(pos.marketValue) : '-'}</td>
+                      <td className={`p-2 text-right tabular-nums ${(pos.gainLossPercent || 0) >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                         {pos.gainLossPercent !== undefined ? `${pos.gainLossPercent >= 0 ? '+' : ''}${pos.gainLossPercent.toFixed(1)}%` : '-'}
                       </td>
-                      <td className="p-2 text-right">{pos.weight ? `${pos.weight.toFixed(1)}%` : '-'}</td>
+                      <td className="p-2 text-right tabular-nums">{pos.weight ? `${pos.weight.toFixed(1)}%` : '-'}</td>
                       <td className="p-2 text-right">
                         <button
                           onClick={() => removePosition(i)}
-                          className="text-[#e15241] hover:text-[#e15241]/80 text-xs transition-colors duration-100"
+                          className="text-[#ff5c5c] hover:text-[#ff5c5c]/80 text-xs motion-safe:transition-colors motion-safe:duration-150 ease-out"
                         >
                           Remove
                         </button>
@@ -428,33 +428,33 @@ export default function PortfolioAnalyzer() {
         <>
           {/* Metrics Overview */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Card className="bg-[#1a1a1a] border-white/[0.08]">
+            <Card className="bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]">
               <CardContent className="pt-6 text-center">
                 <p className="text-[#868f97] text-sm">Total Value</p>
-                <p className="text-2xl font-bold text-[#4ebe96]">{formatCurrency(analysis.totalValue)}</p>
+                <p className="text-2xl font-bold text-[#4ebe96] tabular-nums">{formatCurrency(analysis.totalValue)}</p>
               </CardContent>
             </Card>
-            <Card className="bg-[#1a1a1a] border-white/[0.08]">
+            <Card className="bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]">
               <CardContent className="pt-6 text-center">
                 <p className="text-[#868f97] text-sm">Diversification Score</p>
-                <p className={`text-2xl font-bold ${analysis.metrics.diversificationScore >= 70 ? 'text-[#4ebe96]' : analysis.metrics.diversificationScore >= 50 ? 'text-[#f4a623]' : 'text-[#e15241]'}`}>
+                <p className={`text-2xl font-bold tabular-nums ${analysis.metrics.diversificationScore >= 70 ? 'text-[#4ebe96]' : analysis.metrics.diversificationScore >= 50 ? 'text-[#f4a623]' : 'text-[#ff5c5c]'}`}>
                   {analysis.metrics.diversificationScore}/100
                 </p>
               </CardContent>
             </Card>
-            <Card className="bg-[#1a1a1a] border-white/[0.08]">
+            <Card className="bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]">
               <CardContent className="pt-6 text-center">
                 <p className="text-[#868f97] text-sm">Concentration Risk</p>
-                <p className={`text-2xl font-bold ${analysis.metrics.concentrationRisk === 'Low' ? 'text-[#4ebe96]' : analysis.metrics.concentrationRisk === 'Medium' ? 'text-[#f4a623]' : 'text-[#e15241]'}`}>
+                <p className={`text-2xl font-bold ${analysis.metrics.concentrationRisk === 'Low' ? 'text-[#4ebe96]' : analysis.metrics.concentrationRisk === 'Medium' ? 'text-[#f4a623]' : 'text-[#ff5c5c]'}`}>
                   {analysis.metrics.concentrationRisk}
                 </p>
               </CardContent>
             </Card>
-            <Card className="bg-[#1a1a1a] border-white/[0.08]">
+            <Card className="bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]">
               <CardContent className="pt-6 text-center">
                 <p className="text-[#868f97] text-sm">Top Holding</p>
                 <p className="text-2xl font-bold">{analysis.metrics.topHolding}</p>
-                <p className="text-sm text-[#868f97]">{analysis.metrics.topHoldingWeight.toFixed(1)}%</p>
+                <p className="text-sm text-[#868f97] tabular-nums">{analysis.metrics.topHoldingWeight.toFixed(1)}%</p>
               </CardContent>
             </Card>
           </div>
@@ -462,7 +462,7 @@ export default function PortfolioAnalyzer() {
           {/* Charts */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Sector Allocation */}
-            <Card className="bg-[#1a1a1a] border-white/[0.08]">
+            <Card className="bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]">
               <CardHeader>
                 <CardTitle>Sector Allocation</CardTitle>
               </CardHeader>
@@ -498,7 +498,7 @@ export default function PortfolioAnalyzer() {
             </Card>
 
             {/* Position Weights */}
-            <Card className="bg-[#1a1a1a] border-white/[0.08]">
+            <Card className="bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]">
               <CardHeader>
                 <CardTitle>Position Weights</CardTitle>
               </CardHeader>
@@ -534,7 +534,7 @@ export default function PortfolioAnalyzer() {
           </div>
 
           {/* Recommendations */}
-          <Card className="bg-[#1a1a1a] border-white/[0.08]">
+          <Card className="bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
@@ -544,7 +544,7 @@ export default function PortfolioAnalyzer() {
                 <button
                   onClick={getAIRecommendations}
                   disabled={loading === 'recommend'}
-                  className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 disabled:from-white/[0.05] disabled:to-white/[0.05] text-white rounded-lg text-sm font-medium transition-colors duration-100"
+                  className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 disabled:from-white/[0.05] disabled:to-white/[0.05] text-white rounded-2xl text-sm font-medium motion-safe:transition-colors motion-safe:duration-150 ease-out"
                 >
                   {loading === 'recommend' ? 'Generating...' : 'Get AI Deep Analysis'}
                 </button>
@@ -554,7 +554,7 @@ export default function PortfolioAnalyzer() {
               {/* Quick Recommendations */}
               <div className="space-y-2 mb-6">
                 {analysis.recommendations.map((rec, i) => (
-                  <div key={i} className="flex items-start gap-2 p-3 bg-white/[0.025] rounded-lg">
+                  <div key={i} className="flex items-start gap-2 p-3 bg-white/[0.025] rounded-2xl">
                     <span className="text-[#f4a623]">⚡</span>
                     <p className="text-[#868f97] text-sm">{rec}</p>
                   </div>
@@ -563,7 +563,7 @@ export default function PortfolioAnalyzer() {
 
               {/* AI Deep Analysis */}
               {aiRecommendations && (
-                <div className="p-6 bg-gradient-to-br from-purple-900/20 to-indigo-900/20 rounded-lg border border-purple-500/30">
+                <div className="p-6 bg-gradient-to-br from-purple-900/20 to-indigo-900/20 rounded-2xl border border-purple-500/30">
                   <div className="flex items-center gap-2 mb-4">
                     <span className="text-2xl">🤖</span>
                     <h4 className="font-bold">AI Portfolio Analysis</h4>
@@ -580,7 +580,7 @@ export default function PortfolioAnalyzer() {
 
       {/* Empty State */}
       {positions.length === 0 && !loading && (
-        <div className="text-center py-12 bg-white/[0.015] rounded-lg border border-white/[0.08]">
+        <div className="text-center py-12 bg-white/[0.015] rounded-2xl border border-white/[0.08]">
           <div className="text-4xl mb-4">📊</div>
           <p className="text-white text-lg mb-2">Upload your portfolio to get started</p>
           <p className="text-[#868f97] text-sm">

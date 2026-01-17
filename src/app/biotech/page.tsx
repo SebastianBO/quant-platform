@@ -372,7 +372,7 @@ export default function BiotechCatalystsPage() {
           {/* What Are Biotech Catalysts */}
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-6">What Are Biotech Catalysts?</h2>
-            <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] mb-6">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] mb-6">
               <p className="text-[#868f97] mb-4 leading-relaxed">
                 Biotech catalysts are specific events that can dramatically impact a biotechnology company&apos;s stock price.
                 Unlike traditional stocks driven by quarterly earnings, biotech stocks move on binary events like clinical
@@ -387,7 +387,7 @@ export default function BiotechCatalystsPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {catalystTypes.map((catalyst, i) => (
-                <div key={i} className="bg-[#1a1a1a] p-5 rounded-xl border border-white/[0.08]">
+                <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] p-5 rounded-2xl border border-white/[0.08]">
                   <div className="flex items-center gap-3 mb-3">
                     <span className="text-3xl">{catalyst.icon}</span>
                     <h3 className="text-lg font-bold">{catalyst.type}</h3>
@@ -397,7 +397,7 @@ export default function BiotechCatalystsPage() {
                     <p className="text-xs font-medium text-[#4ebe96] mb-1">Examples:</p>
                     <div className="flex flex-wrap gap-1">
                       {catalyst.examples.map((ex, j) => (
-                        <span key={j} className="text-xs bg-white/[0.05] px-2 py-1 rounded">
+                        <span key={j} className="text-xs bg-white/[0.05] px-2 py-1 rounded-full">
                           {ex}
                         </span>
                       ))}
@@ -415,7 +415,7 @@ export default function BiotechCatalystsPage() {
           {/* FDA Approval Process */}
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-6">FDA Approval Process Explained</h2>
-            <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] mb-6">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] mb-6">
               <p className="text-[#868f97] mb-4 leading-relaxed">
                 The FDA drug approval process takes an average of 10-15 years from discovery to market. Understanding this
                 timeline helps investors assess risk and potential catalysts. Each stage has specific success rates and
@@ -428,7 +428,7 @@ export default function BiotechCatalystsPage() {
             </div>
             <div className="space-y-3">
               {fdaApprovalProcess.map((stage, i) => (
-                <div key={i} className="bg-[#1a1a1a] p-5 rounded-xl border border-white/[0.08] flex items-start gap-4">
+                <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] p-5 rounded-2xl border border-white/[0.08] flex items-start gap-4">
                   <div className="flex-shrink-0 w-10 h-10 bg-[#4ebe96]/20 rounded-lg flex items-center justify-center">
                     <span className="text-lg font-bold text-[#4ebe96]">{i + 1}</span>
                   </div>
@@ -449,7 +449,7 @@ export default function BiotechCatalystsPage() {
             <h2 className="text-3xl font-bold mb-6">Clinical Trial Phases</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {clinicalTrialPhases.map((phase, i) => (
-                <div key={i} className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+                <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-xl font-bold">{phase.phase}</h3>
                     <span className="text-xs px-3 py-1 bg-[#4ebe96]/20 text-[#4ebe96] rounded-full font-medium">
@@ -483,7 +483,7 @@ export default function BiotechCatalystsPage() {
             <h2 className="text-3xl font-bold mb-6">Top Biotech Stocks to Watch</h2>
             <div className="space-y-4">
               {biotechStocks.map((stock) => (
-                <div key={stock.ticker} className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-colors duration-100">
+                <div key={stock.ticker} className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out">
                   <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
                     <div className="flex items-start gap-4">
                       <div className="flex-shrink-0 w-12 h-12 bg-[#4ebe96]/20 rounded-lg flex items-center justify-center">
@@ -516,19 +516,19 @@ export default function BiotechCatalystsPage() {
                   <div className="flex flex-wrap gap-2">
                     <Link
                       href={`/stock/${stock.ticker.toLowerCase()}`}
-                      className="text-sm px-4 py-2 bg-[#4ebe96]/20 text-[#4ebe96] rounded-lg hover:bg-[#4ebe96]/30 transition-colors duration-100 font-medium"
+                      className="text-sm px-4 py-2 bg-[#4ebe96]/20 text-[#4ebe96] rounded-full hover:bg-[#4ebe96]/30 motion-safe:transition-all motion-safe:duration-150 ease-out font-medium"
                     >
                       View Analysis
                     </Link>
                     <Link
                       href={`/should-i-buy/${stock.ticker.toLowerCase()}`}
-                      className="text-sm px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
+                      className="text-sm px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out"
                     >
                       Should I Buy?
                     </Link>
                     <Link
                       href={`/prediction/${stock.ticker.toLowerCase()}`}
-                      className="text-sm px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
+                      className="text-sm px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out"
                     >
                       Price Target
                     </Link>
@@ -541,7 +541,7 @@ export default function BiotechCatalystsPage() {
           {/* Investment Risks */}
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-6">Risks of Biotech Investing</h2>
-            <div className="bg-gradient-to-br from-[#e15241]/10 to-[#e15241]/5 p-6 rounded-xl border border-[#e15241]/20 mb-6">
+            <div className="bg-gradient-to-br from-[#ff5c5c]/10 to-[#ff5c5c]/5 p-6 rounded-2xl border border-[#ff5c5c]/20 mb-6">
               <p className="text-[#868f97] leading-relaxed">
                 Biotech investing carries significantly higher risk than traditional stocks due to binary clinical outcomes,
                 regulatory uncertainty, and high cash burn rates. Understanding these risks is essential for proper position
@@ -550,11 +550,11 @@ export default function BiotechCatalystsPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {investmentRisks.map((risk, i) => (
-                <div key={i} className="bg-[#1a1a1a] p-5 rounded-xl border border-white/[0.08]">
+                <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] p-5 rounded-2xl border border-white/[0.08]">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-lg font-bold">{risk.risk}</h3>
                     <span className={`text-xs px-3 py-1 rounded-full font-medium ${
-                      risk.severity === 'Very High' ? 'bg-[#e15241]/20 text-[#e15241]' :
+                      risk.severity === 'Very High' ? 'bg-[#ff5c5c]/20 text-[#ff5c5c]' :
                       risk.severity === 'High' ? 'bg-[#f4a623]/20 text-[#f4a623]' :
                       'bg-[#f4a623]/20 text-[#f4a623]'
                     }`}>
@@ -575,7 +575,7 @@ export default function BiotechCatalystsPage() {
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-6">Biotech Investment Strategies</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                 <h3 className="text-xl font-bold mb-3 text-[#4ebe96]">Diversified Approach</h3>
                 <p className="text-sm text-[#868f97] mb-4">
                   Lower risk through portfolio diversification
@@ -588,7 +588,7 @@ export default function BiotechCatalystsPage() {
                   <p>• Limit single position to 5-10%</p>
                 </div>
               </div>
-              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                 <h3 className="text-xl font-bold mb-3 text-[#479ffa]">Catalyst-Driven</h3>
                 <p className="text-sm text-[#868f97] mb-4">
                   Time entries around specific events
@@ -601,7 +601,7 @@ export default function BiotechCatalystsPage() {
                   <p>• Use options for defined risk</p>
                 </div>
               </div>
-              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                 <h3 className="text-xl font-bold mb-3 text-purple-500">Quality Growth</h3>
                 <p className="text-sm text-[#868f97] mb-4">
                   Long-term holdings in proven winners
@@ -622,10 +622,10 @@ export default function BiotechCatalystsPage() {
             <h2 className="text-3xl font-bold mb-6">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {faqs.map((faq, i) => (
-                <details key={i} className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] group">
+                <details key={i} className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] group">
                   <summary className="font-bold cursor-pointer list-none flex items-center justify-between">
                     <span>{faq.question}</span>
-                    <span className="text-[#4ebe96] group-open:rotate-180 transition-transform">▼</span>
+                    <span className="text-[#4ebe96] group-open:rotate-180 motion-safe:transition-all motion-safe:duration-150 ease-out">▼</span>
                   </summary>
                   <p className="text-[#868f97] mt-4 leading-relaxed">
                     {faq.answer}
@@ -636,14 +636,14 @@ export default function BiotechCatalystsPage() {
           </section>
 
           {/* CTA */}
-          <section className="bg-gradient-to-br from-[#4ebe96]/20 to-[#4ebe96]/5 p-8 rounded-xl border border-[#4ebe96]/20 text-center mb-12">
+          <section className="bg-gradient-to-br from-[#4ebe96]/20 to-[#4ebe96]/5 p-8 rounded-2xl border border-[#4ebe96]/20 text-center mb-12">
             <h2 className="text-2xl font-bold mb-4">Analyze Biotech Stocks with AI</h2>
             <p className="text-[#868f97] mb-6">
               Get comprehensive analysis, DCF valuations, and pipeline insights for biotech and pharma stocks
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-white px-8 py-3 rounded-lg font-medium transition-colors duration-100"
+              className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-white px-8 py-3 rounded-full font-medium motion-safe:transition-all motion-safe:duration-150 ease-out"
             >
               Start Your Analysis
             </Link>
@@ -653,28 +653,28 @@ export default function BiotechCatalystsPage() {
           <section className="border-t border-white/[0.08] pt-8">
             <h3 className="text-lg font-bold mb-4">Related Pages</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <Link href="/sectors" className="px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 text-center text-sm">
+              <Link href="/sectors" className="px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm">
                 All Sectors
               </Link>
-              <Link href="/sectors/healthcare" className="px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 text-center text-sm">
+              <Link href="/sectors/healthcare" className="px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm">
                 Healthcare Sector
               </Link>
-              <Link href="/best-stocks/healthcare" className="px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 text-center text-sm">
+              <Link href="/best-stocks/healthcare" className="px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm">
                 Best Healthcare Stocks
               </Link>
-              <Link href="/ipo" className="px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 text-center text-sm">
+              <Link href="/ipo" className="px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm">
                 Biotech IPOs
               </Link>
-              <Link href="/analyst-ratings" className="px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 text-center text-sm">
+              <Link href="/analyst-ratings" className="px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm">
                 Analyst Ratings
               </Link>
-              <Link href="/earnings" className="px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 text-center text-sm">
+              <Link href="/earnings" className="px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm">
                 Earnings Calendar
               </Link>
-              <Link href="/institutional" className="px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 text-center text-sm">
+              <Link href="/institutional" className="px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm">
                 Institutional Holdings
               </Link>
-              <Link href="/insights" className="px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.08] transition-colors duration-100 text-center text-sm">
+              <Link href="/insights" className="px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm">
                 Market Insights
               </Link>
             </div>

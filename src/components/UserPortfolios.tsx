@@ -493,7 +493,7 @@ export default function UserPortfolios() {
 
   if (!user) {
     return (
-      <Card className="bg-[#1a1a1a] border-white/[0.08]">
+      <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08]">
         <CardContent className="py-12 text-center">
           <Briefcase className="w-12 h-12 mx-auto mb-4 text-[#868f97]" />
           <p className="text-lg font-medium mb-2">Sign in to view your portfolios</p>
@@ -565,7 +565,7 @@ export default function UserPortfolios() {
 
       {/* Create Portfolio Form */}
       {showCreateForm && (
-        <Card className="bg-[#1a1a1a] border-white/[0.08]">
+        <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08]">
           <CardHeader>
             <CardTitle>Create New Portfolio</CardTitle>
           </CardHeader>
@@ -595,7 +595,7 @@ export default function UserPortfolios() {
 
       {/* Empty State */}
       {portfolios.length === 0 ? (
-        <Card className="bg-[#1a1a1a] border-white/[0.08] border-dashed">
+        <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] border-dashed">
           <CardContent className="py-16 text-center">
             <div className="w-16 h-16 rounded-2xl bg-white/[0.05] mx-auto mb-4 flex items-center justify-center">
               <Briefcase className="w-8 h-8 text-[#868f97]" />
@@ -624,7 +624,7 @@ export default function UserPortfolios() {
             return (
               <Card
                 key={portfolio.id}
-                className="bg-[#1a1a1a] border-white/[0.08] hover:border-[#4ebe96]/50 hover:shadow-lg hover:shadow-[#4ebe96]/5 transition-all duration-100 cursor-pointer group overflow-hidden"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:border-[#4ebe96]/50 hover:shadow-lg hover:shadow-[#4ebe96]/5 motion-safe:transition-all motion-safe:duration-150 ease-out cursor-pointer group overflow-hidden"
                 onClick={() => router.push(`/dashboard/portfolio/${portfolio.id}`)}
               >
                 <CardContent className="p-5">
@@ -647,7 +647,7 @@ export default function UserPortfolios() {
                       {/* Sync button for connected portfolios */}
                       {(portfolio.plaid_item_id || portfolio.tink_connected) && (
                         <button
-                          className={`p-1.5 rounded-lg hover:bg-white/[0.08] transition-colors duration-100 ${syncingPortfolios.has(portfolio.id) ? 'animate-pulse' : ''}`}
+                          className={`p-1.5 rounded-lg hover:bg-white/[0.08] motion-safe:transition-colors motion-safe:duration-150 ease-out ${syncingPortfolios.has(portfolio.id) ? 'animate-pulse' : ''}`}
                           onClick={(e) => {
                             e.stopPropagation()
                             syncPortfolio(portfolio)
@@ -659,18 +659,18 @@ export default function UserPortfolios() {
                         </button>
                       )}
                       <button
-                        className="p-1.5 rounded-lg hover:bg-white/[0.08] transition-colors duration-100 opacity-0 group-hover:opacity-100"
+                        className="p-1.5 rounded-lg hover:bg-white/[0.08] motion-safe:transition-colors motion-safe:duration-150 ease-out opacity-0 group-hover:opacity-100"
                         onClick={(e) => { e.stopPropagation() }}
                       >
                         <MessageCircle className="w-4 h-4 text-[#868f97]" />
                       </button>
                       <button
-                        className="p-1.5 rounded-lg hover:bg-white/[0.08] transition-colors duration-100 opacity-0 group-hover:opacity-100"
+                        className="p-1.5 rounded-lg hover:bg-white/[0.08] motion-safe:transition-colors motion-safe:duration-150 ease-out opacity-0 group-hover:opacity-100"
                         onClick={(e) => { e.stopPropagation() }}
                       >
                         <Users className="w-4 h-4 text-[#868f97]" />
                       </button>
-                      <ChevronRight className="w-5 h-5 text-[#868f97] group-hover:text-[#4ebe96] transition-colors duration-100" />
+                      <ChevronRight className="w-5 h-5 text-[#868f97] group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out" />
                     </div>
                   </div>
 
@@ -684,19 +684,19 @@ export default function UserPortfolios() {
                         {holdingsCount} {holdingsCount === 1 ? 'holding' : 'holdings'} • {portfolio.currency}
                       </p>
                       {holdingsCount > 0 && (
-                        <span className={`text-xs px-1.5 py-0.5 rounded ${isPositive ? 'bg-[#4ebe96]/20 text-[#4ebe96]' : 'bg-[#e15241]/20 text-[#e15241]'}`}>
+                        <span className={`text-xs px-1.5 py-0.5 rounded-full tabular-nums ${isPositive ? 'bg-[#4ebe96]/20 text-[#4ebe96]' : 'bg-[#ff5c5c]/20 text-[#ff5c5c]'}`}>
                           {isPositive ? '+' : ''}{stats.totalGainLossPercent.toFixed(1)}%
                         </span>
                       )}
                       {/* Connected broker indicator */}
                       {portfolio.plaid_item_id && (
-                        <span className="text-xs px-1.5 py-0.5 rounded bg-[#479ffa]/20 text-[#479ffa] flex items-center gap-1">
+                        <span className="text-xs px-1.5 py-0.5 rounded-full bg-[#479ffa]/20 text-[#479ffa] flex items-center gap-1">
                           <CheckCircle className="w-3 h-3" />
                           Plaid
                         </span>
                       )}
                       {portfolio.tink_connected && (
-                        <span className="text-xs px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-400 flex items-center gap-1">
+                        <span className="text-xs px-1.5 py-0.5 rounded-full bg-purple-500/20 text-purple-400 flex items-center gap-1">
                           <CheckCircle className="w-3 h-3" />
                           Tink
                         </span>
@@ -726,7 +726,7 @@ export default function UserPortfolios() {
                             <HoldingLogo symbol={inv.ticker} size={32} />
                             <div className="flex-1 min-w-0">
                               <p className="font-medium text-sm">{inv.ticker}</p>
-                              <p className="text-xs text-[#868f97]">
+                              <p className="text-xs text-[#868f97] tabular-nums">
                                 {inv.shares} shares
                               </p>
                             </div>
@@ -736,7 +736,7 @@ export default function UserPortfolios() {
                               </p>
                               {inv.avg_cost && inv.current_price && (
                                 <p className={`text-xs tabular-nums ${
-                                  inv.current_price >= inv.avg_cost ? 'text-[#4ebe96]' : 'text-[#e15241]'
+                                  inv.current_price >= inv.avg_cost ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'
                                 }`}>
                                   {inv.current_price >= inv.avg_cost ? '+' : ''}
                                   {(((inv.current_price - inv.avg_cost) / inv.avg_cost) * 100).toFixed(1)}%

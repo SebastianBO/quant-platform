@@ -165,8 +165,9 @@ export function AskAIPopup({ ticker, companyName }: AskAIPopupProps) {
           "fixed bottom-6 right-6 z-50",
           "flex items-center gap-2 px-4 py-3",
           "bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black",
-          "rounded-full shadow-lg hover:shadow-xl",
-          "transition-all duration-200 hover:scale-105",
+          "rounded-full shadow-2xl",
+          "motion-safe:transition-all motion-safe:duration-150 ease-out hover:scale-105",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black",
           "animate-in slide-in-from-bottom-5"
         )}
       >
@@ -215,7 +216,7 @@ export function AskAIPopup({ ticker, companyName }: AskAIPopupProps) {
       className={cn(
         "fixed bottom-6 right-6 z-50",
         "w-[400px] max-w-[calc(100vw-3rem)]",
-        "bg-[#1a1a1a] border border-white/[0.08] rounded-2xl shadow-2xl",
+        "bg-black border border-white/[0.08] rounded-2xl shadow-2xl",
         "flex flex-col overflow-hidden",
         "animate-in slide-in-from-bottom-5",
         isMinimized ? "h-14" : "h-[500px] max-h-[70vh]"
@@ -223,7 +224,7 @@ export function AskAIPopup({ ticker, companyName }: AskAIPopupProps) {
     >
       {/* Header */}
       <div
-        className="flex items-center justify-between px-4 py-3 border-b border-white/[0.08] bg-white/[0.05]/30 cursor-pointer"
+        className="flex items-center justify-between px-4 py-3 border-b border-white/[0.08] bg-white/[0.03] backdrop-blur-[10px] cursor-pointer"
         onClick={() => setIsMinimized(!isMinimized)}
       >
         <div className="flex items-center gap-2">
@@ -237,7 +238,7 @@ export function AskAIPopup({ ticker, companyName }: AskAIPopupProps) {
                 e.stopPropagation()
                 clearHistory()
               }}
-              className="p-1.5 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
+              className="p-1.5 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.08] motion-safe:transition-colors motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               title="Clear history"
             >
               <History className="w-4 h-4" />
@@ -248,7 +249,7 @@ export function AskAIPopup({ ticker, companyName }: AskAIPopupProps) {
               e.stopPropagation()
               setIsOpen(false)
             }}
-            className="p-1.5 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
+            className="p-1.5 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.08] motion-safe:transition-colors motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
           >
             <X className="w-4 h-4" />
           </button>
@@ -286,7 +287,7 @@ export function AskAIPopup({ ticker, companyName }: AskAIPopupProps) {
                       "max-w-[85%] rounded-2xl px-4 py-2",
                       message.role === "user"
                         ? "bg-[#4ebe96] text-black"
-                        : "bg-white/[0.05]"
+                        : "bg-white/[0.03] backdrop-blur-[10px]"
                     )}
                   >
                     <p className="text-sm whitespace-pre-wrap">{message.content}</p>
@@ -302,7 +303,7 @@ export function AskAIPopup({ ticker, companyName }: AskAIPopupProps) {
             )}
             {isLoading && (
               <div className="flex justify-start">
-                <div className="bg-white/[0.05] rounded-2xl px-4 py-3">
+                <div className="bg-white/[0.03] backdrop-blur-[10px] rounded-2xl px-4 py-3">
                   <Loader2 className="w-5 h-5 animate-spin text-[#4ebe96]" />
                 </div>
               </div>
@@ -311,7 +312,7 @@ export function AskAIPopup({ ticker, companyName }: AskAIPopupProps) {
           </div>
 
           {/* Input */}
-          <div className="p-4 border-t border-white/[0.08] bg-white/[0.05]/20">
+          <div className="p-4 border-t border-white/[0.08] bg-white/[0.03] backdrop-blur-[10px]">
             <div className="flex gap-2">
               <Textarea
                 value={input}
@@ -330,7 +331,7 @@ export function AskAIPopup({ ticker, companyName }: AskAIPopupProps) {
                 size="icon"
                 onClick={handleSubmit}
                 disabled={!input.trim() || isLoading}
-                className="bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black h-11 w-11 shrink-0"
+                className="bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black h-11 w-11 shrink-0 rounded-full focus-visible:ring-2 focus-visible:ring-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out"
                 aria-label="Send message"
               >
                 <Send className="w-4 h-4" />

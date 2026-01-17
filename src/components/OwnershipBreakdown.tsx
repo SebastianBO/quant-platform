@@ -135,42 +135,42 @@ export default function OwnershipBreakdown({ ticker }: OwnershipBreakdownProps) 
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {/* Institutional */}
-            <div className="p-4 bg-[#479ffa]/10 rounded-xl border border-[#479ffa]/30">
+            <div className="p-4 bg-[#479ffa]/10 rounded-2xl border border-[#479ffa]/30">
               <div className="flex items-center gap-2 mb-2">
                 <Building2 className="w-5 h-5 text-[#479ffa]" />
                 <span className="text-sm text-[#868f97]">Institutional</span>
               </div>
-              <p className="text-3xl font-bold text-[#479ffa]">{percentInstitutions.toFixed(1)}%</p>
+              <p className="text-3xl font-bold text-[#479ffa] tabular-nums">{percentInstitutions.toFixed(1)}%</p>
               <p className="text-sm text-[#868f97]">of shares</p>
             </div>
 
             {/* Insiders */}
-            <div className="p-4 bg-[#4ebe96]/10 rounded-xl border border-[#4ebe96]/30">
+            <div className="p-4 bg-[#4ebe96]/10 rounded-2xl border border-[#4ebe96]/30">
               <div className="flex items-center gap-2 mb-2">
                 <UserCheck className="w-5 h-5 text-[#4ebe96]" />
                 <span className="text-sm text-[#868f97]">Insiders</span>
               </div>
-              <p className="text-3xl font-bold text-[#4ebe96]">{percentInsiders.toFixed(1)}%</p>
+              <p className="text-3xl font-bold text-[#4ebe96] tabular-nums">{percentInsiders.toFixed(1)}%</p>
               <p className="text-sm text-[#868f97]">of shares</p>
             </div>
 
             {/* Retail */}
-            <div className="p-4 bg-purple-500/10 rounded-xl border border-purple-500/30">
+            <div className="p-4 bg-purple-500/10 rounded-2xl border border-purple-500/30">
               <div className="flex items-center gap-2 mb-2">
                 <Users className="w-5 h-5 text-purple-500" />
                 <span className="text-sm text-[#868f97]">Retail/Other</span>
               </div>
-              <p className="text-3xl font-bold text-purple-500">{percentRetail.toFixed(1)}%</p>
+              <p className="text-3xl font-bold text-purple-500 tabular-nums">{percentRetail.toFixed(1)}%</p>
               <p className="text-sm text-[#868f97]">of shares</p>
             </div>
 
             {/* Short Interest */}
-            <div className={`p-4 rounded-xl border ${shortPercent > 10 ? 'bg-red-500/10 border-red-500/30' : 'bg-white/[0.025] border-white/[0.08]'}`}>
+            <div className={`p-4 rounded-2xl border ${shortPercent > 10 ? 'bg-[#ff5c5c]/10 border-[#ff5c5c]/30' : 'bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]'}`}>
               <div className="flex items-center gap-2 mb-2">
-                <AlertTriangle className={`w-5 h-5 ${shortPercent > 10 ? 'text-red-500' : 'text-yellow-500'}`} />
+                <AlertTriangle className={`w-5 h-5 ${shortPercent > 10 ? 'text-[#ff5c5c]' : 'text-yellow-500'}`} />
                 <span className="text-sm text-[#868f97]">Short Interest</span>
               </div>
-              <p className={`text-3xl font-bold ${shortPercent > 10 ? 'text-red-500' : shortPercent > 5 ? 'text-yellow-500' : 'text-white'}`}>
+              <p className={`text-3xl font-bold tabular-nums ${shortPercent > 10 ? 'text-[#ff5c5c]' : shortPercent > 5 ? 'text-yellow-500' : 'text-white'}`}>
                 {shortPercent.toFixed(1)}%
               </p>
               <p className="text-sm text-[#868f97]">of float</p>
@@ -206,7 +206,7 @@ export default function OwnershipBreakdown({ ticker }: OwnershipBreakdownProps) 
                   </Pie>
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: '#1a1a1a',
+                      backgroundColor: '#000000',
                       border: '1px solid rgba(255, 255, 255, 0.08)'
                     }}
                     formatter={(value: number) => [`${value.toFixed(2)}%`, 'Ownership']}
@@ -225,44 +225,44 @@ export default function OwnershipBreakdown({ ticker }: OwnershipBreakdownProps) 
           <CardContent>
             <div className="space-y-4">
               {/* Shares Outstanding */}
-              <div className="p-4 bg-white/[0.015] rounded-lg">
+              <div className="p-4 bg-white/[0.03] backdrop-blur-[10px] rounded-2xl border border-white/[0.08]">
                 <div className="flex justify-between items-center">
                   <span className="text-[#868f97]">Shares Outstanding</span>
-                  <span className="font-bold">{(sharesOutstanding / 1000000).toFixed(2)}M</span>
+                  <span className="font-bold tabular-nums">{(sharesOutstanding / 1000000).toFixed(2)}M</span>
                 </div>
               </div>
 
               {/* Shares Float */}
-              <div className="p-4 bg-white/[0.015] rounded-lg">
+              <div className="p-4 bg-white/[0.03] backdrop-blur-[10px] rounded-2xl border border-white/[0.08]">
                 <div className="flex justify-between items-center">
                   <span className="text-[#868f97]">Float</span>
-                  <span className="font-bold">{(sharesFloat / 1000000).toFixed(2)}M</span>
+                  <span className="font-bold tabular-nums">{(sharesFloat / 1000000).toFixed(2)}M</span>
                 </div>
                 <div className="mt-2">
                   <div className="h-2 bg-white/[0.05] rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-[#4ebe96]"
+                      className="h-full bg-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out"
                       style={{ width: `${floatPercent}%` }}
                     />
                   </div>
-                  <p className="text-xs text-[#868f97] mt-1">{floatPercent.toFixed(1)}% of outstanding</p>
+                  <p className="text-xs text-[#868f97] mt-1 tabular-nums">{floatPercent.toFixed(1)}% of outstanding</p>
                 </div>
               </div>
 
               {/* Short Interest */}
-              <div className="p-4 bg-white/[0.015] rounded-lg">
+              <div className="p-4 bg-white/[0.03] backdrop-blur-[10px] rounded-2xl border border-white/[0.08]">
                 <div className="flex justify-between items-center">
                   <span className="text-[#868f97]">Shares Short</span>
-                  <span className="font-bold">{(sharesShort / 1000000).toFixed(2)}M</span>
+                  <span className="font-bold tabular-nums">{(sharesShort / 1000000).toFixed(2)}M</span>
                 </div>
                 <div className="mt-2">
                   <div className="h-2 bg-white/[0.05] rounded-full overflow-hidden">
                     <div
-                      className={`h-full ${shortPercent > 10 ? 'bg-red-500' : shortPercent > 5 ? 'bg-yellow-500' : 'bg-[#479ffa]'}`}
+                      className={`h-full motion-safe:transition-all motion-safe:duration-150 ease-out ${shortPercent > 10 ? 'bg-[#ff5c5c]' : shortPercent > 5 ? 'bg-yellow-500' : 'bg-[#479ffa]'}`}
                       style={{ width: `${Math.min(shortPercent, 100)}%` }}
                     />
                   </div>
-                  <div className="flex justify-between text-xs text-[#868f97] mt-1">
+                  <div className="flex justify-between text-xs text-[#868f97] mt-1 tabular-nums">
                     <span>{shortPercent.toFixed(1)}% of float</span>
                     <span>Days to Cover: {shortRatio.toFixed(1)}</span>
                   </div>
@@ -281,19 +281,19 @@ export default function OwnershipBreakdown({ ticker }: OwnershipBreakdownProps) 
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="p-4 bg-[#4ebe96]/10 rounded-lg border border-[#4ebe96]/30 text-center">
+              <div className="p-4 bg-[#4ebe96]/10 rounded-2xl border border-[#4ebe96]/30 text-center">
                 <TrendingUp className="w-8 h-8 text-[#4ebe96] mx-auto mb-2" />
-                <p className="text-2xl font-bold text-[#4ebe96]">{increased.length}</p>
+                <p className="text-2xl font-bold text-[#4ebe96] tabular-nums">{increased.length}</p>
                 <p className="text-sm text-[#868f97]">Increased Positions</p>
               </div>
-              <div className="p-4 bg-red-500/10 rounded-lg border border-red-500/30 text-center">
-                <TrendingDown className="w-8 h-8 text-red-500 mx-auto mb-2" />
-                <p className="text-2xl font-bold text-red-500">{decreased.length}</p>
+              <div className="p-4 bg-[#ff5c5c]/10 rounded-2xl border border-[#ff5c5c]/30 text-center">
+                <TrendingDown className="w-8 h-8 text-[#ff5c5c] mx-auto mb-2" />
+                <p className="text-2xl font-bold text-[#ff5c5c] tabular-nums">{decreased.length}</p>
                 <p className="text-sm text-[#868f97]">Decreased Positions</p>
               </div>
-              <div className="p-4 bg-[#479ffa]/10 rounded-lg border border-[#479ffa]/30 text-center">
+              <div className="p-4 bg-[#479ffa]/10 rounded-2xl border border-[#479ffa]/30 text-center">
                 <Building2 className="w-8 h-8 text-[#479ffa] mx-auto mb-2" />
-                <p className="text-2xl font-bold text-[#479ffa]">{newPositions.length}</p>
+                <p className="text-2xl font-bold text-[#479ffa] tabular-nums">{newPositions.length}</p>
                 <p className="text-sm text-[#868f97]">New Positions</p>
               </div>
             </div>
@@ -310,7 +310,7 @@ export default function OwnershipBreakdown({ ticker }: OwnershipBreakdownProps) 
           {topHolders.length > 0 ? (
             <div className="space-y-3">
               {topHolders.map((holder: InstitutionalHolder, i: number) => (
-                <div key={i} className="flex items-center justify-between p-3 bg-white/[0.015] rounded-lg hover:bg-white/[0.025] transition-colors duration-100">
+                <div key={i} className="flex items-center justify-between p-3 bg-white/[0.03] backdrop-blur-[10px] rounded-2xl border border-white/[0.08] hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#479ffa] to-purple-500 flex items-center justify-center text-white text-sm font-bold">
                       {i + 1}
@@ -321,8 +321,8 @@ export default function OwnershipBreakdown({ ticker }: OwnershipBreakdownProps) 
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold">{((holder.shares || holder.shares_held || 0) / 1000000).toFixed(2)}M shares</p>
-                    <p className="text-sm text-[#868f97]">
+                    <p className="font-bold tabular-nums">{((holder.shares || holder.shares_held || 0) / 1000000).toFixed(2)}M shares</p>
+                    <p className="text-sm text-[#868f97] tabular-nums">
                       {holder.ownership_percent ? `${holder.ownership_percent.toFixed(2)}%` : ''}
                       {holder.value && ` • $${(holder.value / 1000000).toFixed(0)}M`}
                     </p>
@@ -346,7 +346,7 @@ export default function OwnershipBreakdown({ ticker }: OwnershipBreakdownProps) 
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Institutional Sentiment */}
-            <div className="p-4 bg-white/[0.015] rounded-lg">
+            <div className="p-4 bg-white/[0.03] backdrop-blur-[10px] rounded-2xl border border-white/[0.08]">
               <h4 className="font-medium mb-2">Institutional Sentiment</h4>
               <p className="text-sm text-[#868f97]">
                 {percentInstitutions > 70
@@ -359,7 +359,7 @@ export default function OwnershipBreakdown({ ticker }: OwnershipBreakdownProps) 
             </div>
 
             {/* Insider Confidence */}
-            <div className="p-4 bg-white/[0.015] rounded-lg">
+            <div className="p-4 bg-white/[0.03] backdrop-blur-[10px] rounded-2xl border border-white/[0.08]">
               <h4 className="font-medium mb-2">Insider Confidence</h4>
               <p className="text-sm text-[#868f97]">
                 {percentInsiders > 20
@@ -372,7 +372,7 @@ export default function OwnershipBreakdown({ ticker }: OwnershipBreakdownProps) 
             </div>
 
             {/* Short Interest Analysis */}
-            <div className="p-4 bg-white/[0.015] rounded-lg">
+            <div className="p-4 bg-white/[0.03] backdrop-blur-[10px] rounded-2xl border border-white/[0.08]">
               <h4 className="font-medium mb-2">Short Interest Analysis</h4>
               <p className="text-sm text-[#868f97]">
                 {shortPercent > 20
@@ -387,7 +387,7 @@ export default function OwnershipBreakdown({ ticker }: OwnershipBreakdownProps) 
             </div>
 
             {/* Float Analysis */}
-            <div className="p-4 bg-white/[0.015] rounded-lg">
+            <div className="p-4 bg-white/[0.03] backdrop-blur-[10px] rounded-2xl border border-white/[0.08]">
               <h4 className="font-medium mb-2">Float Analysis</h4>
               <p className="text-sm text-[#868f97]">
                 {floatPercent < 50

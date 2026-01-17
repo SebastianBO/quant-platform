@@ -199,7 +199,7 @@ export default function HeroAIChat() {
 
         {/* Chat Interface */}
         <div className="max-w-3xl mx-auto">
-          <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-2xl shadow-2xl overflow-hidden">
+          <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl shadow-2xl overflow-hidden">
             {/* Chat Header */}
             <div className="bg-gradient-to-r from-[#4ebe96] to-[#4ebe96] px-6 py-4">
               <div className="flex items-center gap-3">
@@ -307,7 +307,7 @@ export default function HeroAIChat() {
                 <Button
                   type="submit"
                   disabled={isLoading || !inputValue.trim()}
-                  className="bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black h-12 px-6"
+                  className="bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black h-12 px-6 rounded-full motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                 >
                   <Send className="h-5 w-5" />
                 </Button>
@@ -324,7 +324,7 @@ export default function HeroAIChat() {
                   key={prompt}
                   onClick={() => handleExampleClick(prompt)}
                   disabled={isLoading}
-                  className="px-4 py-2 bg-white/[0.05] hover:bg-white/[0.08] rounded-full text-sm transition-colors duration-100 disabled:opacity-50"
+                  className="px-4 py-2 bg-white/[0.05] hover:bg-white/[0.08] rounded-full text-sm motion-safe:transition-colors motion-safe:duration-150 ease-out disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                 >
                   {prompt}
                 </button>
@@ -335,8 +335,8 @@ export default function HeroAIChat() {
 
         {/* Quick Links */}
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
-          <Link href="/screener" className="group flex items-center gap-3 p-4 bg-[#1a1a1a] border border-white/[0.08] rounded-xl hover:border-[#4ebe96]/50 transition-colors duration-100">
-            <div className="w-10 h-10 bg-[#4ebe96]/10 rounded-lg flex items-center justify-center group-hover:bg-[#4ebe96]/20 transition-colors duration-100">
+          <Link href="/screener" className="group flex items-center gap-3 p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
+            <div className="w-10 h-10 bg-[#4ebe96]/10 rounded-lg flex items-center justify-center group-hover:bg-[#4ebe96]/20 motion-safe:transition-all motion-safe:duration-150 ease-out">
               <BarChart3 className="w-5 h-5 text-[#4ebe96]" />
             </div>
             <div>
@@ -344,8 +344,8 @@ export default function HeroAIChat() {
               <p className="text-sm text-[#868f97]">Filter by metrics</p>
             </div>
           </Link>
-          <Link href="/markets" className="group flex items-center gap-3 p-4 bg-[#1a1a1a] border border-white/[0.08] rounded-xl hover:border-[#4ebe96]/50 transition-colors duration-100">
-            <div className="w-10 h-10 bg-[#479ffa]/10 rounded-lg flex items-center justify-center group-hover:bg-[#479ffa]/20 transition-colors duration-100">
+          <Link href="/markets" className="group flex items-center gap-3 p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
+            <div className="w-10 h-10 bg-[#479ffa]/10 rounded-lg flex items-center justify-center group-hover:bg-[#479ffa]/20 motion-safe:transition-all motion-safe:duration-150 ease-out">
               <TrendingUp className="w-5 h-5 text-[#479ffa]" />
             </div>
             <div>
@@ -353,8 +353,8 @@ export default function HeroAIChat() {
               <p className="text-sm text-[#868f97]">Real-time data</p>
             </div>
           </Link>
-          <Link href="/portfolio" className="group flex items-center gap-3 p-4 bg-[#1a1a1a] border border-white/[0.08] rounded-xl hover:border-[#4ebe96]/50 transition-colors duration-100">
-            <div className="w-10 h-10 bg-purple-500/10 rounded-lg flex items-center justify-center group-hover:bg-purple-500/20 transition-colors duration-100">
+          <Link href="/portfolio" className="group flex items-center gap-3 p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
+            <div className="w-10 h-10 bg-purple-500/10 rounded-lg flex items-center justify-center group-hover:bg-purple-500/20 motion-safe:transition-all motion-safe:duration-150 ease-out">
               <PieChart className="w-5 h-5 text-purple-500" />
             </div>
             <div>

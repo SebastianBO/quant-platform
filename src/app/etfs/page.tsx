@@ -407,19 +407,19 @@ export default function ETFsPage() {
 
           {/* Quick Stats */}
           <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-            <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] text-center">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] text-center">
               <div className="text-3xl font-bold text-[#4ebe96] mb-2">3,000+</div>
               <div className="text-sm text-[#868f97]">ETFs Available</div>
             </div>
-            <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] text-center">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] text-center">
               <div className="text-3xl font-bold text-[#4ebe96] mb-2">0.03%</div>
               <div className="text-sm text-[#868f97]">Lowest Expense Ratio</div>
             </div>
-            <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] text-center">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] text-center">
               <div className="text-3xl font-bold text-[#4ebe96] mb-2">$10T+</div>
               <div className="text-sm text-[#868f97]">Total ETF Assets</div>
             </div>
-            <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08] text-center">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] text-center">
               <div className="text-3xl font-bold text-[#4ebe96] mb-2">1 Share</div>
               <div className="text-sm text-[#868f97]">Minimum Investment</div>
             </div>
@@ -430,7 +430,7 @@ export default function ETFsPage() {
             <h2 className="text-2xl font-bold mb-6">Popular ETF Categories</h2>
             <div className="space-y-8">
               {ETF_CATEGORIES.map((category) => (
-                <div key={category.title} className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+                <div key={category.title} className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                   <div className="flex items-start gap-4 mb-4">
                     <span className="text-4xl">{category.icon}</span>
                     <div className="flex-1">
@@ -443,13 +443,13 @@ export default function ETFsPage() {
                       <Link
                         key={etf.ticker}
                         href={`/stock/${etf.ticker}`}
-                        className="bg-white/[0.015] p-4 rounded-lg hover:bg-white/[0.025] transition-colors duration-100 group"
+                        className="bg-white/[0.015] p-4 rounded-2xl hover:bg-white/[0.025] motion-safe:transition-all motion-safe:duration-150 ease-out group"
                       >
                         <div className="flex items-start justify-between mb-2">
-                          <span className="text-lg font-bold group-hover:text-[#4ebe96] transition-colors duration-100">
+                          <span className="text-lg font-bold group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out">
                             {etf.ticker}
                           </span>
-                          <span className="text-xs text-[#868f97] bg-white/[0.05] px-2 py-1 rounded">
+                          <span className="text-xs text-[#868f97] bg-white/[0.05] px-2 py-1 rounded-full">
                             {etf.expense}
                           </span>
                         </div>
@@ -470,7 +470,7 @@ export default function ETFsPage() {
           {/* ETF vs Mutual Funds */}
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-6">ETFs vs Mutual Funds: Key Differences</h2>
-            <div className="bg-[#1a1a1a] rounded-xl border border-white/[0.08] overflow-hidden">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] rounded-2xl border border-white/[0.08] overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead className="bg-white/[0.015]">
@@ -526,7 +526,7 @@ export default function ETFsPage() {
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-6">Complete ETF Investing Guide</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                 <h3 className="text-lg font-bold mb-3 text-[#4ebe96]">Getting Started</h3>
                 <ul className="space-y-2 text-sm text-[#868f97]">
                   <li>• Start with broad market ETFs (SPY, VOO, or VTI)</li>
@@ -537,7 +537,7 @@ export default function ETFsPage() {
                 </ul>
               </div>
 
-              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                 <h3 className="text-lg font-bold mb-3 text-[#479ffa]">Building Your Portfolio</h3>
                 <ul className="space-y-2 text-sm text-[#868f97]">
                   <li>• 60-70% U.S. stocks (VTI or VOO)</li>
@@ -548,7 +548,7 @@ export default function ETFsPage() {
                 </ul>
               </div>
 
-              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                 <h3 className="text-lg font-bold mb-3 text-purple-500">Advanced Strategies</h3>
                 <ul className="space-y-2 text-sm text-[#868f97]">
                   <li>• Tax-loss harvesting with similar ETFs</li>
@@ -559,7 +559,7 @@ export default function ETFsPage() {
                 </ul>
               </div>
 
-              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                 <h3 className="text-lg font-bold mb-3 text-orange-500">Common Mistakes to Avoid</h3>
                 <ul className="space-y-2 text-sm text-[#868f97]">
                   <li>• Don't overtrade - ETFs work best long-term</li>
@@ -576,46 +576,46 @@ export default function ETFsPage() {
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-6">Best ETFs by Investment Goal</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                 <h3 className="text-lg font-bold mb-3">Long-Term Growth</h3>
                 <div className="space-y-2">
-                  <Link href="/stock/VTI" className="block text-sm hover:text-[#4ebe96]">
+                  <Link href="/stock/VTI" className="block text-sm hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out">
                     <span className="font-medium">VTI</span> - Total Market
                   </Link>
-                  <Link href="/stock/QQQ" className="block text-sm hover:text-[#4ebe96]">
+                  <Link href="/stock/QQQ" className="block text-sm hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out">
                     <span className="font-medium">QQQ</span> - Tech Growth
                   </Link>
-                  <Link href="/stock/VGT" className="block text-sm hover:text-[#4ebe96]">
+                  <Link href="/stock/VGT" className="block text-sm hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out">
                     <span className="font-medium">VGT</span> - Technology
                   </Link>
                 </div>
               </div>
 
-              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                 <h3 className="text-lg font-bold mb-3">Income & Dividends</h3>
                 <div className="space-y-2">
-                  <Link href="/stock/SCHD" className="block text-sm hover:text-[#4ebe96]">
+                  <Link href="/stock/SCHD" className="block text-sm hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out">
                     <span className="font-medium">SCHD</span> - Dividend Growth
                   </Link>
-                  <Link href="/stock/VYM" className="block text-sm hover:text-[#4ebe96]">
+                  <Link href="/stock/VYM" className="block text-sm hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out">
                     <span className="font-medium">VYM</span> - High Yield
                   </Link>
-                  <Link href="/stock/DGRO" className="block text-sm hover:text-[#4ebe96]">
+                  <Link href="/stock/DGRO" className="block text-sm hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out">
                     <span className="font-medium">DGRO</span> - Dividend Growth
                   </Link>
                 </div>
               </div>
 
-              <div className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                 <h3 className="text-lg font-bold mb-3">Stability & Safety</h3>
                 <div className="space-y-2">
-                  <Link href="/stock/BND" className="block text-sm hover:text-[#4ebe96]">
+                  <Link href="/stock/BND" className="block text-sm hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out">
                     <span className="font-medium">BND</span> - Total Bond Market
                   </Link>
-                  <Link href="/stock/AGG" className="block text-sm hover:text-[#4ebe96]">
+                  <Link href="/stock/AGG" className="block text-sm hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out">
                     <span className="font-medium">AGG</span> - Aggregate Bonds
                   </Link>
-                  <Link href="/stock/TIP" className="block text-sm hover:text-[#4ebe96]">
+                  <Link href="/stock/TIP" className="block text-sm hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out">
                     <span className="font-medium">TIP</span> - Inflation Protected
                   </Link>
                 </div>
@@ -632,7 +632,7 @@ export default function ETFsPage() {
               {faqs.map((faq, index) => (
                 <div
                   key={index}
-                  className="bg-[#1a1a1a] p-6 rounded-xl border border-white/[0.08]"
+                  className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]"
                 >
                   <h3 className="text-lg font-bold mb-3">{faq.question}</h3>
                   <p className="text-[#868f97] leading-relaxed">{faq.answer}</p>
@@ -647,28 +647,28 @@ export default function ETFsPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <Link
                 href="/sectors"
-                className="bg-[#1a1a1a] p-4 rounded-lg border border-white/[0.08] hover:border-[#4ebe96]/50 transition-colors duration-100 text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-2xl border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out text-center"
               >
                 <p className="font-bold mb-1">Sectors</p>
                 <p className="text-xs text-[#868f97]">Browse by sector</p>
               </Link>
               <Link
                 href="/best-stocks/dividend"
-                className="bg-[#1a1a1a] p-4 rounded-lg border border-white/[0.08] hover:border-[#4ebe96]/50 transition-colors duration-100 text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-2xl border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out text-center"
               >
                 <p className="font-bold mb-1">Dividend Stocks</p>
                 <p className="text-xs text-[#868f97]">Income investing</p>
               </Link>
               <Link
                 href="/screener"
-                className="bg-[#1a1a1a] p-4 rounded-lg border border-white/[0.08] hover:border-[#4ebe96]/50 transition-colors duration-100 text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-2xl border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out text-center"
               >
                 <p className="font-bold mb-1">Stock Screener</p>
                 <p className="text-xs text-[#868f97]">Find opportunities</p>
               </Link>
               <Link
                 href="/markets"
-                className="bg-[#1a1a1a] p-4 rounded-lg border border-white/[0.08] hover:border-[#4ebe96]/50 transition-colors duration-100 text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-2xl border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out text-center"
               >
                 <p className="font-bold mb-1">Market Data</p>
                 <p className="text-xs text-[#868f97]">Live quotes</p>
@@ -677,7 +677,7 @@ export default function ETFsPage() {
           </section>
 
           {/* CTA */}
-          <section className="bg-[#1a1a1a] p-8 rounded-xl border border-white/[0.08] text-center">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] p-8 rounded-2xl border border-white/[0.08] text-center">
             <h2 className="text-2xl font-bold mb-4">Start Analyzing ETFs Today</h2>
             <p className="text-[#868f97] mb-6 max-w-2xl mx-auto">
               Get real-time quotes, comprehensive analysis, and AI-powered insights for any ETF.
@@ -685,7 +685,7 @@ export default function ETFsPage() {
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white px-8 py-3 rounded-lg font-medium transition-colors duration-100"
+              className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white px-8 py-3 rounded-full font-medium motion-safe:transition-all motion-safe:duration-150 ease-out"
             >
               Access Dashboard
             </Link>

@@ -141,7 +141,7 @@ export default function EarningsPage() {
             <div className="flex-1 min-w-0">
           {/* Breadcrumbs */}
           <nav className="text-sm text-[#868f97] mb-4 sm:mb-6" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-white transition-colors duration-100">
+            <Link href="/" className="hover:text-white motion-safe:transition-colors motion-safe:duration-150">
               Home
             </Link>
             {' / '}
@@ -168,7 +168,7 @@ export default function EarningsPage() {
               Understanding Earnings Season
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-4 sm:p-6 rounded-2xl border border-white/[0.08]">
                 <h3 className="text-lg sm:text-xl font-bold mb-3 text-[#4ebe96]">
                   What Happens During Earnings
                 </h3>
@@ -185,7 +185,7 @@ export default function EarningsPage() {
                 </ul>
               </div>
 
-              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-4 sm:p-6 rounded-2xl border border-white/[0.08]">
                 <h3 className="text-lg sm:text-xl font-bold mb-3 text-[#4ebe96]">
                   Earnings Calendar Features
                 </h3>
@@ -206,7 +206,7 @@ export default function EarningsPage() {
           </section>
 
           {/* How to Use the Earnings Calendar */}
-          <section className="mb-8 sm:mb-12 bg-[#1a1a1a] p-4 sm:p-6 lg:p-8 rounded-xl border border-white/[0.08]">
+          <section className="mb-8 sm:mb-12 bg-white/[0.03] backdrop-blur-[10px] p-4 sm:p-6 lg:p-8 rounded-2xl border border-white/[0.08]">
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
               How to Use This Earnings Calendar
             </h2>
@@ -271,7 +271,7 @@ export default function EarningsPage() {
               Trading Strategies Around Earnings
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-4 sm:p-6 rounded-2xl border border-white/[0.08]">
                 <div className="text-2xl sm:text-3xl mb-3">📊</div>
                 <h3 className="text-base sm:text-lg font-bold mb-2">Hold Through Earnings</h3>
                 <p className="text-sm sm:text-base text-[#868f97]">
@@ -280,7 +280,7 @@ export default function EarningsPage() {
                 </p>
               </div>
 
-              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-4 sm:p-6 rounded-2xl border border-white/[0.08]">
                 <div className="text-2xl sm:text-3xl mb-3">⚡</div>
                 <h3 className="text-base sm:text-lg font-bold mb-2">Play the Momentum</h3>
                 <p className="text-sm sm:text-base text-[#868f97]">
@@ -289,7 +289,7 @@ export default function EarningsPage() {
                 </p>
               </div>
 
-              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-4 sm:p-6 rounded-2xl border border-white/[0.08]">
                 <div className="text-2xl sm:text-3xl mb-3">🎯</div>
                 <h3 className="text-base sm:text-lg font-bold mb-2">Wait and React</h3>
                 <p className="text-sm sm:text-base text-[#868f97]">
@@ -301,7 +301,7 @@ export default function EarningsPage() {
           </section>
 
           {/* Key Metrics Explained */}
-          <section className="mb-8 sm:mb-12 bg-[#1a1a1a] p-4 sm:p-6 lg:p-8 rounded-xl border border-white/[0.08]">
+          <section className="mb-8 sm:mb-12 bg-white/[0.03] backdrop-blur-[10px] p-4 sm:p-6 lg:p-8 rounded-2xl border border-white/[0.08]">
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">
               Key Earnings Metrics Explained
             </h2>
@@ -365,11 +365,11 @@ export default function EarningsPage() {
               {earningsFAQs.map((faq, index) => (
                 <details
                   key={index}
-                  className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08] group"
+                  className="bg-white/[0.03] backdrop-blur-[10px] p-4 sm:p-6 rounded-2xl border border-white/[0.08] group"
                 >
                   <summary className="text-base sm:text-lg font-bold cursor-pointer list-none flex items-center justify-between gap-4">
                     <span className="flex-1">{faq.question}</span>
-                    <span className="text-[#4ebe96] group-open:rotate-180 transition-transform flex-shrink-0">
+                    <span className="text-[#4ebe96] group-open:rotate-180 motion-safe:transition-transform motion-safe:duration-150 ease-out flex-shrink-0">
                       ▼
                     </span>
                   </summary>
@@ -389,10 +389,10 @@ export default function EarningsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               <Link
                 href="/markets/top-gainers"
-                className="bg-[#1a1a1a] p-4 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-2xl border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out group"
               >
                 <div className="text-xl sm:text-2xl mb-2">📈</div>
-                <h3 className="font-bold group-hover:text-[#4ebe96] transition-colors duration-100 text-sm sm:text-base">
+                <h3 className="font-bold group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out text-sm sm:text-base">
                   Top Gainers
                 </h3>
                 <p className="text-xs sm:text-sm text-[#868f97]">
@@ -402,10 +402,10 @@ export default function EarningsPage() {
 
               <Link
                 href="/markets/most-active"
-                className="bg-[#1a1a1a] p-4 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-2xl border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out group"
               >
                 <div className="text-xl sm:text-2xl mb-2">📊</div>
-                <h3 className="font-bold group-hover:text-[#4ebe96] transition-colors duration-100 text-sm sm:text-base">
+                <h3 className="font-bold group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out text-sm sm:text-base">
                   Most Active
                 </h3>
                 <p className="text-xs sm:text-sm text-[#868f97]">
@@ -415,10 +415,10 @@ export default function EarningsPage() {
 
               <Link
                 href="/sectors"
-                className="bg-[#1a1a1a] p-4 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-2xl border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out group"
               >
                 <div className="text-xl sm:text-2xl mb-2">🏢</div>
-                <h3 className="font-bold group-hover:text-[#4ebe96] transition-colors duration-100 text-sm sm:text-base">
+                <h3 className="font-bold group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out text-sm sm:text-base">
                   Sectors
                 </h3>
                 <p className="text-xs sm:text-sm text-[#868f97]">
@@ -428,10 +428,10 @@ export default function EarningsPage() {
 
               <Link
                 href="/dashboard"
-                className="bg-[#1a1a1a] p-4 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-2xl border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out group"
               >
                 <div className="text-xl sm:text-2xl mb-2">🔍</div>
-                <h3 className="font-bold group-hover:text-[#4ebe96] transition-colors duration-100 text-sm sm:text-base">
+                <h3 className="font-bold group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out text-sm sm:text-base">
                   Stock Analysis
                 </h3>
                 <p className="text-xs sm:text-sm text-[#868f97]">
@@ -442,7 +442,7 @@ export default function EarningsPage() {
           </section>
 
           {/* CTA Section */}
-          <section className="bg-gradient-to-r from-[#4ebe96] to-[#4ebe96] p-6 sm:p-8 lg:p-12 rounded-xl text-white text-center">
+          <section className="bg-gradient-to-r from-[#4ebe96] to-[#4ebe96] p-6 sm:p-8 lg:p-12 rounded-2xl text-white text-center">
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4">
               Get AI-Powered Stock Analysis
             </h2>
@@ -452,7 +452,7 @@ export default function EarningsPage() {
             </p>
             <Link
               href="/dashboard"
-              className="inline-block w-full sm:w-auto bg-white text-[#4ebe96] hover:bg-gray-100 px-6 sm:px-8 py-3 rounded-lg font-bold transition-colors duration-100"
+              className="inline-block w-full sm:w-auto bg-white text-[#4ebe96] hover:bg-gray-100 px-6 sm:px-8 py-3 rounded-2xl font-bold motion-safe:transition-colors motion-safe:duration-150 ease-out"
             >
               Start Analyzing Stocks Free
             </Link>

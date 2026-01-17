@@ -111,9 +111,9 @@ function formatCurrency(value: number | null | undefined): string {
 const healthRatingConfig = {
   EXCELLENT: { label: 'Excellent', color: 'text-[#4ebe96]', bg: 'bg-[#4ebe96]/10', border: 'border-[#4ebe96]/30' },
   GOOD: { label: 'Good', color: 'text-[#4ebe96]', bg: 'bg-[#4ebe96]/10', border: 'border-[#4ebe96]/30' },
-  MODERATE: { label: 'Moderate', color: 'text-[#f4a623]', bg: 'bg-[#f4a623]/10', border: 'border-[#f4a623]/30' },
-  CONCERN: { label: 'Concern', color: 'text-[#f4a623]', bg: 'bg-[#f4a623]/10', border: 'border-[#f4a623]/30' },
-  HIGH_RISK: { label: 'High Risk', color: 'text-[#e15241]', bg: 'bg-[#e15241]/10', border: 'border-[#e15241]/30' },
+  MODERATE: { label: 'Moderate', color: 'text-[#ffa16c]', bg: 'bg-[#ffa16c]/10', border: 'border-[#ffa16c]/30' },
+  CONCERN: { label: 'Concern', color: 'text-[#ffa16c]', bg: 'bg-[#ffa16c]/10', border: 'border-[#ffa16c]/30' },
+  HIGH_RISK: { label: 'High Risk', color: 'text-[#ff5c5c]', bg: 'bg-[#ff5c5c]/10', border: 'border-[#ff5c5c]/30' },
 }
 
 function formatRatio(value: number | null | undefined, decimals: number = 2): string {
@@ -223,7 +223,7 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
 
         <div className="flex items-center gap-4">
           <div className={cn(
-            "px-4 py-2 rounded-lg border",
+            "px-4 py-2 rounded-2xl border motion-safe:transition-all motion-safe:duration-150 ease-out",
             ratingConfig.bg,
             ratingConfig.border
           )}>
@@ -248,7 +248,7 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
               <DollarSign className="w-4 h-4" />
               <span className="text-xs font-medium">Total Debt</span>
             </div>
-            <p className="text-xl font-bold">{formatCurrency(debt.totalDebt)}</p>
+            <p className="text-xl font-bold tabular-nums">{formatCurrency(debt.totalDebt)}</p>
           </CardContent>
         </Card>
         <Card>
@@ -257,7 +257,7 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
               <PiggyBank className="w-4 h-4" />
               <span className="text-xs font-medium">Net Debt</span>
             </div>
-            <p className="text-xl font-bold">{formatCurrency(ratios?.netDebt)}</p>
+            <p className="text-xl font-bold tabular-nums">{formatCurrency(ratios?.netDebt)}</p>
           </CardContent>
         </Card>
         <Card>
@@ -266,7 +266,7 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
               <Percent className="w-4 h-4" />
               <span className="text-xs font-medium">Interest Coverage</span>
             </div>
-            <p className="text-xl font-bold">{formatRatio(ratios?.interestCoverage)}</p>
+            <p className="text-xl font-bold tabular-nums">{formatRatio(ratios?.interestCoverage)}</p>
           </CardContent>
         </Card>
         <Card>
@@ -275,7 +275,7 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
               <Activity className="w-4 h-4" />
               <span className="text-xs font-medium">Debt to Equity</span>
             </div>
-            <p className="text-xl font-bold">{formatRatio(ratios?.debtToEquity)}</p>
+            <p className="text-xl font-bold tabular-nums">{formatRatio(ratios?.debtToEquity)}</p>
           </CardContent>
         </Card>
       </div>
@@ -311,9 +311,10 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
                     />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: '#1a1a1a',
+                        backgroundColor: 'rgba(0, 0, 0, 0.95)',
+                        backdropFilter: 'blur(10px)',
                         border: '1px solid rgba(255, 255, 255, 0.08)',
-                        borderRadius: '8px',
+                        borderRadius: '16px',
                         fontSize: '12px'
                       }}
                       formatter={(value: number) => [`$${value.toFixed(1)}B`, 'Amount']}
@@ -323,9 +324,9 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
                         <Cell
                           key={`cell-${index}`}
                           fill={
-                            entry.year === 'Year 1' ? '#e15241' :
-                            entry.year === 'Year 2' ? '#f97316' :
-                            entry.year === 'Year 3' ? '#f4a623' :
+                            entry.year === 'Year 1' ? '#ff5c5c' :
+                            entry.year === 'Year 2' ? '#ffa16c' :
+                            entry.year === 'Year 3' ? '#ffa16c' :
                             entry.year === 'Year 4' ? '#4ebe96' :
                             entry.year === 'Year 5' ? '#4ebe96' :
                             '#479ffa'
@@ -355,36 +356,36 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
           <CardContent className="space-y-3">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <ArrowUpRight className="w-4 h-4 text-[#e15241]" />
+                <ArrowUpRight className="w-4 h-4 text-[#ff5c5c]" />
                 <span className="text-sm">New Debt Issued</span>
               </div>
-              <span className="font-medium">{formatCurrency(cashFlow?.debtIssuances)}</span>
+              <span className="font-medium tabular-nums">{formatCurrency(cashFlow?.debtIssuances)}</span>
             </div>
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2">
                 <ArrowDownRight className="w-4 h-4 text-[#4ebe96]" />
                 <span className="text-sm">Debt Repaid</span>
               </div>
-              <span className="font-medium">{formatCurrency(cashFlow?.debtRepayments)}</span>
+              <span className="font-medium tabular-nums">{formatCurrency(cashFlow?.debtRepayments)}</span>
             </div>
             <div className={cn(
-              "p-3 rounded-lg border",
+              "p-3 rounded-2xl border motion-safe:transition-all motion-safe:duration-150 ease-out",
               cashFlow?.isPayingDownDebt
                 ? "bg-[#4ebe96]/10 border-[#4ebe96]/30"
-                : "bg-[#e15241]/10 border-[#e15241]/30"
+                : "bg-[#ff5c5c]/10 border-[#ff5c5c]/30"
             )}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   {cashFlow?.isPayingDownDebt ? (
                     <TrendingDown className="w-4 h-4 text-[#4ebe96]" />
                   ) : (
-                    <TrendingUp className="w-4 h-4 text-[#e15241]" />
+                    <TrendingUp className="w-4 h-4 text-[#ff5c5c]" />
                   )}
                   <span className="font-medium text-sm">Net Change</span>
                 </div>
                 <span className={cn(
-                  "font-bold",
-                  cashFlow?.isPayingDownDebt ? "text-[#4ebe96]" : "text-[#e15241]"
+                  "font-bold tabular-nums",
+                  cashFlow?.isPayingDownDebt ? "text-[#4ebe96]" : "text-[#ff5c5c]"
                 )}>
                   {formatCurrency(cashFlow?.netDebtChange)}
                 </span>
@@ -409,7 +410,7 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
               <DataSourceIndicator source="openfigi" />
             </div>
             {bondsData && (
-              <span className="text-sm font-normal text-[#868f97]">
+              <span className="text-sm font-normal text-[#868f97] tabular-nums">
                 {bondsData.summary.totalBonds} active bonds
                 {bondsData.summary.avgCouponRate && ` • Avg coupon: ${bondsData.summary.avgCouponRate.toFixed(2)}%`}
               </span>
@@ -426,9 +427,9 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
           ) : bondsData && bondsData.bonds.length > 0 ? (
             <>
               {bondsData.maturingSoon.length > 0 && (
-                <div className="mb-4 p-3 bg-[#f4a623]/10 border border-[#f4a623]/30 rounded-lg">
+                <div className="mb-4 p-3 bg-[#ffa16c]/10 border border-[#ffa16c]/30 rounded-2xl motion-safe:transition-all motion-safe:duration-150 ease-out">
                   <div className="flex items-center gap-2">
-                    <AlertTriangle className="w-4 h-4 text-[#f4a623]" />
+                    <AlertTriangle className="w-4 h-4 text-[#ffa16c]" />
                     <span className="font-medium text-sm">
                       {bondsData.maturingSoon.length} bonds maturing within 2 years
                     </span>
@@ -448,19 +449,20 @@ export default function DebtAnalysis({ ticker }: DebtAnalysisProps) {
                   </thead>
                   <tbody>
                     {(showAllBonds ? bondsData.bonds : bondsData.bonds.slice(0, 5)).map((bond) => (
-                      <tr key={bond.figi} className="border-b border-white/[0.04] hover:bg-white/[0.08]">
+                      <tr key={bond.figi} className="border-b border-white/[0.04] hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out">
                         <td className="py-2 px-2">
                           <span className="font-mono text-xs">{bond.ticker}</span>
                         </td>
-                        <td className="py-2 px-2 text-right">
+                        <td className="py-2 px-2 text-right tabular-nums">
                           {bond.couponRate ? `${bond.couponRate.toFixed(2)}%` : 'Float'}
                         </td>
-                        <td className="py-2 px-2 text-right text-[#868f97]">
+                        <td className="py-2 px-2 text-right text-[#868f97] tabular-nums">
                           {bond.maturityDate ? new Date(bond.maturityDate).toLocaleDateString() : '-'}
                         </td>
                         <td className="py-2 px-2 text-right">
                           <span className={cn(
-                            bond.yearsToMaturity && bond.yearsToMaturity <= 2 ? "text-[#f4a623]" : "text-[#868f97]"
+                            "tabular-nums",
+                            bond.yearsToMaturity && bond.yearsToMaturity <= 2 ? "text-[#ffa16c]" : "text-[#868f97]"
                           )}>
                             {bond.yearsToMaturity ? `${bond.yearsToMaturity.toFixed(1)}y` : '-'}
                           </span>

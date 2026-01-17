@@ -55,9 +55,9 @@ function MaturityBar({ maturity, maxAmount }: { maturity: DebtMaturity; maxAmoun
         <div className="flex-1 h-6 bg-white/[0.05] rounded overflow-hidden">
           <div
             className={cn(
-              "h-full rounded transition-all duration-100",
-              maturity.year === 'Year 1' ? 'bg-[#e15241]/80' :
-              maturity.year === 'Year 2' ? 'bg-orange-500/80' :
+              "h-full rounded motion-safe:transition-all motion-safe:duration-100 ease-out",
+              maturity.year === 'Year 1' ? 'bg-[#ff5c5c]/80' :
+              maturity.year === 'Year 2' ? 'bg-[#ffa16c]/80' :
               maturity.year === 'Year 3' ? 'bg-[#f4a623]/80' :
               maturity.year === 'Year 4' ? 'bg-[#4ebe96]/80' :
               maturity.year === 'Year 5' ? 'bg-emerald-500/80' :
@@ -67,10 +67,10 @@ function MaturityBar({ maturity, maxAmount }: { maturity: DebtMaturity; maxAmoun
           />
         </div>
         <div className="w-20 text-right">
-          <span className="text-sm font-medium">{formatCurrency(maturity.amount)}</span>
+          <span className="text-sm font-medium tabular-nums">{formatCurrency(maturity.amount)}</span>
         </div>
         <div className="w-12 text-right">
-          <span className="text-xs text-[#868f97]">{maturity.percentOfTotal.toFixed(1)}%</span>
+          <span className="text-xs text-[#868f97] tabular-nums">{maturity.percentOfTotal.toFixed(1)}%</span>
         </div>
       </div>
     </div>
@@ -183,19 +183,19 @@ export default function CompanyDebt({ ticker }: CompanyDebtProps) {
       <CardContent className="space-y-6">
         {/* Debt Summary Cards */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="p-4 bg-white/[0.05] rounded-lg">
+          <div className="p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
             <div className="flex items-center gap-2 text-[#868f97] mb-1">
               <DollarSign className="w-3.5 h-3.5" />
               <span className="text-xs font-medium">Total Debt</span>
             </div>
-            <p className="text-xl font-bold">{formatCurrency(debt.totalDebt)}</p>
+            <p className="text-xl font-bold tabular-nums">{formatCurrency(debt.totalDebt)}</p>
           </div>
-          <div className="p-4 bg-white/[0.05] rounded-lg">
+          <div className="p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
             <div className="flex items-center gap-2 text-[#868f97] mb-1">
               <TrendingDown className="w-3.5 h-3.5" />
               <span className="text-xs font-medium">Interest Expense</span>
             </div>
-            <p className="text-xl font-bold">{formatCurrency(debt.interestExpense)}</p>
+            <p className="text-xl font-bold tabular-nums">{formatCurrency(debt.interestExpense)}</p>
             <p className="text-xs text-[#868f97]">Annual</p>
           </div>
         </div>
@@ -206,18 +206,18 @@ export default function CompanyDebt({ ticker }: CompanyDebtProps) {
           <div className="space-y-2">
             <div className="flex justify-between items-center p-2 bg-white/[0.05] rounded">
               <span className="text-sm">Long-term Debt</span>
-              <span className="font-medium">{formatCurrency(debt.longTermDebt)}</span>
+              <span className="font-medium tabular-nums">{formatCurrency(debt.longTermDebt)}</span>
             </div>
             <div className="flex justify-between items-center p-2 bg-white/[0.05] rounded">
               <div className="flex items-center gap-2">
                 <span className="text-sm">Short-term Debt</span>
                 {shortTermPercent > 30 && (
-                  <span className="text-[10px] px-1.5 py-0.5 bg-[#f4a623]/20 text-[#f4a623] rounded">
+                  <span className="text-[10px] px-1.5 py-0.5 bg-[#ffa16c]/20 text-[#ffa16c] rounded-full tabular-nums">
                     {shortTermPercent.toFixed(0)}% of total
                   </span>
                 )}
               </div>
-              <span className="font-medium">{formatCurrency(debt.shortTermDebt)}</span>
+              <span className="font-medium tabular-nums">{formatCurrency(debt.shortTermDebt)}</span>
             </div>
             {debt.currentPortionOfLongTermDebt && debt.currentPortionOfLongTermDebt > 0 && (
               <div className="flex justify-between items-center p-2 pl-6 text-[#868f97] text-sm">
@@ -225,7 +225,7 @@ export default function CompanyDebt({ ticker }: CompanyDebtProps) {
                   <ChevronRight className="w-3 h-3" />
                   Current portion of LT debt
                 </span>
-                <span>{formatCurrency(debt.currentPortionOfLongTermDebt)}</span>
+                <span className="tabular-nums">{formatCurrency(debt.currentPortionOfLongTermDebt)}</span>
               </div>
             )}
             {debt.commercialPaper && debt.commercialPaper > 0 && (
@@ -234,7 +234,7 @@ export default function CompanyDebt({ ticker }: CompanyDebtProps) {
                   <ChevronRight className="w-3 h-3" />
                   Commercial Paper
                 </span>
-                <span>{formatCurrency(debt.commercialPaper)}</span>
+                <span className="tabular-nums">{formatCurrency(debt.commercialPaper)}</span>
               </div>
             )}
           </div>
@@ -247,7 +247,7 @@ export default function CompanyDebt({ ticker }: CompanyDebtProps) {
               <p className="text-sm font-medium">Debt Maturity Schedule</p>
               <div className="flex items-center gap-1 text-xs text-[#868f97]">
                 <Clock className="w-3 h-3" />
-                <span>Total: {formatCurrency(debt.totalScheduledMaturities)}</span>
+                <span className="tabular-nums">Total: {formatCurrency(debt.totalScheduledMaturities)}</span>
               </div>
             </div>
 
@@ -272,9 +272,10 @@ export default function CompanyDebt({ ticker }: CompanyDebtProps) {
                   />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: '#1a1a1a',
+                      backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                      backdropFilter: 'blur(10px)',
                       border: '1px solid rgba(255, 255, 255, 0.08)',
-                      borderRadius: '8px',
+                      borderRadius: '16px',
                       fontSize: '12px'
                     }}
                     formatter={(value: number) => [`$${value.toFixed(1)}B`, 'Amount']}
@@ -285,8 +286,8 @@ export default function CompanyDebt({ ticker }: CompanyDebtProps) {
                       <Cell
                         key={`cell-${index}`}
                         fill={
-                          entry.year === 'Year 1' ? '#e15241' :
-                          entry.year === 'Year 2' ? '#f97316' :
+                          entry.year === 'Year 1' ? '#ff5c5c' :
+                          entry.year === 'Year 2' ? '#ffa16c' :
                           entry.year === 'Year 3' ? '#f4a623' :
                           entry.year === 'Year 4' ? '#4ebe96' :
                           entry.year === 'Year 5' ? '#10b981' :
@@ -316,26 +317,26 @@ export default function CompanyDebt({ ticker }: CompanyDebtProps) {
         {/* Risk Indicators */}
         {(nearTermMaturityPercent > 20 || shortTermPercent > 30) && (
           <div className={cn(
-            "p-3 rounded-lg border",
+            "p-3 rounded-2xl border",
             nearTermMaturityPercent > 30 || shortTermPercent > 40
-              ? "bg-[#e15241]/5 border-[#e15241]/30"
-              : "bg-[#f4a623]/5 border-[#f4a623]/30"
+              ? "bg-[#ff5c5c]/5 border-[#ff5c5c]/30"
+              : "bg-[#ffa16c]/5 border-[#ffa16c]/30"
           )}>
             <div className="flex items-start gap-2">
               <AlertTriangle className={cn(
                 "w-4 h-4 mt-0.5 flex-shrink-0",
                 nearTermMaturityPercent > 30 || shortTermPercent > 40
-                  ? "text-[#e15241]"
-                  : "text-[#f4a623]"
+                  ? "text-[#ff5c5c]"
+                  : "text-[#ffa16c]"
               )} />
               <div className="text-xs">
                 <p className="font-medium mb-1">Refinancing Risk</p>
                 <p className="text-[#868f97]">
                   {nearTermMaturityPercent > 20 && (
-                    <span>{nearTermMaturityPercent.toFixed(0)}% of scheduled debt matures within 1 year. </span>
+                    <span className="tabular-nums">{nearTermMaturityPercent.toFixed(0)}% of scheduled debt matures within 1 year. </span>
                   )}
                   {shortTermPercent > 30 && (
-                    <span>{shortTermPercent.toFixed(0)}% of total debt is short-term. </span>
+                    <span className="tabular-nums">{shortTermPercent.toFixed(0)}% of total debt is short-term. </span>
                   )}
                   This may require refinancing in rising rate environments.
                 </p>

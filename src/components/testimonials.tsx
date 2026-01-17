@@ -34,11 +34,11 @@ export function Testimonials() {
 
         <div className="grid md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <div key={index} className="bg-[#1a1a1a] border border-white/[0.08] rounded-2xl p-6">
+            <div key={index} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05]">
               <p className="text-sm text-[#868f97] leading-relaxed mb-6">&quot;{testimonial.quote}&quot;</p>
               <div className="flex items-center gap-3">
-                <Avatar className="w-10 h-10">
-                  <AvatarFallback className="bg-white/[0.05] text-white text-sm">{testimonial.avatar}</AvatarFallback>
+                <Avatar className="w-10 h-10 rounded-full">
+                  <AvatarFallback className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] text-white text-sm">{testimonial.avatar}</AvatarFallback>
                 </Avatar>
                 <div>
                   <p className="text-sm font-medium text-white">{testimonial.author}</p>

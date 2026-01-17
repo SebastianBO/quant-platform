@@ -105,7 +105,7 @@ export default function StockProfilePopup({ symbol, isOpen, onClose, position }:
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/50 z-50 animate-in fade-in duration-200"
+        className="fixed inset-0 bg-black/50 z-50 animate-in fade-in motion-safe:duration-200"
         onClick={onClose}
       />
 
@@ -113,8 +113,8 @@ export default function StockProfilePopup({ symbol, isOpen, onClose, position }:
       <div
         className={cn(
           "fixed z-50 w-[400px] max-w-[90vw] max-h-[80vh] overflow-hidden",
-          "bg-[#1a1a1a] border border-white/[0.08] rounded-2xl shadow-2xl",
-          "animate-in zoom-in-95 fade-in duration-200",
+          "bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl shadow-2xl",
+          "animate-in zoom-in-95 fade-in motion-safe:duration-200",
           position
             ? ""
             : "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
@@ -130,8 +130,8 @@ export default function StockProfilePopup({ symbol, isOpen, onClose, position }:
                 <span className="font-bold text-lg">{symbol}</span>
                 {data && (
                   <span className={cn(
-                    "text-sm px-2 py-0.5 rounded",
-                    data.changePercent >= 0 ? "bg-[#4ebe96]/10 text-[#4ebe96]" : "bg-[#e15241]/10 text-[#e15241]"
+                    "text-sm px-2 py-0.5 rounded-full tabular-nums",
+                    data.changePercent >= 0 ? "bg-[#4ebe96]/10 text-[#4ebe96]" : "bg-[#ff5c5c]/10 text-[#ff5c5c]"
                   )}>
                     {data.changePercent >= 0 ? "+" : ""}{data.changePercent?.toFixed(2)}%
                   </span>
@@ -142,7 +142,7 @@ export default function StockProfilePopup({ symbol, isOpen, onClose, position }:
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 hover:bg-white/[0.08] rounded-lg transition-colors duration-100"
+            className="p-1.5 hover:bg-white/[0.08] rounded-lg motion-safe:transition-colors motion-safe:duration-100"
           >
             <X className="w-5 h-5" />
           </button>
@@ -160,10 +160,10 @@ export default function StockProfilePopup({ symbol, isOpen, onClose, position }:
             <div className="space-y-4">
               {/* Price */}
               <div className="flex items-end gap-3">
-                <span className="text-3xl font-bold">${data.price?.toFixed(2)}</span>
+                <span className="text-3xl font-bold tabular-nums">${data.price?.toFixed(2)}</span>
                 <span className={cn(
-                  "flex items-center gap-1 text-lg",
-                  data.change >= 0 ? "text-[#4ebe96]" : "text-[#e15241]"
+                  "flex items-center gap-1 text-lg tabular-nums",
+                  data.change >= 0 ? "text-[#4ebe96]" : "text-[#ff5c5c]"
                 )}>
                   {data.change >= 0 ? (
                     <TrendingUp className="w-5 h-5" />
@@ -178,19 +178,19 @@ export default function StockProfilePopup({ symbol, isOpen, onClose, position }:
               <div className="grid grid-cols-2 gap-3">
                 <div className="p-3 bg-white/[0.025] rounded-lg">
                   <p className="text-xs text-[#868f97] mb-1">Market Cap</p>
-                  <p className="font-semibold">{formatNumber(data.marketCap)}</p>
+                  <p className="font-semibold tabular-nums">{formatNumber(data.marketCap)}</p>
                 </div>
                 <div className="p-3 bg-white/[0.025] rounded-lg">
                   <p className="text-xs text-[#868f97] mb-1">Volume</p>
-                  <p className="font-semibold">{formatVolume(data.volume)}</p>
+                  <p className="font-semibold tabular-nums">{formatVolume(data.volume)}</p>
                 </div>
                 <div className="p-3 bg-white/[0.025] rounded-lg">
                   <p className="text-xs text-[#868f97] mb-1">P/E Ratio</p>
-                  <p className="font-semibold">{data.pe?.toFixed(2) || "N/A"}</p>
+                  <p className="font-semibold tabular-nums">{data.pe?.toFixed(2) || "N/A"}</p>
                 </div>
                 <div className="p-3 bg-white/[0.025] rounded-lg">
                   <p className="text-xs text-[#868f97] mb-1">EPS</p>
-                  <p className="font-semibold">{data.eps ? `$${data.eps.toFixed(2)}` : "N/A"}</p>
+                  <p className="font-semibold tabular-nums">{data.eps ? `$${data.eps.toFixed(2)}` : "N/A"}</p>
                 </div>
               </div>
 
@@ -199,7 +199,7 @@ export default function StockProfilePopup({ symbol, isOpen, onClose, position }:
                 <div className="p-3 bg-white/[0.025] rounded-lg">
                   <p className="text-xs text-[#868f97] mb-2">52 Week Range</p>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm">${data.low52w?.toFixed(2)}</span>
+                    <span className="text-sm tabular-nums">${data.low52w?.toFixed(2)}</span>
                     <div className="flex-1 h-2 bg-white/[0.05] rounded-full overflow-hidden">
                       <div
                         className="h-full bg-[#4ebe96] rounded-full"
@@ -208,7 +208,7 @@ export default function StockProfilePopup({ symbol, isOpen, onClose, position }:
                         }}
                       />
                     </div>
-                    <span className="text-sm">${data.high52w?.toFixed(2)}</span>
+                    <span className="text-sm tabular-nums">${data.high52w?.toFixed(2)}</span>
                   </div>
                 </div>
               )}
@@ -228,7 +228,7 @@ export default function StockProfilePopup({ symbol, isOpen, onClose, position }:
                     </span>
                   )}
                   {data.employees && (
-                    <span className="flex items-center gap-1.5 px-2.5 py-1 bg-white/[0.05] rounded-full text-xs text-[#868f97]">
+                    <span className="flex items-center gap-1.5 px-2.5 py-1 bg-white/[0.05] rounded-full text-xs text-[#868f97] tabular-nums">
                       <Users className="w-3 h-3" />
                       {data.employees.toLocaleString()} employees
                     </span>
@@ -250,20 +250,20 @@ export default function StockProfilePopup({ symbol, isOpen, onClose, position }:
         <div className="flex items-center justify-between p-4 border-t border-white/[0.08] bg-white/[0.015]">
           <Link
             href={`/stock/${symbol}`}
-            className="flex items-center gap-2 text-sm text-[#4ebe96] hover:text-[#4ebe96] transition-colors duration-100"
+            className="flex items-center gap-2 text-sm text-[#4ebe96] hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-100"
           >
             Full Profile
             <ExternalLink className="w-4 h-4" />
           </Link>
           <div className="flex gap-2">
             <Link href={`/stock/${symbol}/financials`}>
-              <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-white/[0.05] hover:bg-white/[0.08] rounded-lg transition-colors duration-100">
+              <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-white/[0.05] hover:bg-white/[0.08] rounded-lg motion-safe:transition-colors motion-safe:duration-100">
                 <BarChart3 className="w-3.5 h-3.5" />
                 Financials
               </button>
             </Link>
             <Link href={`/stock/${symbol}/analysis`}>
-              <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-[#4ebe96] hover:bg-[#4ebe96] text-white rounded-lg transition-colors duration-100">
+              <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-[#4ebe96] hover:bg-[#4ebe96] text-white rounded-lg motion-safe:transition-colors motion-safe:duration-100">
                 <DollarSign className="w-3.5 h-3.5" />
                 Analyze
               </button>
@@ -291,7 +291,7 @@ export function StockTickerChip({ symbol, className }: StockTickerChipProps) {
         className={cn(
           "inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md",
           "bg-[#4ebe96]/10 text-[#4ebe96] hover:bg-[#4ebe96]/20",
-          "text-sm font-mono font-medium transition-colors duration-100 cursor-pointer",
+          "text-sm font-mono font-medium motion-safe:transition-colors motion-safe:duration-100 cursor-pointer",
           className
         )}
       >

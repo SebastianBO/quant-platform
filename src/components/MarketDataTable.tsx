@@ -76,7 +76,7 @@ function formatPrice(value: number): string {
 function PercentCell({ value }: { value: number }) {
   const isPositive = value >= 0
   return (
-    <span className={`tabular-nums ${isPositive ? 'text-[#4ebe96]' : 'text-[#e15241]'}`}>
+    <span className={`tabular-nums ${isPositive ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
       {formatPercent(value)}
     </span>
   )
@@ -217,7 +217,7 @@ export default function MarketDataTable() {
             size="sm"
             onClick={() => setActiveCategory(cat)}
           >
-            {cat === 'real_commodities' && <Flame className="w-3 h-3 mr-1 text-orange-500" />}
+            {cat === 'real_commodities' && <Flame className="w-3 h-3 mr-1 text-[#ffa16c]" />}
             {allCategories[cat]?.name}
           </Button>
         ))}
@@ -226,7 +226,7 @@ export default function MarketDataTable() {
       {loading ? (
         <div className="space-y-6">
           {[1, 2, 3].map(i => (
-            <Card key={i} className="bg-[#1a1a1a] border-white/[0.08]">
+            <Card key={i} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
               <CardHeader>
                 <div className="h-6 w-40 bg-white/[0.05] animate-pulse rounded" />
               </CardHeader>
@@ -251,10 +251,10 @@ export default function MarketDataTable() {
               const isRealCommodities = cat === 'real_commodities'
 
               return (
-                <Card key={cat} className="bg-[#1a1a1a] border-white/[0.08] overflow-hidden">
+                <Card key={cat} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl overflow-hidden">
                   <CardHeader className="bg-white/[0.015] py-3">
                     <div className="flex items-center gap-2">
-                      {isRealCommodities && <Flame className="w-4 h-4 text-orange-500" />}
+                      {isRealCommodities && <Flame className="w-4 h-4 text-[#ffa16c]" />}
                       <CardTitle className="text-base">{category.name}</CardTitle>
                       {isRealCommodities && (
                         <span className="text-xs text-[#868f97] ml-2">via Alpha Vantage</span>
@@ -291,7 +291,7 @@ export default function MarketDataTable() {
                           {category.data.map((item, i) => (
                             <tr
                               key={item.symbol}
-                              className={`border-b border-white/[0.04] hover:bg-white/[0.015] transition-colors duration-100 cursor-pointer ${
+                              className={`border-b border-white/[0.04] hover:bg-white/[0.015] motion-safe:transition-colors motion-safe:duration-150 ease-out cursor-pointer ${
                                 i % 2 === 0 ? '' : 'bg-white/[0.005]'
                               }`}
                             >

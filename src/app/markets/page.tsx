@@ -161,7 +161,7 @@ export default function MarketsHubPage() {
           </section>
 
           {/* Market Heatmap */}
-          <section className="mb-12 bg-zinc-900/50 rounded-2xl border border-zinc-800 p-6">
+          <section className="mb-12 bg-white/[0.03] backdrop-blur-[10px] rounded-2xl border border-white/[0.08] p-6">
             <MarketHeatmap />
           </section>
 
@@ -173,10 +173,10 @@ export default function MarketsHubPage() {
                 <Link
                   key={page.href}
                   href={page.href}
-                  className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08] hover:border-[#4ebe96]/50 transition-all hover:shadow-lg group"
+                  className="bg-white/[0.03] backdrop-blur-[10px] p-4 sm:p-6 rounded-2xl border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out hover:shadow-lg group"
                 >
                   <div className="text-3xl sm:text-4xl mb-4">{page.icon}</div>
-                  <h3 className="text-lg sm:text-xl font-bold mb-2 group-hover:text-[#4ebe96] transition-colors duration-100">
+                  <h3 className="text-lg sm:text-xl font-bold mb-2 group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out">
                     {page.title}
                   </h3>
                   <p className="text-sm sm:text-base text-[#868f97] mb-3">
@@ -194,7 +194,7 @@ export default function MarketsHubPage() {
               Why Track Market Movers?
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-4 sm:p-6 rounded-2xl border border-white/[0.08]">
                 <h3 className="text-base sm:text-lg font-bold mb-3">
                   Identify Opportunities
                 </h3>
@@ -204,7 +204,7 @@ export default function MarketsHubPage() {
                   mainstream.
                 </p>
               </div>
-              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-4 sm:p-6 rounded-2xl border border-white/[0.08]">
                 <h3 className="text-base sm:text-lg font-bold mb-3">
                   Understand Market Sentiment
                 </h3>
@@ -213,7 +213,7 @@ export default function MarketsHubPage() {
                   into broader market trends and investor sentiment.
                 </p>
               </div>
-              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-4 sm:p-6 rounded-2xl border border-white/[0.08]">
                 <h3 className="text-base sm:text-lg font-bold mb-3">Risk Management</h3>
                 <p className="text-sm sm:text-base text-[#868f97]">
                   Monitor stocks hitting 52-week lows in your portfolio or
@@ -221,7 +221,7 @@ export default function MarketsHubPage() {
                   and exits.
                 </p>
               </div>
-              <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-4 sm:p-6 rounded-2xl border border-white/[0.08]">
                 <h3 className="text-base sm:text-lg font-bold mb-3">
                   Trading Opportunities
                 </h3>
@@ -236,7 +236,7 @@ export default function MarketsHubPage() {
           {/* Key Metrics Explained */}
           <section className="mb-12 sm:mb-16">
             <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Key Metrics Explained</h2>
-            <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08]">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] p-4 sm:p-6 rounded-2xl border border-white/[0.08]">
               <div className="space-y-4">
                 <div>
                   <h3 className="font-bold text-[#4ebe96] mb-2 text-sm sm:text-base">
@@ -291,11 +291,11 @@ export default function MarketsHubPage() {
               {faqs.map((faq, index) => (
                 <details
                   key={index}
-                  className="bg-[#1a1a1a] p-4 sm:p-6 rounded-xl border border-white/[0.08] group"
+                  className="bg-white/[0.03] backdrop-blur-[10px] p-4 sm:p-6 rounded-2xl border border-white/[0.08] group"
                 >
                   <summary className="text-base sm:text-lg font-bold cursor-pointer list-none flex items-center justify-between gap-4">
                     <span className="flex-1">{faq.question}</span>
-                    <span className="text-[#4ebe96] group-open:rotate-180 transition-transform flex-shrink-0">
+                    <span className="text-[#4ebe96] group-open:rotate-180 motion-safe:transition-transform motion-safe:duration-150 ease-out flex-shrink-0">
                       ▼
                     </span>
                   </summary>
@@ -308,7 +308,7 @@ export default function MarketsHubPage() {
           </section>
 
           {/* CTA */}
-          <section className="bg-[#1a1a1a] p-6 sm:p-8 rounded-xl border border-white/[0.08] text-center">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] p-6 sm:p-8 rounded-2xl border border-white/[0.08] text-center">
             <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">
               Get AI-Powered Stock Analysis
             </h2>
@@ -318,7 +318,7 @@ export default function MarketsHubPage() {
             </p>
             <Link
               href="/dashboard"
-              className="inline-block w-full sm:w-auto bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-white px-6 sm:px-8 py-3 rounded-lg font-medium transition-colors duration-100"
+              className="inline-block w-full sm:w-auto bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-white px-6 sm:px-8 py-3 rounded-full font-medium motion-safe:transition-colors motion-safe:duration-150 ease-out"
             >
               Start Analyzing Stocks
             </Link>

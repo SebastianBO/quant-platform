@@ -78,7 +78,7 @@ export default function TrendingTickers({ onSelectTicker }: TrendingTickersProps
             <button
               onClick={() => setViewMode('gainers')}
               className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-100",
+                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium motion-safe:transition-all motion-safe:duration-150 ease-out",
                 viewMode === 'gainers'
                   ? "bg-[#4ebe96]/20 text-[#4ebe96]"
                   : "text-[#868f97] hover:text-white hover:bg-white/[0.025]"
@@ -90,9 +90,9 @@ export default function TrendingTickers({ onSelectTicker }: TrendingTickersProps
             <button
               onClick={() => setViewMode('losers')}
               className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-100",
+                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium motion-safe:transition-all motion-safe:duration-150 ease-out",
                 viewMode === 'losers'
-                  ? "bg-[#e15241]/20 text-[#e15241]"
+                  ? "bg-[#ff5c5c]/20 text-[#ff5c5c]"
                   : "text-[#868f97] hover:text-white hover:bg-white/[0.025]"
               )}
             >
@@ -102,7 +102,7 @@ export default function TrendingTickers({ onSelectTicker }: TrendingTickersProps
             <button
               onClick={() => setViewMode('active')}
               className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-100",
+                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium motion-safe:transition-all motion-safe:duration-150 ease-out",
                 viewMode === 'active'
                   ? "bg-[#479ffa]/20 text-[#479ffa]"
                   : "text-[#868f97] hover:text-white hover:bg-white/[0.025]"
@@ -158,10 +158,10 @@ const MoverCard = memo(function MoverCard({
     <button
       onClick={onClick}
       className={cn(
-        "flex-shrink-0 px-3 py-2 rounded-lg transition-all duration-100 hover:scale-[1.02]",
+        "flex-shrink-0 px-3 py-2 rounded-2xl motion-safe:transition-all motion-safe:duration-150 ease-out hover:scale-[1.02]",
         "border border-transparent",
         isGainer && "bg-[#4ebe96]/5 hover:bg-[#4ebe96]/10 hover:border-[#4ebe96]/30",
-        isLoser && "bg-[#e15241]/5 hover:bg-[#e15241]/10 hover:border-[#e15241]/30",
+        isLoser && "bg-[#ff5c5c]/5 hover:bg-[#ff5c5c]/10 hover:border-[#ff5c5c]/30",
         !isGainer && !isLoser && "bg-white/[0.015] hover:bg-white/[0.025]"
       )}
     >
@@ -191,7 +191,7 @@ const MoverCard = memo(function MoverCard({
           <p className="text-sm font-medium tabular-nums">${typeof mover.price === 'number' ? mover.price.toFixed(2) : '—'}</p>
           <p className={cn(
             "text-xs font-semibold tabular-nums flex items-center justify-end gap-0.5",
-            isPositive ? "text-[#4ebe96]" : "text-[#e15241]"
+            isPositive ? "text-[#4ebe96]" : "text-[#ff5c5c]"
           )}>
             {isPositive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
             {isPositive ? '+' : ''}{typeof mover.changePercent === 'number' ? mover.changePercent.toFixed(2) : '0.00'}%

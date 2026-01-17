@@ -71,17 +71,17 @@ export default function EnhancedMarketMovers() {
 
   if (loading) {
     return (
-      <div className="border-b border-white/[0.08] bg-[#1a1a1a]/50">
+      <div className="border-b border-white/[0.08] bg-white/[0.03] backdrop-blur-[10px]">
         <div className="max-w-7xl mx-auto px-4 py-3">
           <div className="flex items-center gap-4">
             <div className="flex gap-2">
               {[1, 2, 3].map(i => (
-                <div key={i} className="h-8 w-24 bg-white/[0.025] rounded-lg animate-pulse" />
+                <div key={i} className="h-8 w-24 bg-white/[0.025] rounded-full animate-pulse" />
               ))}
             </div>
             <div className="flex-1 flex gap-3 overflow-hidden">
               {[1, 2, 3, 4, 5, 6].map(i => (
-                <div key={i} className="h-16 w-40 bg-white/[0.015] rounded-xl animate-pulse flex-shrink-0" />
+                <div key={i} className="h-16 w-40 bg-white/[0.015] rounded-2xl animate-pulse flex-shrink-0" />
               ))}
             </div>
           </div>
@@ -95,7 +95,7 @@ export default function EnhancedMarketMovers() {
   const Icon = config.icon
 
   return (
-    <div className="border-b border-white/[0.08] bg-[#1a1a1a]/50">
+    <div className="border-b border-white/[0.08] bg-white/[0.03] backdrop-blur-[10px]">
       <div className="max-w-7xl mx-auto px-4 py-3">
         <div className="flex items-center gap-4">
           {/* Mode Switcher */}
@@ -107,17 +107,17 @@ export default function EnhancedMarketMovers() {
                   key={mode}
                   onClick={() => setViewMode(mode as ViewMode)}
                   className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-100",
+                    "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium motion-safe:transition-all motion-safe:duration-150 ease-out",
                     viewMode === mode
                       ? `bg-${conf.color}-500/20 text-${conf.color}-500`
                       : "text-[#868f97] hover:text-white hover:bg-white/[0.025]"
                   )}
                   style={viewMode === mode ? {
                     backgroundColor: conf.color === 'green' ? '#4ebe9633' :
-                                    conf.color === 'red' ? '#e1524133' :
+                                    conf.color === 'red' ? '#ff5c5c33' :
                                     '#479ffa33',
                     color: conf.color === 'green' ? '#4ebe96' :
-                           conf.color === 'red' ? '#e15241' :
+                           conf.color === 'red' ? '#ff5c5c' :
                            '#479ffa'
                   } : undefined}
                 >
@@ -144,7 +144,7 @@ export default function EnhancedMarketMovers() {
           {/* See All Link */}
           <Link
             href={config.link}
-            className="flex items-center gap-1 text-xs text-[#868f97] hover:text-white transition-colors duration-100 flex-shrink-0"
+            className="flex items-center gap-1 text-xs text-[#868f97] hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out flex-shrink-0"
           >
             <span className="hidden sm:inline">See all</span>
             <ChevronRight className="w-4 h-4" />
@@ -170,10 +170,10 @@ function MoverCard({
     <Link
       href={`/${mover.symbol}`}
       className={cn(
-        "flex-shrink-0 flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-100 hover:scale-[1.02]",
+        "flex-shrink-0 flex items-center gap-3 px-3 py-2 rounded-2xl motion-safe:transition-all motion-safe:duration-150 ease-out hover:scale-[1.02]",
         "border border-transparent",
         isGainer && "bg-[#4ebe96]/5 hover:bg-[#4ebe96]/10 hover:border-[#4ebe96]/30",
-        isLoser && "bg-[#e15241]/5 hover:bg-[#e15241]/10 hover:border-[#e15241]/30",
+        isLoser && "bg-[#ff5c5c]/5 hover:bg-[#ff5c5c]/10 hover:border-[#ff5c5c]/30",
         !isGainer && !isLoser && "bg-white/[0.015] hover:bg-white/[0.025]"
       )}
     >
@@ -195,7 +195,7 @@ function MoverCard({
         </p>
         <p className={cn(
           "text-xs font-semibold tabular-nums flex items-center justify-end gap-0.5",
-          isPositive ? "text-[#4ebe96]" : "text-[#e15241]"
+          isPositive ? "text-[#4ebe96]" : "text-[#ff5c5c]"
         )}>
           {isPositive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
           {isPositive ? '+' : ''}{typeof mover.changePercent === 'number' ? mover.changePercent.toFixed(2) : '0.00'}%

@@ -81,7 +81,7 @@ export default function FinancialSnowflake({ ticker, metrics }: FinancialSnowfla
   const scoreInfo = getScoreLabel(avgScore)
 
   return (
-    <Card className="w-full bg-[#1a1a1a] border-white/[0.08]">
+    <Card className="w-full bg-black border-white/[0.08]">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <span className="text-2xl">❄️</span>
@@ -90,7 +90,7 @@ export default function FinancialSnowflake({ ticker, metrics }: FinancialSnowfla
       </CardHeader>
       <CardContent>
         {/* Score Summary */}
-        <div className="flex items-center justify-center mb-6 p-6 bg-white/[0.025] rounded-xl border border-white/[0.08]">
+        <div className="flex items-center justify-center mb-6 p-6 bg-white/[0.03] backdrop-blur-[10px] rounded-2xl border border-white/[0.08]">
           <div className="text-center">
             <p className="text-[#868f97] text-sm mb-2">Overall Health Score</p>
             <p className={`text-5xl font-bold ${scoreInfo.colorClass}`}>
@@ -124,9 +124,10 @@ export default function FinancialSnowflake({ ticker, metrics }: FinancialSnowfla
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: isDark ? 'hsl(0 0% 10%)' : 'hsl(0 0% 100%)',
-                  border: isDark ? '1px solid hsl(0 0% 20%)' : '1px solid hsl(0 0% 85%)',
-                  borderRadius: '8px'
+                  backgroundColor: isDark ? 'rgb(0 0 0)' : 'hsl(0 0% 100%)',
+                  border: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid hsl(0 0% 85%)',
+                  borderRadius: '16px',
+                  backdropFilter: 'blur(10px)'
                 }}
                 formatter={(value: number, _name: string, props: TooltipFormatterProps) => [
                   `${value.toFixed(0)}/100 - ${props.payload?.actual || ''}`,
@@ -140,7 +141,7 @@ export default function FinancialSnowflake({ ticker, metrics }: FinancialSnowfla
         {/* Dimension Breakdown */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-6">
           {radarData.map((dim, i) => (
-            <div key={i} className="p-4 bg-white/[0.015] rounded-xl border border-white/[0.04] text-center hover:bg-white/[0.08] transition-colors duration-100">
+            <div key={i} className="p-4 bg-white/[0.03] backdrop-blur-[10px] rounded-2xl border border-white/[0.08] text-center hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out">
               <p className="text-[#868f97] text-xs mb-1">{dim.dimension}</p>
               <p className={`text-2xl font-bold ${
                 dim.value >= 70 ? 'text-[#4ebe96]' :
@@ -155,7 +156,7 @@ export default function FinancialSnowflake({ ticker, metrics }: FinancialSnowfla
         </div>
 
         {/* Interpretation */}
-        <div className="mt-6 p-5 bg-gradient-to-br from-white/[0.025] to-white/[0.015] rounded-xl border border-white/[0.04]">
+        <div className="mt-6 p-5 bg-white/[0.03] backdrop-blur-[10px] rounded-2xl border border-white/[0.08]">
           <p className="font-semibold mb-2">Snowflake Analysis</p>
           <p className="text-sm text-[#868f97] leading-relaxed">
             {avgScore >= 70

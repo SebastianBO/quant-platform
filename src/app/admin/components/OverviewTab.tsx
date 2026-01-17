@@ -34,16 +34,16 @@ function OverviewTabComponent({
         <Card>
           <CardContent className="pt-4 pb-4">
             <div className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                status?.database.connected ? 'bg-[#4ebe96]/10' : 'bg-[#e15241]/10'
+              <div className={`w-10 h-10 rounded-2xl flex items-center justify-center ${
+                status?.database.connected ? 'bg-[#4ebe96]/10' : 'bg-[#ff5c5c]/10'
               }`}>
                 <Database className={`w-5 h-5 ${
-                  status?.database.connected ? 'text-[#4ebe96]' : 'text-[#e15241]'
+                  status?.database.connected ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'
                 }`} />
               </div>
               <div>
                 <p className="text-xs text-[#868f97]">Database</p>
-                <p className="font-bold text-lg">
+                <p className="font-bold text-lg tabular-nums">
                   {status?.database.connected ? 'Online' : 'Offline'}
                 </p>
               </div>
@@ -54,12 +54,12 @@ function OverviewTabComponent({
         <Card>
           <CardContent className="pt-4 pb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-[#479ffa]/10 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-2xl bg-[#479ffa]/10 flex items-center justify-center">
                 <FileText className="w-5 h-5 text-[#479ffa]" />
               </div>
               <div>
                 <p className="text-xs text-[#868f97]">Symbols</p>
-                <p className="font-bold text-lg">{formatNumber(status?.metrics?.totalSymbols || 0)}</p>
+                <p className="font-bold text-lg tabular-nums">{formatNumber(status?.metrics?.totalSymbols || 0)}</p>
               </div>
             </div>
           </CardContent>
@@ -68,12 +68,12 @@ function OverviewTabComponent({
         <Card>
           <CardContent className="pt-4 pb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-2xl bg-purple-500/10 flex items-center justify-center">
                 <Wallet className="w-5 h-5 text-purple-500" />
               </div>
               <div>
                 <p className="text-xs text-[#868f97]">Portfolios</p>
-                <p className="font-bold text-lg">{formatNumber(status?.metrics?.totalPortfolios || 0)}</p>
+                <p className="font-bold text-lg tabular-nums">{formatNumber(status?.metrics?.totalPortfolios || 0)}</p>
               </div>
             </div>
           </CardContent>
@@ -82,12 +82,12 @@ function OverviewTabComponent({
         <Card>
           <CardContent className="pt-4 pb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-2xl bg-orange-500/10 flex items-center justify-center">
                 <Users className="w-5 h-5 text-orange-500" />
               </div>
               <div>
                 <p className="text-xs text-[#868f97]">Users</p>
-                <p className="font-bold text-lg">{formatNumber(status?.metrics?.totalUsers || 0)}</p>
+                <p className="font-bold text-lg tabular-nums">{formatNumber(status?.metrics?.totalUsers || 0)}</p>
               </div>
             </div>
           </CardContent>
@@ -96,12 +96,12 @@ function OverviewTabComponent({
         <Card>
           <CardContent className="pt-4 pb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-2xl bg-cyan-500/10 flex items-center justify-center">
                 <HardDrive className="w-5 h-5 text-cyan-500" />
               </div>
               <div>
                 <p className="text-xs text-[#868f97]">Total Rows</p>
-                <p className="font-bold text-lg">{formatNumber(status?.database?.totalRows || 0)}</p>
+                <p className="font-bold text-lg tabular-nums">{formatNumber(status?.database?.totalRows || 0)}</p>
               </div>
             </div>
           </CardContent>
@@ -110,12 +110,12 @@ function OverviewTabComponent({
         <Card>
           <CardContent className="pt-4 pb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-pink-500/10 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-2xl bg-pink-500/10 flex items-center justify-center">
                 <Activity className="w-5 h-5 text-pink-500" />
               </div>
               <div>
                 <p className="text-xs text-[#868f97]">API Calls</p>
-                <p className="font-bold text-lg">{formatNumber(status?.metrics?.apiCallsToday || 0)}</p>
+                <p className="font-bold text-lg tabular-nums">{formatNumber(status?.metrics?.apiCallsToday || 0)}</p>
               </div>
             </div>
           </CardContent>
@@ -138,7 +138,7 @@ function OverviewTabComponent({
                 if (emptyInCategory.length === 0) return null
 
                 return (
-                  <div key={category} className="flex items-center justify-between py-2 px-3 bg-yellow-500/10 rounded-lg">
+                  <div key={category} className="flex items-center justify-between py-2 px-3 bg-yellow-500/10 rounded-2xl motion-safe:transition-all motion-safe:duration-150 ease-out">
                     <div className="flex items-center gap-2">
                       <AlertTriangle className="w-4 h-4 text-yellow-500" />
                       <span className="text-sm font-medium">{category}</span>
@@ -172,10 +172,10 @@ function OverviewTabComponent({
               {status?.externalApis?.map((api) => (
                 <div
                   key={api.name}
-                  className={`flex items-center justify-between py-2 px-3 rounded-lg ${
+                  className={`flex items-center justify-between py-2 px-3 rounded-2xl motion-safe:transition-all motion-safe:duration-150 ease-out ${
                     api.status === 'healthy' ? 'bg-[#4ebe96]/5' :
                     api.status === 'degraded' ? 'bg-yellow-500/5' :
-                    'bg-[#e15241]/5'
+                    'bg-[#ff5c5c]/5'
                   }`}
                 >
                   <div className="flex items-center gap-2">
@@ -184,20 +184,20 @@ function OverviewTabComponent({
                     ) : api.status === 'degraded' ? (
                       <AlertTriangle className="w-4 h-4 text-yellow-500" />
                     ) : (
-                      <XCircle className="w-4 h-4 text-[#e15241]" />
+                      <XCircle className="w-4 h-4 text-[#ff5c5c]" />
                     )}
                     <span className="text-sm font-medium">{api.name}</span>
                     {api.critical && (
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#e15241]/20 text-[#e15241]">CRITICAL</span>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#ff5c5c]/20 text-[#ff5c5c]">CRITICAL</span>
                     )}
                   </div>
                   <div className="flex items-center gap-2">
                     {api.responseTime && (
-                      <span className="text-xs text-[#868f97]">{api.responseTime}ms</span>
+                      <span className="text-xs text-[#868f97] tabular-nums">{api.responseTime}ms</span>
                     )}
                     <span className={`text-xs font-medium ${
                       api.status === 'healthy' ? 'text-[#4ebe96]' :
-                      api.status === 'degraded' ? 'text-yellow-500' : 'text-[#e15241]'
+                      api.status === 'degraded' ? 'text-yellow-500' : 'text-[#ff5c5c]'
                     }`}>
                       {api.status.toUpperCase()}
                     </span>
@@ -220,7 +220,7 @@ function OverviewTabComponent({
                 variant={isPollingLogs ? "default" : "outline"}
                 size="sm"
                 onClick={() => setIsPollingLogs(!isPollingLogs)}
-                className="h-7 text-xs"
+                className="h-7 text-xs motion-safe:transition-all motion-safe:duration-150 ease-out"
               >
                 {isPollingLogs ? (
                   <>
@@ -241,9 +241,9 @@ function OverviewTabComponent({
               {functionLogs.length > 0 ? functionLogs.slice(0, 10).map((log) => (
                 <div
                   key={log.id}
-                  className={`flex items-center justify-between py-2 px-3 rounded-lg ${
+                  className={`flex items-center justify-between py-2 px-3 rounded-2xl motion-safe:transition-all motion-safe:duration-150 ease-out ${
                     log.status === 'success' ? 'bg-[#4ebe96]/5' :
-                    log.status === 'error' ? 'bg-[#e15241]/5' :
+                    log.status === 'error' ? 'bg-[#ff5c5c]/5' :
                     'bg-[#479ffa]/5'
                   }`}
                 >
@@ -251,7 +251,7 @@ function OverviewTabComponent({
                     {log.status === 'success' ? (
                       <CheckCircle2 className="w-4 h-4 text-[#4ebe96]" />
                     ) : log.status === 'error' ? (
-                      <XCircle className="w-4 h-4 text-[#e15241]" />
+                      <XCircle className="w-4 h-4 text-[#ff5c5c]" />
                     ) : (
                       <Loader2 className="w-4 h-4 text-[#479ffa] animate-spin" />
                     )}
@@ -259,7 +259,7 @@ function OverviewTabComponent({
                   </div>
                   <div className="flex items-center gap-2">
                     {log.duration && (
-                      <span className="text-xs text-[#868f97]">{log.duration}ms</span>
+                      <span className="text-xs text-[#868f97] tabular-nums">{log.duration}ms</span>
                     )}
                     <span className="text-xs text-[#868f97]">
                       {formatTimeAgo(log.timestamp)}
@@ -289,16 +289,16 @@ function OverviewTabComponent({
             {status?.syncStatus?.length ? status.syncStatus.map((sync) => (
               <div
                 key={sync.name}
-                className={`py-3 px-4 rounded-lg border ${
+                className={`py-3 px-4 rounded-2xl border motion-safe:transition-all motion-safe:duration-150 ease-out ${
                   sync.status === 'fresh' ? 'bg-[#4ebe96]/5 border-[#4ebe96]/20' :
                   sync.status === 'stale' ? 'bg-yellow-500/5 border-yellow-500/20' :
-                  'bg-[#e15241]/5 border-[#e15241]/20'
+                  'bg-[#ff5c5c]/5 border-[#ff5c5c]/20'
                 }`}
               >
                 <div className="flex items-center gap-2 mb-1">
                   <div className={`w-2 h-2 rounded-full ${
                     sync.status === 'fresh' ? 'bg-[#4ebe96]' :
-                    sync.status === 'stale' ? 'bg-yellow-500' : 'bg-[#e15241]'
+                    sync.status === 'stale' ? 'bg-yellow-500' : 'bg-[#ff5c5c]'
                   }`} />
                   <span className="text-sm font-medium truncate">{sync.name}</span>
                 </div>
@@ -307,7 +307,7 @@ function OverviewTabComponent({
                     {sync.lastSync ? formatTimeAgo(sync.lastSync) : 'Never'}
                   </span>
                   {sync.recordsProcessed && (
-                    <span className="text-xs text-[#868f97]">
+                    <span className="text-xs text-[#868f97] tabular-nums">
                       {formatNumber(sync.recordsProcessed)}
                     </span>
                   )}
@@ -322,9 +322,9 @@ function OverviewTabComponent({
 
       {/* Recent Errors */}
       {status?.errors && status.errors.length > 0 && (
-        <Card className="border-[#e15241]/20">
+        <Card className="border-[#ff5c5c]/20">
           <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-base text-[#e15241]">
+            <CardTitle className="flex items-center gap-2 text-base text-[#ff5c5c]">
               <AlertTriangle className="w-5 h-5" />
               Recent Errors ({status.errors.length})
             </CardTitle>
@@ -334,10 +334,10 @@ function OverviewTabComponent({
               {status.errors.slice(0, 5).map((err, i) => (
                 <div
                   key={i}
-                  className="py-2 px-3 bg-[#e15241]/5 border border-[#e15241]/20 rounded-lg"
+                  className="py-2 px-3 bg-[#ff5c5c]/5 border border-[#ff5c5c]/20 rounded-2xl motion-safe:transition-all motion-safe:duration-150 ease-out"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-[#e15241]">{err.source}</span>
+                    <span className="text-sm font-medium text-[#ff5c5c]">{err.source}</span>
                     <span className="text-xs text-[#868f97]">
                       {formatTimeAgo(err.timestamp)}
                     </span>

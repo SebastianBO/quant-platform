@@ -364,7 +364,7 @@ export function PremiumAIChat({
                       "max-w-[85%] rounded-2xl px-4 py-3 shadow-sm",
                       message.role === 'user'
                         ? "bg-[#4ebe96] text-black"
-                        : "bg-[#1a1a1a] border border-white/[0.08]"
+                        : "bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08]"
                     )}
                   >
                     <div className="text-sm whitespace-pre-wrap leading-relaxed">
@@ -376,7 +376,7 @@ export function PremiumAIChat({
                     {message.role === 'assistant' && message.content && (
                       <motion.button
                         onClick={() => copyToClipboard(message.content, message.id)}
-                        className="mt-2 p-1.5 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.04] transition-colors duration-100"
+                        className="mt-2 p-1.5 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.04] motion-safe:transition-colors motion-safe:duration-100"
                         whileTap={{ scale: 0.9 }}
                       >
                         {copiedId === message.id ? (
@@ -397,7 +397,7 @@ export function PremiumAIChat({
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="bg-[#1a1a1a] border border-white/[0.08] rounded-xl p-4 shadow-sm"
+                    className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 shadow-sm"
                   >
                     <div className="flex items-center gap-3 mb-3">
                       <motion.div
@@ -472,7 +472,7 @@ export function PremiumAIChat({
                   <span className="truncate max-w-[200px] font-medium">{attachedFile.name}</span>
                   <button
                     onClick={() => setAttachedFile(null)}
-                    className="p-1 hover:bg-white/[0.08] rounded-lg transition-colors duration-100"
+                    className="p-1 hover:bg-white/[0.08] rounded-lg motion-safe:transition-colors motion-safe:duration-100"
                   >
                     <X className="w-4 h-4 text-[#868f97] hover:text-white" />
                   </button>
@@ -484,7 +484,7 @@ export function PremiumAIChat({
           {/* Input container with glow effect */}
           <motion.div
             className={cn(
-              "relative rounded-2xl transition-all duration-300",
+              "relative rounded-2xl motion-safe:transition-all motion-safe:duration-300",
               isFocused && "shadow-[0_0_30px_rgba(34,197,94,0.15)]"
             )}
           >
@@ -501,7 +501,7 @@ export function PremiumAIChat({
               )}
             </AnimatePresence>
 
-            <div className="relative bg-[#1a1a1a] border border-white/[0.08] rounded-2xl shadow-lg overflow-hidden">
+            <div className="relative bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl shadow-lg overflow-hidden">
               <textarea
                 ref={textareaRef}
                 value={inputValue}
@@ -529,7 +529,7 @@ export function PremiumAIChat({
                 <motion.button
                   onClick={() => fileInputRef.current?.click()}
                   className={cn(
-                    "p-2 text-[#868f97] hover:text-white rounded-xl hover:bg-white/[0.08] transition-colors duration-100",
+                    "p-2 text-[#868f97] hover:text-white rounded-xl hover:bg-white/[0.08] motion-safe:transition-colors motion-safe:duration-100",
                     hasMessages && "hidden md:flex"
                   )}
                   whileHover={{ scale: 1.05 }}
@@ -542,7 +542,7 @@ export function PremiumAIChat({
                 <div className={cn("relative", hasMessages && "hidden md:block")}>
                   <motion.button
                     onClick={() => setShowModelSelector(!showModelSelector)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-[#868f97] hover:text-white rounded-xl hover:bg-white/[0.08] transition-colors duration-100 text-sm"
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-[#868f97] hover:text-white rounded-xl hover:bg-white/[0.08] motion-safe:transition-colors motion-safe:duration-100 text-sm"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -563,7 +563,7 @@ export function PremiumAIChat({
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
                         transition={{ duration: 0.15 }}
-                        className="absolute bottom-full left-0 mb-2 w-64 bg-[#1a1a1a] border border-white/[0.08] rounded-xl shadow-2xl py-2 z-50 overflow-hidden"
+                        className="absolute bottom-full left-0 mb-2 w-64 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl shadow-2xl py-2 z-50 overflow-hidden"
                       >
                         {/* Fast tier */}
                         <div className="px-3 py-1.5 text-xs font-semibold text-[#868f97] uppercase tracking-wider">Fast</div>
@@ -575,7 +575,7 @@ export function PremiumAIChat({
                               setShowModelSelector(false)
                             }}
                             className={cn(
-                              "w-full flex items-center gap-3 px-3 py-2.5 text-sm transition-colors duration-100",
+                              "w-full flex items-center gap-3 px-3 py-2.5 text-sm motion-safe:transition-colors motion-safe:duration-100",
                               selectedModel.key === model.key
                                 ? "bg-[#4ebe96]/10 text-[#4ebe96]"
                                 : "text-white hover:bg-white/[0.08]"
@@ -598,7 +598,7 @@ export function PremiumAIChat({
                               setShowModelSelector(false)
                             }}
                             className={cn(
-                              "w-full flex items-center gap-3 px-3 py-2.5 text-sm transition-colors duration-100",
+                              "w-full flex items-center gap-3 px-3 py-2.5 text-sm motion-safe:transition-colors motion-safe:duration-100",
                               selectedModel.key === model.key
                                 ? "bg-[#4ebe96]/10 text-[#4ebe96]"
                                 : "text-white hover:bg-white/[0.08]"
@@ -625,7 +625,7 @@ export function PremiumAIChat({
                                 onUpgradeRequired?.()
                               }
                             }}
-                            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm transition-colors duration-100 text-white hover:bg-white/[0.08]"
+                            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm motion-safe:transition-colors motion-safe:duration-100 text-white hover:bg-white/[0.08]"
                             whileHover={{ x: 4 }}
                           >
                             <Zap className="w-4 h-4 text-[#f4a623]" />
@@ -651,7 +651,7 @@ export function PremiumAIChat({
                 onClick={handleSubmit}
                 disabled={isLoading || !hasContent}
                 className={cn(
-                  "absolute w-10 h-10 rounded-xl flex items-center justify-center transition-all",
+                  "absolute w-10 h-10 rounded-full flex items-center justify-center motion-safe:transition-all motion-safe:duration-150 ease-out",
                   hasMessages ? "right-3 bottom-2" : "right-4 bottom-4",
                   hasContent && !isLoading
                     ? "bg-[#4ebe96] hover:bg-[#4ebe96] text-black shadow-lg shadow-[#4ebe96]/25"

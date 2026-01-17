@@ -62,8 +62,8 @@ function CorrelationBar({ value, size = 'default' }: { value: number; size?: 'de
     <div className={`${width} ${height} bg-white/[0.05] rounded-full overflow-hidden`}>
       <div
         className={cn(
-          "h-full rounded-full transition-all",
-          isPositive ? "bg-[#4ebe96]" : "bg-[#e15241]"
+          "h-full rounded-full motion-safe:transition-all motion-safe:duration-150 ease-out",
+          isPositive ? "bg-[#4ebe96]" : "bg-[#ff5c5c]"
         )}
         style={{ width: `${Math.min(percentage, 100)}%` }}
       />
@@ -73,7 +73,7 @@ function CorrelationBar({ value, size = 'default' }: { value: number; size?: 'de
 
 function SensitivityBadge({ sensitivity, direction }: { sensitivity: Sensitivity['sensitivity']; direction: Sensitivity['direction'] }) {
   const bgColors = {
-    high: direction === 'negative' ? 'bg-[#e15241]/10 text-[#e15241] border-[#e15241]/30' : 'bg-[#4ebe96]/10 text-[#4ebe96] border-[#4ebe96]/30',
+    high: direction === 'negative' ? 'bg-[#ff5c5c]/10 text-[#ff5c5c] border-[#ff5c5c]/30' : 'bg-[#4ebe96]/10 text-[#4ebe96] border-[#4ebe96]/30',
     medium: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30',
     low: 'bg-white/[0.05] text-[#868f97] border-white/[0.08]'
   }
@@ -86,7 +86,7 @@ function SensitivityBadge({ sensitivity, direction }: { sensitivity: Sensitivity
 
   return (
     <span className={cn(
-      "inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium border",
+      "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border",
       bgColors[sensitivity]
     )}>
       {icons[sensitivity]}
@@ -135,7 +135,7 @@ export default function BondsCorrelation({ ticker }: BondsCorrelationProps) {
         <CardContent>
           <div className="space-y-4">
             {[1, 2, 3, 4, 5].map(i => (
-              <div key={i} className="h-12 bg-white/[0.015] rounded-lg animate-pulse" />
+              <div key={i} className="h-12 bg-white/[0.015] rounded-2xl animate-pulse" />
             ))}
           </div>
         </CardContent>
@@ -180,10 +180,10 @@ export default function BondsCorrelation({ ticker }: BondsCorrelationProps) {
       <CardContent className="space-y-6">
         {/* Interest Rate Sensitivity Summary */}
         <div className={cn(
-          "p-4 rounded-lg border",
+          "p-4 rounded-2xl border",
           data.sensitivity.sensitivity === 'high'
             ? data.sensitivity.direction === 'negative'
-              ? 'bg-[#e15241]/5 border-[#e15241]/30'
+              ? 'bg-[#ff5c5c]/5 border-[#ff5c5c]/30'
               : 'bg-[#4ebe96]/5 border-[#4ebe96]/30'
             : 'bg-white/[0.015] border-white/[0.08]'
         )}>
@@ -218,18 +218,21 @@ export default function BondsCorrelation({ ticker }: BondsCorrelationProps) {
                     tickFormatter={(v) => `${v > 0 ? '+' : ''}${v.toFixed(0)}%`}
                     tick={{ fontSize: 10 }}
                     width={45}
+                    className="tabular-nums"
                   />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: '#1a1a1a',
+                      backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                      backdropFilter: 'blur(10px)',
                       border: '1px solid rgba(255, 255, 255, 0.08)',
-                      borderRadius: '8px',
+                      borderRadius: '16px',
                       fontSize: '12px'
                     }}
                     formatter={(value: number, name: string) => [
                       `${value > 0 ? '+' : ''}${value.toFixed(2)}%`,
                       name === 'stock' ? ticker : 'TLT'
                     ]}
+                    wrapperClassName="tabular-nums"
                   />
                   <ReferenceLine y={0} stroke="#868f97" strokeDasharray="3 3" />
                   <Legend
@@ -267,7 +270,7 @@ export default function BondsCorrelation({ ticker }: BondsCorrelationProps) {
               return (
                 <div
                   key={bond.symbol}
-                  className="p-3 bg-white/[0.015] rounded-lg hover:bg-white/[0.025] transition-colors duration-100"
+                  className="p-3 bg-white/[0.015] rounded-2xl hover:bg-white/[0.025] motion-safe:transition-colors motion-safe:duration-150 ease-out"
                 >
                   <div className="flex items-center justify-between mb-1">
                     <div className="flex-1 min-w-0">
@@ -279,9 +282,9 @@ export default function BondsCorrelation({ ticker }: BondsCorrelationProps) {
                     <div className="flex items-center gap-3">
                       <CorrelationBar value={bond.correlation} size="small" />
                       <span className={cn(
-                        "font-mono text-sm font-medium min-w-[50px] text-right",
+                        "font-mono text-sm font-medium min-w-[50px] text-right tabular-nums",
                         absCorr > 0.4
-                          ? isPositive ? "text-[#4ebe96]" : "text-[#e15241]"
+                          ? isPositive ? "text-[#4ebe96]" : "text-[#ff5c5c]"
                           : "text-[#868f97]"
                       )}>
                         {isPositive ? '+' : ''}{bond.correlation.toFixed(2)}
@@ -297,22 +300,22 @@ export default function BondsCorrelation({ ticker }: BondsCorrelationProps) {
 
         {/* Summary */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="p-3 bg-white/[0.015] rounded-lg text-center">
+          <div className="p-3 bg-white/[0.015] rounded-2xl text-center">
             <p className="text-xs text-[#868f97] mb-1">Most Correlated</p>
             <p className="font-medium text-sm">{data.summary.mostCorrelated.name}</p>
             <p className={cn(
-              "text-sm font-mono",
-              data.summary.mostCorrelated.correlation >= 0 ? "text-[#4ebe96]" : "text-[#e15241]"
+              "text-sm font-mono tabular-nums",
+              data.summary.mostCorrelated.correlation >= 0 ? "text-[#4ebe96]" : "text-[#ff5c5c]"
             )}>
               {data.summary.mostCorrelated.correlation >= 0 ? '+' : ''}
               {data.summary.mostCorrelated.correlation.toFixed(2)}
             </p>
           </div>
-          <div className="p-3 bg-white/[0.015] rounded-lg text-center">
+          <div className="p-3 bg-white/[0.015] rounded-2xl text-center">
             <p className="text-xs text-[#868f97] mb-1">Avg Correlation</p>
             <p className={cn(
-              "text-xl font-bold font-mono",
-              data.summary.avgCorrelation >= 0 ? "text-[#4ebe96]" : "text-[#e15241]"
+              "text-xl font-bold font-mono tabular-nums",
+              data.summary.avgCorrelation >= 0 ? "text-[#4ebe96]" : "text-[#ff5c5c]"
             )}>
               {data.summary.avgCorrelation >= 0 ? '+' : ''}
               {data.summary.avgCorrelation.toFixed(2)}
@@ -325,7 +328,7 @@ export default function BondsCorrelation({ ticker }: BondsCorrelationProps) {
           <p className="font-medium mb-1">Understanding Correlations</p>
           <ul className="space-y-0.5">
             <li>• <span className="text-[#4ebe96]">Positive</span>: Stock moves with bonds (both rise/fall together)</li>
-            <li>• <span className="text-[#e15241]">Negative</span>: Stock moves opposite to bonds</li>
+            <li>• <span className="text-[#ff5c5c]">Negative</span>: Stock moves opposite to bonds</li>
             <li>• <span className="text-[#868f97]">Near 0</span>: No significant relationship</li>
           </ul>
         </div>

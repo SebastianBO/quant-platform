@@ -176,10 +176,10 @@ function getChangeColor(change: number | undefined): string {
   if (change >= 1.5) return "bg-[#4ebe96]/90"
   if (change >= 0.5) return "bg-[#4ebe96]/80"
   if (change >= 0) return "bg-[#4ebe96]/70"
-  if (change >= -0.5) return "bg-[#e15241]/70"
-  if (change >= -1.5) return "bg-[#e15241]/80"
-  if (change >= -3) return "bg-[#e15241]/90"
-  return "bg-[#e15241]"
+  if (change >= -0.5) return "bg-[#ff5c5c]/70"
+  if (change >= -1.5) return "bg-[#ff5c5c]/80"
+  if (change >= -3) return "bg-[#ff5c5c]/90"
+  return "bg-[#ff5c5c]"
 }
 
 function getChangeTextColor(change: number | undefined): string {
@@ -209,7 +209,7 @@ function StockTile({
   }
 
   const className = cn(
-    "flex flex-col items-center justify-center p-1 rounded transition-all duration-100",
+    "flex flex-col items-center justify-center p-1 rounded motion-safe:transition-all motion-safe:duration-150 ease-out",
     bgColor,
     sizeClasses[size],
     interactive && "hover:ring-2 hover:ring-white/30 hover:z-10 cursor-pointer"
@@ -221,7 +221,7 @@ function StockTile({
     <>
       <span className={cn("font-bold truncate", textColor)}>{stock.ticker}</span>
       {stock.change !== undefined && (
-        <span className={cn("text-[10px]", textColor)}>
+        <span className={cn("text-[10px] tabular-nums", textColor)}>
           {stock.change >= 0 ? "+" : ""}{stock.change.toFixed(2)}%
         </span>
       )}
@@ -259,7 +259,7 @@ function SectorTile({
 
   return (
     <div
-      className="flex flex-col rounded-lg overflow-hidden border border-white/[0.08]"
+      className="flex flex-col rounded-2xl overflow-hidden border border-white/[0.08]"
       style={{ flex: `${sector.weight} 1 0%` }}
     >
       {/* Sector header */}
@@ -270,7 +270,7 @@ function SectorTile({
         >
           <span className="truncate">{sector.name}</span>
           {!isNaN(avgChange) && (
-            <span className={cn("text-[10px]", avgChange >= 0 ? "text-[#4ebe96]" : "text-[#e15241]")}>
+            <span className={cn("text-[10px] tabular-nums", avgChange >= 0 ? "text-[#4ebe96]" : "text-[#ff5c5c]")}>
               {avgChange >= 0 ? "+" : ""}{avgChange.toFixed(2)}%
             </span>
           )}
@@ -278,7 +278,7 @@ function SectorTile({
       )}
 
       {/* Stocks grid */}
-      <div className="flex flex-wrap flex-1 gap-0.5 p-1 bg-white/[0.05]">
+      <div className="flex flex-wrap flex-1 gap-0.5 p-1 bg-white/[0.03] backdrop-blur-[10px]">
         {displayStocks.map((stock) => (
           <StockTile
             key={stock.ticker}
@@ -332,11 +332,11 @@ export function MarketHeatmap({
             <span className="text-[#868f97]">+0-3%</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded bg-[#e15241]/80" />
+            <div className="w-3 h-3 rounded bg-[#ff5c5c]/80" />
             <span className="text-[#868f97]">-0-3%</span>
           </div>
           <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded bg-[#e15241]" />
+            <div className="w-3 h-3 rounded bg-[#ff5c5c]" />
             <span className="text-[#868f97]">-3%+</span>
           </div>
         </div>
@@ -374,7 +374,7 @@ export function MarketHeatmap({
       {/* Footer */}
       <div className="mt-4 flex items-center justify-between text-xs text-[#868f97]">
         <span>Size = Market cap weight • Color = Daily % change</span>
-        <Link href="/markets" className="text-[#4ebe96] hover:text-[#4ebe96]/80 transition-colors duration-100">
+        <Link href="/markets" className="text-[#4ebe96] hover:text-[#4ebe96]/80 motion-safe:transition-colors motion-safe:duration-150 ease-out">
           View full market data →
         </Link>
       </div>
@@ -416,7 +416,7 @@ export function CompactHeatmap({
                   key={stock.ticker}
                   href={`/stock/${stock.ticker.toLowerCase()}`}
                   className={cn(
-                    "w-6 h-6 rounded text-[8px] font-bold flex items-center justify-center transition-colors duration-100",
+                    "w-6 h-6 rounded text-[8px] font-bold flex items-center justify-center motion-safe:transition-colors motion-safe:duration-150 ease-out",
                     getChangeColor(stock.change),
                     "hover:ring-1 hover:ring-white/30"
                   )}
@@ -428,8 +428,8 @@ export function CompactHeatmap({
             </div>
             <span
               className={cn(
-                "text-xs font-medium w-12 text-right",
-                avgChange >= 0 ? "text-[#4ebe96]" : "text-[#e15241]"
+                "text-xs font-medium w-12 text-right tabular-nums",
+                avgChange >= 0 ? "text-[#4ebe96]" : "text-[#ff5c5c]"
               )}
             >
               {!isNaN(avgChange) ? `${avgChange >= 0 ? "+" : ""}${avgChange.toFixed(1)}%` : "—"}
@@ -473,8 +473,8 @@ export function SectorBars({
               </div>
               <span
                 className={cn(
-                  "font-medium",
-                  isPositive ? "text-[#4ebe96]" : "text-[#e15241]"
+                  "font-medium tabular-nums",
+                  isPositive ? "text-[#4ebe96]" : "text-[#ff5c5c]"
                 )}
               >
                 {!isNaN(avgChange)
@@ -482,12 +482,12 @@ export function SectorBars({
                   : "—"}
               </span>
             </div>
-            <div className="h-2 bg-white/[0.05] rounded-full overflow-hidden flex">
+            <div className="h-2 bg-white/[0.03] backdrop-blur-[10px] rounded-full overflow-hidden flex">
               {isPositive ? (
                 <>
                   <div className="w-1/2" />
                   <div
-                    className="bg-[#4ebe96] rounded-full transition-all duration-100"
+                    className="bg-[#4ebe96] rounded-full motion-safe:transition-all motion-safe:duration-150 ease-out"
                     style={{ width: `${barWidth / 2}%` }}
                   />
                 </>
@@ -495,7 +495,7 @@ export function SectorBars({
                 <>
                   <div className="flex-1 flex justify-end">
                     <div
-                      className="bg-[#e15241] rounded-full transition-all duration-100"
+                      className="bg-[#ff5c5c] rounded-full motion-safe:transition-all motion-safe:duration-150 ease-out"
                       style={{ width: `${barWidth / 2}%` }}
                     />
                   </div>

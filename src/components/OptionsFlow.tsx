@@ -94,7 +94,7 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
 
   const getSentimentColor = (sentiment: string): string => {
     if (sentiment === 'Bullish') return 'text-[#4ebe96]'
-    if (sentiment === 'Bearish') return 'text-[#e15241]'
+    if (sentiment === 'Bearish') return 'text-[#ff5c5c]'
     return 'text-yellow-500'
   }
 
@@ -155,14 +155,14 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
     if (!data?.summary) return []
     return [
       { name: 'Calls', value: data.summary.totalCallVolume || 0, color: '#4ebe96' },
-      { name: 'Puts', value: data.summary.totalPutVolume || 0, color: '#e15241' },
+      { name: 'Puts', value: data.summary.totalPutVolume || 0, color: '#ff5c5c' },
     ]
   }, [data?.summary])
 
   const daysUntilExp = data?.summary?.expirationDate ? getDaysUntilExpiration(data.summary.expirationDate) : 0
 
   return (
-    <Card className="w-full bg-[#1a1a1a] border-white/[0.08]">
+    <Card className="w-full bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08]">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
@@ -174,8 +174,8 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
               <Calendar className="w-4 h-4 text-[#868f97]" />
               <span className="text-[#868f97]">Exp:</span>
               <span className="font-medium">{formatExpiration(data.summary.expirationDate)}</span>
-              <span className={`px-2 py-0.5 rounded text-xs font-medium ${
-                daysUntilExp <= 2 ? 'bg-[#e15241]/20 text-[#e15241]' :
+              <span className={`px-2 py-0.5 rounded-full text-xs font-medium tabular-nums ${
+                daysUntilExp <= 2 ? 'bg-[#ff5c5c]/20 text-[#ff5c5c]' :
                 daysUntilExp <= 7 ? 'bg-yellow-500/20 text-yellow-500' :
                 'bg-white/[0.05] text-[#868f97]'
               }`}>
@@ -194,29 +194,29 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
           <>
             {/* Summary Cards */}
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-              <div className="p-4 bg-[#4ebe96]/10 border border-[#4ebe96]/30 rounded-lg text-center">
+              <div className="p-4 bg-[#4ebe96]/10 border border-[#4ebe96]/30 rounded-2xl text-center">
                 <p className="text-[#868f97] text-sm">Call Volume</p>
-                <p className="text-2xl font-bold text-[#4ebe96]">
+                <p className="text-2xl font-bold text-[#4ebe96] tabular-nums">
                   {(data.summary.totalCallVolume || 0).toLocaleString()}
                 </p>
               </div>
-              <div className="p-4 bg-[#e15241]/10 border border-[#e15241]/30 rounded-lg text-center">
+              <div className="p-4 bg-[#ff5c5c]/10 border border-[#ff5c5c]/30 rounded-2xl text-center">
                 <p className="text-[#868f97] text-sm">Put Volume</p>
-                <p className="text-2xl font-bold text-[#e15241]">
+                <p className="text-2xl font-bold text-[#ff5c5c] tabular-nums">
                   {(data.summary.totalPutVolume || 0).toLocaleString()}
                 </p>
               </div>
-              <div className="p-4 bg-white/[0.05] rounded-lg text-center">
+              <div className="p-4 bg-white/[0.05] rounded-2xl text-center">
                 <p className="text-[#868f97] text-sm">Put/Call Ratio</p>
-                <p className={`text-2xl font-bold ${(data.summary.putCallRatio || 0) > 1 ? 'text-[#e15241]' : 'text-[#4ebe96]'}`}>
+                <p className={`text-2xl font-bold tabular-nums ${(data.summary.putCallRatio || 0) > 1 ? 'text-[#ff5c5c]' : 'text-[#4ebe96]'}`}>
                   {(data.summary.putCallRatio || 0).toFixed(2)}
                 </p>
               </div>
-              <div className="p-4 bg-white/[0.05] rounded-lg text-center">
+              <div className="p-4 bg-white/[0.05] rounded-2xl text-center">
                 <p className="text-[#868f97] text-sm">Max Pain</p>
-                <p className="text-2xl font-bold">${data.summary.maxPain || 0}</p>
+                <p className="text-2xl font-bold tabular-nums">${data.summary.maxPain || 0}</p>
               </div>
-              <div className="p-4 bg-white/[0.05] rounded-lg text-center">
+              <div className="p-4 bg-white/[0.05] rounded-2xl text-center">
                 <p className="text-[#868f97] text-sm">Sentiment</p>
                 <p className={`text-2xl font-bold ${getSentimentColor(data.summary.sentiment || 'Neutral')}`}>
                   {getSentimentEmoji(data.summary.sentiment || 'Neutral')} {data.summary.sentiment || 'Neutral'}
@@ -240,42 +240,42 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
                   {/* Price Range Visualization */}
                   <div className="mb-4">
                     <div className="flex justify-between text-sm mb-2">
-                      <span className="text-[#e15241]">${data.summary.expectedMove.low.toFixed(2)}</span>
-                      <span className="font-bold text-lg">${data.summary.currentPrice?.toFixed(2)}</span>
-                      <span className="text-[#4ebe96]">${data.summary.expectedMove.high.toFixed(2)}</span>
+                      <span className="text-[#ff5c5c] tabular-nums">${data.summary.expectedMove.low.toFixed(2)}</span>
+                      <span className="font-bold text-lg tabular-nums">${data.summary.currentPrice?.toFixed(2)}</span>
+                      <span className="text-[#4ebe96] tabular-nums">${data.summary.expectedMove.high.toFixed(2)}</span>
                     </div>
                     <div className="relative h-3 bg-white/[0.05] rounded-full overflow-hidden">
                       <div className="absolute inset-y-0 left-0 right-0 flex">
-                        <div className="flex-1 bg-[#e15241]/30" />
+                        <div className="flex-1 bg-[#ff5c5c]/30" />
                         <div className="w-1 bg-white" />
                         <div className="flex-1 bg-[#4ebe96]/30" />
                       </div>
                     </div>
                     <div className="flex justify-between text-xs text-[#868f97] mt-1">
-                      <span>-{data.summary.expectedMove.percent.toFixed(1)}%</span>
+                      <span className="tabular-nums">-{data.summary.expectedMove.percent.toFixed(1)}%</span>
                       <span>Current</span>
-                      <span>+{data.summary.expectedMove.percent.toFixed(1)}%</span>
+                      <span className="tabular-nums">+{data.summary.expectedMove.percent.toFixed(1)}%</span>
                     </div>
                   </div>
 
                   {/* Straddle Breakdown */}
                   <div className="grid grid-cols-3 gap-2 text-center text-sm">
-                    <div className="p-2 bg-white/[0.05] rounded">
+                    <div className="p-2 bg-white/[0.05] rounded-2xl">
                       <p className="text-[#868f97] text-xs">ATM Strike</p>
-                      <p className="font-bold">${data.summary.expectedMove.atmStrike}</p>
+                      <p className="font-bold tabular-nums">${data.summary.expectedMove.atmStrike}</p>
                     </div>
-                    <div className="p-2 bg-[#4ebe96]/10 rounded">
+                    <div className="p-2 bg-[#4ebe96]/10 rounded-2xl">
                       <p className="text-[#868f97] text-xs">Call</p>
-                      <p className="font-bold text-[#4ebe96]">${data.summary.expectedMove.atmCallPrice.toFixed(2)}</p>
+                      <p className="font-bold text-[#4ebe96] tabular-nums">${data.summary.expectedMove.atmCallPrice.toFixed(2)}</p>
                     </div>
-                    <div className="p-2 bg-[#e15241]/10 rounded">
+                    <div className="p-2 bg-[#ff5c5c]/10 rounded-2xl">
                       <p className="text-[#868f97] text-xs">Put</p>
-                      <p className="font-bold text-[#e15241]">${data.summary.expectedMove.atmPutPrice.toFixed(2)}</p>
+                      <p className="font-bold text-[#ff5c5c] tabular-nums">${data.summary.expectedMove.atmPutPrice.toFixed(2)}</p>
                     </div>
                   </div>
 
-                  <div className="mt-3 p-2 bg-white/[0.05] rounded text-xs text-[#868f97]">
-                    Market expects <span className="font-bold text-white">±${data.summary.expectedMove.amount.toFixed(2)}</span> ({data.summary.expectedMove.percent.toFixed(1)}%) move by expiration
+                  <div className="mt-3 p-2 bg-white/[0.05] rounded-2xl text-xs text-[#868f97]">
+                    Market expects <span className="font-bold text-white tabular-nums">±${data.summary.expectedMove.amount.toFixed(2)}</span> (<span className="tabular-nums">{data.summary.expectedMove.percent.toFixed(1)}%</span>) move by expiration
                   </div>
                 </div>
 
@@ -289,14 +289,14 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
                   {/* IV Rank Gauge */}
                   <div className="flex items-center gap-6 mb-4">
                     <div className="text-center">
-                      <p className="text-4xl font-bold">{data.summary.iv.atm.toFixed(1)}%</p>
+                      <p className="text-4xl font-bold tabular-nums">{data.summary.iv.atm.toFixed(1)}%</p>
                       <p className="text-xs text-[#868f97]">ATM IV</p>
                     </div>
                     <div className="flex-1">
                       <div className="flex justify-between text-xs text-[#868f97] mb-1">
                         <span>IV Rank</span>
-                        <span className={`font-bold ${
-                          data.summary.iv.rank > 70 ? 'text-[#e15241]' :
+                        <span className={`font-bold tabular-nums ${
+                          data.summary.iv.rank > 70 ? 'text-[#ff5c5c]' :
                           data.summary.iv.rank < 30 ? 'text-[#4ebe96]' :
                           'text-amber-500'
                         }`}>
@@ -305,8 +305,8 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
                       </div>
                       <div className="h-3 bg-white/[0.05] rounded-full overflow-hidden">
                         <div
-                          className={`h-full transition-all duration-100 ${
-                            data.summary.iv.rank > 70 ? 'bg-[#e15241]' :
+                          className={`h-full motion-safe:transition-all motion-safe:duration-150 ease-out ${
+                            data.summary.iv.rank > 70 ? 'bg-[#ff5c5c]' :
                             data.summary.iv.rank < 30 ? 'bg-[#4ebe96]' :
                             'bg-amber-500'
                           }`}
@@ -322,18 +322,18 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
 
                   {/* IV Stats */}
                   <div className="grid grid-cols-2 gap-2 text-center text-sm">
-                    <div className="p-2 bg-white/[0.05] rounded">
+                    <div className="p-2 bg-white/[0.05] rounded-2xl">
                       <p className="text-[#868f97] text-xs">IV Range Low</p>
-                      <p className="font-bold">{data.summary.iv.min.toFixed(1)}%</p>
+                      <p className="font-bold tabular-nums">{data.summary.iv.min.toFixed(1)}%</p>
                     </div>
-                    <div className="p-2 bg-white/[0.05] rounded">
+                    <div className="p-2 bg-white/[0.05] rounded-2xl">
                       <p className="text-[#868f97] text-xs">IV Range High</p>
-                      <p className="font-bold">{data.summary.iv.max.toFixed(1)}%</p>
+                      <p className="font-bold tabular-nums">{data.summary.iv.max.toFixed(1)}%</p>
                     </div>
                   </div>
 
-                  <div className={`mt-3 p-2 rounded text-xs ${
-                    data.summary.iv.rank > 70 ? 'bg-[#e15241]/10 text-[#e15241]' :
+                  <div className={`mt-3 p-2 rounded-2xl text-xs ${
+                    data.summary.iv.rank > 70 ? 'bg-[#ff5c5c]/10 text-[#ff5c5c]' :
                     data.summary.iv.rank < 30 ? 'bg-[#4ebe96]/10 text-[#4ebe96]' :
                     'bg-white/[0.05] text-[#868f97]'
                   }`}>
@@ -369,16 +369,16 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
                       />
                       <Tooltip
                         contentStyle={{
-                          backgroundColor: '#1a1a1a',
+                          backgroundColor: '#000000',
                           border: '1px solid rgba(255, 255, 255, 0.08)',
-                          borderRadius: '8px',
+                          borderRadius: '16px',
                           color: 'white'
                         }}
                         labelStyle={{ color: 'white' }}
                         formatter={(value: number, name: string) => [value.toLocaleString(), name]}
                       />
                       <Bar dataKey="callVolume" name="Call Volume" fill="#4ebe96" />
-                      <Bar dataKey="putVolume" name="Put Volume" fill="#e15241" />
+                      <Bar dataKey="putVolume" name="Put Volume" fill="#ff5c5c" />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -407,9 +407,9 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
                       </Pie>
                       <Tooltip
                         contentStyle={{
-                          backgroundColor: '#1a1a1a',
+                          backgroundColor: '#000000',
                           border: '1px solid rgba(255, 255, 255, 0.08)',
-                          borderRadius: '8px',
+                          borderRadius: '16px',
                           color: 'white'
                         }}
                         formatter={(value: number) => [value.toLocaleString(), 'Volume']}
@@ -444,15 +444,15 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
                     />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: '#1a1a1a',
+                        backgroundColor: '#000000',
                         border: '1px solid rgba(255, 255, 255, 0.08)',
-                        borderRadius: '8px',
+                        borderRadius: '16px',
                         color: 'white'
                       }}
                       formatter={(value: number) => [value.toLocaleString(), 'OI']}
                     />
                     <Bar dataKey="callOI" name="Call OI" fill="#4ebe96" />
-                    <Bar dataKey="putOI" name="Put OI" fill="#e15241" />
+                    <Bar dataKey="putOI" name="Put OI" fill="#ff5c5c" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -460,28 +460,28 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
 
             {/* Unusual Activity Section */}
             {data.summary.unusualActivity && data.summary.unusualActivity.length > 0 && (
-              <div className="mb-6 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+              <div className="mb-6 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-2xl">
                 <div className="flex items-center gap-2 mb-3">
                   <AlertTriangle className="w-5 h-5 text-yellow-500" />
                   <p className="font-medium text-yellow-500">Unusual Options Activity</p>
                 </div>
                 <div className="space-y-2">
                   {data.summary.unusualActivity.map((activity, i) => (
-                    <div key={i} className="flex items-center justify-between p-2 bg-white/[0.05] rounded-lg text-sm">
+                    <div key={i} className="flex items-center justify-between p-2 bg-white/[0.05] rounded-2xl text-sm">
                       <div className="flex items-center gap-2">
                         {activity.type === 'call' ? (
                           <TrendingUp className="w-4 h-4 text-[#4ebe96]" />
                         ) : (
-                          <TrendingDown className="w-4 h-4 text-[#e15241]" />
+                          <TrendingDown className="w-4 h-4 text-[#ff5c5c]" />
                         )}
-                        <span className={activity.type === 'call' ? 'text-[#4ebe96]' : 'text-[#e15241]'}>
+                        <span className={activity.type === 'call' ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}>
                           {activity.type.toUpperCase()}
                         </span>
-                        <span className="font-medium">${activity.strike}</span>
+                        <span className="font-medium tabular-nums">${activity.strike}</span>
                       </div>
                       <div className="flex items-center gap-4 text-[#868f97]">
-                        <span>Vol: <span className="text-white font-medium">{activity.volume.toLocaleString()}</span></span>
-                        <span>OI: <span className="text-white">{activity.openInterest.toLocaleString()}</span></span>
+                        <span>Vol: <span className="text-white font-medium tabular-nums">{activity.volume.toLocaleString()}</span></span>
+                        <span>OI: <span className="text-white tabular-nums">{activity.openInterest.toLocaleString()}</span></span>
                         <span className="text-yellow-500 font-medium">{activity.ratio}x OI</span>
                       </div>
                     </div>
@@ -491,11 +491,11 @@ function OptionsFlowComponent({ ticker }: OptionsFlowProps) {
             )}
 
             {/* Interpretation */}
-            <div className={`p-4 rounded-lg ${
+            <div className={`p-4 rounded-2xl ${
               (data.summary.sentiment || 'Neutral') === 'Bullish'
                 ? 'bg-[#4ebe96]/10 border border-[#4ebe96]/30'
                 : (data.summary.sentiment || 'Neutral') === 'Bearish'
-                ? 'bg-[#e15241]/10 border border-[#e15241]/30'
+                ? 'bg-[#ff5c5c]/10 border border-[#ff5c5c]/30'
                 : 'bg-white/[0.05] border border-white/[0.08]'
             }`}>
               <p className="font-medium mb-1">Options Flow Interpretation</p>
