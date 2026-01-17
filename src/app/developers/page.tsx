@@ -1,285 +1,33 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
-import {
-  Copy,
-  Check,
-  Database,
-  Zap,
-  Shield,
-  Globe,
-  Code2,
-  Terminal,
-  FileJson,
-  ArrowRight,
-  ChevronRight,
-  Building2,
-  TrendingUp,
-  DollarSign,
-  Bot,
-  Cpu,
-  Package,
-  ExternalLink,
-  Sparkles,
-} from "lucide-react"
 import { cn } from "@/lib/utils"
 
-// Stats data
-const STATS = [
-  { value: "141K+", label: "Companies", icon: Building2 },
-  { value: "839K+", label: "Financial Records", icon: Database },
-  { value: "12", label: "API Endpoints", icon: Code2 },
-  { value: "30+", label: "Years of Data", icon: TrendingUp },
-]
+// Scroll animation hook
+function useScrollAnimation(threshold = 0.1) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [isVisible, setIsVisible] = useState(false)
 
-// API Endpoints
-const ENDPOINTS = [
-  {
-    method: "GET",
-    path: "/v1/prices",
-    description: "Historical and real-time stock prices",
-    params: ["ticker", "start_date", "end_date", "interval"],
-  },
-  {
-    method: "GET",
-    path: "/v1/prices/snapshot",
-    description: "Current price snapshot with change metrics",
-    params: ["ticker"],
-  },
-  {
-    method: "GET",
-    path: "/v1/financials/income-statements",
-    description: "Income statements (annual, quarterly, TTM)",
-    params: ["ticker", "period", "limit"],
-  },
-  {
-    method: "GET",
-    path: "/v1/financials/balance-sheets",
-    description: "Balance sheet data with all line items",
-    params: ["ticker", "period", "limit"],
-  },
-  {
-    method: "GET",
-    path: "/v1/financials/cash-flow-statements",
-    description: "Cash flow statements and metrics",
-    params: ["ticker", "period", "limit"],
-  },
-  {
-    method: "GET",
-    path: "/v1/financial-metrics",
-    description: "Key ratios: P/E, P/B, ROE, margins",
-    params: ["ticker"],
-  },
-  {
-    method: "GET",
-    path: "/v1/insider-trades",
-    description: "SEC Form 4 insider transactions",
-    params: ["ticker", "limit"],
-  },
-  {
-    method: "GET",
-    path: "/v1/institutional-ownership",
-    description: "13F institutional holdings data",
-    params: ["ticker", "investor_name"],
-  },
-  {
-    method: "GET",
-    path: "/v1/analyst-ratings",
-    description: "Analyst recommendations and targets",
-    params: ["ticker"],
-  },
-  {
-    method: "GET",
-    path: "/v1/analyst-estimates",
-    description: "EPS and revenue estimates",
-    params: ["ticker", "period"],
-  },
-  {
-    method: "GET",
-    path: "/v1/filings",
-    description: "SEC EDGAR filings (10-K, 10-Q, 8-K)",
-    params: ["ticker", "form_type", "limit"],
-  },
-  {
-    method: "GET",
-    path: "/v1/company/facts",
-    description: "Company profile and fundamentals",
-    params: ["ticker"],
-  },
-]
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.disconnect()
+        }
+      },
+      { threshold }
+    )
+    if (ref.current) observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [threshold])
 
-// Pricing tiers
-const PRICING_TIERS = [
-  {
-    name: "Free",
-    price: "$0",
-    period: "forever",
-    description: "Perfect for testing and small projects",
-    requests: "100",
-    requestPeriod: "day",
-    features: [
-      "100 requests per day",
-      "All 12 endpoints",
-      "US market data",
-      "Community support",
-    ],
-    cta: "Get Started",
-    ctaLink: "/developers/signup",
-    highlighted: false,
-  },
-  {
-    name: "Basic",
-    price: "$29",
-    period: "month",
-    description: "For indie developers and small apps",
-    requests: "10,000",
-    requestPeriod: "day",
-    features: [
-      "10,000 requests per day",
-      "All 12 endpoints",
-      "US + EU market data",
-      "Email support",
-      "MCP integration",
-    ],
-    cta: "Subscribe",
-    ctaLink: "/api/stripe/api-checkout?plan=basic",
-    highlighted: false,
-  },
-  {
-    name: "Pro",
-    price: "$99",
-    period: "month",
-    description: "For production applications",
-    requests: "100,000",
-    requestPeriod: "day",
-    features: [
-      "100,000 requests per day",
-      "All 12 endpoints",
-      "Global market data",
-      "Priority support",
-      "MCP + Agent integration",
-      "Webhook notifications",
-    ],
-    cta: "Subscribe",
-    ctaLink: "/api/stripe/api-checkout?plan=pro",
-    highlighted: true,
-  },
-  {
-    name: "Enterprise",
-    price: "Custom",
-    period: "",
-    description: "For high-volume applications",
-    requests: "Unlimited",
-    requestPeriod: "",
-    features: [
-      "Unlimited requests",
-      "Dedicated infrastructure",
-      "Custom data feeds",
-      "SLA guarantee",
-      "White-glove onboarding",
-      "Direct Slack support",
-    ],
-    cta: "Contact Sales",
-    ctaLink: "mailto:api@lician.com",
-    highlighted: false,
-  },
-]
-
-// Agent discovery files
-const DISCOVERY_FILES = [
-  {
-    name: "openapi.json",
-    path: "/.well-known/openapi.json",
-    description: "OpenAPI 3.1 specification",
-    icon: FileJson,
-  },
-  {
-    name: "server-card.json",
-    path: "/.well-known/server-card.json",
-    description: "MCP server metadata",
-    icon: Cpu,
-  },
-  {
-    name: "agent.json",
-    path: "/.well-known/agent.json",
-    description: "Agent capabilities manifest",
-    icon: Bot,
-  },
-  {
-    name: "ai-plugin.json",
-    path: "/.well-known/ai-plugin.json",
-    description: "OpenAI plugin manifest",
-    icon: Sparkles,
-  },
-]
-
-// Code examples for integration tabs
-const CODE_EXAMPLES = {
-  claude: `{
-  "mcpServers": {
-    "lician": {
-      "url": "https://lician.com/mcp",
-      "transport": "http",
-      "headers": {
-        "Authorization": "Bearer YOUR_API_KEY"
-      }
-    }
-  }
-}`,
-  mcp: `# Using MCP HTTP transport
-curl -X POST https://lician.com/mcp \\
-  -H "Authorization: Bearer YOUR_API_KEY" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "method": "tools/call",
-    "params": {
-      "name": "get_stock_price",
-      "arguments": { "ticker": "AAPL" }
-    }
-  }'`,
-  npm: `import { LicianClient } from '@lician/sdk';
-
-const client = new LicianClient({
-  apiKey: process.env.LICIAN_API_KEY
-});
-
-// Get stock price
-const price = await client.prices.get('AAPL');
-console.log(price);
-
-// Get financials
-const financials = await client.financials.incomeStatements({
-  ticker: 'AAPL',
-  period: 'annual',
-  limit: 4
-});`,
+  return { ref, isVisible }
 }
 
-const CURL_EXAMPLE = `curl -X GET "https://lician.com/api/v1/prices?ticker=AAPL" \\
-  -H "Authorization: Bearer YOUR_API_KEY"`
-
-const RESPONSE_EXAMPLE = `{
-  "prices": [
-    {
-      "ticker": "AAPL",
-      "date": "2026-01-17",
-      "open": 229.45,
-      "high": 232.10,
-      "low": 228.90,
-      "close": 231.85,
-      "volume": 58432100,
-      "adjusted_close": 231.85
-    }
-  ],
-  "_meta": {
-    "source": "lician",
-    "count": 1,
-    "fetched_at": "2026-01-17T14:30:00Z"
-  }
-}`
-
-function CopyButton({ text, className }: { text: string; className?: string }) {
+// Copy button component
+function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
@@ -291,526 +39,680 @@ function CopyButton({ text, className }: { text: string; className?: string }) {
   return (
     <button
       onClick={handleCopy}
-      className={cn(
-        "p-2 rounded-lg transition-all hover:bg-white/10",
-        className
-      )}
-      title="Copy to clipboard"
+      className="absolute top-3 right-3 p-2 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] transition-colors opacity-0 group-hover:opacity-100"
     >
       {copied ? (
-        <Check className="w-4 h-4 text-emerald-400" />
+        <svg className="size-4 text-[#4ebe96]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
       ) : (
-        <Copy className="w-4 h-4 text-zinc-400" />
+        <svg className="size-4 text-[#868f97]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <rect x="9" y="9" width="13" height="13" rx="2" />
+          <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+        </svg>
       )}
     </button>
   )
 }
 
-function CodeBlock({ code }: { code: string }) {
-  return (
-    <div className="relative group">
-      <pre className="bg-zinc-950 border border-zinc-800 rounded-xl p-4 overflow-x-auto text-sm">
-        <code className="text-zinc-300 font-mono">{code}</code>
-      </pre>
-      <CopyButton
-        text={code}
-        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100"
-      />
-    </div>
-  )
-}
+// API Endpoints
+const ENDPOINTS = [
+  { path: "/v1/prices/snapshot", desc: "Current stock price, change, volume, market cap" },
+  { path: "/v1/financials/income-statements", desc: "Revenue, profit, EPS by period" },
+  { path: "/v1/financials/balance-sheets", desc: "Assets, liabilities, equity, debt" },
+  { path: "/v1/financials/cash-flow-statements", desc: "Operating, investing, financing flows" },
+  { path: "/v1/financial-metrics", desc: "P/E, ROE, margins, dividend yield" },
+  { path: "/v1/insider-trades", desc: "SEC Form 4 insider transactions" },
+  { path: "/v1/institutional-ownership", desc: "13F institutional holdings" },
+  { path: "/v1/analyst-ratings", desc: "Buy/hold/sell ratings, price targets" },
+  { path: "/v1/analyst-estimates", desc: "EPS and revenue estimates" },
+  { path: "/v1/company/facts", desc: "Company profile and fundamentals" },
+  { path: "/v1/filings", desc: "SEC EDGAR filings (10-K, 10-Q, 8-K)" },
+  { path: "/v1/news", desc: "Market and company news" },
+]
+
+// Pricing tiers
+const PRICING = [
+  {
+    name: "Free",
+    price: "$0",
+    period: "",
+    requests: "100/day",
+    features: ["All 12 endpoints", "US market data", "Community support"],
+  },
+  {
+    name: "Basic",
+    price: "$29",
+    period: "/mo",
+    requests: "10K/day",
+    features: ["All 12 endpoints", "US + EU data", "Email support", "MCP integration"],
+    highlighted: true,
+  },
+  {
+    name: "Pro",
+    price: "$99",
+    period: "/mo",
+    requests: "100K/day",
+    features: ["All 12 endpoints", "Global data", "Priority support", "Webhooks"],
+  },
+  {
+    name: "Enterprise",
+    price: "Custom",
+    period: "",
+    requests: "Unlimited",
+    features: ["Dedicated infra", "SLA guarantee", "Custom feeds", "Slack support"],
+  },
+]
 
 export default function DevelopersPage() {
+  const [isLoaded, setIsLoaded] = useState(false)
   const [activeTab, setActiveTab] = useState<"claude" | "mcp" | "npm">("claude")
-  const [expandedEndpoint, setExpandedEndpoint] = useState<string | null>(null)
+  const agentAnim = useScrollAnimation(0.1)
+  const endpointsAnim = useScrollAnimation(0.1)
+  const pricingAnim = useScrollAnimation(0.1)
+  const ctaAnim = useScrollAnimation(0.1)
+
+  useEffect(() => {
+    setIsLoaded(true)
+  }, [])
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        {/* Gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/20 via-black to-blue-900/20" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-500/10 via-transparent to-transparent" />
-
-        {/* Grid pattern overlay */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-                             linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-            backgroundSize: '64px 64px'
-          }}
-        />
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-24">
-          {/* Navigation */}
-          <nav className="flex items-center justify-between mb-16">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center">
-                <span className="text-black font-bold text-lg">L</span>
+    <div className="min-h-dvh bg-black text-white font-['Inter',system-ui,sans-serif]">
+      {/* Nav */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/[0.06]">
+        <div className="max-w-[1400px] mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-8">
+            {/* Lician Logo - Acme style */}
+            <Link href="/" className="flex items-center gap-2.5">
+              <div className="size-8 rounded-lg bg-gradient-to-br from-[#d4ff00] to-[#9acd32] flex items-center justify-center">
+                <svg viewBox="0 0 24 24" className="size-5 text-black" fill="currentColor">
+                  <path d="M13 3L4 14h7l-2 7 9-11h-7l2-7z" />
+                </svg>
               </div>
-              <span className="font-semibold text-xl">Lician</span>
+              <span className="text-[17px] font-semibold tracking-tight">Lician</span>
             </Link>
-            <div className="flex items-center gap-4">
-              <Link
-                href="/login"
-                className="text-zinc-400 hover:text-white transition-colors"
-              >
-                Sign In
-              </Link>
-              <Link
-                href="/developers/signup"
-                className="px-4 py-2 bg-white text-black font-medium rounded-lg hover:bg-zinc-200 transition-colors"
-              >
-                Get API Key
-              </Link>
+            <div className="hidden md:flex items-center gap-1 text-[14px] text-[#868f97]">
+              {["Features", "Endpoints", "Pricing", "Docs"].map((item) => (
+                <a
+                  key={item}
+                  href={`#${item.toLowerCase()}`}
+                  className="px-3 py-2 hover:text-white transition-colors rounded-lg hover:bg-white/5"
+                >
+                  {item}
+                </a>
+              ))}
             </div>
-          </nav>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="hidden lg:flex items-center gap-2 text-[13px] text-[#868f97]">
+              <span className="size-2 rounded-full bg-[#4ebe96] animate-pulse" />
+              MCP Registry Live
+            </span>
+            <Link
+              href="/"
+              className="px-5 py-2.5 bg-[#e6e6e6] text-black text-[14px] font-medium rounded-full hover:bg-white transition-colors"
+            >
+              Try AI Chat
+            </Link>
+          </div>
+        </div>
+      </nav>
 
-          {/* Hero content */}
-          <div className="text-center max-w-4xl mx-auto">
+      {/* Hero */}
+      <section className="pt-28 pb-16">
+        <div className="max-w-[1400px] mx-auto px-6">
+          <div
+            className={cn(
+              "transition-all duration-1000",
+              isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            )}
+          >
             {/* Badges */}
-            <div className="flex items-center justify-center gap-3 mb-8">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium">
-                <Bot className="w-4 h-4" />
+            <div className="flex items-center gap-3 mb-6">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#d4ff00]/10 border border-[#d4ff00]/20 text-[#d4ff00] text-[12px] font-medium">
+                <svg className="size-3.5" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="12" cy="12" r="10" />
+                </svg>
                 MCP Enabled
               </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium">
-                <Building2 className="w-4 h-4" />
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#479ffa]/10 border border-[#479ffa]/20 text-[#479ffa] text-[12px] font-medium">
                 141K+ Companies
               </span>
             </div>
 
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">
-              Financial Data API
+            <span className="text-[#868f97] text-[14px]">Financial Data API</span>
+            <h1 className="text-[48px] md:text-[64px] font-semibold leading-[1.05] tracking-[-0.02em] mt-2 mb-6">
+              Stock data for
+              <br />
+              <span className="italic bg-gradient-to-r from-[#d4ff00] to-[#9acd32] bg-clip-text text-transparent">
+                the agentic web.
+              </span>
             </h1>
-            <p className="text-xl sm:text-2xl text-zinc-400 mb-8 max-w-2xl mx-auto">
-              Comprehensive stock data for AI agents, trading bots, and financial applications.
-              Built for the agentic web.
+            <p className="text-[#a0a0a0] text-[18px] leading-[1.6] max-w-[560px] mb-8">
+              Comprehensive financial data for AI agents, trading bots, and applications.
+              Native MCP support. 839K+ records across 141K+ companies.
             </p>
 
-            {/* CTA buttons */}
-            <div className="flex items-center justify-center gap-4 mb-12">
-              <Link
+            <div className="flex items-center gap-4">
+              <a
                 href="#quickstart"
-                className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-blue-500 text-white font-semibold rounded-xl hover:opacity-90 transition-opacity flex items-center gap-2"
+                className="px-6 py-3 bg-[#d4ff00] text-black text-[14px] font-semibold rounded-full hover:bg-[#e5ff40] transition-colors"
               >
-                Get Started
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link
-                href="#endpoints"
-                className="px-6 py-3 bg-zinc-900 border border-zinc-800 text-white font-semibold rounded-xl hover:bg-zinc-800 transition-colors"
+                Get Started Free
+              </a>
+              <a
+                href="/openapi.json"
+                target="_blank"
+                className="px-6 py-3 border border-white/[0.15] text-[14px] font-medium rounded-full hover:border-white/30 hover:bg-white/[0.03] transition-colors"
               >
-                View Endpoints
-              </Link>
+                OpenAPI Spec
+              </a>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Stats Bar */}
-      <section className="border-y border-zinc-800 bg-zinc-950/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4">
-            {STATS.map((stat, index) => (
-              <div
-                key={stat.label}
-                className={cn(
-                  "py-8 px-6 text-center",
-                  index !== STATS.length - 1 && "md:border-r border-zinc-800"
-                )}
-              >
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <stat.icon className="w-5 h-5 text-emerald-400" />
-                  <span className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
-                    {stat.value}
-                  </span>
-                </div>
-                <p className="text-zinc-500 text-sm">{stat.label}</p>
+          {/* Stats */}
+          <div
+            className={cn(
+              "grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 pt-10 border-t border-white/[0.06]",
+              "transition-all duration-700 delay-300",
+              isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            )}
+          >
+            {[
+              { value: "141K+", label: "Companies" },
+              { value: "839K+", label: "Financial Records" },
+              { value: "12", label: "Endpoints" },
+              { value: "30+", label: "Years of Data" },
+            ].map((stat) => (
+              <div key={stat.label}>
+                <div className="text-[28px] font-semibold text-white">{stat.value}</div>
+                <div className="text-[13px] text-[#868f97]">{stat.label}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* AI Agent Integration Section */}
-      <section className="py-24 relative" id="agent-integration">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium mb-4">
-              <Zap className="w-4 h-4" />
+      {/* AI Agent Integration */}
+      <section ref={agentAnim.ref} className="py-20" id="features">
+        <div className="max-w-[1400px] mx-auto px-6">
+          <div
+            className={cn(
+              "mb-12 transition-all duration-700",
+              agentAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            )}
+          >
+            <span className="text-[#ff9966] text-[13px] font-medium tracking-wider uppercase">
               AI-Native
             </span>
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">
-              AI Agent Integration
+            <h2 className="text-[42px] font-semibold italic leading-[1.1] tracking-[-0.02em] mt-3 mb-4">
+              Built for AI agents.
             </h2>
-            <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-              Connect your AI agents directly to financial data. Native MCP support for Claude,
-              GPT, and custom agents.
+            <p className="text-[#a0a0a0] text-[17px] leading-[1.6] max-w-[560px]">
+              Connect Claude, GPT, or any MCP-compatible agent directly to financial data.
+              No middleware required.
             </p>
           </div>
 
           {/* Integration tabs */}
-          <div className="max-w-4xl mx-auto">
-            <div className="flex items-center gap-2 mb-6 p-1 bg-zinc-900 rounded-xl w-fit mx-auto">
-              {[
-                { id: "claude", label: "Claude Desktop", icon: Bot },
-                { id: "mcp", label: "MCP HTTP", icon: Terminal },
-                { id: "npm", label: "NPM Package", icon: Package },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id as "claude" | "mcp" | "npm")}
-                  className={cn(
-                    "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all",
-                    activeTab === tab.id
-                      ? "bg-zinc-800 text-white"
-                      : "text-zinc-400 hover:text-white"
+          <div className="flex items-center gap-2 mb-6">
+            {[
+              { id: "claude", label: "Claude Desktop" },
+              { id: "mcp", label: "MCP HTTP" },
+              { id: "npm", label: "NPM Package" },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as "claude" | "mcp" | "npm")}
+                className={cn(
+                  "px-4 py-2 rounded-lg text-[13px] font-medium transition-all",
+                  activeTab === tab.id
+                    ? "bg-white/[0.1] text-white"
+                    : "text-[#868f97] hover:text-white"
+                )}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Code blocks */}
+          <div className="grid lg:grid-cols-2 gap-4">
+            <div className="relative group">
+              <div className="bg-[#0a0a0a] rounded-2xl border border-white/[0.08] p-5 overflow-x-auto">
+                <pre className="text-[13px] font-mono leading-relaxed">
+                  {activeTab === "claude" && (
+                    <code className="text-[#a0a0a0]">
+                      {`// claude_desktop_config.json
+{
+  `}
+                      <span className="text-[#479ffa]">&quot;mcpServers&quot;</span>
+                      {`: {
+    `}
+                      <span className="text-[#d4ff00]">&quot;lician&quot;</span>
+                      {`: {
+      `}
+                      <span className="text-[#479ffa]">&quot;command&quot;</span>
+                      {`: `}
+                      <span className="text-[#4ebe96]">&quot;npx&quot;</span>
+                      {`,
+      `}
+                      <span className="text-[#479ffa]">&quot;args&quot;</span>
+                      {`: [`}
+                      <span className="text-[#4ebe96]">&quot;-y&quot;</span>
+                      {`, `}
+                      <span className="text-[#4ebe96]">&quot;@lician/mcp-server&quot;</span>
+                      {`]
+    }
+  }
+}`}
+                    </code>
                   )}
-                >
-                  <tab.icon className="w-4 h-4" />
-                  {tab.label}
-                </button>
-              ))}
+                  {activeTab === "mcp" && (
+                    <code className="text-[#a0a0a0]">
+                      {`curl -X POST https://lician.com/api/mcp \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    `}
+                      <span className="text-[#479ffa]">&quot;method&quot;</span>
+                      {`: `}
+                      <span className="text-[#4ebe96]">&quot;tools/call&quot;</span>
+                      {`,
+    `}
+                      <span className="text-[#479ffa]">&quot;params&quot;</span>
+                      {`: {
+      `}
+                      <span className="text-[#479ffa]">&quot;name&quot;</span>
+                      {`: `}
+                      <span className="text-[#4ebe96]">&quot;get_stock_price&quot;</span>
+                      {`,
+      `}
+                      <span className="text-[#479ffa]">&quot;arguments&quot;</span>
+                      {`: { `}
+                      <span className="text-[#479ffa]">&quot;ticker&quot;</span>
+                      {`: `}
+                      <span className="text-[#4ebe96]">&quot;AAPL&quot;</span>
+                      {` }
+    },
+    `}
+                      <span className="text-[#479ffa]">&quot;id&quot;</span>
+                      {`: `}
+                      <span className="text-[#ff9966]">1</span>
+                      {`
+  }'`}
+                    </code>
+                  )}
+                  {activeTab === "npm" && (
+                    <code className="text-[#a0a0a0]">
+                      {`npx -y @lician/mcp-server
+
+`}
+                      <span className="text-[#868f97]">// Or install globally</span>
+                      {`
+npm install -g @lician/mcp-server
+lician-mcp`}
+                    </code>
+                  )}
+                </pre>
+              </div>
+              <CopyButton
+                text={
+                  activeTab === "claude"
+                    ? '{\n  "mcpServers": {\n    "lician": {\n      "command": "npx",\n      "args": ["-y", "@lician/mcp-server"]\n    }\n  }\n}'
+                    : activeTab === "mcp"
+                    ? 'curl -X POST https://lician.com/api/mcp -H "Content-Type: application/json" -d \'{"method":"tools/call","params":{"name":"get_stock_price","arguments":{"ticker":"AAPL"}},"id":1}\''
+                    : "npx -y @lician/mcp-server"
+                }
+              />
             </div>
 
-            <CodeBlock code={CODE_EXAMPLES[activeTab]} />
-
-            {activeTab === "claude" && (
-              <p className="text-zinc-500 text-sm mt-4 text-center">
-                Add this to your <code className="text-emerald-400">claude_desktop_config.json</code> to enable Lician tools in Claude Desktop.
-              </p>
-            )}
+            {/* Registry cards */}
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                {
+                  name: "MCP Registry",
+                  id: "io.github.SebastianBO/financial-data",
+                  url: "https://registry.modelcontextprotocol.io",
+                },
+                {
+                  name: "Smithery",
+                  id: "@lician/financial-data",
+                  url: "https://smithery.ai/server/@lician/financial-data",
+                },
+                {
+                  name: "NPM",
+                  id: "@lician/mcp-server",
+                  url: "https://www.npmjs.com/package/@lician/mcp-server",
+                },
+                {
+                  name: "HTTP Endpoint",
+                  id: "lician.com/api/mcp",
+                  url: "https://lician.com/api/mcp",
+                },
+              ].map((registry) => (
+                <a
+                  key={registry.name}
+                  href={registry.url}
+                  target="_blank"
+                  rel="noopener"
+                  className="p-4 bg-[#0a0a0a] rounded-xl border border-white/[0.08] hover:border-white/[0.15] transition-colors"
+                >
+                  <div className="text-[13px] font-medium text-white mb-1">{registry.name}</div>
+                  <div className="text-[11px] text-[#868f97] font-mono truncate">{registry.id}</div>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Quickstart Section */}
-      <section className="py-24 bg-zinc-950/50" id="quickstart">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium mb-4">
-              <Terminal className="w-4 h-4" />
+      {/* Quickstart */}
+      <section className="py-20 bg-[#050505]" id="quickstart">
+        <div className="max-w-[1400px] mx-auto px-6">
+          <div className="mb-12">
+            <span className="text-[#479ffa] text-[13px] font-medium tracking-wider uppercase">
               Quickstart
             </span>
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">
-              Start in Seconds
+            <h2 className="text-[42px] font-semibold italic leading-[1.1] tracking-[-0.02em] mt-3 mb-4">
+              Start in seconds.
             </h2>
-            <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-              Make your first API call in under a minute. Simple REST endpoints with JSON responses.
-            </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-6">
             {/* Request */}
             <div>
               <div className="flex items-center gap-2 mb-3">
-                <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 text-xs font-mono rounded">
+                <span className="px-2 py-0.5 bg-[#4ebe96]/20 text-[#4ebe96] text-[11px] font-mono font-medium rounded">
                   GET
                 </span>
-                <span className="text-zinc-400 text-sm">Request</span>
+                <span className="text-[13px] text-[#868f97]">Request</span>
               </div>
-              <CodeBlock code={CURL_EXAMPLE} />
+              <div className="relative group bg-[#0a0a0a] rounded-2xl border border-white/[0.08] p-5">
+                <pre className="text-[13px] font-mono text-[#a0a0a0] overflow-x-auto">
+                  {`curl "https://lician.com/api/v1/prices/snapshot?ticker=AAPL"`}
+                </pre>
+                <CopyButton text='curl "https://lician.com/api/v1/prices/snapshot?ticker=AAPL"' />
+              </div>
             </div>
 
             {/* Response */}
             <div>
               <div className="flex items-center gap-2 mb-3">
-                <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 text-xs font-mono rounded">
+                <span className="px-2 py-0.5 bg-[#479ffa]/20 text-[#479ffa] text-[11px] font-mono font-medium rounded">
                   200
                 </span>
-                <span className="text-zinc-400 text-sm">Response</span>
+                <span className="text-[13px] text-[#868f97]">Response</span>
               </div>
-              <CodeBlock code={RESPONSE_EXAMPLE} />
+              <div className="relative group bg-[#0a0a0a] rounded-2xl border border-white/[0.08] p-5">
+                <pre className="text-[13px] font-mono leading-relaxed overflow-x-auto">
+                  <code className="text-[#a0a0a0]">
+                    {`{
+  `}
+                    <span className="text-[#479ffa]">&quot;ticker&quot;</span>
+                    {`: `}
+                    <span className="text-[#4ebe96]">&quot;AAPL&quot;</span>
+                    {`,
+  `}
+                    <span className="text-[#479ffa]">&quot;price&quot;</span>
+                    {`: `}
+                    <span className="text-[#ff9966]">231.85</span>
+                    {`,
+  `}
+                    <span className="text-[#479ffa]">&quot;change&quot;</span>
+                    {`: `}
+                    <span className="text-[#4ebe96]">+2.34</span>
+                    {`,
+  `}
+                    <span className="text-[#479ffa]">&quot;changePercent&quot;</span>
+                    {`: `}
+                    <span className="text-[#4ebe96]">+1.02%</span>
+                    {`,
+  `}
+                    <span className="text-[#479ffa]">&quot;volume&quot;</span>
+                    {`: `}
+                    <span className="text-[#ff9966]">58432100</span>
+                    {`,
+  `}
+                    <span className="text-[#479ffa]">&quot;marketCap&quot;</span>
+                    {`: `}
+                    <span className="text-[#ff9966]">3.58T</span>
+                    {`
+}`}
+                  </code>
+                </pre>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* API Endpoints Section */}
-      <section className="py-24" id="endpoints">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-sm font-medium mb-4">
-              <Code2 className="w-4 h-4" />
+      {/* Endpoints */}
+      <section ref={endpointsAnim.ref} className="py-20" id="endpoints">
+        <div className="max-w-[1400px] mx-auto px-6">
+          <div
+            className={cn(
+              "mb-12 transition-all duration-700",
+              endpointsAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            )}
+          >
+            <span className="text-[#d4ff00] text-[13px] font-medium tracking-wider uppercase">
               Endpoints
             </span>
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">
-              12 Powerful Endpoints
+            <h2 className="text-[42px] font-semibold italic leading-[1.1] tracking-[-0.02em] mt-3 mb-4">
+              12 powerful endpoints.
             </h2>
-            <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-              Everything you need for comprehensive financial analysis. Prices, fundamentals,
-              insider activity, and more.
+            <p className="text-[#a0a0a0] text-[17px] leading-[1.6] max-w-[560px]">
+              Everything you need for comprehensive financial analysis.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
-            {ENDPOINTS.map((endpoint) => (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {ENDPOINTS.map((ep, i) => (
               <div
-                key={endpoint.path}
-                className="group p-5 bg-zinc-900/50 border border-zinc-800 rounded-xl hover:border-zinc-700 transition-all cursor-pointer"
-                onClick={() =>
-                  setExpandedEndpoint(
-                    expandedEndpoint === endpoint.path ? null : endpoint.path
-                  )
-                }
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 text-xs font-mono rounded">
-                    {endpoint.method}
-                  </span>
-                  <ChevronRight
-                    className={cn(
-                      "w-4 h-4 text-zinc-500 transition-transform",
-                      expandedEndpoint === endpoint.path && "rotate-90"
-                    )}
-                  />
-                </div>
-                <code className="text-white font-mono text-sm block mb-2">
-                  {endpoint.path}
-                </code>
-                <p className="text-zinc-500 text-sm">{endpoint.description}</p>
-
-                {expandedEndpoint === endpoint.path && (
-                  <div className="mt-4 pt-4 border-t border-zinc-800">
-                    <p className="text-xs text-zinc-500 uppercase tracking-wider mb-2">
-                      Parameters
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {endpoint.params.map((param) => (
-                        <span
-                          key={param}
-                          className="px-2 py-1 bg-zinc-800 text-zinc-400 text-xs font-mono rounded"
-                        >
-                          {param}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
+                key={ep.path}
+                className={cn(
+                  "p-4 bg-[#0a0a0a] rounded-xl border border-white/[0.08] hover:border-white/[0.15] transition-all",
+                  endpointsAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
                 )}
+                style={{ transitionDelay: `${i * 50}ms`, transitionDuration: "500ms" }}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="px-1.5 py-0.5 bg-[#4ebe96]/20 text-[#4ebe96] text-[10px] font-mono font-medium rounded">
+                    GET
+                  </span>
+                  <code className="text-[13px] font-mono text-white truncate">{ep.path}</code>
+                </div>
+                <p className="text-[12px] text-[#868f97]">{ep.desc}</p>
               </div>
             ))}
           </div>
 
-          <div className="text-center mt-12">
-            <Link
-              href="/developers/docs"
-              className="inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 transition-colors"
+          <div className="mt-8 text-center">
+            <a
+              href="/openapi.json"
+              target="_blank"
+              className="text-[#d4ff00] text-[14px] hover:underline"
             >
-              View Full Documentation
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+              View full OpenAPI specification →
+            </a>
           </div>
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section className="py-24 bg-zinc-950/50" id="pricing">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-sm font-medium mb-4">
-              <DollarSign className="w-4 h-4" />
+      {/* Pricing */}
+      <section ref={pricingAnim.ref} className="py-20 bg-[#050505]" id="pricing">
+        <div className="max-w-[1400px] mx-auto px-6">
+          <div
+            className={cn(
+              "mb-12 text-center transition-all duration-700",
+              pricingAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            )}
+          >
+            <span className="text-[#ff9966] text-[13px] font-medium tracking-wider uppercase">
               Pricing
             </span>
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">
-              Simple, Transparent Pricing
+            <h2 className="text-[42px] font-semibold italic leading-[1.1] tracking-[-0.02em] mt-3 mb-4">
+              Simple, transparent pricing.
             </h2>
-            <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-              Start free, scale as you grow. No hidden fees, no surprises.
-            </p>
+            <p className="text-[#a0a0a0] text-[17px]">Start free. Scale as you grow.</p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            {PRICING_TIERS.map((tier) => (
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-[1100px] mx-auto">
+            {PRICING.map((tier, i) => (
               <div
                 key={tier.name}
                 className={cn(
-                  "relative p-6 rounded-2xl border transition-all",
+                  "p-6 rounded-2xl border transition-all",
                   tier.highlighted
-                    ? "bg-gradient-to-b from-emerald-500/10 to-blue-500/10 border-emerald-500/30"
-                    : "bg-zinc-900/50 border-zinc-800 hover:border-zinc-700"
+                    ? "bg-[#d4ff00]/5 border-[#d4ff00]/30"
+                    : "bg-[#0a0a0a] border-white/[0.08]",
+                  pricingAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
                 )}
+                style={{ transitionDelay: `${i * 100}ms`, transitionDuration: "500ms" }}
               >
                 {tier.highlighted && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-gradient-to-r from-emerald-500 to-blue-500 text-white text-xs font-medium rounded-full">
-                    Most Popular
+                  <span className="inline-block px-2 py-0.5 bg-[#d4ff00] text-black text-[10px] font-semibold rounded mb-3">
+                    POPULAR
                   </span>
                 )}
-
-                <div className="mb-6">
-                  <h3 className="text-xl font-semibold mb-2">{tier.name}</h3>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-bold">{tier.price}</span>
-                    {tier.period && (
-                      <span className="text-zinc-500">/{tier.period}</span>
-                    )}
-                  </div>
-                  <p className="text-zinc-500 text-sm mt-2">{tier.description}</p>
+                <h3 className="text-[18px] font-semibold mb-1">{tier.name}</h3>
+                <div className="flex items-baseline gap-0.5 mb-1">
+                  <span className="text-[32px] font-semibold">{tier.price}</span>
+                  <span className="text-[14px] text-[#868f97]">{tier.period}</span>
                 </div>
+                <div className="text-[13px] text-[#4ebe96] mb-5">{tier.requests}</div>
 
-                <div className="mb-6">
-                  <div className="flex items-center gap-2 text-lg">
-                    <Zap className="w-5 h-5 text-emerald-400" />
-                    <span className="font-semibold">{tier.requests}</span>
-                    {tier.requestPeriod && (
-                      <span className="text-zinc-500">requests/{tier.requestPeriod}</span>
-                    )}
-                  </div>
-                </div>
-
-                <ul className="space-y-3 mb-6">
-                  {tier.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-2 text-sm">
-                      <Check className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
-                      <span className="text-zinc-300">{feature}</span>
+                <ul className="space-y-2.5 mb-6">
+                  {tier.features.map((f) => (
+                    <li key={f} className="flex items-center gap-2 text-[13px] text-[#a0a0a0]">
+                      <svg
+                        className="size-4 text-[#4ebe96] flex-shrink-0"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                      {f}
                     </li>
                   ))}
                 </ul>
 
-                <Link
-                  href={tier.ctaLink}
+                <a
+                  href={tier.name === "Enterprise" ? "mailto:api@lician.com" : "/developers/signup"}
                   className={cn(
-                    "block w-full py-3 rounded-xl font-medium transition-all text-center",
+                    "block w-full py-2.5 rounded-full text-[13px] font-medium text-center transition-colors",
                     tier.highlighted
-                      ? "bg-gradient-to-r from-emerald-500 to-blue-500 text-white hover:opacity-90"
-                      : "bg-zinc-800 text-white hover:bg-zinc-700"
+                      ? "bg-[#d4ff00] text-black hover:bg-[#e5ff40]"
+                      : "border border-white/[0.15] text-white hover:border-white/30 hover:bg-white/[0.03]"
                   )}
                 >
-                  {tier.cta}
-                </Link>
+                  {tier.name === "Enterprise" ? "Contact Sales" : "Get Started"}
+                </a>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Agent Discovery Section */}
-      <section className="py-24" id="discovery">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-sm font-medium mb-4">
-              <Globe className="w-4 h-4" />
+      {/* Discovery Files */}
+      <section className="py-20">
+        <div className="max-w-[1400px] mx-auto px-6">
+          <div className="mb-12">
+            <span className="text-[#479ffa] text-[13px] font-medium tracking-wider uppercase">
               Agent Discovery
             </span>
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">
-              Built for the Agentic Web
+            <h2 className="text-[42px] font-semibold italic leading-[1.1] tracking-[-0.02em] mt-3 mb-4">
+              Machine-readable files.
             </h2>
-            <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-              Standard discovery files for AI agents and tools. Let agents find and
-              understand your API automatically.
-            </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            {DISCOVERY_FILES.map((file) => (
-              <Link
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { name: "OpenAPI", path: "/openapi.json", desc: "API specification" },
+              { name: "MCP Card", path: "/.well-known/mcp/server-card.json", desc: "Server metadata" },
+              { name: "Agent JSON", path: "/agent.json", desc: "Capabilities" },
+              { name: "llms.txt", path: "/llms.txt", desc: "LLM context" },
+            ].map((file) => (
+              <a
                 key={file.name}
                 href={file.path}
                 target="_blank"
-                className="group p-5 bg-zinc-900/50 border border-zinc-800 rounded-xl hover:border-cyan-500/30 hover:bg-cyan-500/5 transition-all"
+                rel="noopener"
+                className="p-4 bg-[#0a0a0a] rounded-xl border border-white/[0.08] hover:border-[#479ffa]/30 hover:bg-[#479ffa]/5 transition-all group"
               >
-                <div className="flex items-center justify-between mb-3">
-                  <file.icon className="w-5 h-5 text-cyan-400" />
-                  <ExternalLink className="w-4 h-4 text-zinc-600 group-hover:text-cyan-400 transition-colors" />
-                </div>
-                <code className="text-white font-mono text-sm block mb-2">
+                <div className="text-[14px] font-medium text-white group-hover:text-[#479ffa] transition-colors mb-1">
                   {file.name}
-                </code>
-                <p className="text-zinc-500 text-sm">{file.description}</p>
-              </Link>
+                </div>
+                <div className="text-[12px] text-[#868f97] mb-2">{file.desc}</div>
+                <code className="text-[11px] text-[#555] font-mono">{file.path}</code>
+              </a>
             ))}
-          </div>
-
-          <div className="mt-12 p-6 bg-zinc-900/50 border border-zinc-800 rounded-xl max-w-4xl mx-auto">
-            <h3 className="font-semibold mb-4 flex items-center gap-2">
-              <Shield className="w-5 h-5 text-emerald-400" />
-              Security First
-            </h3>
-            <p className="text-zinc-400 mb-4">
-              All API requests require authentication via API key. Keys are scoped to your account
-              and can be rotated at any time. We never store or log your queries.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <span className="inline-flex items-center gap-2 text-sm text-zinc-500">
-                <Check className="w-4 h-4 text-emerald-400" />
-                TLS 1.3 encryption
-              </span>
-              <span className="inline-flex items-center gap-2 text-sm text-zinc-500">
-                <Check className="w-4 h-4 text-emerald-400" />
-                SOC 2 compliant
-              </span>
-              <span className="inline-flex items-center gap-2 text-sm text-zinc-500">
-                <Check className="w-4 h-4 text-emerald-400" />
-                GDPR compliant
-              </span>
-              <span className="inline-flex items-center gap-2 text-sm text-zinc-500">
-                <Check className="w-4 h-4 text-emerald-400" />
-                99.9% uptime SLA
-              </span>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/20 via-transparent to-transparent" />
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl sm:text-5xl font-bold mb-6">
-            Ready to Build?
+      {/* CTA */}
+      <section ref={ctaAnim.ref} className="py-24 text-center">
+        <div className="max-w-[1400px] mx-auto px-6">
+          <p
+            className={cn(
+              "text-[#ff9966] text-[14px] font-medium mb-4",
+              ctaAnim.isVisible ? "opacity-100" : "opacity-0"
+            )}
+          >
+            No credit card required
+          </p>
+          <h2
+            className={cn(
+              "text-[48px] md:text-[64px] font-semibold italic leading-[1.05] tracking-[-0.02em] mb-4",
+              "transition-all duration-700",
+              ctaAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            )}
+          >
+            Ready to build?
           </h2>
-          <p className="text-xl text-zinc-400 mb-8 max-w-2xl mx-auto">
-            Join thousands of developers building the next generation of financial applications.
+          <p
+            className={cn(
+              "text-[#868f97] text-[17px] max-w-md mx-auto mb-8",
+              "transition-all duration-700 delay-100",
+              ctaAnim.isVisible ? "opacity-100" : "opacity-0"
+            )}
+          >
+            Join thousands of developers building with Lician.
           </p>
-          <div className="flex items-center justify-center gap-4">
-            <Link
-              href="/developers/signup"
-              className="px-8 py-4 bg-gradient-to-r from-emerald-500 to-blue-500 text-white font-semibold rounded-xl hover:opacity-90 transition-opacity flex items-center gap-2"
-            >
-              Get Your Free API Key
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-          </div>
-          <p className="text-zinc-500 text-sm mt-4">
-            No credit card required. 100 free requests per day.
-          </p>
+          <a
+            href="/developers/signup"
+            className={cn(
+              "inline-block px-8 py-3.5 bg-[#d4ff00] text-black text-[14px] font-semibold rounded-full hover:bg-[#e5ff40] transition-colors",
+              ctaAnim.isVisible ? "opacity-100" : "opacity-0"
+            )}
+          >
+            Get your free API key
+          </a>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-800 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center">
-                <span className="text-black font-bold text-lg">L</span>
-              </div>
-              <span className="font-semibold">Lician</span>
-              <span className="text-zinc-600">|</span>
-              <span className="text-zinc-500 text-sm">Financial Data API</span>
+      <footer className="py-8 px-6 border-t border-white/[0.06]">
+        <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2.5">
+            <div className="size-6 rounded-md bg-gradient-to-br from-[#d4ff00] to-[#9acd32] flex items-center justify-center">
+              <svg viewBox="0 0 24 24" className="size-3.5 text-black" fill="currentColor">
+                <path d="M13 3L4 14h7l-2 7 9-11h-7l2-7z" />
+              </svg>
             </div>
-            <div className="flex items-center gap-6 text-sm text-zinc-500">
-              <Link href="/developers/docs" className="hover:text-white transition-colors">
-                Documentation
-              </Link>
-              <Link href="#pricing" className="hover:text-white transition-colors">
-                Pricing
-              </Link>
-              <Link href="/status" className="hover:text-white transition-colors">
-                Status
-              </Link>
-              <Link href="/privacy" className="hover:text-white transition-colors">
-                Privacy
-              </Link>
-              <Link href="/terms" className="hover:text-white transition-colors">
-                Terms
-              </Link>
-            </div>
+            <span className="text-[14px] font-medium">Lician</span>
+            <span className="text-[#868f97] text-[13px]">Financial Data API</span>
           </div>
-          <p className="text-center text-zinc-600 text-sm mt-8">
-            2026 Lician. All rights reserved.
-          </p>
+          <div className="flex items-center gap-6 text-[#868f97] text-[13px]">
+            {["Docs", "Pricing", "Status", "Privacy", "Terms"].map((item) => (
+              <a key={item} href={`/${item.toLowerCase()}`} className="hover:text-white transition-colors">
+                {item}
+              </a>
+            ))}
+          </div>
         </div>
       </footer>
     </div>
