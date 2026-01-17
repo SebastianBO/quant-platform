@@ -165,16 +165,18 @@ export function Header() {
             {Object.entries(navMenus).map(([name, menu]) => (
               <div key={name} className="relative">
                 <button
-                  className={`flex items-center gap-1 px-3 py-2 text-sm rounded-lg transition-colors duration-100 min-h-[44px] ${
+                  className={`flex items-center gap-1 px-3 py-2 text-sm rounded-lg transition-colors duration-100 min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                     activeMenu === name
                       ? "bg-white/[0.08] text-white"
                       : "text-[#868f97] hover:text-white hover:bg-white/[0.05]"
                   }`}
                   onClick={() => setActiveMenu(activeMenu === name ? null : name)}
+                  aria-expanded={activeMenu === name}
+                  aria-haspopup="true"
                 >
                   <menu.icon className="w-4 h-4" />
                   {name}
-                  <ChevronDown className={`w-4 h-4 transition-transform ${activeMenu === name ? "rotate-180" : ""}`} />
+                  <ChevronDown className={`w-4 h-4 motion-safe:transition-transform ${activeMenu === name ? "rotate-180" : ""}`} />
                 </button>
 
                 {activeMenu === name && (
@@ -189,7 +191,7 @@ export function Header() {
                             <li key={link.href}>
                               <Link
                                 href={link.href}
-                                className="block p-2 rounded-lg hover:bg-white/[0.05] transition-colors duration-100 group min-h-[44px] flex items-start"
+                                className="block p-2 rounded-lg hover:bg-white/[0.05] transition-colors duration-100 group min-h-[44px] flex items-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-inset"
                                 onClick={() => setActiveMenu(null)}
                               >
                                 <div>
@@ -210,7 +212,7 @@ export function Header() {
             ))}
             <Link
               href="/premium"
-              className="px-3 py-2 text-sm text-[#868f97] hover:text-white transition-colors duration-100 min-h-[44px] flex items-center"
+              className="px-3 py-2 text-sm text-[#868f97] hover:text-white transition-colors duration-100 min-h-[44px] flex items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
               Pricing
             </Link>
@@ -233,7 +235,7 @@ export function Header() {
 
           <ThemeToggle />
           {loading ? (
-            <div className="w-20 h-9 bg-white/[0.05] animate-pulse rounded-lg" />
+            <div className="w-20 h-9 bg-white/[0.05] motion-safe:animate-pulse motion-reduce:animate-none rounded-lg" />
           ) : user ? (
             <>
               <Link href="/dashboard">
@@ -272,7 +274,7 @@ export function Header() {
         </div>
 
         <button
-          className="lg:hidden p-2 hover:bg-white/[0.05] rounded-lg transition-colors duration-100 min-h-[44px] min-w-[44px] flex items-center justify-center"
+          className="lg:hidden p-2 hover:bg-white/[0.05] rounded-lg transition-colors duration-100 min-h-[44px] min-w-[44px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           aria-expanded={mobileMenuOpen}
@@ -287,14 +289,15 @@ export function Header() {
             {Object.entries(navMenus).map(([name, menu]) => (
               <div key={name}>
                 <button
-                  className="flex items-center justify-between w-full py-3 text-sm font-medium text-white min-h-[44px]"
+                  className="flex items-center justify-between w-full py-3 text-sm font-medium text-white min-h-[44px] rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-inset"
                   onClick={() => setActiveMenu(activeMenu === name ? null : name)}
+                  aria-expanded={activeMenu === name}
                 >
                   <span className="flex items-center gap-2">
                     <menu.icon className="w-4 h-4" />
                     {name}
                   </span>
-                  <ChevronDown className={`w-4 h-4 transition-transform ${activeMenu === name ? "rotate-180" : ""}`} />
+                  <ChevronDown className={`w-4 h-4 motion-safe:transition-transform ${activeMenu === name ? "rotate-180" : ""}`} />
                 </button>
                 {activeMenu === name && (
                   <div className="pl-6 space-y-4 mt-2">
@@ -306,7 +309,7 @@ export function Header() {
                             <li key={link.href}>
                               <Link
                                 href={link.href}
-                                className="block py-2 text-sm text-[#868f97] hover:text-white min-h-[44px] flex items-center transition-colors duration-100"
+                                className="block py-2 text-sm text-[#868f97] hover:text-white min-h-[44px] flex items-center transition-colors duration-100 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-inset"
                                 onClick={() => {
                                   setMobileMenuOpen(false)
                                   setActiveMenu(null)
@@ -328,7 +331,7 @@ export function Header() {
             ))}
             <Link
               href="/premium"
-              className="block py-3 text-sm text-[#868f97] hover:text-white min-h-[44px] flex items-center transition-colors duration-100"
+              className="block py-3 text-sm text-[#868f97] hover:text-white min-h-[44px] flex items-center transition-colors duration-100 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-inset"
               onClick={() => setMobileMenuOpen(false)}
             >
               Pricing

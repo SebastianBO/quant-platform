@@ -236,7 +236,7 @@ const TaskItem = memo(function TaskItem({ task }: { task: Task }) {
       {task.status === 'completed' ? (
         <CheckCircle2 className="w-4 h-4 text-[#4ebe96]" />
       ) : task.status === 'running' ? (
-        <Loader2 className="w-4 h-4 animate-spin text-[#479ffa]" />
+        <Loader2 className="w-4 h-4 motion-safe:animate-spin text-[#479ffa]" />
       ) : (
         <div className="w-4 h-4 rounded-full border border-white/[0.15]" />
       )}
@@ -288,7 +288,8 @@ const ChatMessage = memo(function ChatMessage({
         {message.role === 'assistant' && message.content && (
           <button
             onClick={() => onCopy(message.content, message.id)}
-            className="mt-2 p-1 text-[#868f97] hover:text-white rounded transition-colors duration-100"
+            className="mt-2 p-1 text-[#868f97] hover:text-white rounded transition-colors duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d1117]"
+            aria-label={copiedId === message.id ? "Message copied" : "Copy message"}
           >
             {copiedId === message.id ? (
               <Check className="w-4 h-4" />
@@ -931,7 +932,7 @@ export default function ManusStyleHome() {
       {/* Left Sidebar - Hidden on mobile */}
       <aside
         className={cn(
-          "hidden md:flex flex-col py-4 border-r border-white/[0.08] bg-[#0a0a0a] transition-all duration-[250ms]",
+          "hidden md:flex flex-col py-4 border-r border-white/[0.08] bg-[#0a0a0a] motion-safe:transition-[width] duration-[250ms]",
           sidebarExpanded ? "w-52" : "w-14"
         )}
         onMouseEnter={() => setSidebarExpanded(true)}
@@ -1010,20 +1011,23 @@ export default function ManusStyleHome() {
 
             {/* Share credits - hidden on mobile */}
             <button
-              className="hidden md:block p-2 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.05] transition-colors duration-100"
-              title="Invite friends for free credits"
+              className="hidden md:block p-2 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.05] transition-colors duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d1117]"
+              aria-label="Invite friends for free credits"
             >
               <Gift className="w-5 h-5" />
             </button>
 
             {/* Notifications - hidden on mobile */}
-            <button className="hidden md:block p-2 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.05] transition-colors duration-100">
+            <button
+              className="hidden md:block p-2 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.05] transition-colors duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d1117]"
+              aria-label="View notifications"
+            >
               <Bell className="w-5 h-5" />
             </button>
 
             {/* User/Auth */}
             {loading ? (
-              <div className="size-9 bg-white/[0.05] animate-pulse rounded-full" />
+              <div className="size-9 bg-white/[0.05] motion-safe:animate-pulse motion-reduce:animate-none rounded-full" />
             ) : user ? (
               <Link href="/dashboard">
                 <div className="size-9 bg-[#4ebe96] rounded-full flex items-center justify-center text-black font-medium">
@@ -1065,7 +1069,7 @@ export default function ManusStyleHome() {
                 {isLoading && tasks.length > 0 && (
                   <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-3">
-                      <Loader2 className="w-4 h-4 animate-spin text-[#4ebe96]" />
+                      <Loader2 className="w-4 h-4 motion-safe:animate-spin text-[#4ebe96]" />
                       <span className="text-sm font-medium">Researching...</span>
                     </div>
                     <div className="space-y-2">
@@ -1165,7 +1169,7 @@ export default function ManusStyleHome() {
                           <Link
                             key={mover.symbol}
                             href={`/stock/${mover.symbol}`}
-                            className="hover:scale-110 transition-transform duration-100"
+                            className="motion-safe:hover:scale-110 motion-safe:transition-transform duration-100"
                             title={`${mover.symbol} - ${mover.changePercent > 0 ? '+' : ''}${mover.changePercent?.toFixed(2)}%`}
                           >
                             <StockLogo symbol={mover.symbol} size="sm" />
@@ -1174,7 +1178,7 @@ export default function ManusStyleHome() {
                       ) : (
                         /* Skeleton placeholders to prevent CLS */
                         Array.from({ length: 4 }).map((_, i) => (
-                          <div key={i} className="size-6 rounded-lg bg-white/[0.05] animate-pulse" />
+                          <div key={i} className="size-6 rounded-lg bg-white/[0.05] motion-safe:animate-pulse motion-reduce:animate-none" />
                         ))
                       )}
                     </div>
@@ -1186,14 +1190,23 @@ export default function ManusStyleHome() {
                       <div className="relative">
                         <div
                           onClick={() => handleCarouselClick(CAROUSEL_SLIDES[carouselIndex])}
-                          className="bg-[#1a1a1a]/80 border border-white/[0.08] rounded-2xl p-4 md:p-5 cursor-pointer hover:bg-[#1a1a1a] transition-colors duration-100 group"
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault()
+                              handleCarouselClick(CAROUSEL_SLIDES[carouselIndex])
+                            }
+                          }}
+                          role="button"
+                          tabIndex={0}
+                          aria-label={`${CAROUSEL_SLIDES[carouselIndex].title}: ${CAROUSEL_SLIDES[carouselIndex].subtitle}`}
+                          className="bg-[#1a1a1a]/80 border border-white/[0.08] rounded-2xl p-4 md:p-5 cursor-pointer hover:bg-[#1a1a1a] transition-colors duration-100 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d1117]"
                         >
                           <div className="flex items-start justify-between gap-4 md:gap-6">
                             {/* Left content */}
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 mb-2">
                                 <h2 className="font-semibold text-base md:text-lg truncate text-white">{CAROUSEL_SLIDES[carouselIndex].title}</h2>
-                                <ChevronRight className="w-4 h-4 text-[#868f97] group-hover:translate-x-1 transition-transform duration-100" />
+                                <ChevronRight className="w-4 h-4 text-[#868f97] motion-safe:group-hover:translate-x-1 motion-safe:transition-transform duration-100" />
                               </div>
                               <p className="text-sm text-[#868f97] mb-4">
                                 {CAROUSEL_SLIDES[carouselIndex].subtitle}
@@ -1211,7 +1224,7 @@ export default function ManusStyleHome() {
                                         // Focus the input
                                         textareaRef.current?.focus()
                                       }}
-                                      className="px-3 py-1.5 text-xs rounded-full border border-white/[0.08] bg-white/[0.05] text-[#868f97] hover:bg-white/[0.08] hover:text-white hover:border-[#4ebe96]/50 transition-all duration-100 cursor-pointer"
+                                      className="px-3 py-1.5 text-xs rounded-full border border-white/[0.08] bg-white/[0.05] text-[#868f97] hover:bg-white/[0.08] hover:text-white hover:border-[#4ebe96]/50 transition-colors duration-100 cursor-pointer"
                                     >
                                       {tag.label}
                                     </button>
@@ -1315,7 +1328,7 @@ export default function ManusStyleHome() {
                           <Link
                             key={ticker}
                             href={`/stock/${ticker.toLowerCase()}`}
-                            className="px-3 md:px-4 py-2 bg-[#1a1a1a] border border-white/[0.08] rounded-lg hover:border-[#4ebe96]/50 hover:bg-white/[0.08] transition-all duration-100 text-sm font-medium text-white flex-shrink-0"
+                            className="px-3 md:px-4 py-2 bg-[#1a1a1a] border border-white/[0.08] rounded-lg hover:border-[#4ebe96]/50 hover:bg-white/[0.08] transition-colors duration-100 text-sm font-medium text-white flex-shrink-0"
                           >
                             {ticker}
                           </Link>
@@ -1331,7 +1344,7 @@ export default function ManusStyleHome() {
                           <Link
                             key={ticker}
                             href={`/prediction/${ticker.toLowerCase()}`}
-                            className="px-3 md:px-4 py-2 bg-[#1a1a1a] border border-white/[0.08] rounded-lg hover:border-[#4ebe96]/50 hover:bg-white/[0.08] transition-all duration-100 text-sm text-white whitespace-nowrap flex-shrink-0"
+                            className="px-3 md:px-4 py-2 bg-[#1a1a1a] border border-white/[0.08] rounded-lg hover:border-[#4ebe96]/50 hover:bg-white/[0.08] transition-colors duration-100 text-sm text-white whitespace-nowrap flex-shrink-0"
                           >
                             {ticker} Prediction
                           </Link>
@@ -1354,7 +1367,7 @@ export default function ManusStyleHome() {
                           <Link
                             key={pair.slug}
                             href={`/compare/${pair.slug}`}
-                            className="px-3 md:px-4 py-2 bg-[#1a1a1a] border border-white/[0.08] rounded-lg hover:border-[#4ebe96]/50 hover:bg-white/[0.08] transition-all duration-100 text-sm text-white whitespace-nowrap flex-shrink-0"
+                            className="px-3 md:px-4 py-2 bg-[#1a1a1a] border border-white/[0.08] rounded-lg hover:border-[#4ebe96]/50 hover:bg-white/[0.08] transition-colors duration-100 text-sm text-white whitespace-nowrap flex-shrink-0"
                           >
                             {pair.label}
                           </Link>
@@ -1370,7 +1383,7 @@ export default function ManusStyleHome() {
                           <Link
                             key={ticker}
                             href={`/should-i-buy/${ticker.toLowerCase()}`}
-                            className="px-3 md:px-4 py-2 bg-[#1a1a1a] border border-white/[0.08] rounded-lg hover:border-[#4ebe96]/50 hover:bg-white/[0.08] transition-all duration-100 text-sm text-white whitespace-nowrap flex-shrink-0"
+                            className="px-3 md:px-4 py-2 bg-[#1a1a1a] border border-white/[0.08] rounded-lg hover:border-[#4ebe96]/50 hover:bg-white/[0.08] transition-colors duration-100 text-sm text-white whitespace-nowrap flex-shrink-0"
                           >
                             Should I Buy {ticker}?
                           </Link>
@@ -1393,7 +1406,7 @@ export default function ManusStyleHome() {
                           <Link
                             key={sector.slug}
                             href={`/sectors/${sector.slug}`}
-                            className="px-3 md:px-4 py-2 bg-[#4ebe96]/20 text-[#4ebe96] border border-[#4ebe96]/30 rounded-lg hover:bg-[#4ebe96]/30 transition-all duration-100 text-sm whitespace-nowrap flex-shrink-0"
+                            className="px-3 md:px-4 py-2 bg-[#4ebe96]/20 text-[#4ebe96] border border-[#4ebe96]/30 rounded-lg hover:bg-[#4ebe96]/30 transition-colors duration-100 text-sm whitespace-nowrap flex-shrink-0"
                           >
                             {sector.label}
                           </Link>
