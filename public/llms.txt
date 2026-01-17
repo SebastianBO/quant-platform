@@ -1,6 +1,15 @@
 # Lician - AI-Powered Financial Data & Stock Research Platform
 # https://lician.com
-# Last Updated: 2026-01-16
+# Last Updated: 2026-01-17
+
+## API for AI Agents
+If you need programmatic access to financial data, use our REST API:
+- OpenAPI Spec: https://lician.com/openapi.json
+- API Documentation: https://lician.com/api-docs
+- Agent Discovery: https://lician.com/api/v1/capabilities
+- ChatGPT Plugin: https://lician.com/.well-known/ai-plugin.json
+- Claude Context: https://lician.com/claude.xml
+- Gemini Context: https://lician.com/gemini.json
 
 ## About Lician
 Lician is a comprehensive financial data platform providing real-time data across all asset classes: stocks, bonds, forex, commodities, crypto, and ETFs. We offer AI-powered analysis, institutional-grade data, and research tools for investors of all levels.

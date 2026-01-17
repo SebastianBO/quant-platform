@@ -4,11 +4,26 @@
 User-agent: *
 Allow: /
 
+# AI Agent Discovery Files
+# These files help AI agents understand and integrate with our API
+# OpenAPI Spec: https://lician.com/openapi.json
+# Agent Manifest: https://lician.com/agent.json
+# LLMs Context: https://lician.com/llms.txt
+# AI Discovery: https://lician.com/ai.txt
+# ChatGPT Plugin: https://lician.com/.well-known/ai-plugin.json
+# Claude Context: https://lician.com/claude.xml
+# Gemini Context: https://lician.com/gemini.json
+# Capabilities API: https://lician.com/api/v1/capabilities
+
 # Disallow internal paths
 Disallow: /api/
 Disallow: /_next/
 Disallow: /admin/
 Disallow: /auth/
+
+# Allow AI discovery endpoints
+Allow: /api/v1/capabilities
+Allow: /api/og/
 
 # Disallow query parameter variations (prevents duplicate content)
 Disallow: /*?exchange=
@@ -18,9 +33,6 @@ Disallow: /*?filter=
 Disallow: /*?page=
 Disallow: /*?ref=
 Disallow: /*?utm_
-
-# Allow specific API endpoints for preview
-Allow: /api/og/
 
 # Googlebot specific
 User-agent: Googlebot

@@ -1,0 +1,92 @@
+{
+  "$schema": "https://agentprotocol.ai/schema/v1",
+  "name": "Lician Financial Data API",
+  "description": "Comprehensive financial data API for AI agents. Access stock prices, financials, insider trades, institutional holdings, and more for 141,000+ companies worldwide.",
+  "version": "1.0.0",
+  "homepage": "https://lician.com",
+  "documentation": "https://lician.com/api-docs",
+  "openapi_spec": "https://lician.com/openapi.json",
+  "llms_txt": "https://lician.com/llms.txt",
+  "contact": {
+    "email": "api@lician.com",
+    "support_url": "https://lician.com/developers"
+  },
+  "capabilities": {
+    "stock_prices": {
+      "description": "Real-time and historical stock prices",
+      "endpoint": "/api/v1/prices/snapshot",
+      "example": "GET /api/v1/prices/snapshot?ticker=AAPL"
+    },
+    "financial_statements": {
+      "description": "Income statements, balance sheets, cash flow statements",
+      "endpoints": [
+        "/api/v1/financials/income-statements",
+        "/api/v1/financials/balance-sheets",
+        "/api/v1/financials/cash-flow-statements"
+      ],
+      "example": "GET /api/v1/financials/income-statements?ticker=AAPL&period=quarterly"
+    },
+    "insider_trading": {
+      "description": "SEC Form 4 insider transactions",
+      "endpoint": "/api/v1/insider-trades",
+      "example": "GET /api/v1/insider-trades?ticker=AAPL"
+    },
+    "institutional_ownership": {
+      "description": "13F institutional holder data",
+      "endpoint": "/api/v1/institutional-ownership",
+      "example": "GET /api/v1/institutional-ownership?ticker=AAPL"
+    },
+    "analyst_ratings": {
+      "description": "Buy/hold/sell ratings and price targets",
+      "endpoint": "/api/v1/analyst-ratings",
+      "example": "GET /api/v1/analyst-ratings?ticker=AAPL"
+    },
+    "company_info": {
+      "description": "Company profile and key facts",
+      "endpoint": "/api/v1/company/facts",
+      "example": "GET /api/v1/company/facts?ticker=AAPL"
+    }
+  },
+  "data_coverage": {
+    "us_companies": 5345,
+    "eu_companies": 106975,
+    "total_companies": 141000,
+    "financial_records": 839000,
+    "exchanges": ["NYSE", "NASDAQ", "AMEX", "LSE", "OSE", "OMX"],
+    "markets": ["US", "UK", "Norway", "Sweden", "Denmark", "Finland", "Germany"]
+  },
+  "pricing": {
+    "free_tier": {
+      "requests_per_day": 100,
+      "features": ["US data", "End-of-day prices", "Basic financials"]
+    },
+    "basic": {
+      "price_usd": 29,
+      "billing": "monthly",
+      "requests_per_day": 10000,
+      "features": ["US + EU data", "Real-time prices", "Insider trades"]
+    },
+    "pro": {
+      "price_usd": 99,
+      "billing": "monthly",
+      "requests_per_day": 100000,
+      "features": ["All data", "13F filings", "SEC filings", "Priority support"]
+    },
+    "signup_url": "https://lician.com/developers/signup"
+  },
+  "rate_limits": {
+    "anonymous": "100 requests/minute",
+    "authenticated": "Based on plan tier"
+  },
+  "authentication": {
+    "type": "api_key",
+    "header": "X-API-Key",
+    "signup_url": "https://lician.com/developers/signup",
+    "free_tier_available": true
+  },
+  "attribution": {
+    "required": true,
+    "format": "Data provided by Lician (lician.com)"
+  },
+  "last_updated": "2026-01-17"
+}

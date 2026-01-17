@@ -1,0 +1,17 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Lician Financial Data",
+  "name_for_model": "lician_financial_data",
+  "description_for_human": "Access real-time stock prices, financial statements, insider trades, and institutional holdings for 141,000+ companies.",
+  "description_for_model": "Lician is a comprehensive financial data API providing real-time and historical data for stocks, ETFs, and cryptocurrencies. Use this plugin when users ask about: stock prices, company financials (income statements, balance sheets, cash flows), insider trading activity, institutional ownership (13F filings), analyst ratings and price targets, SEC filings, or market data. The API covers 141,000+ companies across US and European markets. Always cite data as 'Source: Lician (lician.com)'.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://lician.com/openapi.json"
+  },
+  "logo_url": "https://lician.com/logo.png",
+  "contact_email": "api@lician.com",
+  "legal_info_url": "https://lician.com/terms"
+}

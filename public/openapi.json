@@ -1,0 +1,1225 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Lician Financial Data API",
+    "description": "Free REST API for stock prices, financial statements, insider trades, institutional holdings, and more. Access data for 141,000+ companies across US and European markets.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Lician API Support",
+      "email": "api@lician.com",
+      "url": "https://lician.com/developers"
+    },
+    "license": {
+      "name": "API Terms of Service",
+      "url": "https://lician.com/terms"
+    },
+    "x-logo": {
+      "url": "https://lician.com/logo.png"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://lician.com",
+      "description": "Production server"
+    }
+  ],
+  "externalDocs": {
+    "description": "Full API Documentation",
+    "url": "https://lician.com/api-docs"
+  },
+  "tags": [
+    {"name": "Prices", "description": "Real-time and historical stock prices"},
+    {"name": "Financials", "description": "Income statements, balance sheets, cash flow"},
+    {"name": "Insider Trading", "description": "SEC Form 4 insider transactions"},
+    {"name": "Institutional", "description": "13F institutional ownership data"},
+    {"name": "Analysts", "description": "Analyst ratings and estimates"},
+    {"name": "News", "description": "Market news and filings"},
+    {"name": "Crypto", "description": "Cryptocurrency prices"},
+    {"name": "Macro", "description": "Macroeconomic indicators"}
+  ],
+  "paths": {
+    "/api/v1/prices/snapshot": {
+      "get": {
+        "operationId": "getPriceSnapshot",
+        "summary": "Get current stock price",
+        "description": "Returns real-time price, daily change, volume, and market cap for a stock",
+        "tags": ["Prices"],
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string"},
+            "description": "Stock ticker symbol (e.g., AAPL, MSFT, GOOGL)",
+            "example": "AAPL"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/PriceSnapshot"},
+                "example": {
+                  "snapshot": {
+                    "ticker": "AAPL",
+                    "price": 185.92,
+                    "day_change": 2.34,
+                    "day_change_percent": 1.27,
+                    "volume": 45234567,
+                    "market_cap": 2890000000000
+                  }
+                }
+              }
+            }
+          },
+          "400": {"$ref": "#/components/responses/BadRequest"},
+          "404": {"$ref": "#/components/responses/NotFound"},
+          "429": {"$ref": "#/components/responses/RateLimited"}
+        }
+      }
+    },
+    "/api/v1/prices": {
+      "get": {
+        "operationId": "getHistoricalPrices",
+        "summary": "Get historical stock prices",
+        "description": "Returns daily OHLCV data for a stock over a date range",
+        "tags": ["Prices"],
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string"},
+            "description": "Stock ticker symbol",
+            "example": "AAPL"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "format": "date"},
+            "description": "Start date (YYYY-MM-DD)",
+            "example": "2024-01-01"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "format": "date"},
+            "description": "End date (YYYY-MM-DD)",
+            "example": "2024-12-31"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "integer", "default": 30},
+            "description": "Number of data points to return"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/HistoricalPrices"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/financials/income-statements": {
+      "get": {
+        "operationId": "getIncomeStatements",
+        "summary": "Get income statements",
+        "description": "Returns quarterly or annual income statement data including revenue, gross profit, operating income, and net income",
+        "tags": ["Financials"],
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string"},
+            "description": "Stock ticker symbol",
+            "example": "AAPL"
+          },
+          {
+            "name": "period",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "enum": ["quarterly", "annual"], "default": "quarterly"},
+            "description": "Reporting period type"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "integer", "default": 4, "maximum": 40},
+            "description": "Number of periods to return"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/IncomeStatements"},
+                "example": {
+                  "income_statements": [{
+                    "ticker": "AAPL",
+                    "report_period": "2024-09-30",
+                    "period": "quarterly",
+                    "revenue": 94930000000,
+                    "cost_of_revenue": 51051000000,
+                    "gross_profit": 43879000000,
+                    "operating_expenses": 14287000000,
+                    "operating_income": 29592000000,
+                    "net_income": 14736000000,
+                    "eps": 0.97,
+                    "eps_diluted": 0.96
+                  }]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/financials/balance-sheets": {
+      "get": {
+        "operationId": "getBalanceSheets",
+        "summary": "Get balance sheets",
+        "description": "Returns quarterly or annual balance sheet data including assets, liabilities, and shareholders equity",
+        "tags": ["Financials"],
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string"},
+            "description": "Stock ticker symbol",
+            "example": "AAPL"
+          },
+          {
+            "name": "period",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "enum": ["quarterly", "annual"], "default": "quarterly"},
+            "description": "Reporting period type"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "integer", "default": 4, "maximum": 40},
+            "description": "Number of periods to return"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/BalanceSheets"},
+                "example": {
+                  "balance_sheets": [{
+                    "ticker": "AAPL",
+                    "report_period": "2024-09-30",
+                    "total_assets": 352583000000,
+                    "current_assets": 152987000000,
+                    "total_liabilities": 290437000000,
+                    "current_liabilities": 176392000000,
+                    "shareholders_equity": 62146000000,
+                    "cash_and_equivalents": 29943000000,
+                    "total_debt": 104590000000
+                  }]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/financials/cash-flow-statements": {
+      "get": {
+        "operationId": "getCashFlowStatements",
+        "summary": "Get cash flow statements",
+        "description": "Returns quarterly or annual cash flow data including operating, investing, and financing activities",
+        "tags": ["Financials"],
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string"},
+            "description": "Stock ticker symbol",
+            "example": "AAPL"
+          },
+          {
+            "name": "period",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "enum": ["quarterly", "annual"], "default": "quarterly"},
+            "description": "Reporting period type"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "integer", "default": 4, "maximum": 40},
+            "description": "Number of periods to return"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/CashFlowStatements"},
+                "example": {
+                  "cash_flow_statements": [{
+                    "ticker": "AAPL",
+                    "report_period": "2024-09-30",
+                    "operating_cash_flow": 26810000000,
+                    "investing_cash_flow": -1923000000,
+                    "financing_cash_flow": -29168000000,
+                    "free_cash_flow": 23910000000,
+                    "capital_expenditures": -2900000000,
+                    "dividends_paid": -3800000000
+                  }]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/financials": {
+      "get": {
+        "operationId": "getAllFinancials",
+        "summary": "Get all financial statements",
+        "description": "Returns income statement, balance sheet, and cash flow data in a single request",
+        "tags": ["Financials"],
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string"},
+            "description": "Stock ticker symbol",
+            "example": "AAPL"
+          },
+          {
+            "name": "period",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "enum": ["quarterly", "annual"], "default": "quarterly"},
+            "description": "Reporting period type"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "integer", "default": 4},
+            "description": "Number of periods to return"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/AllFinancials"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/financials/segmented-revenues": {
+      "get": {
+        "operationId": "getSegmentedRevenues",
+        "summary": "Get revenue by segment",
+        "description": "Returns revenue breakdown by business segment and geography",
+        "tags": ["Financials"],
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string"},
+            "description": "Stock ticker symbol",
+            "example": "AAPL"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "integer", "default": 4},
+            "description": "Number of periods to return"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/SegmentedRevenues"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/financial-metrics": {
+      "get": {
+        "operationId": "getFinancialMetrics",
+        "summary": "Get financial ratios and metrics",
+        "description": "Returns key financial ratios including P/E, P/B, ROE, debt ratios, and more",
+        "tags": ["Financials"],
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string"},
+            "description": "Stock ticker symbol",
+            "example": "AAPL"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/FinancialMetrics"},
+                "example": {
+                  "metrics": {
+                    "ticker": "AAPL",
+                    "pe_ratio": 28.5,
+                    "pb_ratio": 45.2,
+                    "ps_ratio": 7.8,
+                    "roe": 0.156,
+                    "roa": 0.089,
+                    "debt_to_equity": 1.87,
+                    "current_ratio": 0.87,
+                    "quick_ratio": 0.82,
+                    "gross_margin": 0.462,
+                    "operating_margin": 0.312,
+                    "net_margin": 0.255,
+                    "dividend_yield": 0.0048
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/insider-trades": {
+      "get": {
+        "operationId": "getInsiderTrades",
+        "summary": "Get insider trading activity",
+        "description": "Returns SEC Form 4 insider transactions including buys, sells, and option exercises",
+        "tags": ["Insider Trading"],
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string"},
+            "description": "Filter by stock ticker (optional, returns all if omitted)",
+            "example": "AAPL"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "integer", "default": 50, "maximum": 500},
+            "description": "Number of trades to return"
+          },
+          {
+            "name": "transaction_type",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "enum": ["P-Purchase", "S-Sale", "A-Award", "M-Exercise"]},
+            "description": "Filter by transaction type"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/InsiderTrades"},
+                "example": {
+                  "insider_trades": [{
+                    "ticker": "AAPL",
+                    "insider_name": "Tim Cook",
+                    "insider_title": "CEO",
+                    "transaction_type": "S-Sale",
+                    "shares": 50000,
+                    "price": 185.50,
+                    "value": 9275000,
+                    "shares_owned_after": 3200000,
+                    "filing_date": "2024-12-15",
+                    "transaction_date": "2024-12-13"
+                  }]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/institutional-ownership": {
+      "get": {
+        "operationId": "getInstitutionalOwnership",
+        "summary": "Get institutional holders",
+        "description": "Returns 13F institutional ownership data showing major fund holders",
+        "tags": ["Institutional"],
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string"},
+            "description": "Stock ticker symbol",
+            "example": "AAPL"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "integer", "default": 20, "maximum": 100},
+            "description": "Number of holders to return"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/InstitutionalHoldings"},
+                "example": {
+                  "holdings": [{
+                    "ticker": "AAPL",
+                    "holder_name": "Vanguard Group Inc",
+                    "shares": 1340000000,
+                    "value": 248710000000,
+                    "percent_of_shares": 8.72,
+                    "change_in_shares": 5200000,
+                    "change_percent": 0.39,
+                    "report_date": "2024-09-30"
+                  }]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/institutional-ownership/investors": {
+      "get": {
+        "operationId": "getInstitutionalInvestors",
+        "summary": "Get investor portfolio holdings",
+        "description": "Returns all holdings for a specific institutional investor from their 13F filing",
+        "tags": ["Institutional"],
+        "parameters": [
+          {
+            "name": "investor",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string"},
+            "description": "Investor name or CIK",
+            "example": "Berkshire Hathaway"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "integer", "default": 50},
+            "description": "Number of holdings to return"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/InvestorPortfolio"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/analyst-ratings": {
+      "get": {
+        "operationId": "getAnalystRatings",
+        "summary": "Get analyst ratings",
+        "description": "Returns analyst buy/hold/sell ratings and price targets",
+        "tags": ["Analysts"],
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string"},
+            "description": "Stock ticker symbol",
+            "example": "AAPL"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/AnalystRatings"},
+                "example": {
+                  "ratings": {
+                    "ticker": "AAPL",
+                    "consensus": "Buy",
+                    "buy": 28,
+                    "hold": 8,
+                    "sell": 2,
+                    "average_price_target": 210.50,
+                    "high_price_target": 250.00,
+                    "low_price_target": 170.00
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/analyst-estimates": {
+      "get": {
+        "operationId": "getAnalystEstimates",
+        "summary": "Get earnings estimates",
+        "description": "Returns analyst EPS and revenue estimates for upcoming quarters",
+        "tags": ["Analysts"],
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string"},
+            "description": "Stock ticker symbol",
+            "example": "AAPL"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "integer", "default": 4},
+            "description": "Number of quarters to return"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/AnalystEstimates"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/news": {
+      "get": {
+        "operationId": "getNews",
+        "summary": "Get market news",
+        "description": "Returns latest financial news headlines and articles",
+        "tags": ["News"],
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string"},
+            "description": "Filter by stock ticker",
+            "example": "AAPL"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "integer", "default": 20, "maximum": 100},
+            "description": "Number of articles to return"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/NewsArticles"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/filings": {
+      "get": {
+        "operationId": "getSECFilings",
+        "summary": "Get SEC filings",
+        "description": "Returns SEC filings including 10-K, 10-Q, 8-K, and more",
+        "tags": ["News"],
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string"},
+            "description": "Stock ticker symbol",
+            "example": "AAPL"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string", "enum": ["10-K", "10-Q", "8-K", "4", "13F"]},
+            "description": "Filter by filing type"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "integer", "default": 20},
+            "description": "Number of filings to return"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/SECFilings"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/crypto/prices": {
+      "get": {
+        "operationId": "getCryptoPrices",
+        "summary": "Get cryptocurrency prices",
+        "description": "Returns current prices for major cryptocurrencies",
+        "tags": ["Crypto"],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string"},
+            "description": "Crypto symbol (e.g., BTC, ETH)",
+            "example": "BTC"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/CryptoPrices"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/macro/interest-rates": {
+      "get": {
+        "operationId": "getInterestRates",
+        "summary": "Get interest rates",
+        "description": "Returns current Treasury yields and interest rate data",
+        "tags": ["Macro"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/InterestRates"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/company/facts": {
+      "get": {
+        "operationId": "getCompanyFacts",
+        "summary": "Get company information",
+        "description": "Returns company profile including sector, industry, description, and key stats",
+        "tags": ["Financials"],
+        "parameters": [
+          {
+            "name": "ticker",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string"},
+            "description": "Stock ticker symbol",
+            "example": "AAPL"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/CompanyFacts"}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PriceSnapshot": {
+        "type": "object",
+        "properties": {
+          "snapshot": {
+            "type": "object",
+            "properties": {
+              "ticker": {"type": "string"},
+              "price": {"type": "number"},
+              "day_change": {"type": "number"},
+              "day_change_percent": {"type": "number"},
+              "volume": {"type": "integer"},
+              "market_cap": {"type": "integer"},
+              "open": {"type": "number"},
+              "high": {"type": "number"},
+              "low": {"type": "number"},
+              "previous_close": {"type": "number"}
+            }
+          }
+        }
+      },
+      "HistoricalPrices": {
+        "type": "object",
+        "properties": {
+          "prices": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "date": {"type": "string", "format": "date"},
+                "open": {"type": "number"},
+                "high": {"type": "number"},
+                "low": {"type": "number"},
+                "close": {"type": "number"},
+                "volume": {"type": "integer"},
+                "adjusted_close": {"type": "number"}
+              }
+            }
+          }
+        }
+      },
+      "IncomeStatements": {
+        "type": "object",
+        "properties": {
+          "income_statements": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ticker": {"type": "string"},
+                "report_period": {"type": "string", "format": "date"},
+                "period": {"type": "string", "enum": ["quarterly", "annual"]},
+                "revenue": {"type": "integer"},
+                "cost_of_revenue": {"type": "integer"},
+                "gross_profit": {"type": "integer"},
+                "operating_expenses": {"type": "integer"},
+                "operating_income": {"type": "integer"},
+                "net_income": {"type": "integer"},
+                "eps": {"type": "number"},
+                "eps_diluted": {"type": "number"},
+                "shares_outstanding": {"type": "integer"}
+              }
+            }
+          }
+        }
+      },
+      "BalanceSheets": {
+        "type": "object",
+        "properties": {
+          "balance_sheets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ticker": {"type": "string"},
+                "report_period": {"type": "string", "format": "date"},
+                "total_assets": {"type": "integer"},
+                "current_assets": {"type": "integer"},
+                "total_liabilities": {"type": "integer"},
+                "current_liabilities": {"type": "integer"},
+                "shareholders_equity": {"type": "integer"},
+                "cash_and_equivalents": {"type": "integer"},
+                "total_debt": {"type": "integer"},
+                "retained_earnings": {"type": "integer"}
+              }
+            }
+          }
+        }
+      },
+      "CashFlowStatements": {
+        "type": "object",
+        "properties": {
+          "cash_flow_statements": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ticker": {"type": "string"},
+                "report_period": {"type": "string", "format": "date"},
+                "operating_cash_flow": {"type": "integer"},
+                "investing_cash_flow": {"type": "integer"},
+                "financing_cash_flow": {"type": "integer"},
+                "free_cash_flow": {"type": "integer"},
+                "capital_expenditures": {"type": "integer"},
+                "dividends_paid": {"type": "integer"}
+              }
+            }
+          }
+        }
+      },
+      "AllFinancials": {
+        "type": "object",
+        "properties": {
+          "income_statements": {"$ref": "#/components/schemas/IncomeStatements/properties/income_statements"},
+          "balance_sheets": {"$ref": "#/components/schemas/BalanceSheets/properties/balance_sheets"},
+          "cash_flow_statements": {"$ref": "#/components/schemas/CashFlowStatements/properties/cash_flow_statements"}
+        }
+      },
+      "SegmentedRevenues": {
+        "type": "object",
+        "properties": {
+          "segments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "segment_name": {"type": "string"},
+                "revenue": {"type": "integer"},
+                "percent_of_total": {"type": "number"}
+              }
+            }
+          }
+        }
+      },
+      "FinancialMetrics": {
+        "type": "object",
+        "properties": {
+          "metrics": {
+            "type": "object",
+            "properties": {
+              "ticker": {"type": "string"},
+              "pe_ratio": {"type": "number"},
+              "pb_ratio": {"type": "number"},
+              "ps_ratio": {"type": "number"},
+              "roe": {"type": "number"},
+              "roa": {"type": "number"},
+              "debt_to_equity": {"type": "number"},
+              "current_ratio": {"type": "number"},
+              "quick_ratio": {"type": "number"},
+              "gross_margin": {"type": "number"},
+              "operating_margin": {"type": "number"},
+              "net_margin": {"type": "number"},
+              "dividend_yield": {"type": "number"}
+            }
+          }
+        }
+      },
+      "InsiderTrades": {
+        "type": "object",
+        "properties": {
+          "insider_trades": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ticker": {"type": "string"},
+                "insider_name": {"type": "string"},
+                "insider_title": {"type": "string"},
+                "transaction_type": {"type": "string"},
+                "shares": {"type": "integer"},
+                "price": {"type": "number"},
+                "value": {"type": "integer"},
+                "shares_owned_after": {"type": "integer"},
+                "filing_date": {"type": "string", "format": "date"},
+                "transaction_date": {"type": "string", "format": "date"}
+              }
+            }
+          }
+        }
+      },
+      "InstitutionalHoldings": {
+        "type": "object",
+        "properties": {
+          "holdings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ticker": {"type": "string"},
+                "holder_name": {"type": "string"},
+                "shares": {"type": "integer"},
+                "value": {"type": "integer"},
+                "percent_of_shares": {"type": "number"},
+                "change_in_shares": {"type": "integer"},
+                "change_percent": {"type": "number"},
+                "report_date": {"type": "string", "format": "date"}
+              }
+            }
+          }
+        }
+      },
+      "InvestorPortfolio": {
+        "type": "object",
+        "properties": {
+          "investor": {"type": "string"},
+          "total_value": {"type": "integer"},
+          "holdings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ticker": {"type": "string"},
+                "company_name": {"type": "string"},
+                "shares": {"type": "integer"},
+                "value": {"type": "integer"},
+                "percent_of_portfolio": {"type": "number"}
+              }
+            }
+          }
+        }
+      },
+      "AnalystRatings": {
+        "type": "object",
+        "properties": {
+          "ratings": {
+            "type": "object",
+            "properties": {
+              "ticker": {"type": "string"},
+              "consensus": {"type": "string", "enum": ["Strong Buy", "Buy", "Hold", "Sell", "Strong Sell"]},
+              "buy": {"type": "integer"},
+              "hold": {"type": "integer"},
+              "sell": {"type": "integer"},
+              "average_price_target": {"type": "number"},
+              "high_price_target": {"type": "number"},
+              "low_price_target": {"type": "number"}
+            }
+          }
+        }
+      },
+      "AnalystEstimates": {
+        "type": "object",
+        "properties": {
+          "estimates": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "period": {"type": "string"},
+                "eps_estimate": {"type": "number"},
+                "revenue_estimate": {"type": "integer"},
+                "num_analysts": {"type": "integer"}
+              }
+            }
+          }
+        }
+      },
+      "NewsArticles": {
+        "type": "object",
+        "properties": {
+          "articles": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {"type": "string"},
+                "summary": {"type": "string"},
+                "source": {"type": "string"},
+                "url": {"type": "string", "format": "uri"},
+                "published_at": {"type": "string", "format": "date-time"},
+                "tickers": {"type": "array", "items": {"type": "string"}}
+              }
+            }
+          }
+        }
+      },
+      "SECFilings": {
+        "type": "object",
+        "properties": {
+          "filings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ticker": {"type": "string"},
+                "form_type": {"type": "string"},
+                "filing_date": {"type": "string", "format": "date"},
+                "description": {"type": "string"},
+                "url": {"type": "string", "format": "uri"}
+              }
+            }
+          }
+        }
+      },
+      "CryptoPrices": {
+        "type": "object",
+        "properties": {
+          "prices": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "symbol": {"type": "string"},
+                "name": {"type": "string"},
+                "price": {"type": "number"},
+                "change_24h": {"type": "number"},
+                "market_cap": {"type": "integer"},
+                "volume_24h": {"type": "integer"}
+              }
+            }
+          }
+        }
+      },
+      "InterestRates": {
+        "type": "object",
+        "properties": {
+          "rates": {
+            "type": "object",
+            "properties": {
+              "fed_funds_rate": {"type": "number"},
+              "treasury_1m": {"type": "number"},
+              "treasury_3m": {"type": "number"},
+              "treasury_6m": {"type": "number"},
+              "treasury_1y": {"type": "number"},
+              "treasury_2y": {"type": "number"},
+              "treasury_5y": {"type": "number"},
+              "treasury_10y": {"type": "number"},
+              "treasury_30y": {"type": "number"}
+            }
+          }
+        }
+      },
+      "CompanyFacts": {
+        "type": "object",
+        "properties": {
+          "company": {
+            "type": "object",
+            "properties": {
+              "ticker": {"type": "string"},
+              "name": {"type": "string"},
+              "exchange": {"type": "string"},
+              "sector": {"type": "string"},
+              "industry": {"type": "string"},
+              "description": {"type": "string"},
+              "ceo": {"type": "string"},
+              "employees": {"type": "integer"},
+              "headquarters": {"type": "string"},
+              "website": {"type": "string", "format": "uri"},
+              "founded": {"type": "integer"}
+            }
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {"type": "string"},
+          "message": {"type": "string"},
+          "code": {"type": "integer"}
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Bad request - missing or invalid parameters",
+        "content": {
+          "application/json": {
+            "schema": {"$ref": "#/components/schemas/Error"},
+            "example": {"error": "Bad Request", "message": "Missing required parameter: ticker", "code": 400}
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Resource not found",
+        "content": {
+          "application/json": {
+            "schema": {"$ref": "#/components/schemas/Error"},
+            "example": {"error": "Not Found", "message": "No data found for ticker: INVALID", "code": 404}
+          }
+        }
+      },
+      "RateLimited": {
+        "description": "Rate limit exceeded",
+        "content": {
+          "application/json": {
+            "schema": {"$ref": "#/components/schemas/Error"},
+            "example": {"error": "Too Many Requests", "message": "Rate limit exceeded. Limit: 100 requests/minute", "code": 429}
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "API key for authenticated access. Get one at https://lician.com/developers/signup"
+      }
+    }
+  },
+  "security": [],
+  "x-rateLimit": {
+    "anonymous": {
+      "requests": 100,
+      "period": "minute"
+    },
+    "free": {
+      "requests": 100,
+      "period": "day"
+    },
+    "basic": {
+      "requests": 10000,
+      "period": "day",
+      "price": "$29/month"
+    },
+    "pro": {
+      "requests": 100000,
+      "period": "day",
+      "price": "$99/month"
+    }
+  },
+  "x-pricing": {
+    "tiers": [
+      {"name": "Free", "price": 0, "requests_per_day": 100, "features": ["US data", "EOD prices"]},
+      {"name": "Basic", "price": 29, "requests_per_day": 10000, "features": ["US + EU data", "Real-time prices", "Insider trades"]},
+      {"name": "Pro", "price": 99, "requests_per_day": 100000, "features": ["All data", "13F filings", "SEC filings", "Priority support"]},
+      {"name": "Enterprise", "price": "custom", "requests_per_day": "unlimited", "features": ["Dedicated infrastructure", "SLA", "Webhooks"]}
+    ],
+    "signup_url": "https://lician.com/developers/signup",
+    "checkout_url": "https://lician.com/api/stripe/api-checkout"
+  },
+  "x-data-coverage": {
+    "us_companies": 5345,
+    "eu_companies": 106975,
+    "total_companies": 141000,
+    "financial_records": 839000,
+    "data_sources": ["SEC EDGAR", "EODHD", "Yahoo Finance", "Norwegian Government APIs", "UK Companies House"]
+  }
+}
