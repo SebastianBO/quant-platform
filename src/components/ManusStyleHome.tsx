@@ -118,11 +118,11 @@ const CAROUSEL_SLIDES = [
     title: "100,000+ Companies Analyzed",
     subtitle: "US, Norway, UK, Finland, Denmark and growing",
     tags: [
-      { label: "🇺🇸 US", query: "Show me top US tech companies" },
-      { label: "🇳🇴 Norway", query: "Analyze Norwegian oil and energy stocks" },
-      { label: "🇬🇧 UK", query: "Find UK FTSE 100 companies" },
-      { label: "🇫🇮 Finland", query: "Show Finnish companies like Nokia" },
-      { label: "🇩🇰 Denmark", query: "Analyze Danish companies like Novo Nordisk" },
+      { label: "US", query: "Show me top US tech companies" },
+      { label: "Norway", query: "Analyze Norwegian oil and energy stocks" },
+      { label: "UK", query: "Find UK FTSE 100 companies" },
+      { label: "Finland", query: "Show Finnish companies like Nokia" },
+      { label: "Denmark", query: "Analyze Danish companies like Novo Nordisk" },
     ],
     icon: "globe",
     link: "/markets",
@@ -192,7 +192,7 @@ const SidebarNavButton = memo(function SidebarNavButton({
     <button
       onClick={onClick}
       className={cn(
-        "w-full flex items-center gap-3 px-2.5 py-2.5 rounded-xl transition-colors duration-100",
+        "w-full flex items-center gap-3 px-2.5 py-2.5 rounded-xl motion-safe:transition-colors duration-150 ease-out",
         "text-[#868f97] hover:text-white hover:bg-white/[0.05]",
         item.action === "new" && "bg-[#4ebe96]/10 text-[#4ebe96] hover:bg-[#4ebe96]/20"
       )}
@@ -217,7 +217,7 @@ const SidebarNavLink = memo(function SidebarNavLink({
     <Link
       href={item.href}
       className={cn(
-        "w-full flex items-center gap-3 px-2.5 py-2.5 rounded-xl transition-colors duration-100",
+        "w-full flex items-center gap-3 px-2.5 py-2.5 rounded-xl motion-safe:transition-colors duration-150 ease-out",
         "text-[#868f97] hover:text-white hover:bg-white/[0.05]"
       )}
       title={item.label}
@@ -268,7 +268,7 @@ const ChatMessage = memo(function ChatMessage({
           "max-w-[85%] rounded-2xl px-4 py-3",
           message.role === 'user'
             ? "bg-[#4ebe96] text-black"
-            : "bg-[#1a1a1a] border border-white/[0.08]"
+            : "bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08]"
         )}
       >
         <div className="text-sm whitespace-pre-wrap">
@@ -288,7 +288,7 @@ const ChatMessage = memo(function ChatMessage({
         {message.role === 'assistant' && message.content && (
           <button
             onClick={() => onCopy(message.content, message.id)}
-            className="mt-2 p-1 text-[#868f97] hover:text-white rounded transition-colors duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d1117]"
+            className="mt-2 p-1 text-[#868f97] hover:text-white rounded motion-safe:transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             aria-label={copiedId === message.id ? "Message copied" : "Copy message"}
           >
             {copiedId === message.id ? (
@@ -928,11 +928,11 @@ export default function ManusStyleHome() {
   const hasMessages = messages.length > 0
 
   return (
-    <div className="flex h-dvh bg-[#000]">
+    <div className="flex h-dvh bg-black">
       {/* Left Sidebar - Hidden on mobile */}
       <aside
         className={cn(
-          "hidden md:flex flex-col py-4 border-r border-white/[0.08] bg-[#0a0a0a] motion-safe:transition-[width] duration-[250ms]",
+          "hidden md:flex flex-col py-4 border-r border-white/[0.08] bg-white/[0.02] motion-safe:transition-[width] duration-250 ease-out",
           sidebarExpanded ? "w-52" : "w-14"
         )}
         onMouseEnter={() => setSidebarExpanded(true)}
@@ -997,7 +997,7 @@ export default function ManusStyleHome() {
               <div className="hidden sm:flex items-center gap-2 text-sm">
                 <span className="text-[#868f97]">Free plan</span>
                 <span className="text-[#868f97]">|</span>
-                <Link href="/api/stripe/quick-checkout?plan=annual" prefetch={false} className="text-[#4ebe96] hover:text-[#4ebe96]/80 font-medium transition-colors duration-100">
+                <Link href="/api/stripe/quick-checkout?plan=annual" prefetch={false} className="text-[#4ebe96] hover:text-[#4ebe96]/80 font-medium motion-safe:transition-colors duration-150 ease-out">
                   Start free trial
                 </Link>
               </div>
@@ -1005,13 +1005,13 @@ export default function ManusStyleHome() {
 
             {/* Credits */}
             <div className="flex items-center gap-1.5 md:gap-2 px-2 md:px-3 py-1.5 bg-white/[0.05] rounded-full">
-              <Zap className="w-4 h-4 text-[#f4a623]" />
+              <Zap className="w-4 h-4 text-[#ffa16c]" />
               <span className="text-sm font-medium text-white">{credits}</span>
             </div>
 
             {/* Share credits - hidden on mobile */}
             <button
-              className="hidden md:block p-2 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.05] transition-colors duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d1117]"
+              className="hidden md:block p-2 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.05] motion-safe:transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               aria-label="Invite friends for free credits"
             >
               <Gift className="w-5 h-5" />
@@ -1019,7 +1019,7 @@ export default function ManusStyleHome() {
 
             {/* Notifications - hidden on mobile */}
             <button
-              className="hidden md:block p-2 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.05] transition-colors duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d1117]"
+              className="hidden md:block p-2 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.05] motion-safe:transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               aria-label="View notifications"
             >
               <Bell className="w-5 h-5" />
@@ -1037,10 +1037,10 @@ export default function ManusStyleHome() {
             ) : (
               <div className="flex items-center gap-2">
                 <Link href="/login">
-                  <Button variant="ghost" size="sm" className="text-[#868f97] hover:text-white transition-colors duration-100">Sign in</Button>
+                  <Button variant="ghost" size="sm" className="text-[#868f97] hover:text-white motion-safe:transition-colors duration-150 ease-out">Sign in</Button>
                 </Link>
                 <Link href="/login">
-                  <Button size="sm" className="bg-[#4ebe96] text-black hover:bg-[#4ebe96]/90 transition-colors duration-100">Sign up</Button>
+                  <Button size="sm" className="bg-[#4ebe96] text-black hover:bg-[#4ebe96]/90 rounded-full motion-safe:transition-opacity duration-150 ease-out">Sign up</Button>
                 </Link>
               </div>
             )}
@@ -1067,7 +1067,7 @@ export default function ManusStyleHome() {
 
                 {/* Research tasks indicator */}
                 {isLoading && tasks.length > 0 && (
-                  <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-xl p-4">
+                  <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-3">
                       <Loader2 className="w-4 h-4 motion-safe:animate-spin text-[#4ebe96]" />
                       <span className="text-sm font-medium">Researching...</span>
@@ -1089,12 +1089,12 @@ export default function ManusStyleHome() {
           <div className={cn(
             "flex flex-col items-center px-4 md:px-6 py-4 md:py-8",
             hasMessages
-              ? "fixed bottom-0 left-0 right-0 md:relative md:bottom-auto bg-[#000] border-t border-white/[0.08] safe-area-bottom z-40"
+              ? "fixed bottom-0 left-0 right-0 md:relative md:bottom-auto bg-black border-t border-white/[0.08] safe-area-bottom z-40"
               : "min-h-0"
           )}>
             {/* Heading - only show when no messages */}
             {!hasMessages && (
-              <h1 className="text-3xl md:text-5xl font-semibold text-center mb-6 md:mb-10 px-4 text-white">
+              <h1 className="text-3xl md:text-5xl font-semibold text-center mb-6 md:mb-10 px-4 text-white tracking-[-0.02em]">
                 What can I do for you?
               </h1>
             )}
@@ -1128,8 +1128,8 @@ export default function ManusStyleHome() {
                           onClick={() => handleToolClick(tool)}
                           className={cn(
                             "flex items-center gap-2 px-3 md:px-4 py-2 md:py-2.5 rounded-full",
-                            "border border-white/[0.08] bg-[#1a1a1a] hover:bg-white/[0.08]",
-                            "text-sm font-medium text-white transition-colors duration-100 whitespace-nowrap"
+                            "border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/[0.15]",
+                            "text-sm font-medium text-white motion-safe:transition-colors duration-150 ease-out whitespace-nowrap"
                           )}
                         >
                           <tool.icon className="w-4 h-4" />
@@ -1138,12 +1138,12 @@ export default function ManusStyleHome() {
 
                         {/* More tools dropdown */}
                         {tool.id === "more" && showMoreTools && (
-                          <div className="absolute top-full right-0 mt-2 w-56 bg-[#1a1a1a] border border-white/[0.08] rounded-xl shadow-xl py-2 z-50">
+                          <div className="absolute top-full right-0 mt-2 w-56 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-xl shadow-xl py-2 z-50">
                             {MORE_TOOLS.map((moreTool) => (
                               <Link
                                 key={moreTool.label}
                                 href={moreTool.href}
-                                className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/[0.05] transition-colors duration-100"
+                                className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/[0.05] motion-safe:transition-colors duration-150 ease-out"
                                 onClick={() => setShowMoreTools(false)}
                               >
                                 <moreTool.icon className="w-4 h-4 text-[#868f97]" />
@@ -1169,7 +1169,7 @@ export default function ManusStyleHome() {
                           <Link
                             key={mover.symbol}
                             href={`/stock/${mover.symbol}`}
-                            className="motion-safe:hover:scale-110 motion-safe:transition-transform duration-100"
+                            className="motion-safe:hover:scale-110 motion-safe:transition-transform duration-150 ease-out"
                             title={`${mover.symbol} - ${mover.changePercent > 0 ? '+' : ''}${mover.changePercent?.toFixed(2)}%`}
                           >
                             <StockLogo symbol={mover.symbol} size="sm" />
@@ -1199,14 +1199,14 @@ export default function ManusStyleHome() {
                           role="button"
                           tabIndex={0}
                           aria-label={`${CAROUSEL_SLIDES[carouselIndex].title}: ${CAROUSEL_SLIDES[carouselIndex].subtitle}`}
-                          className="bg-[#1a1a1a]/80 border border-white/[0.08] rounded-2xl p-4 md:p-5 cursor-pointer hover:bg-[#1a1a1a] transition-colors duration-100 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d1117]"
+                          className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 md:p-5 cursor-pointer hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-colors duration-150 ease-out group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                         >
                           <div className="flex items-start justify-between gap-4 md:gap-6">
                             {/* Left content */}
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 mb-2">
                                 <h2 className="font-semibold text-base md:text-lg truncate text-white">{CAROUSEL_SLIDES[carouselIndex].title}</h2>
-                                <ChevronRight className="w-4 h-4 text-[#868f97] motion-safe:group-hover:translate-x-1 motion-safe:transition-transform duration-100" />
+                                <ChevronRight className="w-4 h-4 text-[#868f97] motion-safe:group-hover:translate-x-1 motion-safe:transition-transform duration-150 ease-out" />
                               </div>
                               <p className="text-sm text-[#868f97] mb-4">
                                 {CAROUSEL_SLIDES[carouselIndex].subtitle}
@@ -1224,7 +1224,7 @@ export default function ManusStyleHome() {
                                         // Focus the input
                                         textareaRef.current?.focus()
                                       }}
-                                      className="px-3 py-1.5 text-xs rounded-full border border-white/[0.08] bg-white/[0.05] text-[#868f97] hover:bg-white/[0.08] hover:text-white hover:border-[#4ebe96]/50 transition-colors duration-100 cursor-pointer"
+                                      className="px-3 py-1.5 text-xs rounded-full border border-white/[0.08] bg-white/[0.05] text-[#868f97] hover:bg-white/[0.08] hover:text-white hover:border-[#4ebe96]/50 motion-safe:transition-colors duration-150 ease-out cursor-pointer"
                                     >
                                       {tag.label}
                                     </button>
@@ -1244,7 +1244,7 @@ export default function ManusStyleHome() {
                                 </div>
                               )}
                               {CAROUSEL_SLIDES[carouselIndex].icon === "social" && (
-                                <div className="size-16 bg-[#1a1a1a] rounded-lg border border-white/[0.08] shadow-lg p-2">
+                                <div className="size-16 bg-white/[0.03] rounded-lg border border-white/[0.08] shadow-lg p-2">
                                   <div className="w-full h-2 bg-white/10 rounded mb-1" />
                                   <div className="w-3/4 h-2 bg-white/10 rounded mb-1" />
                                   <div className="w-1/2 h-2 bg-white/10 rounded" />
@@ -1269,7 +1269,7 @@ export default function ManusStyleHome() {
                                   e.stopPropagation()
                                   setShowDismissTooltip(true)
                                 }}
-                                className="p-1.5 rounded-full hover:bg-white/[0.05] transition-colors duration-100 text-[#868f97] hover:text-white"
+                                className="p-1.5 rounded-full hover:bg-white/[0.05] motion-safe:transition-colors duration-150 ease-out text-[#868f97] hover:text-white"
                                 aria-label="Dismiss carousel"
                               >
                                 <X className="w-4 h-4" />
@@ -1283,7 +1283,7 @@ export default function ManusStyleHome() {
                                       handleDismissCarousel()
                                       setShowDismissTooltip(false)
                                     }}
-                                    className="whitespace-nowrap px-3 py-2 bg-white text-black text-sm rounded-lg shadow-xl"
+                                    className="whitespace-nowrap px-3 py-2 bg-white text-black text-sm rounded-full shadow-xl"
                                   >
                                     Don't show again
                                   </button>
@@ -1300,7 +1300,7 @@ export default function ManusStyleHome() {
                               key={index}
                               onClick={() => setCarouselIndex(index)}
                               className={cn(
-                                "size-2 rounded-full transition-colors duration-100",
+                                "size-2 rounded-full motion-safe:transition-colors duration-150 ease-out",
                                 index === carouselIndex ? "bg-white" : "bg-white/20"
                               )}
                               aria-label={`Go to slide ${index + 1}: ${slide.title}`}
@@ -1328,7 +1328,7 @@ export default function ManusStyleHome() {
                           <Link
                             key={ticker}
                             href={`/stock/${ticker.toLowerCase()}`}
-                            className="px-3 md:px-4 py-2 bg-[#1a1a1a] border border-white/[0.08] rounded-lg hover:border-[#4ebe96]/50 hover:bg-white/[0.08] transition-colors duration-100 text-sm font-medium text-white flex-shrink-0"
+                            className="px-3 md:px-4 py-2 bg-white/[0.03] border border-white/[0.08] rounded-lg hover:border-[#4ebe96]/50 hover:bg-white/[0.08] motion-safe:transition-colors duration-150 ease-out text-sm font-medium text-white flex-shrink-0"
                           >
                             {ticker}
                           </Link>
@@ -1344,7 +1344,7 @@ export default function ManusStyleHome() {
                           <Link
                             key={ticker}
                             href={`/prediction/${ticker.toLowerCase()}`}
-                            className="px-3 md:px-4 py-2 bg-[#1a1a1a] border border-white/[0.08] rounded-lg hover:border-[#4ebe96]/50 hover:bg-white/[0.08] transition-colors duration-100 text-sm text-white whitespace-nowrap flex-shrink-0"
+                            className="px-3 md:px-4 py-2 bg-white/[0.03] border border-white/[0.08] rounded-lg hover:border-[#4ebe96]/50 hover:bg-white/[0.08] motion-safe:transition-colors duration-150 ease-out text-sm text-white whitespace-nowrap flex-shrink-0"
                           >
                             {ticker} Prediction
                           </Link>
@@ -1367,7 +1367,7 @@ export default function ManusStyleHome() {
                           <Link
                             key={pair.slug}
                             href={`/compare/${pair.slug}`}
-                            className="px-3 md:px-4 py-2 bg-[#1a1a1a] border border-white/[0.08] rounded-lg hover:border-[#4ebe96]/50 hover:bg-white/[0.08] transition-colors duration-100 text-sm text-white whitespace-nowrap flex-shrink-0"
+                            className="px-3 md:px-4 py-2 bg-white/[0.03] border border-white/[0.08] rounded-lg hover:border-[#4ebe96]/50 hover:bg-white/[0.08] motion-safe:transition-colors duration-150 ease-out text-sm text-white whitespace-nowrap flex-shrink-0"
                           >
                             {pair.label}
                           </Link>
@@ -1383,7 +1383,7 @@ export default function ManusStyleHome() {
                           <Link
                             key={ticker}
                             href={`/should-i-buy/${ticker.toLowerCase()}`}
-                            className="px-3 md:px-4 py-2 bg-[#1a1a1a] border border-white/[0.08] rounded-lg hover:border-[#4ebe96]/50 hover:bg-white/[0.08] transition-colors duration-100 text-sm text-white whitespace-nowrap flex-shrink-0"
+                            className="px-3 md:px-4 py-2 bg-white/[0.03] border border-white/[0.08] rounded-lg hover:border-[#4ebe96]/50 hover:bg-white/[0.08] motion-safe:transition-colors duration-150 ease-out text-sm text-white whitespace-nowrap flex-shrink-0"
                           >
                             Should I Buy {ticker}?
                           </Link>
@@ -1406,7 +1406,7 @@ export default function ManusStyleHome() {
                           <Link
                             key={sector.slug}
                             href={`/sectors/${sector.slug}`}
-                            className="px-3 md:px-4 py-2 bg-[#4ebe96]/20 text-[#4ebe96] border border-[#4ebe96]/30 rounded-lg hover:bg-[#4ebe96]/30 transition-colors duration-100 text-sm whitespace-nowrap flex-shrink-0"
+                            className="px-3 md:px-4 py-2 bg-[#4ebe96]/20 text-[#4ebe96] border border-[#4ebe96]/30 rounded-lg hover:bg-[#4ebe96]/30 motion-safe:transition-colors duration-150 ease-out text-sm whitespace-nowrap flex-shrink-0"
                           >
                             {sector.label}
                           </Link>
@@ -1448,12 +1448,12 @@ export default function ManusStyleHome() {
       {/* Auth Prompt Modal */}
       {showAuthPrompt && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-2xl p-8 max-w-md mx-4 shadow-2xl">
+          <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 max-w-md mx-4 shadow-2xl">
             <div className="text-center mb-6">
               <div className="size-16 bg-[#4ebe96]/20 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Sparkles className="w-8 h-8 text-[#4ebe96]" />
               </div>
-              <h2 className="text-2xl font-bold mb-2 text-white">Sign in to continue</h2>
+              <h2 className="text-2xl font-bold mb-2 text-white tracking-[-0.02em]">Sign in to continue</h2>
               <p className="text-[#868f97]">
                 Create a free account to use AI-powered stock analysis
               </p>
@@ -1462,21 +1462,21 @@ export default function ManusStyleHome() {
               <Link
                 href="/login"
                 onClick={() => trackCTAClick('sign_in', 'auth_modal')}
-                className="w-full block text-center py-3 px-4 bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black rounded-lg font-medium transition-colors duration-100"
+                className="w-full block text-center py-3.5 px-6 bg-[#4ebe96] hover:opacity-90 text-black rounded-full font-semibold motion-safe:transition-opacity duration-150 ease-out"
               >
                 Sign in
               </Link>
               <Link
                 href="/login?signup=true"
                 onClick={() => trackCTAClick('create_account', 'auth_modal')}
-                className="w-full block text-center py-3 px-4 bg-white/[0.05] hover:bg-white/[0.08] text-white rounded-lg font-medium transition-colors duration-100"
+                className="w-full block text-center py-3.5 px-6 bg-white/[0.05] hover:bg-white/[0.08] text-white border border-white/[0.15] hover:border-white/[0.25] rounded-full font-medium motion-safe:transition-colors duration-150 ease-out"
               >
                 Create free account
               </Link>
             </div>
             <button
               onClick={() => setShowAuthPrompt(false)}
-              className="w-full mt-4 py-2 text-sm text-[#868f97] hover:text-white transition-colors duration-100"
+              className="w-full mt-4 py-2 text-sm text-[#868f97] hover:text-white motion-safe:transition-colors duration-150 ease-out"
             >
               Maybe later
             </button>
@@ -1487,17 +1487,17 @@ export default function ManusStyleHome() {
       {/* Payment Prompt Modal */}
       {showPaymentPrompt && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-2xl p-8 max-w-md mx-4 shadow-2xl">
+          <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 max-w-md mx-4 shadow-2xl">
             <div className="text-center mb-6">
               <div className="size-16 bg-gradient-to-br from-[#4ebe96] to-[#3da87e] rounded-full flex items-center justify-center mx-auto mb-4">
                 <Zap className="w-8 h-8 text-black" />
               </div>
-              <h2 className="text-2xl font-bold mb-2 text-white">Upgrade to Premium</h2>
+              <h2 className="text-2xl font-bold mb-2 text-white tracking-[-0.02em]">Upgrade to Premium</h2>
               <p className="text-[#868f97]">
                 You have used your 3 free queries. Upgrade for unlimited AI analysis.
               </p>
             </div>
-            <div className="bg-white/[0.05] rounded-xl p-4 mb-6">
+            <div className="bg-white/[0.05] rounded-xl p-4 mb-6 border border-white/[0.08]">
               <div className="flex items-center justify-between mb-2">
                 <span className="font-medium text-white">Lician Pro</span>
                 <span className="text-[#4ebe96] font-bold">$109/mo</span>
@@ -1516,13 +1516,13 @@ export default function ManusStyleHome() {
                 trackCTAClick('start_trial', 'payment_modal')
                 trackBeginCheckout('annual', 109)
               }}
-              className="w-full block text-center py-3 px-4 bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black rounded-lg font-medium transition-colors duration-100"
+              className="w-full block text-center py-3.5 px-6 bg-[#4ebe96] hover:opacity-90 text-black rounded-full font-semibold motion-safe:transition-opacity duration-150 ease-out"
             >
               Start 3-day free trial
             </Link>
             <button
               onClick={() => setShowPaymentPrompt(false)}
-              className="w-full mt-4 py-2 text-sm text-[#868f97] hover:text-white transition-colors duration-100"
+              className="w-full mt-4 py-2 text-sm text-[#868f97] hover:text-white motion-safe:transition-colors duration-150 ease-out"
             >
               Maybe later
             </button>
@@ -1532,4 +1532,3 @@ export default function ManusStyleHome() {
     </div>
   )
 }
-// Deployed at 1767871585

@@ -151,10 +151,13 @@ export function Header() {
   const isDashboard = pathname?.startsWith("/dashboard") || pathname?.startsWith("/stock/")
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#000]/80 backdrop-blur-md border-b border-white/[0.08]">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[#000] backdrop-blur-[10px] border-b border-white/[0.08]">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3 sm:py-4 lg:px-8" ref={menuRef}>
         <div className="flex items-center gap-4 sm:gap-8">
-          <Link href="/" className="flex items-center gap-2">
+          <Link
+            href="/"
+            className="flex items-center gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+          >
             <div className="size-8 bg-white rounded-lg flex items-center justify-center">
               <span className="text-black font-bold text-lg">L</span>
             </div>
@@ -165,7 +168,7 @@ export function Header() {
             {Object.entries(navMenus).map(([name, menu]) => (
               <div key={name} className="relative">
                 <button
-                  className={`flex items-center gap-1 px-3 py-2 text-sm rounded-lg transition-colors duration-100 min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
+                  className={`flex items-center gap-1 px-3 py-2 text-sm rounded-lg motion-safe:transition-all motion-safe:duration-150 min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                     activeMenu === name
                       ? "bg-white/[0.08] text-white"
                       : "text-[#868f97] hover:text-white hover:bg-white/[0.05]"
@@ -176,11 +179,11 @@ export function Header() {
                 >
                   <menu.icon className="w-4 h-4" />
                   {name}
-                  <ChevronDown className={`w-4 h-4 motion-safe:transition-transform ${activeMenu === name ? "rotate-180" : ""}`} />
+                  <ChevronDown className={`w-4 h-4 motion-safe:transition-transform motion-safe:duration-150 ${activeMenu === name ? "rotate-180" : ""}`} />
                 </button>
 
                 {activeMenu === name && (
-                  <div className="absolute top-full left-0 mt-2 bg-[#1a1a1a] border border-white/[0.08] rounded-2xl shadow-xl p-4 min-w-[500px] grid grid-cols-2 gap-6 z-50">
+                  <div className="absolute top-full left-0 mt-2 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl shadow-xl p-4 min-w-[500px] grid grid-cols-2 gap-6 z-50">
                     {menu.sections.map((section) => (
                       <div key={section.title}>
                         <h4 className="text-xs font-semibold text-[#868f97] uppercase tracking-wider mb-3">
@@ -191,11 +194,11 @@ export function Header() {
                             <li key={link.href}>
                               <Link
                                 href={link.href}
-                                className="block p-2 rounded-lg hover:bg-white/[0.05] transition-colors duration-100 group min-h-[44px] flex items-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-inset"
+                                className="block p-2 rounded-lg hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 group min-h-[44px] flex items-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-inset"
                                 onClick={() => setActiveMenu(null)}
                               >
                                 <div>
-                                  <span className="font-medium text-white group-hover:text-[#4ebe96] transition-colors duration-100">
+                                  <span className="font-medium text-white group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150">
                                     {link.label}
                                   </span>
                                   <p className="text-xs text-[#868f97]">{link.desc}</p>
@@ -212,7 +215,7 @@ export function Header() {
             ))}
             <Link
               href="/premium"
-              className="px-3 py-2 text-sm text-[#868f97] hover:text-white transition-colors duration-100 min-h-[44px] flex items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+              className="px-3 py-2 text-sm text-[#868f97] hover:text-white motion-safe:transition-colors motion-safe:duration-150 min-h-[44px] flex items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
               Pricing
             </Link>
@@ -226,7 +229,10 @@ export function Header() {
           {/* Portfolio Connect */}
           {!user && !loading && (
             <Link href="/dashboard/portfolios">
-              <Button variant="outline" className="border-[#4ebe96]/50 text-[#4ebe96] hover:bg-[#4ebe96]/10 gap-2 transition-colors duration-100">
+              <Button
+                variant="outline"
+                className="border-[#4ebe96]/50 text-[#4ebe96] hover:bg-[#4ebe96]/10 hover:border-[#4ebe96] gap-2 motion-safe:transition-all motion-safe:duration-150 focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+              >
                 <Wallet className="w-4 h-4" />
                 Connect Portfolio
               </Button>
@@ -241,7 +247,7 @@ export function Header() {
               <Link href="/dashboard">
                 <Button
                   variant="outline"
-                  className={`border-white/[0.08] hover:bg-white/[0.05] bg-transparent gap-2 min-h-[44px] transition-colors duration-100 ${
+                  className={`border-white/[0.08] hover:bg-white/[0.05] hover:border-white/[0.15] bg-transparent gap-2 min-h-[44px] motion-safe:transition-all motion-safe:duration-150 focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                     isDashboard ? "text-[#4ebe96] border-[#4ebe96]/50" : "text-white"
                   }`}
                 >
@@ -253,7 +259,7 @@ export function Header() {
                 variant="ghost"
                 size="icon"
                 onClick={handleLogout}
-                className="text-[#868f97] hover:text-white min-h-[44px] min-w-[44px] transition-colors duration-100"
+                className="text-[#868f97] hover:text-white hover:bg-white/[0.05] min-h-[44px] min-w-[44px] motion-safe:transition-all motion-safe:duration-150 focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                 aria-label="Sign out"
               >
                 <LogOut className="w-4 h-4" />
@@ -262,19 +268,26 @@ export function Header() {
           ) : (
             <>
               <Link href="/login">
-                <Button variant="outline" className="border-white/[0.08] text-white hover:bg-white/[0.05] bg-transparent min-h-[44px] transition-colors duration-100">
+                <Button
+                  variant="outline"
+                  className="border-white/[0.08] text-white hover:bg-white/[0.05] hover:border-white/[0.15] bg-transparent min-h-[44px] motion-safe:transition-all motion-safe:duration-150 focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                >
                   Sign in
                 </Button>
               </Link>
               <Link href="/login">
-                <Button className="bg-[#4ebe96] text-black hover:bg-[#4ebe96]/90 min-h-[44px] transition-colors duration-100">Get started free</Button>
+                <Button
+                  className="bg-[#4ebe96] text-black hover:bg-[#4ebe96]/90 min-h-[44px] motion-safe:transition-all motion-safe:duration-150 focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                >
+                  Get started free
+                </Button>
               </Link>
             </>
           )}
         </div>
 
         <button
-          className="lg:hidden p-2 hover:bg-white/[0.05] rounded-lg transition-colors duration-100 min-h-[44px] min-w-[44px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+          className="lg:hidden p-2 hover:bg-white/[0.05] rounded-lg motion-safe:transition-all motion-safe:duration-150 min-h-[44px] min-w-[44px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           aria-expanded={mobileMenuOpen}
@@ -284,12 +297,12 @@ export function Header() {
       </nav>
 
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#000] border-t border-white/[0.08] max-h-[calc(100vh-64px)] overflow-y-auto">
+        <div className="lg:hidden bg-[#000] backdrop-blur-[10px] border-t border-white/[0.08] max-h-[calc(100vh-64px)] overflow-y-auto">
           <div className="px-4 sm:px-6 py-4 space-y-4">
             {Object.entries(navMenus).map(([name, menu]) => (
               <div key={name}>
                 <button
-                  className="flex items-center justify-between w-full py-3 text-sm font-medium text-white min-h-[44px] rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-inset"
+                  className="flex items-center justify-between w-full py-3 text-sm font-medium text-white min-h-[44px] rounded-lg motion-safe:transition-all motion-safe:duration-150 hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-inset"
                   onClick={() => setActiveMenu(activeMenu === name ? null : name)}
                   aria-expanded={activeMenu === name}
                 >
@@ -297,27 +310,27 @@ export function Header() {
                     <menu.icon className="w-4 h-4" />
                     {name}
                   </span>
-                  <ChevronDown className={`w-4 h-4 motion-safe:transition-transform ${activeMenu === name ? "rotate-180" : ""}`} />
+                  <ChevronDown className={`w-4 h-4 motion-safe:transition-transform motion-safe:duration-150 ${activeMenu === name ? "rotate-180" : ""}`} />
                 </button>
                 {activeMenu === name && (
-                  <div className="pl-6 space-y-4 mt-2">
+                  <div className="pl-6 space-y-4 mt-2 bg-white/[0.03] rounded-xl p-3 border border-white/[0.08]">
                     {menu.sections.map((section) => (
                       <div key={section.title}>
-                        <h4 className="text-xs font-semibold text-[#868f97] uppercase mb-2">{section.title}</h4>
+                        <h4 className="text-xs font-semibold text-[#868f97] uppercase tracking-wider mb-2">{section.title}</h4>
                         <ul className="space-y-2">
                           {section.links.map((link) => (
                             <li key={link.href}>
                               <Link
                                 href={link.href}
-                                className="block py-2 text-sm text-[#868f97] hover:text-white min-h-[44px] flex items-center transition-colors duration-100 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-inset"
+                                className="block py-2 text-sm text-[#868f97] hover:text-white min-h-[44px] flex items-center motion-safe:transition-all motion-safe:duration-150 rounded-lg hover:bg-white/[0.05] px-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-inset"
                                 onClick={() => {
                                   setMobileMenuOpen(false)
                                   setActiveMenu(null)
                                 }}
                               >
                                 <div>
-                                  <div className="font-medium">{link.label}</div>
-                                  <div className="text-xs opacity-75">{link.desc}</div>
+                                  <div className="font-medium text-white">{link.label}</div>
+                                  <div className="text-xs text-[#868f97]">{link.desc}</div>
                                 </div>
                               </Link>
                             </li>
@@ -331,7 +344,7 @@ export function Header() {
             ))}
             <Link
               href="/premium"
-              className="block py-3 text-sm text-[#868f97] hover:text-white min-h-[44px] flex items-center transition-colors duration-100 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-inset"
+              className="block py-3 text-sm text-[#868f97] hover:text-white min-h-[44px] flex items-center motion-safe:transition-all motion-safe:duration-150 rounded-lg hover:bg-white/[0.05] px-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-inset"
               onClick={() => setMobileMenuOpen(false)}
             >
               Pricing
@@ -340,13 +353,16 @@ export function Header() {
               {user ? (
                 <>
                   <Link href="/dashboard" className="w-full" onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="outline" className="w-full border-white/[0.08] text-white bg-transparent min-h-[44px] transition-colors duration-100">
+                    <Button
+                      variant="outline"
+                      className="w-full border-white/[0.08] text-white bg-transparent hover:bg-white/[0.05] hover:border-white/[0.15] min-h-[44px] motion-safe:transition-all motion-safe:duration-150 focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                    >
                       Dashboard
                     </Button>
                   </Link>
                   <Button
                     variant="outline"
-                    className="w-full border-white/[0.08] text-white bg-transparent min-h-[44px] transition-colors duration-100"
+                    className="w-full border-white/[0.08] text-white bg-transparent hover:bg-white/[0.05] hover:border-white/[0.15] min-h-[44px] motion-safe:transition-all motion-safe:duration-150 focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                     onClick={() => {
                       handleLogout()
                       setMobileMenuOpen(false)
@@ -358,12 +374,19 @@ export function Header() {
               ) : (
                 <>
                   <Link href="/login" className="w-full" onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="outline" className="w-full border-white/[0.08] text-white bg-transparent min-h-[44px] transition-colors duration-100">
+                    <Button
+                      variant="outline"
+                      className="w-full border-white/[0.08] text-white bg-transparent hover:bg-white/[0.05] hover:border-white/[0.15] min-h-[44px] motion-safe:transition-all motion-safe:duration-150 focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                    >
                       Sign in
                     </Button>
                   </Link>
                   <Link href="/login" className="w-full" onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full bg-[#4ebe96] text-black min-h-[44px] transition-colors duration-100">Get started free</Button>
+                    <Button
+                      className="w-full bg-[#4ebe96] text-black hover:bg-[#4ebe96]/90 min-h-[44px] motion-safe:transition-all motion-safe:duration-150 focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                    >
+                      Get started free
+                    </Button>
                   </Link>
                 </>
               )}

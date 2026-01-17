@@ -79,7 +79,7 @@ export function Footer() {
   }
 
   return (
-    <footer className="bg-[#0a0a0a] border-t border-white/[0.08] py-12 sm:py-16 px-4 sm:px-6">
+    <footer className="bg-black border-t border-white/[0.08] py-12 sm:py-16 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
         {/* Popular Stock Links - SEO Internal Linking */}
         <div className="mb-10 pb-10 border-b border-white/[0.08]">
@@ -89,7 +89,7 @@ export function Footer() {
               <Link
                 key={ticker}
                 href={`/stock/${ticker}`}
-                className="px-3 py-1.5 bg-white/[0.05] rounded-lg text-sm text-[#868f97] hover:text-white hover:bg-white/[0.08] transition-colors duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-inset"
+                className="px-3 py-1.5 bg-white/[0.05] rounded-lg text-sm text-[#868f97] hover:text-white hover:bg-white/[0.08] motion-safe:transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-inset"
               >
                 {ticker}
               </Link>
@@ -105,7 +105,7 @@ export function Footer() {
               <Link
                 key={`pred-${ticker}`}
                 href={`/prediction/${ticker.toLowerCase()}`}
-                className="text-sm text-[#868f97] hover:text-[#4ebe96] transition-colors duration-100 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+                className="text-sm text-[#868f97] hover:text-white motion-safe:transition-colors duration-150 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
                 {ticker} Prediction
               </Link>
@@ -121,7 +121,7 @@ export function Footer() {
               <Link
                 key={`buy-${ticker}`}
                 href={`/should-i-buy/${ticker.toLowerCase()}`}
-                className="text-sm text-[#868f97] hover:text-[#4ebe96] transition-colors duration-100 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+                className="text-sm text-[#868f97] hover:text-white motion-safe:transition-colors duration-150 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
                 Buy {ticker}?
               </Link>
@@ -137,7 +137,7 @@ export function Footer() {
               <Link
                 key={pair.slug}
                 href={`/compare/${pair.slug}`}
-                className="px-3 py-1.5 bg-white/[0.05] rounded-lg text-sm text-[#868f97] hover:text-white hover:bg-white/[0.08] transition-colors duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-inset"
+                className="px-3 py-1.5 bg-white/[0.05] rounded-lg text-sm text-[#868f97] hover:text-white hover:bg-white/[0.08] motion-safe:transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-inset"
               >
                 {pair.label}
               </Link>
@@ -163,7 +163,7 @@ export function Footer() {
               <Link
                 key={sector.slug}
                 href={`/predictions/${sector.slug}`}
-                className="px-3 py-1.5 bg-white/[0.05] rounded-lg text-sm text-[#868f97] hover:text-white hover:bg-white/[0.08] transition-colors duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-inset"
+                className="px-3 py-1.5 bg-white/[0.05] rounded-lg text-sm text-[#868f97] hover:text-white hover:bg-white/[0.08] motion-safe:transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-inset"
               >
                 {sector.label} Predictions
               </Link>
@@ -190,7 +190,7 @@ export function Footer() {
               <Link
                 key={cat.key}
                 href={`/best-stocks/${cat.key}`}
-                className="px-3 py-1.5 bg-white/[0.05] rounded-lg text-sm text-[#868f97] hover:text-white hover:bg-white/[0.08] transition-colors duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-inset"
+                className="px-3 py-1.5 bg-white/[0.05] rounded-lg text-sm text-[#868f97] hover:text-white hover:bg-white/[0.08] motion-safe:transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-inset"
               >
                 Best {cat.label}
               </Link>
@@ -214,7 +214,7 @@ export function Footer() {
               <Link
                 href="/api/stripe/quick-checkout?plan=annual"
                 prefetch={false}
-                className="px-4 py-2 bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black rounded-lg text-sm font-medium transition-colors duration-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+                className="px-4 py-2 bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black rounded-lg text-sm font-medium motion-safe:transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
                 Get Premium
               </Link>
@@ -229,7 +229,7 @@ export function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-sm text-[#868f97] hover:text-white transition-colors duration-100 block py-1 min-h-[32px] flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-inset"
+                      className="text-sm text-[#868f97] hover:text-white motion-safe:transition-colors duration-150 block py-1 min-h-[32px] flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-inset"
                     >
                       {link.label}
                     </Link>
@@ -245,7 +245,7 @@ export function Footer() {
           <details className="group">
             <summary className="text-sm font-semibold text-white cursor-pointer flex items-center gap-2">
               <span>More Stock Pages</span>
-              <svg className="w-4 h-4 group-open:rotate-180 transition-transform duration-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 group-open:rotate-180 motion-safe:transition-transform duration-150" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </summary>
@@ -254,7 +254,7 @@ export function Footer() {
                 <Link
                   key={`more-${ticker}`}
                   href={`/stock/${ticker}`}
-                  className="text-sm text-[#868f97] hover:text-[#4ebe96] transition-colors duration-100 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+                  className="text-sm text-[#868f97] hover:text-white motion-safe:transition-colors duration-150 py-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                 >
                   {ticker} Stock
                 </Link>
@@ -290,31 +290,31 @@ export function Footer() {
           <div className="flex flex-wrap gap-4 sm:gap-6 justify-center">
             <Link
               href="/sitemap.xml"
-              className="text-sm text-[#868f97] hover:text-white transition-colors duration-100 py-2 min-h-[44px] flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+              className="text-sm text-[#868f97] hover:text-white motion-safe:transition-colors duration-150 py-2 min-h-[44px] flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
               Sitemap
             </Link>
             <Link
               href="/dashboard"
-              className="text-sm text-[#868f97] hover:text-white transition-colors duration-100 py-2 min-h-[44px] flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+              className="text-sm text-[#868f97] hover:text-white motion-safe:transition-colors duration-150 py-2 min-h-[44px] flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
               Dashboard
             </Link>
             <Link
               href="/privacy"
-              className="text-sm text-[#868f97] hover:text-white transition-colors duration-100 py-2 min-h-[44px] flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+              className="text-sm text-[#868f97] hover:text-white motion-safe:transition-colors duration-150 py-2 min-h-[44px] flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
               Privacy Policy
             </Link>
             <Link
               href="/terms"
-              className="text-sm text-[#868f97] hover:text-white transition-colors duration-100 py-2 min-h-[44px] flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+              className="text-sm text-[#868f97] hover:text-white motion-safe:transition-colors duration-150 py-2 min-h-[44px] flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
               Terms of Service
             </Link>
             <Link
               href="/disclaimer"
-              className="text-sm text-[#868f97] hover:text-white transition-colors duration-100 py-2 min-h-[44px] flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+              className="text-sm text-[#868f97] hover:text-white motion-safe:transition-colors duration-150 py-2 min-h-[44px] flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
               Disclaimer
             </Link>
@@ -339,7 +339,7 @@ export function FooterMinimal() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-[#0a0a0a] border-t border-white/[0.08] py-8 px-4 sm:px-6">
+    <footer className="bg-black border-t border-white/[0.08] py-8 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-2">
@@ -350,10 +350,10 @@ export function FooterMinimal() {
           </div>
           <p className="text-sm text-[#868f97]">© {currentYear} Lician. All rights reserved.</p>
           <div className="flex gap-4">
-            <Link href="/privacy" className="text-sm text-[#868f97] hover:text-white transition-colors duration-100 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
+            <Link href="/privacy" className="text-sm text-[#868f97] hover:text-white motion-safe:transition-colors duration-150 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
               Privacy
             </Link>
-            <Link href="/terms" className="text-sm text-[#868f97] hover:text-white transition-colors duration-100 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
+            <Link href="/terms" className="text-sm text-[#868f97] hover:text-white motion-safe:transition-colors duration-150 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
               Terms
             </Link>
           </div>

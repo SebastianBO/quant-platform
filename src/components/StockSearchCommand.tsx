@@ -86,21 +86,25 @@ export function StockSearchCommand() {
 
   return (
     <>
-      {/* Trigger button in header */}
+      {/* Trigger button in header - Fey ghost button style */}
       <button
         onClick={() => setOpen(true)}
         className="flex items-center gap-2 px-3 py-2 text-sm text-[#868f97]
-                   hover:text-white hover:bg-white/[0.025] rounded-lg transition-colors duration-100"
+                   hover:text-white hover:bg-white/[0.05] rounded-lg
+                   motion-safe:transition-colors motion-safe:duration-150
+                   focus:outline-none focus-visible:ring-1 focus-visible:ring-white/[0.24]"
       >
         <Search className="w-4 h-4" />
         <span className="hidden md:inline">Search stocks...</span>
-        <kbd className="hidden md:inline-flex h-5 items-center gap-1 rounded border
-                        bg-muted px-1.5 text-[10px] text-[#868f97] ml-2">
+        {/* Fey badge/tag style for keyboard shortcut */}
+        <kbd className="hidden md:inline-flex h-5 items-center gap-1 rounded-full
+                        bg-white/[0.08] border border-white/[0.08] px-2
+                        text-[10px] font-medium text-[#868f97] ml-2">
           <span className="text-xs">Cmd</span>K
         </kbd>
       </button>
 
-      {/* Command dialog */}
+      {/* Command dialog with Fey styling */}
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput
           placeholder="Search stocks, companies, tools..."
@@ -109,8 +113,9 @@ export function StockSearchCommand() {
         />
         <CommandList>
           {loading ? (
-            <div className="py-6 text-center text-sm text-[#868f97]">
-              <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-primary mx-auto mb-2" />
+            <div className="py-8 text-center text-sm text-[#868f97]">
+              {/* Fey-styled loading spinner */}
+              <div className="mx-auto mb-3 h-5 w-5 animate-spin rounded-full border-2 border-white/[0.08] border-t-[#4ebe96]" />
               Searching...
             </div>
           ) : results.length === 0 && query ? (
@@ -128,13 +133,16 @@ export function StockSearchCommand() {
                 >
                   <StockLogo symbol={stock.symbol} size="sm" />
                   <div className="flex-1 min-w-0">
-                    <div className="font-medium">{stock.symbol}</div>
+                    {/* Stock symbol in monospace - Fey typography */}
+                    <div className="font-mono font-medium tracking-[-0.8px] text-white">
+                      {stock.symbol}
+                    </div>
                     <div className="text-xs text-[#868f97] truncate">
                       {stock.name}
                     </div>
                   </div>
                   {stock.exchange && (
-                    <span className="text-xs text-[#868f97]">
+                    <span className="text-xs text-[#868f97] font-mono">
                       {stock.exchange}
                     </span>
                   )}
@@ -149,19 +157,19 @@ export function StockSearchCommand() {
               <CommandGroup heading="Quick Actions">
                 <CommandItem onSelect={() => handleQuickAction("/screener")}>
                   <BarChart3 className="mr-2 w-4 h-4 text-[#868f97]" />
-                  Stock Screener
+                  <span className="text-white">Stock Screener</span>
                 </CommandItem>
                 <CommandItem onSelect={() => handleQuickAction("/earnings")}>
                   <Calendar className="mr-2 w-4 h-4 text-[#868f97]" />
-                  Earnings Calendar
+                  <span className="text-white">Earnings Calendar</span>
                 </CommandItem>
                 <CommandItem onSelect={() => handleQuickAction("/markets/top-gainers")}>
                   <Flame className="mr-2 w-4 h-4 text-[#4ebe96]" />
-                  Top Gainers
+                  <span className="text-white">Top Gainers</span>
                 </CommandItem>
                 <CommandItem onSelect={() => handleQuickAction("/markets/top-losers")}>
-                  <TrendingUp className="mr-2 w-4 h-4 text-red-500 rotate-180" />
-                  Top Losers
+                  <TrendingUp className="mr-2 w-4 h-4 text-[#ff5c5c] rotate-180" />
+                  <span className="text-white">Top Losers</span>
                 </CommandItem>
               </CommandGroup>
 
@@ -170,11 +178,11 @@ export function StockSearchCommand() {
               <CommandGroup heading="Portfolio">
                 <CommandItem onSelect={() => handleQuickAction("/dashboard/portfolios")}>
                   <Wallet className="mr-2 w-4 h-4 text-[#4ebe96]" />
-                  Connect Portfolio
+                  <span className="text-white">Connect Portfolio</span>
                 </CommandItem>
                 <CommandItem onSelect={() => handleQuickAction("/dashboard")}>
                   <Building2 className="mr-2 w-4 h-4 text-[#868f97]" />
-                  Dashboard
+                  <span className="text-white">Dashboard</span>
                 </CommandItem>
               </CommandGroup>
             </>

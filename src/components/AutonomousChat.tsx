@@ -129,18 +129,18 @@ function ResearchSection({
       <CollapsibleTrigger className="group flex items-center gap-2 w-full text-left py-2">
         <div className="flex items-center gap-2 flex-1 min-w-0">
           {isLoading ? (
-            <Loader2 className="w-4 h-4 animate-spin text-[#868f97]" />
+            <Loader2 className="w-4 h-4 motion-safe:animate-spin text-[#868f97]" />
           ) : (
             <CheckCircle2 className="w-4 h-4 text-[#4ebe96]" />
           )}
           <span className="text-sm font-medium truncate">{title}</span>
           {badge && (
-            <span className="text-xs text-[#868f97] bg-white/[0.05] px-2 py-0.5 rounded-full">
+            <span className="text-xs text-[#868f97] bg-white/[0.08] px-2 py-0.5 rounded-full">
               {badge}
             </span>
           )}
         </div>
-        <ChevronDown className="w-4 h-4 text-[#868f97] transition-transform duration-200 group-data-[state=open]:rotate-180" />
+        <ChevronDown className="w-4 h-4 text-[#868f97] motion-safe:transition-transform motion-safe:duration-200 group-data-[state=open]:rotate-180" />
       </CollapsibleTrigger>
       <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapse-up data-[state=open]:animate-collapse-down">
         <div className="pt-2 pb-3 text-sm text-[#868f97]">
@@ -171,7 +171,7 @@ function ChatMessage({
   if (message.role === 'user') {
     return (
       <div className="flex justify-end mb-6">
-        <div className="bg-primary text-primary-foreground rounded-2xl px-4 py-3 max-w-[80%]">
+        <div className="bg-white text-black rounded-full px-5 py-3 max-w-[80%]">
           <p className="text-sm whitespace-pre-wrap">{message.content}</p>
         </div>
       </div>
@@ -179,10 +179,10 @@ function ChatMessage({
   }
 
   return (
-    <div className="mb-6 animate-fade-in">
+    <div className="mb-6 motion-safe:animate-fade-in">
       {/* Research phases section */}
       {message.tasks && message.tasks.length > 0 && (
-        <div className="mb-4 border border-white/[0.08] rounded-xl p-3 bg-[#1a1a1a]">
+        <div className="mb-4 border border-white/[0.08] rounded-2xl p-3 bg-white/[0.03] backdrop-blur-[10px]">
           <ResearchSection
             title="Research Plan"
             badge={`${message.tasks.filter(t => t.status === 'completed').length}/${message.tasks.length} tasks`}
@@ -195,9 +195,9 @@ function ChatMessage({
                   {task.status === 'completed' ? (
                     <CheckCircle2 className="w-4 h-4 text-[#4ebe96] mt-0.5 flex-shrink-0" />
                   ) : task.status === 'running' ? (
-                    <Loader2 className="w-4 h-4 animate-spin text-[#479ffa] mt-0.5 flex-shrink-0" />
+                    <Loader2 className="w-4 h-4 motion-safe:animate-spin text-[#479ffa] mt-0.5 flex-shrink-0" />
                   ) : (
-                    <div className="w-4 h-4 rounded-full border border-muted-foreground/30 mt-0.5 flex-shrink-0" />
+                    <div className="w-4 h-4 rounded-full border border-white/[0.15] mt-0.5 flex-shrink-0" />
                   )}
                   <span className={cn(
                     "text-sm",
@@ -214,7 +214,7 @@ function ChatMessage({
 
       {/* Tool results section */}
       {message.toolResults && message.toolResults.length > 0 && (
-        <div className="mb-4 border border-white/[0.08] rounded-xl p-3 bg-[#1a1a1a]">
+        <div className="mb-4 border border-white/[0.08] rounded-2xl p-3 bg-white/[0.03] backdrop-blur-[10px]">
           <ResearchSection
             title="Data Sources"
             badge={`${message.toolResults.length} sources`}
@@ -225,7 +225,7 @@ function ChatMessage({
               {message.toolResults.map((result, idx) => (
                 <span
                   key={idx}
-                  className="text-xs bg-white/[0.05] px-2 py-1 rounded-md"
+                  className="text-xs bg-white/[0.08] px-2 py-1 rounded-full"
                 >
                   {result.tool}
                 </span>
@@ -241,9 +241,9 @@ function ChatMessage({
           {message.content}
           {isStreaming && (
             <span className="inline-flex gap-1 ml-1">
-              <span className="w-1.5 h-1.5 bg-foreground/60 rounded-full typing-dot" />
-              <span className="w-1.5 h-1.5 bg-foreground/60 rounded-full typing-dot" />
-              <span className="w-1.5 h-1.5 bg-foreground/60 rounded-full typing-dot" />
+              <span className="w-1.5 h-1.5 bg-white/60 rounded-full typing-dot" />
+              <span className="w-1.5 h-1.5 bg-white/60 rounded-full typing-dot" />
+              <span className="w-1.5 h-1.5 bg-white/60 rounded-full typing-dot" />
             </span>
           )}
         </p>
@@ -255,7 +255,7 @@ function ChatMessage({
           <Button
             variant="ghost"
             size="sm"
-            className="h-8 px-2 text-[#868f97] hover:text-white"
+            className="h-8 px-2 text-[#868f97] hover:text-white motion-safe:transition-colors motion-safe:duration-150"
             onClick={copyToClipboard}
             aria-label={copied ? "Copied to clipboard" : "Copy message"}
           >
@@ -277,24 +277,24 @@ function ResearchSkeleton({ phase }: { phase: Phase }) {
   const Icon = config.icon
 
   return (
-    <div className="mb-6 animate-fade-in">
-      <div className="border border-white/[0.08] rounded-xl p-4 bg-[#1a1a1a]">
+    <div className="mb-6 motion-safe:animate-fade-in">
+      <div className="border border-white/[0.08] rounded-2xl p-4 bg-white/[0.03] backdrop-blur-[10px]">
         <div className="flex items-center gap-3 mb-3">
-          <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center">
-            <Icon className="w-4 h-4 text-primary" />
+          <div className="size-8 rounded-lg bg-[#4ebe96]/10 flex items-center justify-center">
+            <Icon className="w-4 h-4 text-[#4ebe96]" />
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <Loader2 className="w-4 h-4 animate-spin text-primary" />
+              <Loader2 className="w-4 h-4 motion-safe:animate-spin text-[#4ebe96]" />
               <span className="text-sm font-medium">{config.activeLabel}</span>
             </div>
           </div>
         </div>
-        <Separator className="my-3" />
+        <Separator className="my-3 bg-white/[0.08]" />
         <div className="space-y-2">
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-3/4" />
-          <Skeleton className="h-4 w-1/2" />
+          <Skeleton className="h-4 w-full bg-white/[0.08]" />
+          <Skeleton className="h-4 w-3/4 bg-white/[0.08]" />
+          <Skeleton className="h-4 w-1/2 bg-white/[0.08]" />
         </div>
       </div>
     </div>
@@ -364,22 +364,22 @@ function EmptyState({
   return (
     <div className="flex flex-col items-center justify-center h-full min-h-[500px] px-6 py-12">
       {/* Heading */}
-      <h1 className="text-4xl md:text-5xl font-semibold text-center mb-10">
+      <h1 className="text-4xl md:text-5xl font-semibold text-center mb-10 tracking-[-0.02em]">
         What can I do for you?
       </h1>
 
       {/* Chat input */}
       <div className="w-full max-w-2xl">
-        <div className="relative bg-[#1a1a1a] border border-white/[0.08] rounded-2xl shadow-lg focus-within:border-[#4ebe96]/50 transition-all">
+        <div className="relative bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl shadow-lg focus-within:border-white/[0.24] motion-safe:transition-[border-color] motion-safe:duration-150">
           {/* Attached file preview */}
           {attachedFile && (
             <div className="px-4 pt-3 pb-0">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/[0.05]/50 rounded-lg text-sm">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/[0.08] rounded-full text-sm">
                 <FileText className="w-4 h-4 text-[#868f97]" />
                 <span className="truncate max-w-[200px]">{attachedFile.name}</span>
                 <button
                   onClick={onFileRemove}
-                  className="p-0.5 hover:bg-white/[0.08] rounded transition-colors duration-100"
+                  className="p-0.5 hover:bg-white/[0.08] rounded-full motion-safe:transition-colors motion-safe:duration-100"
                   aria-label="Remove attached file"
                 >
                   <X className="w-3.5 h-3.5 text-[#868f97] hover:text-white" aria-hidden="true" />
@@ -412,7 +412,7 @@ function EmptyState({
               />
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="p-2 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
+                className="p-2 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.08] motion-safe:transition-colors motion-safe:duration-100"
                 aria-label="Attach PDF or document"
               >
                 <Paperclip className="w-5 h-5" aria-hidden="true" />
@@ -424,14 +424,14 @@ function EmptyState({
               disabled={isLoading || (!inputValue.trim() && !attachedFile)}
               aria-label={isLoading ? "Sending message..." : "Send message"}
               className={cn(
-                "w-9 h-9 rounded-xl flex items-center justify-center transition-colors duration-100",
+                "w-9 h-9 rounded-full flex items-center justify-center motion-safe:transition-colors motion-safe:duration-100",
                 inputValue.trim() || attachedFile
                   ? "bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black"
-                  : "bg-white/[0.05] text-[#868f97]"
+                  : "bg-white/[0.08] text-[#868f97]"
               )}
             >
               {isLoading ? (
-                <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
+                <Loader2 className="w-5 h-5 motion-safe:animate-spin" aria-hidden="true" />
               ) : (
                 <Sparkles className="w-5 h-5" aria-hidden="true" />
               )}
@@ -445,7 +445,7 @@ function EmptyState({
             <button
               key={prompt}
               onClick={() => onPromptClick(prompt)}
-              className="text-sm px-3 py-2 rounded-full border border-white/[0.08] bg-[#1a1a1a] hover:bg-white/[0.08]/50 transition-colors duration-100"
+              className="text-sm px-3 py-2 rounded-full border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/[0.15] motion-safe:transition-colors motion-safe:duration-100"
             >
               {prompt}
             </button>
@@ -460,8 +460,8 @@ function EmptyState({
               href={tool.href}
               className={cn(
                 "flex items-center gap-2 px-4 py-2.5 rounded-full",
-                "border border-white/[0.08] bg-[#1a1a1a] hover:bg-white/[0.08]",
-                "text-sm font-medium transition-colors duration-100"
+                "border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/[0.15]",
+                "text-sm font-medium motion-safe:transition-colors motion-safe:duration-100"
               )}
             >
               <tool.icon className="w-4 h-4" />
@@ -728,9 +728,9 @@ function AutonomousChatComponent() {
 
             {/* Live task progress */}
             {isLoading && tasks.length > 0 && currentPhase === 'execute' && (
-              <div className="mb-6 border border-white/[0.08] rounded-xl p-4 bg-[#1a1a1a] animate-fade-in">
+              <div className="mb-6 border border-white/[0.08] rounded-2xl p-4 bg-white/[0.03] backdrop-blur-[10px] motion-safe:animate-fade-in">
                 <div className="flex items-center gap-2 mb-3">
-                  <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                  <Loader2 className="w-4 h-4 motion-safe:animate-spin text-[#4ebe96]" />
                   <span className="text-sm font-medium">Researching...</span>
                   <span className="text-xs text-[#868f97]">
                     {tasks.filter(t => t.status === 'completed').length}/{tasks.length}
@@ -742,9 +742,9 @@ function AutonomousChatComponent() {
                       {task.status === 'completed' ? (
                         <CheckCircle2 className="w-4 h-4 text-[#4ebe96] mt-0.5 flex-shrink-0" />
                       ) : task.status === 'running' ? (
-                        <Loader2 className="w-4 h-4 animate-spin text-[#479ffa] mt-0.5 flex-shrink-0" />
+                        <Loader2 className="w-4 h-4 motion-safe:animate-spin text-[#479ffa] mt-0.5 flex-shrink-0" />
                       ) : (
-                        <div className="w-4 h-4 rounded-full border border-muted-foreground/30 mt-0.5 flex-shrink-0" />
+                        <div className="w-4 h-4 rounded-full border border-white/[0.15] mt-0.5 flex-shrink-0" />
                       )}
                       <span className={cn(
                         "text-sm",
@@ -763,7 +763,7 @@ function AutonomousChatComponent() {
 
       {/* Input area - only show when there are messages */}
       {messages.length > 0 && (
-        <div className="border-t border-white/[0.08] bg-background p-4">
+        <div className="border-t border-white/[0.08] bg-black p-4">
           <div className="max-w-3xl mx-auto">
             {/* Hidden file input */}
             <input
@@ -783,12 +783,12 @@ function AutonomousChatComponent() {
             {/* Attached file preview */}
             {attachedFile && (
               <div className="mb-2">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/[0.05]/50 rounded-lg text-sm">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/[0.08] rounded-full text-sm">
                   <FileText className="w-4 h-4 text-[#868f97]" />
                   <span className="truncate max-w-[200px]">{attachedFile.name}</span>
                   <button
                     onClick={() => setAttachedFile(null)}
-                    className="p-0.5 hover:bg-white/[0.08] rounded transition-colors duration-100"
+                    className="p-0.5 hover:bg-white/[0.08] rounded-full motion-safe:transition-colors motion-safe:duration-100"
                     aria-label="Remove attached file"
                   >
                     <X className="w-3.5 h-3.5 text-[#868f97] hover:text-white" aria-hidden="true" />
@@ -804,14 +804,14 @@ function AutonomousChatComponent() {
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Ask a follow-up question..."
-                className="min-h-[52px] max-h-[200px] pl-12 pr-14 resize-none rounded-xl border-white/[0.08] bg-white/[0.05]/30 focus-visible:ring-1 focus-visible:ring-ring"
+                className="min-h-[52px] max-h-[200px] pl-12 pr-14 resize-none rounded-lg border-white/[0.08] bg-white/[0.04] focus-visible:ring-1 focus-visible:ring-white/[0.24] focus-visible:border-white/[0.24]"
                 disabled={isLoading}
                 rows={1}
               />
               {/* File attachment button */}
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="absolute left-3 bottom-3 p-1.5 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.08] transition-colors duration-100"
+                className="absolute left-3 bottom-3 p-1.5 text-[#868f97] hover:text-white rounded-lg hover:bg-white/[0.08] motion-safe:transition-colors motion-safe:duration-100"
                 aria-label="Attach PDF or document"
               >
                 <Paperclip className="w-5 h-5" aria-hidden="true" />
@@ -822,10 +822,10 @@ function AutonomousChatComponent() {
                 disabled={isLoading || (!inputValue.trim() && !attachedFile)}
                 onClick={() => handleSubmit()}
                 aria-label={isLoading ? "Sending message..." : "Send message"}
-                className="absolute right-2 bottom-2 h-9 w-9 rounded-lg bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black"
+                className="absolute right-2 bottom-2 h-9 w-9 rounded-full bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black motion-safe:transition-opacity motion-safe:duration-150"
               >
                 {isLoading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                  <Loader2 className="h-4 w-4 motion-safe:animate-spin" aria-hidden="true" />
                 ) : (
                   <Sparkles className="h-4 w-4" aria-hidden="true" />
                 )}
@@ -834,12 +834,12 @@ function AutonomousChatComponent() {
             <div className="flex items-center justify-between mt-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="h-8 gap-2 text-[#868f97] hover:text-white">
+                  <Button variant="ghost" size="sm" className="h-8 gap-2 text-[#868f97] hover:text-white motion-safe:transition-colors motion-safe:duration-150">
                     <span className="text-xs">{selectedModel.name}</span>
                     <ChevronDown className="w-3 h-3" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-48">
+                <DropdownMenuContent align="start" className="w-48 bg-black border-white/[0.08]">
                   {MODELS.map((model) => (
                     <DropdownMenuItem
                       key={model.key}
@@ -851,12 +851,12 @@ function AutonomousChatComponent() {
                           setSelectedModel(model)
                         }
                       }}
-                      className="flex items-center justify-between"
+                      className="flex items-center justify-between hover:bg-white/[0.08] focus:bg-white/[0.08]"
                     >
                       <span className="text-sm">{model.name}</span>
                       <span className={cn(
-                        "text-[10px] px-1.5 py-0.5 rounded",
-                        model.tier === 'premium' && "bg-amber-500/20 text-amber-600",
+                        "text-[10px] px-1.5 py-0.5 rounded-full",
+                        model.tier === 'premium' && "bg-[#ffa16c]/20 text-[#ffa16c]",
                         model.tier === 'standard' && "bg-[#479ffa]/20 text-[#479ffa]",
                         model.tier === 'fast' && "bg-[#4ebe96]/20 text-[#4ebe96]"
                       )}>
