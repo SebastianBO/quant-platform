@@ -1,7 +1,7 @@
 import type React from "react"
 import type { Metadata, Viewport } from "next"
 import { Suspense } from "react"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Inter, JetBrains_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { ThemeProvider } from "@/components/theme-provider"
 import { PostHogProvider, PostHogPageView } from "@/components/PostHogProvider"
@@ -10,8 +10,17 @@ import { MobileTabBar } from "@/components/MobileTabBar"
 import { getOrganizationSchema, getWebSiteSchema } from "@/lib/seo"
 import "./globals.css"
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-geist" })
-const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" })
+// Fey design system uses Inter for sans and JetBrains Mono for code
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+})
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+})
 
 // Viewport configuration for responsive design and mobile optimization
 export const viewport: Viewport = {
@@ -215,7 +224,7 @@ export default function RootLayout({
           </>
         )}
       </head>
-      <body className={`${geist.variable} ${geistMono.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
         <PostHogProvider>
           <Suspense fallback={null}>
             <PostHogPageView />

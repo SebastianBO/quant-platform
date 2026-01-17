@@ -18,7 +18,7 @@ body:has(main.min-h-screen) .ssr-content {
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: var(--font-inter), 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   overflow-x: hidden;
 }
 
@@ -38,8 +38,9 @@ body {
   --fey-border: rgba(255, 255, 255, 0.08);
   --fey-border-hover: rgba(255, 255, 255, 0.15);
 
-  /* Typography */
-  --fey-font: 'Calibre', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  /* Typography - Inter as Calibre alternative (per Fey design tokens) */
+  --fey-font: var(--font-inter), 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --fey-font-mono: var(--font-mono), 'JetBrains Mono', 'SF Mono', monospace;
   --fey-h1: 48px;
   --fey-h2: 54px;
   --fey-h3: 26px;
@@ -180,10 +181,17 @@ input[type="range"]::-moz-range-thumb {
 }
 
 @theme inline {
+  /* Font families (Fey design system) */
+  --font-sans: var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-mono), 'JetBrains Mono', 'SF Mono', monospace;
+
+  /* Border Radius */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* Core colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -202,11 +210,24 @@ input[type="range"]::-moz-range-thumb {
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
+  /* Fey accent colors (use as: text-fey-blue, bg-fey-green, etc.) */
+  --color-fey-blue: #479ffa;
+  --color-fey-green: #4ebe96;
+  --color-fey-orange: #ffa16c;
+  --color-fey-lime: #d6fe51;
+  --color-fey-pink: #e75ece;
+  --color-fey-red: #ff5c5c;
+  --color-fey-muted: #868f97;
+
+  /* Chart colors */
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+
+  /* Sidebar */
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -215,6 +236,11 @@ input[type="range"]::-moz-range-thumb {
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Fey transition durations */
+  --duration-quick: 100ms;
+  --duration-smooth: 250ms;
+  --duration-slow: 1000ms;
 }
 
 :root {
