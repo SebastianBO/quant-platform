@@ -1,0 +1,74 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schemas/server-card.json",
+  "name": "lician-financial-data",
+  "version": "1.0.0",
+  "description": "Access real-time stock prices, financial statements, insider trades, and institutional holdings for 141,000+ companies",
+  "publisher": {
+    "name": "Lician",
+    "url": "https://lician.com"
+  },
+  "repository": "https://github.com/lician/mcp-server",
+  "documentation": "https://lician.com/developers",
+  "license": "MIT",
+  "runtime": {
+    "transport": "http",
+    "endpoint": "https://lician.com/api/mcp"
+  },
+  "capabilities": {
+    "tools": true,
+    "resources": false,
+    "prompts": false
+  },
+  "tools": [
+    {
+      "name": "get_stock_price",
+      "description": "Get current stock price, daily change, volume, and market cap for a ticker symbol"
+    },
+    {
+      "name": "get_income_statement",
+      "description": "Get income statement data including revenue, gross profit, operating income, net income, and EPS"
+    },
+    {
+      "name": "get_balance_sheet",
+      "description": "Get balance sheet data including assets, liabilities, equity, cash, and debt"
+    },
+    {
+      "name": "get_cash_flow",
+      "description": "Get cash flow statement including operating, investing, financing flows and free cash flow"
+    },
+    {
+      "name": "get_financial_metrics",
+      "description": "Get key ratios: P/E, P/B, ROE, ROA, debt-to-equity, margins, dividend yield"
+    },
+    {
+      "name": "get_insider_trades",
+      "description": "Get SEC Form 4 insider trading activity - buys and sells by executives"
+    },
+    {
+      "name": "get_institutional_holders",
+      "description": "Get 13F institutional ownership data showing major fund holders"
+    },
+    {
+      "name": "get_investor_portfolio",
+      "description": "Get all holdings for a specific institutional investor from 13F filing"
+    },
+    {
+      "name": "get_analyst_ratings",
+      "description": "Get analyst buy/hold/sell ratings and price targets"
+    },
+    {
+      "name": "get_company_info",
+      "description": "Get company profile: sector, industry, description, CEO, employees"
+    },
+    {
+      "name": "get_stock_news",
+      "description": "Get recent news articles about a stock or the market"
+    },
+    {
+      "name": "get_sec_filings",
+      "description": "Get SEC filings: 10-K, 10-Q, 8-K reports"
+    }
+  ],
+  "categories": ["finance", "data", "stocks", "investing"],
+  "tags": ["financial-data", "stock-prices", "insider-trading", "institutional-holdings", "sec-filings"]
+}
