@@ -479,52 +479,52 @@ export default async function IndustryPage({ params }: Props) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbSchema]) }}
         />
         <Header />
-        <main className="min-h-screen bg-background text-foreground pt-20">
+        <main className="min-h-screen bg-black text-white pt-20">
           <div className="max-w-5xl mx-auto px-6 py-12">
-            <nav className="text-sm text-muted-foreground mb-6">
-              <Link href="/" className="hover:text-foreground">Home</Link>
+            <nav className="text-sm text-[#868f97] mb-6">
+              <Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Home</Link>
               {' / '}
-              <Link href="/dashboard" className="hover:text-foreground">Stocks</Link>
+              <Link href="/dashboard" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Stocks</Link>
               {' / '}
               <span>{filterData.label}</span>
             </nav>
 
-            <h1 className="text-4xl font-bold mb-4">
+            <h1 className="text-4xl font-bold mb-4 text-balance">
               {filterData.label} Stocks {currentYear}
             </h1>
-            <p className="text-xl text-muted-foreground mb-8">
+            <p className="text-xl text-[#868f97] mb-8">
               {filterData.description}
             </p>
 
             <section className="mb-12">
-              <h2 className="text-2xl font-bold mb-6">Top {filterData.label} Stocks</h2>
+              <h2 className="text-2xl font-bold mb-6 text-balance">Top {filterData.label} Stocks</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {filterData.stocks.map((ticker, i) => (
                   <Link
                     key={ticker}
                     href={`/stock/${ticker.toLowerCase()}`}
-                    className="bg-card p-5 rounded-lg border border-border hover:border-green-500/50 transition-colors"
+                    className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <span className="text-xs text-muted-foreground">#{i + 1}</span>
+                        <span className="text-xs text-[#868f97] tabular-nums">#{i + 1}</span>
                         <span className="text-xl font-bold">{ticker}</span>
                       </div>
-                      <span className="text-xs text-green-500">View →</span>
+                      <span className="text-xs text-[#4ebe96]">View →</span>
                     </div>
                   </Link>
                 ))}
               </div>
             </section>
 
-            <section className="bg-card p-8 rounded-xl border border-border text-center">
-              <h2 className="text-2xl font-bold mb-4">Explore More Stocks</h2>
-              <p className="text-muted-foreground mb-6">
+            <section className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 text-center">
+              <h2 className="text-2xl font-bold mb-4 text-balance">Explore More Stocks</h2>
+              <p className="text-[#868f97] mb-6">
                 Get AI-powered analysis and detailed insights
               </p>
               <Link
                 href="/dashboard"
-                className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium"
+                className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 Start Research
               </Link>
@@ -589,31 +589,31 @@ export default async function IndustryPage({ params }: Props) {
         }}
       />
       <Header />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-screen bg-black text-white pt-20">
         <div className="max-w-5xl mx-auto px-6 py-12">
           {/* Breadcrumbs */}
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Home</Link>
             {' / '}
-            <Link href="/dashboard" className="hover:text-foreground">Stocks</Link>
+            <Link href="/dashboard" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Stocks</Link>
             {' / '}
             <span>{industryData.title}</span>
           </nav>
 
           {/* Header */}
-          <h1 className="text-4xl font-bold mb-4">
+          <h1 className="text-4xl font-bold mb-4 text-balance">
             Best {industryData.title} {currentYear}
           </h1>
-          <p className="text-xl text-muted-foreground mb-4">
+          <p className="text-xl text-[#868f97] mb-4">
             {industryData.description}
           </p>
-          <p className="text-base text-muted-foreground mb-8">
+          <p className="text-base text-[#868f97] mb-8">
             {industryData.longDescription}
           </p>
 
           {/* Top Stocks Grid */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">
+            <h2 className="text-2xl font-bold mb-6 text-balance">
               Top {topStocks.length} {industryData.title} to Buy
             </h2>
             {topStocks.length > 0 ? (
@@ -622,39 +622,39 @@ export default async function IndustryPage({ params }: Props) {
                   <Link
                     key={stock.ticker}
                     href={`/stock/${stock.ticker.toLowerCase()}`}
-                    className="bg-card p-5 rounded-lg border border-border hover:border-green-500/50 transition-colors"
+                    className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-xs text-muted-foreground">#{i + 1}</span>
+                          <span className="text-xs text-[#868f97] tabular-nums">#{i + 1}</span>
                           <span className="text-xl font-bold">{stock.ticker}</span>
                         </div>
-                        <p className="text-sm text-muted-foreground line-clamp-1">
+                        <p className="text-sm text-[#868f97] line-clamp-1">
                           {stock.company_name || stock.ticker}
                         </p>
                         {stock.industry && (
-                          <p className="text-xs text-muted-foreground mt-1">
+                          <p className="text-xs text-[#868f97] mt-1">
                             {stock.industry}
                           </p>
                         )}
                       </div>
-                      <span className="text-xs text-green-500">View</span>
+                      <span className="text-xs text-[#4ebe96]">View</span>
                     </div>
                     <div className="grid grid-cols-2 gap-3 text-sm">
                       <div>
-                        <p className="text-muted-foreground text-xs mb-1">Market Cap</p>
-                        <p className="font-semibold">
+                        <p className="text-[#868f97] text-xs mb-1">Market Cap</p>
+                        <p className="font-semibold tabular-nums">
                           {stock.market_cap ? formatMarketCap(stock.market_cap) : '—'}
                         </p>
                       </div>
                       <div>
-                        <p className="text-muted-foreground text-xs mb-1">P/E Ratio</p>
-                        <p className={`font-semibold ${
+                        <p className="text-[#868f97] text-xs mb-1">P/E Ratio</p>
+                        <p className={`font-semibold tabular-nums ${
                           stock.pe_ratio && stock.pe_ratio < 15
-                            ? 'text-green-500'
+                            ? 'text-[#4ebe96]'
                             : stock.pe_ratio && stock.pe_ratio > 30
-                            ? 'text-red-500'
+                            ? 'text-[#ff5c5c]'
                             : ''
                         }`}>
                           {stock.pe_ratio ? stock.pe_ratio.toFixed(2) : '—'}
@@ -665,8 +665,8 @@ export default async function IndustryPage({ params }: Props) {
                 ))}
               </div>
             ) : (
-              <div className="bg-card p-8 rounded-lg border border-border text-center">
-                <p className="text-muted-foreground">No stocks found in this industry. Check back soon as we add more data.</p>
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 text-center">
+                <p className="text-[#868f97]">No stocks found in this industry. Check back soon as we add more data.</p>
               </div>
             )}
           </section>
@@ -674,33 +674,33 @@ export default async function IndustryPage({ params }: Props) {
           {/* Investment Tools */}
           {topStocks.length > 0 && (
             <section className="mb-12">
-              <h2 className="text-2xl font-bold mb-6">Stock Analysis & Investment Tools</h2>
+              <h2 className="text-2xl font-bold mb-6 text-balance">Stock Analysis & Investment Tools</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {topStocks.slice(0, 6).map((stock) => (
-                  <div key={stock.ticker} className="bg-card p-5 rounded-lg border border-border">
+                  <div key={stock.ticker} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5">
                     <p className="font-bold text-lg mb-3">{stock.ticker}</p>
                     <div className="flex flex-col gap-2 text-sm">
                       <Link
                         href={`/should-i-buy/${stock.ticker.toLowerCase()}`}
-                        className="text-green-500 hover:underline"
+                        className="text-[#4ebe96] hover:underline motion-safe:transition-all motion-safe:duration-150 ease-out"
                       >
                         Should I Buy {stock.ticker}?
                       </Link>
                       <Link
                         href={`/buy/${stock.ticker.toLowerCase()}`}
-                        className="text-green-500 hover:underline"
+                        className="text-[#4ebe96] hover:underline motion-safe:transition-all motion-safe:duration-150 ease-out"
                       >
                         How to Buy {stock.ticker}
                       </Link>
                       <Link
                         href={`/prediction/${stock.ticker.toLowerCase()}`}
-                        className="text-green-500 hover:underline"
+                        className="text-[#4ebe96] hover:underline motion-safe:transition-all motion-safe:duration-150 ease-out"
                       >
                         {stock.ticker} Price Prediction {currentYear}
                       </Link>
                       <Link
                         href={`/stock/${stock.ticker.toLowerCase()}`}
-                        className="text-green-500 hover:underline"
+                        className="text-[#4ebe96] hover:underline motion-safe:transition-all motion-safe:duration-150 ease-out"
                       >
                         {stock.ticker} Stock Analysis
                       </Link>
@@ -714,7 +714,7 @@ export default async function IndustryPage({ params }: Props) {
           {/* Stock Comparisons */}
           {topStocks.length > 1 && (
             <section className="mb-12">
-              <h2 className="text-2xl font-bold mb-6">Compare Top {industryData.title}</h2>
+              <h2 className="text-2xl font-bold mb-6 text-balance">Compare Top {industryData.title}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {topStocks.slice(0, 5).map((stock1, i) => {
                   const stock2 = topStocks[i + 1]
@@ -723,12 +723,12 @@ export default async function IndustryPage({ params }: Props) {
                     <Link
                       key={`${stock1.ticker}-${stock2.ticker}`}
                       href={`/compare/${stock1.ticker.toLowerCase()}-vs-${stock2.ticker.toLowerCase()}`}
-                      className="bg-card p-4 rounded-lg border border-border hover:border-green-500/50 transition-colors"
+                      className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                     >
-                      <p className="font-medium text-green-500">
+                      <p className="font-medium text-[#4ebe96]">
                         {stock1.ticker} vs {stock2.ticker}
                       </p>
-                      <p className="text-sm text-muted-foreground mt-1">
+                      <p className="text-sm text-[#868f97] mt-1">
                         Compare fundamentals, valuation & performance
                       </p>
                     </Link>
@@ -740,12 +740,12 @@ export default async function IndustryPage({ params }: Props) {
 
           {/* FAQ Section */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Frequently Asked Questions</h2>
             <div className="space-y-6">
               {industryData.faqs.map((faq, i) => (
-                <div key={i} className="bg-card p-6 rounded-lg border border-border">
-                  <h3 className="text-lg font-bold mb-2">{faq.question}</h3>
-                  <p className="text-muted-foreground">{faq.answer}</p>
+                <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
+                  <h3 className="text-lg font-bold mb-2 text-balance">{faq.question}</h3>
+                  <p className="text-[#868f97]">{faq.answer}</p>
                 </div>
               ))}
             </div>
@@ -754,7 +754,7 @@ export default async function IndustryPage({ params }: Props) {
           {/* Related Industries */}
           {industryData.relatedIndustries.length > 0 && (
             <section className="mb-12">
-              <h2 className="text-2xl font-bold mb-6">Related Industries</h2>
+              <h2 className="text-2xl font-bold mb-6 text-balance">Related Industries</h2>
               <div className="flex flex-wrap gap-3">
                 {industryData.relatedIndustries.map((relatedIndustry) => {
                   const related = INDUSTRIES[relatedIndustry]
@@ -763,7 +763,7 @@ export default async function IndustryPage({ params }: Props) {
                     <Link
                       key={relatedIndustry}
                       href={`/stocks/${relatedIndustry}`}
-                      className="px-5 py-3 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors"
+                      className="px-5 py-3 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                     >
                       {related.title}
                     </Link>
@@ -774,14 +774,14 @@ export default async function IndustryPage({ params }: Props) {
           )}
 
           {/* CTA */}
-          <section className="bg-card p-8 rounded-xl border border-border text-center">
-            <h2 className="text-2xl font-bold mb-4">Get AI-Powered Stock Analysis</h2>
-            <p className="text-muted-foreground mb-6">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 text-center">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Get AI-Powered Stock Analysis</h2>
+            <p className="text-[#868f97] mb-6">
               Access detailed DCF valuations, AI insights, and comprehensive analysis for {industryData.title.toLowerCase()}
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium"
+              className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
             >
               Start Research
             </Link>

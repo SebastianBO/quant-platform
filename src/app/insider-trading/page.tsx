@@ -223,18 +223,18 @@ export default async function InsiderTradingPage() {
           ]),
         }}
       />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-dvh bg-black text-white pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           <div className="flex gap-8">
             <SEOSidebar />
             <div className="flex-1 min-w-0">
           {/* Breadcrumbs */}
-          <nav className="text-sm text-muted-foreground mb-6" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-foreground transition-colors">
+          <nav className="text-sm text-[#868f97] mb-6" aria-label="Breadcrumb">
+            <Link href="/" className="hover:text-[#479ffa] motion-safe:transition-all motion-safe:duration-150 ease-out">
               Home
             </Link>
             {' / '}
-            <span className="text-foreground">Insider Trading</span>
+            <span className="text-white">Insider Trading</span>
           </nav>
 
           {/* Hero Section */}
@@ -242,7 +242,7 @@ export default async function InsiderTradingPage() {
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
               Insider Trading Tracker
             </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl">
+            <p className="text-lg sm:text-xl text-[#868f97] max-w-3xl">
               Track real-time corporate insider trading activity from SEC Form 4 filings.
               Monitor insider buys and sells from CEOs, CFOs, directors, and other key executives.
             </p>
@@ -250,35 +250,35 @@ export default async function InsiderTradingPage() {
 
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 sm:mb-12">
-            <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-2">Recent Buys</p>
-              <p className="text-2xl sm:text-3xl font-bold text-green-500">{totalBuys}</p>
-              <p className="text-xs text-muted-foreground mt-1">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 sm:p-6 rounded-2xl">
+              <p className="text-sm text-[#868f97] mb-2">Recent Buys</p>
+              <p className="text-2xl sm:text-3xl font-bold tabular-nums text-[#4ebe96]">{totalBuys}</p>
+              <p className="text-xs text-[#868f97] mt-1 tabular-nums">
                 ${formatNumber(buyVolume)} value
               </p>
             </div>
-            <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-2">Recent Sells</p>
-              <p className="text-2xl sm:text-3xl font-bold text-red-500">{totalSells}</p>
-              <p className="text-xs text-muted-foreground mt-1">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 sm:p-6 rounded-2xl">
+              <p className="text-sm text-[#868f97] mb-2">Recent Sells</p>
+              <p className="text-2xl sm:text-3xl font-bold tabular-nums text-[#ff5c5c]">{totalSells}</p>
+              <p className="text-xs text-[#868f97] mt-1 tabular-nums">
                 ${formatNumber(sellVolume)} value
               </p>
             </div>
-            <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-2">Buy/Sell Ratio</p>
-              <p className="text-2xl sm:text-3xl font-bold">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 sm:p-6 rounded-2xl">
+              <p className="text-sm text-[#868f97] mb-2">Buy/Sell Ratio</p>
+              <p className="text-2xl sm:text-3xl font-bold tabular-nums">
                 {totalSells > 0 ? (totalBuys / totalSells).toFixed(2) : totalBuys.toFixed(2)}
               </p>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-xs text-[#868f97] mt-1">
                 {totalBuys > totalSells ? 'Bullish' : 'Bearish'} sentiment
               </p>
             </div>
-            <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-2">Notable Trades</p>
-              <p className="text-2xl sm:text-3xl font-bold text-green-500">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 sm:p-6 rounded-2xl">
+              <p className="text-sm text-[#868f97] mb-2">Notable Trades</p>
+              <p className="text-2xl sm:text-3xl font-bold tabular-nums text-[#4ebe96]">
                 {notableTrades.length}
               </p>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-xs text-[#868f97] mt-1">
                 By CEOs & CFOs
               </p>
             </div>
@@ -289,7 +289,7 @@ export default async function InsiderTradingPage() {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-2xl sm:text-3xl font-bold">Notable Insider Trades</h2>
-                <p className="text-muted-foreground mt-1">
+                <p className="text-[#868f97] mt-1">
                   Transactions by CEOs, CFOs, and key executives
                 </p>
               </div>
@@ -302,56 +302,56 @@ export default async function InsiderTradingPage() {
                 return (
                   <div
                     key={`${trade.ticker}-${trade.filing_date}-${index}`}
-                    className="bg-card p-4 sm:p-5 rounded-xl border border-border hover:border-green-500/50 transition-all"
+                    className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 sm:p-5 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out"
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-3 mb-2">
                           <Link
                             href={`/stock/${trade.ticker}`}
-                            className="text-lg sm:text-xl font-bold hover:text-green-500 transition-colors"
+                            className="text-lg sm:text-xl font-bold hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded"
                           >
                             {trade.ticker}
                           </Link>
                           <span
-                            className={`px-2 py-1 rounded text-xs font-medium ${
+                            className={`px-2 py-1 rounded-full text-xs font-medium ${
                               isBuy
-                                ? 'bg-green-500/20 text-green-500'
-                                : 'bg-red-500/20 text-red-500'
+                                ? 'bg-[#4ebe96]/20 text-[#4ebe96]'
+                                : 'bg-[#ff5c5c]/20 text-[#ff5c5c]'
                             }`}
                           >
                             {transactionType}
                           </span>
                           {trade.is_board_director && (
-                            <span className="px-2 py-1 rounded text-xs bg-blue-500/20 text-blue-500">
+                            <span className="px-2 py-1 rounded-full text-xs bg-[#479ffa]/20 text-[#479ffa]">
                               Director
                             </span>
                           )}
                         </div>
-                        <p className="text-sm text-muted-foreground line-clamp-1 mb-1">
+                        <p className="text-sm text-[#868f97] line-clamp-1 mb-1">
                           {trade.issuer}
                         </p>
                         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
                           <span className="font-medium">{trade.name}</span>
-                          <span className="text-muted-foreground">{trade.title}</span>
+                          <span className="text-[#868f97]">{trade.title}</span>
                         </div>
                       </div>
                       <div className="flex flex-row sm:flex-col items-start sm:items-end gap-4 sm:gap-1 text-right">
                         <div className="flex-1 sm:flex-none">
-                          <p className={`text-lg sm:text-xl font-bold ${
-                            isBuy ? 'text-green-500' : 'text-red-500'
+                          <p className={`text-lg sm:text-xl font-bold tabular-nums ${
+                            isBuy ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'
                           }`}>
                             ${formatNumber(Math.abs(trade.transaction_value))}
                           </p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-sm text-[#868f97] tabular-nums">
                             {formatNumber(Math.abs(trade.transaction_shares))} shares
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-sm text-[#868f97] tabular-nums">
                             @ ${trade.transaction_price_per_share?.toFixed(2) || 'N/A'}
                           </p>
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-xs text-[#868f97]">
                             {new Date(trade.filing_date).toLocaleDateString()}
                           </p>
                         </div>
@@ -365,13 +365,13 @@ export default async function InsiderTradingPage() {
 
           {/* Tabs Navigation */}
           <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-            <button className="px-4 py-2 rounded-lg bg-green-600 text-white font-medium whitespace-nowrap">
+            <button className="px-4 py-2 rounded-full bg-[#4ebe96] text-black font-medium whitespace-nowrap focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
               All Trades
             </button>
-            <button className="px-4 py-2 rounded-lg bg-card border border-border hover:border-green-500/50 transition-colors whitespace-nowrap">
+            <button className="px-4 py-2 rounded-full bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out whitespace-nowrap focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
               Buys Only
             </button>
-            <button className="px-4 py-2 rounded-lg bg-card border border-border hover:border-green-500/50 transition-colors whitespace-nowrap">
+            <button className="px-4 py-2 rounded-full bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out whitespace-nowrap focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
               Sells Only
             </button>
           </div>
@@ -379,10 +379,10 @@ export default async function InsiderTradingPage() {
           {/* Recent Insider Buys */}
           <section className="mb-12">
             <h2 className="text-2xl sm:text-3xl font-bold mb-6">Recent Insider Buys</h2>
-            <div className="bg-card rounded-xl border border-border overflow-hidden">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-muted/50 border-b border-border">
+                  <thead className="bg-white/[0.05] border-b border-white/[0.08]">
                     <tr>
                       <th className="text-left p-3 text-sm font-medium">Ticker</th>
                       <th className="text-left p-3 text-sm font-medium hidden sm:table-cell">Insider</th>
@@ -397,12 +397,12 @@ export default async function InsiderTradingPage() {
                     {recentBuys.slice(0, 25).map((trade, index) => (
                       <tr
                         key={`buy-${trade.ticker}-${trade.filing_date}-${index}`}
-                        className="border-b border-border hover:bg-muted/30 transition-colors"
+                        className="border-b border-white/[0.08] hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out"
                       >
                         <td className="p-3">
                           <Link
                             href={`/stock/${trade.ticker}`}
-                            className="font-bold text-green-500 hover:text-green-400"
+                            className="font-bold text-[#4ebe96] hover:text-[#4ebe96]/80 motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded"
                           >
                             {trade.ticker}
                           </Link>
@@ -412,19 +412,19 @@ export default async function InsiderTradingPage() {
                             <p className="font-medium">{trade.name}</p>
                           </div>
                         </td>
-                        <td className="p-3 text-sm text-muted-foreground hidden md:table-cell">
+                        <td className="p-3 text-sm text-[#868f97] hidden md:table-cell">
                           {trade.title}
                         </td>
-                        <td className="p-3 text-right font-medium">
+                        <td className="p-3 text-right font-medium tabular-nums">
                           {formatNumber(trade.transaction_shares)}
                         </td>
-                        <td className="p-3 text-right font-bold text-green-500">
+                        <td className="p-3 text-right font-bold text-[#4ebe96] tabular-nums">
                           ${formatNumber(Math.abs(trade.transaction_value))}
                         </td>
-                        <td className="p-3 text-right text-sm text-muted-foreground hidden lg:table-cell">
+                        <td className="p-3 text-right text-sm text-[#868f97] hidden lg:table-cell tabular-nums">
                           ${trade.transaction_price_per_share?.toFixed(2) || 'N/A'}
                         </td>
-                        <td className="p-3 text-right text-sm text-muted-foreground">
+                        <td className="p-3 text-right text-sm text-[#868f97]">
                           {new Date(trade.filing_date).toLocaleDateString('en-US', {
                             month: 'short',
                             day: 'numeric',
@@ -441,10 +441,10 @@ export default async function InsiderTradingPage() {
           {/* Recent Insider Sells */}
           <section className="mb-12">
             <h2 className="text-2xl sm:text-3xl font-bold mb-6">Recent Insider Sells</h2>
-            <div className="bg-card rounded-xl border border-border overflow-hidden">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-muted/50 border-b border-border">
+                  <thead className="bg-white/[0.05] border-b border-white/[0.08]">
                     <tr>
                       <th className="text-left p-3 text-sm font-medium">Ticker</th>
                       <th className="text-left p-3 text-sm font-medium hidden sm:table-cell">Insider</th>
@@ -459,12 +459,12 @@ export default async function InsiderTradingPage() {
                     {recentSells.slice(0, 25).map((trade, index) => (
                       <tr
                         key={`sell-${trade.ticker}-${trade.filing_date}-${index}`}
-                        className="border-b border-border hover:bg-muted/30 transition-colors"
+                        className="border-b border-white/[0.08] hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out"
                       >
                         <td className="p-3">
                           <Link
                             href={`/stock/${trade.ticker}`}
-                            className="font-bold text-red-500 hover:text-red-400"
+                            className="font-bold text-[#ff5c5c] hover:text-[#ff5c5c]/80 motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded"
                           >
                             {trade.ticker}
                           </Link>
@@ -474,19 +474,19 @@ export default async function InsiderTradingPage() {
                             <p className="font-medium">{trade.name}</p>
                           </div>
                         </td>
-                        <td className="p-3 text-sm text-muted-foreground hidden md:table-cell">
+                        <td className="p-3 text-sm text-[#868f97] hidden md:table-cell">
                           {trade.title}
                         </td>
-                        <td className="p-3 text-right font-medium">
+                        <td className="p-3 text-right font-medium tabular-nums">
                           {formatNumber(Math.abs(trade.transaction_shares))}
                         </td>
-                        <td className="p-3 text-right font-bold text-red-500">
+                        <td className="p-3 text-right font-bold text-[#ff5c5c] tabular-nums">
                           ${formatNumber(Math.abs(trade.transaction_value))}
                         </td>
-                        <td className="p-3 text-right text-sm text-muted-foreground hidden lg:table-cell">
+                        <td className="p-3 text-right text-sm text-[#868f97] hidden lg:table-cell tabular-nums">
                           ${trade.transaction_price_per_share?.toFixed(2) || 'N/A'}
                         </td>
-                        <td className="p-3 text-right text-sm text-muted-foreground">
+                        <td className="p-3 text-right text-sm text-[#868f97]">
                           {new Date(trade.filing_date).toLocaleDateString('en-US', {
                             month: 'short',
                             day: 'numeric',
@@ -506,16 +506,16 @@ export default async function InsiderTradingPage() {
               Understanding Insider Trading
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-xl font-bold mb-3 text-green-500">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl">
+                <h3 className="text-xl font-bold mb-3 text-[#4ebe96]">
                   Why Insider Buying Matters
                 </h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="text-[#868f97] mb-4">
                   When corporate insiders purchase their company's stock with their own money,
                   it's often a strong bullish signal. Insiders have access to information that
                   gives them unique insight into the company's prospects.
                 </p>
-                <ul className="list-disc list-inside text-muted-foreground space-y-2">
+                <ul className="list-disc list-inside text-[#868f97] space-y-2">
                   <li>Insiders know the business better than anyone</li>
                   <li>Buying signals confidence in future performance</li>
                   <li>Studies show insider buys can predict stock outperformance</li>
@@ -523,16 +523,16 @@ export default async function InsiderTradingPage() {
                 </ul>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-xl font-bold mb-3 text-green-500">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl">
+                <h3 className="text-xl font-bold mb-3 text-[#4ebe96]">
                   How to Interpret Insider Sells
                 </h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="text-[#868f97] mb-4">
                   Insider selling is less meaningful than buying because executives sell for
                   many personal reasons. However, heavy selling can be a warning sign worth
                   investigating further.
                 </p>
-                <ul className="list-disc list-inside text-muted-foreground space-y-2">
+                <ul className="list-disc list-inside text-[#868f97] space-y-2">
                   <li>Diversification and tax planning drive many sales</li>
                   <li>Pre-planned selling programs are routine</li>
                   <li>Heavy selling by multiple insiders warrants attention</li>
@@ -543,64 +543,64 @@ export default async function InsiderTradingPage() {
           </section>
 
           {/* Key Signals to Watch */}
-          <section className="mb-12 bg-card p-6 sm:p-8 rounded-xl border border-border">
+          <section className="mb-12 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 sm:p-8 rounded-2xl">
             <h2 className="text-2xl sm:text-3xl font-bold mb-6">
               Key Insider Trading Signals
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h3 className="font-bold text-green-500 mb-3 flex items-center gap-2">
+                <h3 className="font-bold text-[#4ebe96] mb-3 flex items-center gap-2">
                   <span className="text-xl">🟢</span>
                   Bullish Signals
                 </h3>
-                <ul className="space-y-2 text-muted-foreground">
+                <ul className="space-y-2 text-[#868f97]">
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
+                    <span className="text-[#4ebe96] mt-1">•</span>
                     <span>Multiple insiders buying within a short period</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
+                    <span className="text-[#4ebe96] mt-1">•</span>
                     <span>CEO or CFO making large open-market purchases</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
+                    <span className="text-[#4ebe96] mt-1">•</span>
                     <span>Insider buying near 52-week lows</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
+                    <span className="text-[#4ebe96] mt-1">•</span>
                     <span>Purchases that significantly increase ownership</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
+                    <span className="text-[#4ebe96] mt-1">•</span>
                     <span>Insider buying during market weakness</span>
                   </li>
                 </ul>
               </div>
 
               <div>
-                <h3 className="font-bold text-red-500 mb-3 flex items-center gap-2">
+                <h3 className="font-bold text-[#ff5c5c] mb-3 flex items-center gap-2">
                   <span className="text-xl">🔴</span>
                   Warning Signals
                 </h3>
-                <ul className="space-y-2 text-muted-foreground">
+                <ul className="space-y-2 text-[#868f97]">
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
+                    <span className="text-[#ff5c5c] mt-1">•</span>
                     <span>Multiple top executives selling large amounts</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
+                    <span className="text-[#ff5c5c] mt-1">•</span>
                     <span>CEO or CFO selling after recent stock price surge</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
+                    <span className="text-[#ff5c5c] mt-1">•</span>
                     <span>Insiders selling more than 25% of holdings</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
+                    <span className="text-[#ff5c5c] mt-1">•</span>
                     <span>Cluster of selling with no accompanying buys</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
+                    <span className="text-[#ff5c5c] mt-1">•</span>
                     <span>Sales occurring before negative news or earnings</span>
                   </li>
                 </ul>
@@ -617,15 +617,15 @@ export default async function InsiderTradingPage() {
               {faqs.map((faq, index) => (
                 <details
                   key={index}
-                  className="bg-card p-6 rounded-xl border border-border group"
+                  className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl group hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out"
                 >
-                  <summary className="text-lg font-bold cursor-pointer list-none flex items-center justify-between">
+                  <summary className="text-lg font-bold cursor-pointer list-none flex items-center justify-between focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded">
                     <span>{faq.question}</span>
-                    <span className="text-green-500 group-open:rotate-180 transition-transform">
+                    <span className="text-[#4ebe96] group-open:rotate-180 motion-safe:transition-transform motion-safe:duration-150 ease-out">
                       ▼
                     </span>
                   </summary>
-                  <p className="text-muted-foreground mt-4 leading-relaxed">
+                  <p className="text-[#868f97] mt-4 leading-relaxed">
                     {faq.answer}
                   </p>
                 </details>
@@ -641,52 +641,52 @@ export default async function InsiderTradingPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Link
                 href="/markets/top-gainers"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out group focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <div className="text-2xl mb-2">📈</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors">
+                <h3 className="font-bold group-hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   Top Gainers
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-[#868f97]">
                   Biggest price movers up
                 </p>
               </Link>
 
               <Link
                 href="/sectors"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out group focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <div className="text-2xl mb-2">🏢</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors">
+                <h3 className="font-bold group-hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   Sectors
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-[#868f97]">
                   Browse by industry
                 </p>
               </Link>
 
               <Link
                 href="/earnings"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out group focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <div className="text-2xl mb-2">📊</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors">
+                <h3 className="font-bold group-hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   Earnings Calendar
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-[#868f97]">
                   Upcoming earnings reports
                 </p>
               </Link>
 
               <Link
                 href="/dashboard"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out group focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <div className="text-2xl mb-2">🔍</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors">
+                <h3 className="font-bold group-hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   Stock Analysis
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-[#868f97]">
                   AI-powered research
                 </p>
               </Link>
@@ -694,7 +694,7 @@ export default async function InsiderTradingPage() {
           </section>
 
           {/* CTA Section */}
-          <section className="bg-gradient-to-r from-green-600 to-emerald-600 p-8 sm:p-12 rounded-xl text-white text-center">
+          <section className="bg-gradient-to-r from-[#4ebe96] to-[#4ebe96]/80 p-8 sm:p-12 rounded-2xl text-black text-center">
             <h2 className="text-2xl sm:text-3xl font-bold mb-4">
               Get AI-Powered Stock Analysis
             </h2>
@@ -704,7 +704,7 @@ export default async function InsiderTradingPage() {
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-white text-green-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-bold transition-colors"
+              className="inline-block bg-black text-white hover:bg-black/90 px-8 py-3 rounded-full font-bold motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-black"
             >
               Start Analyzing Stocks Free
             </Link>

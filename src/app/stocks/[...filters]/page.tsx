@@ -210,27 +210,27 @@ export default async function FilteredStocksPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbSchema, articleSchema, itemListSchema]) }}
       />
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-black text-white">
         <div className="max-w-5xl mx-auto px-6 py-12">
           {/* Breadcrumb */}
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Home</Link>
             {' / '}
-            <Link href="/dashboard" className="hover:text-foreground">Stocks</Link>
+            <Link href="/dashboard" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Stocks</Link>
             {' / '}
             <span>{filterLabels.join(' + ')}</span>
           </nav>
 
           {/* Title */}
-          <h1 className="text-4xl font-bold mb-4">{title}</h1>
-          <p className="text-xl text-muted-foreground mb-8">{description}</p>
+          <h1 className="text-4xl font-bold mb-4 text-balance">{title}</h1>
+          <p className="text-xl text-[#868f97] mb-8">{description}</p>
 
           {/* Active Filters */}
           <div className="flex flex-wrap gap-2 mb-8">
             {activeFilters.map((filter) => (
               <span
                 key={filter}
-                className="px-3 py-1 bg-green-600/20 text-green-500 rounded-full text-sm font-medium"
+                className="px-3 py-1 bg-[#4ebe96]/20 text-[#4ebe96] rounded-full text-sm font-medium"
               >
                 {FILTERS[filter]?.label}
               </span>
@@ -239,19 +239,19 @@ export default async function FilteredStocksPage({ params }: Props) {
 
           {/* Stock Grid */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Top Picks ({stocks.length})</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Top Picks ({stocks.length})</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
               {stocks.map((stock, i) => (
                 <Link
                   key={stock}
                   href={`/stock/${stock}`}
-                  className="bg-card p-4 rounded-lg border border-border hover:border-green-500/50 transition-colors"
+                  className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-muted-foreground">#{i + 1}</span>
-                    <span className="text-xs text-green-500">View</span>
+                    <span className="text-xs text-[#868f97] tabular-nums">#{i + 1}</span>
+                    <span className="text-xs text-[#4ebe96]">View</span>
                   </div>
-                  <p className="text-lg font-bold">{stock}</p>
+                  <p className="text-lg font-bold tabular-nums">{stock}</p>
                 </Link>
               ))}
             </div>
@@ -259,17 +259,17 @@ export default async function FilteredStocksPage({ params }: Props) {
 
           {/* Quick Analysis Links */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Quick Analysis</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Quick Analysis</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {stocks.slice(0, 6).map((stock) => (
-                <div key={stock} className="bg-card p-4 rounded-lg border border-border">
-                  <p className="font-bold text-lg mb-2">{stock}</p>
+                <div key={stock} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4">
+                  <p className="font-bold text-lg mb-2 tabular-nums">{stock}</p>
                   <div className="flex flex-wrap gap-2 text-sm">
-                    <Link href={`/should-i-buy/${stock.toLowerCase()}`} className="text-green-500 hover:underline">
+                    <Link href={`/should-i-buy/${stock.toLowerCase()}`} className="text-[#479ffa] hover:underline motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                       Should I Buy?
                     </Link>
-                    <span className="text-muted-foreground">|</span>
-                    <Link href={`/prediction/${stock.toLowerCase()}`} className="text-green-500 hover:underline">
+                    <span className="text-[#868f97]">|</span>
+                    <Link href={`/prediction/${stock.toLowerCase()}`} className="text-[#479ffa] hover:underline motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                       Prediction
                     </Link>
                   </div>
@@ -280,13 +280,13 @@ export default async function FilteredStocksPage({ params }: Props) {
 
           {/* Related Combinations */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Refine Your Search</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Refine Your Search</h2>
             <div className="flex flex-wrap gap-2">
               {relatedCombinations.map((combo) => (
                 <Link
                   key={combo.slug}
                   href={`/stocks/${combo.slug}`}
-                  className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 text-sm"
+                  className="px-4 py-2 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] text-sm"
                 >
                   {combo.label}
                 </Link>
@@ -296,13 +296,13 @@ export default async function FilteredStocksPage({ params }: Props) {
 
           {/* Other Filters */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Explore Other Filters</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Explore Other Filters</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {otherFilters.slice(0, 8).map((filter) => (
                 <Link
                   key={filter}
                   href={`/stocks/${filter}`}
-                  className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 text-sm text-center"
+                  className="px-4 py-2 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] text-sm text-center"
                 >
                   {FILTERS[filter].label}
                 </Link>
@@ -311,14 +311,14 @@ export default async function FilteredStocksPage({ params }: Props) {
           </section>
 
           {/* CTA */}
-          <section className="bg-card p-8 rounded-xl border border-border text-center">
-            <h2 className="text-2xl font-bold mb-4">Get AI-Powered Analysis</h2>
-            <p className="text-muted-foreground mb-6">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 text-center">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Get AI-Powered Analysis</h2>
+            <p className="text-[#868f97] mb-6">
               Access detailed analysis, DCF valuations, and AI insights for any stock
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium"
+              className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
             >
               Start Research
             </Link>

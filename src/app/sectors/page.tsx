@@ -150,7 +150,7 @@ export default function SectorsHubPage() {
         }}
       />
       <Header />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-dvh bg-black text-white pt-20">
         <div className="max-w-6xl mx-auto px-6 py-12">
           <div className="flex gap-8">
             <SEOSidebar />
@@ -266,7 +266,7 @@ export default function SectorsHubPage() {
               </div>
 
               <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
-                <h3 className="text-lg font-bold mb-3 text-purple-500">Defensive Sectors</h3>
+                <h3 className="text-lg font-bold mb-3 text-[#ffa16c]">Defensive Sectors</h3>
                 <p className="text-sm text-[#868f97] mb-3">
                   Stable earnings regardless of economic conditions
                 </p>

@@ -133,69 +133,69 @@ export default async function QuarterlyComparisonPage({ params }: Props) {
   const wins2 = comparisonRows.filter(r => r.winner === 2).length
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-dvh bg-black">
       <Header />
       <main className="max-w-6xl mx-auto px-4 py-8 pt-24">
-        <nav className="text-sm mb-4">
-          <Link href="/" className="text-blue-600 hover:underline">Home</Link>
+        <nav className="text-sm text-[#868f97] mb-4">
+          <Link href="/" className="hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out">Home</Link>
           {' > '}
-          <Link href="/compare" className="text-blue-600 hover:underline">Compare</Link>
+          <Link href="/compare" className="hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out">Compare</Link>
           {' > '}
-          <Link href={`/compare/${slugs}`} className="text-blue-600 hover:underline">
+          <Link href={`/compare/${slugs}`} className="hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out">
             {t1} vs {t2}
           </Link>
           {' > '}
-          <span className="text-gray-600 dark:text-gray-400">{period} {yearStr}</span>
+          <span>{period} {yearStr}</span>
         </nav>
 
         <h1 className="text-3xl font-bold mb-2">
           {t1} vs {t2} — {period} {yearStr} Earnings
         </h1>
 
-        <p className="text-gray-600 dark:text-gray-400 mb-6">
+        <p className="text-[#868f97] mb-6">
           Quarterly earnings comparison for {period} {yearStr}. Compare revenue, profits, margins, and EPS.
         </p>
 
         {/* Winner Summary */}
         {(data1 || data2) && (
-          <div className="bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/20 rounded-xl p-4 mb-6">
+          <div className="bg-[#4ebe96]/10 border border-[#4ebe96]/20 rounded-2xl p-4 mb-6">
             <div className="flex items-center justify-between">
               <div className="text-center flex-1">
-                <div className={`text-2xl font-bold ${wins1 > wins2 ? 'text-green-500' : 'text-gray-600'}`}>{t1}</div>
-                <div className="text-sm text-gray-500">{wins1} wins</div>
+                <div className={`text-2xl font-bold tabular-nums ${wins1 > wins2 ? 'text-[#4ebe96]' : 'text-[#868f97]'}`}>{t1}</div>
+                <div className="text-sm text-[#868f97]">{wins1} wins</div>
               </div>
-              <div className="text-2xl font-bold text-gray-400">vs</div>
+              <div className="text-2xl font-bold text-[#868f97]">vs</div>
               <div className="text-center flex-1">
-                <div className={`text-2xl font-bold ${wins2 > wins1 ? 'text-green-500' : 'text-gray-600'}`}>{t2}</div>
-                <div className="text-sm text-gray-500">{wins2} wins</div>
+                <div className={`text-2xl font-bold tabular-nums ${wins2 > wins1 ? 'text-[#4ebe96]' : 'text-[#868f97]'}`}>{t2}</div>
+                <div className="text-sm text-[#868f97]">{wins2} wins</div>
               </div>
             </div>
           </div>
         )}
 
         {/* Comparison Table */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-8">
+        <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl overflow-hidden mb-8">
           <table className="w-full">
             <thead>
-              <tr className="bg-gray-100 dark:bg-gray-700">
+              <tr className="bg-white/[0.05]">
                 <th className="px-4 py-3 text-left text-sm font-semibold">Metric</th>
                 <th className="px-4 py-3 text-right text-sm font-semibold">
-                  <Link href={`/stock/${ticker1}`} className="hover:text-blue-500">{t1}</Link>
+                  <Link href={`/stock/${ticker1}`} className="hover:text-[#479ffa] motion-safe:transition-colors motion-safe:duration-150 ease-out">{t1}</Link>
                 </th>
                 <th className="px-4 py-3 text-right text-sm font-semibold">
-                  <Link href={`/stock/${ticker2}`} className="hover:text-blue-500">{t2}</Link>
+                  <Link href={`/stock/${ticker2}`} className="hover:text-[#479ffa] motion-safe:transition-colors motion-safe:duration-150 ease-out">{t2}</Link>
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-white/[0.08]">
               {comparisonRows.map((row, i) => (
-                <tr key={row.label} className={i % 2 === 0 ? 'bg-gray-50 dark:bg-gray-800/50' : ''}>
+                <tr key={row.label}>
                   <td className="px-4 py-3 text-sm font-medium">{row.label}</td>
-                  <td className={`px-4 py-3 text-sm text-right ${row.winner === 1 ? 'text-green-600 font-semibold' : ''}`}>
+                  <td className={`px-4 py-3 text-sm text-right tabular-nums ${row.winner === 1 ? 'text-[#4ebe96] font-semibold' : ''}`}>
                     {row.v1}
                     {row.winner === 1 && <span className="ml-1">✓</span>}
                   </td>
-                  <td className={`px-4 py-3 text-sm text-right ${row.winner === 2 ? 'text-green-600 font-semibold' : ''}`}>
+                  <td className={`px-4 py-3 text-sm text-right tabular-nums ${row.winner === 2 ? 'text-[#4ebe96] font-semibold' : ''}`}>
                     {row.v2}
                     {row.winner === 2 && <span className="ml-1">✓</span>}
                   </td>
@@ -207,22 +207,22 @@ export default async function QuarterlyComparisonPage({ params }: Props) {
 
         {/* No Data Message */}
         {!data1 && !data2 && (
-          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 mb-6">
-            <p className="text-yellow-800 dark:text-yellow-200">
+          <div className="bg-[#ffa16c]/10 border border-[#ffa16c]/20 rounded-2xl p-4 mb-6">
+            <p className="text-[#ffa16c]">
               Financial data for {period} {yearStr} is not yet available for these stocks.
             </p>
           </div>
         )}
 
         {/* Related Quarters */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 mb-6">
+        <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 mb-6">
           <h2 className="text-xl font-semibold mb-4">Compare Other Quarters</h2>
           <div className="flex flex-wrap gap-2">
             {QUARTERS.filter(q => q !== quarter).slice(-12).reverse().map(q => (
               <Link
                 key={q}
                 href={`/compare/${slugs}/q/${q}`}
-                className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 text-sm transition-colors"
+                className="px-3 py-1.5 bg-white/[0.03] border border-white/[0.08] rounded-full hover:bg-white/[0.05] hover:border-white/[0.15] text-sm motion-safe:transition-all motion-safe:duration-150 ease-out"
               >
                 {q}
               </Link>
@@ -231,14 +231,14 @@ export default async function QuarterlyComparisonPage({ params }: Props) {
         </div>
 
         {/* Year Comparisons */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 mb-6">
+        <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 mb-6">
           <h2 className="text-xl font-semibold mb-4">Annual Comparisons</h2>
           <div className="flex flex-wrap gap-2">
             {[2024, 2023, 2022, 2021, 2020].map(year => (
               <Link
                 key={year}
                 href={`/compare/${slugs}/${year}`}
-                className="px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 text-sm font-medium transition-colors"
+                className="px-4 py-2 bg-white/[0.03] border border-white/[0.08] rounded-full hover:bg-white/[0.05] hover:border-white/[0.15] text-sm font-medium motion-safe:transition-all motion-safe:duration-150 ease-out tabular-nums"
               >
                 {year} Full Year
               </Link>
@@ -250,22 +250,22 @@ export default async function QuarterlyComparisonPage({ params }: Props) {
         <div className="grid grid-cols-2 gap-4 mb-6">
           <Link
             href={`/stock/${ticker1}`}
-            className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 hover:shadow-lg transition-shadow"
+            className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out"
           >
-            <div className="text-lg font-bold text-blue-600">{t1}</div>
-            <div className="text-sm text-gray-500">View full analysis →</div>
+            <div className="text-lg font-bold text-[#479ffa]">{t1}</div>
+            <div className="text-sm text-[#868f97]">View full analysis →</div>
           </Link>
           <Link
             href={`/stock/${ticker2}`}
-            className="bg-white dark:bg-gray-800 rounded-xl shadow p-4 hover:shadow-lg transition-shadow"
+            className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out"
           >
-            <div className="text-lg font-bold text-blue-600">{t2}</div>
-            <div className="text-sm text-gray-500">View full analysis →</div>
+            <div className="text-lg font-bold text-[#479ffa]">{t2}</div>
+            <div className="text-sm text-[#868f97]">View full analysis →</div>
           </Link>
         </div>
 
         <div className="text-center">
-          <Link href={`/compare/${slugs}`} className="text-blue-600 hover:underline font-medium">
+          <Link href={`/compare/${slugs}`} className="text-[#479ffa] hover:text-[#479ffa]/80 font-medium motion-safe:transition-colors motion-safe:duration-150 ease-out">
             ← View Current {t1} vs {t2} Comparison
           </Link>
         </div>

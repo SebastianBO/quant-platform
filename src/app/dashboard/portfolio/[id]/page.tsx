@@ -341,15 +341,15 @@ export default function PortfolioDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background p-6">
+      <div className="min-h-dvh bg-black p-6">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-10 h-10 bg-secondary animate-pulse rounded-lg" />
-            <div className="h-8 w-48 bg-secondary animate-pulse rounded" />
+            <div className="w-10 h-10 bg-white/[0.03] animate-pulse rounded-lg" />
+            <div className="h-8 w-48 bg-white/[0.03] animate-pulse rounded" />
           </div>
           <div className="grid gap-4">
-            <div className="h-32 bg-secondary animate-pulse rounded-lg" />
-            <div className="h-64 bg-secondary animate-pulse rounded-lg" />
+            <div className="h-32 bg-white/[0.03] animate-pulse rounded-lg" />
+            <div className="h-64 bg-white/[0.03] animate-pulse rounded-lg" />
           </div>
         </div>
       </div>
@@ -358,28 +358,28 @@ export default function PortfolioDetailPage() {
 
   if (error || !portfolio) {
     return (
-      <div className="min-h-screen bg-background p-6">
+      <div className="min-h-dvh bg-black p-6">
         <div className="max-w-6xl mx-auto">
           <Button
             variant="ghost"
             onClick={() => router.back()}
-            className="mb-6"
+            className="mb-6 motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
-          <Card className="bg-card border-border">
-            <CardContent className="py-12 text-center">
-              <p className="text-lg font-medium text-destructive">{error || 'Portfolio not found'}</p>
+          <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
+            <div className="py-12 text-center">
+              <p className="text-lg font-medium text-[#ff5c5c]">{error || 'Portfolio not found'}</p>
               <Button
                 variant="outline"
                 onClick={() => router.push('/dashboard')}
-                className="mt-4"
+                className="mt-4 motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 Return to Dashboard
               </Button>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
     )
@@ -392,9 +392,9 @@ export default function PortfolioDetailPage() {
   const isPositive = totalGain >= 0
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-black">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b border-border">
+      <div className="sticky top-0 z-10 bg-black/95 backdrop-blur-[10px] border-b border-white/[0.08]">
         <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -402,12 +402,13 @@ export default function PortfolioDetailPage() {
                 variant="ghost"
                 size="icon"
                 onClick={() => router.back()}
+                className="motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <ArrowLeft className="w-5 h-5" />
               </Button>
               <div>
-                <h1 className="text-xl font-bold">{portfolio.name}</h1>
-                <p className="text-sm text-muted-foreground">
+                <h1 className="text-xl font-bold text-balance">{portfolio.name}</h1>
+                <p className="text-sm text-[#868f97]">
                   {portfolio.currency} Account
                 </p>
               </div>
@@ -418,16 +419,17 @@ export default function PortfolioDetailPage() {
                 size="icon"
                 onClick={handleRefresh}
                 disabled={refreshing}
+                className="motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
               </Button>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" className="motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                 <MessageCircle className="w-4 h-4" />
               </Button>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" className="motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                 <Users className="w-4 h-4" />
               </Button>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" className="motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                 <MoreVertical className="w-4 h-4" />
               </Button>
             </div>
@@ -437,39 +439,39 @@ export default function PortfolioDetailPage() {
 
       <div className="max-w-6xl mx-auto px-6 py-6 space-y-6">
         {/* Portfolio Summary */}
-        <Card className="bg-gradient-to-br from-green-900/20 to-emerald-900/20 border-green-500/30">
-          <CardContent className="py-6">
+        <div className="bg-white/[0.03] backdrop-blur-[10px] border border-[#4ebe96]/30 rounded-2xl">
+          <div className="py-6 px-6">
             <div className="space-y-4">
               <div>
-                <p className="text-sm text-muted-foreground mb-1">Total Value</p>
-                <p className="text-3xl font-bold">{formatCurrency(totalValue, portfolio.currency)}</p>
+                <p className="text-sm text-[#868f97] mb-1">Total Value</p>
+                <p className="text-3xl font-bold tabular-nums">{formatCurrency(totalValue, portfolio.currency)}</p>
               </div>
 
-              <div className={`flex items-center gap-2 ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
+              <div className={`flex items-center gap-2 ${isPositive ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                 {isPositive ? (
                   <TrendingUp className="w-5 h-5" />
                 ) : (
                   <TrendingDown className="w-5 h-5" />
                 )}
-                <span className="text-lg font-semibold">
+                <span className="text-lg font-semibold tabular-nums">
                   {formatCurrency(Math.abs(totalGain), portfolio.currency)} ({formatPercent(totalGainPercent)})
                 </span>
-                <span className="text-muted-foreground text-sm">all time</span>
+                <span className="text-[#868f97] text-sm">all time</span>
               </div>
 
               <div className="flex gap-6 text-sm">
                 <div>
-                  <span className="text-muted-foreground">Cost Basis: </span>
-                  <span className="font-medium">{formatCurrency(totalCost, portfolio.currency)}</span>
+                  <span className="text-[#868f97]">Cost Basis: </span>
+                  <span className="font-medium tabular-nums">{formatCurrency(totalCost, portfolio.currency)}</span>
                 </div>
                 <div>
-                  <span className="text-muted-foreground">Positions: </span>
-                  <span className="font-medium">{portfolio.investments.length}</span>
+                  <span className="text-[#868f97]">Positions: </span>
+                  <span className="font-medium tabular-nums">{portfolio.investments.length}</span>
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Performance Chart */}
         <PortfolioPerformanceChart
@@ -483,23 +485,23 @@ export default function PortfolioDetailPage() {
         {/* Positions Section */}
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">Positions ({portfolio.investments.length})</h2>
-            <Button className="bg-green-600 hover:bg-green-500 text-white" size="sm">
+            <h2 className="text-lg font-semibold text-balance tabular-nums">Positions ({portfolio.investments.length})</h2>
+            <Button className="bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-white motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]" size="sm">
               <Plus className="w-4 h-4 mr-2" />
               Add Position
             </Button>
           </div>
 
           {portfolio.investments.length === 0 ? (
-            <Card className="bg-card border-border">
-              <CardContent className="py-12 text-center">
-                <p className="text-muted-foreground mb-4">No positions in this portfolio yet</p>
-                <Button className="bg-green-600 hover:bg-green-500 text-white">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
+              <div className="py-12 text-center px-6">
+                <p className="text-[#868f97] mb-4">No positions in this portfolio yet</p>
+                <Button className="bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-white motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                   <Plus className="w-4 h-4 mr-2" />
                   Add Your First Position
                 </Button>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ) : (
             <div className="space-y-2">
               {portfolio.investments.map((investment) => {
@@ -537,10 +539,10 @@ export default function PortfolioDetailPage() {
                   <Link
                     key={investment.id}
                     href={`/stock/${ticker}`}
-                    className="block"
+                    className="block focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded-2xl"
                   >
-                    <Card className="bg-card border-border hover:border-green-500/50 transition-colors cursor-pointer">
-                      <CardContent className="py-4">
+                    <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out cursor-pointer">
+                      <div className="py-4 px-6">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-4">
                             <HoldingLogo symbol={ticker} size={44} />
@@ -548,32 +550,32 @@ export default function PortfolioDetailPage() {
                               <div className="flex items-center gap-2">
                                 <span className="font-bold text-lg">{ticker}</span>
                                 {liveData && (
-                                  <span className={`text-xs px-1.5 py-0.5 rounded ${dayChangePositive ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'}`}>
+                                  <span className={`text-xs px-1.5 py-0.5 rounded tabular-nums ${dayChangePositive ? 'bg-[#4ebe96]/20 text-[#4ebe96]' : 'bg-[#ff5c5c]/20 text-[#ff5c5c]'}`}>
                                     {dayChangePositive ? '+' : ''}{dayChangePercent.toFixed(2)}%
                                   </span>
                                 )}
                                 {pricesLoading && !liveData && (
-                                  <span className="text-xs text-muted-foreground animate-pulse">updating...</span>
+                                  <span className="text-xs text-[#868f97] animate-pulse">updating...</span>
                                 )}
                               </div>
-                              <p className="text-sm text-muted-foreground">
+                              <p className="text-sm text-[#868f97] tabular-nums">
                                 {shares.toLocaleString()} shares @ {formatCurrency(avgCostInStockCurrency, stockCurrency)}
                               </p>
                             </div>
                           </div>
 
                           <div className="text-right">
-                            <p className="font-semibold">{formatCurrency(marketValue, portfolio.currency)}</p>
-                            <div className={`flex items-center justify-end gap-1 text-sm ${positionIsPositive ? 'text-green-500' : 'text-red-500'}`}>
-                              <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${positionIsPositive ? 'bg-green-500/20' : 'bg-red-500/20'}`}>
+                            <p className="font-semibold tabular-nums">{formatCurrency(marketValue, portfolio.currency)}</p>
+                            <div className={`flex items-center justify-end gap-1 text-sm ${positionIsPositive ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
+                              <span className={`px-2 py-0.5 rounded-full text-xs font-medium tabular-nums ${positionIsPositive ? 'bg-[#4ebe96]/20' : 'bg-[#ff5c5c]/20'}`}>
                                 {positionIsPositive ? '↗' : '↘'} {Math.abs(gainPercent).toFixed(2)}%
                               </span>
-                              <span>{formatCurrency(Math.abs(gain), portfolio.currency)}</span>
+                              <span className="tabular-nums">{formatCurrency(Math.abs(gain), portfolio.currency)}</span>
                             </div>
                           </div>
                         </div>
-                      </CardContent>
-                    </Card>
+                      </div>
+                    </div>
                   </Link>
                 )
               })}
@@ -588,10 +590,10 @@ export default function PortfolioDetailPage() {
         <div className="flex gap-2">
           <button
             onClick={() => setChatMode('ai')}
-            className={`flex-1 py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${
+            className={`flex-1 py-3 px-4 rounded-2xl font-medium motion-safe:transition-all motion-safe:duration-150 ease-out flex items-center justify-center gap-2 focus-visible:ring-2 focus-visible:ring-[#4ebe96] ${
               chatMode === 'ai'
-                ? 'bg-green-500 text-white'
-                : 'bg-secondary text-muted-foreground hover:text-foreground'
+                ? 'bg-[#4ebe96] text-white'
+                : 'bg-white/[0.03] text-[#868f97] hover:bg-white/[0.05] hover:text-white'
             }`}
           >
             <MessageCircle className="w-4 h-4" />
@@ -599,10 +601,10 @@ export default function PortfolioDetailPage() {
           </button>
           <button
             onClick={() => setChatMode('team')}
-            className={`flex-1 py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${
+            className={`flex-1 py-3 px-4 rounded-2xl font-medium motion-safe:transition-all motion-safe:duration-150 ease-out flex items-center justify-center gap-2 focus-visible:ring-2 focus-visible:ring-[#4ebe96] ${
               chatMode === 'team'
-                ? 'bg-green-500 text-white'
-                : 'bg-secondary text-muted-foreground hover:text-foreground'
+                ? 'bg-[#4ebe96] text-white'
+                : 'bg-white/[0.03] text-[#868f97] hover:bg-white/[0.05] hover:text-white'
             }`}
           >
             <Users className="w-4 h-4" />

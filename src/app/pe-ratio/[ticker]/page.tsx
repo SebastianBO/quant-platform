@@ -82,21 +82,21 @@ export default async function PERatioPage({ params }: Props) {
 
   // Determine valuation assessment
   let valuationStatus = 'Fair Value'
-  let valuationColor = 'text-yellow-500'
-  let valuationBg = 'bg-yellow-500/20'
-  let valuationBorder = 'border-yellow-500/30'
+  let valuationColor = 'text-[#ffa16c]'
+  let valuationBg = 'bg-[#ffa16c]/20'
+  let valuationBorder = 'border-[#ffa16c]/30'
 
   if (hasPE) {
     if (peRatio < industryPE * 0.8) {
       valuationStatus = 'Undervalued'
-      valuationColor = 'text-green-500'
-      valuationBg = 'bg-green-500/20'
-      valuationBorder = 'border-green-500/30'
+      valuationColor = 'text-[#4ebe96]'
+      valuationBg = 'bg-[#4ebe96]/20'
+      valuationBorder = 'border-[#4ebe96]/30'
     } else if (peRatio > industryPE * 1.2) {
       valuationStatus = 'Overvalued'
-      valuationColor = 'text-red-500'
-      valuationBg = 'bg-red-500/20'
-      valuationBorder = 'border-red-500/30'
+      valuationColor = 'text-[#ff5c5c]'
+      valuationBg = 'bg-[#ff5c5c]/20'
+      valuationBorder = 'border-[#ff5c5c]/30'
     }
   }
 
@@ -160,48 +160,48 @@ export default async function PERatioPage({ params }: Props) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }} />
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-black text-white">
         <div className="max-w-4xl mx-auto px-6 py-12">
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded">Home</Link>
             {' / '}
-            <Link href="/learn" className="hover:text-foreground">Learn</Link>
+            <Link href="/learn" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded">Learn</Link>
             {' / '}
-            <Link href="/learn/pe-ratio" className="hover:text-foreground">PE Ratio</Link>
+            <Link href="/learn/pe-ratio" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded">PE Ratio</Link>
             {' / '}
             <span>{symbol} PE Ratio</span>
           </nav>
 
-          <h1 className="text-4xl font-bold mb-4">{symbol} PE Ratio {currentYear}</h1>
-          <p className="text-xl text-muted-foreground mb-8">{companyName} Price to Earnings Analysis</p>
+          <h1 className="text-4xl font-bold mb-4 text-balance">{symbol} PE Ratio {currentYear}</h1>
+          <p className="text-xl text-[#868f97] mb-8">{companyName} Price to Earnings Analysis</p>
 
           {/* PE Ratio Overview */}
           <div className={`p-8 rounded-xl border mb-8 ${valuationBg} ${valuationBorder}`}>
             {hasPE ? (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div>
-                  <p className="text-muted-foreground text-sm mb-1">Current P/E Ratio</p>
-                  <p className="text-4xl font-bold">{peRatio.toFixed(2)}</p>
+                  <p className="text-[#868f97] text-sm mb-1">Current P/E Ratio</p>
+                  <p className="text-4xl font-bold tabular-nums">{peRatio.toFixed(2)}</p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground text-sm mb-1">Stock Price</p>
-                  <p className="text-3xl font-bold">${currentPrice.toFixed(2)}</p>
+                  <p className="text-[#868f97] text-sm mb-1">Stock Price</p>
+                  <p className="text-3xl font-bold tabular-nums">${currentPrice.toFixed(2)}</p>
                 </div>
                 {eps && (
                   <div>
-                    <p className="text-muted-foreground text-sm mb-1">EPS (TTM)</p>
-                    <p className="text-3xl font-bold">${eps.toFixed(2)}</p>
+                    <p className="text-[#868f97] text-sm mb-1">EPS (TTM)</p>
+                    <p className="text-3xl font-bold tabular-nums">${eps.toFixed(2)}</p>
                   </div>
                 )}
                 <div>
-                  <p className="text-muted-foreground text-sm mb-1">Valuation</p>
+                  <p className="text-[#868f97] text-sm mb-1">Valuation</p>
                   <p className={`text-2xl font-bold ${valuationColor}`}>{valuationStatus}</p>
                 </div>
               </div>
             ) : (
               <div className="text-center py-4">
                 <p className="text-2xl font-bold mb-2">{symbol} P/E Ratio Not Available</p>
-                <p className="text-muted-foreground">This company may not be profitable yet or recently reported negative earnings.</p>
+                <p className="text-[#868f97]">This company may not be profitable yet or recently reported negative earnings.</p>
               </div>
             )}
           </div>
@@ -209,32 +209,32 @@ export default async function PERatioPage({ params }: Props) {
           {/* Key PE Metrics */}
           {hasPE && (
             <section className="mb-12">
-              <h2 className="text-2xl font-bold mb-4">PE Ratio Breakdown</h2>
+              <h2 className="text-2xl font-bold mb-4 text-balance">PE Ratio Breakdown</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-card p-5 rounded-lg border border-border">
-                  <p className="text-sm text-muted-foreground mb-1">Trailing P/E (TTM)</p>
-                  <p className="text-2xl font-bold mb-2">{trailingPE.toFixed(2)}</p>
-                  <p className="text-sm text-muted-foreground">Based on last 12 months earnings</p>
+                <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                  <p className="text-sm text-[#868f97] mb-1">Trailing P/E (TTM)</p>
+                  <p className="text-2xl font-bold mb-2 tabular-nums">{trailingPE.toFixed(2)}</p>
+                  <p className="text-sm text-[#868f97]">Based on last 12 months earnings</p>
                 </div>
                 {forwardPE && (
-                  <div className="bg-card p-5 rounded-lg border border-border">
-                    <p className="text-sm text-muted-foreground mb-1">Forward P/E</p>
-                    <p className="text-2xl font-bold mb-2">{forwardPE.toFixed(2)}</p>
-                    <p className="text-sm text-muted-foreground">Based on next 12 months estimates</p>
+                  <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                    <p className="text-sm text-[#868f97] mb-1">Forward P/E</p>
+                    <p className="text-2xl font-bold mb-2 tabular-nums">{forwardPE.toFixed(2)}</p>
+                    <p className="text-sm text-[#868f97]">Based on next 12 months estimates</p>
                   </div>
                 )}
-                <div className="bg-card p-5 rounded-lg border border-border">
-                  <p className="text-sm text-muted-foreground mb-1">{sector} Industry Avg</p>
-                  <p className="text-2xl font-bold mb-2">{industryPE.toFixed(2)}</p>
-                  <p className="text-sm text-muted-foreground">
+                <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                  <p className="text-sm text-[#868f97] mb-1">{sector} Industry Avg</p>
+                  <p className="text-2xl font-bold mb-2 tabular-nums">{industryPE.toFixed(2)}</p>
+                  <p className="text-sm text-[#868f97]">
                     {symbol} is {peRatio > industryPE ? ((peRatio - industryPE) / industryPE * 100).toFixed(0) + '% above' : ((industryPE - peRatio) / industryPE * 100).toFixed(0) + '% below'} industry
                   </p>
                 </div>
                 {pegRatio && (
-                  <div className="bg-card p-5 rounded-lg border border-border">
-                    <p className="text-sm text-muted-foreground mb-1">PEG Ratio</p>
-                    <p className="text-2xl font-bold mb-2">{pegRatio.toFixed(2)}</p>
-                    <p className="text-sm text-muted-foreground">
+                  <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                    <p className="text-sm text-[#868f97] mb-1">PEG Ratio</p>
+                    <p className="text-2xl font-bold mb-2 tabular-nums">{pegRatio.toFixed(2)}</p>
+                    <p className="text-sm text-[#868f97]">
                       {pegRatio < 1 ? 'Potentially undervalued' : pegRatio < 2 ? 'Fairly valued' : 'Potentially overvalued'}
                     </p>
                   </div>
@@ -246,12 +246,12 @@ export default async function PERatioPage({ params }: Props) {
           {/* Valuation Interpretation */}
           {hasPE && (
             <section className="mb-12">
-              <h2 className="text-2xl font-bold mb-4">What Does {symbol} P/E Ratio Mean?</h2>
-              <div className="bg-card p-6 rounded-lg border border-border space-y-4">
+              <h2 className="text-2xl font-bold mb-4 text-balance">What Does {symbol} P/E Ratio Mean?</h2>
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out space-y-4">
                 <div>
                   <h3 className="font-bold text-lg mb-2">Current Valuation</h3>
-                  <p className="text-muted-foreground">
-                    At a P/E ratio of {peRatio.toFixed(2)}, investors are paying ${peRatio.toFixed(2)} for every $1 of {symbol}'s annual earnings.
+                  <p className="text-[#868f97]">
+                    At a P/E ratio of <span className="tabular-nums">{peRatio.toFixed(2)}</span>, investors are paying $<span className="tabular-nums">{peRatio.toFixed(2)}</span> for every $1 of {symbol}'s annual earnings.
                     {peRatio < 15 && ' This relatively low P/E could indicate the stock is undervalued or that growth prospects are limited.'}
                     {peRatio >= 15 && peRatio <= 25 && ' This moderate P/E is typical for established companies with steady earnings.'}
                     {peRatio > 25 && ' This high P/E suggests investors expect strong future earnings growth or that the stock is trading at a premium.'}
@@ -259,8 +259,8 @@ export default async function PERatioPage({ params }: Props) {
                 </div>
                 <div>
                   <h3 className="font-bold text-lg mb-2">Industry Comparison</h3>
-                  <p className="text-muted-foreground">
-                    Compared to the {sector} industry average P/E of {industryPE}, {symbol} is trading at a {peRatio > industryPE ? 'premium' : 'discount'}.
+                  <p className="text-[#868f97]">
+                    Compared to the {sector} industry average P/E of <span className="tabular-nums">{industryPE}</span>, {symbol} is trading at a {peRatio > industryPE ? 'premium' : 'discount'}.
                     {peRatio > industryPE && ' This could be justified by superior growth, profitability, or competitive position.'}
                     {peRatio < industryPE && ' This discount may present a value opportunity or could reflect higher risk or slower growth.'}
                   </p>
@@ -268,8 +268,8 @@ export default async function PERatioPage({ params }: Props) {
                 {forwardPE && (
                   <div>
                     <h3 className="font-bold text-lg mb-2">Forward vs Trailing</h3>
-                    <p className="text-muted-foreground">
-                      The forward P/E of {forwardPE.toFixed(2)} is {forwardPE < trailingPE ? 'lower than' : 'higher than'} the trailing P/E of {trailingPE.toFixed(2)},
+                    <p className="text-[#868f97]">
+                      The forward P/E of <span className="tabular-nums">{forwardPE.toFixed(2)}</span> is {forwardPE < trailingPE ? 'lower than' : 'higher than'} the trailing P/E of <span className="tabular-nums">{trailingPE.toFixed(2)}</span>,
                       {forwardPE < trailingPE && ' suggesting analysts expect earnings to grow in the coming year.'}
                       {forwardPE > trailingPE && ' suggesting analysts expect earnings to decline or grow slower in the coming year.'}
                     </p>
@@ -282,18 +282,18 @@ export default async function PERatioPage({ params }: Props) {
           {/* PE Calculator */}
           {hasPE && eps && (
             <section className="mb-12">
-              <h2 className="text-2xl font-bold mb-4">PE Ratio Calculator</h2>
-              <div className="bg-card p-6 rounded-lg border border-border">
-                <p className="text-muted-foreground mb-4">How P/E ratio changes with different stock prices:</p>
+              <h2 className="text-2xl font-bold mb-4 text-balance">PE Ratio Calculator</h2>
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <p className="text-[#868f97] mb-4">How P/E ratio changes with different stock prices:</p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {[0.8, 0.9, 1.1, 1.2].map(multiplier => {
                     const hypotheticalPrice = currentPrice * multiplier
                     const hypotheticalPE = hypotheticalPrice / eps
                     return (
-                      <div key={multiplier} className="text-center p-3 bg-secondary/30 rounded-lg">
-                        <p className="text-sm text-muted-foreground">At ${hypotheticalPrice.toFixed(2)}</p>
-                        <p className="text-xl font-bold">P/E: {hypotheticalPE.toFixed(2)}</p>
-                        <p className="text-xs text-muted-foreground">
+                      <div key={multiplier} className="text-center p-3 bg-white/[0.05] rounded-lg">
+                        <p className="text-sm text-[#868f97]">At $<span className="tabular-nums">{hypotheticalPrice.toFixed(2)}</span></p>
+                        <p className="text-xl font-bold tabular-nums">P/E: {hypotheticalPE.toFixed(2)}</p>
+                        <p className="text-xs text-[#868f97] tabular-nums">
                           {multiplier < 1 ? `${((1-multiplier)*100).toFixed(0)}% lower` : `${((multiplier-1)*100).toFixed(0)}% higher`}
                         </p>
                       </div>
@@ -305,14 +305,14 @@ export default async function PERatioPage({ params }: Props) {
           )}
 
           {/* CTA */}
-          <section className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 p-8 rounded-xl border border-purple-500/30 text-center mb-12">
-            <h2 className="text-2xl font-bold mb-4">Get Complete {symbol} Valuation Analysis</h2>
-            <p className="text-muted-foreground mb-6">DCF model, comparable companies, and AI-powered insights</p>
+          <section className="bg-gradient-to-r from-[#479ffa]/20 to-[#4ebe96]/20 p-8 rounded-2xl border border-[#479ffa]/30 text-center mb-12">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Get Complete {symbol} Valuation Analysis</h2>
+            <p className="text-[#868f97] mb-6">DCF model, comparable companies, and AI-powered insights</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href={`/stock/${symbol.toLowerCase()}`} className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium">
+              <Link href={`/stock/${symbol.toLowerCase()}`} className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                 Full Stock Analysis
               </Link>
-              <Link href={`/analysis/${symbol.toLowerCase()}/valuation`} className="inline-block bg-secondary hover:bg-secondary/80 px-8 py-3 rounded-lg font-medium">
+              <Link href={`/analysis/${symbol.toLowerCase()}/valuation`} className="inline-block bg-white/[0.03] hover:bg-white/[0.05] border border-white/[0.08] hover:border-white/[0.15] px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                 Valuation Analysis
               </Link>
             </div>
@@ -320,12 +320,12 @@ export default async function PERatioPage({ params }: Props) {
 
           {/* FAQ */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {peFaqs.map((faq, i) => (
-                <div key={i} className="bg-card p-5 rounded-lg border border-border">
+                <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   <h3 className="font-bold text-lg mb-2">{faq.question}</h3>
-                  <p className="text-muted-foreground">{faq.answer}</p>
+                  <p className="text-[#868f97]">{faq.answer}</p>
                 </div>
               ))}
             </div>
@@ -333,13 +333,13 @@ export default async function PERatioPage({ params }: Props) {
 
           {/* Related */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Compare P/E Ratios</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Compare P/E Ratios</h2>
             <div className="flex flex-wrap gap-2">
               {['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'META', 'NVDA', 'TSLA', 'JPM', 'JNJ', 'WMT']
                 .filter(s => s !== symbol)
                 .slice(0, 8)
                 .map(stock => (
-                  <Link key={stock} href={`/pe-ratio/${stock.toLowerCase()}`} className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80">
+                  <Link key={stock} href={`/pe-ratio/${stock.toLowerCase()}`} className="px-4 py-2 bg-white/[0.03] border border-white/[0.08] rounded-lg hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                     {stock} P/E Ratio
                   </Link>
                 ))}

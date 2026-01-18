@@ -230,15 +230,15 @@ export default async function EarningsSurprisesPage() {
           ]),
         }}
       />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-dvh bg-black text-foreground pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           {/* Breadcrumbs */}
-          <nav className="text-sm text-muted-foreground mb-6" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-foreground transition-colors">
+          <nav className="text-sm mb-6" aria-label="Breadcrumb" style={{ color: '#868f97' }}>
+            <Link href="/" className="hover:text-foreground motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded">
               Home
             </Link>
             {' / '}
-            <Link href="/earnings" className="hover:text-foreground transition-colors">
+            <Link href="/earnings" className="hover:text-foreground motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded">
               Earnings Calendar
             </Link>
             {' / '}
@@ -247,10 +247,10 @@ export default async function EarningsSurprisesPage() {
 
           {/* Hero Section */}
           <div className="mb-8 sm:mb-12">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-balance">
               Earnings Surprises 2025
             </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl">
+            <p className="text-lg sm:text-xl max-w-3xl" style={{ color: '#868f97' }}>
               Track stocks that beat or miss earnings estimates. View real-time earnings surprises,
               historical trends, and the biggest beats and misses by percentage.
             </p>
@@ -258,69 +258,70 @@ export default async function EarningsSurprisesPage() {
 
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 sm:mb-12">
-            <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
-              <TrendingUp className="w-6 h-6 mb-2 text-green-500" />
-              <p className="text-2xl sm:text-3xl font-bold text-green-500">{totalBeats}</p>
-              <p className="text-sm text-muted-foreground">Earnings Beats</p>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 sm:p-6">
+              <TrendingUp className="w-6 h-6 mb-2" style={{ color: '#4ebe96' }} />
+              <p className="text-2xl sm:text-3xl font-bold tabular-nums" style={{ color: '#4ebe96' }}>{totalBeats}</p>
+              <p className="text-sm" style={{ color: '#868f97' }}>Earnings Beats</p>
             </div>
-            <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
-              <TrendingDown className="w-6 h-6 mb-2 text-red-500" />
-              <p className="text-2xl sm:text-3xl font-bold text-red-500">{totalMisses}</p>
-              <p className="text-sm text-muted-foreground">Earnings Misses</p>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 sm:p-6">
+              <TrendingDown className="w-6 h-6 mb-2" style={{ color: '#ff5c5c' }} />
+              <p className="text-2xl sm:text-3xl font-bold tabular-nums" style={{ color: '#ff5c5c' }}>{totalMisses}</p>
+              <p className="text-sm" style={{ color: '#868f97' }}>Earnings Misses</p>
             </div>
-            <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
-              <Target className="w-6 h-6 mb-2 text-green-500" />
-              <p className="text-2xl sm:text-3xl font-bold">{beatRate.toFixed(1)}%</p>
-              <p className="text-sm text-muted-foreground">Beat Rate</p>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 sm:p-6">
+              <Target className="w-6 h-6 mb-2" style={{ color: '#4ebe96' }} />
+              <p className="text-2xl sm:text-3xl font-bold tabular-nums">{beatRate.toFixed(1)}%</p>
+              <p className="text-sm" style={{ color: '#868f97' }}>Beat Rate</p>
             </div>
-            <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
-              <Calendar className="w-6 h-6 mb-2 text-amber-500" />
-              <p className="text-2xl sm:text-3xl font-bold text-amber-500">{totalReported}</p>
-              <p className="text-sm text-muted-foreground">Total Reported</p>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 sm:p-6">
+              <Calendar className="w-6 h-6 mb-2" style={{ color: '#ffa16c' }} />
+              <p className="text-2xl sm:text-3xl font-bold tabular-nums" style={{ color: '#ffa16c' }}>{totalReported}</p>
+              <p className="text-sm" style={{ color: '#868f97' }}>Total Reported</p>
             </div>
           </div>
 
           {/* Average Surprise Stats */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-            <div className="bg-gradient-to-r from-green-600/10 to-green-600/5 p-6 rounded-xl border border-green-500/30">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]" style={{ background: 'linear-gradient(to right, rgba(78, 190, 150, 0.1), rgba(78, 190, 150, 0.05))' }}>
               <div className="flex items-center gap-3 mb-4">
-                <div className="bg-green-600 rounded-full p-3">
+                <div className="rounded-full p-3" style={{ backgroundColor: '#4ebe96' }}>
                   <TrendingUp className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold">Average Earnings Beat</h3>
-                  <p className="text-sm text-muted-foreground">Among companies that exceeded estimates</p>
+                  <h3 className="text-xl font-bold text-balance">Average Earnings Beat</h3>
+                  <p className="text-sm" style={{ color: '#868f97' }}>Among companies that exceeded estimates</p>
                 </div>
               </div>
-              <p className="text-4xl font-bold text-green-500">{formatPercent(avgBeatPercent)}</p>
+              <p className="text-4xl font-bold tabular-nums" style={{ color: '#4ebe96' }}>{formatPercent(avgBeatPercent)}</p>
             </div>
 
-            <div className="bg-gradient-to-r from-red-600/10 to-red-600/5 p-6 rounded-xl border border-red-500/30">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]" style={{ background: 'linear-gradient(to right, rgba(255, 92, 92, 0.1), rgba(255, 92, 92, 0.05))' }}>
               <div className="flex items-center gap-3 mb-4">
-                <div className="bg-red-600 rounded-full p-3">
+                <div className="rounded-full p-3" style={{ backgroundColor: '#ff5c5c' }}>
                   <TrendingDown className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold">Average Earnings Miss</h3>
-                  <p className="text-sm text-muted-foreground">Among companies that fell short</p>
+                  <h3 className="text-xl font-bold text-balance">Average Earnings Miss</h3>
+                  <p className="text-sm" style={{ color: '#868f97' }}>Among companies that fell short</p>
                 </div>
               </div>
-              <p className="text-4xl font-bold text-red-500">{formatPercent(avgMissPercent)}</p>
+              <p className="text-4xl font-bold tabular-nums" style={{ color: '#ff5c5c' }}>{formatPercent(avgMissPercent)}</p>
             </div>
           </div>
 
           {/* Link to Main Earnings Calendar */}
-          <div className="mb-12 bg-gradient-to-r from-green-600 to-emerald-600 p-6 rounded-xl">
+          <div className="mb-12 p-6 rounded-2xl" style={{ background: 'linear-gradient(to right, #4ebe96, rgba(78, 190, 150, 0.8))' }}>
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="text-white">
-                <h3 className="text-xl font-bold mb-2">View Upcoming Earnings</h3>
+                <h3 className="text-xl font-bold mb-2 text-balance">View Upcoming Earnings</h3>
                 <p className="opacity-90">
                   See the next 2 weeks of earnings reports with dates and estimates
                 </p>
               </div>
               <Link
                 href="/earnings"
-                className="bg-white text-green-600 hover:bg-gray-100 px-6 py-3 rounded-lg font-bold transition-colors whitespace-nowrap"
+                className="bg-white px-6 py-3 rounded-lg font-bold whitespace-nowrap hover:bg-white/[0.9] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-white"
+                style={{ color: '#4ebe96' }}
               >
                 Earnings Calendar
               </Link>
@@ -330,18 +331,18 @@ export default async function EarningsSurprisesPage() {
           {/* Biggest Earnings Beats */}
           <section className="mb-12">
             <div className="flex items-center gap-3 mb-6">
-              <Award className="w-8 h-8 text-green-500" />
+              <Award className="w-8 h-8" style={{ color: '#4ebe96' }} />
               <div>
-                <h2 className="text-2xl sm:text-3xl font-bold">Biggest Earnings Beats</h2>
-                <p className="text-muted-foreground">
+                <h2 className="text-2xl sm:text-3xl font-bold text-balance">Biggest Earnings Beats</h2>
+                <p style={{ color: '#868f97' }}>
                   Stocks that exceeded earnings estimates by the highest percentage
                 </p>
               </div>
             </div>
-            <div className="bg-card rounded-xl border border-border overflow-hidden">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] rounded-2xl border border-white/[0.08] overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-muted/50 border-b border-border">
+                  <thead className="bg-white/[0.02] border-b border-white/[0.08]">
                     <tr>
                       <th className="text-left p-3 text-sm font-medium">Ticker</th>
                       <th className="text-right p-3 text-sm font-medium">Quarter</th>
@@ -355,33 +356,34 @@ export default async function EarningsSurprisesPage() {
                     {topBeats.map((surprise, index) => (
                       <tr
                         key={`beat-${surprise.ticker}-${surprise.fiscal_period}-${index}`}
-                        className="border-b border-border hover:bg-green-500/5 transition-colors"
+                        className="border-b border-white/[0.08] hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out"
                       >
                         <td className="p-3">
                           <Link
                             href={`/stock/${surprise.ticker}`}
-                            className="flex items-center gap-2 font-bold text-green-500 hover:text-green-400"
+                            className="flex items-center gap-2 font-bold motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded"
+                            style={{ color: '#4ebe96' }}
                           >
                             <StockLogo symbol={surprise.ticker} size="sm" />
                             {surprise.ticker}
                           </Link>
                         </td>
-                        <td className="p-3 text-right text-sm text-muted-foreground">
+                        <td className="p-3 text-right text-sm" style={{ color: '#868f97' }}>
                           {surprise.fiscal_period}
                         </td>
-                        <td className="p-3 text-right font-medium">
+                        <td className="p-3 text-right font-medium tabular-nums">
                           ${surprise.eps_estimate?.toFixed(2)}
                         </td>
-                        <td className="p-3 text-right font-bold text-green-500">
+                        <td className="p-3 text-right font-bold tabular-nums" style={{ color: '#4ebe96' }}>
                           ${surprise.eps_actual?.toFixed(2)}
                         </td>
                         <td className="p-3 text-right">
-                          <span className="inline-flex items-center gap-1 text-green-500 font-bold">
+                          <span className="inline-flex items-center gap-1 font-bold tabular-nums" style={{ color: '#4ebe96' }}>
                             <TrendingUp className="w-4 h-4" />
                             {formatPercent(surprise.eps_surprise_percent)}
                           </span>
                         </td>
-                        <td className="p-3 text-right text-sm text-muted-foreground hidden md:table-cell">
+                        <td className="p-3 text-right text-sm tabular-nums hidden md:table-cell" style={{ color: '#868f97' }}>
                           {surprise.num_analysts || 'N/A'}
                         </td>
                       </tr>
@@ -395,18 +397,18 @@ export default async function EarningsSurprisesPage() {
           {/* Biggest Earnings Misses */}
           <section className="mb-12">
             <div className="flex items-center gap-3 mb-6">
-              <Award className="w-8 h-8 text-red-500" />
+              <Award className="w-8 h-8" style={{ color: '#ff5c5c' }} />
               <div>
-                <h2 className="text-2xl sm:text-3xl font-bold">Biggest Earnings Misses</h2>
-                <p className="text-muted-foreground">
+                <h2 className="text-2xl sm:text-3xl font-bold text-balance">Biggest Earnings Misses</h2>
+                <p style={{ color: '#868f97' }}>
                   Stocks that fell short of earnings estimates by the highest percentage
                 </p>
               </div>
             </div>
-            <div className="bg-card rounded-xl border border-border overflow-hidden">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] rounded-2xl border border-white/[0.08] overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-muted/50 border-b border-border">
+                  <thead className="bg-white/[0.02] border-b border-white/[0.08]">
                     <tr>
                       <th className="text-left p-3 text-sm font-medium">Ticker</th>
                       <th className="text-right p-3 text-sm font-medium">Quarter</th>
@@ -420,33 +422,34 @@ export default async function EarningsSurprisesPage() {
                     {topMisses.map((surprise, index) => (
                       <tr
                         key={`miss-${surprise.ticker}-${surprise.fiscal_period}-${index}`}
-                        className="border-b border-border hover:bg-red-500/5 transition-colors"
+                        className="border-b border-white/[0.08] hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out"
                       >
                         <td className="p-3">
                           <Link
                             href={`/stock/${surprise.ticker}`}
-                            className="flex items-center gap-2 font-bold text-red-500 hover:text-red-400"
+                            className="flex items-center gap-2 font-bold motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded"
+                            style={{ color: '#ff5c5c' }}
                           >
                             <StockLogo symbol={surprise.ticker} size="sm" />
                             {surprise.ticker}
                           </Link>
                         </td>
-                        <td className="p-3 text-right text-sm text-muted-foreground">
+                        <td className="p-3 text-right text-sm" style={{ color: '#868f97' }}>
                           {surprise.fiscal_period}
                         </td>
-                        <td className="p-3 text-right font-medium">
+                        <td className="p-3 text-right font-medium tabular-nums">
                           ${surprise.eps_estimate?.toFixed(2)}
                         </td>
-                        <td className="p-3 text-right font-bold text-red-500">
+                        <td className="p-3 text-right font-bold tabular-nums" style={{ color: '#ff5c5c' }}>
                           ${surprise.eps_actual?.toFixed(2)}
                         </td>
                         <td className="p-3 text-right">
-                          <span className="inline-flex items-center gap-1 text-red-500 font-bold">
+                          <span className="inline-flex items-center gap-1 font-bold tabular-nums" style={{ color: '#ff5c5c' }}>
                             <TrendingDown className="w-4 h-4" />
                             {formatPercent(surprise.eps_surprise_percent)}
                           </span>
                         </td>
-                        <td className="p-3 text-right text-sm text-muted-foreground hidden md:table-cell">
+                        <td className="p-3 text-right text-sm tabular-nums hidden md:table-cell" style={{ color: '#868f97' }}>
                           {surprise.num_analysts || 'N/A'}
                         </td>
                       </tr>
@@ -459,20 +462,20 @@ export default async function EarningsSurprisesPage() {
 
           {/* Understanding Earnings Surprises */}
           <section className="mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-6">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-balance">
               Understanding Earnings Surprises
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-xl font-bold mb-3 text-green-500">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
+                <h3 className="text-xl font-bold mb-3 text-balance" style={{ color: '#4ebe96' }}>
                   What is an Earnings Beat?
                 </h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="mb-4" style={{ color: '#868f97' }}>
                   An earnings beat occurs when a company reports earnings per share (EPS) that
                   exceeds analyst consensus estimates. This positive surprise typically indicates
                   stronger-than-expected business performance.
                 </p>
-                <ul className="list-disc list-inside text-muted-foreground space-y-2">
+                <ul className="list-disc list-inside space-y-2" style={{ color: '#868f97' }}>
                   <li>Often drives stock price higher</li>
                   <li>Signals business strength and execution</li>
                   <li>Beats of 5%+ are considered significant</li>
@@ -480,16 +483,16 @@ export default async function EarningsSurprisesPage() {
                 </ul>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-xl font-bold mb-3 text-green-500">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
+                <h3 className="text-xl font-bold mb-3 text-balance" style={{ color: '#ff5c5c' }}>
                   What is an Earnings Miss?
                 </h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="mb-4" style={{ color: '#868f97' }}>
                   An earnings miss happens when reported EPS falls short of analyst estimates.
                   This negative surprise usually indicates weaker performance or unexpected
                   challenges.
                 </p>
-                <ul className="list-disc list-inside text-muted-foreground space-y-2">
+                <ul className="list-disc list-inside space-y-2" style={{ color: '#868f97' }}>
                   <li>Typically causes stock price decline</li>
                   <li>May signal business headwinds</li>
                   <li>Misses of 5%+ are considered significant</li>
@@ -500,18 +503,18 @@ export default async function EarningsSurprisesPage() {
           </section>
 
           {/* How to Use This Data */}
-          <section className="mb-12 bg-card p-6 sm:p-8 rounded-xl border border-border">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-6">
+          <section className="mb-12 bg-white/[0.03] backdrop-blur-[10px] p-6 sm:p-8 rounded-2xl border border-white/[0.08]">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-balance">
               How to Use Earnings Surprise Data
             </h2>
             <div className="space-y-4">
               <div className="flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center font-bold">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full text-white flex items-center justify-center font-bold tabular-nums" style={{ backgroundColor: '#4ebe96' }}>
                   1
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg mb-2">Identify Consistent Performers</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="font-bold text-lg mb-2 text-balance">Identify Consistent Performers</h3>
+                  <p style={{ color: '#868f97' }}>
                     Look for companies that consistently beat earnings estimates quarter after quarter.
                     These stocks often have strong business models and conservative guidance.
                   </p>
@@ -519,12 +522,12 @@ export default async function EarningsSurprisesPage() {
               </div>
 
               <div className="flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center font-bold">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full text-white flex items-center justify-center font-bold tabular-nums" style={{ backgroundColor: '#4ebe96' }}>
                   2
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg mb-2">Spot Turnaround Candidates</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="font-bold text-lg mb-2 text-balance">Spot Turnaround Candidates</h3>
+                  <p style={{ color: '#868f97' }}>
                     Watch for companies that start beating estimates after a period of misses.
                     This can signal operational improvements or a business turnaround.
                   </p>
@@ -532,12 +535,12 @@ export default async function EarningsSurprisesPage() {
               </div>
 
               <div className="flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center font-bold">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full text-white flex items-center justify-center font-bold tabular-nums" style={{ backgroundColor: '#4ebe96' }}>
                   3
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg mb-2">Gauge Market Sentiment</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="font-bold text-lg mb-2 text-balance">Gauge Market Sentiment</h3>
+                  <p style={{ color: '#868f97' }}>
                     The overall beat rate shows market health. Beat rates above 70% indicate strong
                     corporate earnings season, while below 50% may signal economic weakness.
                   </p>
@@ -545,12 +548,12 @@ export default async function EarningsSurprisesPage() {
               </div>
 
               <div className="flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center font-bold">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full text-white flex items-center justify-center font-bold tabular-nums" style={{ backgroundColor: '#4ebe96' }}>
                   4
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg mb-2">Combine with Other Analysis</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="font-bold text-lg mb-2 text-balance">Combine with Other Analysis</h3>
+                  <p style={{ color: '#868f97' }}>
                     Use earnings surprises alongside fundamental analysis, valuation metrics, and
                     technical indicators. A single beat or miss doesn't tell the whole story.
                   </p>
@@ -561,32 +564,32 @@ export default async function EarningsSurprisesPage() {
 
           {/* Earnings Surprise Trends */}
           <section className="mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-6">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-balance">
               Key Trends in Earnings Surprises
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                 <div className="text-3xl mb-3">📊</div>
-                <h3 className="text-lg font-bold mb-2">Beat Rate Trends</h3>
-                <p className="text-muted-foreground text-sm">
+                <h3 className="text-lg font-bold mb-2 text-balance">Beat Rate Trends</h3>
+                <p className="text-sm" style={{ color: '#868f97' }}>
                   Track the percentage of companies beating estimates over time. Higher beat rates
                   typically correlate with bull markets and economic strength.
                 </p>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                 <div className="text-3xl mb-3">🎯</div>
-                <h3 className="text-lg font-bold mb-2">Estimate Accuracy</h3>
-                <p className="text-muted-foreground text-sm">
+                <h3 className="text-lg font-bold mb-2 text-balance">Estimate Accuracy</h3>
+                <p className="text-sm" style={{ color: '#868f97' }}>
                   Analysts tend to be conservative, leading to a historical beat rate around 60-70%.
                   Monitor whether estimates are becoming more or less accurate.
                 </p>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                 <div className="text-3xl mb-3">📈</div>
-                <h3 className="text-lg font-bold mb-2">Magnitude Matters</h3>
-                <p className="text-muted-foreground text-sm">
+                <h3 className="text-lg font-bold mb-2 text-balance">Magnitude Matters</h3>
+                <p className="text-sm" style={{ color: '#868f97' }}>
                   The size of beats and misses matters more than frequency. Large surprises (10%+)
                   tend to drive more significant stock price movements.
                 </p>
@@ -596,22 +599,22 @@ export default async function EarningsSurprisesPage() {
 
           {/* FAQ Section */}
           <section className="mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-6">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-balance">
               Frequently Asked Questions
             </h2>
             <div className="space-y-4">
               {faqs.map((faq, index) => (
                 <details
                   key={index}
-                  className="bg-card p-6 rounded-xl border border-border group"
+                  className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] group"
                 >
                   <summary className="text-lg font-bold cursor-pointer list-none flex items-center justify-between">
                     <span>{faq.question}</span>
-                    <span className="text-green-500 group-open:rotate-180 transition-transform">
+                    <span className="group-open:rotate-180 motion-safe:transition-all motion-safe:duration-150 ease-out" style={{ color: '#4ebe96' }}>
                       ▼
                     </span>
                   </summary>
-                  <p className="text-muted-foreground mt-4 leading-relaxed">
+                  <p className="mt-4 leading-relaxed" style={{ color: '#868f97' }}>
                     {faq.answer}
                   </p>
                 </details>
@@ -621,58 +624,58 @@ export default async function EarningsSurprisesPage() {
 
           {/* Related Links */}
           <section className="mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-6">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-balance">
               Related Earnings Data
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Link
                 href="/earnings"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-2xl border border-white/[0.08] hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] group"
               >
                 <div className="text-2xl mb-2">📅</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors">
+                <h3 className="font-bold text-balance motion-safe:transition-all motion-safe:duration-150 ease-out" style={{ color: 'inherit' }}>
                   Earnings Calendar
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm" style={{ color: '#868f97' }}>
                   Upcoming earnings reports
                 </p>
               </Link>
 
               <Link
                 href="/markets/top-gainers"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-2xl border border-white/[0.08] hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] group"
               >
                 <div className="text-2xl mb-2">📈</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors">
+                <h3 className="font-bold text-balance motion-safe:transition-all motion-safe:duration-150 ease-out" style={{ color: 'inherit' }}>
                   Top Gainers
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm" style={{ color: '#868f97' }}>
                   Biggest price movers
                 </p>
               </Link>
 
               <Link
                 href="/sectors"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-2xl border border-white/[0.08] hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] group"
               >
                 <div className="text-2xl mb-2">🏢</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors">
+                <h3 className="font-bold text-balance motion-safe:transition-all motion-safe:duration-150 ease-out" style={{ color: 'inherit' }}>
                   Sectors
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm" style={{ color: '#868f97' }}>
                   Browse by industry
                 </p>
               </Link>
 
               <Link
                 href="/dashboard"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-2xl border border-white/[0.08] hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] group"
               >
                 <div className="text-2xl mb-2">🔍</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors">
+                <h3 className="font-bold text-balance motion-safe:transition-all motion-safe:duration-150 ease-out" style={{ color: 'inherit' }}>
                   Stock Analysis
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm" style={{ color: '#868f97' }}>
                   AI-powered research
                 </p>
               </Link>
@@ -680,8 +683,8 @@ export default async function EarningsSurprisesPage() {
           </section>
 
           {/* CTA Section */}
-          <section className="bg-gradient-to-r from-green-600 to-emerald-600 p-8 sm:p-12 rounded-xl text-white text-center">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+          <section className="p-8 sm:p-12 rounded-2xl text-white text-center" style={{ background: 'linear-gradient(to right, #4ebe96, rgba(78, 190, 150, 0.8))' }}>
+            <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-balance">
               Get Detailed Earnings Analysis
             </h2>
             <p className="text-lg mb-6 opacity-90 max-w-2xl mx-auto">
@@ -690,7 +693,8 @@ export default async function EarningsSurprisesPage() {
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-white text-green-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-bold transition-colors"
+              className="inline-block bg-white px-8 py-3 rounded-lg font-bold hover:bg-white/[0.9] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-white"
+              style={{ color: '#4ebe96' }}
             >
               Start Analyzing Stocks Free
             </Link>

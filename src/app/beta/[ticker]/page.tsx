@@ -122,40 +122,40 @@ export default async function BetaPage({ params }: Props) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }} />
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-black text-white">
         <div className="max-w-4xl mx-auto px-6 py-12">
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Home</Link>
             {' / '}
-            <Link href="/dashboard" className="hover:text-foreground">Analysis</Link>
+            <Link href="/dashboard" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Analysis</Link>
             {' / '}
             <span>{symbol} Beta</span>
           </nav>
 
-          <h1 className="text-4xl font-bold mb-4">{symbol} Stock Beta</h1>
-          <p className="text-xl text-muted-foreground mb-8">{companyName} - Volatility & systematic risk analysis</p>
+          <h1 className="text-4xl font-bold mb-4 text-balance">{symbol} Stock Beta</h1>
+          <p className="text-xl text-[#868f97] mb-8">{companyName} - Volatility & systematic risk analysis</p>
 
           {/* Beta Card */}
-          <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 p-8 rounded-xl border border-purple-500/30 mb-8">
+          <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 mb-8 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div>
-                <p className="text-muted-foreground text-sm mb-1">Current Price</p>
-                <p className="text-4xl font-bold">${price.toFixed(2)}</p>
+                <p className="text-[#868f97] text-sm mb-1">Current Price</p>
+                <p className="text-4xl font-bold tabular-nums">${price.toFixed(2)}</p>
               </div>
               <div>
-                <p className="text-muted-foreground text-sm mb-1">Beta Coefficient</p>
-                <p className={`text-4xl font-bold ${beta > 1 ? 'text-orange-500' : beta < 0 ? 'text-purple-500' : 'text-blue-500'}`}>
+                <p className="text-[#868f97] text-sm mb-1">Beta Coefficient</p>
+                <p className={`text-4xl font-bold tabular-nums ${beta > 1 ? 'text-[#ffa16c]' : beta < 0 ? 'text-[#ff5c5c]' : 'text-[#479ffa]'}`}>
                   {beta.toFixed(2)}
                 </p>
               </div>
               <div>
-                <p className="text-muted-foreground text-sm mb-1">Risk Level</p>
+                <p className="text-[#868f97] text-sm mb-1">Risk Level</p>
                 <p className="text-2xl font-bold">
                   {beta > 1.5 ? 'High' : beta > 1 ? 'Above Average' : beta > 0.5 ? 'Average' : 'Low'}
                 </p>
               </div>
               <div>
-                <p className="text-muted-foreground text-sm mb-1">Volatility</p>
+                <p className="text-[#868f97] text-sm mb-1">Volatility</p>
                 <p className="text-2xl font-bold">
                   {beta > 1 ? 'More than Market' : beta < 1 ? 'Less than Market' : 'Same as Market'}
                 </p>
@@ -165,12 +165,12 @@ export default async function BetaPage({ params }: Props) {
 
           {/* Understanding Beta */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Understanding {symbol} Beta</h2>
-            <div className="bg-card p-6 rounded-lg border border-border space-y-4">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Understanding {symbol} Beta</h2>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 space-y-4 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
               <div>
                 <h3 className="font-bold text-lg mb-2">What Beta Measures</h3>
-                <p className="text-muted-foreground">
-                  Beta measures {symbol}'s volatility relative to the overall market. A beta of {beta.toFixed(2)} means
+                <p className="text-[#868f97]">
+                  Beta measures {symbol}'s volatility relative to the overall market. A beta of <span className="tabular-nums">{beta.toFixed(2)}</span> means
                   {beta > 1 ? ` ${symbol} tends to move ${((beta - 1) * 100).toFixed(0)}% more than the market.` :
                    beta < 1 ? ` ${symbol} tends to move ${((1 - beta) * 100).toFixed(0)}% less than the market.` :
                    ` ${symbol} tends to move in line with the market.`}
@@ -178,7 +178,7 @@ export default async function BetaPage({ params }: Props) {
               </div>
               <div>
                 <h3 className="font-bold text-lg mb-2">Investment Implications</h3>
-                <p className="text-muted-foreground">
+                <p className="text-[#868f97]">
                   {beta > 1 ?
                     `High beta stocks like ${symbol} offer greater upside potential during bull markets but also carry higher downside risk during market corrections.` :
                     `Low beta stocks like ${symbol} provide more stability and are often preferred by conservative investors seeking lower volatility.`}
@@ -189,7 +189,7 @@ export default async function BetaPage({ params }: Props) {
 
           {/* Beta Interpretation */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Beta Interpretation Guide</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Beta Interpretation Guide</h2>
             <div className="grid gap-4">
               {[
                 { range: '> 1.5', meaning: 'High Risk', desc: 'Significantly more volatile than market' },
@@ -198,10 +198,10 @@ export default async function BetaPage({ params }: Props) {
                 { range: '< 0.5', meaning: 'Low Risk', desc: 'Less volatile than market' },
                 { range: '< 0', meaning: 'Negative Correlation', desc: 'Moves opposite to market' },
               ].map((item, i) => (
-                <div key={i} className="bg-card p-4 rounded-lg border border-border flex justify-between items-center">
+                <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 flex justify-between items-center hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   <div>
-                    <p className="font-bold">{item.range}</p>
-                    <p className="text-sm text-muted-foreground">{item.desc}</p>
+                    <p className="font-bold tabular-nums">{item.range}</p>
+                    <p className="text-sm text-[#868f97]">{item.desc}</p>
                   </div>
                   <p className="text-sm font-medium">{item.meaning}</p>
                 </div>
@@ -210,22 +210,22 @@ export default async function BetaPage({ params }: Props) {
           </section>
 
           {/* CTA */}
-          <section className="bg-gradient-to-r from-blue-600/20 to-cyan-600/20 p-8 rounded-xl border border-blue-500/30 text-center mb-12">
-            <h2 className="text-2xl font-bold mb-4">Complete Risk Analysis</h2>
-            <p className="text-muted-foreground mb-6">View full volatility metrics and technical analysis for {symbol}</p>
-            <Link href={`/dashboard?ticker=${symbol}&tab=technical`} className="inline-block bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-lg font-medium">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 text-center mb-12 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Complete Risk Analysis</h2>
+            <p className="text-[#868f97] mb-6">View full volatility metrics and technical analysis for {symbol}</p>
+            <Link href={`/dashboard?ticker=${symbol}&tab=technical`} className="inline-block bg-[#479ffa] hover:bg-[#479ffa]/80 text-white px-8 py-3 rounded-2xl font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
               View Full Analysis
             </Link>
           </section>
 
           {/* FAQ */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {betaFaqs.map((faq, i) => (
-                <div key={i} className="bg-card p-5 rounded-lg border border-border">
+                <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   <h3 className="font-bold text-lg mb-2">{faq.question}</h3>
-                  <p className="text-muted-foreground">{faq.answer}</p>
+                  <p className="text-[#868f97]">{faq.answer}</p>
                 </div>
               ))}
             </div>

@@ -217,8 +217,8 @@ async function fetchStocks(params: SearchParams): Promise<ScreenerStock[]> {
 // Loading state component
 function LoadingState() {
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-[#4ebe96]"></div>
+    <div className="flex items-center justify-center min-h-screen bg-black">
+      <div className="motion-safe:animate-spin rounded-full h-12 w-12 border-t-2 border-[#4ebe96]"></div>
     </div>
   )
 }
@@ -234,7 +234,7 @@ async function ScreenerContent({ params }: { params: SearchParams }) {
   if (params.revenue_min) activeFilters.push(`Revenue ≥ $${(parseFloat(params.revenue_min) / 1e9).toFixed(1)}B`)
 
   return (
-    <main className="min-h-screen bg-background pt-20">
+    <main className="min-h-screen bg-black pt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
           {/* Sidebar - hidden on mobile, shown on lg+ */}
@@ -273,25 +273,25 @@ async function ScreenerContent({ params }: { params: SearchParams }) {
               </Link>
               <Link
                 href="/screener?market_cap=large"
-                className="px-3 sm:px-4 py-2 bg-purple-600/10 hover:bg-purple-600/20 border border-purple-600/20 rounded-full text-xs sm:text-sm font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
+                className="px-3 sm:px-4 py-2 bg-[#479ffa]/10 hover:bg-[#479ffa]/20 border border-[#479ffa]/20 rounded-full text-xs sm:text-sm font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 Large Cap
               </Link>
               <Link
                 href="/screener?sector=healthcare"
-                className="px-3 sm:px-4 py-2 bg-[#e15241]/10 hover:bg-[#e15241]/20 border border-[#e15241]/20 rounded-full text-xs sm:text-sm font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
+                className="px-3 sm:px-4 py-2 bg-[#ff5c5c]/10 hover:bg-[#ff5c5c]/20 border border-[#ff5c5c]/20 rounded-full text-xs sm:text-sm font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 Healthcare
               </Link>
               <Link
                 href="/screener?sector=energy"
-                className="px-3 sm:px-4 py-2 bg-yellow-600/10 hover:bg-yellow-600/20 border border-yellow-600/20 rounded-full text-xs sm:text-sm font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
+                className="px-3 sm:px-4 py-2 bg-[#ffa16c]/10 hover:bg-[#ffa16c]/20 border border-[#ffa16c]/20 rounded-full text-xs sm:text-sm font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 Energy
               </Link>
               <Link
                 href="/screener?sector=financial"
-                className="px-3 sm:px-4 py-2 bg-indigo-600/10 hover:bg-indigo-600/20 border border-indigo-600/20 rounded-full text-xs sm:text-sm font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
+                className="px-3 sm:px-4 py-2 bg-[#479ffa]/10 hover:bg-[#479ffa]/20 border border-[#479ffa]/20 rounded-full text-xs sm:text-sm font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 Financial
               </Link>
@@ -357,7 +357,7 @@ async function ScreenerContent({ params }: { params: SearchParams }) {
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-xs sm:text-sm font-semibold">Active Filters:</span>
               {activeFilters.map((filter, i) => (
-                <span key={i} className="px-2 sm:px-3 py-1 bg-blue-600/20 rounded-full text-xs sm:text-sm">
+                <span key={i} className="px-2 sm:px-3 py-1 bg-[#479ffa]/20 rounded-full text-xs sm:text-sm">
                   {filter}
                 </span>
               ))}
@@ -396,7 +396,7 @@ async function ScreenerContent({ params }: { params: SearchParams }) {
                   {stocks.map((stock) => (
                     <tr
                       key={stock.symbol}
-                      className="hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out"
+                      className="hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out"
                     >
                       <td className="px-3 sm:px-4 py-3">
                         <Link
@@ -417,7 +417,7 @@ async function ScreenerContent({ params }: { params: SearchParams }) {
                       <td className="px-3 sm:px-4 py-3 text-xs sm:text-sm text-[#868f97]">
                         {stock.sector || '—'}
                       </td>
-                      <td className="px-3 sm:px-4 py-3 text-right font-medium text-xs sm:text-sm">
+                      <td className="px-3 sm:px-4 py-3 text-right font-medium text-xs sm:text-sm tabular-nums">
                         <div>
                           {stock.market_cap ? formatMarketCap(stock.market_cap) : '—'}
                         </div>
@@ -425,14 +425,14 @@ async function ScreenerContent({ params }: { params: SearchParams }) {
                           {stock.market_cap ? getMarketCapCategory(stock.market_cap) : ''}
                         </div>
                       </td>
-                      <td className="px-3 sm:px-4 py-3 text-right text-xs sm:text-sm">
+                      <td className="px-3 sm:px-4 py-3 text-right text-xs sm:text-sm tabular-nums">
                         {stock.pe_ratio ? (
                           <span
                             className={
                               stock.pe_ratio < 15
                                 ? 'text-[#4ebe96] font-semibold'
                                 : stock.pe_ratio > 30
-                                ? 'text-[#e15241]'
+                                ? 'text-[#ff5c5c]'
                                 : ''
                             }
                           >
@@ -442,7 +442,7 @@ async function ScreenerContent({ params }: { params: SearchParams }) {
                           '—'
                         )}
                       </td>
-                      <td className="px-3 sm:px-4 py-3 text-right font-medium text-xs sm:text-sm">
+                      <td className="px-3 sm:px-4 py-3 text-right font-medium text-xs sm:text-sm tabular-nums">
                         {stock.revenue ? formatRevenue(stock.revenue) : '—'}
                       </td>
                     </tr>
@@ -643,7 +643,7 @@ export default async function ScreenerPage({ searchParams }: Props) {
 
       {/* SSR Content - Visible immediately for crawlers */}
       <div className="ssr-content">
-        <div className="min-h-screen bg-background pt-20">
+        <div className="min-h-screen bg-black pt-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
             <article>
               <header className="mb-8">

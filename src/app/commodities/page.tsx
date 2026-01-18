@@ -212,14 +212,14 @@ export default async function CommoditiesPage() {
         }}
       />
 
-      <main className="min-h-screen bg-background text-white pt-20">
+      <main className="min-h-dvh bg-black text-white pt-20">
         <div className="max-w-[1800px] mx-auto px-6 py-8">
           <div className="flex gap-8">
             <SEOSidebar />
             <div className="flex-1 min-w-0">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-[#868f97] mb-6" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">
+            <Link href="/" className="hover:text-[#479ffa] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded-full px-1 -mx-1">
               Home
             </Link>
             <ChevronRight className="w-4 h-4" />
@@ -250,7 +250,7 @@ export default async function CommoditiesPage() {
               <h2 className="text-2xl font-bold">Precious Metals</h2>
               <Link
                 href="#faq"
-                className="text-sm text-[#4ebe96] hover:text-[#4ebe96]/80 flex items-center gap-1"
+                className="text-sm text-[#479ffa] hover:text-[#479ffa]/80 flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded-full px-1 -mx-1"
               >
                 Learn about precious metals
                 <ArrowRight className="w-4 h-4" />
@@ -268,7 +268,7 @@ export default async function CommoditiesPage() {
               <h2 className="text-2xl font-bold">Energy Commodities</h2>
               <Link
                 href="#faq"
-                className="text-sm text-[#4ebe96] hover:text-[#4ebe96]/80 flex items-center gap-1"
+                className="text-sm text-[#479ffa] hover:text-[#479ffa]/80 flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded-full px-1 -mx-1"
               >
                 Learn about oil & gas
                 <ArrowRight className="w-4 h-4" />
@@ -287,7 +287,7 @@ export default async function CommoditiesPage() {
               <h2 className="text-2xl font-bold">Industrial Metals</h2>
               <Link
                 href="#faq"
-                className="text-sm text-[#4ebe96] hover:text-[#4ebe96]/80 flex items-center gap-1"
+                className="text-sm text-[#479ffa] hover:text-[#479ffa]/80 flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded-full px-1 -mx-1"
               >
                 Learn about industrial metals
                 <ArrowRight className="w-4 h-4" />
@@ -305,7 +305,7 @@ export default async function CommoditiesPage() {
               <h2 className="text-2xl font-bold">Agricultural Commodities</h2>
               <Link
                 href="#faq"
-                className="text-sm text-[#4ebe96] hover:text-[#4ebe96]/80 flex items-center gap-1"
+                className="text-sm text-[#479ffa] hover:text-[#479ffa]/80 flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded-full px-1 -mx-1"
               >
                 Learn about agricultural investing
                 <ArrowRight className="w-4 h-4" />
@@ -322,31 +322,31 @@ export default async function CommoditiesPage() {
 
           {/* Market Insights */}
           <section className="mb-8">
-            <Card className="bg-gradient-to-br from-[#4ebe96]/10 to-[#479ffa]/10 border-[#4ebe96]/20">
+            <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
               <CardHeader>
                 <CardTitle className="text-xl">Commodity Market Insights</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="p-4 bg-background/50 rounded-lg">
+                  <div className="p-4 bg-black/50 rounded-2xl">
                     <h3 className="font-semibold mb-2">Inflation Hedge</h3>
                     <p className="text-sm text-[#868f97]">
                       Commodities like gold and silver historically maintain purchasing power during inflationary periods, making them popular inflation hedges.
                     </p>
                   </div>
-                  <div className="p-4 bg-background/50 rounded-lg">
+                  <div className="p-4 bg-black/50 rounded-2xl">
                     <h3 className="font-semibold mb-2">Portfolio Diversification</h3>
                     <p className="text-sm text-[#868f97]">
                       Adding commodities to a portfolio can reduce overall risk through diversification, as commodity prices often move independently of stocks and bonds.
                     </p>
                   </div>
-                  <div className="p-4 bg-background/50 rounded-lg">
+                  <div className="p-4 bg-black/50 rounded-2xl">
                     <h3 className="font-semibold mb-2">Supply & Demand Dynamics</h3>
                     <p className="text-sm text-[#868f97]">
                       Commodity prices are driven by global supply and demand, geopolitical events, weather patterns, and economic growth expectations.
                     </p>
                   </div>
-                  <div className="p-4 bg-background/50 rounded-lg">
+                  <div className="p-4 bg-black/50 rounded-2xl">
                     <h3 className="font-semibold mb-2">Investment Methods</h3>
                     <p className="text-sm text-[#868f97]">
                       Invest in commodities through ETFs, futures contracts, commodity stocks, or physical ownership depending on your risk tolerance and goals.
@@ -384,7 +384,7 @@ export default async function CommoditiesPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Link
                     href="/"
-                    className="p-4 bg-white/[0.05] rounded-2xl hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out"
+                    className="p-4 bg-white/[0.03] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                   >
                     <h3 className="font-semibold mb-2">Stock Market</h3>
                     <p className="text-sm text-[#868f97]">
@@ -393,7 +393,7 @@ export default async function CommoditiesPage() {
                   </Link>
                   <Link
                     href="/dashboard?tab=screener"
-                    className="p-4 bg-white/[0.05] rounded-2xl hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out"
+                    className="p-4 bg-white/[0.03] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                   >
                     <h3 className="font-semibold mb-2">Stock Screener</h3>
                     <p className="text-sm text-[#868f97]">
@@ -402,7 +402,7 @@ export default async function CommoditiesPage() {
                   </Link>
                   <Link
                     href="/dashboard?tab=portfolio"
-                    className="p-4 bg-white/[0.05] rounded-2xl hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out"
+                    className="p-4 bg-white/[0.03] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                   >
                     <h3 className="font-semibold mb-2">Portfolio Analyzer</h3>
                     <p className="text-sm text-[#868f97]">
@@ -453,7 +453,7 @@ function CommodityCard({ commodity, compact = false }: { commodity?: CommodityDa
   const absChange = Math.abs(commodity.change)
 
   return (
-    <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out">
+    <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
       <CardContent className={compact ? 'p-4' : 'p-6'}>
         <div className="space-y-3">
           {/* Header */}
@@ -491,7 +491,7 @@ function CommodityCard({ commodity, compact = false }: { commodity?: CommodityDa
               </div>
               <div className="h-2 bg-white/[0.05] rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-[#ff5c5c] via-yellow-500 to-[#4ebe96]"
+                  className="h-full bg-gradient-to-r from-[#ff5c5c] via-[#ffa16c] to-[#4ebe96]"
                   style={{
                     width: `${
                       ((commodity.price - commodity.week52Low) /

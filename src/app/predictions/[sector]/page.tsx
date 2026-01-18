@@ -538,41 +538,41 @@ export default async function SectorPredictionPage({ params }: Props) {
         }}
       />
       <Header />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-dvh bg-black text-white pt-20">
         <div className="max-w-5xl mx-auto px-6 py-12">
           {/* Breadcrumbs */}
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Home</Link>
             {' / '}
-            <Link href="/insights/2026-stock-predictions" className="hover:text-foreground">Predictions</Link>
+            <Link href="/insights/2026-stock-predictions" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Predictions</Link>
             {' / '}
             <span>{sectorData.title}</span>
           </nav>
 
           {/* Header */}
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-balance">
             {sectorData.seoTitle}
           </h1>
 
           {/* Sector Outlook Badge */}
           <div className="flex items-center gap-4 mb-6">
             <span className={`px-4 py-2 rounded-lg text-sm font-bold ${
-              sectorData.outlook === 'Bullish' ? 'bg-green-500/20 text-green-500' :
-              sectorData.outlook === 'Bearish' ? 'bg-red-500/20 text-red-500' :
-              sectorData.outlook === 'Selective' ? 'bg-purple-500/20 text-purple-500' :
-              'bg-yellow-500/20 text-yellow-500'
+              sectorData.outlook === 'Bullish' ? 'bg-[#4ebe96]/20 text-[#4ebe96]' :
+              sectorData.outlook === 'Bearish' ? 'bg-[#ff5c5c]/20 text-[#ff5c5c]' :
+              sectorData.outlook === 'Selective' ? 'bg-[#e75ece]/20 text-[#e75ece]' :
+              'bg-[#ffa16c]/20 text-[#ffa16c]'
             }`}>
               {currentYear} Outlook: {sectorData.outlook}
             </span>
-            <span className="text-muted-foreground">
-              Expected Return: <span className="text-green-500 font-bold">+{sectorData.expectedReturn.low}% to +{sectorData.expectedReturn.high}%</span>
+            <span className="text-[#868f97]">
+              Expected Return: <span className="text-[#4ebe96] font-bold tabular-nums">+{sectorData.expectedReturn.low}% to +{sectorData.expectedReturn.high}%</span>
             </span>
           </div>
 
           {/* Hero Intro - Unique per sector */}
           <div className="prose prose-lg prose-invert max-w-none mb-12">
             {sectorData.heroIntro.split('\n\n').map((paragraph, i) => (
-              <p key={i} className="text-muted-foreground leading-relaxed">
+              <p key={i} className="text-[#868f97] leading-relaxed">
                 {paragraph}
               </p>
             ))}
@@ -580,23 +580,23 @@ export default async function SectorPredictionPage({ params }: Props) {
 
           {/* Sector Average Metrics Card */}
           <section className="mb-12">
-            <div className="bg-gradient-to-br from-green-600/20 to-green-600/5 p-8 rounded-xl border border-green-500/20">
-              <h2 className="text-2xl font-bold mb-6">{sectorData.title} Price Targets {currentYear}</h2>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8">
+              <h2 className="text-2xl font-bold mb-6 text-balance">{sectorData.title} Price Targets {currentYear}</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="text-center">
-                  <p className="text-sm text-muted-foreground mb-2">Bear Case</p>
-                  <p className="text-3xl font-bold text-red-500">+{sectorData.expectedReturn.low}%</p>
-                  <p className="text-xs text-muted-foreground mt-1">Conservative scenario</p>
+                  <p className="text-sm text-[#868f97] mb-2">Bear Case</p>
+                  <p className="text-3xl font-bold text-[#ff5c5c] tabular-nums">+{sectorData.expectedReturn.low}%</p>
+                  <p className="text-xs text-[#868f97] mt-1">Conservative scenario</p>
                 </div>
-                <div className="text-center bg-green-500/10 p-4 rounded-lg">
-                  <p className="text-sm text-muted-foreground mb-2">Base Case</p>
-                  <p className="text-4xl font-bold text-green-500">+{sectorData.expectedReturn.mid}%</p>
-                  <p className="text-xs text-muted-foreground mt-1">Most likely outcome</p>
+                <div className="text-center bg-[#4ebe96]/10 p-4 rounded-lg">
+                  <p className="text-sm text-[#868f97] mb-2">Base Case</p>
+                  <p className="text-4xl font-bold text-[#4ebe96] tabular-nums">+{sectorData.expectedReturn.mid}%</p>
+                  <p className="text-xs text-[#868f97] mt-1">Most likely outcome</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-sm text-muted-foreground mb-2">Bull Case</p>
-                  <p className="text-3xl font-bold text-purple-500">+{sectorData.expectedReturn.high}%</p>
-                  <p className="text-xs text-muted-foreground mt-1">Optimistic scenario</p>
+                  <p className="text-sm text-[#868f97] mb-2">Bull Case</p>
+                  <p className="text-3xl font-bold text-[#e75ece] tabular-nums">+{sectorData.expectedReturn.high}%</p>
+                  <p className="text-xs text-[#868f97] mt-1">Optimistic scenario</p>
                 </div>
               </div>
             </div>
@@ -604,17 +604,17 @@ export default async function SectorPredictionPage({ params }: Props) {
 
           {/* Key Catalysts */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Key Catalysts for {currentYear}</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Key Catalysts for {currentYear}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {sectorData.catalysts.map((catalyst, i) => (
-                <div key={i} className="bg-card p-5 rounded-lg border border-border">
+                <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <span className="text-green-500 font-bold text-sm">{i + 1}</span>
+                    <div className="w-8 h-8 bg-[#4ebe96]/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span className="text-[#4ebe96] font-bold text-sm tabular-nums">{i + 1}</span>
                     </div>
                     <div>
                       <h3 className="font-bold mb-1">{catalyst.title}</h3>
-                      <p className="text-sm text-muted-foreground">{catalyst.description}</p>
+                      <p className="text-sm text-[#868f97]">{catalyst.description}</p>
                     </div>
                   </div>
                 </div>
@@ -624,32 +624,32 @@ export default async function SectorPredictionPage({ params }: Props) {
 
           {/* Bull vs Bear Case */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Bull Case vs Bear Case</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Bull Case vs Bear Case</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-green-500/10 p-6 rounded-xl border border-green-500/30">
-                <h3 className="text-xl font-bold text-green-500 mb-4">Bull Case (+{sectorData.expectedReturn.high}%)</h3>
-                <p className="text-muted-foreground">{sectorData.bullCase}</p>
+              <div className="bg-[#4ebe96]/10 p-6 rounded-2xl border border-[#4ebe96]/30">
+                <h3 className="text-xl font-bold text-[#4ebe96] mb-4">Bull Case (<span className="tabular-nums">+{sectorData.expectedReturn.high}%</span>)</h3>
+                <p className="text-[#868f97]">{sectorData.bullCase}</p>
               </div>
-              <div className="bg-red-500/10 p-6 rounded-xl border border-red-500/30">
-                <h3 className="text-xl font-bold text-red-500 mb-4">Bear Case (+{sectorData.expectedReturn.low}%)</h3>
-                <p className="text-muted-foreground">{sectorData.bearCase}</p>
+              <div className="bg-[#ff5c5c]/10 p-6 rounded-2xl border border-[#ff5c5c]/30">
+                <h3 className="text-xl font-bold text-[#ff5c5c] mb-4">Bear Case (<span className="tabular-nums">+{sectorData.expectedReturn.low}%</span>)</h3>
+                <p className="text-[#868f97]">{sectorData.bearCase}</p>
               </div>
             </div>
           </section>
 
           {/* Risk Factors */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Risk Factors to Monitor</h2>
-            <div className="bg-card p-6 rounded-xl border border-border">
+            <h2 className="text-2xl font-bold mb-6 text-balance">Risk Factors to Monitor</h2>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
               <ul className="space-y-3">
                 {sectorData.risks.map((risk, i) => (
                   <li key={i} className="flex items-start gap-3">
-                    <span className="text-red-500 mt-1">
+                    <span className="text-[#ff5c5c] mt-1">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                       </svg>
                     </span>
-                    <span className="text-muted-foreground">{risk}</span>
+                    <span className="text-[#868f97]">{risk}</span>
                   </li>
                 ))}
               </ul>
@@ -658,8 +658,8 @@ export default async function SectorPredictionPage({ params }: Props) {
 
           {/* Top Picks Section */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Our Top {sectorData.title} Picks</h2>
-            <p className="text-muted-foreground mb-6">{sectorData.topPicksReasoning}</p>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Our Top {sectorData.title} Picks</h2>
+            <p className="text-[#868f97] mb-6">{sectorData.topPicksReasoning}</p>
 
             {topPicks.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
@@ -667,35 +667,35 @@ export default async function SectorPredictionPage({ params }: Props) {
                   <Link
                     key={stock.ticker}
                     href={`/prediction/${stock.ticker.toLowerCase()}`}
-                    className="bg-gradient-to-br from-green-600/10 to-transparent p-5 rounded-xl border border-green-500/30 hover:border-green-500/50 transition-colors group"
+                    className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15] group focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
-                        <span className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
+                        <span className="w-6 h-6 bg-[#4ebe96] text-white rounded-full flex items-center justify-center text-xs font-bold tabular-nums">
                           {i + 1}
                         </span>
-                        <span className="text-xl font-bold group-hover:text-green-500 transition-colors">{stock.ticker}</span>
+                        <span className="text-xl font-bold group-hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out">{stock.ticker}</span>
                       </div>
-                      <span className="text-xs text-green-500">Top Pick</span>
+                      <span className="text-xs text-[#4ebe96]">Top Pick</span>
                     </div>
-                    <p className="text-sm text-muted-foreground line-clamp-1 mb-3">{stock.company_name}</p>
+                    <p className="text-sm text-[#868f97] line-clamp-1 mb-3">{stock.company_name}</p>
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Market Cap</span>
-                      <span className="font-medium">{stock.market_cap ? formatMarketCap(stock.market_cap) : '-'}</span>
+                      <span className="text-[#868f97]">Market Cap</span>
+                      <span className="font-medium tabular-nums">{stock.market_cap ? formatMarketCap(stock.market_cap) : '-'}</span>
                     </div>
                   </Link>
                 ))}
               </div>
             ) : (
-              <div className="bg-card p-8 rounded-xl border border-border text-center">
-                <p className="text-muted-foreground">Loading top picks...</p>
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 text-center">
+                <p className="text-[#868f97]">Loading top picks...</p>
               </div>
             )}
           </section>
 
           {/* Top 20 Stocks Grid */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">
+            <h2 className="text-2xl font-bold mb-6 text-balance">
               Top 20 {sectorData.title} Stocks with Predictions
             </h2>
             {topStocks.length > 0 ? (
@@ -703,33 +703,33 @@ export default async function SectorPredictionPage({ params }: Props) {
                 {topStocks.map((stock, i) => (
                   <div
                     key={stock.ticker}
-                    className="bg-card p-5 rounded-lg border border-border hover:border-green-500/50 transition-colors"
+                    className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]"
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div>
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-xs text-muted-foreground">#{i + 1}</span>
+                          <span className="text-xs text-[#868f97] tabular-nums">#{i + 1}</span>
                           <span className="text-xl font-bold">{stock.ticker}</span>
                         </div>
-                        <p className="text-sm text-muted-foreground line-clamp-1">
+                        <p className="text-sm text-[#868f97] line-clamp-1">
                           {stock.company_name || stock.ticker}
                         </p>
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-3 text-sm mb-4">
                       <div>
-                        <p className="text-muted-foreground text-xs mb-1">Market Cap</p>
-                        <p className="font-semibold">
+                        <p className="text-[#868f97] text-xs mb-1">Market Cap</p>
+                        <p className="font-semibold tabular-nums">
                           {stock.market_cap ? formatMarketCap(stock.market_cap) : '-'}
                         </p>
                       </div>
                       <div>
-                        <p className="text-muted-foreground text-xs mb-1">P/E Ratio</p>
-                        <p className={`font-semibold ${
+                        <p className="text-[#868f97] text-xs mb-1">P/E Ratio</p>
+                        <p className={`font-semibold tabular-nums ${
                           stock.pe_ratio && stock.pe_ratio < 15
-                            ? 'text-green-500'
+                            ? 'text-[#4ebe96]'
                             : stock.pe_ratio && stock.pe_ratio > 30
-                            ? 'text-red-500'
+                            ? 'text-[#ff5c5c]'
                             : ''
                         }`}>
                           {stock.pe_ratio ? stock.pe_ratio.toFixed(2) : '-'}
@@ -739,13 +739,13 @@ export default async function SectorPredictionPage({ params }: Props) {
                     <div className="flex gap-2">
                       <Link
                         href={`/prediction/${stock.ticker.toLowerCase()}`}
-                        className="flex-1 text-center text-sm py-2 px-3 bg-green-600/20 text-green-500 rounded-lg hover:bg-green-600/30 transition-colors"
+                        className="flex-1 text-center text-sm py-2 px-3 bg-[#4ebe96]/20 text-[#4ebe96] rounded-lg motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-[#4ebe96]/30 focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                       >
                         View Prediction
                       </Link>
                       <Link
                         href={`/dashboard?ticker=${stock.ticker}`}
-                        className="text-sm py-2 px-3 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors"
+                        className="text-sm py-2 px-3 bg-white/[0.05] rounded-lg motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.08] focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                       >
                         Analysis
                       </Link>
@@ -754,8 +754,8 @@ export default async function SectorPredictionPage({ params }: Props) {
                 ))}
               </div>
             ) : (
-              <div className="bg-card p-8 rounded-lg border border-border text-center">
-                <p className="text-muted-foreground">No stocks found in this sector.</p>
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 text-center">
+                <p className="text-[#868f97]">No stocks found in this sector.</p>
               </div>
             )}
           </section>
@@ -763,13 +763,13 @@ export default async function SectorPredictionPage({ params }: Props) {
           {/* Internal Links to Stock Predictions */}
           {topStocks.length > 0 && (
             <section className="mb-12">
-              <h2 className="text-2xl font-bold mb-6">Quick Links to Stock Predictions</h2>
+              <h2 className="text-2xl font-bold mb-6 text-balance">Quick Links to Stock Predictions</h2>
               <div className="flex flex-wrap gap-2">
                 {topStocks.map((stock) => (
                   <Link
                     key={stock.ticker}
                     href={`/prediction/${stock.ticker.toLowerCase()}`}
-                    className="px-4 py-2 bg-secondary rounded-lg hover:bg-green-600/20 hover:text-green-500 transition-colors text-sm"
+                    className="px-4 py-2 bg-white/[0.05] rounded-lg motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-[#4ebe96]/20 hover:text-[#4ebe96] text-sm focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                   >
                     {stock.ticker} Prediction
                   </Link>
@@ -780,19 +780,19 @@ export default async function SectorPredictionPage({ params }: Props) {
 
           {/* FAQ Section */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {sectorData.faqs.map((faq, i) => (
-                <details key={i} className="bg-card p-6 rounded-xl border border-border group">
+                <details key={i} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 group">
                   <summary className="font-bold cursor-pointer list-none flex items-center justify-between">
                     <span>{faq.question}</span>
-                    <span className="text-green-500 group-open:rotate-180 transition-transform">
+                    <span className="text-[#4ebe96] group-open:rotate-180 motion-safe:transition-all motion-safe:duration-150 ease-out">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </span>
                   </summary>
-                  <p className="text-muted-foreground mt-4 leading-relaxed">
+                  <p className="text-[#868f97] mt-4 leading-relaxed">
                     {faq.answer}
                   </p>
                 </details>
@@ -802,7 +802,7 @@ export default async function SectorPredictionPage({ params }: Props) {
 
           {/* Related Sectors */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Related Sector Predictions</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Related Sector Predictions</h2>
             <div className="flex flex-wrap gap-3">
               {sectorData.relatedSectors.map((relatedSector) => {
                 const related = SECTOR_PREDICTIONS[relatedSector]
@@ -811,7 +811,7 @@ export default async function SectorPredictionPage({ params }: Props) {
                   <Link
                     key={relatedSector}
                     href={`/predictions/${relatedSector}`}
-                    className="px-5 py-3 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors"
+                    className="px-5 py-3 bg-white/[0.05] rounded-lg motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.08] focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                   >
                     {related.title} Predictions
                   </Link>
@@ -819,7 +819,7 @@ export default async function SectorPredictionPage({ params }: Props) {
               })}
               <Link
                 href="/insights/2026-stock-predictions"
-                className="px-5 py-3 bg-green-600/20 text-green-500 rounded-lg hover:bg-green-600/30 transition-colors"
+                className="px-5 py-3 bg-[#4ebe96]/20 text-[#4ebe96] rounded-lg motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-[#4ebe96]/30 focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 All Market Predictions
               </Link>
@@ -828,48 +828,48 @@ export default async function SectorPredictionPage({ params }: Props) {
 
           {/* More Resources */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">More {sectorData.title} Resources</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">More {sectorData.title} Resources</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Link
                 href={`/sectors/${sector.toLowerCase()}`}
-                className="bg-card p-5 rounded-lg border border-border hover:border-green-500/50 transition-colors"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15] focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <h3 className="font-bold mb-2">{sectorData.title} Overview</h3>
-                <p className="text-sm text-muted-foreground">Comprehensive sector analysis and top stocks</p>
+                <p className="text-sm text-[#868f97]">Comprehensive sector analysis and top stocks</p>
               </Link>
               <Link
                 href="/screener"
-                className="bg-card p-5 rounded-lg border border-border hover:border-green-500/50 transition-colors"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15] focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <h3 className="font-bold mb-2">Stock Screener</h3>
-                <p className="text-sm text-muted-foreground">Filter {sectorData.title.toLowerCase()} stocks by metrics</p>
+                <p className="text-sm text-[#868f97]">Filter {sectorData.title.toLowerCase()} stocks by metrics</p>
               </Link>
               <Link
                 href="/insights/2026-stock-predictions"
-                className="bg-card p-5 rounded-lg border border-border hover:border-green-500/50 transition-colors"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15] focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <h3 className="font-bold mb-2">{currentYear} Market Outlook</h3>
-                <p className="text-sm text-muted-foreground">Full market predictions and analysis</p>
+                <p className="text-sm text-[#868f97]">Full market predictions and analysis</p>
               </Link>
             </div>
           </section>
 
           {/* CTA */}
-          <section className="bg-gradient-to-br from-green-600/20 to-green-600/5 p-8 rounded-xl border border-green-500/20 text-center">
-            <h2 className="text-2xl font-bold mb-4">Get AI-Powered Stock Analysis</h2>
-            <p className="text-muted-foreground mb-6">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 text-center">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Get AI-Powered Stock Analysis</h2>
+            <p className="text-[#868f97] mb-6">
               Research any {sectorData.title.toLowerCase()} stock with our AI-powered platform. DCF valuations, quant models, and real-time insights.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/dashboard"
-                className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium"
+                className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 Start Research
               </Link>
               <Link
                 href="/premium"
-                className="inline-block bg-secondary hover:bg-secondary/80 px-8 py-3 rounded-lg font-medium"
+                className="inline-block bg-white/[0.05] hover:bg-white/[0.08] px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 View Premium Features
               </Link>
@@ -877,7 +877,7 @@ export default async function SectorPredictionPage({ params }: Props) {
           </section>
 
           {/* Disclaimer */}
-          <div className="mt-8 text-xs text-muted-foreground bg-secondary/30 p-4 rounded-lg">
+          <div className="mt-8 text-xs text-[#868f97] bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4">
             <p><strong>Disclaimer:</strong> Stock predictions are based on publicly available data and AI models. This is not financial advice. Past performance does not guarantee future results. Always conduct your own research and consider consulting a financial advisor before making investment decisions. Predicted returns are estimates and actual results may vary significantly.</p>
           </div>
         </div>

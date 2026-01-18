@@ -122,53 +122,53 @@ export default async function OptionsPage({ params }: Props) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }} />
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-dvh bg-black text-white">
         <div className="max-w-4xl mx-auto px-6 py-12">
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none rounded">Home</Link>
             {' / '}
-            <Link href="/options" className="hover:text-foreground">Options</Link>
+            <Link href="/options" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none rounded">Options</Link>
             {' / '}
             <span>{symbol} Options</span>
           </nav>
 
-          <h1 className="text-4xl font-bold mb-4">{symbol} Options Chain</h1>
-          <p className="text-xl text-muted-foreground mb-8">{companyName} - Calls, puts & options trading</p>
+          <h1 className="text-4xl font-bold mb-4 text-balance">{symbol} Options Chain</h1>
+          <p className="text-xl text-[#868f97] mb-8">{companyName} - Calls, puts & options trading</p>
 
           {/* Price Card */}
-          <div className="bg-gradient-to-r from-orange-600/20 to-yellow-600/20 p-8 rounded-xl border border-orange-500/30 mb-8">
+          <div className="bg-white/[0.03] backdrop-blur-[10px] border border-[#ffa16c]/30 rounded-2xl p-8 mb-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div>
-                <p className="text-muted-foreground text-sm mb-1">Stock Price</p>
-                <p className="text-3xl font-bold">${price.toFixed(2)}</p>
+                <p className="text-[#868f97] text-sm mb-1">Stock Price</p>
+                <p className="text-3xl font-bold tabular-nums">${price.toFixed(2)}</p>
               </div>
               <div>
-                <p className="text-muted-foreground text-sm mb-1">Day Change</p>
-                <p className={`text-3xl font-bold ${snapshot.day_change_percent >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                <p className="text-[#868f97] text-sm mb-1">Day Change</p>
+                <p className={`text-3xl font-bold tabular-nums ${snapshot.day_change_percent >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                   {snapshot.day_change_percent >= 0 ? '+' : ''}{snapshot.day_change_percent?.toFixed(2)}%
                 </p>
               </div>
               <div>
-                <p className="text-muted-foreground text-sm mb-1">Volume</p>
-                <p className="text-3xl font-bold">{(snapshot.volume / 1e6).toFixed(1)}M</p>
+                <p className="text-[#868f97] text-sm mb-1">Volume</p>
+                <p className="text-3xl font-bold tabular-nums">{(snapshot.volume / 1e6).toFixed(1)}M</p>
               </div>
               <div>
-                <p className="text-muted-foreground text-sm mb-1">Avg Volume</p>
-                <p className="text-3xl font-bold">{((snapshot.avgVolume || snapshot.volume) / 1e6).toFixed(1)}M</p>
+                <p className="text-[#868f97] text-sm mb-1">Avg Volume</p>
+                <p className="text-3xl font-bold tabular-nums">{((snapshot.avgVolume || snapshot.volume) / 1e6).toFixed(1)}M</p>
               </div>
             </div>
           </div>
 
           {/* Popular Strikes */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Popular Strike Prices</h2>
-            <div className="bg-card p-6 rounded-lg border border-border">
-              <p className="text-sm text-muted-foreground mb-4">Based on current stock price of ${price.toFixed(2)}</p>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Popular Strike Prices</h2>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
+              <p className="text-sm text-[#868f97] mb-4 tabular-nums">Based on current stock price of ${price.toFixed(2)}</p>
               <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
                 {strikes.map((strike, i) => (
-                  <div key={i} className={`p-3 rounded-lg text-center ${strike === Math.floor(price) ? 'bg-green-500/20 border border-green-500/50' : 'bg-secondary'}`}>
-                    <p className="font-bold">${strike}</p>
-                    <p className="text-xs text-muted-foreground">
+                  <div key={i} className={`p-3 rounded-lg text-center motion-safe:transition-all motion-safe:duration-150 ease-out ${strike === Math.floor(price) ? 'bg-[#4ebe96]/20 border border-[#4ebe96]/50' : 'bg-white/[0.03] border border-white/[0.08] hover:bg-white/[0.05] hover:border-white/[0.15]'}`}>
+                    <p className="font-bold tabular-nums">${strike}</p>
+                    <p className="text-xs text-[#868f97]">
                       {strike < price ? 'ITM' : strike > price ? 'OTM' : 'ATM'}
                     </p>
                   </div>
@@ -179,22 +179,22 @@ export default async function OptionsPage({ params }: Props) {
 
           {/* Options Strategies */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Popular {symbol} Options Strategies</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Popular {symbol} Options Strategies</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-green-500/10 p-5 rounded-lg border border-green-500/30">
-                <h3 className="font-bold text-green-500 mb-2">Bullish Strategies</h3>
-                <ul className="text-sm text-muted-foreground space-y-2">
-                  <li><strong>Long Call:</strong> Buy calls to profit from price increase</li>
-                  <li><strong>Bull Call Spread:</strong> Limited risk bullish play</li>
-                  <li><strong>Cash-Secured Put:</strong> Get paid to wait to buy</li>
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-[#4ebe96]/30 rounded-2xl p-5 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-[#4ebe96]/50">
+                <h3 className="font-bold text-[#4ebe96] mb-2 text-balance">Bullish Strategies</h3>
+                <ul className="text-sm text-[#868f97] space-y-2">
+                  <li><strong className="text-white">Long Call:</strong> Buy calls to profit from price increase</li>
+                  <li><strong className="text-white">Bull Call Spread:</strong> Limited risk bullish play</li>
+                  <li><strong className="text-white">Cash-Secured Put:</strong> Get paid to wait to buy</li>
                 </ul>
               </div>
-              <div className="bg-red-500/10 p-5 rounded-lg border border-red-500/30">
-                <h3 className="font-bold text-red-500 mb-2">Bearish Strategies</h3>
-                <ul className="text-sm text-muted-foreground space-y-2">
-                  <li><strong>Long Put:</strong> Buy puts to profit from price decline</li>
-                  <li><strong>Bear Put Spread:</strong> Limited risk bearish play</li>
-                  <li><strong>Covered Call:</strong> Generate income on shares owned</li>
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-[#ff5c5c]/30 rounded-2xl p-5 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-[#ff5c5c]/50">
+                <h3 className="font-bold text-[#ff5c5c] mb-2 text-balance">Bearish Strategies</h3>
+                <ul className="text-sm text-[#868f97] space-y-2">
+                  <li><strong className="text-white">Long Put:</strong> Buy puts to profit from price decline</li>
+                  <li><strong className="text-white">Bear Put Spread:</strong> Limited risk bearish play</li>
+                  <li><strong className="text-white">Covered Call:</strong> Generate income on shares owned</li>
                 </ul>
               </div>
             </div>
@@ -202,38 +202,38 @@ export default async function OptionsPage({ params }: Props) {
 
           {/* Options Basics */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Options Trading Basics</h2>
-            <div className="bg-card p-6 rounded-lg border border-border">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Options Trading Basics</h2>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
               <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <h3 className="font-bold text-green-500 mb-2">Calls</h3>
-                  <p className="text-sm text-muted-foreground">Give you the right to BUY {symbol} at a set price. Profit when stock goes UP.</p>
+                  <h3 className="font-bold text-[#4ebe96] mb-2 text-balance">Calls</h3>
+                  <p className="text-sm text-[#868f97]">Give you the right to BUY {symbol} at a set price. Profit when stock goes UP.</p>
                 </div>
                 <div>
-                  <h3 className="font-bold text-red-500 mb-2">Puts</h3>
-                  <p className="text-sm text-muted-foreground">Give you the right to SELL {symbol} at a set price. Profit when stock goes DOWN.</p>
+                  <h3 className="font-bold text-[#ff5c5c] mb-2 text-balance">Puts</h3>
+                  <p className="text-sm text-[#868f97]">Give you the right to SELL {symbol} at a set price. Profit when stock goes DOWN.</p>
                 </div>
               </div>
             </div>
           </section>
 
           {/* CTA */}
-          <section className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 p-8 rounded-xl border border-purple-500/30 text-center mb-12">
-            <h2 className="text-2xl font-bold mb-4">View Full Options Chain</h2>
-            <p className="text-muted-foreground mb-6">Real-time options data with Greeks and IV</p>
-            <Link href={`/dashboard?ticker=${symbol}&tab=options`} className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] border border-[#479ffa]/30 rounded-2xl p-8 text-center mb-12">
+            <h2 className="text-2xl font-bold mb-4 text-balance">View Full Options Chain</h2>
+            <p className="text-[#868f97] mb-6">Real-time options data with Greeks and IV</p>
+            <Link href={`/dashboard?ticker=${symbol}&tab=options`} className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none">
               Open Options Chain
             </Link>
           </section>
 
           {/* FAQ */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {optionsFaqs.map((faq, i) => (
-                <div key={i} className="bg-card p-5 rounded-lg border border-border">
-                  <h3 className="font-bold text-lg mb-2">{faq.question}</h3>
-                  <p className="text-muted-foreground">{faq.answer}</p>
+                <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
+                  <h3 className="font-bold text-lg mb-2 text-balance">{faq.question}</h3>
+                  <p className="text-[#868f97]">{faq.answer}</p>
                 </div>
               ))}
             </div>
@@ -241,12 +241,12 @@ export default async function OptionsPage({ params }: Props) {
 
           {/* Related */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Popular Options</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Popular Options</h2>
             <div className="flex flex-wrap gap-2">
               {['AAPL', 'TSLA', 'NVDA', 'AMD', 'SPY', 'QQQ', 'META', 'AMZN']
                 .filter(s => s !== symbol)
                 .map(stock => (
-                  <Link key={stock} href={`/options/${stock.toLowerCase()}`} className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80">
+                  <Link key={stock} href={`/options/${stock.toLowerCase()}`} className="px-4 py-2 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-lg hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none">
                     {stock} Options
                   </Link>
                 ))}

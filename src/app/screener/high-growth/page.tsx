@@ -146,31 +146,31 @@ export default async function HighGrowthPage() {
           __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema, itemListSchema]),
         }}
       />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-dvh bg-black text-foreground pt-20">
         <div className="max-w-6xl mx-auto px-6 py-12">
           {/* Breadcrumbs */}
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Home</Link>
             {' / '}
-            <Link href="/screener" className="hover:text-foreground">Stock Screener</Link>
+            <Link href="/screener" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Stock Screener</Link>
             {' / '}
             <span>High Growth</span>
           </nav>
 
           {/* Header */}
           <header className="mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-balance">
               High Growth Stocks
             </h1>
-            <p className="text-xl text-muted-foreground mb-4">
+            <p className="text-xl text-[#868f97] mb-4">
               Stocks with revenue growth over 20% - screened for growth investors seeking fast-growing
               companies with strong momentum and market expansion.
             </p>
             <div className="flex flex-wrap gap-4 text-sm">
-              <div className="bg-purple-600/20 text-purple-400 px-4 py-2 rounded-lg">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] px-4 py-2 rounded-2xl">
                 Filter: Revenue Growth &gt; 20%
               </div>
-              <div className="bg-secondary px-4 py-2 rounded-lg">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] px-4 py-2 rounded-2xl tabular-nums">
                 {HIGH_GROWTH_STOCKS.length} Stocks Found
               </div>
             </div>
@@ -178,53 +178,53 @@ export default async function HighGrowthPage() {
 
           {/* Key Metrics Summary */}
           <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-card p-4 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-1">Average Growth</p>
-              <p className="text-2xl font-bold text-purple-400">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl">
+              <p className="text-sm text-[#868f97] mb-1">Average Growth</p>
+              <p className="text-2xl font-bold text-[#4ebe96] tabular-nums">
                 {Math.round(HIGH_GROWTH_STOCKS.reduce((sum, s) => sum + s.revenueGrowth, 0) / HIGH_GROWTH_STOCKS.length)}%
               </p>
             </div>
-            <div className="bg-card p-4 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-1">Highest Growth</p>
-              <p className="text-2xl font-bold text-green-500">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl">
+              <p className="text-sm text-[#868f97] mb-1">Highest Growth</p>
+              <p className="text-2xl font-bold text-[#4ebe96] tabular-nums">
                 {HIGH_GROWTH_STOCKS[0].revenueGrowth}%
               </p>
             </div>
-            <div className="bg-card p-4 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-1">Hypergrowth (&gt;40%)</p>
-              <p className="text-2xl font-bold text-purple-400">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl">
+              <p className="text-sm text-[#868f97] mb-1">Hypergrowth (&gt;40%)</p>
+              <p className="text-2xl font-bold text-[#4ebe96] tabular-nums">
                 {HIGH_GROWTH_STOCKS.filter(s => s.revenueGrowth >= 40).length}
               </p>
             </div>
-            <div className="bg-card p-4 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-1">Avg PEG Ratio</p>
-              <p className="text-2xl font-bold">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl">
+              <p className="text-sm text-[#868f97] mb-1">Avg PEG Ratio</p>
+              <p className="text-2xl font-bold tabular-nums">
                 {(HIGH_GROWTH_STOCKS.filter(s => s.peg).reduce((sum, s) => sum + (s.peg || 0), 0) / HIGH_GROWTH_STOCKS.filter(s => s.peg).length).toFixed(1)}
               </p>
             </div>
           </section>
 
           {/* Why Growth Investing */}
-          <section className="bg-gradient-to-br from-purple-600/10 to-pink-600/10 p-6 rounded-xl border border-purple-500/20 mb-8">
-            <h2 className="text-2xl font-bold mb-4">Why Invest in High Growth Stocks?</h2>
+          <section className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl mb-8">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Why Invest in High Growth Stocks?</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-card/50 p-4 rounded-lg">
-                <h3 className="font-bold mb-2 text-purple-400">Capital Appreciation</h3>
-                <p className="text-sm text-muted-foreground">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl">
+                <h3 className="font-bold mb-2 text-[#4ebe96]">Capital Appreciation</h3>
+                <p className="text-sm text-[#868f97]">
                   Growth stocks aim to multiply your investment through stock price appreciation as
                   the company expands. A company doubling revenue often sees stock price follow.
                 </p>
               </div>
-              <div className="bg-card/50 p-4 rounded-lg">
-                <h3 className="font-bold mb-2 text-purple-400">Market Leaders</h3>
-                <p className="text-sm text-muted-foreground">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl">
+                <h3 className="font-bold mb-2 text-[#4ebe96]">Market Leaders</h3>
+                <p className="text-sm text-[#868f97]">
                   Fast-growing companies often lead their industries, benefiting from network effects,
                   economies of scale, and competitive moats that compound over time.
                 </p>
               </div>
-              <div className="bg-card/50 p-4 rounded-lg">
-                <h3 className="font-bold mb-2 text-purple-400">Innovation Exposure</h3>
-                <p className="text-sm text-muted-foreground">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl">
+                <h3 className="font-bold mb-2 text-[#4ebe96]">Innovation Exposure</h3>
+                <p className="text-sm text-[#868f97]">
                   High growth stocks provide exposure to transformative trends like AI, cloud computing,
                   cybersecurity, and biotech that are reshaping the global economy.
                 </p>
@@ -234,12 +234,12 @@ export default async function HighGrowthPage() {
 
           {/* Stock Table */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Top High Growth Stocks</h2>
-            <div className="bg-card border border-border rounded-xl overflow-hidden">
+            <h2 className="text-2xl font-bold mb-6 text-balance">Top High Growth Stocks</h2>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-secondary/50">
-                    <tr className="border-b border-border">
+                  <thead className="bg-white/[0.03]">
+                    <tr className="border-b border-white/[0.08]">
                       <th className="px-4 py-3 text-left text-sm font-semibold">#</th>
                       <th className="px-4 py-3 text-left text-sm font-semibold">Ticker</th>
                       <th className="px-4 py-3 text-left text-sm font-semibold">Company</th>
@@ -250,52 +250,52 @@ export default async function HighGrowthPage() {
                       <th className="px-4 py-3 text-right text-sm font-semibold">Market Cap</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-border">
+                  <tbody className="divide-y divide-white/[0.08]">
                     {HIGH_GROWTH_STOCKS.map((stock, index) => (
-                      <tr key={stock.ticker} className="hover:bg-secondary/30 transition-colors">
-                        <td className="px-4 py-3 text-sm text-muted-foreground">{index + 1}</td>
+                      <tr key={stock.ticker} className="hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                        <td className="px-4 py-3 text-sm text-[#868f97] tabular-nums">{index + 1}</td>
                         <td className="px-4 py-3">
                           <Link
                             href={`/stock/${stock.ticker.toLowerCase()}`}
-                            className="font-bold text-purple-400 hover:text-purple-300 hover:underline"
+                            className="font-bold text-[#479ffa] hover:text-white hover:underline motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                           >
                             {stock.ticker}
                           </Link>
                         </td>
                         <td className="px-4 py-3 text-sm">
-                          <Link href={`/stock/${stock.ticker.toLowerCase()}`} className="hover:underline">
+                          <Link href={`/stock/${stock.ticker.toLowerCase()}`} className="hover:underline motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                             {stock.name}
                           </Link>
                         </td>
-                        <td className="px-4 py-3 text-sm text-muted-foreground">{stock.sector}</td>
+                        <td className="px-4 py-3 text-sm text-[#868f97]">{stock.sector}</td>
                         <td className="px-4 py-3 text-right">
-                          <span className={`font-bold ${stock.revenueGrowth >= 40 ? 'text-green-500' : 'text-purple-400'}`}>
+                          <span className={`font-bold tabular-nums ${stock.revenueGrowth >= 40 ? 'text-[#4ebe96]' : 'text-[#479ffa]'}`}>
                             {stock.revenueGrowth}%
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-right text-sm">
+                        <td className="px-4 py-3 text-right text-sm tabular-nums">
                           {stock.earningsGrowth !== null ? (
-                            <span className="text-green-500">{stock.earningsGrowth}%</span>
+                            <span className="text-[#4ebe96]">{stock.earningsGrowth}%</span>
                           ) : (
-                            <span className="text-yellow-500">N/P</span>
+                            <span className="text-[#ffa16c]">N/P</span>
                           )}
                         </td>
-                        <td className="px-4 py-3 text-right text-sm">
+                        <td className="px-4 py-3 text-right text-sm tabular-nums">
                           {stock.peg !== null ? (
-                            <span className={stock.peg < 1.5 ? 'text-green-500 font-medium' : ''}>
+                            <span className={stock.peg < 1.5 ? 'text-[#4ebe96] font-medium' : ''}>
                               {stock.peg.toFixed(1)}
                             </span>
                           ) : (
-                            <span className="text-muted-foreground">---</span>
+                            <span className="text-[#868f97]">---</span>
                           )}
                         </td>
-                        <td className="px-4 py-3 text-right text-sm font-medium">{stock.marketCap}</td>
+                        <td className="px-4 py-3 text-right text-sm font-medium tabular-nums">{stock.marketCap}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-              <div className="p-3 bg-secondary/30 text-xs text-muted-foreground">
+              <div className="p-3 bg-white/[0.03] text-xs text-[#868f97]">
                 N/P = Not Profitable (negative earnings). PEG not applicable for unprofitable companies.
               </div>
             </div>
@@ -303,38 +303,38 @@ export default async function HighGrowthPage() {
 
           {/* Growth Tiers */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Growth Rate Categories</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Growth Rate Categories</h2>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="bg-card p-5 rounded-xl border-2 border-green-500/30">
-                <h3 className="font-bold text-green-500 mb-2">Hypergrowth (&gt;100%)</h3>
-                <p className="text-sm text-muted-foreground mb-3">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border-2 border-[#4ebe96]/30 p-5 rounded-2xl">
+                <h3 className="font-bold text-[#4ebe96] mb-2">Hypergrowth (&gt;100%)</h3>
+                <p className="text-sm text-[#868f97] mb-3">
                   Explosive growth, often in early-stage or disruptive companies. High risk/reward.
                 </p>
                 <div className="text-xs">
                   {HIGH_GROWTH_STOCKS.filter(s => s.revenueGrowth >= 100).map(s => s.ticker).join(', ') || 'None currently'}
                 </div>
               </div>
-              <div className="bg-card p-5 rounded-xl border-2 border-purple-500/30">
-                <h3 className="font-bold text-purple-400 mb-2">Rapid (40-100%)</h3>
-                <p className="text-sm text-muted-foreground mb-3">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border-2 border-[#4ebe96]/20 p-5 rounded-2xl">
+                <h3 className="font-bold text-[#4ebe96] mb-2">Rapid (40-100%)</h3>
+                <p className="text-sm text-[#868f97] mb-3">
                   Very fast growth indicating strong product-market fit and scaling operations.
                 </p>
                 <div className="text-xs">
                   {HIGH_GROWTH_STOCKS.filter(s => s.revenueGrowth >= 40 && s.revenueGrowth < 100).map(s => s.ticker).join(', ')}
                 </div>
               </div>
-              <div className="bg-card p-5 rounded-xl border-2 border-blue-500/30">
-                <h3 className="font-bold text-blue-400 mb-2">Strong (25-40%)</h3>
-                <p className="text-sm text-muted-foreground mb-3">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border-2 border-[#479ffa]/30 p-5 rounded-2xl">
+                <h3 className="font-bold text-[#479ffa] mb-2">Strong (25-40%)</h3>
+                <p className="text-sm text-[#868f97] mb-3">
                   Above-average growth with proven business models and sustainable expansion.
                 </p>
                 <div className="text-xs">
                   {HIGH_GROWTH_STOCKS.filter(s => s.revenueGrowth >= 25 && s.revenueGrowth < 40).map(s => s.ticker).join(', ')}
                 </div>
               </div>
-              <div className="bg-card p-5 rounded-xl border-2 border-yellow-500/30">
-                <h3 className="font-bold text-yellow-500 mb-2">Growth (20-25%)</h3>
-                <p className="text-sm text-muted-foreground mb-3">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border-2 border-[#ffa16c]/30 p-5 rounded-2xl">
+                <h3 className="font-bold text-[#ffa16c] mb-2">Growth (20-25%)</h3>
+                <p className="text-sm text-[#868f97] mb-3">
                   Solid growth beating market averages. Often larger, more mature companies.
                 </p>
                 <div className="text-xs">
@@ -345,54 +345,54 @@ export default async function HighGrowthPage() {
           </section>
 
           {/* Rule of 40 */}
-          <section className="bg-gradient-to-br from-blue-600/10 to-purple-600/10 p-6 rounded-xl border border-blue-500/20 mb-12">
-            <h2 className="text-2xl font-bold mb-4">The Rule of 40</h2>
-            <p className="text-muted-foreground mb-4">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl mb-12">
+            <h2 className="text-2xl font-bold mb-4 text-balance">The Rule of 40</h2>
+            <p className="text-[#868f97] mb-4">
               A key metric for evaluating growth stocks, especially software/SaaS companies. The Rule of 40
               states that a healthy company's growth rate plus profit margin should exceed 40%.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-card/50 p-4 rounded-lg text-center">
-                <p className="text-2xl font-bold text-green-500">50% + 10%</p>
-                <p className="text-sm text-muted-foreground mt-1">Hypergrowth with profit = 60</p>
-                <p className="text-xs text-green-400 mt-2">Excellent</p>
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl text-center">
+                <p className="text-2xl font-bold text-[#4ebe96] tabular-nums">50% + 10%</p>
+                <p className="text-sm text-[#868f97] mt-1">Hypergrowth with profit = 60</p>
+                <p className="text-xs text-[#4ebe96] mt-2">Excellent</p>
               </div>
-              <div className="bg-card/50 p-4 rounded-lg text-center">
-                <p className="text-2xl font-bold text-purple-400">35% + 5%</p>
-                <p className="text-sm text-muted-foreground mt-1">Strong growth, thin margin = 40</p>
-                <p className="text-xs text-blue-400 mt-2">Passing</p>
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl text-center">
+                <p className="text-2xl font-bold text-[#479ffa] tabular-nums">35% + 5%</p>
+                <p className="text-sm text-[#868f97] mt-1">Strong growth, thin margin = 40</p>
+                <p className="text-xs text-[#479ffa] mt-2">Passing</p>
               </div>
-              <div className="bg-card/50 p-4 rounded-lg text-center">
-                <p className="text-2xl font-bold text-yellow-500">25% + 10%</p>
-                <p className="text-sm text-muted-foreground mt-1">Moderate both = 35</p>
-                <p className="text-xs text-yellow-400 mt-2">Watch for improvement</p>
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl text-center">
+                <p className="text-2xl font-bold text-[#ffa16c] tabular-nums">25% + 10%</p>
+                <p className="text-sm text-[#868f97] mt-1">Moderate both = 35</p>
+                <p className="text-xs text-[#ffa16c] mt-2">Watch for improvement</p>
               </div>
             </div>
           </section>
 
           {/* Screening Criteria */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Our Screening Criteria</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Our Screening Criteria</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 text-purple-400">Revenue Growth &gt; 20%</h3>
-                <p className="text-muted-foreground mb-4">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl">
+                <h3 className="text-lg font-bold mb-3 text-[#4ebe96]">Revenue Growth &gt; 20%</h3>
+                <p className="text-[#868f97] mb-4">
                   We screen for companies with year-over-year revenue growth exceeding 20%, which is
                   approximately 3-4x the S&P 500 average growth rate. This threshold identifies
                   companies with strong momentum and market expansion.
                 </p>
-                <div className="text-sm bg-secondary/50 p-3 rounded-lg">
+                <div className="text-sm bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-3 rounded-2xl">
                   <strong>Formula:</strong> Revenue Growth = (Current Revenue - Prior Revenue) / Prior Revenue x 100
                 </div>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 text-green-400">Quality Considerations</h3>
-                <p className="text-muted-foreground mb-4">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl">
+                <h3 className="text-lg font-bold mb-3 text-[#4ebe96]">Quality Considerations</h3>
+                <p className="text-[#868f97] mb-4">
                   Growth should be evaluated alongside quality metrics: improving gross margins,
                   sustainable unit economics, reasonable valuation (PEG ratio), and competitive moats.
                   Revenue growth alone does not guarantee investment success.
                 </p>
-                <div className="text-sm bg-secondary/50 p-3 rounded-lg">
+                <div className="text-sm bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-3 rounded-2xl">
                   <strong>Key:</strong> Look for profitable growth or clear path to profitability.
                 </div>
               </div>
@@ -400,19 +400,19 @@ export default async function HighGrowthPage() {
           </section>
 
           {/* Growth Risks */}
-          <section className="bg-yellow-500/10 border border-yellow-500/20 p-6 rounded-xl mb-12">
-            <h2 className="text-xl font-bold mb-4 text-yellow-500">Growth Investing Risks</h2>
-            <p className="text-muted-foreground mb-4">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] border border-[#ffa16c]/20 p-6 rounded-2xl mb-12">
+            <h2 className="text-xl font-bold mb-4 text-[#ffa16c] text-balance">Growth Investing Risks</h2>
+            <p className="text-[#868f97] mb-4">
               High growth stocks offer significant upside but carry elevated risks:
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <ul className="text-sm text-muted-foreground space-y-2">
+              <ul className="text-sm text-[#868f97] space-y-2">
                 <li>&#8226; <strong>Valuation compression:</strong> P/E multiples contract if growth slows</li>
                 <li>&#8226; <strong>Execution risk:</strong> Scaling operations is difficult</li>
                 <li>&#8226; <strong>Competition:</strong> High margins attract competitors</li>
                 <li>&#8226; <strong>Interest rate sensitivity:</strong> Growth stocks fall when rates rise</li>
               </ul>
-              <ul className="text-sm text-muted-foreground space-y-2">
+              <ul className="text-sm text-[#868f97] space-y-2">
                 <li>&#8226; <strong>Burn rate:</strong> Unprofitable companies can run out of cash</li>
                 <li>&#8226; <strong>Management dilution:</strong> Stock compensation dilutes shareholders</li>
                 <li>&#8226; <strong>Binary outcomes:</strong> Some growth bets go to zero</li>
@@ -423,15 +423,15 @@ export default async function HighGrowthPage() {
 
           {/* FAQs */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {faqs.map((faq, index) => (
-                <details key={index} className="bg-card p-6 rounded-xl border border-border group">
-                  <summary className="font-bold cursor-pointer list-none flex items-center justify-between">
+                <details key={index} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl group hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                  <summary className="font-bold cursor-pointer list-none flex items-center justify-between focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded">
                     <span>{faq.question}</span>
-                    <span className="text-purple-400 group-open:rotate-180 transition-transform">&#9660;</span>
+                    <span className="text-[#4ebe96] group-open:rotate-180 motion-safe:transition-all motion-safe:duration-150 ease-out">&#9660;</span>
                   </summary>
-                  <p className="text-muted-foreground mt-4 leading-relaxed">{faq.answer}</p>
+                  <p className="text-[#868f97] mt-4 leading-relaxed">{faq.answer}</p>
                 </details>
               ))}
             </div>
@@ -439,60 +439,60 @@ export default async function HighGrowthPage() {
 
           {/* Related Screeners */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Related Stock Screeners</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Related Stock Screeners</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <Link
                 href="/screener/high-dividend-yield"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] text-center"
               >
                 <p className="text-2xl mb-2">&#128176;</p>
                 <p className="font-bold">High Dividend</p>
-                <p className="text-xs text-muted-foreground">Yield &gt; 3%</p>
+                <p className="text-xs text-[#868f97]">Yield &gt; 3%</p>
               </Link>
               <Link
                 href="/screener/low-pe-ratio"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] text-center"
               >
                 <p className="text-2xl mb-2">&#128181;</p>
                 <p className="font-bold">Low P/E Ratio</p>
-                <p className="text-xs text-muted-foreground">Value stocks P/E &lt; 15</p>
+                <p className="text-xs text-[#868f97]">Value stocks P/E &lt; 15</p>
               </Link>
               <Link
                 href="/screener/large-cap"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] text-center"
               >
                 <p className="text-2xl mb-2">&#127942;</p>
                 <p className="font-bold">Large Cap</p>
-                <p className="text-xs text-muted-foreground">Market cap &gt; $100B</p>
+                <p className="text-xs text-[#868f97]">Market cap &gt; $100B</p>
               </Link>
               <Link
                 href="/screener/small-cap-gems"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] text-center"
               >
                 <p className="text-2xl mb-2">&#128142;</p>
                 <p className="font-bold">Small Cap Gems</p>
-                <p className="text-xs text-muted-foreground">Quality small caps</p>
+                <p className="text-xs text-[#868f97]">Quality small caps</p>
               </Link>
             </div>
           </section>
 
           {/* CTA */}
-          <section className="bg-gradient-to-br from-purple-600/20 to-pink-600/20 p-8 rounded-xl border border-purple-500/20 text-center">
-            <h2 className="text-2xl font-bold mb-4">Analyze Growth Stocks with AI</h2>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-8 rounded-2xl text-center">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Analyze Growth Stocks with AI</h2>
+            <p className="text-[#868f97] mb-6 max-w-2xl mx-auto">
               Go beyond revenue growth. Our AI analyzes total addressable market, competitive positioning,
               unit economics, and management quality to identify the best growth opportunities.
             </p>
             <div className="flex gap-4 justify-center flex-wrap">
               <Link
                 href="/dashboard"
-                className="bg-purple-600 hover:bg-purple-500 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+                className="bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black px-8 py-3 rounded-2xl font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 Start Growth Research
               </Link>
               <Link
                 href="/learn/growth-investing"
-                className="bg-secondary hover:bg-secondary/80 px-8 py-3 rounded-lg font-medium transition-colors"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:bg-white/[0.05] hover:border-white/[0.15] px-8 py-3 rounded-2xl font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 Learn Growth Investing
               </Link>

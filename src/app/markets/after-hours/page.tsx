@@ -110,15 +110,15 @@ export default function AfterHoursPage() {
           ]),
         }}
       />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-screen bg-black text-white pt-20">
         <div className="max-w-7xl mx-auto px-6 py-12">
           {/* Breadcrumbs */}
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">
               Home
             </Link>
             {' / '}
-            <Link href="/markets" className="hover:text-foreground">
+            <Link href="/markets" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">
               Markets
             </Link>
             {' / '}
@@ -127,37 +127,37 @@ export default function AfterHoursPage() {
 
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-4xl font-bold mb-4">After Hours Trading & Stock Movers Today</h1>
-            <p className="text-xl text-muted-foreground">
-              Track stocks making big moves after the market closes. Monitor after hours trading from 4:00 PM - 8:00 PM ET.
+            <h1 className="text-4xl font-bold mb-4 text-balance">After Hours Trading & Stock Movers Today</h1>
+            <p className="text-xl text-[#868f97]">
+              Track stocks making big moves after the market closes. Monitor after hours trading from <span className="tabular-nums">4:00 PM - 8:00 PM ET</span>.
             </p>
           </div>
 
           {/* After Hours Trading Hours */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">After Hours Trading Hours</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">After Hours Trading Hours</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 <div className="text-3xl mb-3">🔔</div>
                 <h3 className="text-lg font-bold mb-2">Market Close</h3>
-                <p className="text-2xl font-bold text-blue-500 mb-2">4:00 PM ET</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-2xl font-bold text-[#479ffa] mb-2 tabular-nums">4:00 PM ET</p>
+                <p className="text-sm text-[#868f97]">
                   Regular trading session ends. After hours trading begins immediately.
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 <div className="text-3xl mb-3">📊</div>
                 <h3 className="text-lg font-bold mb-2">Active After Hours</h3>
-                <p className="text-2xl font-bold text-blue-500 mb-2">4:00 PM - 6:00 PM ET</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-2xl font-bold text-[#479ffa] mb-2 tabular-nums">4:00 PM - 6:00 PM ET</p>
+                <p className="text-sm text-[#868f97]">
                   Peak after hours activity. Earnings releases and highest liquidity.
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 <div className="text-3xl mb-3">🌙</div>
                 <h3 className="text-lg font-bold mb-2">Late After Hours</h3>
-                <p className="text-2xl font-bold text-blue-500 mb-2">6:00 PM - 8:00 PM ET</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-2xl font-bold text-[#479ffa] mb-2 tabular-nums">6:00 PM - 8:00 PM ET</p>
+                <p className="text-sm text-[#868f97]">
                   Extended hours continue. Significantly lower volume and liquidity.
                 </p>
               </div>
@@ -166,17 +166,17 @@ export default function AfterHoursPage() {
 
           {/* Live After Hours Data CTA */}
           <section className="mb-12">
-            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 p-8 rounded-xl border border-blue-500/20">
+            <div className="bg-gradient-to-r from-[#479ffa]/10 to-[#4ebe96]/10 p-8 rounded-2xl border border-[#479ffa]/20">
               <div className="flex items-center justify-between flex-wrap gap-4">
                 <div>
-                  <h2 className="text-2xl font-bold mb-2">View Live After Hours Movers</h2>
-                  <p className="text-muted-foreground">
+                  <h2 className="text-2xl font-bold mb-2 text-balance">View Live After Hours Movers</h2>
+                  <p className="text-[#868f97]">
                     Get real-time after hours data, extended hours quotes, and AI-powered analysis on our dashboard.
                   </p>
                 </div>
                 <Link
                   href="/dashboard"
-                  className="inline-block bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-lg font-medium transition-colors whitespace-nowrap"
+                  className="inline-block bg-[#479ffa] hover:bg-[#479ffa]/90 text-white px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out whitespace-nowrap focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                 >
                   Open Dashboard
                 </Link>
@@ -186,115 +186,115 @@ export default function AfterHoursPage() {
 
           {/* Why After Hours Trading Matters */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Why After Hours Trading Matters</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Why After Hours Trading Matters</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 <h3 className="text-lg font-bold mb-3 flex items-center gap-2">
-                  <span className="text-blue-500">📰</span>
+                  <span className="text-[#479ffa]">📰</span>
                   Earnings Season Activity
                 </h3>
-                <p className="text-muted-foreground mb-4">
-                  Many companies release quarterly earnings after the market closes (4:00-5:30 PM ET). After hours trading allows investors to react immediately to earnings beats, misses, and guidance changes.
+                <p className="text-[#868f97] mb-4">
+                  Many companies release quarterly earnings after the market closes (<span className="tabular-nums">4:00-5:30 PM ET</span>). After hours trading allows investors to react immediately to earnings beats, misses, and guidance changes.
                 </p>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <ul className="space-y-2 text-sm text-[#868f97]">
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-500 mt-1">•</span>
-                    <span>Earnings announcements (typically 4:00-5:30 PM ET)</span>
+                    <span className="text-[#479ffa] mt-1">•</span>
+                    <span>Earnings announcements (typically <span className="tabular-nums">4:00-5:30 PM ET</span>)</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-500 mt-1">•</span>
+                    <span className="text-[#479ffa] mt-1">•</span>
                     <span>Post-earnings conference calls and management guidance</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-500 mt-1">•</span>
+                    <span className="text-[#479ffa] mt-1">•</span>
                     <span>Corporate announcements and press releases</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-500 mt-1">•</span>
+                    <span className="text-[#479ffa] mt-1">•</span>
                     <span>FDA approvals and regulatory decisions</span>
                   </li>
                 </ul>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 <h3 className="text-lg font-bold mb-3 flex items-center gap-2">
-                  <span className="text-blue-500">⚡</span>
+                  <span className="text-[#479ffa]">⚡</span>
                   React to Breaking News
                 </h3>
-                <p className="text-muted-foreground mb-4">
-                  After hours trading enables you to respond to late-breaking news, analyst reports, and market-moving events that occur after 4:00 PM ET.
+                <p className="text-[#868f97] mb-4">
+                  After hours trading enables you to respond to late-breaking news, analyst reports, and market-moving events that occur after <span className="tabular-nums">4:00 PM ET</span>.
                 </p>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <ul className="space-y-2 text-sm text-[#868f97]">
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-500 mt-1">•</span>
+                    <span className="text-[#479ffa] mt-1">•</span>
                     <span>Analyst upgrades and downgrades released after close</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-500 mt-1">•</span>
+                    <span className="text-[#479ffa] mt-1">•</span>
                     <span>M&A announcements and partnership deals</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-500 mt-1">•</span>
+                    <span className="text-[#479ffa] mt-1">•</span>
                     <span>Breaking news affecting specific companies or sectors</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-500 mt-1">•</span>
+                    <span className="text-[#479ffa] mt-1">•</span>
                     <span>Late-day Federal Reserve or government announcements</span>
                   </li>
                 </ul>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 <h3 className="text-lg font-bold mb-3 flex items-center gap-2">
-                  <span className="text-blue-500">🎯</span>
+                  <span className="text-[#479ffa]">🎯</span>
                   Position Before Next Day
                 </h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="text-[#868f97] mb-4">
                   Sophisticated traders use after hours to establish positions before the next trading day opens, capitalizing on earnings surprises or breaking news.
                 </p>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <ul className="space-y-2 text-sm text-[#868f97]">
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-500 mt-1">•</span>
+                    <span className="text-[#479ffa] mt-1">•</span>
                     <span>Enter positions on positive earnings before premarket rush</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-500 mt-1">•</span>
+                    <span className="text-[#479ffa] mt-1">•</span>
                     <span>Exit holdings on negative news before next day's selloff</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-500 mt-1">•</span>
+                    <span className="text-[#479ffa] mt-1">•</span>
                     <span>Lock in profits from regular hours moves</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-500 mt-1">•</span>
+                    <span className="text-[#479ffa] mt-1">•</span>
                     <span>Hedge portfolio positions against overnight risk</span>
                   </li>
                 </ul>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 <h3 className="text-lg font-bold mb-3 flex items-center gap-2">
-                  <span className="text-blue-500">📈</span>
+                  <span className="text-[#479ffa]">📈</span>
                   Gauge Market Sentiment
                 </h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="text-[#868f97] mb-4">
                   After hours price action reveals how investors interpret earnings and news, providing clues for the next day's market direction.
                 </p>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <ul className="space-y-2 text-sm text-[#868f97]">
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-500 mt-1">•</span>
+                    <span className="text-[#479ffa] mt-1">•</span>
                     <span>Initial market reaction to earnings quality and guidance</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-500 mt-1">•</span>
+                    <span className="text-[#479ffa] mt-1">•</span>
                     <span>Investor sentiment on corporate announcements</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-500 mt-1">•</span>
+                    <span className="text-[#479ffa] mt-1">•</span>
                     <span>Sector rotation signals from key stock movements</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-500 mt-1">•</span>
+                    <span className="text-[#479ffa] mt-1">•</span>
                     <span>Potential gap-up or gap-down scenarios for next day</span>
                   </li>
                 </ul>
@@ -304,52 +304,52 @@ export default function AfterHoursPage() {
 
           {/* How After Hours Trading Works */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">How After Hours Trading Works</h2>
-            <div className="bg-card p-8 rounded-xl border border-border">
+            <h2 className="text-2xl font-bold mb-6 text-balance">How After Hours Trading Works</h2>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <h3 className="text-lg font-bold mb-4 text-blue-500">Getting Started</h3>
+                  <h3 className="text-lg font-bold mb-4 text-[#479ffa]">Getting Started</h3>
                   <ol className="space-y-3">
                     <li className="flex items-start gap-3">
-                      <span className="bg-blue-500/20 text-blue-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm font-bold">
+                      <span className="bg-[#479ffa]/20 text-[#479ffa] rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm font-bold tabular-nums">
                         1
                       </span>
                       <div>
                         <p className="font-medium mb-1">Enable Extended Hours Trading</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-[#868f97]">
                           Most brokers require you to enable after hours trading in your account settings or sign an extended hours agreement.
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="bg-blue-500/20 text-blue-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm font-bold">
+                      <span className="bg-[#479ffa]/20 text-[#479ffa] rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm font-bold tabular-nums">
                         2
                       </span>
                       <div>
                         <p className="font-medium mb-1">Use Limit Orders Only</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-[#868f97]">
                           Market orders are not allowed after hours. Always set specific price limits to avoid poor execution.
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="bg-blue-500/20 text-blue-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm font-bold">
+                      <span className="bg-[#479ffa]/20 text-[#479ffa] rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm font-bold tabular-nums">
                         3
                       </span>
                       <div>
                         <p className="font-medium mb-1">Monitor Volume and Spreads</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-[#868f97]">
                           Check trading volume and bid-ask spreads. Only trade stocks with reasonable liquidity and clear catalysts.
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="bg-blue-500/20 text-blue-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm font-bold">
+                      <span className="bg-[#479ffa]/20 text-[#479ffa] rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm font-bold tabular-nums">
                         4
                       </span>
                       <div>
                         <p className="font-medium mb-1">Watch Earnings Calendar</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-[#868f97]">
                           Know which companies report earnings after the close. These stocks typically have the highest after hours activity.
                         </p>
                       </div>
@@ -358,49 +358,49 @@ export default function AfterHoursPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-bold mb-4 text-blue-500">Best Practices</h3>
+                  <h3 className="text-lg font-bold mb-4 text-[#479ffa]">Best Practices</h3>
                   <ul className="space-y-3">
                     <li className="flex items-start gap-2">
-                      <span className="text-blue-500 mt-1">✓</span>
+                      <span className="text-[#479ffa] mt-1">✓</span>
                       <div>
                         <p className="font-medium mb-1">Trade Stocks with News Catalysts</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-[#868f97]">
                           Focus on earnings releases, FDA approvals, or major announcements
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-blue-500 mt-1">✓</span>
+                      <span className="text-[#479ffa] mt-1">✓</span>
                       <div>
                         <p className="font-medium mb-1">Stick to Large-Cap Stocks</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-[#868f97]">
                           Big stocks have better after hours liquidity than small-caps
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-blue-500 mt-1">✓</span>
+                      <span className="text-[#479ffa] mt-1">✓</span>
                       <div>
                         <p className="font-medium mb-1">Be Cautious with Price Targets</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-[#868f97]">
                           Don't chase extreme prices; set realistic limits
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-blue-500 mt-1">✓</span>
+                      <span className="text-[#479ffa] mt-1">✓</span>
                       <div>
                         <p className="font-medium mb-1">Understand Price May Not Hold</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-[#868f97]">
                           After hours moves can reverse in premarket or at market open
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-blue-500 mt-1">✓</span>
+                      <span className="text-[#479ffa] mt-1">✓</span>
                       <div>
                         <p className="font-medium mb-1">Use Smaller Position Sizes</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-[#868f97]">
                           Higher risk warrants smaller positions than regular hours
                         </p>
                       </div>
@@ -413,89 +413,89 @@ export default function AfterHoursPage() {
 
           {/* Risks and Benefits */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">After Hours Trading: Risks & Benefits</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">After Hours Trading: Risks & Benefits</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-green-500/30">
-                <h3 className="text-lg font-bold mb-4 text-green-500 flex items-center gap-2">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-[#4ebe96]/30 rounded-2xl p-6 hover:bg-white/[0.05] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <h3 className="text-lg font-bold mb-4 text-[#4ebe96] flex items-center gap-2">
                   <span>✓</span> Benefits
                 </h3>
                 <ul className="space-y-3 text-sm">
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-0.5">•</span>
+                    <span className="text-[#4ebe96] mt-0.5">•</span>
                     <div>
-                      <strong className="text-foreground">React Immediately to Earnings:</strong>
-                      <span className="text-muted-foreground"> Trade on earnings releases without waiting for next day's open</span>
+                      <strong className="text-white">React Immediately to Earnings:</strong>
+                      <span className="text-[#868f97]"> Trade on earnings releases without waiting for next day's open</span>
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-0.5">•</span>
+                    <span className="text-[#4ebe96] mt-0.5">•</span>
                     <div>
-                      <strong className="text-foreground">Convenience for Day Traders:</strong>
-                      <span className="text-muted-foreground"> Manage positions outside of 9:30 AM - 4:00 PM ET window</span>
+                      <strong className="text-white">Convenience for Day Traders:</strong>
+                      <span className="text-[#868f97]"> Manage positions outside of <span className="tabular-nums">9:30 AM - 4:00 PM ET</span> window</span>
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-0.5">•</span>
+                    <span className="text-[#4ebe96] mt-0.5">•</span>
                     <div>
-                      <strong className="text-foreground">Early Position Entry:</strong>
-                      <span className="text-muted-foreground"> Get ahead of premarket and regular hours crowd</span>
+                      <strong className="text-white">Early Position Entry:</strong>
+                      <span className="text-[#868f97]"> Get ahead of premarket and regular hours crowd</span>
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-0.5">•</span>
+                    <span className="text-[#4ebe96] mt-0.5">•</span>
                     <div>
-                      <strong className="text-foreground">Risk Management:</strong>
-                      <span className="text-muted-foreground"> Exit losing positions on negative news before next day</span>
+                      <strong className="text-white">Risk Management:</strong>
+                      <span className="text-[#868f97]"> Exit losing positions on negative news before next day</span>
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-0.5">•</span>
+                    <span className="text-[#4ebe96] mt-0.5">•</span>
                     <div>
-                      <strong className="text-foreground">Price Discovery:</strong>
-                      <span className="text-muted-foreground"> See how market values new information immediately</span>
+                      <strong className="text-white">Price Discovery:</strong>
+                      <span className="text-[#868f97]"> See how market values new information immediately</span>
                     </div>
                   </li>
                 </ul>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-red-500/30">
-                <h3 className="text-lg font-bold mb-4 text-red-500 flex items-center gap-2">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-[#ff5c5c]/30 rounded-2xl p-6 hover:bg-white/[0.05] hover:border-[#ff5c5c]/50 motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <h3 className="text-lg font-bold mb-4 text-[#ff5c5c] flex items-center gap-2">
                   <span>!</span> Risks
                 </h3>
                 <ul className="space-y-3 text-sm">
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-0.5">•</span>
+                    <span className="text-[#ff5c5c] mt-0.5">•</span>
                     <div>
-                      <strong className="text-foreground">Low Liquidity:</strong>
-                      <span className="text-muted-foreground"> Volume is 80-90% lower than regular hours, making trades harder to execute</span>
+                      <strong className="text-white">Low Liquidity:</strong>
+                      <span className="text-[#868f97]"> Volume is <span className="tabular-nums">80-90%</span> lower than regular hours, making trades harder to execute</span>
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-0.5">•</span>
+                    <span className="text-[#ff5c5c] mt-0.5">•</span>
                     <div>
-                      <strong className="text-foreground">Wide Spreads:</strong>
-                      <span className="text-muted-foreground"> Bid-ask spreads can be 2-5x wider, increasing costs</span>
+                      <strong className="text-white">Wide Spreads:</strong>
+                      <span className="text-[#868f97]"> Bid-ask spreads can be <span className="tabular-nums">2-5x</span> wider, increasing costs</span>
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-0.5">•</span>
+                    <span className="text-[#ff5c5c] mt-0.5">•</span>
                     <div>
-                      <strong className="text-foreground">High Volatility:</strong>
-                      <span className="text-muted-foreground"> Prices can swing wildly on low volume trades</span>
+                      <strong className="text-white">High Volatility:</strong>
+                      <span className="text-[#868f97]"> Prices can swing wildly on low volume trades</span>
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-0.5">•</span>
+                    <span className="text-[#ff5c5c] mt-0.5">•</span>
                     <div>
-                      <strong className="text-foreground">Price Gaps:</strong>
-                      <span className="text-muted-foreground"> After hours prices may not hold at next day's open</span>
+                      <strong className="text-white">Price Gaps:</strong>
+                      <span className="text-[#868f97]"> After hours prices may not hold at next day's open</span>
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-0.5">•</span>
+                    <span className="text-[#ff5c5c] mt-0.5">•</span>
                     <div>
-                      <strong className="text-foreground">Limited Order Types:</strong>
-                      <span className="text-muted-foreground"> Only limit orders allowed; no stop losses or market orders</span>
+                      <strong className="text-white">Limited Order Types:</strong>
+                      <span className="text-[#868f97]"> Only limit orders allowed; no stop losses or market orders</span>
                     </div>
                   </li>
                 </ul>
@@ -505,15 +505,15 @@ export default function AfterHoursPage() {
 
           {/* FAQ Section */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {faqs.map((faq, index) => (
                 <div
                   key={index}
-                  className="bg-card p-6 rounded-xl border border-border"
+                  className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out"
                 >
                   <h3 className="text-lg font-bold mb-3">{faq.question}</h3>
-                  <p className="text-muted-foreground">{faq.answer}</p>
+                  <p className="text-[#868f97]">{faq.answer}</p>
                 </div>
               ))}
             </div>
@@ -521,91 +521,91 @@ export default function AfterHoursPage() {
 
           {/* After Hours Trading Tips */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">After Hours Trading Tips & Strategies</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">After Hours Trading Tips & Strategies</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 text-blue-500">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <h3 className="text-lg font-bold mb-3 text-[#479ffa]">
                   What to Watch After Hours
                 </h3>
-                <ul className="space-y-3 text-muted-foreground">
+                <ul className="space-y-3 text-[#868f97]">
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-500 mt-1">1.</span>
+                    <span className="text-[#479ffa] mt-1 tabular-nums">1.</span>
                     <div>
-                      <strong className="text-foreground">Earnings Calendar:</strong> Track which companies report after the close
+                      <strong className="text-white">Earnings Calendar:</strong> Track which companies report after the close
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-500 mt-1">2.</span>
+                    <span className="text-[#479ffa] mt-1 tabular-nums">2.</span>
                     <div>
-                      <strong className="text-foreground">Earnings Quality:</strong> Revenue beat/miss, EPS beat/miss, and guidance changes
+                      <strong className="text-white">Earnings Quality:</strong> Revenue beat/miss, EPS beat/miss, and guidance changes
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-500 mt-1">3.</span>
+                    <span className="text-[#479ffa] mt-1 tabular-nums">3.</span>
                     <div>
-                      <strong className="text-foreground">Conference Calls:</strong> Listen to management commentary and Q&A
+                      <strong className="text-white">Conference Calls:</strong> Listen to management commentary and Q&A
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-500 mt-1">4.</span>
+                    <span className="text-[#479ffa] mt-1 tabular-nums">4.</span>
                     <div>
-                      <strong className="text-foreground">Breaking News:</strong> FDA approvals, M&A deals, analyst calls
+                      <strong className="text-white">Breaking News:</strong> FDA approvals, M&A deals, analyst calls
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-500 mt-1">5.</span>
+                    <span className="text-[#479ffa] mt-1 tabular-nums">5.</span>
                     <div>
-                      <strong className="text-foreground">Volume Spikes:</strong> Unusual after hours volume indicates significant news
+                      <strong className="text-white">Volume Spikes:</strong> Unusual after hours volume indicates significant news
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-500 mt-1">6.</span>
+                    <span className="text-[#479ffa] mt-1 tabular-nums">6.</span>
                     <div>
-                      <strong className="text-foreground">Sector Trends:</strong> How are peers reacting to the same news?
+                      <strong className="text-white">Sector Trends:</strong> How are peers reacting to the same news?
                     </div>
                   </li>
                 </ul>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 text-red-500">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <h3 className="text-lg font-bold mb-3 text-[#ff5c5c]">
                   Common After Hours Mistakes to Avoid
                 </h3>
-                <ul className="space-y-3 text-muted-foreground">
+                <ul className="space-y-3 text-[#868f97]">
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">✗</span>
+                    <span className="text-[#ff5c5c] mt-1">✗</span>
                     <div>
-                      <strong className="text-foreground">Using Market Orders:</strong> Only limit orders work after hours
+                      <strong className="text-white">Using Market Orders:</strong> Only limit orders work after hours
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">✗</span>
+                    <span className="text-[#ff5c5c] mt-1">✗</span>
                     <div>
-                      <strong className="text-foreground">Chasing Initial Moves:</strong> Wait 15-30 minutes for volatility to settle
+                      <strong className="text-white">Chasing Initial Moves:</strong> Wait <span className="tabular-nums">15-30</span> minutes for volatility to settle
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">✗</span>
+                    <span className="text-[#ff5c5c] mt-1">✗</span>
                     <div>
-                      <strong className="text-foreground">Ignoring the Spread:</strong> Wide spreads can cost you 1-3% per trade
+                      <strong className="text-white">Ignoring the Spread:</strong> Wide spreads can cost you <span className="tabular-nums">1-3%</span> per trade
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">✗</span>
+                    <span className="text-[#ff5c5c] mt-1">✗</span>
                     <div>
-                      <strong className="text-foreground">Trading Thinly Traded Stocks:</strong> Stick to liquid large-caps
+                      <strong className="text-white">Trading Thinly Traded Stocks:</strong> Stick to liquid large-caps
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">✗</span>
+                    <span className="text-[#ff5c5c] mt-1">✗</span>
                     <div>
-                      <strong className="text-foreground">Assuming Prices Hold:</strong> After hours gaps often fill next day
+                      <strong className="text-white">Assuming Prices Hold:</strong> After hours gaps often fill next day
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">✗</span>
+                    <span className="text-[#ff5c5c] mt-1">✗</span>
                     <div>
-                      <strong className="text-foreground">Oversized Positions:</strong> Keep position sizes smaller due to higher risk
+                      <strong className="text-white">Oversized Positions:</strong> Keep position sizes smaller due to higher risk
                     </div>
                   </li>
                 </ul>
@@ -615,62 +615,62 @@ export default function AfterHoursPage() {
 
           {/* Related Market Pages */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Explore More Market Data</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Explore More Market Data</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <Link
                 href="/markets/premarket"
-                className="bg-card p-4 rounded-lg border border-border hover:border-blue-500/50 transition-colors text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <p className="text-2xl mb-2">🌅</p>
                 <p className="font-bold">Premarket</p>
-                <p className="text-xs text-muted-foreground mt-1">Before market opens</p>
+                <p className="text-xs text-[#868f97] mt-1">Before market opens</p>
               </Link>
               <Link
                 href="/markets/top-gainers"
-                className="bg-card p-4 rounded-lg border border-border hover:border-blue-500/50 transition-colors text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <p className="text-2xl mb-2">📈</p>
                 <p className="font-bold">Top Gainers</p>
-                <p className="text-xs text-muted-foreground mt-1">Biggest % increases</p>
+                <p className="text-xs text-[#868f97] mt-1">Biggest % increases</p>
               </Link>
               <Link
                 href="/markets/most-active"
-                className="bg-card p-4 rounded-lg border border-border hover:border-blue-500/50 transition-colors text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <p className="text-2xl mb-2">📊</p>
                 <p className="font-bold">Most Active</p>
-                <p className="text-xs text-muted-foreground mt-1">Highest volume</p>
+                <p className="text-xs text-[#868f97] mt-1">Highest volume</p>
               </Link>
               <Link
                 href="/markets/top-losers"
-                className="bg-card p-4 rounded-lg border border-border hover:border-blue-500/50 transition-colors text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <p className="text-2xl mb-2">📉</p>
                 <p className="font-bold">Top Losers</p>
-                <p className="text-xs text-muted-foreground mt-1">Biggest declines</p>
+                <p className="text-xs text-[#868f97] mt-1">Biggest declines</p>
               </Link>
             </div>
           </section>
 
           {/* CTA Section */}
-          <section className="bg-card p-8 rounded-xl border border-border text-center">
-            <h2 className="text-2xl font-bold mb-4">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 text-center">
+            <h2 className="text-2xl font-bold mb-4 text-balance">
               Start Trading Smarter with AI Analysis
             </h2>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+            <p className="text-[#868f97] mb-6 max-w-2xl mx-auto">
               Don't just track after hours movers—understand them. Our AI-powered platform analyzes earnings reports,
               news catalysts, and fundamental data to help you make informed after hours trading decisions.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Link
                 href="/dashboard"
-                className="inline-block bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+                className="inline-block bg-[#479ffa] hover:bg-[#479ffa]/90 text-white px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 View Live After Hours Data
               </Link>
               <Link
                 href="/markets"
-                className="inline-block bg-card hover:bg-muted text-foreground px-8 py-3 rounded-lg font-medium transition-colors border border-border"
+                className="inline-block bg-white/[0.03] hover:bg-white/[0.05] text-white px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out border border-white/[0.08] hover:border-white/[0.15] focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 Explore All Markets
               </Link>

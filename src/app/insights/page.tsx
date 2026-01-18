@@ -80,10 +80,10 @@ export default function InsightsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbSchema, articleSchema]) }}
       />
       <Header />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-screen bg-black text-white pt-20">
         <div className="max-w-6xl mx-auto px-6 py-12">
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Home</Link>
             {' / '}
             <span>Insights</span>
           </nav>
@@ -92,7 +92,7 @@ export default function InsightsPage() {
             <h1 className="text-5xl font-bold mb-4">
               Stock Market Insights 2026
             </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl">
+            <p className="text-xl text-[#868f97] max-w-3xl">
               Expert predictions, comprehensive analysis, and top stock picks for 2026.
               Make informed investment decisions with AI-powered insights and data-driven research.
             </p>
@@ -100,13 +100,13 @@ export default function InsightsPage() {
 
           {/* Prediction Accuracy Summary Banner */}
           <section className="mb-12">
-            <Link href="/insights/prediction-accuracy" className="block hover:opacity-90 transition-opacity">
+            <Link href="/insights/prediction-accuracy" className="block hover:opacity-90 motion-safe:transition-all motion-safe:duration-150 ease-out">
               <PredictionAccuracy />
             </Link>
             <div className="mt-3 text-center">
               <Link
                 href="/insights/prediction-accuracy"
-                className="text-emerald-500 hover:text-emerald-400 font-medium text-sm inline-flex items-center gap-1"
+                className="text-[#4ebe96] hover:text-[#4ebe96]/80 font-medium text-sm inline-flex items-center gap-1 motion-safe:transition-all motion-safe:duration-150 ease-out"
               >
                 View Full Track Record
                 <span>→</span>
@@ -122,36 +122,36 @@ export default function InsightsPage() {
                 <Link
                   key={insight.href}
                   href={insight.href}
-                  className={`group bg-card p-8 rounded-xl border transition-all duration-300 ${
+                  className={`group bg-white/[0.03] backdrop-blur-[10px] p-8 rounded-2xl border motion-safe:transition-all motion-safe:duration-150 ease-out ${
                     insight.featured
-                      ? 'border-emerald-500/50 hover:border-emerald-500 bg-gradient-to-br from-emerald-500/10 to-transparent'
-                      : 'border-border hover:border-green-500/50'
+                      ? 'border-[#4ebe96]/50 hover:border-[#4ebe96] bg-gradient-to-br from-[#4ebe96]/10 to-transparent'
+                      : 'border-white/[0.08] hover:border-white/[0.15]'
                   }`}
                 >
                   <div className="flex items-start gap-4 mb-4">
                     <span className="text-4xl">{insight.icon}</span>
                     <div className="flex-1">
                       <span className={`text-xs font-medium uppercase tracking-wider ${
-                        insight.featured ? 'text-emerald-500' : 'text-green-500'
+                        insight.featured ? 'text-[#4ebe96]' : 'text-[#4ebe96]'
                       }`}>
                         {insight.category}
                       </span>
-                      <h3 className="text-2xl font-bold mt-1 group-hover:text-green-500 transition-colors">
+                      <h3 className="text-2xl font-bold mt-1 group-hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out">
                         {insight.title}
                       </h3>
                     </div>
                     {insight.featured && (
-                      <span className="bg-emerald-500/20 text-emerald-500 text-xs px-2 py-1 rounded-full font-medium">
+                      <span className="bg-[#4ebe96]/20 text-[#4ebe96] text-xs px-2 py-1 rounded-full font-medium">
                         New
                       </span>
                     )}
                   </div>
-                  <p className="text-muted-foreground mb-4">
+                  <p className="text-[#868f97] mb-4">
                     {insight.description}
                   </p>
-                  <span className="text-green-500 font-medium inline-flex items-center gap-2">
+                  <span className="text-[#4ebe96] font-medium inline-flex items-center gap-2">
                     Read Full Analysis
-                    <span className="group-hover:translate-x-1 transition-transform">→</span>
+                    <span className="group-hover:translate-x-1 motion-safe:transition-all motion-safe:duration-150 ease-out">→</span>
                   </span>
                 </Link>
               ))}
@@ -162,24 +162,24 @@ export default function InsightsPage() {
           <section className="mb-16">
             <h2 className="text-3xl font-bold mb-6">2026 Market Trends</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                 <div className="text-3xl mb-3">🚀</div>
                 <h3 className="text-lg font-bold mb-2">AI Revolution</h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-[#868f97]">
                   Artificial intelligence continues to drive market growth with enterprise adoption accelerating
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                 <div className="text-3xl mb-3">💹</div>
                 <h3 className="text-lg font-bold mb-2">Rate Normalization</h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-[#868f97]">
                   Interest rates stabilizing creating opportunities across growth and value stocks
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                 <div className="text-3xl mb-3">🌍</div>
                 <h3 className="text-lg font-bold mb-2">Global Expansion</h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-[#868f97]">
                   Emerging markets and international growth driving diversification strategies
                 </p>
               </div>
@@ -190,35 +190,35 @@ export default function InsightsPage() {
           <section className="mb-16">
             <h2 className="text-3xl font-bold mb-6">Explore by Category</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <Link href="/best-stocks/tech" className="bg-secondary p-4 rounded-lg hover:bg-secondary/80 transition-colors text-center">
+              <Link href="/best-stocks/tech" className="bg-white/[0.03] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] border border-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out text-center">
                 <div className="text-2xl mb-2">💻</div>
                 <p className="font-medium">Tech Stocks</p>
               </Link>
-              <Link href="/best-stocks/growth" className="bg-secondary p-4 rounded-lg hover:bg-secondary/80 transition-colors text-center">
+              <Link href="/best-stocks/growth" className="bg-white/[0.03] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] border border-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out text-center">
                 <div className="text-2xl mb-2">📈</div>
                 <p className="font-medium">Growth Stocks</p>
               </Link>
-              <Link href="/best-stocks/dividend" className="bg-secondary p-4 rounded-lg hover:bg-secondary/80 transition-colors text-center">
+              <Link href="/best-stocks/dividend" className="bg-white/[0.03] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] border border-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out text-center">
                 <div className="text-2xl mb-2">💵</div>
                 <p className="font-medium">Dividend Stocks</p>
               </Link>
-              <Link href="/best-stocks/value" className="bg-secondary p-4 rounded-lg hover:bg-secondary/80 transition-colors text-center">
+              <Link href="/best-stocks/value" className="bg-white/[0.03] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] border border-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out text-center">
                 <div className="text-2xl mb-2">💎</div>
                 <p className="font-medium">Value Stocks</p>
               </Link>
-              <Link href="/best-stocks/healthcare" className="bg-secondary p-4 rounded-lg hover:bg-secondary/80 transition-colors text-center">
+              <Link href="/best-stocks/healthcare" className="bg-white/[0.03] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] border border-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out text-center">
                 <div className="text-2xl mb-2">🏥</div>
                 <p className="font-medium">Healthcare</p>
               </Link>
-              <Link href="/best-stocks/energy" className="bg-secondary p-4 rounded-lg hover:bg-secondary/80 transition-colors text-center">
+              <Link href="/best-stocks/energy" className="bg-white/[0.03] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] border border-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out text-center">
                 <div className="text-2xl mb-2">⚡</div>
                 <p className="font-medium">Energy</p>
               </Link>
-              <Link href="/sectors" className="bg-secondary p-4 rounded-lg hover:bg-secondary/80 transition-colors text-center">
+              <Link href="/sectors" className="bg-white/[0.03] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] border border-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out text-center">
                 <div className="text-2xl mb-2">🏭</div>
                 <p className="font-medium">All Sectors</p>
               </Link>
-              <Link href="/dashboard" className="bg-green-600/20 text-green-500 p-4 rounded-lg hover:bg-green-600/30 transition-colors text-center">
+              <Link href="/dashboard" className="bg-[#4ebe96]/20 text-[#4ebe96] p-4 rounded-2xl hover:bg-[#4ebe96]/30 border border-[#4ebe96]/30 motion-safe:transition-all motion-safe:duration-150 ease-out text-center">
                 <div className="text-2xl mb-2">🔍</div>
                 <p className="font-medium">Research Tool</p>
               </Link>
@@ -226,15 +226,15 @@ export default function InsightsPage() {
           </section>
 
           {/* CTA */}
-          <section className="bg-gradient-to-br from-green-600/20 to-green-600/5 p-10 rounded-2xl border border-green-500/20 text-center">
+          <section className="bg-gradient-to-br from-[#4ebe96]/20 to-[#4ebe96]/5 p-10 rounded-2xl border border-[#4ebe96]/20 text-center">
             <h2 className="text-3xl font-bold mb-4">Get AI-Powered Stock Analysis</h2>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+            <p className="text-[#868f97] mb-6 max-w-2xl mx-auto">
               Access detailed DCF valuations, AI insights, financial analysis, and real-time data for any stock.
               Make smarter investment decisions backed by data.
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+              className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-black px-8 py-3 rounded-full font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
             >
               Start Researching Now
             </Link>

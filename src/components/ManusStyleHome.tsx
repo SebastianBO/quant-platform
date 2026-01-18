@@ -238,7 +238,7 @@ const TaskItem = memo(function TaskItem({ task }: { task: Task }) {
       ) : task.status === 'running' ? (
         <Loader2 className="w-4 h-4 motion-safe:animate-spin text-[#479ffa]" />
       ) : (
-        <div className="w-4 h-4 rounded-full border border-white/[0.15]" />
+        <div className="size-4 rounded-full border border-white/[0.08]" />
       )}
       <span className={task.status === 'completed' ? 'text-[#868f97]' : 'text-white'}>
         {task.description}
@@ -932,7 +932,7 @@ export default function ManusStyleHome() {
       {/* Left Sidebar - Hidden on mobile */}
       <aside
         className={cn(
-          "hidden md:flex flex-col py-4 border-r border-white/[0.08] bg-white/[0.02] motion-safe:transition-[width] duration-250 ease-out",
+          "hidden md:flex flex-col py-4 border-r border-white/[0.08] bg-white/[0.03] motion-safe:transition-[width] duration-150 ease-out",
           sidebarExpanded ? "w-52" : "w-14"
         )}
         onMouseEnter={() => setSidebarExpanded(true)}
@@ -1224,7 +1224,7 @@ export default function ManusStyleHome() {
                                         // Focus the input
                                         textareaRef.current?.focus()
                                       }}
-                                      className="px-3 py-1.5 text-xs rounded-full border border-white/[0.08] bg-white/[0.05] text-[#868f97] hover:bg-white/[0.08] hover:text-white hover:border-[#4ebe96]/50 motion-safe:transition-colors duration-150 ease-out cursor-pointer"
+                                      className="px-3 py-1.5 text-xs rounded-full border border-white/[0.08] bg-white/[0.03] text-[#868f97] hover:bg-white/[0.05] hover:text-white hover:border-white/[0.15] motion-safe:transition-colors duration-150 ease-out cursor-pointer"
                                     >
                                       {tag.label}
                                     </button>

@@ -173,63 +173,63 @@ export default async function LowPERatioPage() {
           __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema, itemListSchema]),
         }}
       />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-dvh bg-black text-white pt-20">
         <div className="max-w-6xl mx-auto px-6 py-12">
           {/* Breadcrumbs */}
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Home</Link>
             {' / '}
-            <Link href="/screener" className="hover:text-foreground">Stock Screener</Link>
+            <Link href="/screener" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Stock Screener</Link>
             {' / '}
             <span>Low P/E Ratio</span>
           </nav>
 
           {/* Header */}
           <header className="mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-balance">
               Low P/E Ratio Stocks
             </h1>
-            <p className="text-xl text-muted-foreground mb-4">
+            <p className="text-xl text-[#868f97] mb-4">
               Undervalued stocks with P/E ratios below 15 - screened for value investors seeking profitable
               companies trading at attractive valuations.
             </p>
             <div className="flex flex-wrap gap-4 text-sm">
-              <div className="bg-blue-600/20 text-blue-400 px-4 py-2 rounded-lg">
+              <div className="bg-[#479ffa]/20 text-[#479ffa] px-4 py-2 rounded-lg">
                 Filter: P/E Ratio &lt; 15
               </div>
-              <div className="bg-secondary px-4 py-2 rounded-lg">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] px-4 py-2 rounded-lg">
                 {displayStocks?.length || LOW_PE_STOCKS.length} Stocks Found
               </div>
-              <div className="bg-secondary px-4 py-2 rounded-lg">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] px-4 py-2 rounded-lg">
                 Market Cap &gt; $1B
               </div>
             </div>
           </header>
 
           {/* Value Investing Quote */}
-          <section className="bg-gradient-to-br from-blue-600/10 to-purple-600/10 p-6 rounded-xl border border-blue-500/20 mb-8">
-            <blockquote className="text-lg italic text-muted-foreground mb-2">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl mb-8">
+            <blockquote className="text-lg italic text-[#868f97] mb-2">
               "Price is what you pay. Value is what you get."
             </blockquote>
-            <p className="text-sm text-blue-400">- Warren Buffett</p>
+            <p className="text-sm text-[#479ffa]">- Warren Buffett</p>
             <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-card/50 p-4 rounded-lg">
-                <h3 className="font-bold mb-2">Margin of Safety</h3>
-                <p className="text-sm text-muted-foreground">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl">
+                <h3 className="font-bold mb-2 text-balance">Margin of Safety</h3>
+                <p className="text-sm text-[#868f97]">
                   Low P/E stocks provide downside protection. If a $10 stock earns $1/share (P/E 10),
                   even if it drops 50%, it still trades at P/E 5 - usually attractive to buyers.
                 </p>
               </div>
-              <div className="bg-card/50 p-4 rounded-lg">
-                <h3 className="font-bold mb-2">Mean Reversion</h3>
-                <p className="text-sm text-muted-foreground">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl">
+                <h3 className="font-bold mb-2 text-balance">Mean Reversion</h3>
+                <p className="text-sm text-[#868f97]">
                   P/E ratios tend to revert toward industry and historical averages over time.
                   Low P/E stocks have more upside as valuations normalize.
                 </p>
               </div>
-              <div className="bg-card/50 p-4 rounded-lg">
-                <h3 className="font-bold mb-2">Earnings Yield</h3>
-                <p className="text-sm text-muted-foreground">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl">
+                <h3 className="font-bold mb-2 text-balance">Earnings Yield</h3>
+                <p className="text-sm text-[#868f97]">
                   P/E of 10 = 10% earnings yield. Compare to bond yields: if stocks yield 10%
                   and bonds yield 5%, stocks offer better value (all else equal).
                 </p>
@@ -239,27 +239,27 @@ export default async function LowPERatioPage() {
 
           {/* Key Metrics Summary */}
           <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-card p-4 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-1">Average P/E</p>
-              <p className="text-2xl font-bold text-blue-400">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl">
+              <p className="text-sm text-[#868f97] mb-1">Average P/E</p>
+              <p className="text-2xl font-bold text-[#479ffa] tabular-nums">
                 {(LOW_PE_STOCKS.reduce((sum, s) => sum + s.pe, 0) / LOW_PE_STOCKS.length).toFixed(1)}
               </p>
             </div>
-            <div className="bg-card p-4 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-1">Lowest P/E</p>
-              <p className="text-2xl font-bold text-green-500">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl">
+              <p className="text-sm text-[#868f97] mb-1">Lowest P/E</p>
+              <p className="text-2xl font-bold text-[#4ebe96] tabular-nums">
                 {LOW_PE_STOCKS[0].pe.toFixed(1)}
               </p>
             </div>
-            <div className="bg-card p-4 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-1">S&P 500 P/E</p>
-              <p className="text-2xl font-bold text-muted-foreground">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl">
+              <p className="text-sm text-[#868f97] mb-1">S&P 500 P/E</p>
+              <p className="text-2xl font-bold text-[#868f97] tabular-nums">
                 ~22
               </p>
             </div>
-            <div className="bg-card p-4 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-1">Discount vs S&P</p>
-              <p className="text-2xl font-bold text-green-500">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl">
+              <p className="text-sm text-[#868f97] mb-1">Discount vs S&P</p>
+              <p className="text-2xl font-bold text-[#4ebe96] tabular-nums">
                 {Math.round((1 - (LOW_PE_STOCKS.reduce((sum, s) => sum + s.pe, 0) / LOW_PE_STOCKS.length) / 22) * 100)}%
               </p>
             </div>
@@ -267,12 +267,12 @@ export default async function LowPERatioPage() {
 
           {/* Stock Table - Database or Curated */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Top Low P/E Value Stocks</h2>
-            <div className="bg-card border border-border rounded-xl overflow-hidden">
+            <h2 className="text-2xl font-bold mb-6 text-balance">Top Low P/E Value Stocks</h2>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-secondary/50">
-                    <tr className="border-b border-border">
+                  <thead className="bg-white/[0.03]">
+                    <tr className="border-b border-white/[0.08]">
                       <th className="px-4 py-3 text-left text-sm font-semibold">#</th>
                       <th className="px-4 py-3 text-left text-sm font-semibold">Ticker</th>
                       <th className="px-4 py-3 text-left text-sm font-semibold">Company</th>
@@ -282,63 +282,63 @@ export default async function LowPERatioPage() {
                       <th className="px-4 py-3 text-right text-sm font-semibold">Market Cap</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-border">
+                  <tbody className="divide-y divide-white/[0.08]">
                     {displayStocks ? (
                       displayStocks.map((stock, index) => (
-                        <tr key={stock.ticker} className="hover:bg-secondary/30 transition-colors">
-                          <td className="px-4 py-3 text-sm text-muted-foreground">{index + 1}</td>
+                        <tr key={stock.ticker} className="hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                          <td className="px-4 py-3 text-sm text-[#868f97] tabular-nums">{index + 1}</td>
                           <td className="px-4 py-3">
                             <Link
                               href={`/stock/${stock.ticker.toLowerCase()}`}
-                              className="font-bold text-blue-400 hover:text-blue-300 hover:underline"
+                              className="font-bold text-[#479ffa] hover:text-[#479ffa]/80 hover:underline motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none rounded"
                             >
                               {stock.ticker}
                             </Link>
                           </td>
                           <td className="px-4 py-3 text-sm">
-                            <Link href={`/stock/${stock.ticker.toLowerCase()}`} className="hover:underline">
+                            <Link href={`/stock/${stock.ticker.toLowerCase()}`} className="hover:underline motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none rounded">
                               {stock.company_name || stock.ticker}
                             </Link>
                           </td>
-                          <td className="px-4 py-3 text-sm text-muted-foreground">{stock.sector || '---'}</td>
+                          <td className="px-4 py-3 text-sm text-[#868f97]">{stock.sector || '---'}</td>
                           <td className="px-4 py-3 text-right">
-                            <span className={`font-bold ${stock.pe_ratio && stock.pe_ratio < 10 ? 'text-green-500' : 'text-blue-400'}`}>
+                            <span className={`font-bold tabular-nums ${stock.pe_ratio && stock.pe_ratio < 10 ? 'text-[#4ebe96]' : 'text-[#479ffa]'}`}>
                               {stock.pe_ratio?.toFixed(1) || '---'}
                             </span>
                           </td>
-                          <td className="px-4 py-3 text-right text-sm text-muted-foreground">---</td>
-                          <td className="px-4 py-3 text-right text-sm font-medium">
+                          <td className="px-4 py-3 text-right text-sm text-[#868f97] tabular-nums">---</td>
+                          <td className="px-4 py-3 text-right text-sm font-medium tabular-nums">
                             {stock.market_cap ? formatMarketCap(stock.market_cap) : '---'}
                           </td>
                         </tr>
                       ))
                     ) : (
                       LOW_PE_STOCKS.map((stock, index) => (
-                        <tr key={stock.ticker} className="hover:bg-secondary/30 transition-colors">
-                          <td className="px-4 py-3 text-sm text-muted-foreground">{index + 1}</td>
+                        <tr key={stock.ticker} className="hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                          <td className="px-4 py-3 text-sm text-[#868f97] tabular-nums">{index + 1}</td>
                           <td className="px-4 py-3">
                             <Link
                               href={`/stock/${stock.ticker.toLowerCase()}`}
-                              className="font-bold text-blue-400 hover:text-blue-300 hover:underline"
+                              className="font-bold text-[#479ffa] hover:text-[#479ffa]/80 hover:underline motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none rounded"
                             >
                               {stock.ticker}
                             </Link>
                           </td>
                           <td className="px-4 py-3 text-sm">
-                            <Link href={`/stock/${stock.ticker.toLowerCase()}`} className="hover:underline">
+                            <Link href={`/stock/${stock.ticker.toLowerCase()}`} className="hover:underline motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none rounded">
                               {stock.name}
                             </Link>
                           </td>
-                          <td className="px-4 py-3 text-sm text-muted-foreground">{stock.sector}</td>
+                          <td className="px-4 py-3 text-sm text-[#868f97]">{stock.sector}</td>
                           <td className="px-4 py-3 text-right">
-                            <span className={`font-bold ${stock.pe < 10 ? 'text-green-500' : 'text-blue-400'}`}>
+                            <span className={`font-bold tabular-nums ${stock.pe < 10 ? 'text-[#4ebe96]' : 'text-[#479ffa]'}`}>
                               {stock.pe.toFixed(1)}
                             </span>
                           </td>
-                          <td className="px-4 py-3 text-right text-sm text-muted-foreground">
+                          <td className="px-4 py-3 text-right text-sm text-[#868f97] tabular-nums">
                             {stock.forwardPe.toFixed(1)}
                           </td>
-                          <td className="px-4 py-3 text-right text-sm font-medium">{stock.marketCap}</td>
+                          <td className="px-4 py-3 text-right text-sm font-medium tabular-nums">{stock.marketCap}</td>
                         </tr>
                       ))
                     )}
@@ -350,41 +350,41 @@ export default async function LowPERatioPage() {
 
           {/* P/E Ratio Tiers */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Understanding P/E Ratio Tiers</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Understanding P/E Ratio Tiers</h2>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="bg-card p-5 rounded-xl border-2 border-green-500/30">
-                <h3 className="font-bold text-green-500 mb-2">Deep Value (P/E &lt; 10)</h3>
-                <p className="text-sm text-muted-foreground mb-3">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border-2 border-[#4ebe96]/30 p-5 rounded-2xl">
+                <h3 className="font-bold text-[#4ebe96] mb-2 text-balance">Deep Value (P/E &lt; 10)</h3>
+                <p className="text-sm text-[#868f97] mb-3">
                   Extremely cheap stocks. May indicate opportunity or problems. Requires careful analysis.
                 </p>
-                <div className="text-xs bg-green-500/10 p-2 rounded">
+                <div className="text-xs bg-[#4ebe96]/10 p-2 rounded tabular-nums">
                   Earnings Yield: &gt;10%
                 </div>
               </div>
-              <div className="bg-card p-5 rounded-xl border-2 border-blue-500/30">
-                <h3 className="font-bold text-blue-400 mb-2">Value (P/E 10-15)</h3>
-                <p className="text-sm text-muted-foreground mb-3">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border-2 border-[#479ffa]/30 p-5 rounded-2xl">
+                <h3 className="font-bold text-[#479ffa] mb-2 text-balance">Value (P/E 10-15)</h3>
+                <p className="text-sm text-[#868f97] mb-3">
                   Classic value territory. Often mature, stable businesses at reasonable prices.
                 </p>
-                <div className="text-xs bg-blue-500/10 p-2 rounded">
+                <div className="text-xs bg-[#479ffa]/10 p-2 rounded tabular-nums">
                   Earnings Yield: 6.7-10%
                 </div>
               </div>
-              <div className="bg-card p-5 rounded-xl border-2 border-yellow-500/30">
-                <h3 className="font-bold text-yellow-500 mb-2">Fair Value (P/E 15-25)</h3>
-                <p className="text-sm text-muted-foreground mb-3">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border-2 border-[#ffa16c]/30 p-5 rounded-2xl">
+                <h3 className="font-bold text-[#ffa16c] mb-2 text-balance">Fair Value (P/E 15-25)</h3>
+                <p className="text-sm text-[#868f97] mb-3">
                   Market average range. Appropriate for quality companies with moderate growth.
                 </p>
-                <div className="text-xs bg-yellow-500/10 p-2 rounded">
+                <div className="text-xs bg-[#ffa16c]/10 p-2 rounded tabular-nums">
                   Earnings Yield: 4-6.7%
                 </div>
               </div>
-              <div className="bg-card p-5 rounded-xl border-2 border-red-500/30">
-                <h3 className="font-bold text-red-400 mb-2">Growth Premium (P/E &gt; 25)</h3>
-                <p className="text-sm text-muted-foreground mb-3">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border-2 border-[#ff5c5c]/30 p-5 rounded-2xl">
+                <h3 className="font-bold text-[#ff5c5c] mb-2 text-balance">Growth Premium (P/E &gt; 25)</h3>
+                <p className="text-sm text-[#868f97] mb-3">
                   High valuations requiring strong growth to justify. Higher risk if growth disappoints.
                 </p>
-                <div className="text-xs bg-red-500/10 p-2 rounded">
+                <div className="text-xs bg-[#ff5c5c]/10 p-2 rounded tabular-nums">
                   Earnings Yield: &lt;4%
                 </div>
               </div>
@@ -393,27 +393,27 @@ export default async function LowPERatioPage() {
 
           {/* Screening Criteria */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Our Screening Criteria</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Our Screening Criteria</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 text-blue-400">P/E Ratio &lt; 15</h3>
-                <p className="text-muted-foreground mb-4">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl">
+                <h3 className="text-lg font-bold mb-3 text-[#479ffa] text-balance">P/E Ratio &lt; 15</h3>
+                <p className="text-[#868f97] mb-4">
                   We screen for stocks with trailing P/E ratios below 15, representing a discount to the
                   S&P 500 average of approximately 22. This identifies companies trading at attractive
                   valuations relative to their current earnings.
                 </p>
-                <div className="text-sm bg-secondary/50 p-3 rounded-lg">
+                <div className="text-sm bg-white/[0.03] border border-white/[0.08] p-3 rounded-lg">
                   <strong>Formula:</strong> P/E = Stock Price / Earnings Per Share (TTM)
                 </div>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 text-green-400">Quality Filters</h3>
-                <p className="text-muted-foreground mb-4">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl">
+                <h3 className="text-lg font-bold mb-3 text-[#4ebe96] text-balance">Quality Filters</h3>
+                <p className="text-[#868f97] mb-4">
                   We require positive earnings (profitable companies only) and minimum $1B market cap
                   to ensure adequate liquidity and exclude speculative micro-caps. This focuses on
                   established businesses with proven profitability.
                 </p>
-                <div className="text-sm bg-secondary/50 p-3 rounded-lg">
+                <div className="text-sm bg-white/[0.03] border border-white/[0.08] p-3 rounded-lg">
                   <strong>Warning:</strong> Always investigate WHY a stock has a low P/E before buying.
                 </div>
               </div>
@@ -421,19 +421,19 @@ export default async function LowPERatioPage() {
           </section>
 
           {/* Value Traps Warning */}
-          <section className="bg-red-500/10 border border-red-500/20 p-6 rounded-xl mb-12">
-            <h2 className="text-xl font-bold mb-4 text-red-400">Avoiding Value Traps</h2>
-            <p className="text-muted-foreground mb-4">
+          <section className="bg-[#ff5c5c]/10 border border-[#ff5c5c]/20 p-6 rounded-2xl mb-12">
+            <h2 className="text-xl font-bold mb-4 text-[#ff5c5c] text-balance">Avoiding Value Traps</h2>
+            <p className="text-[#868f97] mb-4">
               Not all low P/E stocks are good investments. Some are "value traps" - cheap for good reasons:
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <ul className="text-sm text-muted-foreground space-y-2">
+              <ul className="text-sm text-[#868f97] space-y-2">
                 <li>&#8226; Declining revenues or market share</li>
                 <li>&#8226; Industry disruption or obsolete products</li>
                 <li>&#8226; Cyclical peak earnings about to decline</li>
                 <li>&#8226; One-time earnings not sustainable</li>
               </ul>
-              <ul className="text-sm text-muted-foreground space-y-2">
+              <ul className="text-sm text-[#868f97] space-y-2">
                 <li>&#8226; Management or governance issues</li>
                 <li>&#8226; Heavy debt or financial stress</li>
                 <li>&#8226; Regulatory or legal problems</li>
@@ -447,15 +447,15 @@ export default async function LowPERatioPage() {
 
           {/* FAQs */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {faqs.map((faq, index) => (
-                <details key={index} className="bg-card p-6 rounded-xl border border-border group">
-                  <summary className="font-bold cursor-pointer list-none flex items-center justify-between">
+                <details key={index} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl group hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                  <summary className="font-bold cursor-pointer list-none flex items-center justify-between focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none rounded">
                     <span>{faq.question}</span>
-                    <span className="text-blue-400 group-open:rotate-180 transition-transform">&#9660;</span>
+                    <span className="text-[#479ffa] group-open:rotate-180 motion-safe:transition-all motion-safe:duration-150 ease-out">&#9660;</span>
                   </summary>
-                  <p className="text-muted-foreground mt-4 leading-relaxed">{faq.answer}</p>
+                  <p className="text-[#868f97] mt-4 leading-relaxed">{faq.answer}</p>
                 </details>
               ))}
             </div>
@@ -463,60 +463,60 @@ export default async function LowPERatioPage() {
 
           {/* Related Screeners */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Related Stock Screeners</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Related Stock Screeners</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <Link
                 href="/screener/high-dividend-yield"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out text-center focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none"
               >
                 <p className="text-2xl mb-2">&#128176;</p>
                 <p className="font-bold">High Dividend</p>
-                <p className="text-xs text-muted-foreground">Yield &gt; 3%</p>
+                <p className="text-xs text-[#868f97]">Yield &gt; 3%</p>
               </Link>
               <Link
                 href="/screener/large-cap"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out text-center focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none"
               >
                 <p className="text-2xl mb-2">&#127942;</p>
                 <p className="font-bold">Large Cap</p>
-                <p className="text-xs text-muted-foreground">Market cap &gt; $100B</p>
+                <p className="text-xs text-[#868f97]">Market cap &gt; $100B</p>
               </Link>
               <Link
                 href="/screener/high-growth"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out text-center focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none"
               >
                 <p className="text-2xl mb-2">&#128200;</p>
                 <p className="font-bold">High Growth</p>
-                <p className="text-xs text-muted-foreground">Revenue growth &gt; 20%</p>
+                <p className="text-xs text-[#868f97]">Revenue growth &gt; 20%</p>
               </Link>
               <Link
                 href="/screener/small-cap-gems"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out text-center focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none"
               >
                 <p className="text-2xl mb-2">&#128142;</p>
                 <p className="font-bold">Small Cap Gems</p>
-                <p className="text-xs text-muted-foreground">Quality small caps</p>
+                <p className="text-xs text-[#868f97]">Quality small caps</p>
               </Link>
             </div>
           </section>
 
           {/* CTA */}
-          <section className="bg-gradient-to-br from-blue-600/20 to-purple-600/20 p-8 rounded-xl border border-blue-500/20 text-center">
-            <h2 className="text-2xl font-bold mb-4">Deep Dive Value Analysis with AI</h2>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-8 rounded-2xl text-center">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Deep Dive Value Analysis with AI</h2>
+            <p className="text-[#868f97] mb-6 max-w-2xl mx-auto">
               Go beyond P/E ratios. Our AI analyzes intrinsic value using DCF models, compares to peers,
               evaluates competitive moats, and identifies potential value traps before you invest.
             </p>
             <div className="flex gap-4 justify-center flex-wrap">
               <Link
                 href="/dashboard"
-                className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+                className="bg-[#479ffa] hover:bg-[#479ffa]/80 text-white px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none"
               >
                 Start Value Research
               </Link>
               <Link
                 href="/learn/value-investing"
-                className="bg-secondary hover:bg-secondary/80 px-8 py-3 rounded-lg font-medium transition-colors"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:bg-white/[0.05] hover:border-white/[0.15] px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none"
               >
                 Learn Value Investing
               </Link>

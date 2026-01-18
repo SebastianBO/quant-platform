@@ -125,36 +125,36 @@ export default function PortfolioClient() {
     <div className="space-y-6">
       {/* Portfolio Summary */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-card p-4 rounded-xl border border-border">
-          <div className="flex items-center gap-2 text-muted-foreground mb-1">
+        <div className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-2xl border border-white/[0.08] hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+          <div className="flex items-center gap-2 text-[#868f97] mb-1">
             <DollarSign className="w-4 h-4" />
             <span className="text-xs">Portfolio Value</span>
           </div>
-          <p className="text-2xl font-bold">{formatMoney(totalValue)}</p>
+          <p className="text-2xl font-bold tabular-nums">{formatMoney(totalValue)}</p>
         </div>
-        <div className="bg-card p-4 rounded-xl border border-border">
-          <div className="flex items-center gap-2 text-muted-foreground mb-1">
+        <div className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-2xl border border-white/[0.08] hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+          <div className="flex items-center gap-2 text-[#868f97] mb-1">
             <TrendingUp className="w-4 h-4" />
             <span className="text-xs">Today</span>
           </div>
-          <p className={`text-2xl font-bold ${todayChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+          <p className={`text-2xl font-bold tabular-nums ${todayChange >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
             {todayChange >= 0 ? '+' : ''}{formatMoney(todayChange)}
           </p>
         </div>
-        <div className="bg-card p-4 rounded-xl border border-border">
-          <div className="flex items-center gap-2 text-muted-foreground mb-1">
+        <div className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-2xl border border-white/[0.08] hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+          <div className="flex items-center gap-2 text-[#868f97] mb-1">
             <PieChart className="w-4 h-4" />
             <span className="text-xs">Total Gain/Loss</span>
           </div>
-          <p className={`text-2xl font-bold ${totalGain >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+          <p className={`text-2xl font-bold tabular-nums ${totalGain >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
             {totalGain >= 0 ? '+' : ''}{formatMoney(totalGain)}
           </p>
         </div>
-        <div className="bg-card p-4 rounded-xl border border-border">
-          <div className="flex items-center gap-2 text-muted-foreground mb-1">
+        <div className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-2xl border border-white/[0.08] hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+          <div className="flex items-center gap-2 text-[#868f97] mb-1">
             <span className="text-xs">Return</span>
           </div>
-          <p className={`text-2xl font-bold ${totalGainPercent >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+          <p className={`text-2xl font-bold tabular-nums ${totalGainPercent >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
             {totalGainPercent >= 0 ? '+' : ''}{totalGainPercent.toFixed(2)}%
           </p>
         </div>
@@ -164,23 +164,23 @@ export default function PortfolioClient() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <button
           onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-500 text-white rounded-lg font-medium transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-[#4ebe96] hover:bg-[#45ab88] text-white rounded-full font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
         >
           <Plus className="w-4 h-4" />
           Add Stock
         </button>
         <div className="flex items-center gap-3">
           {lastUpdate && (
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs text-[#868f97]">
               Updated {lastUpdate.toLocaleTimeString()}
             </span>
           )}
           <button
             onClick={fetchQuotes}
             disabled={loading}
-            className="flex items-center gap-2 px-3 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors text-sm"
+            className="flex items-center gap-2 px-3 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] text-sm"
           >
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${loading ? 'motion-safe:animate-spin' : ''}`} />
             Refresh
           </button>
         </div>
@@ -188,25 +188,25 @@ export default function PortfolioClient() {
 
       {/* Holdings Table */}
       {holdings.length === 0 ? (
-        <div className="bg-card p-12 rounded-xl border border-border text-center">
-          <PieChart className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+        <div className="bg-white/[0.03] backdrop-blur-[10px] p-12 rounded-2xl border border-white/[0.08] hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center">
+          <PieChart className="w-12 h-12 text-[#868f97] mx-auto mb-4" />
           <h3 className="text-lg font-bold mb-2">No Holdings Yet</h3>
-          <p className="text-muted-foreground mb-4">
+          <p className="text-[#868f97] mb-4">
             Add your first stock to start tracking your portfolio
           </p>
           <button
             onClick={() => setShowAddModal(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-500 text-white rounded-lg font-medium transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[#4ebe96] hover:bg-[#45ab88] text-white rounded-full font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
           >
             <Plus className="w-4 h-4" />
             Add Stock
           </button>
         </div>
       ) : (
-        <div className="bg-card rounded-xl border border-border overflow-hidden">
+        <div className="bg-white/[0.03] backdrop-blur-[10px] rounded-2xl border border-white/[0.08] hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-secondary/50">
+              <thead className="bg-white/[0.02]">
                 <tr>
                   <th className="text-left py-3 px-4 font-medium">Symbol</th>
                   <th className="text-right py-3 px-4 font-medium">Shares</th>
@@ -228,29 +228,29 @@ export default function PortfolioClient() {
                   const isGainPositive = gain >= 0
 
                   return (
-                    <tr key={holding.id} className="border-t border-border/50 hover:bg-secondary/30">
+                    <tr key={holding.id} className="border-t border-white/[0.08] hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out">
                       <td className="py-3 px-4">
-                        <Link href={`/stock/${holding.symbol.toLowerCase()}`} className="font-bold text-green-500 hover:underline">
+                        <Link href={`/stock/${holding.symbol.toLowerCase()}`} className="font-bold text-[#4ebe96] hover:underline">
                           {holding.symbol}
                         </Link>
                       </td>
-                      <td className="text-right py-3 px-4">{holding.shares}</td>
-                      <td className="text-right py-3 px-4 font-mono">
+                      <td className="text-right py-3 px-4 tabular-nums">{holding.shares}</td>
+                      <td className="text-right py-3 px-4 tabular-nums">
                         {holding.currentPrice ? formatMoney(holding.currentPrice) : '-'}
                       </td>
-                      <td className={`text-right py-3 px-4 ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
+                      <td className={`text-right py-3 px-4 tabular-nums ${isPositive ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                         <span className="flex items-center justify-end gap-1">
                           {isPositive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
                           {holding.changePercent?.toFixed(2)}%
                         </span>
                       </td>
-                      <td className="text-right py-3 px-4 text-muted-foreground hidden md:table-cell">
+                      <td className="text-right py-3 px-4 text-[#868f97] hidden md:table-cell tabular-nums">
                         {holding.costBasis > 0 ? formatMoney(holding.costBasis) : '-'}
                       </td>
-                      <td className="text-right py-3 px-4 font-medium">
+                      <td className="text-right py-3 px-4 font-medium tabular-nums">
                         {formatMoney(value)}
                       </td>
-                      <td className={`text-right py-3 px-4 hidden md:table-cell ${isGainPositive ? 'text-green-500' : 'text-red-500'}`}>
+                      <td className={`text-right py-3 px-4 hidden md:table-cell tabular-nums ${isGainPositive ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                         {holding.costBasis > 0 ? (
                           <>
                             {isGainPositive ? '+' : ''}{formatMoney(gain)}
@@ -261,7 +261,7 @@ export default function PortfolioClient() {
                       <td className="text-right py-3 px-4">
                         <button
                           onClick={() => removeHolding(holding.id)}
-                          className="p-1 text-muted-foreground hover:text-red-500 transition-colors"
+                          className="p-1 text-[#868f97] hover:text-[#ff5c5c] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -278,10 +278,10 @@ export default function PortfolioClient() {
       {/* Add Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-card p-6 rounded-xl border border-border max-w-md w-full">
+          <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out max-w-md w-full">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-bold">Add Stock</h3>
-              <button onClick={() => setShowAddModal(false)} className="text-muted-foreground hover:text-foreground">
+              <button onClick={() => setShowAddModal(false)} className="text-[#868f97] hover:text-foreground motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -293,7 +293,7 @@ export default function PortfolioClient() {
                   placeholder="AAPL"
                   value={newSymbol}
                   onChange={(e) => setNewSymbol(e.target.value.toUpperCase())}
-                  className="w-full px-4 py-2 bg-secondary border border-border rounded-lg focus:border-green-500 focus:outline-none"
+                  className="w-full px-4 py-2 bg-white/[0.03] border border-white/[0.08] rounded-2xl motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none"
                 />
               </div>
               <div>
@@ -303,7 +303,7 @@ export default function PortfolioClient() {
                   placeholder="100"
                   value={newShares}
                   onChange={(e) => setNewShares(e.target.value)}
-                  className="w-full px-4 py-2 bg-secondary border border-border rounded-lg focus:border-green-500 focus:outline-none"
+                  className="w-full px-4 py-2 bg-white/[0.03] border border-white/[0.08] rounded-2xl motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none"
                 />
               </div>
               <div>
@@ -314,21 +314,21 @@ export default function PortfolioClient() {
                   placeholder="150.00"
                   value={newCostBasis}
                   onChange={(e) => setNewCostBasis(e.target.value)}
-                  className="w-full px-4 py-2 bg-secondary border border-border rounded-lg focus:border-green-500 focus:outline-none"
+                  className="w-full px-4 py-2 bg-white/[0.03] border border-white/[0.08] rounded-2xl motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none"
                 />
-                <p className="text-xs text-muted-foreground mt-1">Optional - used to calculate gains</p>
+                <p className="text-xs text-[#868f97] mt-1">Optional - used to calculate gains</p>
               </div>
               <div className="flex gap-3 pt-2">
                 <button
                   onClick={() => setShowAddModal(false)}
-                  className="flex-1 px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors"
+                  className="flex-1 px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={addHolding}
                   disabled={!newSymbol || !newShares}
-                  className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-500 disabled:bg-green-600/50 text-white rounded-lg transition-colors"
+                  className="flex-1 px-4 py-2 bg-[#4ebe96] hover:bg-[#45ab88] disabled:bg-[#4ebe96]/50 text-white rounded-full motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                 >
                   Add Stock
                 </button>

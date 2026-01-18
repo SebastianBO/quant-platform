@@ -23,10 +23,10 @@ export default function NewsCategories({ categories }: NewsCategoriesProps) {
             key={category.filter}
             onClick={() => setActiveCategory(category.filter)}
             className={`
-              flex items-center gap-2 px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-all
+              flex items-center gap-2 px-4 py-2 rounded-full font-medium whitespace-nowrap motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]
               ${activeCategory === category.filter
-                ? 'bg-green-500 text-white'
-                : 'bg-card text-muted-foreground hover:bg-card/80 border border-border hover:border-green-500/30'
+                ? 'bg-[#4ebe96] text-white'
+                : 'bg-white/[0.03] backdrop-blur-[10px] text-[#868f97] hover:bg-white/[0.05] border border-white/[0.08] hover:border-white/[0.15]'
               }
             `}
           >
@@ -37,8 +37,8 @@ export default function NewsCategories({ categories }: NewsCategoriesProps) {
       </div>
 
       {activeCategory !== 'all' && (
-        <div className="mt-4 p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
-          <p className="text-sm text-muted-foreground">
+        <div className="mt-4 p-3 bg-[#4ebe96]/10 border border-[#4ebe96]/20 rounded-2xl">
+          <p className="text-sm text-[#868f97]">
             Category filtering is coming soon. Currently showing all market news.
           </p>
         </div>

@@ -34,8 +34,8 @@ export function SubscriptionSuccessContent() {
   if (status === 'loading') {
     return (
       <div className="text-center">
-        <Loader2 className="w-12 h-12 text-[#4ebe96] mx-auto mb-4 animate-spin" />
-        <h1 className="text-2xl font-bold mb-2">Processing...</h1>
+        <Loader2 className="w-12 h-12 text-[#4ebe96] mx-auto mb-4 motion-safe:animate-spin" />
+        <h1 className="text-2xl font-bold mb-2 text-balance">Processing...</h1>
         <p className="text-[#868f97]">Confirming your subscription</p>
       </div>
     )
@@ -44,16 +44,16 @@ export function SubscriptionSuccessContent() {
   if (status === 'error') {
     return (
       <div className="text-center">
-        <div className="w-16 h-16 bg-[#f4a623]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div className="w-16 h-16 bg-[#ffa16c]/10 rounded-full flex items-center justify-center mx-auto mb-4">
           <span className="text-2xl">?</span>
         </div>
-        <h1 className="text-2xl font-bold mb-2">Something went wrong</h1>
+        <h1 className="text-2xl font-bold mb-2 text-balance">Something went wrong</h1>
         <p className="text-[#868f97] mb-6">
           We couldn&apos;t confirm your subscription. If you were charged, please contact support.
         </p>
         <Link
           href="/developers"
-          className="inline-flex items-center gap-2 text-[#4ebe96] hover:underline"
+          className="inline-flex items-center gap-2 text-[#4ebe96] hover:underline motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
         >
           Return to Developers page
         </Link>
@@ -67,21 +67,21 @@ export function SubscriptionSuccessContent() {
         <div className="w-16 h-16 bg-[#4ebe96]/10 rounded-full flex items-center justify-center mx-auto mb-4">
           <Check className="w-8 h-8 text-[#4ebe96]" />
         </div>
-        <h1 className="text-2xl font-bold mb-2">Welcome to Lician API!</h1>
+        <h1 className="text-2xl font-bold mb-2 text-balance">Welcome to Lician API!</h1>
         <p className="text-[#868f97]">
           Your subscription is now active. {email && `A confirmation has been sent to ${email}.`}
         </p>
       </div>
 
-      <div className="bg-[#1a1a1a] border border-white/[0.08] rounded-lg p-6 mb-6">
-        <h2 className="font-semibold mb-4 flex items-center gap-2">
+      <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 mb-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+        <h2 className="font-semibold mb-4 flex items-center gap-2 text-balance">
           <Key className="w-5 h-5" />
           Your API Key
         </h2>
         <p className="text-sm text-[#868f97] mb-4">
           Your API key will be sent to your email shortly. You can also generate additional keys from your dashboard.
         </p>
-        <div className="bg-[#4ebe96]/10 border border-[#4ebe96]/20 rounded-lg p-4">
+        <div className="bg-[#4ebe96]/10 border border-[#4ebe96]/20 rounded-2xl p-4">
           <p className="text-sm">
             <strong>What&apos;s included in your plan:</strong>
           </p>
@@ -96,7 +96,7 @@ export function SubscriptionSuccessContent() {
       </div>
 
       <div className="space-y-4">
-        <h2 className="font-bold">Next Steps</h2>
+        <h2 className="font-bold text-balance">Next Steps</h2>
         <div className="space-y-3">
           <div className="flex items-start gap-3 text-sm">
             <div className="w-6 h-6 bg-[#4ebe96]/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -115,7 +115,7 @@ export function SubscriptionSuccessContent() {
               <span className="text-xs font-bold text-[#4ebe96]">3</span>
             </div>
             <p>
-              Read our <Link href="/developers" className="text-[#4ebe96] hover:underline">API documentation</Link> to get started
+              Read our <Link href="/developers" className="text-[#4ebe96] hover:underline motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">API documentation</Link> to get started
             </p>
           </div>
         </div>
@@ -124,14 +124,14 @@ export function SubscriptionSuccessContent() {
       <div className="mt-8 pt-8 border-t border-white/[0.08] flex items-center justify-between">
         <Link
           href="/developers"
-          className="inline-flex items-center gap-2 text-[#4ebe96] hover:underline"
+          className="inline-flex items-center gap-2 text-[#4ebe96] hover:underline motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
         >
           <ArrowRight className="w-4 h-4" />
           View API Documentation
         </Link>
         <Link
           href="/api/stripe/portal"
-          className="text-sm text-[#868f97] hover:text-white transition-colors duration-100"
+          className="text-sm text-[#868f97] hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
         >
           Manage subscription
         </Link>
@@ -143,8 +143,8 @@ export function SubscriptionSuccessContent() {
 export function LoadingFallback() {
   return (
     <div className="text-center">
-      <Loader2 className="w-12 h-12 text-[#4ebe96] mx-auto mb-4 animate-spin" />
-      <h1 className="text-2xl font-bold mb-2">Loading...</h1>
+      <Loader2 className="w-12 h-12 text-[#4ebe96] mx-auto mb-4 motion-safe:animate-spin" />
+      <h1 className="text-2xl font-bold mb-2 text-balance">Loading...</h1>
       <p className="text-[#868f97]">Please wait</p>
     </div>
   )

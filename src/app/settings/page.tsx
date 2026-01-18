@@ -3,9 +3,6 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { createClient } from "@/lib/supabase-browser"
 import { ArrowLeft, User, Bell, Shield, CreditCard, Moon, LogOut } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -74,33 +71,37 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-green-500" />
+      <div className="min-h-dvh bg-black flex items-center justify-center">
+        <div className="motion-safe:animate-spin rounded-full h-8 w-8 border-t-2 border-[#4ebe96]" />
       </div>
     )
   }
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Card className="w-full max-w-md">
-          <CardContent className="py-12 text-center">
-            <p className="text-muted-foreground mb-4">Please sign in to access settings</p>
-            <Link href="/login">
-              <Button>Sign in</Button>
-            </Link>
-          </CardContent>
-        </Card>
+      <div className="min-h-dvh bg-black flex items-center justify-center">
+        <div className="w-full max-w-md bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-12 text-center">
+          <p className="text-[#868f97] mb-4">Please sign in to access settings</p>
+          <Link
+            href="/login"
+            className="inline-block px-6 py-3 bg-[#4ebe96] text-white rounded-full font-medium hover:bg-[#4ebe96]/90 motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none"
+          >
+            Sign in
+          </Link>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
+    <div className="min-h-dvh bg-black">
+      <header className="sticky top-0 z-50 bg-black/95 backdrop-blur-[10px] border-b border-white/[0.08]">
         <div className="max-w-3xl mx-auto px-6 py-4">
           <div className="flex items-center gap-4">
-            <button onClick={() => router.back()} className="p-2 hover:bg-secondary rounded-lg transition-colors">
+            <button
+              onClick={() => router.back()}
+              className="p-2 hover:bg-white/[0.05] rounded-full motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none"
+            >
               <ArrowLeft className="w-5 h-5" />
             </button>
             <h1 className="text-xl font-semibold">Settings</h1>
@@ -110,119 +111,114 @@ export default function SettingsPage() {
 
       <main className="max-w-3xl mx-auto px-6 py-8 space-y-6">
         {/* Profile Section */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <User className="w-5 h-5" />
-              Profile
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+        <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+          <div className="flex items-center gap-2 mb-6">
+            <User className="w-5 h-5" />
+            <h2 className="text-lg font-semibold">Profile</h2>
+          </div>
+          <div className="space-y-4">
             <div>
-              <label className="text-sm text-muted-foreground mb-1 block">Email</label>
-              <Input value={user.email || ""} disabled className="bg-secondary/50" />
+              <label className="text-sm text-[#868f97] mb-1 block">Email</label>
+              <input
+                type="email"
+                value={user.email || ""}
+                disabled
+                className="w-full px-4 py-2 bg-white/[0.02] border border-white/[0.08] rounded-2xl text-white placeholder-[#868f97] focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none motion-safe:transition-all motion-safe:duration-150 ease-out disabled:opacity-50 disabled:cursor-not-allowed"
+              />
             </div>
             <div>
-              <label className="text-sm text-muted-foreground mb-1 block">Full Name</label>
-              <Input
+              <label className="text-sm text-[#868f97] mb-1 block">Full Name</label>
+              <input
+                type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="Your full name"
+                className="w-full px-4 py-2 bg-white/[0.02] border border-white/[0.08] rounded-2xl text-white placeholder-[#868f97] hover:border-white/[0.15] focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none motion-safe:transition-all motion-safe:duration-150 ease-out"
               />
             </div>
             <div>
-              <label className="text-sm text-muted-foreground mb-1 block">Username</label>
-              <Input
+              <label className="text-sm text-[#868f97] mb-1 block">Username</label>
+              <input
+                type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="@username"
+                className="w-full px-4 py-2 bg-white/[0.02] border border-white/[0.08] rounded-2xl text-white placeholder-[#868f97] hover:border-white/[0.15] focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none motion-safe:transition-all motion-safe:duration-150 ease-out"
               />
             </div>
-            <Button onClick={handleSaveProfile} disabled={saving} className="bg-green-600 hover:bg-green-500">
+            <button
+              onClick={handleSaveProfile}
+              disabled={saving}
+              className="px-6 py-3 bg-[#4ebe96] text-white rounded-full font-medium hover:bg-[#4ebe96]/90 motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               {saving ? "Saving..." : "Save Changes"}
-            </Button>
-          </CardContent>
-        </Card>
+            </button>
+          </div>
+        </div>
 
         {/* Appearance */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Moon className="w-5 h-5" />
-              Appearance
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">Theme</p>
-                <p className="text-sm text-muted-foreground">Switch between light and dark mode</p>
-              </div>
-              <ThemeToggle />
+        <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+          <div className="flex items-center gap-2 mb-6">
+            <Moon className="w-5 h-5" />
+            <h2 className="text-lg font-semibold">Appearance</h2>
+          </div>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium">Theme</p>
+              <p className="text-sm text-[#868f97]">Switch between light and dark mode</p>
             </div>
-          </CardContent>
-        </Card>
+            <ThemeToggle />
+          </div>
+        </div>
 
         {/* Subscription */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CreditCard className="w-5 h-5" />
-              Subscription
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">Current Plan</p>
-                <p className="text-sm text-muted-foreground">Free tier</p>
-              </div>
-              <Link href="/premium">
-                <Button variant="outline">Upgrade</Button>
-              </Link>
+        <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+          <div className="flex items-center gap-2 mb-6">
+            <CreditCard className="w-5 h-5" />
+            <h2 className="text-lg font-semibold">Subscription</h2>
+          </div>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium">Current Plan</p>
+              <p className="text-sm text-[#868f97]">Free tier</p>
             </div>
-          </CardContent>
-        </Card>
+            <Link
+              href="/premium"
+              className="px-6 py-2 bg-white/[0.03] border border-white/[0.08] rounded-full font-medium hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none"
+            >
+              Upgrade
+            </Link>
+          </div>
+        </div>
 
         {/* Notifications */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Bell className="w-5 h-5" />
-              Notifications
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">Notification settings coming soon...</p>
-          </CardContent>
-        </Card>
+        <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+          <div className="flex items-center gap-2 mb-4">
+            <Bell className="w-5 h-5" />
+            <h2 className="text-lg font-semibold">Notifications</h2>
+          </div>
+          <p className="text-sm text-[#868f97]">Notification settings coming soon...</p>
+        </div>
 
         {/* Security */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Shield className="w-5 h-5" />
-              Security
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">Security settings coming soon...</p>
-          </CardContent>
-        </Card>
+        <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+          <div className="flex items-center gap-2 mb-4">
+            <Shield className="w-5 h-5" />
+            <h2 className="text-lg font-semibold">Security</h2>
+          </div>
+          <p className="text-sm text-[#868f97]">Security settings coming soon...</p>
+        </div>
 
         {/* Sign Out */}
-        <Card className="border-red-500/20">
-          <CardContent className="py-4">
-            <Button
-              variant="outline"
-              className="w-full border-red-500/50 text-red-500 hover:bg-red-500/10"
-              onClick={handleLogout}
-            >
-              <LogOut className="w-4 h-4 mr-2" />
-              Sign out
-            </Button>
-          </CardContent>
-        </Card>
+        <div className="bg-white/[0.03] backdrop-blur-[10px] border border-[#ff5c5c]/20 rounded-2xl p-4 hover:bg-white/[0.05] hover:border-[#ff5c5c]/30 motion-safe:transition-all motion-safe:duration-150 ease-out">
+          <button
+            onClick={handleLogout}
+            className="w-full px-6 py-3 bg-transparent border border-[#ff5c5c]/50 text-[#ff5c5c] rounded-full font-medium hover:bg-[#ff5c5c]/10 hover:border-[#ff5c5c] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#ff5c5c] focus-visible:outline-none flex items-center justify-center gap-2"
+          >
+            <LogOut className="w-4 h-4" />
+            Sign out
+          </button>
+        </div>
       </main>
     </div>
   )

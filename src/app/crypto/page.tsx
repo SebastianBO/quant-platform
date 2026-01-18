@@ -309,14 +309,14 @@ export default async function CryptoPage() {
         }}
       />
 
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-dvh bg-black text-foreground pt-20">
         {/* Header */}
-        <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-white/[0.08]">
+        <header className="sticky top-0 z-50 bg-black/95 backdrop-blur-md border-b border-white/[0.08]">
           <div className="max-w-[1800px] mx-auto px-6 py-3">
             <div className="flex items-center gap-6">
-              <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-                <div className="w-9 h-9 bg-white rounded-xl flex items-center justify-center">
-                  <span className="text-background font-bold text-lg">L</span>
+              <Link href="/" className="flex items-center gap-2 flex-shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded-2xl">
+                <div className="w-9 h-9 bg-white rounded-2xl flex items-center justify-center">
+                  <span className="text-black font-bold text-lg">L</span>
                 </div>
                 <span className="font-semibold text-lg hidden sm:inline">Lician</span>
               </Link>
@@ -324,13 +324,13 @@ export default async function CryptoPage() {
               <nav className="flex items-center gap-1">
                 <Link
                   href="/dashboard"
-                  className="px-4 py-2 text-sm font-medium rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out text-[#868f97] hover:text-white hover:bg-white/[0.05]"
+                  className="px-4 py-2 text-sm font-medium rounded-full motion-safe:transition-colors motion-safe:duration-150 ease-out text-[#868f97] hover:text-white hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                 >
                   Market
                 </Link>
                 <Link
                   href="/crypto"
-                  className="px-4 py-2 text-sm font-medium rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out bg-[#4ebe96] text-white"
+                  className="px-4 py-2 text-sm font-medium rounded-full motion-safe:transition-colors motion-safe:duration-150 ease-out bg-[#4ebe96] text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                 >
                   Crypto
                 </Link>
@@ -345,7 +345,7 @@ export default async function CryptoPage() {
             <div className="flex-1 min-w-0">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-[#868f97] mb-6">
-            <Link href="/" className="hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out">
+            <Link href="/" className="hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded-full px-1">
               Home
             </Link>
             <ChevronRight className="w-4 h-4" />
@@ -375,7 +375,7 @@ export default async function CryptoPage() {
                     <h3 className="text-sm font-medium text-[#868f97]">Total Market Cap</h3>
                   </div>
                 </div>
-                <p className="text-3xl font-bold">{formatMarketCap(totalMarketCap)}</p>
+                <p className="text-3xl font-bold tabular-nums">{formatMarketCap(totalMarketCap)}</p>
                 <p className="text-sm text-[#868f97] mt-1">
                   Across {cryptoPrices.length} cryptocurrencies
                 </p>
@@ -390,7 +390,7 @@ export default async function CryptoPage() {
                     <h3 className="text-sm font-medium text-[#868f97]">24h Volume</h3>
                   </div>
                 </div>
-                <p className="text-3xl font-bold">{formatMarketCap(total24hVolume)}</p>
+                <p className="text-3xl font-bold tabular-nums">{formatMarketCap(total24hVolume)}</p>
                 <p className="text-sm text-[#868f97] mt-1">
                   Trading volume across markets
                 </p>
@@ -409,7 +409,7 @@ export default async function CryptoPage() {
                     <h3 className="text-sm font-medium text-[#868f97]">Market Trend</h3>
                   </div>
                 </div>
-                <p className={`text-3xl font-bold ${avgChange >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
+                <p className={`text-3xl font-bold tabular-nums ${avgChange >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                   {avgChange >= 0 ? '+' : ''}{avgChange.toFixed(2)}%
                 </p>
                 <p className="text-sm text-[#868f97] mt-1">
@@ -441,7 +441,7 @@ export default async function CryptoPage() {
                     {cryptoPrices.map((crypto, index) => (
                       <tr
                         key={crypto.symbol}
-                        className="border-b border-white/[0.08]/50 hover:bg-white/[0.05] motion-safe:transition-colors motion-safe:duration-150 ease-out"
+                        className="border-b border-white/[0.08]/50 hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out"
                       >
                         <td className="py-4 px-4 text-[#868f97]">{index + 1}</td>
                         <td className="py-4 px-4">
@@ -450,11 +450,11 @@ export default async function CryptoPage() {
                             <div className="text-sm text-[#868f97]">{crypto.symbol}</div>
                           </div>
                         </td>
-                        <td className="py-4 px-4 text-right font-mono font-semibold">
+                        <td className="py-4 px-4 text-right font-semibold tabular-nums">
                           {formatPrice(crypto.price)}
                         </td>
                         <td className="py-4 px-4 text-right">
-                          <div className={`flex items-center justify-end gap-1 ${
+                          <div className={`flex items-center justify-end gap-1 tabular-nums ${
                             crypto.changePercent24h >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'
                           }`}>
                             {crypto.changePercent24h >= 0 ? (
@@ -468,10 +468,10 @@ export default async function CryptoPage() {
                             </span>
                           </div>
                         </td>
-                        <td className="py-4 px-4 text-right font-mono">
+                        <td className="py-4 px-4 text-right tabular-nums">
                           {formatMarketCap(crypto.marketCap)}
                         </td>
-                        <td className="py-4 px-4 text-right font-mono text-[#868f97]">
+                        <td className="py-4 px-4 text-right tabular-nums text-[#868f97]">
                           {formatMarketCap(crypto.volume24h)}
                         </td>
                       </tr>
@@ -501,11 +501,11 @@ export default async function CryptoPage() {
                 <div className="grid grid-cols-2 gap-4 pt-4">
                   <div className="p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
                     <p className="text-sm text-[#868f97] mb-1">Market Dominance</p>
-                    <p className="text-xl font-bold">~40-50%</p>
+                    <p className="text-xl font-bold tabular-nums">~40-50%</p>
                   </div>
                   <div className="p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
                     <p className="text-sm text-[#868f97] mb-1">Max Supply</p>
-                    <p className="text-xl font-bold">21M BTC</p>
+                    <p className="text-xl font-bold tabular-nums">21M BTC</p>
                   </div>
                 </div>
               </CardContent>
@@ -528,7 +528,7 @@ export default async function CryptoPage() {
                 <div className="grid grid-cols-2 gap-4 pt-4">
                   <div className="p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
                     <p className="text-sm text-[#868f97] mb-1">Smart Contracts</p>
-                    <p className="text-xl font-bold">1000s+</p>
+                    <p className="text-xl font-bold tabular-nums">1000s+</p>
                   </div>
                   <div className="p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
                     <p className="text-sm text-[#868f97] mb-1">Network Type</p>
@@ -575,7 +575,7 @@ export default async function CryptoPage() {
 
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold">
+                    <div className="w-8 h-8 bg-[#ffa16c] rounded-full flex items-center justify-center text-white font-bold">
                       3
                     </div>
                     <h3 className="font-semibold">Secure Storage</h3>
@@ -690,7 +690,7 @@ export default async function CryptoPage() {
                     How do I invest in cryptocurrency?
                     <ChevronRight className="w-5 h-5 group-open:rotate-90 motion-safe:transition-transform motion-safe:duration-150 ease-out" />
                   </summary>
-                  <div className="text-muted-foreground mt-2 pl-2 space-y-2">
+                  <div className="text-[#868f97] mt-2 pl-2 space-y-2">
                     <p>To invest in cryptocurrency, follow these steps:</p>
                     <ol className="list-decimal list-inside space-y-1 ml-2">
                       <li>Choose a reputable cryptocurrency exchange (Coinbase, Binance, Kraken)</li>
@@ -882,7 +882,7 @@ export default async function CryptoPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Link
                   href="/dashboard"
-                  className="p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out"
+                  className="p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                 >
                   <h3 className="font-semibold mb-2">Stock Market Dashboard</h3>
                   <p className="text-sm text-[#868f97]">
@@ -891,7 +891,7 @@ export default async function CryptoPage() {
                 </Link>
                 <Link
                   href="/dashboard"
-                  className="p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out"
+                  className="p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                 >
                   <h3 className="font-semibold mb-2">Portfolio Tracker</h3>
                   <p className="text-sm text-[#868f97]">
@@ -900,7 +900,7 @@ export default async function CryptoPage() {
                 </Link>
                 <Link
                   href="/dashboard"
-                  className="p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out"
+                  className="p-4 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                 >
                   <h3 className="font-semibold mb-2">Market News</h3>
                   <p className="text-sm text-[#868f97]">
@@ -912,7 +912,7 @@ export default async function CryptoPage() {
           </Card>
 
           {/* Disclaimer */}
-          <div className="mt-8 p-6 bg-yellow-500/10 border border-yellow-500/20 rounded-2xl">
+          <div className="mt-8 p-6 bg-[#ffa16c]/10 border border-[#ffa16c]/20 rounded-2xl">
             <p className="text-sm text-[#868f97]">
               <strong className="text-white">Disclaimer:</strong> Cryptocurrency prices are highly volatile and subject to market risks. The information provided is for educational purposes only and should not be considered financial advice. Always conduct your own research and consider consulting with a qualified financial advisor before making investment decisions. Past performance is not indicative of future results. You may lose all or part of your investment.
             </p>

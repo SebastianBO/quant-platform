@@ -147,129 +147,135 @@ export default async function InventoryTurnsPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
       />
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-black text-white">
         <div className="max-w-4xl mx-auto px-6 py-12">
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          {/* Breadcrumb Navigation */}
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="text-[#479ffa] hover:text-[#5baeff] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#479ffa] focus:ring-offset-2 focus:ring-offset-black rounded-sm">
+              Home
+            </Link>
             {' / '}
-            <Link href="/dashboard" className="hover:text-foreground">Stocks</Link>
+            <Link href="/dashboard" className="text-[#479ffa] hover:text-[#5baeff] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#479ffa] focus:ring-offset-2 focus:ring-offset-black rounded-sm">
+              Stocks
+            </Link>
             {' / '}
             <span>{symbol} Inventory Turns</span>
           </nav>
 
-          <h1 className="text-4xl font-bold mb-4">
+          {/* Page Header */}
+          <h1 className="text-4xl font-bold mb-4 text-balance">
             {symbol} Inventory Turnover
           </h1>
-          <p className="text-xl text-muted-foreground mb-8">
+          <p className="text-xl text-[#868f97] mb-8 text-balance">
             Inventory efficiency and working capital management for {companyName}
           </p>
 
-          {/* Current Price Card */}
-          <div className="bg-card p-6 rounded-xl border border-border mb-8">
+          {/* Current Price Card - Glassmorphism */}
+          <div className="relative overflow-hidden p-6 rounded-xl mb-8 bg-white/[0.03] backdrop-blur-xl border border-white/[0.05] hover:bg-white/[0.05] hover:border-white/[0.08] transition-all duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-muted-foreground mb-1">Current Price</p>
-                <p className="text-4xl font-bold">${price.toFixed(2)}</p>
+                <p className="text-[#868f97] mb-1">Current Price</p>
+                <p className="text-4xl font-bold tabular-nums">${price.toFixed(2)}</p>
               </div>
               <div className="text-right">
-                <p className="text-muted-foreground mb-1">Day Change</p>
-                <p className={`text-2xl font-bold ${snapshot.day_change_percent >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                <p className="text-[#868f97] mb-1">Day Change</p>
+                <p className={`text-2xl font-bold tabular-nums ${snapshot.day_change_percent >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                   {snapshot.day_change_percent >= 0 ? '+' : ''}{snapshot.day_change_percent?.toFixed(2)}%
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Inventory Metrics */}
+          {/* Inventory Metrics - Glassmorphism Cards */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Inventory Efficiency Metrics</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Inventory Efficiency Metrics</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-card p-6 rounded-lg border border-border">
-                <p className="text-sm text-muted-foreground">Inventory Turnover</p>
-                <p className="text-3xl font-bold">{estimatedInventoryTurns.toFixed(1)}x</p>
-                <p className="text-sm text-green-500 mt-1">Annual</p>
+              <div className="relative overflow-hidden p-6 rounded-lg bg-white/[0.03] backdrop-blur-xl border border-white/[0.05] hover:bg-white/[0.05] hover:border-white/[0.08] transition-all duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
+                <p className="text-sm text-[#868f97]">Inventory Turnover</p>
+                <p className="text-3xl font-bold tabular-nums">{estimatedInventoryTurns.toFixed(1)}x</p>
+                <p className="text-sm text-[#4ebe96] mt-1">Annual</p>
               </div>
-              <div className="bg-card p-6 rounded-lg border border-border">
-                <p className="text-sm text-muted-foreground">Days Inventory</p>
-                <p className="text-3xl font-bold">{daysInventory.toFixed(0)}</p>
-                <p className="text-sm text-muted-foreground mt-1">Days</p>
+              <div className="relative overflow-hidden p-6 rounded-lg bg-white/[0.03] backdrop-blur-xl border border-white/[0.05] hover:bg-white/[0.05] hover:border-white/[0.08] transition-all duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
+                <p className="text-sm text-[#868f97]">Days Inventory</p>
+                <p className="text-3xl font-bold tabular-nums">{daysInventory.toFixed(0)}</p>
+                <p className="text-sm text-[#868f97] mt-1">Days</p>
               </div>
-              <div className="bg-card p-6 rounded-lg border border-border">
-                <p className="text-sm text-muted-foreground">Revenue Growth</p>
-                <p className={`text-3xl font-bold ${revenueGrowth >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+              <div className="relative overflow-hidden p-6 rounded-lg bg-white/[0.03] backdrop-blur-xl border border-white/[0.05] hover:bg-white/[0.05] hover:border-white/[0.08] transition-all duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
+                <p className="text-sm text-[#868f97]">Revenue Growth</p>
+                <p className={`text-3xl font-bold tabular-nums ${revenueGrowth >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                   {(revenueGrowth * 100).toFixed(1)}%
                 </p>
-                <p className="text-sm text-muted-foreground mt-1">YoY</p>
+                <p className="text-sm text-[#868f97] mt-1">YoY</p>
               </div>
             </div>
           </section>
 
-          {/* Inventory Management Strategy */}
+          {/* Inventory Management Strategy - Glassmorphism */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Inventory Management Best Practices</h2>
-            <div className="bg-card p-6 rounded-lg border border-border">
-              <p className="text-muted-foreground mb-4">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Inventory Management Best Practices</h2>
+            <div className="relative overflow-hidden p-6 rounded-lg bg-white/[0.03] backdrop-blur-xl border border-white/[0.05] hover:bg-white/[0.05] hover:border-white/[0.08] transition-all duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
+              <p className="text-[#868f97] mb-4">
                 {companyName} optimizes inventory through:
               </p>
-              <ul className="space-y-2 text-muted-foreground">
+              <ul className="space-y-2 text-[#868f97]">
                 <li className="flex items-start gap-2">
-                  <span className="text-cyan-500 mt-1">•</span>
-                  <span><strong>Demand Forecasting:</strong> AI and data analytics to predict customer demand accurately</span>
+                  <span className="text-[#4ebe96] mt-1">•</span>
+                  <span><strong className="text-white">Demand Forecasting:</strong> AI and data analytics to predict customer demand accurately</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-cyan-500 mt-1">•</span>
-                  <span><strong>Just-in-Time:</strong> Lean inventory practices to minimize holding costs</span>
+                  <span className="text-[#4ebe96] mt-1">•</span>
+                  <span><strong className="text-white">Just-in-Time:</strong> Lean inventory practices to minimize holding costs</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-cyan-500 mt-1">•</span>
-                  <span><strong>Supplier Partnerships:</strong> Vendor collaboration for faster replenishment cycles</span>
+                  <span className="text-[#4ebe96] mt-1">•</span>
+                  <span><strong className="text-white">Supplier Partnerships:</strong> Vendor collaboration for faster replenishment cycles</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-cyan-500 mt-1">•</span>
-                  <span><strong>SKU Optimization:</strong> Reducing slow-moving products and focusing on high-velocity items</span>
+                  <span className="text-[#4ebe96] mt-1">•</span>
+                  <span><strong className="text-white">SKU Optimization:</strong> Reducing slow-moving products and focusing on high-velocity items</span>
                 </li>
               </ul>
             </div>
           </section>
 
-          {/* CTA */}
-          <section className="bg-gradient-to-r from-cyan-600/20 to-teal-600/20 p-8 rounded-xl border border-cyan-500/30 text-center mb-12">
-            <h2 className="text-2xl font-bold mb-4">Analyze {symbol} Operational Efficiency</h2>
-            <p className="text-muted-foreground mb-6">
+          {/* CTA Section - Glassmorphism with Gradient Accent */}
+          <section className="relative overflow-hidden p-8 rounded-xl text-center mb-12 bg-gradient-to-r from-[#4ebe96]/10 to-[#479ffa]/10 backdrop-blur-xl border border-[#4ebe96]/20 hover:border-[#4ebe96]/30 transition-all duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Analyze {symbol} Operational Efficiency</h2>
+            <p className="text-[#868f97] mb-6">
               Track working capital metrics, cash conversion, and operational performance
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href={`/stock/${symbol.toLowerCase()}`}
-                className="inline-block bg-cyan-600 hover:bg-cyan-500 text-white px-8 py-3 rounded-lg font-medium"
+                className="inline-block bg-[#4ebe96] hover:bg-[#5ecfa6] text-black px-8 py-3 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#4ebe96] focus:ring-offset-2 focus:ring-offset-black shadow-lg hover:shadow-[#4ebe96]/20"
               >
                 View Full Analysis
               </Link>
               <Link
                 href={`/cash-flow/${symbol.toLowerCase()}`}
-                className="inline-block bg-secondary hover:bg-secondary/80 px-8 py-3 rounded-lg font-medium"
+                className="inline-block bg-white/[0.05] hover:bg-white/[0.08] backdrop-blur-xl border border-white/[0.1] hover:border-white/[0.15] px-8 py-3 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#479ffa] focus:ring-offset-2 focus:ring-offset-black"
               >
                 Cash Flow Analysis
               </Link>
             </div>
           </section>
 
-          {/* FAQ Section */}
+          {/* FAQ Section - Glassmorphism Cards */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {inventoryFaqs.map((faq, index) => (
-                <div key={index} className="bg-card p-5 rounded-lg border border-border">
-                  <h3 className="font-bold text-lg mb-2">{faq.question}</h3>
-                  <p className="text-muted-foreground">{faq.answer}</p>
+                <div key={index} className="relative overflow-hidden p-5 rounded-lg bg-white/[0.03] backdrop-blur-xl border border-white/[0.05] hover:bg-white/[0.05] hover:border-white/[0.08] transition-all duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
+                  <h3 className="font-bold text-lg mb-2 text-balance">{faq.question}</h3>
+                  <p className="text-[#868f97]">{faq.answer}</p>
                 </div>
               ))}
             </div>
           </section>
 
-          {/* Disclaimer */}
-          <div className="text-xs text-muted-foreground bg-secondary/30 p-4 rounded-lg mb-8">
-            <p><strong>Disclaimer:</strong> Inventory turnover estimates are based on industry averages. Actual metrics may vary. Consult balance sheets and cash flow statements for precise inventory data and trends.</p>
+          {/* Disclaimer - Glassmorphism */}
+          <div className="text-xs text-[#868f97] bg-[#ffa16c]/5 backdrop-blur-xl border border-[#ffa16c]/20 p-4 rounded-lg mb-8">
+            <p><strong className="text-[#ffa16c]">Disclaimer:</strong> Inventory turnover estimates are based on industry averages. Actual metrics may vary. Consult balance sheets and cash flow statements for precise inventory data and trends.</p>
           </div>
 
           {/* Internal Linking */}

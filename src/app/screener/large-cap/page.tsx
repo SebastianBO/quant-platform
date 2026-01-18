@@ -179,34 +179,34 @@ export default async function LargeCapPage() {
           __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema, itemListSchema]),
         }}
       />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-screen bg-black text-white pt-20">
         <div className="max-w-6xl mx-auto px-6 py-12">
           {/* Breadcrumbs */}
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Home</Link>
             {' / '}
-            <Link href="/screener" className="hover:text-foreground">Stock Screener</Link>
+            <Link href="/screener" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Stock Screener</Link>
             {' / '}
             <span>Large Cap</span>
           </nav>
 
           {/* Header */}
           <header className="mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-balance">
               Large Cap Stocks
             </h1>
-            <p className="text-xl text-muted-foreground mb-4">
+            <p className="text-xl text-[#868f97] mb-4">
               Mega cap stocks with market capitalizations over $100 billion - the world's most valuable
               and established companies offering stability and quality.
             </p>
             <div className="flex flex-wrap gap-4 text-sm">
-              <div className="bg-yellow-600/20 text-yellow-400 px-4 py-2 rounded-lg">
+              <div className="bg-[#ffa16c]/20 text-[#ffa16c] px-4 py-2 rounded-lg">
                 Filter: Market Cap &gt; $100B
               </div>
-              <div className="bg-secondary px-4 py-2 rounded-lg">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] px-4 py-2 rounded-lg tabular-nums">
                 {displayStocks?.length || LARGE_CAP_STOCKS.length} Stocks Found
               </div>
-              <div className="bg-secondary px-4 py-2 rounded-lg">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] px-4 py-2 rounded-lg tabular-nums">
                 Total: {formatMarketCap(totalMarketCap)}
               </div>
             </div>
@@ -214,39 +214,39 @@ export default async function LargeCapPage() {
 
           {/* Key Metrics Summary */}
           <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-card p-4 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-1">Largest Company</p>
-              <p className="text-2xl font-bold text-yellow-400">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+              <p className="text-sm text-[#868f97] mb-1">Largest Company</p>
+              <p className="text-2xl font-bold text-[#ffa16c] tabular-nums">
                 {LARGE_CAP_STOCKS[0].ticker}
               </p>
-              <p className="text-xs text-muted-foreground">{formatMarketCap(LARGE_CAP_STOCKS[0].marketCap)}</p>
+              <p className="text-xs text-[#868f97] tabular-nums">{formatMarketCap(LARGE_CAP_STOCKS[0].marketCap)}</p>
             </div>
-            <div className="bg-card p-4 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-1">$1T+ Club</p>
-              <p className="text-2xl font-bold text-green-500">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+              <p className="text-sm text-[#868f97] mb-1">$1T+ Club</p>
+              <p className="text-2xl font-bold text-[#4ebe96] tabular-nums">
                 {LARGE_CAP_STOCKS.filter(s => s.marketCap >= 1e12).length}
               </p>
-              <p className="text-xs text-muted-foreground">Trillion dollar companies</p>
+              <p className="text-xs text-[#868f97]">Trillion dollar companies</p>
             </div>
-            <div className="bg-card p-4 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-1">Average P/E</p>
-              <p className="text-2xl font-bold">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+              <p className="text-sm text-[#868f97] mb-1">Average P/E</p>
+              <p className="text-2xl font-bold tabular-nums">
                 {(LARGE_CAP_STOCKS.reduce((sum, s) => sum + s.pe, 0) / LARGE_CAP_STOCKS.length).toFixed(1)}
               </p>
             </div>
-            <div className="bg-card p-4 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-1">Technology</p>
-              <p className="text-2xl font-bold text-blue-400">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+              <p className="text-sm text-[#868f97] mb-1">Technology</p>
+              <p className="text-2xl font-bold text-[#479ffa] tabular-nums">
                 {LARGE_CAP_STOCKS.filter(s => s.sector === 'Technology').length}
               </p>
-              <p className="text-xs text-muted-foreground">Tech giants</p>
+              <p className="text-xs text-[#868f97]">Tech giants</p>
             </div>
           </section>
 
           {/* Magnificent Seven */}
-          <section className="bg-gradient-to-br from-yellow-600/10 to-orange-600/10 p-6 rounded-xl border border-yellow-500/20 mb-8">
-            <h2 className="text-2xl font-bold mb-4">The Magnificent Seven</h2>
-            <p className="text-muted-foreground mb-4">
+          <section className="bg-gradient-to-br from-[#ffa16c]/10 to-[#ffa16c]/5 p-6 rounded-2xl border border-[#ffa16c]/20 mb-8">
+            <h2 className="text-2xl font-bold mb-4 text-balance">The Magnificent Seven</h2>
+            <p className="text-[#868f97] mb-4">
               The seven tech giants dominating the market, representing over 30% of S&P 500 weight:
             </p>
             <div className="grid grid-cols-2 md:grid-cols-7 gap-4">
@@ -256,10 +256,10 @@ export default async function LargeCapPage() {
                   <Link
                     key={ticker}
                     href={`/stock/${ticker.toLowerCase()}`}
-                    className="bg-card/50 p-3 rounded-lg text-center hover:bg-card transition-colors"
+                    className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-3 rounded-lg text-center hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                   >
-                    <p className="font-bold text-yellow-400">{ticker}</p>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="font-bold text-[#ffa16c]">{ticker}</p>
+                    <p className="text-xs text-[#868f97] mt-1 tabular-nums">
                       {stock ? formatMarketCap(stock.marketCap) : '---'}
                     </p>
                   </Link>
@@ -270,12 +270,12 @@ export default async function LargeCapPage() {
 
           {/* Stock Table */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">All Large Cap Stocks (&gt;$100B)</h2>
-            <div className="bg-card border border-border rounded-xl overflow-hidden">
+            <h2 className="text-2xl font-bold mb-6 text-balance">All Large Cap Stocks (&gt;$100B)</h2>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-secondary/50">
-                    <tr className="border-b border-border">
+                  <thead className="bg-white/[0.02]">
+                    <tr className="border-b border-white/[0.08]">
                       <th className="px-4 py-3 text-left text-sm font-semibold">#</th>
                       <th className="px-4 py-3 text-left text-sm font-semibold">Ticker</th>
                       <th className="px-4 py-3 text-left text-sm font-semibold">Company</th>
@@ -285,65 +285,65 @@ export default async function LargeCapPage() {
                       <th className="px-4 py-3 text-right text-sm font-semibold">Revenue</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-border">
+                  <tbody className="divide-y divide-white/[0.08]">
                     {displayStocks ? (
                       displayStocks.map((stock, index) => (
-                        <tr key={stock.ticker} className="hover:bg-secondary/30 transition-colors">
-                          <td className="px-4 py-3 text-sm text-muted-foreground">{index + 1}</td>
+                        <tr key={stock.ticker} className="hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                          <td className="px-4 py-3 text-sm text-[#868f97] tabular-nums">{index + 1}</td>
                           <td className="px-4 py-3">
                             <Link
                               href={`/stock/${stock.ticker.toLowerCase()}`}
-                              className="font-bold text-yellow-400 hover:text-yellow-300 hover:underline"
+                              className="font-bold text-[#ffa16c] hover:text-[#ffa16c]/80 hover:underline motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                             >
                               {stock.ticker}
                             </Link>
                           </td>
                           <td className="px-4 py-3 text-sm">
-                            <Link href={`/stock/${stock.ticker.toLowerCase()}`} className="hover:underline">
+                            <Link href={`/stock/${stock.ticker.toLowerCase()}`} className="hover:underline motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                               {stock.company_name || stock.ticker}
                             </Link>
                           </td>
-                          <td className="px-4 py-3 text-sm text-muted-foreground">{stock.sector || '---'}</td>
-                          <td className="px-4 py-3 text-right font-medium">
-                            <span className={stock.market_cap && stock.market_cap >= 1e12 ? 'text-yellow-400' : ''}>
+                          <td className="px-4 py-3 text-sm text-[#868f97]">{stock.sector || '---'}</td>
+                          <td className="px-4 py-3 text-right font-medium tabular-nums">
+                            <span className={stock.market_cap && stock.market_cap >= 1e12 ? 'text-[#ffa16c]' : ''}>
                               {stock.market_cap ? formatMarketCap(stock.market_cap) : '---'}
                             </span>
                           </td>
-                          <td className="px-4 py-3 text-right text-sm">
+                          <td className="px-4 py-3 text-right text-sm tabular-nums">
                             {stock.pe_ratio?.toFixed(1) || '---'}
                           </td>
-                          <td className="px-4 py-3 text-right text-sm font-medium">
+                          <td className="px-4 py-3 text-right text-sm font-medium tabular-nums">
                             {stock.revenue ? formatMarketCap(stock.revenue) : '---'}
                           </td>
                         </tr>
                       ))
                     ) : (
                       LARGE_CAP_STOCKS.map((stock, index) => (
-                        <tr key={stock.ticker} className="hover:bg-secondary/30 transition-colors">
-                          <td className="px-4 py-3 text-sm text-muted-foreground">{index + 1}</td>
+                        <tr key={stock.ticker} className="hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                          <td className="px-4 py-3 text-sm text-[#868f97] tabular-nums">{index + 1}</td>
                           <td className="px-4 py-3">
                             <Link
                               href={`/stock/${stock.ticker.toLowerCase()}`}
-                              className="font-bold text-yellow-400 hover:text-yellow-300 hover:underline"
+                              className="font-bold text-[#ffa16c] hover:text-[#ffa16c]/80 hover:underline motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                             >
                               {stock.ticker}
                             </Link>
                           </td>
                           <td className="px-4 py-3 text-sm">
-                            <Link href={`/stock/${stock.ticker.toLowerCase()}`} className="hover:underline">
+                            <Link href={`/stock/${stock.ticker.toLowerCase()}`} className="hover:underline motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                               {stock.name}
                             </Link>
                           </td>
-                          <td className="px-4 py-3 text-sm text-muted-foreground">{stock.sector}</td>
-                          <td className="px-4 py-3 text-right font-medium">
-                            <span className={stock.marketCap >= 1e12 ? 'text-yellow-400' : ''}>
+                          <td className="px-4 py-3 text-sm text-[#868f97]">{stock.sector}</td>
+                          <td className="px-4 py-3 text-right font-medium tabular-nums">
+                            <span className={stock.marketCap >= 1e12 ? 'text-[#ffa16c]' : ''}>
                               {formatMarketCap(stock.marketCap)}
                             </span>
                           </td>
-                          <td className="px-4 py-3 text-right text-sm">
+                          <td className="px-4 py-3 text-right text-sm tabular-nums">
                             {stock.pe.toFixed(1)}
                           </td>
-                          <td className="px-4 py-3 text-right text-sm font-medium">
+                          <td className="px-4 py-3 text-right text-sm font-medium tabular-nums">
                             {formatMarketCap(stock.revenue)}
                           </td>
                         </tr>
@@ -357,39 +357,39 @@ export default async function LargeCapPage() {
 
           {/* Market Cap Tiers */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Market Cap Classification</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Market Cap Classification</h2>
             <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-              <div className="bg-card p-5 rounded-xl border-2 border-yellow-500/30">
-                <h3 className="font-bold text-yellow-500 mb-2">Mega Cap (&gt;$200B)</h3>
-                <p className="text-sm text-muted-foreground mb-3">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border-2 border-[#ffa16c]/30 rounded-2xl p-5 hover:bg-white/[0.05] hover:border-[#ffa16c]/50 motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <h3 className="font-bold text-[#ffa16c] mb-2">Mega Cap (&gt;$200B)</h3>
+                <p className="text-sm text-[#868f97] mb-3">
                   The world's largest companies. Apple, Microsoft, and others.
                 </p>
-                <p className="text-xs">{LARGE_CAP_STOCKS.filter(s => s.marketCap >= 200e9).length} companies</p>
+                <p className="text-xs tabular-nums">{LARGE_CAP_STOCKS.filter(s => s.marketCap >= 200e9).length} companies</p>
               </div>
-              <div className="bg-card p-5 rounded-xl border-2 border-orange-500/30">
-                <h3 className="font-bold text-orange-400 mb-2">Large Cap ($100-200B)</h3>
-                <p className="text-sm text-muted-foreground mb-3">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border-2 border-[#ffa16c]/20 rounded-2xl p-5 hover:bg-white/[0.05] hover:border-[#ffa16c]/40 motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <h3 className="font-bold text-[#ffa16c]/80 mb-2">Large Cap ($100-200B)</h3>
+                <p className="text-sm text-[#868f97] mb-3">
                   Major corporations with significant market presence.
                 </p>
-                <p className="text-xs">{LARGE_CAP_STOCKS.filter(s => s.marketCap >= 100e9 && s.marketCap < 200e9).length} companies</p>
+                <p className="text-xs tabular-nums">{LARGE_CAP_STOCKS.filter(s => s.marketCap >= 100e9 && s.marketCap < 200e9).length} companies</p>
               </div>
-              <div className="bg-card p-5 rounded-xl border-2 border-blue-500/30">
-                <h3 className="font-bold text-blue-400 mb-2">Large Cap ($10-100B)</h3>
-                <p className="text-sm text-muted-foreground mb-3">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border-2 border-[#479ffa]/30 rounded-2xl p-5 hover:bg-white/[0.05] hover:border-[#479ffa]/50 motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <h3 className="font-bold text-[#479ffa] mb-2">Large Cap ($10-100B)</h3>
+                <p className="text-sm text-[#868f97] mb-3">
                   Established companies, often S&P 500 members.
                 </p>
                 <p className="text-xs">Not shown in this screen</p>
               </div>
-              <div className="bg-card p-5 rounded-xl border-2 border-green-500/30">
-                <h3 className="font-bold text-green-400 mb-2">Mid Cap ($2-10B)</h3>
-                <p className="text-sm text-muted-foreground mb-3">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border-2 border-[#4ebe96]/30 rounded-2xl p-5 hover:bg-white/[0.05] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <h3 className="font-bold text-[#4ebe96] mb-2">Mid Cap ($2-10B)</h3>
+                <p className="text-sm text-[#868f97] mb-3">
                   Growing companies with expansion potential.
                 </p>
                 <p className="text-xs">Not shown in this screen</p>
               </div>
-              <div className="bg-card p-5 rounded-xl border-2 border-purple-500/30">
-                <h3 className="font-bold text-purple-400 mb-2">Small Cap (&lt;$2B)</h3>
-                <p className="text-sm text-muted-foreground mb-3">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border-2 border-white/[0.15] rounded-2xl p-5 hover:bg-white/[0.05] hover:border-white/[0.20] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <h3 className="font-bold text-white/80 mb-2">Small Cap (&lt;$2B)</h3>
+                <p className="text-sm text-[#868f97] mb-3">
                   Smaller companies with higher growth/risk.
                 </p>
                 <p className="text-xs">See Small Cap Gems</p>
@@ -398,8 +398,8 @@ export default async function LargeCapPage() {
           </section>
 
           {/* Sector Breakdown */}
-          <section className="bg-gradient-to-br from-blue-600/10 to-purple-600/10 p-6 rounded-xl border border-blue-500/20 mb-12">
-            <h2 className="text-2xl font-bold mb-4">Sector Distribution</h2>
+          <section className="bg-gradient-to-br from-[#479ffa]/10 to-[#479ffa]/5 p-6 rounded-2xl border border-[#479ffa]/20 mb-12">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Sector Distribution</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {Object.entries(
                 LARGE_CAP_STOCKS.reduce((acc, s) => {
@@ -409,12 +409,12 @@ export default async function LargeCapPage() {
               )
                 .sort((a, b) => b[1] - a[1])
                 .map(([sector, count]) => (
-                  <div key={sector} className="bg-card/50 p-4 rounded-lg">
+                  <div key={sector} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-lg hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                     <p className="font-bold">{sector}</p>
-                    <p className="text-sm text-muted-foreground">{count} companies</p>
-                    <div className="w-full bg-secondary rounded-full h-2 mt-2">
+                    <p className="text-sm text-[#868f97] tabular-nums">{count} companies</p>
+                    <div className="w-full bg-white/[0.05] rounded-full h-2 mt-2">
                       <div
-                        className="bg-blue-500 h-2 rounded-full"
+                        className="bg-[#479ffa] h-2 rounded-full"
                         style={{ width: `${(count / LARGE_CAP_STOCKS.length) * 100}%` }}
                       />
                     </div>
@@ -425,11 +425,11 @@ export default async function LargeCapPage() {
 
           {/* Benefits of Large Cap */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Benefits of Large Cap Investing</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Benefits of Large Cap Investing</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 text-yellow-400">Stability & Safety</h3>
-                <ul className="text-muted-foreground text-sm space-y-2">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <h3 className="text-lg font-bold mb-3 text-[#ffa16c]">Stability & Safety</h3>
+                <ul className="text-[#868f97] text-sm space-y-2">
                   <li>&#8226; Diversified revenue streams</li>
                   <li>&#8226; Strong balance sheets</li>
                   <li>&#8226; Experienced management teams</li>
@@ -437,9 +437,9 @@ export default async function LargeCapPage() {
                   <li>&#8226; Recession resilience</li>
                 </ul>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 text-green-400">Income Potential</h3>
-                <ul className="text-muted-foreground text-sm space-y-2">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <h3 className="text-lg font-bold mb-3 text-[#4ebe96]">Income Potential</h3>
+                <ul className="text-[#868f97] text-sm space-y-2">
                   <li>&#8226; Consistent dividend payments</li>
                   <li>&#8226; Share buyback programs</li>
                   <li>&#8226; Dividend growth track records</li>
@@ -447,9 +447,9 @@ export default async function LargeCapPage() {
                   <li>&#8226; Many are Dividend Aristocrats</li>
                 </ul>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 text-blue-400">Accessibility</h3>
-                <ul className="text-muted-foreground text-sm space-y-2">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <h3 className="text-lg font-bold mb-3 text-[#479ffa]">Accessibility</h3>
+                <ul className="text-[#868f97] text-sm space-y-2">
                   <li>&#8226; High trading liquidity</li>
                   <li>&#8226; Extensive analyst coverage</li>
                   <li>&#8226; Options and derivatives available</li>
@@ -462,15 +462,15 @@ export default async function LargeCapPage() {
 
           {/* FAQs */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {faqs.map((faq, index) => (
-                <details key={index} className="bg-card p-6 rounded-xl border border-border group">
+                <details key={index} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 group hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   <summary className="font-bold cursor-pointer list-none flex items-center justify-between">
                     <span>{faq.question}</span>
-                    <span className="text-yellow-400 group-open:rotate-180 transition-transform">&#9660;</span>
+                    <span className="text-[#ffa16c] group-open:rotate-180 motion-safe:transition-all motion-safe:duration-150 ease-out">&#9660;</span>
                   </summary>
-                  <p className="text-muted-foreground mt-4 leading-relaxed">{faq.answer}</p>
+                  <p className="text-[#868f97] mt-4 leading-relaxed">{faq.answer}</p>
                 </details>
               ))}
             </div>
@@ -478,60 +478,60 @@ export default async function LargeCapPage() {
 
           {/* Related Screeners */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Related Stock Screeners</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Related Stock Screeners</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <Link
                 href="/screener/high-dividend-yield"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out text-center focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <p className="text-2xl mb-2">&#128176;</p>
                 <p className="font-bold">High Dividend</p>
-                <p className="text-xs text-muted-foreground">Yield &gt; 3%</p>
+                <p className="text-xs text-[#868f97]">Yield &gt; 3%</p>
               </Link>
               <Link
                 href="/screener/low-pe-ratio"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out text-center focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <p className="text-2xl mb-2">&#128181;</p>
                 <p className="font-bold">Low P/E Ratio</p>
-                <p className="text-xs text-muted-foreground">Value stocks P/E &lt; 15</p>
+                <p className="text-xs text-[#868f97]">Value stocks P/E &lt; 15</p>
               </Link>
               <Link
                 href="/screener/high-growth"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out text-center focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <p className="text-2xl mb-2">&#128200;</p>
                 <p className="font-bold">High Growth</p>
-                <p className="text-xs text-muted-foreground">Revenue growth &gt; 20%</p>
+                <p className="text-xs text-[#868f97]">Revenue growth &gt; 20%</p>
               </Link>
               <Link
                 href="/screener/small-cap-gems"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out text-center focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <p className="text-2xl mb-2">&#128142;</p>
                 <p className="font-bold">Small Cap Gems</p>
-                <p className="text-xs text-muted-foreground">Quality small caps</p>
+                <p className="text-xs text-[#868f97]">Quality small caps</p>
               </Link>
             </div>
           </section>
 
           {/* CTA */}
-          <section className="bg-gradient-to-br from-yellow-600/20 to-orange-600/20 p-8 rounded-xl border border-yellow-500/20 text-center">
-            <h2 className="text-2xl font-bold mb-4">Analyze Large Caps with AI</h2>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+          <section className="bg-gradient-to-br from-[#ffa16c]/20 to-[#ffa16c]/10 p-8 rounded-2xl border border-[#ffa16c]/20 text-center">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Analyze Large Caps with AI</h2>
+            <p className="text-[#868f97] mb-6 max-w-2xl mx-auto">
               Go deeper on the world's largest companies. Our AI analyzes competitive positioning,
               valuation relative to peers, growth sustainability, and dividend safety for mega caps.
             </p>
             <div className="flex gap-4 justify-center flex-wrap">
               <Link
                 href="/dashboard"
-                className="bg-yellow-600 hover:bg-yellow-500 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+                className="bg-[#ffa16c] hover:bg-[#ffa16c]/80 text-black px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 Start Large Cap Research
               </Link>
               <Link
                 href="/blue-chip-stocks"
-                className="bg-secondary hover:bg-secondary/80 px-8 py-3 rounded-lg font-medium transition-colors"
+                className="bg-white/[0.05] hover:bg-white/[0.08] px-8 py-3 rounded-lg font-medium border border-white/[0.08] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 Explore Blue Chips
               </Link>

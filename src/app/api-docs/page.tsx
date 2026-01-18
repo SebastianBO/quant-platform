@@ -204,25 +204,25 @@ const endpoints = [
 
 export default function APIDocsPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
+    <div className="min-h-dvh bg-black">
       <div className="max-w-5xl mx-auto px-4 py-16">
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-balance bg-gradient-to-r from-[#479ffa] to-[#e75ece] bg-clip-text text-transparent">
             Free Stock API
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="text-xl text-[#868f97] max-w-2xl mx-auto">
             Access real-time stock data, financial statements, insider trades, and more. No API key required for basic access.
           </p>
         </div>
 
         {/* Base URL */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mb-12">
-          <h2 className="text-2xl font-bold mb-4">Base URL</h2>
+        <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 mb-12 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
+          <h2 className="text-2xl font-bold mb-4 text-balance">Base URL</h2>
           <div className="bg-gray-900 rounded-lg p-4">
-            <code className="text-green-400">https://lician.com</code>
+            <code className="text-[#4ebe96]">https://lician.com</code>
           </div>
-          <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
+          <div className="mt-4 text-sm text-[#868f97]">
             <p className="mb-2"><strong>Rate Limits:</strong> 100 requests/minute for anonymous users</p>
             <p><strong>Attribution:</strong> Required for embed endpoints - include "Powered by Lician" link</p>
           </div>
@@ -230,25 +230,25 @@ export default function APIDocsPage() {
 
         {/* Endpoints */}
         {endpoints.map((category) => (
-          <div key={category.category} className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mb-8">
-            <h2 className="text-2xl font-bold mb-6">{category.category}</h2>
+          <div key={category.category} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 mb-8 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
+            <h2 className="text-2xl font-bold mb-6 text-balance">{category.category}</h2>
 
             {category.items.map((endpoint, idx) => (
-              <div key={idx} className={idx > 0 ? 'mt-8 pt-8 border-t border-gray-200 dark:border-gray-700' : ''}>
+              <div key={idx} className={idx > 0 ? 'mt-8 pt-8 border-t border-white/[0.08]' : ''}>
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">
+                  <span className="bg-[#4ebe96] text-white text-xs font-bold px-2 py-1 rounded">
                     {endpoint.method}
                   </span>
-                  <code className="text-blue-600 dark:text-blue-400 font-mono">{endpoint.path}</code>
+                  <code className="text-[#479ffa] font-mono">{endpoint.path}</code>
                 </div>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">{endpoint.description}</p>
+                <p className="text-[#868f97] mb-4">{endpoint.description}</p>
 
                 {/* Parameters */}
                 <div className="mb-4">
                   <h4 className="font-semibold mb-2">Parameters</h4>
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="text-left border-b">
+                      <tr className="text-left border-b border-white/[0.08]">
                         <th className="pb-2">Name</th>
                         <th className="pb-2">Type</th>
                         <th className="pb-2">Required</th>
@@ -257,17 +257,17 @@ export default function APIDocsPage() {
                     </thead>
                     <tbody>
                       {endpoint.params.map((param) => (
-                        <tr key={param.name} className="border-b border-gray-100 dark:border-gray-700">
-                          <td className="py-2 font-mono text-purple-600">{param.name}</td>
-                          <td className="py-2 text-gray-500">{param.type}</td>
+                        <tr key={param.name} className="border-b border-white/[0.08]">
+                          <td className="py-2 font-mono text-[#e75ece]">{param.name}</td>
+                          <td className="py-2 text-[#868f97]">{param.type}</td>
                           <td className="py-2">
                             {param.required ? (
-                              <span className="text-red-500">Yes</span>
+                              <span className="text-[#ff5c5c]">Yes</span>
                             ) : (
-                              <span className="text-gray-400">No</span>
+                              <span className="text-[#868f97]">No</span>
                             )}
                           </td>
-                          <td className="py-2 text-gray-600 dark:text-gray-400">{param.desc}</td>
+                          <td className="py-2 text-[#868f97]">{param.desc}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -278,7 +278,7 @@ export default function APIDocsPage() {
                 <div className="mb-4">
                   <h4 className="font-semibold mb-2">Example Request</h4>
                   <div className="bg-gray-900 rounded-lg p-3 overflow-x-auto">
-                    <code className="text-green-400 text-sm">
+                    <code className="text-[#4ebe96] text-sm">
                       curl "https://lician.com{endpoint.example}"
                     </code>
                   </div>
@@ -288,7 +288,7 @@ export default function APIDocsPage() {
                 <div>
                   <h4 className="font-semibold mb-2">Example Response</h4>
                   <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
-                    <pre className="text-green-400 text-sm">{endpoint.response}</pre>
+                    <pre className="text-[#4ebe96] text-sm tabular-nums">{endpoint.response}</pre>
                   </div>
                 </div>
               </div>
@@ -297,29 +297,29 @@ export default function APIDocsPage() {
         ))}
 
         {/* Widget Section */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-xl p-8 text-white mb-12">
-          <h2 className="text-2xl font-bold mb-4">Embeddable Widget</h2>
+        <div className="bg-gradient-to-r from-[#479ffa] to-[#e75ece] rounded-2xl p-8 text-white mb-12">
+          <h2 className="text-2xl font-bold mb-4 text-balance">Embeddable Widget</h2>
           <p className="opacity-90 mb-6">
             Add stock quotes to your website with just one line of code.
           </p>
           <Link
             href="/embed"
-            className="inline-block bg-white text-blue-600 font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition"
+            className="inline-block bg-white text-[#479ffa] font-semibold px-6 py-3 rounded-lg hover:bg-white/90 motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
           >
             Get Widget Code
           </Link>
         </div>
 
         {/* Data Coverage */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mb-12">
-          <h2 className="text-2xl font-bold mb-6">Data Coverage</h2>
+        <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 mb-12 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
+          <h2 className="text-2xl font-bold mb-6 text-balance">Data Coverage</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <h3 className="font-semibold mb-2">US Markets</h3>
-              <ul className="text-gray-600 dark:text-gray-400 space-y-1">
-                <li>10,000+ US stocks (NYSE, NASDAQ, AMEX)</li>
-                <li>Real-time prices (15-min delay)</li>
-                <li>10+ years of financial statements</li>
+              <ul className="text-[#868f97] space-y-1">
+                <li><span className="tabular-nums">10,000+</span> US stocks (NYSE, NASDAQ, AMEX)</li>
+                <li>Real-time prices (<span className="tabular-nums">15</span>-min delay)</li>
+                <li><span className="tabular-nums">10+</span> years of financial statements</li>
                 <li>SEC filings (10-K, 10-Q, 8-K)</li>
                 <li>Insider trades (Form 4)</li>
                 <li>Institutional holdings (13F)</li>
@@ -327,8 +327,8 @@ export default function APIDocsPage() {
             </div>
             <div>
               <h3 className="font-semibold mb-2">European Markets</h3>
-              <ul className="text-gray-600 dark:text-gray-400 space-y-1">
-                <li>100,000+ European companies</li>
+              <ul className="text-[#868f97] space-y-1">
+                <li><span className="tabular-nums">100,000+</span> European companies</li>
                 <li>Norway, Sweden, Denmark, Finland, UK</li>
                 <li>IFRS financial statements</li>
                 <li>Free government API sources</li>
@@ -338,12 +338,12 @@ export default function APIDocsPage() {
         </div>
 
         {/* Footer */}
-        <div className="text-center text-sm text-gray-500">
+        <div className="text-center text-sm text-[#868f97]">
           <p>
-            Questions? Contact us at <a href="mailto:api@lician.com" className="text-blue-600 hover:underline">api@lician.com</a>
+            Questions? Contact us at <a href="mailto:api@lician.com" className="text-[#479ffa] hover:underline motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded">api@lician.com</a>
           </p>
           <p className="mt-2">
-            Data provided by <Link href="/" className="text-blue-600 hover:underline">Lician</Link>.
+            Data provided by <Link href="/" className="text-[#479ffa] hover:underline motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded">Lician</Link>.
           </p>
         </div>
       </div>

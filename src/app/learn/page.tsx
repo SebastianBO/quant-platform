@@ -136,14 +136,14 @@ export default function LearnPage() {
         }}
       />
       <Header />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-dvh bg-black text-white pt-20">
         <div className="max-w-6xl mx-auto px-6 py-12">
           <div className="flex gap-8">
             <SEOSidebar />
             <div className="flex-1 min-w-0">
           {/* Breadcrumbs */}
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-[#479ffa] motion-safe:transition-all motion-safe:duration-150 ease-out">
               Home
             </Link>
             {' / '}
@@ -155,7 +155,7 @@ export default function LearnPage() {
             <h1 className="text-4xl font-bold mb-4">
               Master Stock Investing & Analysis
             </h1>
-            <p className="text-xl text-muted-foreground mb-6">
+            <p className="text-xl text-[#868f97] mb-6">
               Free, comprehensive guides to help you analyze stocks like a professional investor.
               Learn valuation techniques, fundamental analysis, and how AI is revolutionizing stock research.
             </p>
@@ -169,31 +169,31 @@ export default function LearnPage() {
                 <Link
                   key={topic.href}
                   href={topic.href}
-                  className="bg-card p-6 rounded-xl border border-border hover:border-green-500/50 transition-all hover:shadow-lg group"
+                  className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out group"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="text-4xl">{topic.icon}</div>
                     <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs px-2 py-1 bg-primary/10 text-primary rounded">
+                      <span className="text-xs px-2 py-1 bg-white/[0.05] text-[#868f97] rounded-full">
                         {topic.difficulty}
                       </span>
                       {topic.badge && (
-                        <span className="text-xs px-2 py-1 bg-green-500/10 text-green-500 rounded">
+                        <span className="text-xs px-2 py-1 bg-[#4ebe96]/10 text-[#4ebe96] rounded-full">
                           {topic.badge}
                         </span>
                       )}
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold mb-2 group-hover:text-green-500 transition-colors">
+                  <h3 className="text-xl font-bold mb-2 group-hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out">
                     {topic.title}
                   </h3>
-                  <p className="text-muted-foreground mb-4">
+                  <p className="text-[#868f97] mb-4">
                     {topic.description}
                   </p>
                   <ul className="space-y-1">
                     {topic.topics.map((item, idx) => (
-                      <li key={idx} className="text-sm text-muted-foreground flex items-center gap-2">
-                        <span className="text-green-500">•</span>
+                      <li key={idx} className="text-sm text-[#868f97] flex items-center gap-2">
+                        <span className="text-[#4ebe96]">•</span>
                         {item}
                       </li>
                     ))}
@@ -209,38 +209,38 @@ export default function LearnPage() {
               Why Learn Stock Analysis?
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
                 <h3 className="text-lg font-bold mb-3">
                   Make Informed Decisions
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-[#868f97]">
                   Understanding stock analysis helps you evaluate opportunities objectively,
                   avoiding emotional decisions and hype-driven mistakes that destroy wealth.
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
                 <h3 className="text-lg font-bold mb-3">
                   Find Undervalued Stocks
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-[#868f97]">
                   Learn to identify stocks trading below their intrinsic value using
                   valuation techniques employed by successful investors like Warren Buffett.
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
                 <h3 className="text-lg font-bold mb-3">
                   Build Long-Term Wealth
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-[#868f97]">
                   Quality stock analysis enables you to build a portfolio of great companies
                   at fair prices, compounding wealth over decades rather than gambling on trends.
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
                 <h3 className="text-lg font-bold mb-3">
                   Avoid Costly Mistakes
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-[#868f97]">
                   Understanding fundamentals helps you recognize red flags like deteriorating
                   margins, unsustainable debt, or accounting irregularities before they crater.
                 </p>
@@ -251,74 +251,74 @@ export default function LearnPage() {
           {/* Learning Path */}
           <section className="mb-16">
             <h2 className="text-2xl font-bold mb-6">Recommended Learning Path</h2>
-            <div className="bg-card p-6 rounded-xl border border-border">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
               <div className="space-y-4">
                 <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold">
+                  <div className="flex-shrink-0 w-8 h-8 bg-[#4ebe96] text-white rounded-full flex items-center justify-center font-bold">
                     1
                   </div>
                   <div>
                     <h3 className="font-bold mb-1">
-                      <Link href="/learn/how-to-invest" className="hover:text-green-500">
+                      <Link href="/learn/how-to-invest" className="hover:text-[#4ebe96]">
                         Start with How to Invest in Stocks
                       </Link>
                     </h3>
-                    <p className="text-muted-foreground">
+                    <p className="text-[#868f97]">
                       Learn the absolute basics: opening accounts, placing orders, building portfolios, and avoiding beginner mistakes.
                     </p>
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold">
+                  <div className="flex-shrink-0 w-8 h-8 bg-[#4ebe96] text-white rounded-full flex items-center justify-center font-bold">
                     2
                   </div>
                   <div>
                     <h3 className="font-bold mb-1">Master Stock Analysis Fundamentals</h3>
-                    <p className="text-muted-foreground">
+                    <p className="text-[#868f97]">
                       Learn to read financial statements, understand key metrics, and evaluate business quality.
                     </p>
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold">
+                  <div className="flex-shrink-0 w-8 h-8 bg-[#4ebe96] text-white rounded-full flex items-center justify-center font-bold">
                     3
                   </div>
                   <div>
                     <h3 className="font-bold mb-1">Understand P/E Ratios and Valuation Multiples</h3>
-                    <p className="text-muted-foreground">
+                    <p className="text-[#868f97]">
                       Master relative valuation and how to compare stocks within industries.
                     </p>
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold">
+                  <div className="flex-shrink-0 w-8 h-8 bg-[#4ebe96] text-white rounded-full flex items-center justify-center font-bold">
                     4
                   </div>
                   <div>
                     <h3 className="font-bold mb-1">Learn DCF Valuation</h3>
-                    <p className="text-muted-foreground">
+                    <p className="text-[#868f97]">
                       Calculate intrinsic value using discounted cash flow analysis - the gold standard for valuation.
                     </p>
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold">
+                  <div className="flex-shrink-0 w-8 h-8 bg-[#4ebe96] text-white rounded-full flex items-center justify-center font-bold">
                     5
                   </div>
                   <div>
                     <h3 className="font-bold mb-1">Explore Specialized Strategies</h3>
-                    <p className="text-muted-foreground">
+                    <p className="text-[#868f97]">
                       Deep dive into dividend investing, growth investing, or other strategies that match your goals.
                     </p>
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold">
+                  <div className="flex-shrink-0 w-8 h-8 bg-[#4ebe96] text-white rounded-full flex items-center justify-center font-bold">
                     6
                   </div>
                   <div>
                     <h3 className="font-bold mb-1">Leverage AI for Enhanced Analysis</h3>
-                    <p className="text-muted-foreground">
+                    <p className="text-[#868f97]">
                       Understand how AI can process vast amounts of data to complement your analysis and find opportunities.
                     </p>
                   </div>
@@ -336,27 +336,27 @@ export default function LearnPage() {
               {faqs.map((faq, index) => (
                 <div
                   key={index}
-                  className="bg-card p-6 rounded-xl border border-border"
+                  className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6"
                 >
                   <h3 className="text-lg font-bold mb-3">{faq.question}</h3>
-                  <p className="text-muted-foreground">{faq.answer}</p>
+                  <p className="text-[#868f97]">{faq.answer}</p>
                 </div>
               ))}
             </div>
           </section>
 
           {/* CTA */}
-          <section className="bg-card p-8 rounded-xl border border-border text-center">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 text-center">
             <h2 className="text-2xl font-bold mb-4">
               Ready to Start Analyzing Stocks?
             </h2>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-[#868f97] mb-6">
               Apply what you learn with our AI-powered stock analysis platform.
               Get instant DCF valuations, financial analysis, and investment insights.
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+              className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black px-8 py-3 rounded-full font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
             >
               Start Free Analysis
             </Link>

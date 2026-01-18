@@ -229,14 +229,14 @@ export default async function ForexPage() {
           __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema]),
         }}
       />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-dvh bg-black text-white pt-20">
         <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="flex gap-8">
             <SEOSidebar />
             <div className="flex-1 min-w-0">
           {/* Breadcrumbs */}
           <nav className="text-sm text-[#868f97] mb-6">
-            <Link href="/" className="hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out">
+            <Link href="/" className="hover:text-[#479ffa] motion-safe:transition-colors motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none rounded-sm">
               Home
             </Link>
             {' / '}
@@ -323,8 +323,8 @@ export default async function ForexPage() {
                             </div>
                           </td>
                           <td className="p-4 font-mono text-[#868f97]">{currency.code}</td>
-                          <td className="p-4 text-right font-mono text-lg">{rate.toFixed(4)}</td>
-                          <td className="p-4 text-right font-mono text-lg text-[#4ebe96]">{inverseRate.toFixed(4)}</td>
+                          <td className="p-4 text-right font-mono text-lg tabular-nums">{rate.toFixed(4)}</td>
+                          <td className="p-4 text-right font-mono text-lg text-[#4ebe96] tabular-nums">{inverseRate.toFixed(4)}</td>
                         </tr>
                       )
                     })}
@@ -360,13 +360,13 @@ export default async function ForexPage() {
                       <span className="text-2xl">{getCurrencyFlag(conversion.to)}</span>
                     </div>
                     <div className="text-center">
-                      <div className="text-lg font-bold mb-2">
+                      <div className="text-lg font-bold mb-2 tabular-nums">
                         {conversion.amount} {conversion.from}
                       </div>
-                      <div className="text-2xl font-bold text-[#4ebe96] mb-2">
+                      <div className="text-2xl font-bold text-[#4ebe96] mb-2 tabular-nums">
                         {result.toFixed(2)} {conversion.to}
                       </div>
-                      <div className="text-sm text-[#868f97]">
+                      <div className="text-sm text-[#868f97] tabular-nums">
                         Rate: {formatRate(rate, `${conversion.from}/${conversion.to}`)}
                       </div>
                     </div>
@@ -477,7 +477,7 @@ export default async function ForexPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Link
                 href="/markets"
-                className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out group"
+                className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none group"
               >
                 <div className="text-3xl mb-3">📊</div>
                 <h3 className="text-lg font-bold mb-2 group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out">
@@ -490,7 +490,7 @@ export default async function ForexPage() {
 
               <Link
                 href="/dashboard"
-                className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out group"
+                className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none group"
               >
                 <div className="text-3xl mb-3">🔍</div>
                 <h3 className="text-lg font-bold mb-2 group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out">
@@ -503,7 +503,7 @@ export default async function ForexPage() {
 
               <Link
                 href="/screener"
-                className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out group"
+                className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none group"
               >
                 <div className="text-3xl mb-3">🎯</div>
                 <h3 className="text-lg font-bold mb-2 group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out">
@@ -533,17 +533,17 @@ export default async function ForexPage() {
           </section>
 
           {/* CTA Section 1 - Analysis Tools */}
-          <section className="bg-gradient-to-r from-[#4ebe96] to-[#4ebe96] p-8 rounded-xl text-white text-center mb-8">
+          <section className="bg-gradient-to-r from-[#4ebe96] to-[#4ebe96] p-8 rounded-2xl text-white text-center mb-8">
             <h2 className="text-3xl font-bold mb-4">
               Track Forex Impact on Global Markets
             </h2>
-            <p className="text-lg mb-6 text-green-50">
+            <p className="text-lg mb-6 text-white/90">
               Currency movements affect multinational companies, commodities, and international investments.
               Use our AI-powered tools to analyze how forex impacts your portfolio.
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-white text-[#4ebe96] px-8 py-3 rounded-lg font-semibold hover:bg-[#4ebe96]/10 motion-safe:transition-colors motion-safe:duration-150 ease-out"
+              className="inline-block bg-white text-[#4ebe96] px-8 py-3 rounded-full font-semibold hover:bg-white/90 motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
             >
               Analyze Stocks Now
             </Link>
@@ -561,13 +561,13 @@ export default async function ForexPage() {
             <div className="flex gap-4 justify-center">
               <Link
                 href="/premium"
-                className="bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-white px-8 py-3 rounded-lg font-medium motion-safe:transition-colors motion-safe:duration-150 ease-out"
+                className="bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-white px-8 py-3 rounded-full font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none"
               >
                 Upgrade to Premium
               </Link>
               <Link
                 href="/learn"
-                className="bg-white/[0.05] hover:bg-white/[0.08] text-white px-8 py-3 rounded-lg font-medium motion-safe:transition-colors motion-safe:duration-150 ease-out"
+                className="bg-white/[0.05] hover:bg-white/[0.08] text-white px-8 py-3 rounded-full font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none"
               >
                 Learn More About Forex
               </Link>

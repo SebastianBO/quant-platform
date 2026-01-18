@@ -1,145 +1,153 @@
-# Lician - AI-Powered Stock Research Platform
+# MCP Registry
 
-An institutional-grade quantitative finance platform combining real-time market data, AI-driven analysis, and portfolio management.
+The MCP registry provides MCP clients with a list of MCP servers, like an app store for MCP servers.
 
-## Quick Links
+[**📤 Publish my MCP server**](docs/modelcontextprotocol-io/quickstart.mdx) | [**⚡️ Live API docs**](https://registry.modelcontextprotocol.io/docs) | [**👀 Ecosystem vision**](docs/design/ecosystem-vision.md) | 📖 **[Full documentation](./docs)**
 
-- **Live Site:** https://lician.com
-- **Admin Dashboard:** https://lician.com/admin
-- **API Docs:** See [PLATFORM_DOCUMENTATION.md](./PLATFORM_DOCUMENTATION.md)
-- **Operations Guide:** See [OPERATIONS_RUNBOOK.md](./OPERATIONS_RUNBOOK.md)
+## Development Status
 
-## Features
+**2025-10-24 update**: The Registry API has entered an **API freeze (v0.1)** 🎉. For the next month or more, the API will remain stable with no breaking changes, allowing integrators to confidently implement support. This freeze applies to v0.1 while development continues on v0. We'll use this period to validate the API in real-world integrations and gather feedback to shape v1 for general availability. Thank you to everyone for your contributions and patience—your involvement has been key to getting us here!
 
-- Real-time stock quotes and charts
-- AI-powered investment analysis (Claude/GPT)
-- Financial statements (10-K, 10-Q)
-- Institutional ownership (13F filings)
-- Insider trading (Form 4)
-- Biotech catalyst tracking
-- Portfolio management (Plaid/Tink)
-- Programmatic SEO (100K+ pages)
+**2025-09-08 update**: The registry has launched in preview 🎉 ([announcement blog post](https://blog.modelcontextprotocol.io/posts/2025-09-08-mcp-registry-preview/)). While the system is now more stable, this is still a preview release and breaking changes or data resets may occur. A general availability (GA) release will follow later. We'd love your feedback in [GitHub discussions](https://github.com/modelcontextprotocol/registry/discussions/new?category=ideas) or in the [#registry-dev Discord](https://discord.com/channels/1358869848138059966/1369487942862504016) ([joining details here](https://modelcontextprotocol.io/community/communication)).
 
-## Tech Stack
+Current key maintainers:
+- **Adam Jones** (Anthropic) [@domdomegg](https://github.com/domdomegg)  
+- **Tadas Antanavicius** (PulseMCP) [@tadasant](https://github.com/tadasant)
+- **Toby Padilla** (GitHub) [@toby](https://github.com/toby)
+- **Radoslav (Rado) Dimitrov** (Stacklok) [@rdimitrov](https://github.com/rdimitrov)
 
-| Layer | Technology |
-|-------|------------|
-| Frontend | Next.js 16, React 19, Tailwind CSS |
-| Backend | Supabase (PostgreSQL), Vercel |
-| AI | Anthropic Claude, OpenAI GPT-4 |
-| Payments | Stripe, RevenueCat |
-| Data | SEC EDGAR, EODHD, Financial Datasets |
+## Contributing
 
-## Getting Started
+We use multiple channels for collaboration - see [modelcontextprotocol.io/community/communication](https://modelcontextprotocol.io/community/communication).
 
-### Prerequisites
+Often (but not always) ideas flow through this pipeline:
 
-- Node.js 20+
-- Supabase account
-- Required API keys (see `.env.example`)
+- **[Discord](https://modelcontextprotocol.io/community/communication)** - Real-time community discussions
+- **[Discussions](https://github.com/modelcontextprotocol/registry/discussions)** - Propose and discuss product/technical requirements
+- **[Issues](https://github.com/modelcontextprotocol/registry/issues)** - Track well-scoped technical work  
+- **[Pull Requests](https://github.com/modelcontextprotocol/registry/pulls)** - Contribute work towards issues
 
-### Installation
+### Quick start:
+
+#### Pre-requisites
+
+- **Docker**
+- **Go 1.24.x**
+- **ko** - Container image builder for Go ([installation instructions](https://ko.build/install/))
+- **golangci-lint v2.4.0**
+
+#### Running the server
 
 ```bash
-# Install dependencies
-npm install
-
-# Set up environment variables
-cp .env.example .env.local
-# Edit .env.local with your keys
-
-# Run development server
-npm run dev
+# Start full development environment
+make dev-compose
 ```
 
-### Database Setup
+This starts the registry at [`localhost:8080`](http://localhost:8080) with PostgreSQL. The database uses ephemeral storage and is reset each time you restart the containers, ensuring a clean state for development and testing.
+
+**Note:** The registry uses [ko](https://ko.build) to build container images. The `make dev-compose` command automatically builds the registry image with ko and loads it into your local Docker daemon before starting the services.
+
+By default, the registry seeds from the production API with a filtered subset of servers (to keep startup fast). This ensures your local environment mirrors production behavior and all seed data passes validation. For offline development you can seed from a file without validation with `MCP_REGISTRY_SEED_FROM=data/seed.json MCP_REGISTRY_ENABLE_REGISTRY_VALIDATION=false make dev-compose`.
+
+The setup can be configured with environment variables in [docker-compose.yml](./docker-compose.yml) - see [.env.example](./.env.example) for a reference.
+
+<details>
+<summary>Alternative: Running a pre-built Docker image</summary>
+
+Pre-built Docker images are automatically published to GitHub Container Registry:
 
 ```bash
-# Link to Supabase project
-supabase link --project-ref YOUR_PROJECT_REF
+# Run latest stable release
+docker run -p 8080:8080 ghcr.io/modelcontextprotocol/registry:latest
 
-# Push migrations
-supabase db push --linked
+# Run latest from main branch (continuous deployment)
+docker run -p 8080:8080 ghcr.io/modelcontextprotocol/registry:main
 
-# Generate types
-supabase gen types typescript --linked > types/supabase.ts
+# Run specific release version
+docker run -p 8080:8080 ghcr.io/modelcontextprotocol/registry:v1.0.0
+
+# Run development build from main branch
+docker run -p 8080:8080 ghcr.io/modelcontextprotocol/registry:main-20250906-abc123d
 ```
 
-## Project Structure
+**Available tags:** 
+- **Releases**: `latest`, `v1.0.0`, `v1.1.0`, etc.
+- **Continuous**: `main` (latest main branch build)
+- **Development**: `main-<date>-<sha>` (specific commit builds)
 
-```
-src/
-├── app/           # Next.js App Router pages
-│   ├── api/       # API routes (83 endpoints)
-│   ├── stock/     # Stock analysis pages
-│   ├── admin/     # Admin dashboard
-│   └── premium/   # Subscription pages
-├── components/    # React components (71)
-└── lib/           # Utilities and helpers
+</details>
 
-supabase/
-└── migrations/    # Database migrations (22)
+#### Publishing a server
 
-scripts/
-├── check-cron-status.js    # Cron diagnostics
-└── generate-favicons.js    # Favicon generator
-```
-
-## Documentation
-
-| Document | Description |
-|----------|-------------|
-| [PLATFORM_DOCUMENTATION.md](./PLATFORM_DOCUMENTATION.md) | Complete platform documentation |
-| [OPERATIONS_RUNBOOK.md](./OPERATIONS_RUNBOOK.md) | Operations and troubleshooting guide |
-
-## Key Commands
+To publish a server, we've built a simple CLI. You can use it with:
 
 ```bash
-# Development
-npm run dev          # Start dev server
-npm run build        # Production build
+# Build the latest CLI
+make publisher
 
-# Database
-supabase db push --linked              # Deploy migrations
-supabase migration new NAME            # Create migration
-supabase migration list --linked       # Check status
-
-# Diagnostics
-node scripts/check-cron-status.js      # Check cron jobs
+# Use it!
+./bin/mcp-publisher --help
 ```
 
-## Environment Variables
+See [the publisher guide](./docs/modelcontextprotocol-io/quickstart.mdx) for more details.
 
-See `.env.example` for required variables. Key ones:
-
-- `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
-- `SUPABASE_SERVICE_ROLE_KEY` - Supabase admin key
-- `STRIPE_SECRET_KEY` - Stripe API key
-- `EODHD_API_KEY` - Market data API
-- `ADMIN_PASSWORD` - Admin dashboard access
-
-## Deployment
-
-Deployed on Vercel with automatic deployments from `main` branch.
+#### Other commands
 
 ```bash
-# Manual deploy
-vercel --prod
-
-# Database migrations
-supabase db push --linked
+# Run lint, unit tests and integration tests
+make check
 ```
 
-## Monitoring
+There are also a few more helpful commands for development. Run `make help` to learn more, or look in [Makefile](./Makefile).
 
-- **Vercel:** https://vercel.com/finance-liciancoms-projects/quant-platform
-- **Supabase:** https://supabase.com/dashboard/project/wcckhqxkmhyzfpynthte
-- **Admin:** https://lician.com/admin
+<!--
+For Claude and other AI tools: Always prefer make targets over custom commands where possible.
+-->
 
-## License
+## Architecture
 
-Proprietary - All rights reserved
+### Project Structure
 
----
+```
+├── cmd/                     # Application entry points
+│   └── publisher/           # Server publishing tool
+├── data/                    # Seed data
+├── deploy/                  # Deployment configuration (Pulumi)
+├── docs/                    # Documentation
+├── internal/                # Private application code
+│   ├── api/                 # HTTP handlers and routing
+│   ├── auth/                # Authentication (GitHub OAuth, JWT, namespace blocking)
+│   ├── config/              # Configuration management
+│   ├── database/            # Data persistence (PostgreSQL)
+│   ├── service/             # Business logic
+│   ├── telemetry/           # Metrics and monitoring
+│   └── validators/          # Input validation
+├── pkg/                     # Public packages
+│   ├── api/                 # API types and structures
+│   │   └── v0/              # Version 0 API types
+│   └── model/               # Data models for server.json
+├── scripts/                 # Development and testing scripts
+├── tests/                   # Integration tests
+└── tools/                   # CLI tools and utilities
+    └── validate-*.sh        # Schema validation tools
+```
 
-*Built with Next.js, Supabase, and AI*
+### Authentication
+
+Publishing supports multiple authentication methods:
+- **GitHub OAuth** - For publishing by logging into GitHub
+- **GitHub OIDC** - For publishing from GitHub Actions
+- **DNS verification** - For proving ownership of a domain and its subdomains
+- **HTTP verification** - For proving ownership of a domain
+
+The registry validates namespace ownership when publishing. E.g. to publish...:
+- `io.github.domdomegg/my-cool-mcp` you must login to GitHub as `domdomegg`, or be in a GitHub Action on domdomegg's repos
+- `me.adamjones/my-cool-mcp` you must prove ownership of `adamjones.me` via DNS or HTTP challenge
+
+## Community Projects
+
+Check out [community projects](docs/community-projects.md) to explore notable registry-related work created by the community.
+
+## More documentation
+
+See the [documentation](./docs) for more details if your question has not been answered here!

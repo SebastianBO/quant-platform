@@ -7,7 +7,7 @@ export default function SubscriptionSuccessPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-[#0a0a0a] text-white pt-20">
+      <main className="min-h-dvh bg-black text-white pt-20">
         <div className="max-w-xl mx-auto px-6 py-16">
           <Suspense fallback={<LoadingFallback />}>
             <SubscriptionSuccessContent />

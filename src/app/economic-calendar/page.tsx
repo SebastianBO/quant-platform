@@ -1,6 +1,5 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card"
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import SEOSidebar from '@/components/SEOSidebar'
@@ -310,29 +309,29 @@ export default function EconomicCalendarPage() {
         }}
       />
 
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-dvh bg-black text-white pt-20">
         <div className="max-w-[1400px] mx-auto px-6 py-8">
           <div className="flex gap-8">
             <SEOSidebar />
             <div className="flex-1 min-w-0">
           {/* Breadcrumb Navigation */}
-          <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground transition-colors">
+          <nav className="flex items-center gap-2 text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded-full px-1">
               Home
             </Link>
             <ChevronRight className="w-4 h-4" />
-            <span className="text-foreground">Economic Calendar</span>
+            <span className="text-white">Economic Calendar</span>
           </nav>
 
           {/* Page Header */}
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center">
-                <Calendar className="w-6 h-6 text-green-500" />
+              <div className="w-12 h-12 bg-[#4ebe96]/10 rounded-xl flex items-center justify-center">
+                <Calendar className="w-6 h-6 text-[#4ebe96]" />
               </div>
               <h1 className="text-4xl font-bold">Economic Calendar 2025</h1>
             </div>
-            <p className="text-xl text-muted-foreground max-w-3xl">
+            <p className="text-xl text-[#868f97] max-w-3xl">
               Track major economic events including FOMC meeting dates, Federal Reserve decisions, CPI releases,
               jobs reports, GDP data, and other market-moving indicators. Never miss critical economic events.
             </p>
@@ -340,108 +339,100 @@ export default function EconomicCalendarPage() {
 
           {/* Quick Stats */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-            <Card className="bg-card border-border">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-muted-foreground mb-1">FOMC Meetings</p>
-                    <p className="text-2xl font-bold">8</p>
-                    <p className="text-xs text-muted-foreground mt-1">in 2025</p>
-                  </div>
-                  <Building2 className="w-8 h-8 text-green-500" />
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-[#868f97] mb-1">FOMC Meetings</p>
+                  <p className="text-2xl font-bold tabular-nums">8</p>
+                  <p className="text-xs text-[#868f97] mt-1">in 2025</p>
                 </div>
-              </CardContent>
-            </Card>
+                <Building2 className="w-8 h-8 text-[#4ebe96]" />
+              </div>
+            </div>
 
-            <Card className="bg-card border-border">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-muted-foreground mb-1">Next FOMC</p>
-                    <p className="text-lg font-bold">Jan 28-29</p>
-                    <p className="text-xs text-muted-foreground mt-1">Press Conference</p>
-                  </div>
-                  <Calendar className="w-8 h-8 text-blue-500" />
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-[#868f97] mb-1">Next FOMC</p>
+                  <p className="text-lg font-bold">Jan 28-29</p>
+                  <p className="text-xs text-[#868f97] mt-1">Press Conference</p>
                 </div>
-              </CardContent>
-            </Card>
+                <Calendar className="w-8 h-8 text-[#479ffa]" />
+              </div>
+            </div>
 
-            <Card className="bg-card border-border">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-muted-foreground mb-1">Monthly Reports</p>
-                    <p className="text-2xl font-bold">12+</p>
-                    <p className="text-xs text-muted-foreground mt-1">Key Indicators</p>
-                  </div>
-                  <TrendingUp className="w-8 h-8 text-purple-500" />
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-[#868f97] mb-1">Monthly Reports</p>
+                  <p className="text-2xl font-bold tabular-nums">12+</p>
+                  <p className="text-xs text-[#868f97] mt-1">Key Indicators</p>
                 </div>
-              </CardContent>
-            </Card>
+                <TrendingUp className="w-8 h-8 text-[#4ebe96]" />
+              </div>
+            </div>
 
-            <Card className="bg-card border-border">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-muted-foreground mb-1">High Impact</p>
-                    <p className="text-2xl font-bold">25+</p>
-                    <p className="text-xs text-muted-foreground mt-1">Events/Quarter</p>
-                  </div>
-                  <AlertCircle className="w-8 h-8 text-red-500" />
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-[#868f97] mb-1">High Impact</p>
+                  <p className="text-2xl font-bold tabular-nums">25+</p>
+                  <p className="text-xs text-[#868f97] mt-1">Events/Quarter</p>
                 </div>
-              </CardContent>
-            </Card>
+                <AlertCircle className="w-8 h-8 text-[#ff5c5c]" />
+              </div>
+            </div>
           </div>
 
           {/* Upcoming Events Table */}
-          <Card className="bg-card border-border mb-8">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-green-500" />
-                Upcoming Economic Events
-              </CardTitle>
-              <CardDescription>
+          <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out mb-8">
+            <div className="p-6 border-b border-white/[0.08]">
+              <div className="flex items-center gap-2 mb-2">
+                <Calendar className="w-5 h-5 text-[#4ebe96]" />
+                <h2 className="text-xl font-bold">Upcoming Economic Events</h2>
+              </div>
+              <p className="text-sm text-[#868f97]">
                 Major market-moving economic releases and central bank meetings
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+              </p>
+            </div>
+            <div className="p-6">
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-border">
-                      <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Date</th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Time</th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Event</th>
-                      <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Impact</th>
-                      <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Previous</th>
-                      <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Forecast</th>
-                      <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Actual</th>
+                    <tr className="border-b border-white/[0.08]">
+                      <th className="text-left py-3 px-4 text-sm font-medium text-[#868f97]">Date</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-[#868f97]">Time</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-[#868f97]">Event</th>
+                      <th className="text-center py-3 px-4 text-sm font-medium text-[#868f97]">Impact</th>
+                      <th className="text-right py-3 px-4 text-sm font-medium text-[#868f97]">Previous</th>
+                      <th className="text-right py-3 px-4 text-sm font-medium text-[#868f97]">Forecast</th>
+                      <th className="text-right py-3 px-4 text-sm font-medium text-[#868f97]">Actual</th>
                     </tr>
                   </thead>
                   <tbody>
                     {upcomingEvents.map((event, index) => (
-                      <tr key={index} className="border-b border-border/50 hover:bg-secondary/30 transition-colors">
+                      <tr key={index} className="border-b border-white/[0.05] hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out">
                         <td className="py-4 px-4">
                           <div className="text-sm font-medium">{new Date(event.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
-                          <div className="text-xs text-muted-foreground">{new Date(event.date).toLocaleDateString('en-US', { weekday: 'short' })}</div>
+                          <div className="text-xs text-[#868f97]">{new Date(event.date).toLocaleDateString('en-US', { weekday: 'short' })}</div>
                         </td>
-                        <td className="py-4 px-4 text-sm text-muted-foreground">{event.time}</td>
+                        <td className="py-4 px-4 text-sm text-[#868f97]">{event.time}</td>
                         <td className="py-4 px-4">
                           <div className="text-sm font-medium">{event.event}</div>
-                          <div className="text-xs text-muted-foreground">{event.country}</div>
+                          <div className="text-xs text-[#868f97]">{event.country}</div>
                         </td>
                         <td className="py-4 px-4 text-center">
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                             event.importance === 'High'
-                              ? 'bg-red-500/10 text-red-500 border border-red-500/20'
-                              : 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20'
+                              ? 'bg-[#ff5c5c]/10 text-[#ff5c5c] border border-[#ff5c5c]/20'
+                              : 'bg-[#ffa16c]/10 text-[#ffa16c] border border-[#ffa16c]/20'
                           }`}>
                             {event.importance}
                           </span>
                         </td>
                         <td className="py-4 px-4 text-right text-sm tabular-nums">{event.previous}</td>
                         <td className="py-4 px-4 text-right text-sm font-medium tabular-nums">{event.forecast}</td>
-                        <td className="py-4 px-4 text-right text-sm tabular-nums text-muted-foreground">
+                        <td className="py-4 px-4 text-right text-sm tabular-nums text-[#868f97]">
                           {event.actual || '-'}
                         </td>
                       </tr>
@@ -449,380 +440,378 @@ export default function EconomicCalendarPage() {
                   </tbody>
                 </table>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           {/* FOMC Meeting Schedule */}
-          <Card className="bg-card border-border mb-8">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Building2 className="w-5 h-5 text-green-500" />
-                FOMC Meeting Schedule 2025
-              </CardTitle>
-              <CardDescription>
+          <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out mb-8">
+            <div className="p-6 border-b border-white/[0.08]">
+              <div className="flex items-center gap-2 mb-2">
+                <Building2 className="w-5 h-5 text-[#4ebe96]" />
+                <h2 className="text-xl font-bold">FOMC Meeting Schedule 2025</h2>
+              </div>
+              <p className="text-sm text-[#868f97]">
                 Federal Reserve Federal Open Market Committee meeting dates - All meetings include press conferences
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+              </p>
+            </div>
+            <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {fomcMeetings.map((meeting, index) => (
                   <div
                     key={index}
-                    className="p-4 bg-secondary/30 rounded-lg border border-border hover:border-green-500/50 transition-colors"
+                    className="p-4 bg-white/[0.03] rounded-2xl border border-white/[0.08] hover:bg-white/[0.05] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out"
                   >
                     <div className="flex items-start justify-between mb-2">
-                      <Calendar className="w-5 h-5 text-green-500" />
+                      <Calendar className="w-5 h-5 text-[#4ebe96]" />
                       {meeting.pressConference && (
-                        <span className="text-xs bg-green-500/10 text-green-500 px-2 py-0.5 rounded-full">
+                        <span className="text-xs bg-[#4ebe96]/10 text-[#4ebe96] px-2 py-0.5 rounded-full">
                           Press Conf.
                         </span>
                       )}
                     </div>
                     <p className="font-medium">{meeting.date}</p>
-                    <p className="text-xs text-muted-foreground mt-1">2:00 PM EST Decision</p>
+                    <p className="text-xs text-[#868f97] mt-1">2:00 PM EST Decision</p>
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           {/* Educational Content */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             {/* Understanding FOMC */}
-            <Card className="bg-card border-border">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Building2 className="w-5 h-5 text-green-500" />
-                  What is FOMC and Why It Matters
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+              <div className="p-6 border-b border-white/[0.08]">
+                <div className="flex items-center gap-2">
+                  <Building2 className="w-5 h-5 text-[#4ebe96]" />
+                  <h3 className="text-lg font-bold">What is FOMC and Why It Matters</h3>
+                </div>
+              </div>
+              <div className="p-6 space-y-4">
                 <div>
                   <h4 className="font-medium mb-2">The Federal Open Market Committee (FOMC)</h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-[#868f97]">
                     The FOMC is the monetary policymaking body of the Federal Reserve System. It consists of 12 members:
                     the seven members of the Board of Governors and five Reserve Bank presidents.
                   </p>
                 </div>
                 <div>
                   <h4 className="font-medium mb-2">Why FOMC Meetings Matter</h4>
-                  <ul className="text-sm text-muted-foreground space-y-2">
+                  <ul className="text-sm text-[#868f97] space-y-2">
                     <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">•</span>
+                      <span className="text-[#4ebe96] mt-1">•</span>
                       <span><strong>Interest Rates:</strong> Sets the federal funds rate, affecting all borrowing costs</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">•</span>
+                      <span className="text-[#4ebe96] mt-1">•</span>
                       <span><strong>Stock Valuations:</strong> Rate changes impact how stocks are valued</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">•</span>
+                      <span className="text-[#4ebe96] mt-1">•</span>
                       <span><strong>Dollar Strength:</strong> Higher rates typically strengthen the US dollar</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">•</span>
+                      <span className="text-[#4ebe96] mt-1">•</span>
                       <span><strong>Economic Growth:</strong> Monetary policy affects business investment and consumer spending</span>
                     </li>
                   </ul>
                 </div>
                 <div>
                   <h4 className="font-medium mb-2">What to Watch For</h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-[#868f97]">
                     Markets react to both the rate decision and the accompanying statement. Pay attention to the "dot plot"
                     (FOMC members' rate projections), economic projections, and the Chair's press conference for forward guidance.
                   </p>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
             {/* Understanding CPI */}
-            <Card className="bg-card border-border">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-green-500" />
-                  Understanding CPI and Inflation
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+              <div className="p-6 border-b border-white/[0.08]">
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-[#4ebe96]" />
+                  <h3 className="text-lg font-bold">Understanding CPI and Inflation</h3>
+                </div>
+              </div>
+              <div className="p-6 space-y-4">
                 <div>
                   <h4 className="font-medium mb-2">Consumer Price Index (CPI)</h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-[#868f97]">
                     CPI measures the average change over time in prices paid by consumers for a basket of goods and services.
                     It's the most widely watched inflation indicator.
                   </p>
                 </div>
                 <div>
                   <h4 className="font-medium mb-2">Components of CPI</h4>
-                  <ul className="text-sm text-muted-foreground space-y-2">
+                  <ul className="text-sm text-[#868f97] space-y-2">
                     <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">•</span>
-                      <span><strong>Food and Beverages:</strong> Grocery items, dining out (~14% of CPI)</span>
+                      <span className="text-[#4ebe96] mt-1">•</span>
+                      <span><strong>Food and Beverages:</strong> Grocery items, dining out (~<span className="tabular-nums">14%</span> of CPI)</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">•</span>
-                      <span><strong>Housing:</strong> Rent, owner's equivalent rent (~42% of CPI)</span>
+                      <span className="text-[#4ebe96] mt-1">•</span>
+                      <span><strong>Housing:</strong> Rent, owner's equivalent rent (~<span className="tabular-nums">42%</span> of CPI)</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">•</span>
-                      <span><strong>Energy:</strong> Gasoline, electricity, natural gas (~7% of CPI)</span>
+                      <span className="text-[#4ebe96] mt-1">•</span>
+                      <span><strong>Energy:</strong> Gasoline, electricity, natural gas (~<span className="tabular-nums">7%</span> of CPI)</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">•</span>
-                      <span><strong>Medical Care:</strong> Healthcare services and insurance (~9% of CPI)</span>
+                      <span className="text-[#4ebe96] mt-1">•</span>
+                      <span><strong>Medical Care:</strong> Healthcare services and insurance (~<span className="tabular-nums">9%</span> of CPI)</span>
                     </li>
                   </ul>
                 </div>
                 <div>
                   <h4 className="font-medium mb-2">Core CPI vs Headline CPI</h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-[#868f97]">
                     Core CPI excludes volatile food and energy prices, providing a better view of underlying inflation trends.
                     The Fed focuses more on Core CPI for policy decisions as it's less affected by temporary shocks.
                   </p>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
             {/* Employment Data */}
-            <Card className="bg-card border-border">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Users className="w-5 h-5 text-green-500" />
-                  Employment Data Interpretation
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+              <div className="p-6 border-b border-white/[0.08]">
+                <div className="flex items-center gap-2">
+                  <Users className="w-5 h-5 text-[#4ebe96]" />
+                  <h3 className="text-lg font-bold">Employment Data Interpretation</h3>
+                </div>
+              </div>
+              <div className="p-6 space-y-4">
                 <div>
                   <h4 className="font-medium mb-2">Non-Farm Payrolls (NFP)</h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-[#868f97]">
                     The monthly jobs report shows how many jobs were added or lost in the US economy, excluding farm workers,
                     government employees, and non-profit organizations. It's released the first Friday of each month.
                   </p>
                 </div>
                 <div>
                   <h4 className="font-medium mb-2">Key Employment Metrics</h4>
-                  <ul className="text-sm text-muted-foreground space-y-2">
+                  <ul className="text-sm text-[#868f97] space-y-2">
                     <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">•</span>
+                      <span className="text-[#4ebe96] mt-1">•</span>
                       <span><strong>Unemployment Rate:</strong> Percentage of labor force actively seeking work</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">•</span>
+                      <span className="text-[#4ebe96] mt-1">•</span>
                       <span><strong>Labor Force Participation:</strong> Percentage of working-age population in labor force</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">•</span>
+                      <span className="text-[#4ebe96] mt-1">•</span>
                       <span><strong>Average Hourly Earnings:</strong> Wage growth indicator affecting consumer spending</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">•</span>
+                      <span className="text-[#4ebe96] mt-1">•</span>
                       <span><strong>Average Weekly Hours:</strong> Total hours worked affects productivity</span>
                     </li>
                   </ul>
                 </div>
                 <div>
                   <h4 className="font-medium mb-2">How Markets React</h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-[#868f97]">
                     Strong job growth can be positive (economic strength) or negative (inflation concerns). The market's reaction
                     depends on where we are in the economic cycle and the Fed's policy stance.
                   </p>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
             {/* GDP and Economic Health */}
-            <Card className="bg-card border-border">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <DollarSign className="w-5 h-5 text-green-500" />
-                  GDP and Economic Health
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+              <div className="p-6 border-b border-white/[0.08]">
+                <div className="flex items-center gap-2">
+                  <DollarSign className="w-5 h-5 text-[#4ebe96]" />
+                  <h3 className="text-lg font-bold">GDP and Economic Health</h3>
+                </div>
+              </div>
+              <div className="p-6 space-y-4">
                 <div>
                   <h4 className="font-medium mb-2">Gross Domestic Product (GDP)</h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-[#868f97]">
                     GDP measures the total value of all goods and services produced in the economy. It's the broadest measure
                     of economic activity and health, reported quarterly in annualized percentage terms.
                   </p>
                 </div>
                 <div>
                   <h4 className="font-medium mb-2">Components of GDP</h4>
-                  <ul className="text-sm text-muted-foreground space-y-2">
+                  <ul className="text-sm text-[#868f97] space-y-2">
                     <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">•</span>
-                      <span><strong>Consumer Spending (C):</strong> ~70% of GDP - retail sales, services</span>
+                      <span className="text-[#4ebe96] mt-1">•</span>
+                      <span><strong>Consumer Spending (C):</strong> ~<span className="tabular-nums">70%</span> of GDP - retail sales, services</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">•</span>
-                      <span><strong>Business Investment (I):</strong> ~18% - equipment, structures, software</span>
+                      <span className="text-[#4ebe96] mt-1">•</span>
+                      <span><strong>Business Investment (I):</strong> ~<span className="tabular-nums">18%</span> - equipment, structures, software</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">•</span>
-                      <span><strong>Government Spending (G):</strong> ~17% - federal, state, local expenditures</span>
+                      <span className="text-[#4ebe96] mt-1">•</span>
+                      <span><strong>Government Spending (G):</strong> ~<span className="tabular-nums">17%</span> - federal, state, local expenditures</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">•</span>
+                      <span className="text-[#4ebe96] mt-1">•</span>
                       <span><strong>Net Exports (NX):</strong> Exports minus imports</span>
                     </li>
                   </ul>
                 </div>
                 <div>
                   <h4 className="font-medium mb-2">GDP Growth Benchmarks</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Healthy GDP growth is typically 2-3% annually. Above 3% suggests strong expansion, while negative GDP
+                  <p className="text-sm text-[#868f97]">
+                    Healthy GDP growth is typically <span className="tabular-nums">2-3%</span> annually. Above <span className="tabular-nums">3%</span> suggests strong expansion, while negative GDP
                     growth for two consecutive quarters technically indicates a recession.
                   </p>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
 
           {/* Economic Indicators Glossary */}
-          <Card className="bg-card border-border mb-8">
-            <CardHeader>
-              <CardTitle>Key Economic Indicators Glossary</CardTitle>
-              <CardDescription>
+          <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out mb-8">
+            <div className="p-6 border-b border-white/[0.08]">
+              <h2 className="text-xl font-bold mb-2">Key Economic Indicators Glossary</h2>
+              <p className="text-sm text-[#868f97]">
                 Essential metrics that move markets and influence Fed policy
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+              </p>
+            </div>
+            <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 bg-secondary/20 rounded-lg">
+                <div className="p-4 bg-white/[0.02] rounded-2xl border border-white/[0.05]">
                   <h4 className="font-medium mb-2 flex items-center gap-2">
-                    <span className="text-green-500">•</span>
+                    <span className="text-[#4ebe96]">•</span>
                     PCE Price Index
                   </h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-[#868f97]">
                     Personal Consumption Expenditures - The Fed's preferred inflation gauge. Tracks price changes
                     for all consumer spending including healthcare paid by employers.
                   </p>
                 </div>
 
-                <div className="p-4 bg-secondary/20 rounded-lg">
+                <div className="p-4 bg-white/[0.02] rounded-2xl border border-white/[0.05]">
                   <h4 className="font-medium mb-2 flex items-center gap-2">
-                    <span className="text-green-500">•</span>
+                    <span className="text-[#4ebe96]">•</span>
                     Producer Price Index (PPI)
                   </h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-[#868f97]">
                     Measures wholesale/producer prices. Leading indicator for consumer inflation as producer
                     cost increases often pass through to consumers.
                   </p>
                 </div>
 
-                <div className="p-4 bg-secondary/20 rounded-lg">
+                <div className="p-4 bg-white/[0.02] rounded-2xl border border-white/[0.05]">
                   <h4 className="font-medium mb-2 flex items-center gap-2">
-                    <span className="text-green-500">•</span>
+                    <span className="text-[#4ebe96]">•</span>
                     Retail Sales
                   </h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-[#868f97]">
                     Total receipts at retail stores. Key indicator of consumer spending strength, which drives
-                    70% of GDP. Excludes services spending.
+                    <span className="tabular-nums"> 70%</span> of GDP. Excludes services spending.
                   </p>
                 </div>
 
-                <div className="p-4 bg-secondary/20 rounded-lg">
+                <div className="p-4 bg-white/[0.02] rounded-2xl border border-white/[0.05]">
                   <h4 className="font-medium mb-2 flex items-center gap-2">
-                    <span className="text-green-500">•</span>
+                    <span className="text-[#4ebe96]">•</span>
                     ISM Manufacturing PMI
                   </h4>
-                  <p className="text-sm text-muted-foreground">
-                    Survey of purchasing managers. Above 50 = expansion, below 50 = contraction. Leading
+                  <p className="text-sm text-[#868f97]">
+                    Survey of purchasing managers. Above <span className="tabular-nums">50</span> = expansion, below <span className="tabular-nums">50</span> = contraction. Leading
                     indicator that often predicts economic turning points.
                   </p>
                 </div>
 
-                <div className="p-4 bg-secondary/20 rounded-lg">
+                <div className="p-4 bg-white/[0.02] rounded-2xl border border-white/[0.05]">
                   <h4 className="font-medium mb-2 flex items-center gap-2">
-                    <span className="text-green-500">•</span>
+                    <span className="text-[#4ebe96]">•</span>
                     Initial Jobless Claims
                   </h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-[#868f97]">
                     Weekly report of new unemployment benefit applications. Real-time indicator of labor
                     market health. Rising claims suggest weakening employment.
                   </p>
                 </div>
 
-                <div className="p-4 bg-secondary/20 rounded-lg">
+                <div className="p-4 bg-white/[0.02] rounded-2xl border border-white/[0.05]">
                   <h4 className="font-medium mb-2 flex items-center gap-2">
-                    <span className="text-green-500">•</span>
+                    <span className="text-[#4ebe96]">•</span>
                     Consumer Confidence
                   </h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-[#868f97]">
                     Survey measuring consumer optimism about economy and personal finances. Strong confidence
                     often leads to increased spending and economic growth.
                   </p>
                 </div>
 
-                <div className="p-4 bg-secondary/20 rounded-lg">
+                <div className="p-4 bg-white/[0.02] rounded-2xl border border-white/[0.05]">
                   <h4 className="font-medium mb-2 flex items-center gap-2">
-                    <span className="text-green-500">•</span>
+                    <span className="text-[#4ebe96]">•</span>
                     Housing Starts
                   </h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-[#868f97]">
                     Number of new residential construction projects. Leading economic indicator as housing
                     drives jobs, consumer spending, and business investment.
                   </p>
                 </div>
 
-                <div className="p-4 bg-secondary/20 rounded-lg">
+                <div className="p-4 bg-white/[0.02] rounded-2xl border border-white/[0.05]">
                   <h4 className="font-medium mb-2 flex items-center gap-2">
-                    <span className="text-green-500">•</span>
+                    <span className="text-[#4ebe96]">•</span>
                     Durable Goods Orders
                   </h4>
-                  <p className="text-sm text-muted-foreground">
-                    Orders for goods lasting 3+ years (cars, appliances, machinery). Indicator of business
+                  <p className="text-sm text-[#868f97]">
+                    Orders for goods lasting <span className="tabular-nums">3+</span> years (cars, appliances, machinery). Indicator of business
                     investment and manufacturing strength.
                   </p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           {/* FAQs Section */}
-          <Card className="bg-card border-border">
-            <CardHeader>
-              <CardTitle>Frequently Asked Questions</CardTitle>
-              <CardDescription>
+          <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+            <div className="p-6 border-b border-white/[0.08]">
+              <h2 className="text-xl font-bold mb-2">Frequently Asked Questions</h2>
+              <p className="text-sm text-[#868f97]">
                 Common questions about economic calendars and indicators
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+              </p>
+            </div>
+            <div className="p-6">
               <div className="space-y-6">
                 {faqs.map((faq, index) => (
-                  <div key={index} className="pb-6 border-b border-border last:border-0 last:pb-0">
+                  <div key={index} className="pb-6 border-b border-white/[0.08] last:border-0 last:pb-0">
                     <h3 className="font-medium mb-2">{faq.question}</h3>
-                    <p className="text-sm text-muted-foreground">{faq.answer}</p>
+                    <p className="text-sm text-[#868f97]">{faq.answer}</p>
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           {/* Call to Action */}
           <div className="mt-8 text-center">
-            <Card className="bg-gradient-to-br from-green-500/10 to-blue-500/10 border-green-500/20">
-              <CardContent className="p-8">
-                <h2 className="text-2xl font-bold mb-3">Stay Ahead of Market-Moving Events</h2>
-                <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                  Use our AI-powered analysis to understand how economic data impacts your investments.
-                  Get instant alerts for major releases and FOMC decisions.
-                </p>
-                <div className="flex items-center justify-center gap-4">
-                  <Link
-                    href="/dashboard"
-                    className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition-colors"
-                  >
-                    Go to Dashboard
-                  </Link>
-                  <Link
-                    href="/stock/SPY"
-                    className="px-6 py-3 bg-secondary hover:bg-secondary/80 text-foreground rounded-lg font-medium transition-colors"
-                  >
-                    Analyze SPY
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="bg-gradient-to-br from-[#4ebe96]/10 to-[#479ffa]/10 border border-[#4ebe96]/20 backdrop-blur-[10px] rounded-2xl p-8">
+              <h2 className="text-2xl font-bold mb-3">Stay Ahead of Market-Moving Events</h2>
+              <p className="text-[#868f97] mb-6 max-w-2xl mx-auto">
+                Use our AI-powered analysis to understand how economic data impacts your investments.
+                Get instant alerts for major releases and FOMC decisions.
+              </p>
+              <div className="flex items-center justify-center gap-4">
+                <Link
+                  href="/dashboard"
+                  className="px-6 py-3 bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black rounded-full font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
+                >
+                  Go to Dashboard
+                </Link>
+                <Link
+                  href="/stock/SPY"
+                  className="px-6 py-3 bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.15] text-white rounded-full font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
+                >
+                  Analyze SPY
+                </Link>
+              </div>
+            </div>
           </div>
             </div>
           </div>

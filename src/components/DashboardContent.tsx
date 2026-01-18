@@ -203,9 +203,9 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
   const isViewingStock = !["myportfolios", "earnings", "screener", "market", "watchlist", "advisor"].includes(activeTab)
 
   return (
-    <main className="min-h-dvh bg-background text-white">
+    <main className="min-h-dvh bg-black text-white">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-white/[0.08]">
+      <header className="sticky top-0 z-50 bg-black/95 backdrop-blur-md border-b border-white/[0.08]">
         <div className="max-w-[1800px] mx-auto px-4 sm:px-6 py-3">
           <div className="flex items-center gap-3 md:gap-6">
             {/* Logo */}
@@ -220,7 +220,7 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 hover:bg-white/[0.08] rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out"
+              className="lg:hidden p-2 hover:bg-white/[0.05] rounded-full motion-safe:transition-colors motion-safe:duration-150 ease-out"
             >
               {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
             </button>
@@ -229,50 +229,50 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
             <nav className="hidden lg:flex items-center gap-1">
               <button
                 onClick={() => setActiveTab('market')}
-                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out ${
+                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-full motion-safe:transition-colors motion-safe:duration-150 ease-out ${
                   activeTab === 'market' || activeTab === 'overview'
                     ? 'bg-[#4ebe96] text-black'
-                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
+                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.05]'
                 }`}
               >
                 Market
               </button>
               <button
                 onClick={() => setActiveTab('watchlist')}
-                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out ${
+                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-full motion-safe:transition-colors motion-safe:duration-150 ease-out ${
                   activeTab === 'watchlist'
                     ? 'bg-[#4ebe96] text-black'
-                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
+                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.05]'
                 }`}
               >
                 Watchlist
               </button>
               <button
                 onClick={() => setActiveTab('myportfolios')}
-                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out ${
+                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-full motion-safe:transition-colors motion-safe:duration-150 ease-out ${
                   activeTab === 'myportfolios'
                     ? 'bg-[#4ebe96] text-black'
-                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
+                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.05]'
                 }`}
               >
                 Portfolio
               </button>
               <button
                 onClick={() => setActiveTab('advisor')}
-                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out ${
+                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-full motion-safe:transition-colors motion-safe:duration-150 ease-out ${
                   activeTab === 'advisor' || activeTab === 'screener' || activeTab === 'dcf'
                     ? 'bg-[#4ebe96] text-black'
-                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
+                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.05]'
                 }`}
               >
                 Advisor
               </button>
               <button
                 onClick={() => setActiveTab('earnings')}
-                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out ${
+                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded-full motion-safe:transition-colors motion-safe:duration-150 ease-out ${
                   activeTab === 'earnings'
                     ? 'bg-[#4ebe96] text-black'
-                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
+                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.05]'
                 }`}
               >
                 Earnings
@@ -304,10 +304,10 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
                   setActiveTab('market')
                   setMobileMenuOpen(false)
                 }}
-                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out ${
+                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-full motion-safe:transition-colors motion-safe:duration-150 ease-out ${
                   activeTab === 'market' || activeTab === 'overview'
                     ? 'bg-[#4ebe96] text-black'
-                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
+                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.05]'
                 }`}
               >
                 Market
@@ -317,10 +317,10 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
                   setActiveTab('watchlist')
                   setMobileMenuOpen(false)
                 }}
-                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out ${
+                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-full motion-safe:transition-colors motion-safe:duration-150 ease-out ${
                   activeTab === 'watchlist'
                     ? 'bg-[#4ebe96] text-black'
-                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
+                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.05]'
                 }`}
               >
                 Watchlist
@@ -330,10 +330,10 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
                   setActiveTab('myportfolios')
                   setMobileMenuOpen(false)
                 }}
-                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out ${
+                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-full motion-safe:transition-colors motion-safe:duration-150 ease-out ${
                   activeTab === 'myportfolios'
                     ? 'bg-[#4ebe96] text-black'
-                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
+                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.05]'
                 }`}
               >
                 Portfolio
@@ -343,10 +343,10 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
                   setActiveTab('advisor')
                   setMobileMenuOpen(false)
                 }}
-                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out ${
+                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-full motion-safe:transition-colors motion-safe:duration-150 ease-out ${
                   activeTab === 'advisor' || activeTab === 'screener' || activeTab === 'dcf'
                     ? 'bg-[#4ebe96] text-black'
-                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
+                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.05]'
                 }`}
               >
                 Advisor
@@ -356,10 +356,10 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
                   setActiveTab('earnings')
                   setMobileMenuOpen(false)
                 }}
-                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg motion-safe:transition-colors motion-safe:duration-150 ease-out ${
+                className={`w-full text-left px-4 py-3 text-sm font-medium rounded-full motion-safe:transition-colors motion-safe:duration-150 ease-out ${
                   activeTab === 'earnings'
                     ? 'bg-[#4ebe96] text-black'
-                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.08]'
+                    : 'text-[#868f97] hover:text-white hover:bg-white/[0.05]'
                 }`}
               >
                 Earnings
@@ -410,7 +410,7 @@ function DashboardContentComponent({ initialTicker, initialTab }: DashboardConte
                       {typeof stockData.snapshot.price === 'number' ? stockData.snapshot.price.toFixed(2) : Number(stockData.snapshot.price || 0).toFixed(2)}
                     </span>
                     <div className={`flex items-center gap-1 sm:gap-2 text-base sm:text-lg ${
-                      (stockData.snapshot.day_change_percent || 0) >= 0 ? 'text-[#4ebe96]' : 'text-red-500'
+                      (stockData.snapshot.day_change_percent || 0) >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'
                     }`}>
                       {(stockData.snapshot.day_change_percent || 0) >= 0 ? (
                         <TrendingUp className="size-4 sm:size-5" />

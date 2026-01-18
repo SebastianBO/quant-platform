@@ -137,48 +137,48 @@ export default async function MAUPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
       />
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-black text-white">
         <div className="max-w-4xl mx-auto px-6 py-12">
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm mb-6" style={{ color: '#868f97' }}>
+            <Link href="/" className="motion-safe:transition-all motion-safe:duration-150 ease-out hover:text-white focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded">Home</Link>
             {' / '}
-            <Link href="/screener" className="hover:text-foreground">Stocks</Link>
+            <Link href="/screener" className="motion-safe:transition-all motion-safe:duration-150 ease-out hover:text-white focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded">Stocks</Link>
             {' / '}
             <span>{symbol} MAU</span>
           </nav>
 
-          <h1 className="text-4xl font-bold mb-4">
+          <h1 className="text-4xl font-bold mb-4 text-balance">
             {symbol} MAU - Monthly Active Users
           </h1>
-          <p className="text-xl text-muted-foreground mb-8">
+          <p className="text-xl mb-8" style={{ color: '#868f97' }}>
             {companyName} monthly active users and growth trends
           </p>
 
-          <div className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 p-8 rounded-xl border border-purple-500/30 mb-8">
+          <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 mb-8 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
             <div className="text-center">
-              <p className="text-sm text-muted-foreground mb-2">Monthly Active Users</p>
-              <p className="text-4xl font-bold mb-4">MAU Metrics</p>
-              <p className="text-muted-foreground">
+              <p className="text-sm mb-2" style={{ color: '#868f97' }}>Monthly Active Users</p>
+              <p className="text-4xl font-bold mb-4 tabular-nums">MAU Metrics</p>
+              <p style={{ color: '#868f97' }}>
                 Track monthly user base for {companyName}
               </p>
             </div>
           </div>
 
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Understanding MAU</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Understanding MAU</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-card p-5 rounded-lg border border-border">
-                <h3 className="font-bold text-purple-500 mb-2">What MAU Measures</h3>
-                <ul className="text-sm text-muted-foreground space-y-2">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
+                <h3 className="font-bold mb-2" style={{ color: '#4ebe96' }}>What MAU Measures</h3>
+                <ul className="text-sm space-y-2" style={{ color: '#868f97' }}>
                   <li>Total monthly user reach</li>
                   <li>User base growth trajectory</li>
                   <li>Market penetration levels</li>
                   <li>Acquisition effectiveness</li>
                 </ul>
               </div>
-              <div className="bg-card p-5 rounded-lg border border-border">
-                <h3 className="font-bold text-blue-500 mb-2">Why MAU Matters</h3>
-                <ul className="text-sm text-muted-foreground space-y-2">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
+                <h3 className="font-bold mb-2" style={{ color: '#479ffa' }}>Why MAU Matters</h3>
+                <ul className="text-sm space-y-2" style={{ color: '#868f97' }}>
                   <li>Predicts revenue potential</li>
                   <li>Shows network effects</li>
                   <li>Indicates brand strength</li>
@@ -189,18 +189,18 @@ export default async function MAUPage({ params }: Props) {
           </section>
 
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">MAU vs DAU Comparison</h2>
-            <div className="bg-card p-6 rounded-lg border border-border">
+            <h2 className="text-2xl font-bold mb-4 text-balance">MAU vs DAU Comparison</h2>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
               <div className="space-y-4">
                 <div>
                   <p className="font-medium mb-2">DAU/MAU Ratio</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm" style={{ color: '#868f97' }}>
                     The ratio of daily to monthly active users shows engagement frequency. Higher ratios indicate users engage with the platform more frequently within the month.
                   </p>
                 </div>
                 <div>
                   <p className="font-medium mb-2">Engagement Interpretation</p>
-                  <ul className="text-sm text-muted-foreground space-y-1 ml-4">
+                  <ul className="text-sm space-y-1 ml-4 tabular-nums" style={{ color: '#868f97' }}>
                     <li>0.6+ ratio: Exceptional daily engagement</li>
                     <li>0.4-0.6 ratio: Strong engagement</li>
                     <li>0.2-0.4 ratio: Moderate engagement</li>
@@ -211,21 +211,24 @@ export default async function MAUPage({ params }: Props) {
             </div>
           </section>
 
-          <section className="bg-gradient-to-r from-green-600/20 to-purple-600/20 p-8 rounded-xl border border-green-500/30 text-center mb-12">
-            <h2 className="text-2xl font-bold mb-4">Get Full {symbol} Analysis</h2>
-            <p className="text-muted-foreground mb-6">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 text-center mb-12 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Get Full {symbol} Analysis</h2>
+            <p className="mb-6" style={{ color: '#868f97' }}>
               View complete user metrics, financials, and AI-powered insights
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href={`/stock/${symbol.toLowerCase()}`}
-                className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium"
+                className="inline-block px-8 py-3 rounded-lg font-medium text-white motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
+                style={{ backgroundColor: '#4ebe96' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#3da67f'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4ebe96'}
               >
                 View Full Analysis
               </Link>
               <Link
                 href={`/dau/${symbol.toLowerCase()}`}
-                className="inline-block bg-secondary hover:bg-secondary/80 px-8 py-3 rounded-lg font-medium"
+                className="inline-block bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15] focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 View DAU Metrics
               </Link>
@@ -233,18 +236,18 @@ export default async function MAUPage({ params }: Props) {
           </section>
 
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {mauFaqs.map((faq, index) => (
-                <div key={index} className="bg-card p-5 rounded-lg border border-border">
+                <div key={index} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
                   <h3 className="font-bold text-lg mb-2">{faq.question}</h3>
-                  <p className="text-muted-foreground">{faq.answer}</p>
+                  <p style={{ color: '#868f97' }}>{faq.answer}</p>
                 </div>
               ))}
             </div>
           </section>
 
-          <div className="text-xs text-muted-foreground bg-secondary/30 p-4 rounded-lg mb-8">
+          <div className="text-xs bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 mb-8" style={{ color: '#868f97' }}>
             <p><strong>Disclaimer:</strong> User metrics are based on company disclosures and public filings. MAU definitions may vary by company. Always conduct your own research before making investment decisions.</p>
           </div>
 

@@ -62,33 +62,33 @@ export default function APISignupPage() {
     return (
       <>
         <Header />
-        <main className="min-h-screen bg-background text-foreground pt-20">
+        <main className="min-h-dvh bg-black text-foreground pt-20">
           <div className="max-w-xl mx-auto px-6 py-16">
             <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Check className="w-8 h-8 text-green-500" />
+              <div className="w-16 h-16 bg-[#4ebe96]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Check className="w-8 h-8 text-[#4ebe96]" />
               </div>
               <h1 className="text-2xl font-bold mb-2">Your API Key is Ready!</h1>
-              <p className="text-muted-foreground">
+              <p className="text-[#868f97]">
                 Copy your API key below. You won't be able to see it again.
               </p>
             </div>
 
-            <div className="bg-card border border-border rounded-lg p-4 mb-6">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 mb-6">
               <div className="flex items-center gap-2 mb-2">
-                <Key className="w-4 h-4 text-muted-foreground" />
+                <Key className="w-4 h-4 text-[#868f97]" />
                 <span className="text-sm font-medium">API Key</span>
               </div>
               <div className="flex items-center gap-2">
-                <code className="flex-1 p-3 bg-muted rounded font-mono text-sm break-all">
+                <code className="flex-1 p-3 bg-white/[0.03] rounded font-mono text-sm break-all">
                   {apiKey}
                 </code>
                 <button
                   onClick={copyToClipboard}
-                  className="p-3 bg-muted hover:bg-muted/80 rounded transition-colors"
+                  className="p-3 bg-white/[0.03] hover:bg-white/[0.05] rounded motion-safe:transition-all motion-safe:duration-150 ease-out"
                 >
                   {copied ? (
-                    <Check className="w-4 h-4 text-green-500" />
+                    <Check className="w-4 h-4 text-[#4ebe96]" />
                   ) : (
                     <Copy className="w-4 h-4" />
                   )}
@@ -96,8 +96,8 @@ export default function APISignupPage() {
               </div>
             </div>
 
-            <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 mb-8">
-              <p className="text-sm text-yellow-600 dark:text-yellow-400">
+            <div className="bg-[#ffa16c]/10 border border-[#ffa16c]/20 rounded-2xl p-4 mb-8">
+              <p className="text-sm text-[#ffa16c]">
                 <strong>Important:</strong> Store this key securely. For security reasons,
                 we cannot show it again. If you lose it, you'll need to generate a new one.
               </p>
@@ -107,30 +107,30 @@ export default function APISignupPage() {
               <h2 className="font-bold">Next Steps</h2>
               <div className="space-y-3">
                 <div className="flex items-start gap-3 text-sm">
-                  <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-xs font-bold text-primary">1</span>
+                  <div className="w-6 h-6 bg-[#4ebe96]/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-xs font-bold text-[#4ebe96]">1</span>
                   </div>
-                  <p>Add the API key to your request headers: <code className="bg-muted px-1 rounded">Authorization: Bearer YOUR_KEY</code></p>
+                  <p>Add the API key to your request headers: <code className="bg-white/[0.03] px-1 rounded">Authorization: Bearer YOUR_KEY</code></p>
                 </div>
                 <div className="flex items-start gap-3 text-sm">
-                  <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-xs font-bold text-primary">2</span>
+                  <div className="w-6 h-6 bg-[#4ebe96]/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-xs font-bold text-[#4ebe96]">2</span>
                   </div>
-                  <p>Make your first API call to <code className="bg-muted px-1 rounded">/api/v1/financials/income-statements?ticker=AAPL</code></p>
+                  <p>Make your first API call to <code className="bg-white/[0.03] px-1 rounded">/api/v1/financials/income-statements?ticker=AAPL</code></p>
                 </div>
                 <div className="flex items-start gap-3 text-sm">
-                  <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-xs font-bold text-primary">3</span>
+                  <div className="w-6 h-6 bg-[#4ebe96]/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-xs font-bold text-[#4ebe96]">3</span>
                   </div>
-                  <p>Check out the <Link href="/developers/docs" className="text-primary hover:underline">full documentation</Link> for all available endpoints</p>
+                  <p>Check out the <Link href="/developers/docs" className="text-[#479ffa] hover:underline">full documentation</Link> for all available endpoints</p>
                 </div>
               </div>
             </div>
 
-            <div className="mt-8 pt-8 border-t border-border">
+            <div className="mt-8 pt-8 border-t border-white/[0.08]">
               <Link
                 href="/developers"
-                className="inline-flex items-center gap-2 text-primary hover:underline"
+                className="inline-flex items-center gap-2 text-[#479ffa] hover:underline"
               >
                 <ArrowRight className="w-4 h-4" />
                 Back to Developer Portal
@@ -146,12 +146,12 @@ export default function APISignupPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-dvh bg-black text-foreground pt-20">
         <div className="max-w-xl mx-auto px-6 py-16">
           <div className="text-center mb-8">
-            <Key className="w-12 h-12 text-primary mx-auto mb-4" />
+            <Key className="w-12 h-12 text-[#4ebe96] mx-auto mb-4" />
             <h1 className="text-2xl font-bold mb-2">Get Your Free API Key</h1>
-            <p className="text-muted-foreground">
+            <p className="text-[#868f97]">
               100 requests per day, no credit card required
             </p>
           </div>
@@ -167,7 +167,7 @@ export default function APISignupPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-3 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out"
                 placeholder="you@company.com"
               />
             </div>
@@ -182,7 +182,7 @@ export default function APISignupPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-3 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out"
                 placeholder="John Doe"
               />
             </div>
@@ -196,7 +196,7 @@ export default function APISignupPage() {
                 id="company"
                 value={company}
                 onChange={(e) => setCompany(e.target.value)}
-                className="w-full px-4 py-3 bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-3 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out"
                 placeholder="Acme Inc."
               />
             </div>
@@ -210,7 +210,7 @@ export default function APISignupPage() {
                 value={useCase}
                 onChange={(e) => setUseCase(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-3 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out"
               >
                 <option value="">Select an option</option>
                 <option value="trading_app">Trading Application</option>
@@ -224,34 +224,34 @@ export default function APISignupPage() {
             </div>
 
             {error && (
-              <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
-                <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+              <div className="p-4 bg-[#ff5c5c]/10 border border-[#ff5c5c]/20 rounded-2xl">
+                <p className="text-sm text-[#ff5c5c]">{error}</p>
               </div>
             )}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg transition-colors disabled:opacity-50"
+              className="w-full py-3 bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black font-medium rounded-2xl motion-safe:transition-all motion-safe:duration-150 ease-out disabled:opacity-50"
             >
               {loading ? 'Creating API Key...' : 'Get API Key'}
             </button>
           </form>
 
-          <p className="text-xs text-muted-foreground text-center mt-6">
+          <p className="text-xs text-[#868f97] text-center mt-6">
             By signing up, you agree to our{' '}
-            <Link href="/terms" className="text-primary hover:underline">Terms of Service</Link>
+            <Link href="/terms" className="text-[#479ffa] hover:underline">Terms of Service</Link>
             {' '}and{' '}
-            <Link href="/privacy" className="text-primary hover:underline">Privacy Policy</Link>.
+            <Link href="/privacy" className="text-[#479ffa] hover:underline">Privacy Policy</Link>.
           </p>
 
-          <div className="mt-8 pt-8 border-t border-border text-center">
-            <p className="text-sm text-muted-foreground mb-4">
+          <div className="mt-8 pt-8 border-t border-white/[0.08] text-center">
+            <p className="text-sm text-[#868f97] mb-4">
               Need more requests?
             </p>
             <Link
               href="/developers#pricing"
-              className="text-primary hover:underline"
+              className="text-[#479ffa] hover:underline"
             >
               View paid plans starting at $29/month
             </Link>

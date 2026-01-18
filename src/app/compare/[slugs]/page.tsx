@@ -487,7 +487,7 @@ export default async function ComparePage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema]) }}
       />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-dvh bg-black text-foreground pt-20">
         <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="flex gap-8">
             <SEOSidebar />
@@ -519,12 +519,12 @@ export default async function ComparePage({ params }: Props) {
             <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl text-center">
               <h2 className="text-2xl font-bold text-[#4ebe96] mb-2">{stock1.symbol}</h2>
               <p className="text-[#868f97] mb-4">{stock1.name}</p>
-              <p className="text-3xl font-bold">{stock1.price && stock1.price > 0 ? `$${stock1.price.toFixed(2)}` : '—'}</p>
+              <p className="text-3xl font-bold tabular-nums">{stock1.price && stock1.price > 0 ? `$${stock1.price.toFixed(2)}` : '—'}</p>
             </div>
             <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl text-center">
               <h2 className="text-2xl font-bold text-[#479ffa] mb-2">{stock2.symbol}</h2>
               <p className="text-[#868f97] mb-4">{stock2.name}</p>
-              <p className="text-3xl font-bold">{stock2.price && stock2.price > 0 ? `$${stock2.price.toFixed(2)}` : '—'}</p>
+              <p className="text-3xl font-bold tabular-nums">{stock2.price && stock2.price > 0 ? `$${stock2.price.toFixed(2)}` : '—'}</p>
             </div>
           </div>
 
@@ -544,8 +544,8 @@ export default async function ComparePage({ params }: Props) {
                 <tbody className="divide-y divide-white/[0.08]">
                   <tr>
                     <td className="p-4">Market Cap</td>
-                    <td className="text-center p-4">{formatMarketCap(stock1.marketCap)}</td>
-                    <td className="text-center p-4">{formatMarketCap(stock2.marketCap)}</td>
+                    <td className="text-center p-4 tabular-nums">{formatMarketCap(stock1.marketCap)}</td>
+                    <td className="text-center p-4 tabular-nums">{formatMarketCap(stock2.marketCap)}</td>
                     <td className="text-center p-4">
                       <span className={getWinner(stock1.marketCap, stock2.marketCap) === 'stock1' ? 'text-[#4ebe96]' : getWinner(stock1.marketCap, stock2.marketCap) === 'stock2' ? 'text-[#479ffa]' : ''}>
                         {getWinner(stock1.marketCap, stock2.marketCap) === 'stock1' ? stock1.symbol : getWinner(stock1.marketCap, stock2.marketCap) === 'stock2' ? stock2.symbol : 'Tie'}
@@ -554,8 +554,8 @@ export default async function ComparePage({ params }: Props) {
                   </tr>
                   <tr>
                     <td className="p-4">P/E Ratio</td>
-                    <td className="text-center p-4">{typeof stock1.pe === 'number' && stock1.pe > 0 ? safeFixed(stock1.pe, 2) : 'N/A'}</td>
-                    <td className="text-center p-4">{typeof stock2.pe === 'number' && stock2.pe > 0 ? safeFixed(stock2.pe, 2) : 'N/A'}</td>
+                    <td className="text-center p-4 tabular-nums">{typeof stock1.pe === 'number' && stock1.pe > 0 ? safeFixed(stock1.pe, 2) : 'N/A'}</td>
+                    <td className="text-center p-4 tabular-nums">{typeof stock2.pe === 'number' && stock2.pe > 0 ? safeFixed(stock2.pe, 2) : 'N/A'}</td>
                     <td className="text-center p-4">
                       <span className={getWinner(stock1.pe, stock2.pe, false) === 'stock1' ? 'text-[#4ebe96]' : getWinner(stock1.pe, stock2.pe, false) === 'stock2' ? 'text-[#479ffa]' : ''}>
                         {getWinner(stock1.pe, stock2.pe, false) === 'stock1' ? stock1.symbol : getWinner(stock1.pe, stock2.pe, false) === 'stock2' ? stock2.symbol : 'Tie'}
@@ -564,8 +564,8 @@ export default async function ComparePage({ params }: Props) {
                   </tr>
                   <tr>
                     <td className="p-4">EPS (TTM)</td>
-                    <td className="text-center p-4">${typeof stock1.eps === 'number' && stock1.eps > 0 ? safeFixed(stock1.eps, 2) : 'N/A'}</td>
-                    <td className="text-center p-4">${typeof stock2.eps === 'number' && stock2.eps > 0 ? safeFixed(stock2.eps, 2) : 'N/A'}</td>
+                    <td className="text-center p-4 tabular-nums">${typeof stock1.eps === 'number' && stock1.eps > 0 ? safeFixed(stock1.eps, 2) : 'N/A'}</td>
+                    <td className="text-center p-4 tabular-nums">${typeof stock2.eps === 'number' && stock2.eps > 0 ? safeFixed(stock2.eps, 2) : 'N/A'}</td>
                     <td className="text-center p-4">
                       <span className={getWinner(stock1.eps, stock2.eps) === 'stock1' ? 'text-[#4ebe96]' : getWinner(stock1.eps, stock2.eps) === 'stock2' ? 'text-[#479ffa]' : ''}>
                         {getWinner(stock1.eps, stock2.eps) === 'stock1' ? stock1.symbol : getWinner(stock1.eps, stock2.eps) === 'stock2' ? stock2.symbol : 'Tie'}
@@ -574,8 +574,8 @@ export default async function ComparePage({ params }: Props) {
                   </tr>
                   <tr>
                     <td className="p-4">Revenue Growth</td>
-                    <td className="text-center p-4">{safeFixed(stock1.revenueGrowth * 100, 1)}%</td>
-                    <td className="text-center p-4">{safeFixed(stock2.revenueGrowth * 100, 1)}%</td>
+                    <td className="text-center p-4 tabular-nums">{safeFixed(stock1.revenueGrowth * 100, 1)}%</td>
+                    <td className="text-center p-4 tabular-nums">{safeFixed(stock2.revenueGrowth * 100, 1)}%</td>
                     <td className="text-center p-4">
                       <span className={getWinner(stock1.revenueGrowth, stock2.revenueGrowth) === 'stock1' ? 'text-[#4ebe96]' : getWinner(stock1.revenueGrowth, stock2.revenueGrowth) === 'stock2' ? 'text-[#479ffa]' : ''}>
                         {getWinner(stock1.revenueGrowth, stock2.revenueGrowth) === 'stock1' ? stock1.symbol : getWinner(stock1.revenueGrowth, stock2.revenueGrowth) === 'stock2' ? stock2.symbol : 'Tie'}
@@ -584,8 +584,8 @@ export default async function ComparePage({ params }: Props) {
                   </tr>
                   <tr>
                     <td className="p-4">Gross Margin</td>
-                    <td className="text-center p-4">{safeFixed(stock1.grossMargin * 100, 1)}%</td>
-                    <td className="text-center p-4">{safeFixed(stock2.grossMargin * 100, 1)}%</td>
+                    <td className="text-center p-4 tabular-nums">{safeFixed(stock1.grossMargin * 100, 1)}%</td>
+                    <td className="text-center p-4 tabular-nums">{safeFixed(stock2.grossMargin * 100, 1)}%</td>
                     <td className="text-center p-4">
                       <span className={getWinner(stock1.grossMargin, stock2.grossMargin) === 'stock1' ? 'text-[#4ebe96]' : getWinner(stock1.grossMargin, stock2.grossMargin) === 'stock2' ? 'text-[#479ffa]' : ''}>
                         {getWinner(stock1.grossMargin, stock2.grossMargin) === 'stock1' ? stock1.symbol : getWinner(stock1.grossMargin, stock2.grossMargin) === 'stock2' ? stock2.symbol : 'Tie'}

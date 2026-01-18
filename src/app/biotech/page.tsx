@@ -348,15 +348,15 @@ export default function BiotechCatalystsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema, itemListSchema]) }}
       />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-screen bg-black pt-20">
         <div className="max-w-5xl mx-auto px-6 py-12">
           <div className="flex gap-8">
             <SEOSidebar />
             <div className="flex-1 min-w-0">
           <nav className="text-sm text-[#868f97] mb-6">
-            <Link href="/" className="hover:text-white">Home</Link>
+            <Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]">Home</Link>
             {' / '}
-            <Link href="/sectors" className="hover:text-white">Sectors</Link>
+            <Link href="/sectors" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]">Sectors</Link>
             {' / '}
             <span>Biotech Catalysts</span>
           </nav>
@@ -430,7 +430,7 @@ export default function BiotechCatalystsPage() {
               {fdaApprovalProcess.map((stage, i) => (
                 <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] p-5 rounded-2xl border border-white/[0.08] flex items-start gap-4">
                   <div className="flex-shrink-0 w-10 h-10 bg-[#4ebe96]/20 rounded-lg flex items-center justify-center">
-                    <span className="text-lg font-bold text-[#4ebe96]">{i + 1}</span>
+                    <span className="text-lg font-bold text-[#4ebe96] tabular-nums">{i + 1}</span>
                   </div>
                   <div className="flex-1">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
@@ -452,7 +452,7 @@ export default function BiotechCatalystsPage() {
                 <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-xl font-bold">{phase.phase}</h3>
-                    <span className="text-xs px-3 py-1 bg-[#4ebe96]/20 text-[#4ebe96] rounded-full font-medium">
+                    <span className="text-xs px-3 py-1 bg-[#4ebe96]/20 text-[#4ebe96] rounded-full font-medium tabular-nums">
                       {phase.successRate} success
                     </span>
                   </div>
@@ -483,11 +483,11 @@ export default function BiotechCatalystsPage() {
             <h2 className="text-3xl font-bold mb-6">Top Biotech Stocks to Watch</h2>
             <div className="space-y-4">
               {biotechStocks.map((stock) => (
-                <div key={stock.ticker} className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <div key={stock.ticker} className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
                     <div className="flex items-start gap-4">
                       <div className="flex-shrink-0 w-12 h-12 bg-[#4ebe96]/20 rounded-lg flex items-center justify-center">
-                        <span className="text-xl font-bold text-[#4ebe96]">#{stock.rank}</span>
+                        <span className="text-xl font-bold text-[#4ebe96] tabular-nums">#{stock.rank}</span>
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
@@ -516,19 +516,19 @@ export default function BiotechCatalystsPage() {
                   <div className="flex flex-wrap gap-2">
                     <Link
                       href={`/stock/${stock.ticker.toLowerCase()}`}
-                      className="text-sm px-4 py-2 bg-[#4ebe96]/20 text-[#4ebe96] rounded-full hover:bg-[#4ebe96]/30 motion-safe:transition-all motion-safe:duration-150 ease-out font-medium"
+                      className="text-sm px-4 py-2 bg-[#4ebe96]/20 text-[#4ebe96] rounded-full hover:bg-[#4ebe96]/30 motion-safe:transition-all motion-safe:duration-150 ease-out font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                     >
                       View Analysis
                     </Link>
                     <Link
                       href={`/should-i-buy/${stock.ticker.toLowerCase()}`}
-                      className="text-sm px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out"
+                      className="text-sm px-4 py-2 bg-white/[0.05] border border-white/[0.08] rounded-full hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                     >
                       Should I Buy?
                     </Link>
                     <Link
                       href={`/prediction/${stock.ticker.toLowerCase()}`}
-                      className="text-sm px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out"
+                      className="text-sm px-4 py-2 bg-white/[0.05] border border-white/[0.08] rounded-full hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                     >
                       Price Target
                     </Link>
@@ -555,8 +555,8 @@ export default function BiotechCatalystsPage() {
                     <h3 className="text-lg font-bold">{risk.risk}</h3>
                     <span className={`text-xs px-3 py-1 rounded-full font-medium ${
                       risk.severity === 'Very High' ? 'bg-[#ff5c5c]/20 text-[#ff5c5c]' :
-                      risk.severity === 'High' ? 'bg-[#f4a623]/20 text-[#f4a623]' :
-                      'bg-[#f4a623]/20 text-[#f4a623]'
+                      risk.severity === 'High' ? 'bg-[#ffa16c]/20 text-[#ffa16c]' :
+                      'bg-[#ffa16c]/20 text-[#ffa16c]'
                     }`}>
                       {risk.severity}
                     </span>
@@ -602,7 +602,7 @@ export default function BiotechCatalystsPage() {
                 </div>
               </div>
               <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
-                <h3 className="text-xl font-bold mb-3 text-purple-500">Quality Growth</h3>
+                <h3 className="text-xl font-bold mb-3 text-[#ffa16c]">Quality Growth</h3>
                 <p className="text-sm text-[#868f97] mb-4">
                   Long-term holdings in proven winners
                 </p>
@@ -643,7 +643,7 @@ export default function BiotechCatalystsPage() {
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-white px-8 py-3 rounded-full font-medium motion-safe:transition-all motion-safe:duration-150 ease-out"
+              className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-white px-8 py-3 rounded-full font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
             >
               Start Your Analysis
             </Link>
@@ -653,28 +653,28 @@ export default function BiotechCatalystsPage() {
           <section className="border-t border-white/[0.08] pt-8">
             <h3 className="text-lg font-bold mb-4">Related Pages</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <Link href="/sectors" className="px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm">
+              <Link href="/sectors" className="px-4 py-2 bg-white/[0.05] border border-white/[0.08] rounded-full hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                 All Sectors
               </Link>
-              <Link href="/sectors/healthcare" className="px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm">
+              <Link href="/sectors/healthcare" className="px-4 py-2 bg-white/[0.05] border border-white/[0.08] rounded-full hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                 Healthcare Sector
               </Link>
-              <Link href="/best-stocks/healthcare" className="px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm">
+              <Link href="/best-stocks/healthcare" className="px-4 py-2 bg-white/[0.05] border border-white/[0.08] rounded-full hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                 Best Healthcare Stocks
               </Link>
-              <Link href="/ipo" className="px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm">
+              <Link href="/ipo" className="px-4 py-2 bg-white/[0.05] border border-white/[0.08] rounded-full hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                 Biotech IPOs
               </Link>
-              <Link href="/analyst-ratings" className="px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm">
+              <Link href="/analyst-ratings" className="px-4 py-2 bg-white/[0.05] border border-white/[0.08] rounded-full hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                 Analyst Ratings
               </Link>
-              <Link href="/earnings" className="px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm">
+              <Link href="/earnings" className="px-4 py-2 bg-white/[0.05] border border-white/[0.08] rounded-full hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                 Earnings Calendar
               </Link>
-              <Link href="/institutional" className="px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm">
+              <Link href="/institutional" className="px-4 py-2 bg-white/[0.05] border border-white/[0.08] rounded-full hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                 Institutional Holdings
               </Link>
-              <Link href="/insights" className="px-4 py-2 bg-white/[0.05] rounded-full hover:bg-white/[0.08] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm">
+              <Link href="/insights" className="px-4 py-2 bg-white/[0.05] border border-white/[0.08] rounded-full hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                 Market Insights
               </Link>
             </div>

@@ -135,7 +135,7 @@ function ApiHealthCheck() {
       : "offline"
 
   return (
-    <div className="bg-[#111] rounded-2xl border border-white/[0.08] overflow-hidden">
+    <div className="bg-white/[0.03] backdrop-blur-[10px] rounded-2xl border border-white/[0.08] overflow-hidden">
       {/* Header with overall status */}
       <div className="flex items-center justify-between p-6 border-b border-white/[0.08]">
         <div>
@@ -174,7 +174,7 @@ function ApiHealthCheck() {
                   className={cn(
                     "text-[14px] font-mono tabular-nums",
                     ep.latency < 100 && "text-[#4ebe96]",
-                    ep.latency >= 100 && ep.latency < 300 && "text-[#f4a623]",
+                    ep.latency >= 100 && ep.latency < 300 && "text-[#ffa16c]",
                     ep.latency >= 300 && "text-[#ff5c5c]"
                   )}
                 >
@@ -182,7 +182,7 @@ function ApiHealthCheck() {
                 </div>
               )}
               {ep.lastChecked && (
-                <div className="text-[11px] text-[#555]">
+                <div className="text-[11px] text-[#868f97]">
                   Last checked: {ep.lastChecked.toLocaleTimeString()}
                 </div>
               )}
@@ -209,9 +209,9 @@ function AnimatedBorderButton({ children, href, className }: { children: React.R
   return (
     <a href={href} className={cn("relative group inline-flex", className)}>
       {/* Cyan orb - top left */}
-      <div className="absolute -top-8 -left-8 w-32 h-32 bg-[#00d4ff] rounded-full blur-2xl opacity-60 group-hover:opacity-80 transition-opacity" />
+      <div className="absolute -top-8 -left-8 w-32 h-32 bg-[#00d4ff] rounded-full blur-2xl opacity-60 group-hover:opacity-80 motion-safe:transition-opacity motion-safe:duration-150 ease-out" />
       {/* Lime orb - bottom right */}
-      <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-[#d4ff00] rounded-full blur-2xl opacity-60 group-hover:opacity-80 transition-opacity" />
+      <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-[#d4ff00] rounded-full blur-2xl opacity-60 group-hover:opacity-80 motion-safe:transition-opacity motion-safe:duration-150 ease-out" />
       {/* Button background with rounded pill shape */}
       <span className="relative px-8 py-4 bg-black rounded-full text-white text-[15px] font-medium inline-flex items-center gap-2 border border-white/[0.1]">
         {children}
@@ -236,7 +236,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="absolute top-3 right-3 p-2 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] transition-colors opacity-0 group-hover:opacity-100"
+      className="absolute top-3 right-3 p-2 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] motion-safe:transition-colors motion-safe:duration-150 ease-out opacity-0 group-hover:opacity-100"
     >
       {copied ? (
         <svg className="size-4 text-[#4ebe96]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -357,7 +357,7 @@ export default function DevelopersPage() {
                 <a
                   key={item}
                   href={`#${item.toLowerCase()}`}
-                  className="px-3 py-2 hover:text-white transition-colors"
+                  className="px-3 py-2 hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out"
                 >
                   {item}
                 </a>
@@ -365,12 +365,12 @@ export default function DevelopersPage() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <a href="#quickstart" className="hidden sm:block px-4 py-2 text-[14px] text-[#868f97] hover:text-white transition-colors">
+            <a href="#quickstart" className="hidden sm:block px-4 py-2 text-[14px] text-[#868f97] hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out">
               Documentation
             </a>
             <Link
               href="/"
-              className="px-5 py-2.5 bg-white text-black text-[14px] font-medium rounded-full hover:bg-white/90 transition-colors"
+              className="px-5 py-2.5 bg-white text-black text-[14px] font-medium rounded-full hover:bg-white/90 motion-safe:transition-colors motion-safe:duration-150 ease-out"
             >
               Get Started
             </Link>
@@ -384,7 +384,7 @@ export default function DevelopersPage() {
           {/* Announcement pill */}
           <div
             className={cn(
-              "inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.05] border border-white/[0.1] mb-8 transition-all duration-700",
+              "inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.05] border border-white/[0.1] mb-8 motion-safe:transition-all motion-safe:duration-700 ease-out",
               isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             )}
           >
@@ -397,14 +397,14 @@ export default function DevelopersPage() {
           {/* Main headline - Bold, heavy, two-tone */}
           <h1
             className={cn(
-              "transition-all duration-1000 delay-100",
+              "motion-safe:transition-all motion-safe:duration-1000 ease-out delay-100",
               isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             )}
           >
-            <span className="block text-[56px] md:text-[72px] lg:text-[84px] font-bold leading-[0.95] tracking-[-0.03em]">
+            <span className="block text-[56px] md:text-[72px] lg:text-[84px] font-bold leading-[0.95] tracking-[-0.03em] text-balance">
               Build faster.
             </span>
-            <span className="block text-[56px] md:text-[72px] lg:text-[84px] font-bold leading-[0.95] tracking-[-0.03em] text-[#555]">
+            <span className="block text-[56px] md:text-[72px] lg:text-[84px] font-bold leading-[0.95] tracking-[-0.03em] text-[#868f97] text-balance">
               Ship smarter.
             </span>
           </h1>
@@ -412,7 +412,7 @@ export default function DevelopersPage() {
           {/* Subtitle */}
           <p
             className={cn(
-              "text-[18px] md:text-[20px] text-[#868f97] leading-[1.5] max-w-[600px] mx-auto mt-8 mb-10 transition-all duration-700 delay-200",
+              "text-[18px] md:text-[20px] text-[#868f97] leading-[1.5] max-w-[600px] mx-auto mt-8 mb-10 motion-safe:transition-all motion-safe:duration-700 ease-out delay-200",
               isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             )}
           >
@@ -423,7 +423,7 @@ export default function DevelopersPage() {
           {/* CTAs */}
           <div
             className={cn(
-              "flex items-center justify-center gap-4 mb-12 transition-all duration-700 delay-300",
+              "flex items-center justify-center gap-4 mb-12 motion-safe:transition-all motion-safe:duration-700 ease-out delay-300",
               isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             )}
           >
@@ -432,7 +432,7 @@ export default function DevelopersPage() {
             </AnimatedBorderButton>
             <a
               href="#features"
-              className="inline-flex items-center gap-2 text-[15px] text-[#868f97] hover:text-white transition-colors"
+              className="inline-flex items-center gap-2 text-[15px] text-[#868f97] hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out"
             >
               See how it works
               <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -444,7 +444,7 @@ export default function DevelopersPage() {
           {/* Social proof */}
           <div
             className={cn(
-              "flex items-center justify-center gap-6 transition-all duration-700 delay-400",
+              "flex items-center justify-center gap-6 motion-safe:transition-all motion-safe:duration-700 ease-out delay-400",
               isLoaded ? "opacity-100" : "opacity-0"
             )}
           >
@@ -461,7 +461,7 @@ export default function DevelopersPage() {
                   key={i}
                   src={src}
                   alt=""
-                  className="size-10 rounded-full border-2 border-[#0a0a0a] object-cover"
+                  className="size-10 rounded-full border-2 border-black object-cover"
                 />
               ))}
             </div>
@@ -470,7 +470,7 @@ export default function DevelopersPage() {
             <div className="flex items-center gap-2">
               <div className="flex">
                 {[...Array(5)].map((_, i) => (
-                  <svg key={i} className="size-5 text-yellow-400" viewBox="0 0 24 24" fill="currentColor">
+                  <svg key={i} className="size-5 text-[#d4ff00]" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                   </svg>
                 ))}
@@ -489,12 +489,12 @@ export default function DevelopersPage() {
         <div className="max-w-[1200px] mx-auto px-6">
           <div
             className={cn(
-              "text-center mb-16 transition-all duration-700",
+              "text-center mb-16 motion-safe:transition-all motion-safe:duration-700 ease-out",
               impactAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             )}
           >
             <span className="text-[13px] text-[#868f97] tracking-widest uppercase">Our Impact</span>
-            <h2 className="text-[40px] md:text-[56px] font-bold leading-[1.05] tracking-[-0.02em] mt-4">
+            <h2 className="text-[40px] md:text-[56px] font-bold leading-[1.05] tracking-[-0.02em] mt-4 text-balance">
               Trusted by teams worldwide
             </h2>
             <p className="text-[18px] text-[#868f97] mt-4 max-w-[500px] mx-auto">
@@ -513,12 +513,12 @@ export default function DevelopersPage() {
               <div
                 key={stat.label}
                 className={cn(
-                  "p-8 rounded-2xl border border-white/[0.08] bg-[#111] transition-all duration-500",
+                  "p-8 rounded-2xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-[10px] motion-safe:transition-all motion-safe:duration-500 ease-out",
                   impactAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
                 )}
                 style={{ transitionDelay: `${i * 100}ms` }}
               >
-                <div className="text-[40px] md:text-[48px] font-bold italic tracking-tight">{stat.value}</div>
+                <div className="text-[40px] md:text-[48px] font-bold italic tracking-tight tabular-nums">{stat.value}</div>
                 <div className="text-[16px] font-medium text-white mt-2">{stat.label}</div>
                 <div className="text-[14px] text-[#868f97]">{stat.desc}</div>
               </div>
@@ -532,12 +532,12 @@ export default function DevelopersPage() {
         <div className="max-w-[1200px] mx-auto px-6">
           <div
             className={cn(
-              "text-center mb-16 transition-all duration-700",
+              "text-center mb-16 motion-safe:transition-all motion-safe:duration-700 ease-out",
               featuresAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             )}
           >
             <span className="text-[13px] text-[#868f97] tracking-widest uppercase">Features</span>
-            <h2 className="text-[40px] md:text-[56px] font-bold leading-[1.05] tracking-[-0.02em] mt-4">
+            <h2 className="text-[40px] md:text-[56px] font-bold leading-[1.05] tracking-[-0.02em] mt-4 text-balance">
               Everything you need to succeed
             </h2>
             <p className="text-[18px] text-[#868f97] mt-4">
@@ -550,7 +550,7 @@ export default function DevelopersPage() {
             {/* Feature 1 - Large */}
             <div
               className={cn(
-                "p-8 rounded-2xl border border-white/[0.08] bg-[#111] transition-all duration-500",
+                "p-8 rounded-2xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-[10px] motion-safe:transition-all motion-safe:duration-500 ease-out",
                 featuresAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
               )}
             >
@@ -572,8 +572,8 @@ export default function DevelopersPage() {
                   <div className="size-2.5 rounded-full bg-[#ff5f57]" />
                   <div className="size-2.5 rounded-full bg-[#febc2e]" />
                   <div className="size-2.5 rounded-full bg-[#28c840]" />
-                  <span className="ml-auto text-[11px] text-[#555]">Users</span>
-                  <span className="text-[11px] text-[#555]">Revenue</span>
+                  <span className="ml-auto text-[11px] text-[#868f97]">Users</span>
+                  <span className="text-[11px] text-[#868f97]">Revenue</span>
                 </div>
                 <div className="grid grid-cols-3 gap-3">
                   {[
@@ -595,7 +595,7 @@ export default function DevelopersPage() {
             {/* Feature 2 */}
             <div
               className={cn(
-                "p-8 rounded-2xl border border-white/[0.08] bg-[#111] transition-all duration-500",
+                "p-8 rounded-2xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-[10px] motion-safe:transition-all motion-safe:duration-500 ease-out",
                 featuresAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
               )}
               style={{ transitionDelay: "100ms" }}
@@ -624,7 +624,7 @@ export default function DevelopersPage() {
             {/* Feature 3 - MCP Integration */}
             <div
               className={cn(
-                "p-8 rounded-2xl border border-white/[0.08] bg-[#111] transition-all duration-500",
+                "p-8 rounded-2xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-[10px] motion-safe:transition-all motion-safe:duration-500 ease-out",
                 featuresAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
               )}
               style={{ transitionDelay: "200ms" }}
@@ -655,14 +655,14 @@ export default function DevelopersPage() {
             {/* Feature 4 */}
             <div
               className={cn(
-                "p-8 rounded-2xl border border-white/[0.08] bg-[#111] transition-all duration-500",
+                "p-8 rounded-2xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-[10px] motion-safe:transition-all motion-safe:duration-500 ease-out",
                 featuresAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
               )}
               style={{ transitionDelay: "300ms" }}
             >
               <div className="flex items-center gap-3 mb-4">
                 <div className="size-10 rounded-xl bg-white/[0.05] flex items-center justify-center">
-                  <svg className="size-5 text-[#ff9966]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+                  <svg className="size-5 text-[#ffa16c]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                     <path d="M9 12l2 2 4-4" />
                   </svg>
@@ -691,7 +691,7 @@ export default function DevelopersPage() {
           <div className="text-center mb-12">
             <span className="text-[13px] text-[#4ebe96] tracking-widest uppercase">Live Demo</span>
             <h2 className="text-[40px] md:text-[48px] font-bold leading-[1.05] tracking-[-0.02em] mt-4 text-balance">
-              Earnings & Financial Data API
+              Earnings &amp; Financial Data API
             </h2>
             <p className="text-[18px] text-[#868f97] mt-4 max-w-[600px] mx-auto text-pretty">
               Watch our endpoints in real-time. Green means online and fast. This is the same infrastructure your app will use.
@@ -708,7 +708,7 @@ export default function DevelopersPage() {
         <div className="max-w-[1200px] mx-auto px-6">
           <div className="text-center mb-12">
             <span className="text-[13px] text-[#479ffa] tracking-widest uppercase">Quick Start</span>
-            <h2 className="text-[40px] md:text-[48px] font-bold leading-[1.05] tracking-[-0.02em] mt-4">
+            <h2 className="text-[40px] md:text-[48px] font-bold leading-[1.05] tracking-[-0.02em] mt-4 text-balance">
               Start in seconds
             </h2>
           </div>
@@ -724,10 +724,10 @@ export default function DevelopersPage() {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as "claude" | "mcp" | "npm")}
                 className={cn(
-                  "px-5 py-2.5 rounded-full text-[14px] font-medium transition-all",
+                  "px-5 py-2.5 rounded-full text-[14px] font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]",
                   activeTab === tab.id
                     ? "bg-white text-black"
-                    : "bg-white/[0.05] text-[#868f97] hover:text-white hover:bg-white/[0.1]"
+                    : "bg-white/[0.05] text-[#868f97] hover:text-white hover:bg-white/[0.05]"
                 )}
               >
                 {tab.label}
@@ -737,7 +737,7 @@ export default function DevelopersPage() {
 
           {/* Code block */}
           <div className="max-w-[800px] mx-auto">
-            <div className="relative group bg-[#111] rounded-2xl border border-white/[0.08] p-6 overflow-x-auto">
+            <div className="relative group bg-white/[0.03] backdrop-blur-[10px] rounded-2xl border border-white/[0.08] p-6 overflow-x-auto">
               <pre className="text-[14px] font-mono leading-relaxed">
                 {activeTab === "claude" && (
                   <code className="text-[#a0a0a0]">
@@ -782,7 +782,7 @@ export default function DevelopersPage() {
   `}
                     <span className="text-[#479ffa]">&quot;price&quot;</span>
                     {`: `}
-                    <span className="text-[#ff9966]">231.85</span>
+                    <span className="text-[#ffa16c]">231.85</span>
                     {`,
   `}
                     <span className="text-[#479ffa]">&quot;change&quot;</span>
@@ -792,7 +792,7 @@ export default function DevelopersPage() {
   `}
                     <span className="text-[#479ffa]">&quot;volume&quot;</span>
                     {`: `}
-                    <span className="text-[#ff9966]">58432100</span>
+                    <span className="text-[#ffa16c]">58432100</span>
                     {`
 }`}
                   </code>
@@ -827,12 +827,12 @@ npx -y @lician/mcp-server`}
         <div className="max-w-[1200px] mx-auto px-6">
           <div
             className={cn(
-              "text-center mb-16 transition-all duration-700",
+              "text-center mb-16 motion-safe:transition-all motion-safe:duration-700 ease-out",
               endpointsAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             )}
           >
             <span className="text-[13px] text-[#868f97] tracking-widest uppercase">API Endpoints</span>
-            <h2 className="text-[40px] md:text-[48px] font-bold leading-[1.05] tracking-[-0.02em] mt-4">
+            <h2 className="text-[40px] md:text-[48px] font-bold leading-[1.05] tracking-[-0.02em] mt-4 text-balance">
               RESTful JSON API with consistent, predictable responses
             </h2>
           </div>
@@ -842,10 +842,10 @@ npx -y @lician/mcp-server`}
               <div
                 key={ep.path}
                 className={cn(
-                  "flex items-center gap-4 p-4 bg-[#111] rounded-xl border border-white/[0.08] hover:border-white/[0.15] transition-all",
+                  "flex items-center gap-4 p-4 bg-white/[0.03] backdrop-blur-[10px] rounded-xl border border-white/[0.08] hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out",
                   endpointsAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 )}
-                style={{ transitionDelay: `${i * 30}ms`, transitionDuration: "400ms" }}
+                style={{ transitionDelay: `${i * 30}ms` }}
               >
                 <span className="px-2.5 py-1 bg-[#4ebe96]/20 text-[#4ebe96] text-[11px] font-mono font-semibold rounded">
                   GET
@@ -863,12 +863,12 @@ npx -y @lician/mcp-server`}
         <div className="max-w-[1200px] mx-auto px-6">
           <div
             className={cn(
-              "text-center mb-16 transition-all duration-700",
+              "text-center mb-16 motion-safe:transition-all motion-safe:duration-700 ease-out",
               pricingAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             )}
           >
             <span className="text-[13px] text-[#868f97] tracking-widest uppercase">Pricing</span>
-            <h2 className="text-[40px] md:text-[48px] font-bold leading-[1.05] tracking-[-0.02em] mt-4">
+            <h2 className="text-[40px] md:text-[48px] font-bold leading-[1.05] tracking-[-0.02em] mt-4 text-balance">
               Simple, transparent pricing
             </h2>
           </div>
@@ -878,10 +878,10 @@ npx -y @lician/mcp-server`}
               <div
                 key={tier.name}
                 className={cn(
-                  "relative p-6 rounded-2xl border transition-all duration-500",
+                  "relative p-6 rounded-2xl border motion-safe:transition-all motion-safe:duration-500 ease-out",
                   tier.highlighted
-                    ? "bg-white/[0.03] border-white/[0.15]"
-                    : "bg-[#111] border-white/[0.08]",
+                    ? "bg-white/[0.03] backdrop-blur-[10px] border-white/[0.15]"
+                    : "bg-white/[0.03] backdrop-blur-[10px] border-white/[0.08]",
                   pricingAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
                 )}
                 style={{ transitionDelay: `${i * 100}ms` }}
@@ -919,10 +919,10 @@ npx -y @lician/mcp-server`}
                 <a
                   href={tier.href}
                   className={cn(
-                    "block w-full py-3 rounded-full text-[14px] font-medium text-center transition-colors",
+                    "block w-full py-3 rounded-full text-[14px] font-medium text-center motion-safe:transition-colors motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]",
                     tier.highlighted
                       ? "bg-white text-black hover:bg-white/90"
-                      : "border border-white/[0.15] text-white hover:border-white/30 hover:bg-white/[0.03]"
+                      : "border border-white/[0.15] text-white hover:border-white/[0.15] hover:bg-white/[0.05]"
                   )}
                 >
                   {tier.cta}
@@ -938,7 +938,7 @@ npx -y @lician/mcp-server`}
         <div className="max-w-[1200px] mx-auto px-6">
           <div
             className={cn(
-              "inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.05] border border-white/[0.1] mb-8 transition-all duration-700",
+              "inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.05] border border-white/[0.1] mb-8 motion-safe:transition-all motion-safe:duration-700 ease-out",
               ctaAnim.isVisible ? "opacity-100" : "opacity-0"
             )}
           >
@@ -950,7 +950,7 @@ npx -y @lician/mcp-server`}
 
           <h2
             className={cn(
-              "text-[48px] md:text-[64px] lg:text-[72px] font-bold leading-[0.95] tracking-[-0.03em] mb-6 transition-all duration-700",
+              "text-[48px] md:text-[64px] lg:text-[72px] font-bold leading-[0.95] tracking-[-0.03em] mb-6 motion-safe:transition-all motion-safe:duration-700 ease-out text-balance",
               ctaAnim.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             )}
           >
@@ -959,7 +959,7 @@ npx -y @lician/mcp-server`}
 
           <p
             className={cn(
-              "text-[18px] text-[#868f97] max-w-[500px] mx-auto mb-10 transition-all duration-700 delay-100",
+              "text-[18px] text-[#868f97] max-w-[500px] mx-auto mb-10 motion-safe:transition-all motion-safe:duration-700 ease-out delay-100",
               ctaAnim.isVisible ? "opacity-100" : "opacity-0"
             )}
           >
@@ -986,7 +986,7 @@ npx -y @lician/mcp-server`}
             </div>
             <div className="flex items-center gap-8 text-[14px] text-[#868f97]">
               {["Documentation", "Pricing", "Status", "Privacy", "Terms"].map((item) => (
-                <a key={item} href={`/${item.toLowerCase()}`} className="hover:text-white transition-colors">
+                <a key={item} href={`/${item.toLowerCase()}`} className="hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out">
                   {item}
                 </a>
               ))}

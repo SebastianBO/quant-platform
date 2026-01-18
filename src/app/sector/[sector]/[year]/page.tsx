@@ -36,38 +36,38 @@ export default async function SectorYearPage({ params }: Props) {
   const name = SECTOR_NAMES[sector] || sector
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-black">
       <Header />
       <main className="max-w-6xl mx-auto px-4 py-8">
         <nav className="text-sm mb-4">
-          <Link href="/" className="text-blue-600 hover:underline">Home</Link>
+          <Link href="/" className="text-[#479ffa] hover:text-[#479ffa]/80 motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">Home</Link>
           {' > '}
-          <Link href={`/sector/${sector}`} className="text-blue-600 hover:underline">{name}</Link>
+          <Link href={`/sector/${sector}`} className="text-[#479ffa] hover:text-[#479ffa]/80 motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">{name}</Link>
           {' > '}
-          <span className="text-gray-600">{year}</span>
+          <span className="text-[#868f97]">{year}</span>
         </nav>
 
-        <h1 className="text-3xl font-bold mb-4">{name} Sector Performance {year}</h1>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">
+        <h1 className="text-3xl font-bold mb-4 text-balance">{name} Sector Performance {year}</h1>
+        <p className="text-[#868f97] mb-6">
           Historical analysis of {name} sector stocks in {year}. Review top performers,
           sector returns, and key events that shaped the {name} market.
         </p>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
-          <h2 className="text-xl font-semibold mb-4">{year} Highlights</h2>
-          <p className="text-gray-600 dark:text-gray-400">
+        <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 mb-6 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
+          <h2 className="text-xl font-semibold mb-4 text-balance">{year} Highlights</h2>
+          <p className="text-[#868f97]">
             Performance data for {name} sector during {year}.
           </p>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
-          <h2 className="text-xl font-semibold mb-4">Other Years</h2>
+        <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 mb-6 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
+          <h2 className="text-xl font-semibold mb-4 text-balance">Other Years</h2>
           <div className="flex flex-wrap gap-2">
             {YEARS.filter(y => y !== year).map(y => (
               <Link
                 key={y}
                 href={`/sector/${sector}/${y}`}
-                className="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded hover:bg-blue-100 text-sm"
+                className="px-3 py-1 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl text-sm motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15] focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 {y}
               </Link>

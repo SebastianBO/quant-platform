@@ -310,13 +310,13 @@ export default function ValueInvestingPage() {
       />
       <FAQSchema faqs={faqs} />
 
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-dvh bg-black text-white pt-20">
         <div className="max-w-4xl mx-auto px-6 py-12">
           {/* Breadcrumbs */}
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-[#479ffa] motion-safe:motion-safe:transition-all motion-safe:duration-150 ease-out motion-safe:duration-150 ease-out">Home</Link>
             {' / '}
-            <Link href="/learn" className="hover:text-foreground">Learn</Link>
+            <Link href="/learn" className="hover:text-[#479ffa] motion-safe:motion-safe:transition-all motion-safe:duration-150 ease-out motion-safe:duration-150 ease-out">Learn</Link>
             {' / '}
             <span>Value Investing</span>
           </nav>
@@ -326,7 +326,7 @@ export default function ValueInvestingPage() {
             <h1 className="text-4xl font-bold mb-4">
               Value Investing: Find Undervalued Stocks Like Warren Buffett
             </h1>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-xl text-[#868f97]">
               Master the time-tested strategy of buying stocks trading below intrinsic value. Learn Warren Buffett&apos;s
               approach to finding wonderful businesses at fair prices, calculating margin of safety, and building
               long-term wealth through disciplined value investing.
@@ -336,19 +336,19 @@ export default function ValueInvestingPage() {
           {/* What is Value Investing */}
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-4">What is Value Investing?</h2>
-            <p className="text-muted-foreground mb-4">
+            <p className="text-[#868f97] mb-4">
               Value investing is a strategy pioneered by Benjamin Graham and perfected by Warren Buffett. The core
               principle is simple: buy stocks trading for less than they&apos;re truly worth. When market price is below
               intrinsic value, you have both upside potential (value recognition) and downside protection (margin of safety).
             </p>
-            <div className="bg-card p-6 rounded-xl border border-border mb-6">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 mb-6">
               <h3 className="text-lg font-bold mb-3">The Warren Buffett Philosophy</h3>
               <div className="space-y-4">
                 <div className="flex gap-3">
-                  <div className="text-green-500 text-2xl">📊</div>
+                  <div className="text-[#4ebe96] text-2xl">📊</div>
                   <div>
                     <div className="font-bold mb-1">Price vs Value</div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-sm text-[#868f97]">
                       "Price is what you pay, value is what you get." Market prices fluctuate based on emotion,
                       news, and sentiment. Intrinsic value is based on business fundamentals: cash flow, assets,
                       and competitive position. Value investors exploit the gap.
@@ -356,10 +356,10 @@ export default function ValueInvestingPage() {
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <div className="text-green-500 text-2xl">🛡️</div>
+                  <div className="text-[#4ebe96] text-2xl">🛡️</div>
                   <div>
                     <div className="font-bold mb-1">Margin of Safety</div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-sm text-[#868f97]">
                       Benjamin Graham&apos;s cornerstone concept. If intrinsic value is $100, only buy at $60-70. This
                       30-40% discount protects against errors, bad luck, or market downturns. The larger the uncertainty,
                       the wider margin you need.
@@ -367,10 +367,10 @@ export default function ValueInvestingPage() {
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <div className="text-green-500 text-2xl">⏳</div>
+                  <div className="text-[#4ebe96] text-2xl">⏳</div>
                   <div>
                     <div className="font-bold mb-1">Long-Term Perspective</div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-sm text-[#868f97]">
                       "In the short run, the market is a voting machine. In the long run, it&apos;s a weighing machine."
                       Value recognition takes time - often 2-5 years. But patient investors are rewarded as the market
                       eventually reflects true value.
@@ -386,14 +386,14 @@ export default function ValueInvestingPage() {
             <h2 className="text-3xl font-bold mb-6">How to Start Value Investing</h2>
             <div className="space-y-6">
               {howToSteps.map((step, index) => (
-                <div key={index} className="bg-card p-6 rounded-xl border border-border">
+                <div key={index} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
                   <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-10 h-10 bg-green-500 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                    <div className="flex-shrink-0 w-10 h-10 bg-[#4ebe96] text-white rounded-full flex items-center justify-center font-bold text-lg">
                       {index + 1}
                     </div>
                     <div>
                       <h3 className="text-xl font-bold mb-2">{step.name}</h3>
-                      <p className="text-muted-foreground">{step.text}</p>
+                      <p className="text-[#868f97]">{step.text}</p>
                     </div>
                   </div>
                 </div>
@@ -404,25 +404,25 @@ export default function ValueInvestingPage() {
           {/* Key Metrics */}
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-6">Key Value Investing Metrics</h2>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-[#868f97] mb-6">
               Value investors use these metrics to identify undervalued stocks and calculate intrinsic value:
             </p>
             <div className="space-y-6">
               {keyMetrics.map((metric) => (
-                <div key={metric.name} className="bg-card p-6 rounded-xl border border-border">
+                <div key={metric.name} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
                   <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-lg font-bold text-green-500">{metric.name}</h3>
-                    <div className="text-xs bg-green-500/10 text-green-500 px-3 py-1 rounded-full">
+                    <h3 className="text-lg font-bold text-[#4ebe96]">{metric.name}</h3>
+                    <div className="text-xs bg-[#4ebe96]/10 text-[#4ebe96] px-3 py-1 rounded-full">
                       {metric.valueRange}
                     </div>
                   </div>
-                  <div className="bg-background p-3 rounded font-mono text-sm mb-3">
+                  <div className="bg-black/50 p-3 rounded-2xl font-mono text-sm mb-3">
                     {metric.formula}
                   </div>
-                  <p className="text-sm text-muted-foreground mb-3">{metric.description}</p>
-                  <div className="bg-blue-500/10 border border-blue-500/20 p-3 rounded text-sm">
-                    <span className="font-bold text-blue-500">Example: </span>
-                    <span className="text-muted-foreground">{metric.example}</span>
+                  <p className="text-sm text-[#868f97] mb-3">{metric.description}</p>
+                  <div className="bg-blue-500/10 border border-[#479ffa]/20 p-3 rounded text-sm">
+                    <span className="font-bold text-[#479ffa]">Example: </span>
+                    <span className="text-[#868f97]">{metric.example}</span>
                   </div>
                 </div>
               ))}
@@ -432,17 +432,17 @@ export default function ValueInvestingPage() {
           {/* Warren Buffett's Approach */}
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-6">Warren Buffett&apos;s Value Investing Principles</h2>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-[#868f97] mb-6">
               Warren Buffett evolved value investing from buying &quot;cigar butts&quot; (cheap, low-quality stocks) to
               acquiring &quot;wonderful businesses at fair prices.&quot; His principles combine Graham&apos;s value discipline
               with focus on business quality:
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {buffettPrinciples.map((item) => (
-                <div key={item.principle} className="bg-card p-6 rounded-xl border border-border">
+                <div key={item.principle} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
                   <h3 className="text-xl font-bold mb-2">{item.principle}</h3>
-                  <p className="text-sm text-green-500 mb-3">{item.description}</p>
-                  <p className="text-sm text-muted-foreground">{item.explanation}</p>
+                  <p className="text-sm text-[#4ebe96] mb-3">{item.description}</p>
+                  <p className="text-sm text-[#868f97]">{item.explanation}</p>
                 </div>
               ))}
             </div>
@@ -451,74 +451,74 @@ export default function ValueInvestingPage() {
           {/* How to Find Undervalued Stocks */}
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-6">How to Find Undervalued Stocks</h2>
-            <div className="bg-card p-6 rounded-xl border border-border">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
               <h3 className="text-lg font-bold mb-4">Stock Screening Criteria</h3>
               <div className="space-y-4">
                 <div className="flex gap-3">
-                  <div className="text-green-500 font-bold">✓</div>
+                  <div className="text-[#4ebe96] font-bold">✓</div>
                   <div>
                     <div className="font-bold mb-1">P/E Ratio Below 15</div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-sm text-[#868f97]">
                       Compare to S&P 500 average (~18-20) and industry peers. Below 10 is deep value territory.
                       Use normalized earnings (5-10 year average) for cyclical companies.
                     </div>
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <div className="text-green-500 font-bold">✓</div>
+                  <div className="text-[#4ebe96] font-bold">✓</div>
                   <div>
                     <div className="font-bold mb-1">P/B Ratio Below 1.5-2.0</div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-sm text-[#868f97]">
                       Trading near or below book value suggests undervaluation. Especially meaningful for banks,
                       insurers, and asset-heavy businesses. Adjust for asset quality and ROE.
                     </div>
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <div className="text-green-500 font-bold">✓</div>
+                  <div className="text-[#4ebe96] font-bold">✓</div>
                   <div>
                     <div className="font-bold mb-1">PEG Ratio Below 1.0</div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-sm text-[#868f97]">
                       Finds value in growing companies. P/E of 12 with 15% growth (PEG 0.8) beats P/E of 8
                       with 5% growth (PEG 1.6). Use sustainable growth, not one-year spikes.
                     </div>
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <div className="text-green-500 font-bold">✓</div>
+                  <div className="text-[#4ebe96] font-bold">✓</div>
                   <div>
                     <div className="font-bold mb-1">Dividend Yield 3-6%</div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-sm text-[#868f97]">
                       Provides income and downside support. Verify payout ratio below 60% and consistent dividend
                       history. Yields above 8% often signal danger.
                     </div>
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <div className="text-green-500 font-bold">✓</div>
+                  <div className="text-[#4ebe96] font-bold">✓</div>
                   <div>
                     <div className="font-bold mb-1">Strong Free Cash Flow</div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-sm text-[#868f97]">
                       FCF yield above 7-8% is attractive. Cash flow harder to manipulate than earnings.
                       Ensures company generates real cash, not just accounting profits.
                     </div>
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <div className="text-green-500 font-bold">✓</div>
+                  <div className="text-[#4ebe96] font-bold">✓</div>
                   <div>
                     <div className="font-bold mb-1">Low Debt Levels</div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-sm text-[#868f97]">
                       Debt-to-equity below 0.5 is safe. High debt magnifies problems and increases risk.
                       Check interest coverage (EBIT / interest) above 5x.
                     </div>
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <div className="text-green-500 font-bold">✓</div>
+                  <div className="text-[#4ebe96] font-bold">✓</div>
                   <div>
                     <div className="font-bold mb-1">Quality Business with Moat</div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-sm text-[#868f97]">
                       Look for competitive advantages: brand power, network effects, switching costs, or
                       scale advantages. ROE above 15% indicates quality.
                     </div>
@@ -526,9 +526,9 @@ export default function ValueInvestingPage() {
                 </div>
               </div>
             </div>
-            <div className="mt-6 bg-gradient-to-br from-green-500/10 to-blue-500/10 p-6 rounded-xl border border-green-500/20">
+            <div className="mt-6 bg-gradient-to-br from-[#4ebe96]/10 to-[#479ffa]/10 p-6 rounded-xl border border-[#4ebe96]/20">
               <h3 className="font-bold mb-3">Where to Find Value</h3>
-              <div className="text-sm text-muted-foreground space-y-2">
+              <div className="text-sm text-[#868f97] space-y-2">
                 <p>• <strong>Out of favor sectors:</strong> Industries temporarily unloved (energy in 2020, banks in 2023)</p>
                 <p>• <strong>Spin-offs:</strong> Parent company shareholders sell without analysis, creating opportunity</p>
                 <p>• <strong>Small caps:</strong> Less analyst coverage = more pricing inefficiencies</p>
@@ -542,25 +542,25 @@ export default function ValueInvestingPage() {
           {/* Value Traps */}
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-6">Value Traps to Avoid</h2>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-[#868f97] mb-6">
               Not all cheap stocks are good value. Value traps are stocks that look cheap but deserve to be because
               of permanent problems. Learn to distinguish temporary setbacks from terminal decline:
             </p>
             <div className="space-y-4">
               {valueTraps.map((trap) => (
-                <div key={trap.trap} className="bg-card p-6 rounded-xl border border-red-500/20">
+                <div key={trap.trap} className="bg-card p-6 rounded-xl border border-[#ff5c5c]/20">
                   <div className="flex items-start gap-4">
-                    <div className="text-red-500 text-2xl">⚠️</div>
+                    <div className="text-[#ff5c5c] text-2xl">⚠️</div>
                     <div className="flex-1">
-                      <h3 className="font-bold mb-1 text-red-500">{trap.trap}</h3>
-                      <p className="text-sm text-muted-foreground mb-2">{trap.warning}</p>
-                      <div className="bg-background p-3 rounded mb-3">
-                        <div className="text-xs font-bold text-muted-foreground mb-1">Examples:</div>
+                      <h3 className="font-bold mb-1 text-[#ff5c5c]">{trap.trap}</h3>
+                      <p className="text-sm text-[#868f97] mb-2">{trap.warning}</p>
+                      <div className="bg-black/50 p-3 rounded-2xl mb-3">
+                        <div className="text-xs font-bold text-[#868f97] mb-1">Examples:</div>
                         <div className="text-sm">{trap.examples}</div>
                       </div>
                       <div className="text-sm">
-                        <span className="font-bold text-green-500">How to avoid: </span>
-                        <span className="text-muted-foreground">{trap.howToAvoid}</span>
+                        <span className="font-bold text-[#4ebe96]">How to avoid: </span>
+                        <span className="text-[#868f97]">{trap.howToAvoid}</span>
                       </div>
                     </div>
                   </div>
@@ -572,7 +572,7 @@ export default function ValueInvestingPage() {
           {/* Value vs Growth */}
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-6">Value vs Growth Investing</h2>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-[#868f97] mb-6">
               Understanding the difference helps you choose the right strategy for your goals and market environment.
               Many successful investors combine both approaches (&quot;Growth at a Reasonable Price&quot; or GARP):
             </p>
@@ -581,34 +581,34 @@ export default function ValueInvestingPage() {
                 <thead>
                   <tr className="border-b border-border">
                     <th className="text-left p-4 font-bold">Aspect</th>
-                    <th className="text-left p-4 font-bold text-green-500">Value Investing</th>
-                    <th className="text-left p-4 font-bold text-blue-500">Growth Investing</th>
+                    <th className="text-left p-4 font-bold text-[#4ebe96]">Value Investing</th>
+                    <th className="text-left p-4 font-bold text-[#479ffa]">Growth Investing</th>
                   </tr>
                 </thead>
                 <tbody>
                   {valueVsGrowth.map((row, index) => (
                     <tr key={row.aspect} className={index % 2 === 0 ? 'bg-card' : ''}>
                       <td className="p-4 font-bold text-sm">{row.aspect}</td>
-                      <td className="p-4 text-sm text-muted-foreground">{row.value}</td>
-                      <td className="p-4 text-sm text-muted-foreground">{row.growth}</td>
+                      <td className="p-4 text-sm text-[#868f97]">{row.value}</td>
+                      <td className="p-4 text-sm text-[#868f97]">{row.growth}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            <div className="mt-6 bg-card p-6 rounded-xl border border-border">
+            <div className="mt-6 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
               <h3 className="font-bold mb-3">Which is Better?</h3>
-              <p className="text-sm text-muted-foreground mb-3">
+              <p className="text-sm text-[#868f97] mb-3">
                 Historically, value outperforms growth over long periods (10+ years), but growth dominated 2010-2021
                 due to low interest rates and tech disruption. Value tends to outperform when:
               </p>
-              <ul className="text-sm text-muted-foreground space-y-1 ml-6 mb-3">
+              <ul className="text-sm text-[#868f97] space-y-1 ml-6 mb-3">
                 <li>• Interest rates are rising or high</li>
                 <li>• Economy is recovering from recession</li>
                 <li>• Inflation is elevated</li>
                 <li>• Market volatility increases</li>
               </ul>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-[#868f97]">
                 Growth outperforms when rates are low, innovation accelerates, and liquidity is abundant. Best approach:
                 Combine both. Even Buffett owns growth stocks (Apple is his largest holding).
               </p>
@@ -620,9 +620,9 @@ export default function ValueInvestingPage() {
             <h2 className="text-3xl font-bold mb-6">Frequently Asked Questions</h2>
             <div className="space-y-6">
               {faqs.map((faq, index) => (
-                <div key={index} className="bg-card p-6 rounded-xl border border-border">
+                <div key={index} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
                   <h3 className="text-lg font-bold mb-3">{faq.question}</h3>
-                  <p className="text-muted-foreground">{faq.answer}</p>
+                  <p className="text-[#868f97]">{faq.answer}</p>
                 </div>
               ))}
             </div>
@@ -634,45 +634,45 @@ export default function ValueInvestingPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Link
                 href="/learn/dcf-valuation"
-                className="bg-card p-6 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out group"
               >
-                <h3 className="text-xl font-bold mb-2 group-hover:text-green-500 transition-colors">
+                <h3 className="text-xl font-bold mb-2 group-hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   DCF Valuation Guide
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-[#868f97]">
                   Learn to calculate intrinsic value using discounted cash flow analysis.
                 </p>
               </Link>
               <Link
                 href="/learn/pe-ratio"
-                className="bg-card p-6 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out group"
               >
-                <h3 className="text-xl font-bold mb-2 group-hover:text-green-500 transition-colors">
+                <h3 className="text-xl font-bold mb-2 group-hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   P/E Ratio Deep Dive
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-[#868f97]">
                   Master P/E ratio analysis and learn when high or low P/E matters.
                 </p>
               </Link>
               <Link
                 href="/learn/dividend-investing"
-                className="bg-card p-6 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out group"
               >
-                <h3 className="text-xl font-bold mb-2 group-hover:text-green-500 transition-colors">
+                <h3 className="text-xl font-bold mb-2 group-hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   Dividend Investing
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-[#868f97]">
                   Build passive income with dividend stocks - common in value portfolios.
                 </p>
               </Link>
               <Link
                 href="/learn/stock-analysis"
-                className="bg-card p-6 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out group"
               >
-                <h3 className="text-xl font-bold mb-2 group-hover:text-green-500 transition-colors">
+                <h3 className="text-xl font-bold mb-2 group-hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   Stock Analysis Fundamentals
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-[#868f97]">
                   Learn to analyze financial statements and assess business quality.
                 </p>
               </Link>
@@ -680,17 +680,17 @@ export default function ValueInvestingPage() {
           </section>
 
           {/* CTA */}
-          <section className="bg-gradient-to-br from-green-500/10 to-blue-500/10 p-8 rounded-xl border border-green-500/20 text-center">
+          <section className="bg-gradient-to-br from-[#4ebe96]/10 to-[#479ffa]/10 p-8 rounded-xl border border-[#4ebe96]/20 text-center">
             <h2 className="text-2xl font-bold mb-4">
               Find Undervalued Stocks with AI-Powered Screening
             </h2>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-[#868f97] mb-6">
               Screen for value stocks with low P/E, P/B, and PEG ratios. Get instant intrinsic value calculations,
               margin of safety analysis, and Warren Buffett-style quality scores. Find wonderful businesses at fair prices.
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+              className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black px-8 py-3 rounded-full font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
             >
               Screen for Value Stocks
             </Link>

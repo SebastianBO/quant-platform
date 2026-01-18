@@ -110,37 +110,37 @@ export default async function SupportResistancePage({ params }: Props) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }} />
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-black text-white">
         <div className="max-w-4xl mx-auto px-6 py-12">
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded">Home</Link>
             {' / '}
-            <Link href="/dashboard" className="hover:text-foreground">Technical Analysis</Link>
+            <Link href="/dashboard" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded">Technical Analysis</Link>
             {' / '}
             <span>{symbol} Support & Resistance</span>
           </nav>
 
-          <h1 className="text-4xl font-bold mb-4">{symbol} Support & Resistance</h1>
-          <p className="text-xl text-muted-foreground mb-8">{companyName} - Key price levels & trading zones</p>
+          <h1 className="text-4xl font-bold mb-4 text-balance">{symbol} Support & Resistance</h1>
+          <p className="text-xl text-[#868f97] mb-8">{companyName} - Key price levels & trading zones</p>
 
           {/* Price Card */}
-          <div className="bg-gradient-to-r from-orange-600/20 to-red-600/20 p-8 rounded-xl border border-orange-500/30 mb-8">
+          <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 mb-8 motion-safe:transition-all motion-safe:duration-150 ease-out">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div>
-                <p className="text-muted-foreground text-sm mb-1">Current Price</p>
-                <p className="text-4xl font-bold">${price.toFixed(2)}</p>
+                <p className="text-[#868f97] text-sm mb-1">Current Price</p>
+                <p className="text-4xl font-bold tabular-nums">${price.toFixed(2)}</p>
               </div>
               <div>
-                <p className="text-muted-foreground text-sm mb-1">52W High (Resistance)</p>
-                <p className="text-3xl font-bold text-red-500">${yearHigh.toFixed(2)}</p>
+                <p className="text-[#868f97] text-sm mb-1">52W High (Resistance)</p>
+                <p className="text-3xl font-bold text-[#ff5c5c] tabular-nums">${yearHigh.toFixed(2)}</p>
               </div>
               <div>
-                <p className="text-muted-foreground text-sm mb-1">52W Low (Support)</p>
-                <p className="text-3xl font-bold text-green-500">${yearLow.toFixed(2)}</p>
+                <p className="text-[#868f97] text-sm mb-1">52W Low (Support)</p>
+                <p className="text-3xl font-bold text-[#4ebe96] tabular-nums">${yearLow.toFixed(2)}</p>
               </div>
               <div>
-                <p className="text-muted-foreground text-sm mb-1">Distance to High</p>
-                <p className="text-2xl font-bold">
+                <p className="text-[#868f97] text-sm mb-1">Distance to High</p>
+                <p className="text-2xl font-bold tabular-nums">
                   {((yearHigh - price) / price * 100).toFixed(1)}%
                 </p>
               </div>
@@ -149,14 +149,14 @@ export default async function SupportResistancePage({ params }: Props) {
 
           {/* Understanding Support & Resistance */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Understanding Support & Resistance</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Understanding Support & Resistance</h2>
             <div className="grid md:grid-cols-2 gap-4">
-              <div className="bg-card p-6 rounded-lg border border-border">
-                <h3 className="font-bold text-lg mb-3 text-green-500">Support Levels</h3>
-                <p className="text-sm text-muted-foreground mb-3">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <h3 className="font-bold text-lg mb-3 text-[#4ebe96]">Support Levels</h3>
+                <p className="text-sm text-[#868f97] mb-3">
                   Support is a price level where buying interest is strong enough to prevent {symbol} from declining further.
                 </p>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <ul className="space-y-2 text-sm text-[#868f97]">
                   <li>• Previous lows and swing bottoms</li>
                   <li>• Moving averages (50-day, 200-day)</li>
                   <li>• Round psychological numbers</li>
@@ -164,12 +164,12 @@ export default async function SupportResistancePage({ params }: Props) {
                   <li>• Fibonacci retracement levels</li>
                 </ul>
               </div>
-              <div className="bg-card p-6 rounded-lg border border-border">
-                <h3 className="font-bold text-lg mb-3 text-red-500">Resistance Levels</h3>
-                <p className="text-sm text-muted-foreground mb-3">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <h3 className="font-bold text-lg mb-3 text-[#ff5c5c]">Resistance Levels</h3>
+                <p className="text-sm text-[#868f97] mb-3">
                   Resistance is a price level where selling pressure is strong enough to prevent {symbol} from rising further.
                 </p>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <ul className="space-y-2 text-sm text-[#868f97]">
                   <li>• Previous highs and swing tops</li>
                   <li>• Moving averages in downtrends</li>
                   <li>• Round psychological numbers</li>
@@ -182,7 +182,7 @@ export default async function SupportResistancePage({ params }: Props) {
 
           {/* Types of Support/Resistance */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Types of Support & Resistance</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Types of Support & Resistance</h2>
             <div className="grid gap-4">
               {[
                 {
@@ -211,10 +211,10 @@ export default async function SupportResistancePage({ params }: Props) {
                   example: 'High volume nodes and value areas'
                 },
               ].map((item, i) => (
-                <div key={i} className="bg-card p-5 rounded-lg border border-border">
+                <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   <h3 className="font-bold text-lg mb-2">{item.type}</h3>
-                  <p className="text-sm text-muted-foreground mb-1">{item.desc}</p>
-                  <p className="text-sm text-foreground">Example: {item.example}</p>
+                  <p className="text-sm text-[#868f97] mb-1">{item.desc}</p>
+                  <p className="text-sm text-white">Example: {item.example}</p>
                 </div>
               ))}
             </div>
@@ -222,7 +222,7 @@ export default async function SupportResistancePage({ params }: Props) {
 
           {/* Trading Strategies */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Support & Resistance Trading Strategies</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Support & Resistance Trading Strategies</h2>
             <div className="space-y-4">
               {[
                 {
@@ -251,32 +251,32 @@ export default async function SupportResistancePage({ params }: Props) {
                   risk: 'Weekly/monthly levels are stronger'
                 },
               ].map((item, i) => (
-                <div key={i} className="bg-card p-5 rounded-lg border border-border">
+                <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   <h3 className="font-bold text-lg mb-2">{item.strategy}</h3>
-                  <p className="text-sm text-muted-foreground mb-1">{item.desc}</p>
-                  <p className="text-sm text-orange-500">Note: {item.risk}</p>
+                  <p className="text-sm text-[#868f97] mb-1">{item.desc}</p>
+                  <p className="text-sm text-[#ffa16c]">Note: {item.risk}</p>
                 </div>
               ))}
             </div>
           </section>
 
           {/* CTA */}
-          <section className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 p-8 rounded-xl border border-blue-500/30 text-center mb-12">
-            <h2 className="text-2xl font-bold mb-4">Identify Key Levels for {symbol}</h2>
-            <p className="text-muted-foreground mb-6">View interactive charts with support and resistance zones</p>
-            <Link href={`/dashboard?ticker=${symbol}&tab=technical`} className="inline-block bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-lg font-medium">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 text-center mb-12 motion-safe:transition-all motion-safe:duration-150 ease-out">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Identify Key Levels for {symbol}</h2>
+            <p className="text-[#868f97] mb-6">View interactive charts with support and resistance zones</p>
+            <Link href={`/dashboard?ticker=${symbol}&tab=technical`} className="inline-block bg-[#479ffa] hover:bg-[#479ffa]/80 text-white px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
               View Chart Analysis
             </Link>
           </section>
 
           {/* FAQ */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {srFaqs.map((faq, i) => (
-                <div key={i} className="bg-card p-5 rounded-lg border border-border">
+                <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   <h3 className="font-bold text-lg mb-2">{faq.question}</h3>
-                  <p className="text-muted-foreground">{faq.answer}</p>
+                  <p className="text-[#868f97]">{faq.answer}</p>
                 </div>
               ))}
             </div>

@@ -107,42 +107,42 @@ export default async function MarketingSpendPage({ params }: Props) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }} />
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-black text-white">
         <div className="max-w-4xl mx-auto px-6 py-12">
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-[#479ffa] transition-colors duration-200">Home</Link>
             {' / '}
-            <Link href="/dashboard" className="hover:text-foreground">Financials</Link>
+            <Link href="/dashboard" className="hover:text-[#479ffa] transition-colors duration-200">Financials</Link>
             {' / '}
             <span>{symbol} Marketing Spend</span>
           </nav>
 
-          <h1 className="text-4xl font-bold mb-4">{symbol} Marketing Spend</h1>
-          <p className="text-xl text-muted-foreground mb-8">{companyName} - Advertising & marketing investment analysis</p>
+          <h1 className="text-4xl font-bold mb-4 text-balance">{symbol} Marketing Spend</h1>
+          <p className="text-xl text-[#868f97] mb-8">{companyName} - Advertising & marketing investment analysis</p>
 
           {/* Price Card */}
-          <div className="bg-gradient-to-r from-blue-600/20 to-cyan-600/20 p-8 rounded-xl border border-blue-500/30 mb-8">
+          <div className="bg-white/5 backdrop-blur-sm p-8 rounded-xl border border-white/10 mb-8 hover:bg-white/[0.07] transition-all duration-200">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div>
-                <p className="text-muted-foreground text-sm mb-1">Current Price</p>
-                <p className="text-4xl font-bold">${price.toFixed(2)}</p>
+                <p className="text-[#868f97] text-sm mb-1">Current Price</p>
+                <p className="text-4xl font-bold tabular-nums">${price.toFixed(2)}</p>
               </div>
               <div>
-                <p className="text-muted-foreground text-sm mb-1">Today's Change</p>
-                <p className={`text-3xl font-bold ${snapshot.day_change_percent >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                <p className="text-[#868f97] text-sm mb-1">Today's Change</p>
+                <p className={`text-3xl font-bold tabular-nums ${snapshot.day_change_percent >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                   {snapshot.day_change_percent >= 0 ? '+' : ''}{snapshot.day_change_percent?.toFixed(2)}%
                 </p>
               </div>
               {snapshot.yearHigh && (
                 <div>
-                  <p className="text-muted-foreground text-sm mb-1">52W High</p>
-                  <p className="text-2xl font-bold">${snapshot.yearHigh.toFixed(2)}</p>
+                  <p className="text-[#868f97] text-sm mb-1">52W High</p>
+                  <p className="text-2xl font-bold tabular-nums">${snapshot.yearHigh.toFixed(2)}</p>
                 </div>
               )}
               {snapshot.yearLow && (
                 <div>
-                  <p className="text-muted-foreground text-sm mb-1">52W Low</p>
-                  <p className="text-2xl font-bold">${snapshot.yearLow.toFixed(2)}</p>
+                  <p className="text-[#868f97] text-sm mb-1">52W Low</p>
+                  <p className="text-2xl font-bold tabular-nums">${snapshot.yearLow.toFixed(2)}</p>
                 </div>
               )}
             </div>
@@ -150,11 +150,11 @@ export default async function MarketingSpendPage({ params }: Props) {
 
           {/* Marketing Spend Overview */}
           <section className="mb-12">
-            <div className="bg-card p-8 rounded-lg border border-border">
+            <div className="bg-white/5 backdrop-blur-sm p-8 rounded-lg border border-white/10 hover:bg-white/[0.07] transition-all duration-200">
               <div className="text-6xl mb-4">📢</div>
-              <h2 className="text-2xl font-bold mb-2">Marketing Investment Analysis</h2>
-              <p className="text-muted-foreground mb-6">Detailed marketing spend metrics, advertising investment, and ROI analysis for {symbol}</p>
-              <Link href={`/dashboard?ticker=${symbol}&tab=financials`} className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium">
+              <h2 className="text-2xl font-bold mb-2 text-balance">Marketing Investment Analysis</h2>
+              <p className="text-[#868f97] mb-6">Detailed marketing spend metrics, advertising investment, and ROI analysis for {symbol}</p>
+              <Link href={`/dashboard?ticker=${symbol}&tab=financials`} className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black px-8 py-3 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#4ebe96] focus:ring-offset-2 focus:ring-offset-black">
                 View Full Financial Analysis
               </Link>
             </div>
@@ -162,7 +162,7 @@ export default async function MarketingSpendPage({ params }: Props) {
 
           {/* Marketing Metrics */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Key Marketing Metrics</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Key Marketing Metrics</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
                 { name: 'Marketing Spend', desc: 'Total advertising investment' },
@@ -172,9 +172,9 @@ export default async function MarketingSpendPage({ params }: Props) {
                 { name: 'Customer Acquisition Cost', desc: 'Cost to acquire customers' },
                 { name: 'Brand Investment', desc: 'Long-term brand building' },
               ].map((metric, i) => (
-                <div key={i} className="bg-card p-4 rounded-lg border border-border">
+                <div key={i} className="bg-white/5 backdrop-blur-sm p-4 rounded-lg border border-white/10 hover:bg-white/[0.07] transition-all duration-200">
                   <p className="font-bold">{metric.name}</p>
-                  <p className="text-sm text-muted-foreground">{metric.desc}</p>
+                  <p className="text-sm text-[#868f97]">{metric.desc}</p>
                 </div>
               ))}
             </div>
@@ -182,7 +182,7 @@ export default async function MarketingSpendPage({ params }: Props) {
 
           {/* What Marketing Spend Tells You */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">What Marketing Spend Tells You About {symbol}</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">What Marketing Spend Tells You About {symbol}</h2>
             <div className="space-y-3">
               {[
                 'Increased marketing spend often indicates growth initiatives and market expansion plans',
@@ -191,30 +191,30 @@ export default async function MarketingSpendPage({ params }: Props) {
                 'Marketing efficiency improvements can drive margin expansion and profitability',
               ].map((point, i) => (
                 <div key={i} className="flex gap-3 items-start">
-                  <span className="text-green-500 text-lg">✓</span>
-                  <p className="text-muted-foreground">{point}</p>
+                  <span className="text-[#4ebe96] text-lg">✓</span>
+                  <p className="text-[#868f97]">{point}</p>
                 </div>
               ))}
             </div>
           </section>
 
           {/* CTA */}
-          <section className="bg-gradient-to-r from-green-600/20 to-emerald-600/20 p-8 rounded-xl border border-green-500/30 text-center mb-12">
-            <h2 className="text-2xl font-bold mb-4">Complete Marketing Analysis</h2>
-            <p className="text-muted-foreground mb-6">Get AI-powered analysis of {symbol} marketing spend and advertising investment</p>
-            <Link href={`/dashboard?ticker=${symbol}&tab=financials`} className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium">
+          <section className="bg-white/5 backdrop-blur-sm p-8 rounded-xl border border-[#4ebe96]/30 text-center mb-12 hover:bg-white/[0.07] transition-all duration-200">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Complete Marketing Analysis</h2>
+            <p className="text-[#868f97] mb-6">Get AI-powered analysis of {symbol} marketing spend and advertising investment</p>
+            <Link href={`/dashboard?ticker=${symbol}&tab=financials`} className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black px-8 py-3 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#4ebe96] focus:ring-offset-2 focus:ring-offset-black">
               Analyze {symbol} Marketing
             </Link>
           </section>
 
           {/* FAQ */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {marketingSpendFaqs.map((faq, i) => (
-                <div key={i} className="bg-card p-5 rounded-lg border border-border">
-                  <h3 className="font-bold text-lg mb-2">{faq.question}</h3>
-                  <p className="text-muted-foreground">{faq.answer}</p>
+                <div key={i} className="bg-white/5 backdrop-blur-sm p-5 rounded-lg border border-white/10 hover:bg-white/[0.07] transition-all duration-200">
+                  <h3 className="font-bold text-lg mb-2 text-balance">{faq.question}</h3>
+                  <p className="text-[#868f97]">{faq.answer}</p>
                 </div>
               ))}
             </div>

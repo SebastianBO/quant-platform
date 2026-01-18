@@ -142,15 +142,15 @@ export default function OptionsPage() {
         }}
       />
 
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-dvh bg-black text-white pt-20">
         {/* Header */}
-        <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
+        <header className="sticky top-0 z-50 bg-black/95 backdrop-blur-[10px] border-b border-white/[0.08]">
           <div className="max-w-[1400px] mx-auto px-6 py-3">
             <div className="flex items-center justify-between gap-6">
               {/* Logo */}
-              <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-                <div className="w-9 h-9 bg-foreground rounded-xl flex items-center justify-center">
-                  <span className="text-background font-bold text-lg">L</span>
+              <Link href="/" className="flex items-center gap-2 flex-shrink-0 focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded-full outline-none">
+                <div className="w-9 h-9 bg-white rounded-2xl flex items-center justify-center">
+                  <span className="text-black font-bold text-lg">L</span>
                 </div>
                 <span className="font-semibold text-lg hidden sm:inline">Lician</span>
               </Link>
@@ -159,13 +159,13 @@ export default function OptionsPage() {
               <nav className="flex items-center gap-4">
                 <Link
                   href="/"
-                  className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-[#868f97] hover:text-white hover:bg-white/[0.05] rounded-full motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] outline-none"
                 >
                   Dashboard
                 </Link>
                 <Link
                   href="/options"
-                  className="px-4 py-2 text-sm font-medium bg-green-500 text-white rounded-lg"
+                  className="px-4 py-2 text-sm font-medium bg-[#4ebe96] text-white rounded-full hover:bg-[#4ebe96]/90 motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] outline-none"
                 >
                   Options Guide
                 </Link>
@@ -181,26 +181,26 @@ export default function OptionsPage() {
         </header>
 
         {/* Hero Section */}
-        <section className="bg-gradient-to-b from-green-500/10 to-background border-b border-border">
+        <section className="bg-gradient-to-b from-[#4ebe96]/10 to-black border-b border-white/[0.08]">
           <div className="max-w-[1400px] mx-auto px-6 py-16">
             <div className="max-w-4xl">
               <h1 className="text-4xl md:text-5xl font-bold mb-6">
                 Options Trading Guide: Master Calls, Puts & Unusual Activity
               </h1>
-              <p className="text-xl text-muted-foreground mb-8">
+              <p className="text-xl text-[#868f97] mb-8">
                 Learn how to analyze options flow, identify unusual options activity, understand the Greeks, and implement proven strategies. Free comprehensive guide for beginners and advanced traders.
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link
                   href="/#options"
-                  className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                  className="inline-flex items-center gap-2 bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white px-6 py-3 rounded-full font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] outline-none"
                 >
                   <TrendingUp className="w-5 h-5" />
                   View Live Options Flow
                 </Link>
                 <Link
                   href="/"
-                  className="inline-flex items-center gap-2 bg-secondary hover:bg-secondary/80 text-foreground px-6 py-3 rounded-lg font-medium transition-colors"
+                  className="inline-flex items-center gap-2 bg-white/[0.03] hover:bg-white/[0.05] border border-white/[0.08] hover:border-white/[0.15] text-white px-6 py-3 rounded-full font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] outline-none"
                 >
                   <Calculator className="w-5 h-5" />
                   Analyze Stocks
@@ -219,86 +219,86 @@ export default function OptionsPage() {
             <div className="lg:col-span-2 space-y-8">
 
               {/* What are Options */}
-              <Card className="bg-card border-border">
+              <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-3 text-2xl">
-                    <BookOpen className="w-6 h-6 text-green-500" />
+                    <BookOpen className="w-6 h-6 text-[#4ebe96]" />
                     What Are Stock Options?
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <p className="text-muted-foreground leading-relaxed">
-                    <strong className="text-foreground">Options</strong> are financial contracts that give you the right (but not the obligation) to buy or sell a stock at a predetermined price (called the strike price) before a specific expiration date. Unlike buying stocks, options allow you to control 100 shares with less capital while limiting your risk to the premium paid.
+                  <p className="text-[#868f97] leading-relaxed">
+                    <strong className="text-white">Options</strong> are financial contracts that give you the right (but not the obligation) to buy or sell a stock at a predetermined price (called the strike price) before a specific expiration date. Unlike buying stocks, options allow you to control 100 shares with less capital while limiting your risk to the premium paid.
                   </p>
 
                   <div className="grid md:grid-cols-2 gap-4 mt-6">
                     {/* Call Options */}
-                    <div className="p-5 bg-green-500/10 border border-green-500/20 rounded-xl">
+                    <div className="p-5 bg-[#4ebe96]/10 border border-[#4ebe96]/20 rounded-2xl">
                       <div className="flex items-center gap-2 mb-3">
-                        <TrendingUp className="w-5 h-5 text-green-500" />
+                        <TrendingUp className="w-5 h-5 text-[#4ebe96]" />
                         <h3 className="font-bold text-lg">Call Options</h3>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-3">
-                        Right to <strong className="text-foreground">BUY</strong> stock at strike price
+                      <p className="text-sm text-[#868f97] mb-3">
+                        Right to <strong className="text-white">BUY</strong> stock at strike price
                       </p>
                       <ul className="space-y-2 text-sm">
                         <li className="flex items-start gap-2">
-                          <span className="text-green-500 mt-1">•</span>
+                          <span className="text-[#4ebe96] mt-1">•</span>
                           <span>Profit when stock price rises above strike</span>
                         </li>
                         <li className="flex items-start gap-2">
-                          <span className="text-green-500 mt-1">•</span>
+                          <span className="text-[#4ebe96] mt-1">•</span>
                           <span>Bullish strategy (expect price increase)</span>
                         </li>
                         <li className="flex items-start gap-2">
-                          <span className="text-green-500 mt-1">•</span>
+                          <span className="text-[#4ebe96] mt-1">•</span>
                           <span>Limited risk: Only premium paid</span>
                         </li>
                         <li className="flex items-start gap-2">
-                          <span className="text-green-500 mt-1">•</span>
+                          <span className="text-[#4ebe96] mt-1">•</span>
                           <span>Unlimited upside potential</span>
                         </li>
                       </ul>
-                      <div className="mt-4 p-3 bg-background/50 rounded-lg">
-                        <p className="text-xs font-mono text-muted-foreground">Example:</p>
-                        <p className="text-xs mt-1">Buy AAPL $180 Call for $5.00</p>
-                        <p className="text-xs">Stock rises to $190 = $5 profit</p>
-                        <p className="text-xs text-green-500">($10 intrinsic - $5 premium)</p>
+                      <div className="mt-4 p-3 bg-black/50 rounded-2xl">
+                        <p className="text-xs font-mono text-[#868f97]">Example:</p>
+                        <p className="text-xs mt-1 tabular-nums">Buy AAPL $180 Call for $5.00</p>
+                        <p className="text-xs tabular-nums">Stock rises to $190 = $5 profit</p>
+                        <p className="text-xs text-[#4ebe96] tabular-nums">($10 intrinsic - $5 premium)</p>
                       </div>
                     </div>
 
                     {/* Put Options */}
-                    <div className="p-5 bg-red-500/10 border border-red-500/20 rounded-xl">
+                    <div className="p-5 bg-[#ff5c5c]/10 border border-[#ff5c5c]/20 rounded-2xl">
                       <div className="flex items-center gap-2 mb-3">
-                        <TrendingDown className="w-5 h-5 text-red-500" />
+                        <TrendingDown className="w-5 h-5 text-[#ff5c5c]" />
                         <h3 className="font-bold text-lg">Put Options</h3>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-3">
-                        Right to <strong className="text-foreground">SELL</strong> stock at strike price
+                      <p className="text-sm text-[#868f97] mb-3">
+                        Right to <strong className="text-white">SELL</strong> stock at strike price
                       </p>
                       <ul className="space-y-2 text-sm">
                         <li className="flex items-start gap-2">
-                          <span className="text-red-500 mt-1">•</span>
+                          <span className="text-[#ff5c5c] mt-1">•</span>
                           <span>Profit when stock price falls below strike</span>
                         </li>
                         <li className="flex items-start gap-2">
-                          <span className="text-red-500 mt-1">•</span>
+                          <span className="text-[#ff5c5c] mt-1">•</span>
                           <span>Bearish strategy (expect price decrease)</span>
                         </li>
                         <li className="flex items-start gap-2">
-                          <span className="text-red-500 mt-1">•</span>
+                          <span className="text-[#ff5c5c] mt-1">•</span>
                           <span>Limited risk: Only premium paid</span>
                         </li>
                         <li className="flex items-start gap-2">
-                          <span className="text-red-500 mt-1">•</span>
+                          <span className="text-[#ff5c5c] mt-1">•</span>
                           <span>Large profit potential as stock drops</span>
                         </li>
                       </ul>
-                      <div className="mt-4 p-3 bg-background/50 rounded-lg">
-                        <p className="text-xs font-mono text-muted-foreground">Example:</p>
-                        <p className="text-xs mt-1">Buy TSLA $250 Put for $8.00</p>
-                        <p className="text-xs">Stock drops to $230 = $12 profit</p>
-                        <p className="text-xs text-green-500">($20 intrinsic - $8 premium)</p>
+                      <div className="mt-4 p-3 bg-black/50 rounded-2xl">
+                        <p className="text-xs font-mono text-[#868f97]">Example:</p>
+                        <p className="text-xs mt-1 tabular-nums">Buy TSLA $250 Put for $8.00</p>
+                        <p className="text-xs tabular-nums">Stock drops to $230 = $12 profit</p>
+                        <p className="text-xs text-[#4ebe96] tabular-nums">($20 intrinsic - $8 premium)</p>
                       </div>
                     </div>
                   </div>
@@ -306,75 +306,75 @@ export default function OptionsPage() {
               </Card>
 
               {/* Options Flow */}
-              <Card className="bg-card border-border">
+              <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
                 <CardHeader>
                   <CardTitle className="text-2xl">Understanding Options Flow</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <p className="text-muted-foreground leading-relaxed">
-                    <strong className="text-foreground">Options flow</strong> is the real-time tracking of options transactions as they happen in the market. By monitoring flow, you can see what institutional traders and smart money are buying or selling, giving you insights into market sentiment and potential price movements.
+                  <p className="text-[#868f97] leading-relaxed">
+                    <strong className="text-white">Options flow</strong> is the real-time tracking of options transactions as they happen in the market. By monitoring flow, you can see what institutional traders and smart money are buying or selling, giving you insights into market sentiment and potential price movements.
                   </p>
 
                   <div className="space-y-3 mt-6">
                     <h4 className="font-semibold text-lg">Key Flow Indicators:</h4>
 
-                    <div className="p-4 bg-secondary/30 rounded-lg">
+                    <div className="p-4 bg-white/[0.03] border border-white/[0.08] rounded-2xl">
                       <h5 className="font-medium mb-2">Premium Spent</h5>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-[#868f97]">
                         Total dollar amount spent on options contracts. Large premium (millions) suggests institutional positioning.
                       </p>
                     </div>
 
-                    <div className="p-4 bg-secondary/30 rounded-lg">
+                    <div className="p-4 bg-white/[0.03] border border-white/[0.08] rounded-2xl">
                       <h5 className="font-medium mb-2">Aggressive Buyers/Sellers</h5>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-[#868f97]">
                         Trades executed at the ask (bullish) vs bid (bearish). Aggressive buying at ask shows urgency and conviction.
                       </p>
                     </div>
 
-                    <div className="p-4 bg-secondary/30 rounded-lg">
+                    <div className="p-4 bg-white/[0.03] border border-white/[0.08] rounded-2xl">
                       <h5 className="font-medium mb-2">Contract Volume</h5>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-[#868f97]">
                         Number of contracts traded. Compare to average volume - 5-10x normal suggests unusual activity.
                       </p>
                     </div>
 
-                    <div className="p-4 bg-secondary/30 rounded-lg">
+                    <div className="p-4 bg-white/[0.03] border border-white/[0.08] rounded-2xl">
                       <h5 className="font-medium mb-2">Open Interest</h5>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-[#868f97]">
                         Total outstanding contracts. High volume with low open interest indicates new positions being opened.
                       </p>
                     </div>
                   </div>
 
-                  <div className="mt-6 p-4 bg-green-500/10 border border-green-500/20 rounded-xl">
+                  <div className="mt-6 p-4 bg-[#4ebe96]/10 border border-[#4ebe96]/20 rounded-2xl">
                     <p className="text-sm">
-                      <strong className="text-foreground">Pro Tip:</strong> Watch for block trades (100+ contracts) and sweeps (aggressive multi-exchange orders). These often precede significant price moves and indicate informed institutional activity.
+                      <strong className="text-white">Pro Tip:</strong> Watch for block trades (100+ contracts) and sweeps (aggressive multi-exchange orders). These often precede significant price moves and indicate informed institutional activity.
                     </p>
                   </div>
                 </CardContent>
               </Card>
 
               {/* Unusual Options Activity */}
-              <Card className="bg-card border-border">
+              <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-3 text-2xl">
-                    <AlertCircle className="w-6 h-6 text-amber-500" />
+                    <AlertCircle className="w-6 h-6 text-[#ffa16c]" />
                     What Unusual Options Activity Signals
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <p className="text-muted-foreground leading-relaxed">
-                    <strong className="text-foreground">Unusual options activity</strong> occurs when options volume significantly exceeds normal levels, often indicating that large institutional investors or informed traders are positioning for a major move. This can signal upcoming catalysts like earnings beats, acquisitions, FDA approvals, or product launches.
+                  <p className="text-[#868f97] leading-relaxed">
+                    <strong className="text-white">Unusual options activity</strong> occurs when options volume significantly exceeds normal levels, often indicating that large institutional investors or informed traders are positioning for a major move. This can signal upcoming catalysts like earnings beats, acquisitions, FDA approvals, or product launches.
                   </p>
 
                   <div className="grid md:grid-cols-2 gap-4 mt-6">
-                    <div className="p-4 bg-secondary/30 rounded-lg">
+                    <div className="p-4 bg-white/[0.03] border border-white/[0.08] rounded-2xl">
                       <h5 className="font-medium mb-2 flex items-center gap-2">
-                        <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                        <span className="w-2 h-2 bg-[#4ebe96] rounded-full"></span>
                         Bullish Signals
                       </h5>
-                      <ul className="space-y-2 text-sm text-muted-foreground">
+                      <ul className="space-y-2 text-sm text-[#868f97]">
                         <li>• Heavy call buying above current price</li>
                         <li>• Large call sweeps at the ask</li>
                         <li>• Put selling (collecting premium)</li>
@@ -383,12 +383,12 @@ export default function OptionsPage() {
                       </ul>
                     </div>
 
-                    <div className="p-4 bg-secondary/30 rounded-lg">
+                    <div className="p-4 bg-white/[0.03] border border-white/[0.08] rounded-2xl">
                       <h5 className="font-medium mb-2 flex items-center gap-2">
-                        <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                        <span className="w-2 h-2 bg-[#ff5c5c] rounded-full"></span>
                         Bearish Signals
                       </h5>
-                      <ul className="space-y-2 text-sm text-muted-foreground">
+                      <ul className="space-y-2 text-sm text-[#868f97]">
                         <li>• Heavy put buying below current price</li>
                         <li>• Large put sweeps at the ask</li>
                         <li>• Call selling (expecting downside)</li>
@@ -400,7 +400,7 @@ export default function OptionsPage() {
 
                   <div className="mt-6 space-y-3">
                     <h4 className="font-semibold">How to Identify Unusual Activity:</h4>
-                    <ol className="space-y-2 text-sm text-muted-foreground list-decimal list-inside">
+                    <ol className="space-y-2 text-sm text-[#868f97] list-decimal list-inside">
                       <li>Volume 5-10x higher than average</li>
                       <li>Volume exceeds open interest (new positions)</li>
                       <li>Large block trades (100-1000+ contracts)</li>
@@ -414,50 +414,50 @@ export default function OptionsPage() {
               </Card>
 
               {/* Options Greeks */}
-              <Card className="bg-card border-border">
+              <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
                 <CardHeader>
                   <CardTitle className="text-2xl">Options Greeks Explained</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <p className="text-muted-foreground leading-relaxed">
-                    The <strong className="text-foreground">Options Greeks</strong> are risk measures that quantify how option prices change based on different factors. Understanding Greeks is essential for managing risk and optimizing entry/exit points.
+                  <p className="text-[#868f97] leading-relaxed">
+                    The <strong className="text-white">Options Greeks</strong> are risk measures that quantify how option prices change based on different factors. Understanding Greeks is essential for managing risk and optimizing entry/exit points.
                   </p>
 
                   <div className="space-y-4 mt-6">
                     {/* Delta */}
-                    <div className="p-5 bg-secondary/30 rounded-xl">
+                    <div className="p-5 bg-white/[0.03] border border-white/[0.08] rounded-2xl">
                       <div className="flex items-center justify-between mb-3">
                         <h4 className="font-bold text-lg">Delta (Δ)</h4>
-                        <span className="text-xs bg-green-500/20 text-green-500 px-3 py-1 rounded-full">Price Sensitivity</span>
+                        <span className="text-xs bg-[#4ebe96]/20 text-[#4ebe96] px-3 py-1 rounded-full">Price Sensitivity</span>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-3">
+                      <p className="text-sm text-[#868f97] mb-3">
                         Measures how much the option price moves for each $1 change in stock price.
                       </p>
                       <div className="grid md:grid-cols-2 gap-3 text-sm">
-                        <div className="p-3 bg-background/50 rounded-lg">
+                        <div className="p-3 bg-black/50 rounded-2xl">
                           <p className="font-medium mb-1">Call Delta: 0 to 1.0</p>
-                          <p className="text-xs text-muted-foreground">0.50 Delta = $0.50 gain per $1 stock rise</p>
+                          <p className="text-xs text-[#868f97] tabular-nums">0.50 Delta = $0.50 gain per $1 stock rise</p>
                         </div>
-                        <div className="p-3 bg-background/50 rounded-lg">
+                        <div className="p-3 bg-black/50 rounded-2xl">
                           <p className="font-medium mb-1">Put Delta: 0 to -1.0</p>
-                          <p className="text-xs text-muted-foreground">-0.50 Delta = $0.50 gain per $1 stock drop</p>
+                          <p className="text-xs text-[#868f97] tabular-nums">-0.50 Delta = $0.50 gain per $1 stock drop</p>
                         </div>
                       </div>
-                      <p className="text-xs text-muted-foreground mt-3">
+                      <p className="text-xs text-[#868f97] mt-3">
                         <strong>Also represents:</strong> Approximate probability option expires in-the-money. 0.70 Delta ≈ 70% chance of ITM expiry.
                       </p>
                     </div>
 
                     {/* Gamma */}
-                    <div className="p-5 bg-secondary/30 rounded-xl">
+                    <div className="p-5 bg-white/[0.03] border border-white/[0.08] rounded-2xl">
                       <div className="flex items-center justify-between mb-3">
                         <h4 className="font-bold text-lg">Gamma (Γ)</h4>
-                        <span className="text-xs bg-blue-500/20 text-blue-500 px-3 py-1 rounded-full">Delta Change Rate</span>
+                        <span className="text-xs bg-[#479ffa]/20 text-[#479ffa] px-3 py-1 rounded-full">Delta Change Rate</span>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-3">
+                      <p className="text-sm text-[#868f97] mb-3">
                         Measures the rate of change in Delta. How much Delta increases for each $1 stock move.
                       </p>
-                      <ul className="space-y-2 text-sm text-muted-foreground">
+                      <ul className="space-y-2 text-sm text-[#868f97]">
                         <li>• Highest for at-the-money options near expiration</li>
                         <li>• High Gamma = Delta changes rapidly (more volatile)</li>
                         <li>• Low Gamma = Delta changes slowly (more stable)</li>
@@ -466,18 +466,18 @@ export default function OptionsPage() {
                     </div>
 
                     {/* Theta */}
-                    <div className="p-5 bg-secondary/30 rounded-xl">
+                    <div className="p-5 bg-white/[0.03] border border-white/[0.08] rounded-2xl">
                       <div className="flex items-center justify-between mb-3">
                         <h4 className="font-bold text-lg">Theta (Θ)</h4>
-                        <span className="text-xs bg-red-500/20 text-red-500 px-3 py-1 rounded-full">Time Decay</span>
+                        <span className="text-xs bg-[#ff5c5c]/20 text-[#ff5c5c] px-3 py-1 rounded-full">Time Decay</span>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-3">
+                      <p className="text-sm text-[#868f97] mb-3">
                         Measures how much value the option loses each day as expiration approaches.
                       </p>
-                      <div className="p-3 bg-background/50 rounded-lg mb-3">
-                        <p className="text-xs font-mono">Theta = -0.05 means option loses $5/day ($0.05 × 100 shares)</p>
+                      <div className="p-3 bg-black/50 rounded-2xl mb-3">
+                        <p className="text-xs font-mono tabular-nums">Theta = -0.05 means option loses $5/day ($0.05 × 100 shares)</p>
                       </div>
-                      <ul className="space-y-2 text-sm text-muted-foreground">
+                      <ul className="space-y-2 text-sm text-[#868f97]">
                         <li>• Time decay accelerates in final 30-45 days</li>
                         <li>• Works against option buyers (losing value)</li>
                         <li>• Benefits option sellers (collecting decay)</li>
@@ -486,25 +486,25 @@ export default function OptionsPage() {
                     </div>
 
                     {/* Vega */}
-                    <div className="p-5 bg-secondary/30 rounded-xl">
+                    <div className="p-5 bg-white/[0.03] border border-white/[0.08] rounded-2xl">
                       <div className="flex items-center justify-between mb-3">
                         <h4 className="font-bold text-lg">Vega (ν)</h4>
                         <span className="text-xs bg-purple-500/20 text-purple-500 px-3 py-1 rounded-full">Volatility Sensitivity</span>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-3">
+                      <p className="text-sm text-[#868f97] mb-3">
                         Measures how much the option price changes for each 1% change in implied volatility.
                       </p>
                       <div className="grid md:grid-cols-2 gap-3 text-sm mb-3">
-                        <div className="p-3 bg-background/50 rounded-lg">
+                        <div className="p-3 bg-black/50 rounded-2xl">
                           <p className="font-medium mb-1">High IV Environment</p>
-                          <p className="text-xs text-muted-foreground">Expensive premiums, good for selling</p>
+                          <p className="text-xs text-[#868f97]">Expensive premiums, good for selling</p>
                         </div>
-                        <div className="p-3 bg-background/50 rounded-lg">
+                        <div className="p-3 bg-black/50 rounded-2xl">
                           <p className="font-medium mb-1">Low IV Environment</p>
-                          <p className="text-xs text-muted-foreground">Cheap premiums, good for buying</p>
+                          <p className="text-xs text-[#868f97]">Cheap premiums, good for buying</p>
                         </div>
                       </div>
-                      <ul className="space-y-2 text-sm text-muted-foreground">
+                      <ul className="space-y-2 text-sm text-[#868f97]">
                         <li>• IV spikes before earnings and major events</li>
                         <li>• Long-dated options have higher Vega</li>
                         <li>• Buy low IV, sell high IV</li>
@@ -515,38 +515,38 @@ export default function OptionsPage() {
               </Card>
 
               {/* Options Strategies */}
-              <Card className="bg-card border-border">
+              <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
                 <CardHeader>
                   <CardTitle className="text-2xl">Popular Options Strategies</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <p className="text-muted-foreground leading-relaxed">
+                  <p className="text-[#868f97] leading-relaxed">
                     Options strategies combine buying and selling contracts to achieve specific risk/reward profiles. Here are proven strategies for different market conditions.
                   </p>
 
                   <div className="space-y-4 mt-6">
                     {/* Covered Call */}
-                    <div className="p-5 border border-border rounded-xl">
+                    <div className="p-5 border border-white/[0.08] rounded-2xl">
                       <h4 className="font-bold text-lg mb-2">Covered Call</h4>
                       <div className="flex items-center gap-2 mb-3">
-                        <span className="text-xs bg-green-500/20 text-green-500 px-2 py-1 rounded">Income Strategy</span>
-                        <span className="text-xs bg-secondary px-2 py-1 rounded">Conservative</span>
+                        <span className="text-xs bg-[#4ebe96]/20 text-[#4ebe96] px-2 py-1 rounded-full">Income Strategy</span>
+                        <span className="text-xs bg-white/[0.03] border border-white/[0.08] px-2 py-1 rounded-full">Conservative</span>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-3">
+                      <p className="text-sm text-[#868f97] mb-3">
                         Own 100 shares of stock and sell 1 call option against it to generate income.
                       </p>
                       <div className="grid md:grid-cols-2 gap-3 text-xs">
                         <div>
-                          <p className="font-medium text-green-500 mb-1">Pros:</p>
-                          <ul className="space-y-1 text-muted-foreground">
+                          <p className="font-medium text-[#4ebe96] mb-1">Pros:</p>
+                          <ul className="space-y-1 text-[#868f97]">
                             <li>• Immediate income from premium</li>
                             <li>• Reduces cost basis of shares</li>
                             <li>• Lower risk than owning stock alone</li>
                           </ul>
                         </div>
                         <div>
-                          <p className="font-medium text-red-500 mb-1">Cons:</p>
-                          <ul className="space-y-1 text-muted-foreground">
+                          <p className="font-medium text-[#ff5c5c] mb-1">Cons:</p>
+                          <ul className="space-y-1 text-[#868f97]">
                             <li>• Caps upside potential</li>
                             <li>• Must sell shares if assigned</li>
                             <li>• Still exposed to downside risk</li>
@@ -556,76 +556,76 @@ export default function OptionsPage() {
                     </div>
 
                     {/* Bull Call Spread */}
-                    <div className="p-5 border border-border rounded-xl">
+                    <div className="p-5 border border-white/[0.08] rounded-2xl">
                       <h4 className="font-bold text-lg mb-2">Bull Call Spread</h4>
                       <div className="flex items-center gap-2 mb-3">
-                        <span className="text-xs bg-green-500/20 text-green-500 px-2 py-1 rounded">Bullish</span>
-                        <span className="text-xs bg-secondary px-2 py-1 rounded">Defined Risk</span>
+                        <span className="text-xs bg-[#4ebe96]/20 text-[#4ebe96] px-2 py-1 rounded-full">Bullish</span>
+                        <span className="text-xs bg-white/[0.03] border border-white/[0.08] px-2 py-1 rounded-full">Defined Risk</span>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-3">
+                      <p className="text-sm text-[#868f97] mb-3">
                         Buy lower strike call, sell higher strike call. Reduces cost and risk vs buying call outright.
                       </p>
-                      <div className="p-3 bg-secondary/30 rounded-lg text-xs font-mono mb-3">
-                        <p>Buy $100 Call for $5.00</p>
-                        <p>Sell $110 Call for $2.00</p>
-                        <p className="text-green-500 mt-1">Net Cost: $3.00 | Max Profit: $7.00</p>
+                      <div className="p-3 bg-white/[0.03] border border-white/[0.08] rounded-2xl text-xs font-mono mb-3">
+                        <p className="tabular-nums">Buy $100 Call for $5.00</p>
+                        <p className="tabular-nums">Sell $110 Call for $2.00</p>
+                        <p className="text-[#4ebe96] mt-1 tabular-nums">Net Cost: $3.00 | Max Profit: $7.00</p>
                       </div>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-[#868f97]">
                         Best for: Moderate bullish outlook with limited capital. Max profit = (spread width - net cost).
                       </p>
                     </div>
 
                     {/* Bear Put Spread */}
-                    <div className="p-5 border border-border rounded-xl">
+                    <div className="p-5 border border-white/[0.08] rounded-2xl">
                       <h4 className="font-bold text-lg mb-2">Bear Put Spread</h4>
                       <div className="flex items-center gap-2 mb-3">
-                        <span className="text-xs bg-red-500/20 text-red-500 px-2 py-1 rounded">Bearish</span>
-                        <span className="text-xs bg-secondary px-2 py-1 rounded">Defined Risk</span>
+                        <span className="text-xs bg-[#ff5c5c]/20 text-[#ff5c5c] px-2 py-1 rounded-full">Bearish</span>
+                        <span className="text-xs bg-white/[0.03] border border-white/[0.08] px-2 py-1 rounded-full">Defined Risk</span>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-3">
+                      <p className="text-sm text-[#868f97] mb-3">
                         Buy higher strike put, sell lower strike put. Profit from downward moves with capped risk.
                       </p>
-                      <div className="p-3 bg-secondary/30 rounded-lg text-xs font-mono mb-3">
-                        <p>Buy $100 Put for $6.00</p>
-                        <p>Sell $90 Put for $3.00</p>
-                        <p className="text-green-500 mt-1">Net Cost: $3.00 | Max Profit: $7.00</p>
+                      <div className="p-3 bg-white/[0.03] border border-white/[0.08] rounded-2xl text-xs font-mono mb-3">
+                        <p className="tabular-nums">Buy $100 Put for $6.00</p>
+                        <p className="tabular-nums">Sell $90 Put for $3.00</p>
+                        <p className="text-[#4ebe96] mt-1 tabular-nums">Net Cost: $3.00 | Max Profit: $7.00</p>
                       </div>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-[#868f97]">
                         Best for: Bearish outlook with limited downside target. Cheaper than buying puts outright.
                       </p>
                     </div>
 
                     {/* Iron Condor */}
-                    <div className="p-5 border border-border rounded-xl">
+                    <div className="p-5 border border-white/[0.08] rounded-2xl">
                       <h4 className="font-bold text-lg mb-2">Iron Condor</h4>
                       <div className="flex items-center gap-2 mb-3">
-                        <span className="text-xs bg-amber-500/20 text-amber-500 px-2 py-1 rounded">Neutral</span>
-                        <span className="text-xs bg-secondary px-2 py-1 rounded">Premium Collection</span>
+                        <span className="text-xs bg-[#ffa16c]/20 text-[#ffa16c] px-2 py-1 rounded-full">Neutral</span>
+                        <span className="text-xs bg-white/[0.03] border border-white/[0.08] px-2 py-1 rounded-full">Premium Collection</span>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-3">
+                      <p className="text-sm text-[#868f97] mb-3">
                         Sell OTM call spread + sell OTM put spread. Profit when stock stays in range.
                       </p>
-                      <div className="p-3 bg-secondary/30 rounded-lg text-xs font-mono mb-3">
-                        <p>Sell $110 Call, Buy $115 Call</p>
-                        <p>Sell $90 Put, Buy $85 Put</p>
-                        <p className="text-green-500 mt-1">Collect $2.00 premium if stock stays $90-$110</p>
+                      <div className="p-3 bg-white/[0.03] border border-white/[0.08] rounded-2xl text-xs font-mono mb-3">
+                        <p className="tabular-nums">Sell $110 Call, Buy $115 Call</p>
+                        <p className="tabular-nums">Sell $90 Put, Buy $85 Put</p>
+                        <p className="text-[#4ebe96] mt-1 tabular-nums">Collect $2.00 premium if stock stays $90-$110</p>
                       </div>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-[#868f97]">
                         Best for: Low volatility, range-bound markets. High probability of profit, limited reward.
                       </p>
                     </div>
 
                     {/* Long Straddle */}
-                    <div className="p-5 border border-border rounded-xl">
+                    <div className="p-5 border border-white/[0.08] rounded-2xl">
                       <h4 className="font-bold text-lg mb-2">Long Straddle</h4>
                       <div className="flex items-center gap-2 mb-3">
-                        <span className="text-xs bg-purple-500/20 text-purple-500 px-2 py-1 rounded">Volatility Play</span>
-                        <span className="text-xs bg-secondary px-2 py-1 rounded">Directional Neutral</span>
+                        <span className="text-xs bg-purple-500/20 text-purple-500 px-2 py-1 rounded-full">Volatility Play</span>
+                        <span className="text-xs bg-white/[0.03] border border-white/[0.08] px-2 py-1 rounded-full">Directional Neutral</span>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-3">
+                      <p className="text-sm text-[#868f97] mb-3">
                         Buy ATM call + ATM put. Profit from large move in either direction.
                       </p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-[#868f97]">
                         Best for: Before earnings or major catalysts. Need stock to move more than premium paid. High cost but unlimited profit potential.
                       </p>
                     </div>
@@ -634,81 +634,81 @@ export default function OptionsPage() {
               </Card>
 
               {/* Risks */}
-              <Card className="bg-card border-border">
+              <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-3 text-2xl">
-                    <Shield className="w-6 h-6 text-amber-500" />
+                    <Shield className="w-6 h-6 text-[#ffa16c]" />
                     Risks of Options Trading
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl mb-4">
+                  <div className="p-4 bg-[#ffa16c]/10 border border-[#ffa16c]/20 rounded-2xl mb-4">
                     <p className="text-sm">
-                      <strong className="text-foreground">Warning:</strong> Options trading involves substantial risk and is not suitable for all investors. You can lose 100% of your investment. Only trade with capital you can afford to lose.
+                      <strong className="text-white">Warning:</strong> Options trading involves substantial risk and is not suitable for all investors. You can lose 100% of your investment. Only trade with capital you can afford to lose.
                     </p>
                   </div>
 
                   <div className="space-y-3">
-                    <div className="p-4 bg-secondary/30 rounded-lg">
+                    <div className="p-4 bg-white/[0.03] border border-white/[0.08] rounded-2xl">
                       <h5 className="font-medium mb-2">Total Loss of Premium</h5>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-[#868f97]">
                         Options can expire worthless if the stock doesn't move as expected. Unlike stocks that retain some value, out-of-the-money options expire with zero value. Many option buyers lose their entire investment.
                       </p>
                     </div>
 
-                    <div className="p-4 bg-secondary/30 rounded-lg">
+                    <div className="p-4 bg-white/[0.03] border border-white/[0.08] rounded-2xl">
                       <h5 className="font-medium mb-2">Time Decay (Theta)</h5>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-[#868f97]">
                         Every day that passes, your option loses value due to time decay. This accelerates as expiration approaches. Even if you're right about direction, timing wrong can result in losses.
                       </p>
                     </div>
 
-                    <div className="p-4 bg-secondary/30 rounded-lg">
+                    <div className="p-4 bg-white/[0.03] border border-white/[0.08] rounded-2xl">
                       <h5 className="font-medium mb-2">Leverage Amplifies Losses</h5>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-[#868f97]">
                         Options provide leverage - controlling $10,000+ in stock with a $500 option. While this amplifies gains, it equally amplifies losses. A 10% adverse stock move can result in 50-100% option loss.
                       </p>
                     </div>
 
-                    <div className="p-4 bg-secondary/30 rounded-lg">
+                    <div className="p-4 bg-white/[0.03] border border-white/[0.08] rounded-2xl">
                       <h5 className="font-medium mb-2">Complexity Requires Education</h5>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-[#868f97]">
                         Options pricing involves Greeks, implied volatility, time decay, and probability. Without proper education, traders often make costly mistakes. Start small and paper trade before risking real capital.
                       </p>
                     </div>
 
-                    <div className="p-4 bg-secondary/30 rounded-lg">
+                    <div className="p-4 bg-white/[0.03] border border-white/[0.08] rounded-2xl">
                       <h5 className="font-medium mb-2">Liquidity and Slippage</h5>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-[#868f97]">
                         Less popular strikes and expirations may have wide bid-ask spreads, making it expensive to enter/exit. Slippage on large orders can significantly reduce profits. Always check volume and open interest.
                       </p>
                     </div>
 
-                    <div className="p-4 bg-secondary/30 rounded-lg">
+                    <div className="p-4 bg-white/[0.03] border border-white/[0.08] rounded-2xl">
                       <h5 className="font-medium mb-2">Assignment Risk (Sellers)</h5>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-[#868f97]">
                         Option sellers can be assigned at any time if options are in-the-money. This means you must buy (puts) or sell (calls) shares at the strike price, potentially at significant losses. Naked option selling carries theoretically unlimited risk.
                       </p>
                     </div>
 
-                    <div className="p-4 bg-secondary/30 rounded-lg">
+                    <div className="p-4 bg-white/[0.03] border border-white/[0.08] rounded-2xl">
                       <h5 className="font-medium mb-2">Gap Risk</h5>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-[#868f97]">
                         Stocks can gap up or down significantly over weekends, holidays, or after earnings announcements. Options held through these events can experience massive losses that exceed normal stop-loss protections.
                       </p>
                     </div>
                   </div>
 
-                  <div className="mt-6 p-4 bg-green-500/10 border border-green-500/20 rounded-xl">
+                  <div className="mt-6 p-4 bg-[#4ebe96]/10 border border-[#4ebe96]/20 rounded-2xl">
                     <p className="text-sm">
-                      <strong className="text-foreground">Best Practices:</strong> Start with small positions (1-2% of capital per trade), use defined-risk strategies (spreads), avoid earnings plays until experienced, set stop losses, never sell naked options, and continuously educate yourself. Consider paper trading for 2-3 months before using real money.
+                      <strong className="text-white">Best Practices:</strong> Start with small positions (1-2% of capital per trade), use defined-risk strategies (spreads), avoid earnings plays until experienced, set stop losses, never sell naked options, and continuously educate yourself. Consider paper trading for 2-3 months before using real money.
                     </p>
                   </div>
                 </CardContent>
               </Card>
 
               {/* FAQs */}
-              <Card className="bg-card border-border">
+              <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
                 <CardHeader>
                   <CardTitle className="text-2xl">Frequently Asked Questions</CardTitle>
                 </CardHeader>
@@ -747,9 +747,9 @@ export default function OptionsPage() {
                       a: "Check implied volatility (IV) percentile. Options are historically cheap when IV is in the 0-30 percentile, fair at 30-70, and expensive at 70-100. Buy options when IV is low (cheap premiums) and sell when IV is high (expensive premiums). IV typically spikes before earnings."
                     }
                   ].map((faq, idx) => (
-                    <div key={idx} className="p-4 bg-secondary/30 rounded-lg">
+                    <div key={idx} className="p-4 bg-white/[0.03] border border-white/[0.08] rounded-2xl">
                       <h4 className="font-medium mb-2">{faq.q}</h4>
-                      <p className="text-sm text-muted-foreground">{faq.a}</p>
+                      <p className="text-sm text-[#868f97]">{faq.a}</p>
                     </div>
                   ))}
                 </CardContent>
@@ -760,92 +760,92 @@ export default function OptionsPage() {
             {/* Sidebar */}
             <div className="space-y-6">
               {/* Quick Links */}
-              <Card className="bg-card border-border sticky top-24">
+              <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl sticky top-24">
                 <CardHeader>
                   <CardTitle className="text-lg">Quick Navigation</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <nav className="space-y-2 text-sm">
-                    <a href="/learn" className="block text-muted-foreground hover:text-foreground transition-colors">What Are Options?</a>
-                    <a href="/learn" className="block text-muted-foreground hover:text-foreground transition-colors">Call vs Put Options</a>
-                    <a href="/learn" className="block text-muted-foreground hover:text-foreground transition-colors">Options Flow</a>
-                    <a href="/learn" className="block text-muted-foreground hover:text-foreground transition-colors">Unusual Activity</a>
-                    <a href="/learn" className="block text-muted-foreground hover:text-foreground transition-colors">Options Greeks</a>
-                    <a href="/learn" className="block text-muted-foreground hover:text-foreground transition-colors">Trading Strategies</a>
-                    <a href="/learn" className="block text-muted-foreground hover:text-foreground transition-colors">Risks & Warnings</a>
-                    <a href="/learn" className="block text-muted-foreground hover:text-foreground transition-colors">FAQs</a>
+                    <a href="/learn" className="block text-[#868f97] hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">What Are Options?</a>
+                    <a href="/learn" className="block text-[#868f97] hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Call vs Put Options</a>
+                    <a href="/learn" className="block text-[#868f97] hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Options Flow</a>
+                    <a href="/learn" className="block text-[#868f97] hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Unusual Activity</a>
+                    <a href="/learn" className="block text-[#868f97] hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Options Greeks</a>
+                    <a href="/learn" className="block text-[#868f97] hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Trading Strategies</a>
+                    <a href="/learn" className="block text-[#868f97] hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Risks & Warnings</a>
+                    <a href="/learn" className="block text-[#868f97] hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">FAQs</a>
                   </nav>
                 </CardContent>
               </Card>
 
               {/* Key Takeaways */}
-              <Card className="bg-card border-border">
+              <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
                 <CardHeader>
                   <CardTitle className="text-lg">Key Takeaways</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3 text-sm">
                   <div className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">✓</span>
+                    <span className="text-[#4ebe96] mt-1">✓</span>
                     <span>Options provide leverage with defined risk (buyers)</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">✓</span>
+                    <span className="text-[#4ebe96] mt-1">✓</span>
                     <span>Greeks help quantify risk and optimize timing</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">✓</span>
+                    <span className="text-[#4ebe96] mt-1">✓</span>
                     <span>Unusual flow signals institutional positioning</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">✓</span>
+                    <span className="text-[#4ebe96] mt-1">✓</span>
                     <span>Spreads reduce cost and risk vs naked options</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <span className="text-amber-500 mt-1">⚠</span>
+                    <span className="text-[#ffa16c] mt-1">⚠</span>
                     <span>Time decay works against option buyers</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <span className="text-amber-500 mt-1">⚠</span>
+                    <span className="text-[#ffa16c] mt-1">⚠</span>
                     <span>Start small, paper trade, educate before risking capital</span>
                   </div>
                 </CardContent>
               </Card>
 
               {/* Related Resources */}
-              <Card className="bg-card border-border">
+              <Card className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl">
                 <CardHeader>
                   <CardTitle className="text-lg">Related Tools</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <Link
                     href="/#options"
-                    className="block p-3 bg-secondary/30 hover:bg-secondary/50 rounded-lg transition-colors"
+                    className="block p-3 bg-white/[0.03] hover:bg-white/[0.05] border border-white/[0.08] hover:border-white/[0.15] rounded-2xl motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] outline-none"
                   >
                     <p className="font-medium text-sm mb-1">Live Options Flow</p>
-                    <p className="text-xs text-muted-foreground">Track real-time unusual activity</p>
+                    <p className="text-xs text-[#868f97]">Track real-time unusual activity</p>
                   </Link>
                   <Link
                     href="/"
-                    className="block p-3 bg-secondary/30 hover:bg-secondary/50 rounded-lg transition-colors"
+                    className="block p-3 bg-white/[0.03] hover:bg-white/[0.05] border border-white/[0.08] hover:border-white/[0.15] rounded-2xl motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] outline-none"
                   >
                     <p className="font-medium text-sm mb-1">Stock Analysis</p>
-                    <p className="text-xs text-muted-foreground">Fundamental & technical analysis</p>
+                    <p className="text-xs text-[#868f97]">Fundamental & technical analysis</p>
                   </Link>
                   <Link
                     href="/#screener"
-                    className="block p-3 bg-secondary/30 hover:bg-secondary/50 rounded-lg transition-colors"
+                    className="block p-3 bg-white/[0.03] hover:bg-white/[0.05] border border-white/[0.08] hover:border-white/[0.15] rounded-2xl motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] outline-none"
                   >
                     <p className="font-medium text-sm mb-1">Stock Screener</p>
-                    <p className="text-xs text-muted-foreground">Find trading opportunities</p>
+                    <p className="text-xs text-[#868f97]">Find trading opportunities</p>
                   </Link>
                 </CardContent>
               </Card>
 
               {/* Educational Notice */}
-              <Card className="bg-amber-500/10 border-amber-500/20">
+              <Card className="bg-[#ffa16c]/10 border-[#ffa16c]/20 rounded-2xl">
                 <CardContent className="pt-6">
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    <strong className="text-foreground">Educational Content:</strong> This guide is for educational purposes only and does not constitute financial advice. Options trading involves substantial risk. Consult with a licensed financial advisor before making investment decisions.
+                  <p className="text-xs text-[#868f97] leading-relaxed">
+                    <strong className="text-white">Educational Content:</strong> This guide is for educational purposes only and does not constitute financial advice. Options trading involves substantial risk. Consult with a licensed financial advisor before making investment decisions.
                   </p>
                 </CardContent>
               </Card>
@@ -856,47 +856,47 @@ export default function OptionsPage() {
         </div>
 
         {/* Footer */}
-        <footer className="border-t border-border mt-16">
+        <footer className="border-t border-white/[0.08] mt-16">
           <div className="max-w-[1400px] mx-auto px-6 py-12">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
               <div>
                 <h3 className="font-semibold mb-4">Options Education</h3>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li><Link href="/options" className="hover:text-foreground">Options Basics</Link></li>
-                  <li><Link href="/options#greeks" className="hover:text-foreground">Greeks Explained</Link></li>
-                  <li><Link href="/options#strategies" className="hover:text-foreground">Trading Strategies</Link></li>
-                  <li><Link href="/options#flow" className="hover:text-foreground">Options Flow</Link></li>
+                <ul className="space-y-2 text-sm text-[#868f97]">
+                  <li><Link href="/options" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Options Basics</Link></li>
+                  <li><Link href="/options#greeks" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Greeks Explained</Link></li>
+                  <li><Link href="/options#strategies" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Trading Strategies</Link></li>
+                  <li><Link href="/options#flow" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Options Flow</Link></li>
                 </ul>
               </div>
               <div>
                 <h3 className="font-semibold mb-4">Trading Tools</h3>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li><Link href="/" className="hover:text-foreground">Stock Dashboard</Link></li>
-                  <li><Link href="/#options" className="hover:text-foreground">Options Chain</Link></li>
-                  <li><Link href="/#screener" className="hover:text-foreground">Stock Screener</Link></li>
-                  <li><Link href="/#dcf" className="hover:text-foreground">DCF Calculator</Link></li>
+                <ul className="space-y-2 text-sm text-[#868f97]">
+                  <li><Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Stock Dashboard</Link></li>
+                  <li><Link href="/#options" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Options Chain</Link></li>
+                  <li><Link href="/#screener" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Stock Screener</Link></li>
+                  <li><Link href="/#dcf" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">DCF Calculator</Link></li>
                 </ul>
               </div>
               <div>
                 <h3 className="font-semibold mb-4">Resources</h3>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li><Link href="/" className="hover:text-foreground">Market Overview</Link></li>
-                  <li><Link href="/#earnings" className="hover:text-foreground">Earnings Calendar</Link></li>
-                  <li><Link href="/#news" className="hover:text-foreground">Market News</Link></li>
-                  <li><Link href="/" className="hover:text-foreground">AI Analysis</Link></li>
+                <ul className="space-y-2 text-sm text-[#868f97]">
+                  <li><Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Market Overview</Link></li>
+                  <li><Link href="/#earnings" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Earnings Calendar</Link></li>
+                  <li><Link href="/#news" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Market News</Link></li>
+                  <li><Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">AI Analysis</Link></li>
                 </ul>
               </div>
               <div>
                 <h3 className="font-semibold mb-4">Company</h3>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li><Link href="/" className="hover:text-foreground">About Lician</Link></li>
-                  <li><Link href="/" className="hover:text-foreground">Terms of Service</Link></li>
-                  <li><Link href="/" className="hover:text-foreground">Privacy Policy</Link></li>
-                  <li><Link href="/" className="hover:text-foreground">Contact</Link></li>
+                <ul className="space-y-2 text-sm text-[#868f97]">
+                  <li><Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">About Lician</Link></li>
+                  <li><Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Terms of Service</Link></li>
+                  <li><Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Privacy Policy</Link></li>
+                  <li><Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Contact</Link></li>
                 </ul>
               </div>
             </div>
-            <div className="mt-8 pt-8 border-t border-border text-center text-sm text-muted-foreground">
+            <div className="mt-8 pt-8 border-t border-white/[0.08] text-center text-sm text-[#868f97]">
               <p>© 2024 Lician. Options trading involves substantial risk. Educational content only - not financial advice.</p>
             </div>
           </div>

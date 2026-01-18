@@ -135,13 +135,13 @@ export default function StockAnalysisPage() {
         }}
       />
       <Header />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-dvh bg-black text-white pt-20">
         <div className="max-w-4xl mx-auto px-6 py-12">
           {/* Breadcrumbs */}
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-[#479ffa] motion-safe:motion-safe:transition-all motion-safe:duration-150 ease-out motion-safe:duration-150 ease-out">Home</Link>
             {' / '}
-            <Link href="/learn" className="hover:text-foreground">Learn</Link>
+            <Link href="/learn" className="hover:text-[#479ffa] motion-safe:motion-safe:transition-all motion-safe:duration-150 ease-out motion-safe:duration-150 ease-out">Learn</Link>
             {' / '}
             <span>Stock Analysis</span>
           </nav>
@@ -151,7 +151,7 @@ export default function StockAnalysisPage() {
             <h1 className="text-4xl font-bold mb-4">
               How to Analyze Stocks: Complete Guide
             </h1>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-xl text-[#868f97]">
               Master the art of stock analysis and learn to evaluate companies like a professional investor.
               This comprehensive guide covers everything from reading financial statements to assessing competitive advantages.
             </p>
@@ -160,12 +160,12 @@ export default function StockAnalysisPage() {
           {/* What is Stock Analysis */}
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-4">What is Stock Analysis?</h2>
-            <p className="text-muted-foreground mb-4">
+            <p className="text-[#868f97] mb-4">
               Stock analysis is the systematic evaluation of a company and its stock to determine its investment potential.
               It involves examining financial statements, competitive position, management quality, growth prospects, and valuation
               to make informed investment decisions.
             </p>
-            <p className="text-muted-foreground">
+            <p className="text-[#868f97]">
               The goal of stock analysis is to determine a company's intrinsic value and compare it to the current market price.
               If the intrinsic value exceeds the market price, the stock may be undervalued and worth buying. If the market price
               exceeds intrinsic value, the stock may be overvalued and should be avoided or sold.
@@ -177,14 +177,14 @@ export default function StockAnalysisPage() {
             <h2 className="text-3xl font-bold mb-6">How to Analyze Stocks: Step-by-Step</h2>
             <div className="space-y-6">
               {howToSteps.map((step, index) => (
-                <div key={index} className="bg-card p-6 rounded-xl border border-border">
+                <div key={index} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
                   <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-10 h-10 bg-green-500 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                    <div className="flex-shrink-0 w-10 h-10 bg-[#4ebe96] text-white rounded-full flex items-center justify-center font-bold text-lg">
                       {index + 1}
                     </div>
                     <div>
                       <h3 className="text-xl font-bold mb-2">{step.name}</h3>
-                      <p className="text-muted-foreground">{step.text}</p>
+                      <p className="text-[#868f97]">{step.text}</p>
                     </div>
                   </div>
                 </div>
@@ -196,46 +196,46 @@ export default function StockAnalysisPage() {
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-6">Essential Financial Metrics</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 text-green-500">Revenue & Growth</h3>
-                <p className="text-muted-foreground">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
+                <h3 className="text-lg font-bold mb-3 text-[#4ebe96]">Revenue & Growth</h3>
+                <p className="text-[#868f97]">
                   Top-line growth indicates increasing demand. Look for consistent revenue growth (10%+ annually is strong).
                   Declining revenue is a red flag unless part of a strategic shift.
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 text-green-500">Profit Margins</h3>
-                <p className="text-muted-foreground">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
+                <h3 className="text-lg font-bold mb-3 text-[#4ebe96]">Profit Margins</h3>
+                <p className="text-[#868f97]">
                   Net margin shows profitability efficiency. Expanding margins indicate operational improvement or pricing power.
                   Compare margins to industry peers to assess competitive position.
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 text-green-500">Return on Equity (ROE)</h3>
-                <p className="text-muted-foreground">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
+                <h3 className="text-lg font-bold mb-3 text-[#4ebe96]">Return on Equity (ROE)</h3>
+                <p className="text-[#868f97]">
                   ROE measures how efficiently a company uses shareholder equity to generate profits. 15%+ ROE is generally
                   considered strong. Consistently high ROE suggests a competitive advantage.
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 text-green-500">Debt-to-Equity Ratio</h3>
-                <p className="text-muted-foreground">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
+                <h3 className="text-lg font-bold mb-3 text-[#4ebe96]">Debt-to-Equity Ratio</h3>
+                <p className="text-[#868f97]">
                   Measures financial leverage and risk. Lower is generally safer. Compare to industry norms - capital-intensive
                   businesses naturally have higher debt levels.
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 text-green-500">Free Cash Flow</h3>
-                <p className="text-muted-foreground">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
+                <h3 className="text-lg font-bold mb-3 text-[#4ebe96]">Free Cash Flow</h3>
+                <p className="text-[#868f97]">
                   Cash left after capital expenditures. Positive, growing FCF enables dividends, buybacks, and acquisitions.
                   Companies with strong FCF have more financial flexibility.
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 text-green-500">Price-to-Earnings (P/E)</h3>
-                <p className="text-muted-foreground">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
+                <h3 className="text-lg font-bold mb-3 text-[#4ebe96]">Price-to-Earnings (P/E)</h3>
+                <p className="text-[#868f97]">
                   Shows how much investors pay per dollar of earnings. Compare to industry peers and historical averages.
-                  Higher P/E can be justified by faster growth. <Link href="/learn/pe-ratio" className="text-green-500 hover:underline">Learn more about P/E ratios</Link>.
+                  Higher P/E can be justified by faster growth. <Link href="/learn/pe-ratio" className="text-[#4ebe96] hover:underline">Learn more about P/E ratios</Link>.
                 </p>
               </div>
             </div>
@@ -244,44 +244,44 @@ export default function StockAnalysisPage() {
           {/* Competitive Analysis */}
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-6">Competitive Analysis Framework</h2>
-            <div className="bg-card p-6 rounded-xl border border-border">
-              <p className="text-muted-foreground mb-4">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
+              <p className="text-[#868f97] mb-4">
                 Understanding a company's competitive position is crucial. Use Porter's Five Forces framework:
               </p>
               <ul className="space-y-3">
                 <li className="flex gap-3">
-                  <span className="text-green-500 font-bold">1.</span>
+                  <span className="text-[#4ebe96] font-bold">1.</span>
                   <div>
                     <span className="font-bold">Competitive Rivalry:</span>
-                    <span className="text-muted-foreground"> How intense is competition? Fragmented markets are more competitive.</span>
+                    <span className="text-[#868f97]"> How intense is competition? Fragmented markets are more competitive.</span>
                   </div>
                 </li>
                 <li className="flex gap-3">
-                  <span className="text-green-500 font-bold">2.</span>
+                  <span className="text-[#4ebe96] font-bold">2.</span>
                   <div>
                     <span className="font-bold">Threat of New Entrants:</span>
-                    <span className="text-muted-foreground"> High barriers to entry (capital, regulation, network effects) protect incumbents.</span>
+                    <span className="text-[#868f97]"> High barriers to entry (capital, regulation, network effects) protect incumbents.</span>
                   </div>
                 </li>
                 <li className="flex gap-3">
-                  <span className="text-green-500 font-bold">3.</span>
+                  <span className="text-[#4ebe96] font-bold">3.</span>
                   <div>
                     <span className="font-bold">Bargaining Power of Suppliers:</span>
-                    <span className="text-muted-foreground"> Can suppliers demand higher prices? Diversified supply chains reduce risk.</span>
+                    <span className="text-[#868f97]"> Can suppliers demand higher prices? Diversified supply chains reduce risk.</span>
                   </div>
                 </li>
                 <li className="flex gap-3">
-                  <span className="text-green-500 font-bold">4.</span>
+                  <span className="text-[#4ebe96] font-bold">4.</span>
                   <div>
                     <span className="font-bold">Bargaining Power of Buyers:</span>
-                    <span className="text-muted-foreground"> Can customers easily switch? Strong brands and switching costs increase pricing power.</span>
+                    <span className="text-[#868f97]"> Can customers easily switch? Strong brands and switching costs increase pricing power.</span>
                   </div>
                 </li>
                 <li className="flex gap-3">
-                  <span className="text-green-500 font-bold">5.</span>
+                  <span className="text-[#4ebe96] font-bold">5.</span>
                   <div>
                     <span className="font-bold">Threat of Substitutes:</span>
-                    <span className="text-muted-foreground"> Are there alternative products? Companies with unique offerings face less threat.</span>
+                    <span className="text-[#868f97]"> Are there alternative products? Companies with unique offerings face less threat.</span>
                   </div>
                 </li>
               </ul>
@@ -291,7 +291,7 @@ export default function StockAnalysisPage() {
           {/* Example Analysis */}
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-6">Example Stock Analysis</h2>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-[#868f97] mb-6">
               Apply what you've learned by analyzing these stocks with our AI-powered platform:
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -299,16 +299,16 @@ export default function StockAnalysisPage() {
                 <Link
                   key={stock.ticker}
                   href={`/stock/${stock.ticker}`}
-                  className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                  className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out group"
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="font-bold text-lg group-hover:text-green-500 transition-colors">
+                    <span className="font-bold text-lg group-hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out">
                       {stock.ticker}
                     </span>
-                    <span className="text-xs text-green-500">View Analysis →</span>
+                    <span className="text-xs text-[#4ebe96]">View Analysis →</span>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-1">{stock.name}</p>
-                  <p className="text-xs text-muted-foreground">{stock.why}</p>
+                  <p className="text-sm text-[#868f97] mb-1">{stock.name}</p>
+                  <p className="text-xs text-[#868f97]">{stock.why}</p>
                 </Link>
               ))}
             </div>
@@ -318,30 +318,30 @@ export default function StockAnalysisPage() {
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-6">Common Stock Analysis Mistakes to Avoid</h2>
             <div className="space-y-4">
-              <div className="bg-card p-6 rounded-xl border border-red-500/20">
-                <h3 className="font-bold mb-2 text-red-500">Focusing Only on Price</h3>
-                <p className="text-muted-foreground">
+              <div className="bg-card p-6 rounded-xl border border-[#ff5c5c]/20">
+                <h3 className="font-bold mb-2 text-[#ff5c5c]">Focusing Only on Price</h3>
+                <p className="text-[#868f97]">
                   A low stock price doesn't mean it's cheap, and a high price doesn't mean it's expensive. Focus on valuation
                   metrics like P/E ratio relative to growth and industry peers.
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-red-500/20">
-                <h3 className="font-bold mb-2 text-red-500">Ignoring Cash Flow</h3>
-                <p className="text-muted-foreground">
+              <div className="bg-card p-6 rounded-xl border border-[#ff5c5c]/20">
+                <h3 className="font-bold mb-2 text-[#ff5c5c]">Ignoring Cash Flow</h3>
+                <p className="text-[#868f97]">
                   Profit on the income statement can be misleading due to non-cash items. Free cash flow is harder to manipulate
                   and better reflects real economic performance.
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-red-500/20">
-                <h3 className="font-bold mb-2 text-red-500">Not Comparing to Peers</h3>
-                <p className="text-muted-foreground">
+              <div className="bg-card p-6 rounded-xl border border-[#ff5c5c]/20">
+                <h3 className="font-bold mb-2 text-[#ff5c5c]">Not Comparing to Peers</h3>
+                <p className="text-[#868f97]">
                   A P/E of 30 might be cheap in software (high growth) but expensive in utilities (slow growth). Always compare
                   metrics to industry peers and historical ranges.
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-red-500/20">
-                <h3 className="font-bold mb-2 text-red-500">Overlooking Risk Factors</h3>
-                <p className="text-muted-foreground">
+              <div className="bg-card p-6 rounded-xl border border-[#ff5c5c]/20">
+                <h3 className="font-bold mb-2 text-[#ff5c5c]">Overlooking Risk Factors</h3>
+                <p className="text-[#868f97]">
                   High debt, customer concentration, regulatory threats, or competitive disruption can destroy value quickly.
                   Always read the risk factors section in the 10-K filing.
                 </p>
@@ -354,9 +354,9 @@ export default function StockAnalysisPage() {
             <h2 className="text-3xl font-bold mb-6">Frequently Asked Questions</h2>
             <div className="space-y-6">
               {faqs.map((faq, index) => (
-                <div key={index} className="bg-card p-6 rounded-xl border border-border">
+                <div key={index} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
                   <h3 className="text-lg font-bold mb-3">{faq.question}</h3>
-                  <p className="text-muted-foreground">{faq.answer}</p>
+                  <p className="text-[#868f97]">{faq.answer}</p>
                 </div>
               ))}
             </div>
@@ -368,23 +368,23 @@ export default function StockAnalysisPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Link
                 href="/learn/pe-ratio"
-                className="bg-card p-6 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out group"
               >
-                <h3 className="text-xl font-bold mb-2 group-hover:text-green-500 transition-colors">
+                <h3 className="text-xl font-bold mb-2 group-hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   Understanding P/E Ratios
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-[#868f97]">
                   Master one of the most important valuation metrics in stock analysis.
                 </p>
               </Link>
               <Link
                 href="/learn/dcf-valuation"
-                className="bg-card p-6 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out group"
               >
-                <h3 className="text-xl font-bold mb-2 group-hover:text-green-500 transition-colors">
+                <h3 className="text-xl font-bold mb-2 group-hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   DCF Valuation Guide
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-[#868f97]">
                   Learn to calculate intrinsic value using discounted cash flow analysis.
                 </p>
               </Link>
@@ -392,17 +392,17 @@ export default function StockAnalysisPage() {
           </section>
 
           {/* CTA */}
-          <section className="bg-gradient-to-br from-green-500/10 to-blue-500/10 p-8 rounded-xl border border-green-500/20 text-center">
+          <section className="bg-gradient-to-br from-[#4ebe96]/10 to-[#479ffa]/10 p-8 rounded-xl border border-[#4ebe96]/20 text-center">
             <h2 className="text-2xl font-bold mb-4">
               Start Analyzing Stocks with AI
             </h2>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-[#868f97] mb-6">
               Skip the manual calculations and get instant comprehensive analysis for any stock.
               Our AI analyzes financial statements, calculates valuations, and highlights opportunities.
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+              className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black px-8 py-3 rounded-full font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
             >
               Try Free Analysis
             </Link>

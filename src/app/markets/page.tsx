@@ -127,7 +127,7 @@ export default function MarketsHubPage() {
           __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema]),
         }}
       />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-dvh bg-black text-foreground pt-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
             {/* Sidebar - hidden on mobile, shown on lg+ */}
@@ -137,7 +137,7 @@ export default function MarketsHubPage() {
             <div className="flex-1 min-w-0">
           {/* Breadcrumbs */}
           <nav className="text-sm text-[#868f97] mb-4 sm:mb-6">
-            <Link href="/" className="hover:text-white">
+            <Link href="/" className="hover:text-[#479ffa] motion-safe:transition-colors motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none rounded">
               Home
             </Link>
             {' / '}
@@ -173,7 +173,7 @@ export default function MarketsHubPage() {
                 <Link
                   key={page.href}
                   href={page.href}
-                  className="bg-white/[0.03] backdrop-blur-[10px] p-4 sm:p-6 rounded-2xl border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out hover:shadow-lg group"
+                  className="bg-white/[0.03] backdrop-blur-[10px] p-4 sm:p-6 rounded-2xl border border-white/[0.08] hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none group"
                 >
                   <div className="text-3xl sm:text-4xl mb-4">{page.icon}</div>
                   <h3 className="text-lg sm:text-xl font-bold mb-2 group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out">
@@ -318,7 +318,7 @@ export default function MarketsHubPage() {
             </p>
             <Link
               href="/dashboard"
-              className="inline-block w-full sm:w-auto bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-white px-6 sm:px-8 py-3 rounded-full font-medium motion-safe:transition-colors motion-safe:duration-150 ease-out"
+              className="inline-block w-full sm:w-auto bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-white px-6 sm:px-8 py-3 rounded-full font-medium motion-safe:transition-colors motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none"
             >
               Start Analyzing Stocks
             </Link>

@@ -107,62 +107,71 @@ export default async function OperatingCashFlowPage({ params }: Props) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }} />
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-black text-foreground">
         <div className="max-w-4xl mx-auto px-6 py-12">
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          {/* Breadcrumb Navigation */}
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="text-[#479ffa] hover:text-[#479ffa]/80 transition-colors duration-250">
+              Home
+            </Link>
             {' / '}
-            <Link href="/dashboard" className="hover:text-foreground">Financials</Link>
+            <Link href="/dashboard" className="text-[#479ffa] hover:text-[#479ffa]/80 transition-colors duration-250">
+              Financials
+            </Link>
             {' / '}
             <span>{symbol} Operating Cash Flow</span>
           </nav>
 
-          <h1 className="text-4xl font-bold mb-4">{symbol} Operating Cash Flow</h1>
-          <p className="text-xl text-muted-foreground mb-8">{companyName} - OCF analysis & cash from core operations</p>
+          {/* Page Header */}
+          <h1 className="text-4xl font-bold mb-4 text-balance">{symbol} Operating Cash Flow</h1>
+          <p className="text-xl text-[#868f97] mb-8">{companyName} - OCF analysis & cash from core operations</p>
 
-          {/* Price Card */}
-          <div className="bg-gradient-to-r from-blue-600/20 to-cyan-600/20 p-8 rounded-xl border border-blue-500/30 mb-8">
+          {/* Price Card - Glassmorphism */}
+          <div className="backdrop-blur-xl bg-white/5 p-8 rounded-xl border border-white/10 mb-8 hover:border-white/20 transition-all duration-250">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div>
-                <p className="text-muted-foreground text-sm mb-1">Current Price</p>
-                <p className="text-4xl font-bold">${price.toFixed(2)}</p>
+                <p className="text-[#868f97] text-sm mb-1">Current Price</p>
+                <p className="text-4xl font-bold tabular-nums">${price.toFixed(2)}</p>
               </div>
               <div>
-                <p className="text-muted-foreground text-sm mb-1">Today's Change</p>
-                <p className={`text-3xl font-bold ${snapshot.day_change_percent >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                <p className="text-[#868f97] text-sm mb-1">Today's Change</p>
+                <p className={`text-3xl font-bold tabular-nums ${snapshot.day_change_percent >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                   {snapshot.day_change_percent >= 0 ? '+' : ''}{snapshot.day_change_percent?.toFixed(2)}%
                 </p>
               </div>
               {snapshot.yearHigh && (
                 <div>
-                  <p className="text-muted-foreground text-sm mb-1">52W High</p>
-                  <p className="text-2xl font-bold">${snapshot.yearHigh.toFixed(2)}</p>
+                  <p className="text-[#868f97] text-sm mb-1">52W High</p>
+                  <p className="text-2xl font-bold tabular-nums">${snapshot.yearHigh.toFixed(2)}</p>
                 </div>
               )}
               {snapshot.yearLow && (
                 <div>
-                  <p className="text-muted-foreground text-sm mb-1">52W Low</p>
-                  <p className="text-2xl font-bold">${snapshot.yearLow.toFixed(2)}</p>
+                  <p className="text-[#868f97] text-sm mb-1">52W Low</p>
+                  <p className="text-2xl font-bold tabular-nums">${snapshot.yearLow.toFixed(2)}</p>
                 </div>
               )}
             </div>
           </div>
 
-          {/* OCF Overview */}
+          {/* OCF Overview - Glassmorphism */}
           <section className="mb-12">
-            <div className="bg-card p-8 rounded-lg border border-border">
+            <div className="backdrop-blur-xl bg-white/5 p-8 rounded-xl border border-white/10 hover:border-white/20 transition-all duration-250">
               <div className="text-6xl mb-4">💵</div>
-              <h2 className="text-2xl font-bold mb-2">Operating Cash Flow Analysis</h2>
-              <p className="text-muted-foreground mb-6">Detailed OCF metrics, trends, and cash generation from core business for {symbol}</p>
-              <Link href={`/dashboard?ticker=${symbol}&tab=financials`} className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium">
+              <h2 className="text-2xl font-bold mb-2 text-balance">Operating Cash Flow Analysis</h2>
+              <p className="text-[#868f97] mb-6">Detailed OCF metrics, trends, and cash generation from core business for {symbol}</p>
+              <Link
+                href={`/dashboard?ticker=${symbol}&tab=financials`}
+                className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-black px-8 py-3 rounded-lg font-medium transition-all duration-250 hover:shadow-lg"
+              >
                 View Full Cash Flow Statements
               </Link>
             </div>
           </section>
 
-          {/* OCF Metrics */}
+          {/* OCF Metrics - Glassmorphism */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Key Operating Cash Flow Metrics</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Key Operating Cash Flow Metrics</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
                 { name: 'Operating Cash Flow', desc: 'Cash from operations' },
@@ -172,18 +181,18 @@ export default async function OperatingCashFlowPage({ params }: Props) {
                 { name: 'Cash Conversion Cycle', desc: 'Operating efficiency' },
                 { name: 'OCF per Share', desc: 'Per-share cash generation' },
               ].map((metric, i) => (
-                <div key={i} className="bg-card p-4 rounded-lg border border-border">
+                <div key={i} className="backdrop-blur-xl bg-white/5 p-4 rounded-lg border border-white/10 hover:border-white/20 transition-all duration-250">
                   <p className="font-bold">{metric.name}</p>
-                  <p className="text-sm text-muted-foreground">{metric.desc}</p>
+                  <p className="text-sm text-[#868f97]">{metric.desc}</p>
                 </div>
               ))}
             </div>
           </section>
 
-          {/* What OCF Tells You */}
+          {/* What OCF Tells You - Glassmorphism */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">What Operating Cash Flow Tells You</h2>
-            <div className="space-y-3">
+            <h2 className="text-2xl font-bold mb-4 text-balance">What Operating Cash Flow Tells You</h2>
+            <div className="backdrop-blur-xl bg-white/5 p-8 rounded-xl border border-white/10 space-y-3">
               {[
                 'Positive and growing OCF indicates strong business fundamentals and sustainable operations',
                 'OCF higher than net income suggests high-quality earnings with good cash conversion',
@@ -191,30 +200,33 @@ export default async function OperatingCashFlowPage({ params }: Props) {
                 'OCF is used to calculate free cash flow, a key metric for investor returns',
               ].map((point, i) => (
                 <div key={i} className="flex gap-3 items-start">
-                  <span className="text-green-500 text-lg">✓</span>
-                  <p className="text-muted-foreground">{point}</p>
+                  <span className="text-[#4ebe96] text-lg flex-shrink-0">✓</span>
+                  <p className="text-[#868f97]">{point}</p>
                 </div>
               ))}
             </div>
           </section>
 
-          {/* CTA */}
-          <section className="bg-gradient-to-r from-green-600/20 to-emerald-600/20 p-8 rounded-xl border border-green-500/30 text-center mb-12">
-            <h2 className="text-2xl font-bold mb-4">Complete Financial Analysis</h2>
-            <p className="text-muted-foreground mb-6">Get AI-powered analysis of {symbol} operating cash flow and cash generation trends</p>
-            <Link href={`/dashboard?ticker=${symbol}&tab=financials`} className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium">
+          {/* CTA - Glassmorphism */}
+          <section className="backdrop-blur-xl bg-gradient-to-r from-[#4ebe96]/10 to-[#4ebe96]/5 p-8 rounded-xl border border-[#4ebe96]/20 text-center mb-12 hover:border-[#4ebe96]/40 transition-all duration-250">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Complete Financial Analysis</h2>
+            <p className="text-[#868f97] mb-6">Get AI-powered analysis of {symbol} operating cash flow and cash generation trends</p>
+            <Link
+              href={`/dashboard?ticker=${symbol}&tab=financials`}
+              className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-black px-8 py-3 rounded-lg font-medium transition-all duration-250 hover:shadow-lg"
+            >
               Analyze {symbol} Financials
             </Link>
           </section>
 
-          {/* FAQ */}
+          {/* FAQ - Glassmorphism */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {ocfFaqs.map((faq, i) => (
-                <div key={i} className="bg-card p-5 rounded-lg border border-border">
-                  <h3 className="font-bold text-lg mb-2">{faq.question}</h3>
-                  <p className="text-muted-foreground">{faq.answer}</p>
+                <div key={i} className="backdrop-blur-xl bg-white/5 p-5 rounded-lg border border-white/10 hover:border-white/20 transition-all duration-250">
+                  <h3 className="font-bold text-lg mb-2 text-balance">{faq.question}</h3>
+                  <p className="text-[#868f97]">{faq.answer}</p>
                 </div>
               ))}
             </div>

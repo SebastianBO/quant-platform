@@ -36,30 +36,30 @@ export default async function TopMetricPage({ params }: Props) {
   const name = METRIC_NAMES[metric] || metric
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-black">
       <Header />
       <main className="max-w-6xl mx-auto px-4 py-8">
         <nav className="text-sm mb-4">
-          <Link href="/" className="text-blue-600 hover:underline">Home</Link>
+          <Link href="/" className="text-[#479ffa] hover:text-[#479ffa]/80 motion-safe:transition-colors motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded">Home</Link>
           {' > '}
-          <Link href="/rankings" className="text-blue-600 hover:underline">Rankings</Link>
+          <Link href="/rankings" className="text-[#479ffa] hover:text-[#479ffa]/80 motion-safe:transition-colors motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded">Rankings</Link>
           {' > '}
-          <span className="text-gray-600">{name}</span>
+          <span className="text-[#868f97]">{name}</span>
         </nav>
 
-        <h1 className="text-3xl font-bold mb-4">Top Stocks by {name}</h1>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">
+        <h1 className="text-3xl font-bold mb-4 text-balance">Top Stocks by {name}</h1>
+        <p className="text-[#868f97] mb-6">
           Stocks ranked by {name}. Find companies with the best {name} for investment opportunities.
         </p>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
-          <h2 className="text-xl font-semibold mb-4">Filter by Sector</h2>
+        <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 mb-6">
+          <h2 className="text-xl font-semibold mb-4 text-balance">Filter by Sector</h2>
           <div className="flex flex-wrap gap-2">
             {SECTORS.map(sector => (
               <Link
                 key={sector}
                 href={`/top/${metric}/${sector}`}
-                className="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded hover:bg-blue-100 text-sm"
+                className="px-3 py-1 bg-white/[0.03] border border-white/[0.08] rounded-lg hover:bg-white/[0.05] hover:border-white/[0.15] text-sm motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 {SECTOR_NAMES[sector]}
               </Link>
@@ -67,14 +67,14 @@ export default async function TopMetricPage({ params }: Props) {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
-          <h2 className="text-xl font-semibold mb-4">Historical Rankings</h2>
+        <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 mb-6">
+          <h2 className="text-xl font-semibold mb-4 text-balance">Historical Rankings</h2>
           <div className="flex flex-wrap gap-2">
             {YEARS.map(year => (
               <Link
                 key={year}
                 href={`/top/${metric}?year=${year}`}
-                className="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded hover:bg-blue-100 text-sm"
+                className="px-3 py-1 bg-white/[0.03] border border-white/[0.08] rounded-lg hover:bg-white/[0.05] hover:border-white/[0.15] text-sm tabular-nums motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 {year}
               </Link>
@@ -82,14 +82,14 @@ export default async function TopMetricPage({ params }: Props) {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-4">Other Rankings</h2>
+        <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
+          <h2 className="text-xl font-semibold mb-4 text-balance">Other Rankings</h2>
           <div className="flex flex-wrap gap-2">
             {RANKING_METRICS.filter(m => m !== metric).slice(0, 15).map(m => (
               <Link
                 key={m}
                 href={`/top/${m}`}
-                className="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded hover:bg-blue-100 text-sm"
+                className="px-3 py-1 bg-white/[0.03] border border-white/[0.08] rounded-lg hover:bg-white/[0.05] hover:border-white/[0.15] text-sm motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 {METRIC_NAMES[m]}
               </Link>

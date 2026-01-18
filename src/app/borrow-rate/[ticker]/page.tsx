@@ -107,32 +107,32 @@ export default async function BorrowRatePage({ params }: Props) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }} />
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-black text-white">
         <div className="max-w-4xl mx-auto px-6 py-12">
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out">Home</Link>
             {' / '}
-            <Link href="/dashboard" className="hover:text-foreground">Stock Analysis</Link>
+            <Link href="/dashboard" className="hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out">Stock Analysis</Link>
             {' / '}
             <span>{symbol} Borrow Rate</span>
           </nav>
 
-          <h1 className="text-4xl font-bold mb-4">{symbol} Borrow Rate</h1>
-          <p className="text-xl text-muted-foreground mb-8">{companyName} - Short selling cost & fee analysis</p>
+          <h1 className="text-4xl font-bold mb-4 text-balance">{symbol} Borrow Rate</h1>
+          <p className="text-xl text-[#868f97] mb-8">{companyName} - Short selling cost & fee analysis</p>
 
           {/* Key Metrics Card */}
-          <div className="bg-gradient-to-r from-yellow-600/20 to-orange-600/20 p-8 rounded-xl border border-yellow-500/30 mb-8">
+          <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 mb-8 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
               <div>
-                <p className="text-muted-foreground text-sm mb-1">Stock Price</p>
-                <p className="text-3xl font-bold">${price.toFixed(2)}</p>
+                <p className="text-[#868f97] text-sm mb-1">Stock Price</p>
+                <p className="text-3xl font-bold tabular-nums">${price.toFixed(2)}</p>
               </div>
               <div>
-                <p className="text-muted-foreground text-sm mb-1">Borrow Rate</p>
+                <p className="text-[#868f97] text-sm mb-1">Borrow Rate</p>
                 <p className="text-3xl font-bold">Check Broker</p>
               </div>
               <div>
-                <p className="text-muted-foreground text-sm mb-1">Availability</p>
+                <p className="text-[#868f97] text-sm mb-1">Availability</p>
                 <p className="text-3xl font-bold">Check Broker</p>
               </div>
             </div>
@@ -140,16 +140,16 @@ export default async function BorrowRatePage({ params }: Props) {
 
           {/* Borrow Rate Explanation */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Understanding Borrow Rates</h2>
-            <div className="bg-card p-6 rounded-lg border border-border mb-6">
-              <p className="text-muted-foreground mb-4">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Understanding Borrow Rates</h2>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 mb-6 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
+              <p className="text-[#868f97] mb-4">
                 The borrow rate is the annual interest rate short sellers pay to borrow {symbol} shares. When you short a stock,
                 you're borrowing shares from someone else (typically through your broker), selling them, and hoping to buy them
                 back later at a lower price. The borrow rate is your cost for this privilege.
               </p>
-              <div className="bg-secondary p-4 rounded-lg">
-                <p className="font-mono text-sm mb-2">Daily Borrow Cost = (Annual Rate ÷ 365) × Share Price × Quantity</p>
-                <p className="text-sm text-muted-foreground">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4">
+                <p className="font-mono text-sm mb-2 tabular-nums">Daily Borrow Cost = (Annual Rate ÷ 365) × Share Price × Quantity</p>
+                <p className="text-sm text-[#868f97]">
                   This cost is charged daily for as long as you hold the short position.
                 </p>
               </div>
@@ -158,7 +158,7 @@ export default async function BorrowRatePage({ params }: Props) {
 
           {/* Borrow Rate Ranges */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Borrow Rate Categories</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Borrow Rate Categories</h2>
             <div className="space-y-4">
               {[
                 {
@@ -198,27 +198,27 @@ export default async function BorrowRatePage({ params }: Props) {
                   color: 'red'
                 },
               ].map((item, i) => (
-                <div key={i} className="bg-card p-5 rounded-lg border border-border">
+                <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
                   <div className="flex justify-between items-start mb-2">
                     <div>
-                      <h3 className="font-bold text-lg">{item.range}</h3>
+                      <h3 className="font-bold text-lg tabular-nums">{item.range}</h3>
                       <p className={`text-sm ${
-                        item.color === 'green' ? 'text-green-400' :
-                        item.color === 'yellow' ? 'text-yellow-400' :
-                        item.color === 'orange' ? 'text-orange-400' :
-                        'text-red-400'
+                        item.color === 'green' ? 'text-[#4ebe96]' :
+                        item.color === 'yellow' ? 'text-[#ffa16c]' :
+                        item.color === 'orange' ? 'text-[#ffa16c]' :
+                        'text-[#ff5c5c]'
                       }`}>{item.status}</p>
                     </div>
                     <span className={`text-xs px-2 py-1 rounded ${
-                      item.color === 'green' ? 'bg-green-500/20 text-green-400' :
-                      item.color === 'yellow' ? 'bg-yellow-500/20 text-yellow-400' :
-                      item.color === 'orange' ? 'bg-orange-500/20 text-orange-400' :
-                      'bg-red-500/20 text-red-400'
+                      item.color === 'green' ? 'bg-[#4ebe96]/20 text-[#4ebe96]' :
+                      item.color === 'yellow' ? 'bg-[#ffa16c]/20 text-[#ffa16c]' :
+                      item.color === 'orange' ? 'bg-[#ffa16c]/20 text-[#ffa16c]' :
+                      'bg-[#ff5c5c]/20 text-[#ff5c5c]'
                     }`}>
                       {item.status}
                     </span>
                   </div>
-                  <p className="text-muted-foreground text-sm">{item.desc}</p>
+                  <p className="text-[#868f97] text-sm">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -226,9 +226,9 @@ export default async function BorrowRatePage({ params }: Props) {
 
           {/* Cost Calculation */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Borrow Cost Calculator</h2>
-            <div className="bg-card p-6 rounded-lg border border-border">
-              <p className="text-sm text-muted-foreground mb-4">Example: Shorting 100 shares of {symbol} at ${price.toFixed(2)}</p>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Borrow Cost Calculator</h2>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
+              <p className="text-sm text-[#868f97] mb-4">Example: Shorting 100 shares of {symbol} at ${price.toFixed(2)}</p>
               <div className="space-y-3">
                 {[
                   { rate: '5%', days: 30, cost: (0.05 * price * 100 * 30 / 365).toFixed(2) },
@@ -236,19 +236,19 @@ export default async function BorrowRatePage({ params }: Props) {
                   { rate: '50%', days: 30, cost: (0.50 * price * 100 * 30 / 365).toFixed(2) },
                   { rate: '100%', days: 30, cost: (1.00 * price * 100 * 30 / 365).toFixed(2) },
                 ].map((calc, i) => (
-                  <div key={i} className="bg-secondary p-4 rounded-lg flex justify-between items-center">
+                  <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 flex justify-between items-center motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
                     <div>
-                      <p className="font-bold">{calc.rate} annual rate × {calc.days} days</p>
-                      <p className="text-sm text-muted-foreground">100 shares at ${price.toFixed(2)}</p>
+                      <p className="font-bold tabular-nums">{calc.rate} annual rate × {calc.days} days</p>
+                      <p className="text-sm text-[#868f97] tabular-nums">100 shares at ${price.toFixed(2)}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-2xl font-bold text-red-400">${calc.cost}</p>
-                      <p className="text-xs text-muted-foreground">Borrow cost</p>
+                      <p className="text-2xl font-bold text-[#ff5c5c] tabular-nums">${calc.cost}</p>
+                      <p className="text-xs text-[#868f97]">Borrow cost</p>
                     </div>
                   </div>
                 ))}
               </div>
-              <p className="text-xs text-muted-foreground mt-4">
+              <p className="text-xs text-[#868f97] mt-4">
                 Note: This excludes trading commissions, margin interest, and potential losses from price increases.
               </p>
             </div>
@@ -256,7 +256,7 @@ export default async function BorrowRatePage({ params }: Props) {
 
           {/* What Affects Rates */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Factors Affecting Borrow Rates</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Factors Affecting Borrow Rates</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
                 { factor: 'Share Availability', impact: 'Less available shares = higher rates' },
@@ -266,9 +266,9 @@ export default async function BorrowRatePage({ params }: Props) {
                 { factor: 'Volatility', impact: 'Higher volatility often increases rates' },
                 { factor: 'Recent Performance', impact: 'Strong gains may increase short demand and rates' },
               ].map((item, i) => (
-                <div key={i} className="bg-secondary p-4 rounded-lg">
+                <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
                   <p className="font-bold mb-2">{item.factor}</p>
-                  <p className="text-sm text-muted-foreground">{item.impact}</p>
+                  <p className="text-sm text-[#868f97]">{item.impact}</p>
                 </div>
               ))}
             </div>
@@ -276,26 +276,26 @@ export default async function BorrowRatePage({ params }: Props) {
 
           {/* Squeeze Implications */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Short Squeeze Implications</h2>
-            <div className="bg-card p-6 rounded-lg border border-border">
-              <p className="text-muted-foreground mb-4">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Short Squeeze Implications</h2>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
+              <p className="text-[#868f97] mb-4">
                 High borrow rates are a key short squeeze indicator. When rates exceed 30-50%, it signals:
               </p>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <ul className="space-y-2 text-sm text-[#868f97]">
                 <li className="flex items-start gap-2">
-                  <span className="text-yellow-400 mt-1">•</span>
+                  <span className="text-[#ffa16c] mt-1">•</span>
                   <span>Very limited share availability for new short positions</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-yellow-400 mt-1">•</span>
+                  <span className="text-[#ffa16c] mt-1">•</span>
                   <span>Existing shorts paying expensive daily fees, increasing pressure to cover</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-yellow-400 mt-1">•</span>
+                  <span className="text-[#ffa16c] mt-1">•</span>
                   <span>Brokers may force close short positions due to hard-to-borrow status</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-yellow-400 mt-1">•</span>
+                  <span className="text-[#ffa16c] mt-1">•</span>
                   <span>Rising rates often precede short squeezes as supply tightens</span>
                 </li>
               </ul>
@@ -303,22 +303,22 @@ export default async function BorrowRatePage({ params }: Props) {
           </section>
 
           {/* CTA */}
-          <section className="bg-gradient-to-r from-green-600/20 to-emerald-600/20 p-8 rounded-xl border border-green-500/30 text-center mb-12">
-            <h2 className="text-2xl font-bold mb-4">Check Short Interest Data</h2>
-            <p className="text-muted-foreground mb-6">View comprehensive short interest metrics and squeeze indicators</p>
-            <Link href={`/short-interest/${symbol.toLowerCase()}`} className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 text-center mb-12 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Check Short Interest Data</h2>
+            <p className="text-[#868f97] mb-6">View comprehensive short interest metrics and squeeze indicators</p>
+            <Link href={`/short-interest/${symbol.toLowerCase()}`} className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-white px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
               View Short Interest
             </Link>
           </section>
 
           {/* FAQ */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {faqs.map((faq, i) => (
-                <div key={i} className="bg-card p-5 rounded-lg border border-border">
-                  <h3 className="font-bold text-lg mb-2">{faq.question}</h3>
-                  <p className="text-muted-foreground">{faq.answer}</p>
+                <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
+                  <h3 className="font-bold text-lg mb-2 text-balance">{faq.question}</h3>
+                  <p className="text-[#868f97]">{faq.answer}</p>
                 </div>
               ))}
             </div>

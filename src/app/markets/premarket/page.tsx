@@ -110,15 +110,15 @@ export default function PremarketPage() {
           ]),
         }}
       />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-dvh bg-black text-foreground pt-20">
         <div className="max-w-7xl mx-auto px-6 py-12">
           {/* Breadcrumbs */}
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-foreground focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded">
               Home
             </Link>
             {' / '}
-            <Link href="/markets" className="hover:text-foreground">
+            <Link href="/markets" className="hover:text-foreground focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded">
               Markets
             </Link>
             {' / '}
@@ -127,37 +127,37 @@ export default function PremarketPage() {
 
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-4xl font-bold mb-4">Premarket Movers & Stock Futures Today</h1>
-            <p className="text-xl text-muted-foreground">
+            <h1 className="text-4xl font-bold mb-4 text-balance">Premarket Movers & Stock Futures Today</h1>
+            <p className="text-xl text-[#868f97]">
               Track stocks making big moves before the market opens. Monitor premarket trading from 4:00 AM - 9:30 AM ET.
             </p>
           </div>
 
           {/* Premarket Trading Hours */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Premarket Trading Hours</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Premarket Trading Hours</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                 <div className="text-3xl mb-3">🌅</div>
-                <h3 className="text-lg font-bold mb-2">Early Premarket</h3>
-                <p className="text-2xl font-bold text-green-500 mb-2">4:00 AM - 7:00 AM ET</p>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="text-lg font-bold mb-2 text-balance">Early Premarket</h3>
+                <p className="text-2xl font-bold text-[#4ebe96] mb-2 tabular-nums">4:00 AM - 7:00 AM ET</p>
+                <p className="text-sm text-[#868f97]">
                   Institutional and professional traders only. Extremely low liquidity.
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                 <div className="text-3xl mb-3">📊</div>
-                <h3 className="text-lg font-bold mb-2">Active Premarket</h3>
-                <p className="text-2xl font-bold text-green-500 mb-2">7:00 AM - 9:30 AM ET</p>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="text-lg font-bold mb-2 text-balance">Active Premarket</h3>
+                <p className="text-2xl font-bold text-[#4ebe96] mb-2 tabular-nums">7:00 AM - 9:30 AM ET</p>
+                <p className="text-sm text-[#868f97]">
                   Retail access available. Higher volume, better liquidity for trading.
                 </p>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                 <div className="text-3xl mb-3">🔔</div>
-                <h3 className="text-lg font-bold mb-2">Market Open</h3>
-                <p className="text-2xl font-bold text-green-500 mb-2">9:30 AM ET</p>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="text-lg font-bold mb-2 text-balance">Market Open</h3>
+                <p className="text-2xl font-bold text-[#4ebe96] mb-2 tabular-nums">9:30 AM ET</p>
+                <p className="text-sm text-[#868f97]">
                   Regular trading begins. Full liquidity and volume restored.
                 </p>
               </div>
@@ -166,17 +166,17 @@ export default function PremarketPage() {
 
           {/* Live Premarket Data CTA */}
           <section className="mb-12">
-            <div className="bg-gradient-to-r from-green-500/10 to-blue-500/10 p-8 rounded-xl border border-green-500/20">
+            <div className="bg-gradient-to-r from-[#4ebe96]/10 to-[#479ffa]/10 p-8 rounded-2xl border border-[#4ebe96]/20">
               <div className="flex items-center justify-between flex-wrap gap-4">
                 <div>
-                  <h2 className="text-2xl font-bold mb-2">View Live Premarket Movers</h2>
-                  <p className="text-muted-foreground">
+                  <h2 className="text-2xl font-bold mb-2 text-balance">View Live Premarket Movers</h2>
+                  <p className="text-[#868f97]">
                     Get real-time premarket data, stock futures, and AI-powered analysis on our dashboard.
                   </p>
                 </div>
                 <Link
                   href="/dashboard"
-                  className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium transition-colors whitespace-nowrap"
+                  className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out whitespace-nowrap focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                 >
                   Open Dashboard
                 </Link>
@@ -186,115 +186,115 @@ export default function PremarketPage() {
 
           {/* Why Premarket Matters */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Why Premarket Trading Matters</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Why Premarket Trading Matters</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 flex items-center gap-2">
-                  <span className="text-green-500">📰</span>
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
+                <h3 className="text-lg font-bold mb-3 text-balance flex items-center gap-2">
+                  <span className="text-[#4ebe96]">📰</span>
                   React to Breaking News
                 </h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="text-[#868f97] mb-4">
                   Many companies release earnings reports before the market opens. Premarket trading allows you to react to earnings beats, misses, and guidance updates before regular hours.
                 </p>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <ul className="space-y-2 text-sm text-[#868f97]">
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
+                    <span className="text-[#4ebe96] mt-1">•</span>
                     <span>Earnings announcements (typically 6:00-8:30 AM ET)</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
+                    <span className="text-[#4ebe96] mt-1">•</span>
                     <span>Economic data releases (8:30 AM ET)</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
+                    <span className="text-[#4ebe96] mt-1">•</span>
                     <span>Corporate announcements and M&A news</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
+                    <span className="text-[#4ebe96] mt-1">•</span>
                     <span>Overnight developments from global markets</span>
                   </li>
                 </ul>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 flex items-center gap-2">
-                  <span className="text-green-500">🌍</span>
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
+                <h3 className="text-lg font-bold mb-3 text-balance flex items-center gap-2">
+                  <span className="text-[#4ebe96]">🌍</span>
                   Global Market Context
                 </h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="text-[#868f97] mb-4">
                   Premarket trading reflects overnight moves in Asian and European markets, providing context for how U.S. stocks might perform.
                 </p>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <ul className="space-y-2 text-sm text-[#868f97]">
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
+                    <span className="text-[#4ebe96] mt-1">•</span>
                     <span>Asian markets close before U.S. premarket opens</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
+                    <span className="text-[#4ebe96] mt-1">•</span>
                     <span>European markets trade during U.S. premarket hours</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
+                    <span className="text-[#4ebe96] mt-1">•</span>
                     <span>Currency and commodity movements overnight</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
+                    <span className="text-[#4ebe96] mt-1">•</span>
                     <span>Geopolitical events and global economic news</span>
                   </li>
                 </ul>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 flex items-center gap-2">
-                  <span className="text-green-500">🎯</span>
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
+                <h3 className="text-lg font-bold mb-3 text-balance flex items-center gap-2">
+                  <span className="text-[#4ebe96]">🎯</span>
                   Position Before the Crowd
                 </h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="text-[#868f97] mb-4">
                   Sophisticated traders use premarket to establish positions before the majority of retail traders enter at market open.
                 </p>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <ul className="space-y-2 text-sm text-[#868f97]">
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
+                    <span className="text-[#4ebe96] mt-1">•</span>
                     <span>Get ahead of positive earnings surprises</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
+                    <span className="text-[#4ebe96] mt-1">•</span>
                     <span>Exit positions on negative news before panic selling</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
+                    <span className="text-[#4ebe96] mt-1">•</span>
                     <span>Identify potential gap-up or gap-down stocks</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
+                    <span className="text-[#4ebe96] mt-1">•</span>
                     <span>Gauge market sentiment before regular hours</span>
                   </li>
                 </ul>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 flex items-center gap-2">
-                  <span className="text-green-500">📈</span>
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
+                <h3 className="text-lg font-bold mb-3 text-balance flex items-center gap-2">
+                  <span className="text-[#4ebe96]">📈</span>
                   Stock Futures Guidance
                 </h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="text-[#868f97] mb-4">
                   Stock index futures (S&P 500, NASDAQ, Dow Jones) trade nearly 24/5 and predict market direction.
                 </p>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <ul className="space-y-2 text-sm text-[#868f97]">
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
+                    <span className="text-[#4ebe96] mt-1">•</span>
                     <span>S&P 500 futures (ES) indicate broad market direction</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
+                    <span className="text-[#4ebe96] mt-1">•</span>
                     <span>NASDAQ futures (NQ) show tech sector sentiment</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
+                    <span className="text-[#4ebe96] mt-1">•</span>
                     <span>Dow futures (YM) reflect blue-chip performance</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
+                    <span className="text-[#4ebe96] mt-1">•</span>
                     <span>Russell 2000 futures for small-cap sentiment</span>
                   </li>
                 </ul>
@@ -304,52 +304,52 @@ export default function PremarketPage() {
 
           {/* How to Trade Premarket */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">How to Trade in Premarket Hours</h2>
-            <div className="bg-card p-8 rounded-xl border border-border">
+            <h2 className="text-2xl font-bold mb-6 text-balance">How to Trade in Premarket Hours</h2>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] p-8 rounded-2xl border border-white/[0.08]">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <h3 className="text-lg font-bold mb-4 text-green-500">Getting Started</h3>
+                  <h3 className="text-lg font-bold mb-4 text-[#4ebe96] text-balance">Getting Started</h3>
                   <ol className="space-y-3">
                     <li className="flex items-start gap-3">
-                      <span className="bg-green-500/20 text-green-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm font-bold">
+                      <span className="bg-[#4ebe96]/20 text-[#4ebe96] rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm font-bold">
                         1
                       </span>
                       <div>
                         <p className="font-medium mb-1">Enable Extended Hours Trading</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-[#868f97]">
                           Contact your broker or enable in account settings. Most major brokers offer this feature.
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="bg-green-500/20 text-green-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm font-bold">
+                      <span className="bg-[#4ebe96]/20 text-[#4ebe96] rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm font-bold">
                         2
                       </span>
                       <div>
                         <p className="font-medium mb-1">Use Limit Orders Only</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-[#868f97]">
                           Market orders are typically not allowed. Set specific price limits to control execution.
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="bg-green-500/20 text-green-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm font-bold">
+                      <span className="bg-[#4ebe96]/20 text-[#4ebe96] rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm font-bold">
                         3
                       </span>
                       <div>
                         <p className="font-medium mb-1">Check Volume and Spreads</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-[#868f97]">
                           Low liquidity means wider bid-ask spreads. Only trade liquid stocks with clear catalysts.
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="bg-green-500/20 text-green-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm font-bold">
+                      <span className="bg-[#4ebe96]/20 text-[#4ebe96] rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm font-bold">
                         4
                       </span>
                       <div>
                         <p className="font-medium mb-1">Monitor Stock Futures</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-[#868f97]">
                           Watch S&P 500, NASDAQ, and Dow futures for overall market sentiment.
                         </p>
                       </div>
@@ -358,49 +358,49 @@ export default function PremarketPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-bold mb-4 text-green-500">Best Practices</h3>
+                  <h3 className="text-lg font-bold mb-4 text-[#4ebe96] text-balance">Best Practices</h3>
                   <ul className="space-y-3">
                     <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">✓</span>
+                      <span className="text-[#4ebe96] mt-1">✓</span>
                       <div>
                         <p className="font-medium mb-1">Trade Stocks with News Catalysts</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-[#868f97]">
                           Focus on stocks with earnings, FDA approvals, or major announcements
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">✓</span>
+                      <span className="text-[#4ebe96] mt-1">✓</span>
                       <div>
                         <p className="font-medium mb-1">Avoid Thinly Traded Stocks</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-[#868f97]">
                           Stick to large-cap, high-volume stocks during premarket
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">✓</span>
+                      <span className="text-[#4ebe96] mt-1">✓</span>
                       <div>
                         <p className="font-medium mb-1">Set Realistic Price Targets</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-[#868f97]">
                           Don't chase extreme prices; wait for reasonable fills
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">✓</span>
+                      <span className="text-[#4ebe96] mt-1">✓</span>
                       <div>
                         <p className="font-medium mb-1">Be Patient After 9:30 AM</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-[#868f97]">
                           Often better to wait 15-30 minutes after open for volatility to settle
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">✓</span>
+                      <span className="text-[#4ebe96] mt-1">✓</span>
                       <div>
                         <p className="font-medium mb-1">Use Smaller Position Sizes</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-[#868f97]">
                           Higher risk means smaller positions relative to regular hours
                         </p>
                       </div>
@@ -413,44 +413,44 @@ export default function PremarketPage() {
 
           {/* Understanding Stock Futures */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Understanding Stock Futures</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Understanding Stock Futures</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="bg-card p-5 rounded-lg border border-border">
-                <h3 className="font-bold mb-2 text-green-500">S&P 500 Futures (ES)</h3>
-                <p className="text-sm text-muted-foreground mb-3">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-5 rounded-lg border border-white/[0.08]">
+                <h3 className="font-bold mb-2 text-[#4ebe96] text-balance">S&P 500 Futures (ES)</h3>
+                <p className="text-sm text-[#868f97] mb-3">
                   The most watched futures contract. Tracks the S&P 500 index representing 500 large-cap U.S. companies.
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-[#868f97]">
                   <strong>Best for:</strong> Overall market sentiment and direction
                 </p>
               </div>
 
-              <div className="bg-card p-5 rounded-lg border border-border">
-                <h3 className="font-bold mb-2 text-green-500">NASDAQ Futures (NQ)</h3>
-                <p className="text-sm text-muted-foreground mb-3">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-5 rounded-lg border border-white/[0.08]">
+                <h3 className="font-bold mb-2 text-[#4ebe96] text-balance">NASDAQ Futures (NQ)</h3>
+                <p className="text-sm text-[#868f97] mb-3">
                   Tech-heavy index futures. Strong indicator for technology and growth stocks.
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-[#868f97]">
                   <strong>Best for:</strong> Technology sector and growth stock sentiment
                 </p>
               </div>
 
-              <div className="bg-card p-5 rounded-lg border border-border">
-                <h3 className="font-bold mb-2 text-green-500">Dow Futures (YM)</h3>
-                <p className="text-sm text-muted-foreground mb-3">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-5 rounded-lg border border-white/[0.08]">
+                <h3 className="font-bold mb-2 text-[#4ebe96] text-balance">Dow Futures (YM)</h3>
+                <p className="text-sm text-[#868f97] mb-3">
                   Tracks 30 large blue-chip companies. More stable, less volatile than NASDAQ.
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-[#868f97]">
                   <strong>Best for:</strong> Blue-chip and industrial sector trends
                 </p>
               </div>
 
-              <div className="bg-card p-5 rounded-lg border border-border">
-                <h3 className="font-bold mb-2 text-green-500">Russell 2000 (RTY)</h3>
-                <p className="text-sm text-muted-foreground mb-3">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-5 rounded-lg border border-white/[0.08]">
+                <h3 className="font-bold mb-2 text-[#4ebe96] text-balance">Russell 2000 (RTY)</h3>
+                <p className="text-sm text-[#868f97] mb-3">
                   Small-cap index futures. Indicates sentiment for smaller U.S. companies.
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-[#868f97]">
                   <strong>Best for:</strong> Small-cap stock sentiment and domestic economy
                 </p>
               </div>
@@ -459,15 +459,15 @@ export default function PremarketPage() {
 
           {/* FAQ Section */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {faqs.map((faq, index) => (
                 <div
                   key={index}
-                  className="bg-card p-6 rounded-xl border border-border"
+                  className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]"
                 >
-                  <h3 className="text-lg font-bold mb-3">{faq.question}</h3>
-                  <p className="text-muted-foreground">{faq.answer}</p>
+                  <h3 className="text-lg font-bold mb-3 text-balance">{faq.question}</h3>
+                  <p className="text-[#868f97]">{faq.answer}</p>
                 </div>
               ))}
             </div>
@@ -475,45 +475,45 @@ export default function PremarketPage() {
 
           {/* Premarket Trading Tips */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Premarket Trading Tips & Strategies</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Premarket Trading Tips & Strategies</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 text-green-500">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
+                <h3 className="text-lg font-bold mb-3 text-[#4ebe96] text-balance">
                   What to Watch in Premarket
                 </h3>
-                <ul className="space-y-3 text-muted-foreground">
+                <ul className="space-y-3 text-[#868f97]">
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">1.</span>
+                    <span className="text-[#4ebe96] mt-1">1.</span>
                     <div>
                       <strong className="text-foreground">Earnings Calendar:</strong> Know which companies report before the bell
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">2.</span>
+                    <span className="text-[#4ebe96] mt-1">2.</span>
                     <div>
                       <strong className="text-foreground">Economic Calendar:</strong> Track 8:30 AM ET data releases (jobs, inflation, GDP)
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">3.</span>
+                    <span className="text-[#4ebe96] mt-1">3.</span>
                     <div>
                       <strong className="text-foreground">Futures Movement:</strong> Are S&P 500, NASDAQ, and Dow futures green or red?
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">4.</span>
+                    <span className="text-[#4ebe96] mt-1">4.</span>
                     <div>
                       <strong className="text-foreground">Global Markets:</strong> How did Asian and European markets perform?
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">5.</span>
+                    <span className="text-[#4ebe96] mt-1">5.</span>
                     <div>
                       <strong className="text-foreground">Volume Leaders:</strong> Which stocks have unusually high premarket volume?
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">6.</span>
+                    <span className="text-[#4ebe96] mt-1">6.</span>
                     <div>
                       <strong className="text-foreground">News Flow:</strong> Check financial news for breaking stories
                     </div>
@@ -521,43 +521,43 @@ export default function PremarketPage() {
                 </ul>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 text-red-500">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
+                <h3 className="text-lg font-bold mb-3 text-[#ff5c5c] text-balance">
                   Common Premarket Mistakes to Avoid
                 </h3>
-                <ul className="space-y-3 text-muted-foreground">
+                <ul className="space-y-3 text-[#868f97]">
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">✗</span>
+                    <span className="text-[#ff5c5c] mt-1">✗</span>
                     <div>
                       <strong className="text-foreground">Using Market Orders:</strong> Always use limit orders in premarket
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">✗</span>
+                    <span className="text-[#ff5c5c] mt-1">✗</span>
                     <div>
                       <strong className="text-foreground">Chasing Gap-Ups:</strong> Don't FOMO into stocks already up 20%+ premarket
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">✗</span>
+                    <span className="text-[#ff5c5c] mt-1">✗</span>
                     <div>
                       <strong className="text-foreground">Ignoring Liquidity:</strong> Low volume = dangerous price swings
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">✗</span>
+                    <span className="text-[#ff5c5c] mt-1">✗</span>
                     <div>
                       <strong className="text-foreground">Trading Without Catalyst:</strong> Only trade stocks with clear news
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">✗</span>
+                    <span className="text-[#ff5c5c] mt-1">✗</span>
                     <div>
                       <strong className="text-foreground">Large Position Sizes:</strong> Keep positions smaller due to higher risk
                     </div>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">✗</span>
+                    <span className="text-[#ff5c5c] mt-1">✗</span>
                     <div>
                       <strong className="text-foreground">Assuming Prices Hold:</strong> Premarket gaps often fill during regular hours
                     </div>
@@ -569,62 +569,62 @@ export default function PremarketPage() {
 
           {/* Related Market Pages */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Explore More Market Data</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Explore More Market Data</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <Link
                 href="/markets/top-gainers"
-                className="bg-card p-4 rounded-lg border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-lg border border-white/[0.08] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <p className="text-2xl mb-2">📈</p>
                 <p className="font-bold">Top Gainers</p>
-                <p className="text-xs text-muted-foreground mt-1">Biggest % increases</p>
+                <p className="text-xs text-[#868f97] mt-1">Biggest % increases</p>
               </Link>
               <Link
                 href="/markets/most-active"
-                className="bg-card p-4 rounded-lg border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-lg border border-white/[0.08] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <p className="text-2xl mb-2">📊</p>
                 <p className="font-bold">Most Active</p>
-                <p className="text-xs text-muted-foreground mt-1">Highest volume</p>
+                <p className="text-xs text-[#868f97] mt-1">Highest volume</p>
               </Link>
               <Link
                 href="/markets/top-losers"
-                className="bg-card p-4 rounded-lg border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-lg border border-white/[0.08] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <p className="text-2xl mb-2">📉</p>
                 <p className="font-bold">Top Losers</p>
-                <p className="text-xs text-muted-foreground mt-1">Biggest declines</p>
+                <p className="text-xs text-[#868f97] mt-1">Biggest declines</p>
               </Link>
               <Link
                 href="/markets/52-week-high"
-                className="bg-card p-4 rounded-lg border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-lg border border-white/[0.08] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <p className="text-2xl mb-2">🚀</p>
                 <p className="font-bold">52-Week Highs</p>
-                <p className="text-xs text-muted-foreground mt-1">New highs today</p>
+                <p className="text-xs text-[#868f97] mt-1">New highs today</p>
               </Link>
             </div>
           </section>
 
           {/* CTA Section */}
-          <section className="bg-card p-8 rounded-xl border border-border text-center">
-            <h2 className="text-2xl font-bold mb-4">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] p-8 rounded-2xl border border-white/[0.08] text-center">
+            <h2 className="text-2xl font-bold mb-4 text-balance">
               Start Trading Smarter with AI Analysis
             </h2>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+            <p className="text-[#868f97] mb-6 max-w-2xl mx-auto">
               Don't just track premarket movers—understand them. Our AI-powered platform analyzes earnings reports,
               news catalysts, and fundamental data to help you make informed premarket trading decisions.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Link
                 href="/dashboard"
-                className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+                className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
                 View Live Premarket Data
               </Link>
               <Link
                 href="/markets"
-                className="inline-block bg-card hover:bg-muted text-foreground px-8 py-3 rounded-lg font-medium transition-colors border border-border"
+                className="inline-block bg-white/[0.03] backdrop-blur-[10px] hover:bg-white/[0.05] text-foreground px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out border border-white/[0.08] hover:border-white/[0.15] focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 Explore All Markets
               </Link>

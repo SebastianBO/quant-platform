@@ -183,7 +183,7 @@ export default async function BondsPage() {
           __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema]),
         }}
       />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-dvh bg-black text-foreground pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
             {/* Sidebar - hidden on mobile, shown on lg+ */}
@@ -193,7 +193,7 @@ export default async function BondsPage() {
             <div className="flex-1 min-w-0">
           {/* Breadcrumbs */}
           <nav className="text-sm text-[#868f97] mb-4 sm:mb-6" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out">
+            <Link href="/" className="hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none rounded-sm">
               Home
             </Link>
             {' / '}
@@ -224,6 +224,7 @@ export default async function BondsPage() {
                     yield: ((y10?.yield || 0) - (y2?.yield || 0)),
                     name: treasuryData.inverted ? 'INVERTED' : 'NORMAL',
                   },
+                  isSpread: true,
                 },
               ].map((item, idx) => (
                 <div
@@ -233,7 +234,7 @@ export default async function BondsPage() {
                   <div className="text-xs sm:text-sm text-[#868f97] mb-2">
                     {item.label}
                   </div>
-                  <div className="text-2xl sm:text-3xl font-bold text-[#4ebe96]">
+                  <div className="text-2xl sm:text-3xl font-bold text-[#4ebe96] tabular-nums">
                     {item.data?.yield?.toFixed(2)}%
                   </div>
                   {idx === 3 && (
@@ -269,7 +270,7 @@ export default async function BondsPage() {
                         key={idx}
                         className="flex flex-col items-center flex-1"
                       >
-                        <div className="text-xs text-[#868f97] mb-2">
+                        <div className="text-xs text-[#868f97] mb-2 tabular-nums">
                           {item.yield.toFixed(2)}%
                         </div>
                         <div
@@ -290,10 +291,10 @@ export default async function BondsPage() {
                 {treasuryData.yieldCurve.map((item: any, idx: number) => (
                   <div
                     key={idx}
-                    className="flex justify-between items-center p-3 bg-background rounded-lg"
+                    className="flex justify-between items-center p-3 bg-black rounded-2xl"
                   >
                     <span className="font-medium text-sm">{item.name}</span>
-                    <span className="text-[#4ebe96] font-bold text-sm">
+                    <span className="text-[#4ebe96] font-bold text-sm tabular-nums">
                       {item.yield.toFixed(2)}%
                     </span>
                   </div>
@@ -301,7 +302,7 @@ export default async function BondsPage() {
               </div>
 
               {treasuryData.inverted && (
-                <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-[#ff5c5c]/10 border border-[#ff5c5c]/20 rounded-lg">
+                <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-[#ff5c5c]/10 border border-[#ff5c5c]/20 rounded-2xl">
                   <div className="flex items-start gap-3">
                     <span className="text-xl sm:text-2xl">⚠️</span>
                     <div>
@@ -472,7 +473,7 @@ export default async function BondsPage() {
 
               <div>
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-yellow-600 flex items-center justify-center text-white font-bold text-lg sm:text-xl">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#ffa16c] flex items-center justify-center text-white font-bold text-lg sm:text-xl">
                     →
                   </div>
                   <h3 className="text-base sm:text-xl font-bold">Flat Yield Curve</h3>
@@ -563,7 +564,7 @@ export default async function BondsPage() {
                   key={index}
                   className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 sm:p-6 rounded-2xl group"
                 >
-                  <summary className="text-base sm:text-lg font-bold cursor-pointer list-none flex items-center justify-between gap-4">
+                  <summary className="text-base sm:text-lg font-bold cursor-pointer list-none flex items-center justify-between gap-4 focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none rounded-lg">
                     <span className="flex-1">{faq.question}</span>
                     <span className="text-[#4ebe96] group-open:rotate-180 motion-safe:transition-transform motion-safe:duration-150 ease-out flex-shrink-0">
                       ▼
@@ -585,7 +586,7 @@ export default async function BondsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               <Link
                 href="/markets"
-                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out p-4 rounded-2xl group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:bg-white/[0.05] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out p-4 rounded-2xl group focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none"
               >
                 <div className="text-xl sm:text-2xl mb-2">📊</div>
                 <h3 className="font-bold group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out text-sm sm:text-base">
@@ -598,7 +599,7 @@ export default async function BondsPage() {
 
               <Link
                 href="/sectors"
-                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out p-4 rounded-2xl group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:bg-white/[0.05] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out p-4 rounded-2xl group focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none"
               >
                 <div className="text-xl sm:text-2xl mb-2">🏢</div>
                 <h3 className="font-bold group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out text-sm sm:text-base">
@@ -611,7 +612,7 @@ export default async function BondsPage() {
 
               <Link
                 href="/earnings"
-                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out p-4 rounded-2xl group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:bg-white/[0.05] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out p-4 rounded-2xl group focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none"
               >
                 <div className="text-xl sm:text-2xl mb-2">📅</div>
                 <h3 className="font-bold group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out text-sm sm:text-base">
@@ -624,7 +625,7 @@ export default async function BondsPage() {
 
               <Link
                 href="/dashboard"
-                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out p-4 rounded-2xl group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:bg-white/[0.05] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out p-4 rounded-2xl group focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none"
               >
                 <div className="text-xl sm:text-2xl mb-2">🔍</div>
                 <h3 className="font-bold group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out text-sm sm:text-base">
@@ -638,7 +639,7 @@ export default async function BondsPage() {
           </section>
 
           {/* CTA Section */}
-          <section className="bg-gradient-to-r from-[#4ebe96] to-[#4ebe96]/80 p-6 sm:p-8 lg:p-12 rounded-xl text-white text-center">
+          <section className="bg-gradient-to-r from-[#4ebe96] to-[#4ebe96]/80 p-6 sm:p-8 lg:p-12 rounded-2xl text-white text-center">
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4">
               Analyze Stocks with AI-Powered Research
             </h2>
@@ -649,7 +650,7 @@ export default async function BondsPage() {
             </p>
             <Link
               href="/dashboard"
-              className="inline-block w-full sm:w-auto bg-white text-[#4ebe96] hover:bg-gray-100 px-6 sm:px-8 py-3 rounded-lg font-bold motion-safe:transition-colors motion-safe:duration-150 ease-out"
+              className="inline-block w-full sm:w-auto bg-white text-[#4ebe96] hover:bg-white/90 px-6 sm:px-8 py-3 rounded-full font-bold motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#4ebe96]"
             >
               Start Analyzing Stocks Free
             </Link>

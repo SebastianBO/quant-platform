@@ -176,31 +176,31 @@ export default async function HighDividendYieldPage() {
           __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema, itemListSchema]),
         }}
       />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-dvh bg-black text-white pt-20">
         <div className="max-w-6xl mx-auto px-6 py-12">
           {/* Breadcrumbs */}
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Home</Link>
             {' / '}
-            <Link href="/screener" className="hover:text-foreground">Stock Screener</Link>
+            <Link href="/screener" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Stock Screener</Link>
             {' / '}
             <span>High Dividend Yield</span>
           </nav>
 
           {/* Header */}
           <header className="mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-balance">
               High Dividend Yield Stocks
             </h1>
-            <p className="text-xl text-muted-foreground mb-4">
+            <p className="text-xl text-[#868f97] mb-4">
               Stocks paying over 3% dividend yield - screened for income investors seeking passive income
               from quality dividend-paying companies.
             </p>
             <div className="flex flex-wrap gap-4 text-sm">
-              <div className="bg-green-600/20 text-green-400 px-4 py-2 rounded-lg">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] text-[#4ebe96] px-4 py-2 rounded-2xl">
                 Filter: Dividend Yield &gt; 3%
               </div>
-              <div className="bg-secondary px-4 py-2 rounded-lg">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] px-4 py-2 rounded-2xl tabular-nums">
                 {HIGH_DIVIDEND_STOCKS.length} Stocks Found
               </div>
             </div>
@@ -208,53 +208,53 @@ export default async function HighDividendYieldPage() {
 
           {/* Key Metrics Summary */}
           <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-card p-4 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-1">Average Yield</p>
-              <p className="text-2xl font-bold text-green-500">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+              <p className="text-sm text-[#868f97] mb-1">Average Yield</p>
+              <p className="text-2xl font-bold text-[#4ebe96] tabular-nums">
                 {(HIGH_DIVIDEND_STOCKS.reduce((sum, s) => sum + s.dividendYield, 0) / HIGH_DIVIDEND_STOCKS.length).toFixed(1)}%
               </p>
             </div>
-            <div className="bg-card p-4 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-1">Highest Yield</p>
-              <p className="text-2xl font-bold text-green-500">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+              <p className="text-sm text-[#868f97] mb-1">Highest Yield</p>
+              <p className="text-2xl font-bold text-[#4ebe96] tabular-nums">
                 {HIGH_DIVIDEND_STOCKS[0].dividendYield}%
               </p>
             </div>
-            <div className="bg-card p-4 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-1">Avg Payout Ratio</p>
-              <p className="text-2xl font-bold">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+              <p className="text-sm text-[#868f97] mb-1">Avg Payout Ratio</p>
+              <p className="text-2xl font-bold tabular-nums">
                 {Math.round(HIGH_DIVIDEND_STOCKS.reduce((sum, s) => sum + s.payoutRatio, 0) / HIGH_DIVIDEND_STOCKS.length)}%
               </p>
             </div>
-            <div className="bg-card p-4 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-1">Aristocrats</p>
-              <p className="text-2xl font-bold text-blue-400">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+              <p className="text-sm text-[#868f97] mb-1">Aristocrats</p>
+              <p className="text-2xl font-bold text-[#479ffa] tabular-nums">
                 {HIGH_DIVIDEND_STOCKS.filter(s => s.years >= 25).length}
               </p>
             </div>
           </section>
 
           {/* Why High Dividend Stocks */}
-          <section className="bg-gradient-to-br from-green-600/10 to-blue-600/10 p-6 rounded-xl border border-green-500/20 mb-8">
-            <h2 className="text-2xl font-bold mb-4">Why Invest in High Dividend Yield Stocks?</h2>
+          <section className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl mb-8">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Why Invest in High Dividend Yield Stocks?</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-card/50 p-4 rounded-lg">
-                <h3 className="font-bold mb-2 text-green-400">Passive Income</h3>
-                <p className="text-sm text-muted-foreground">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl">
+                <h3 className="font-bold mb-2 text-[#4ebe96]">Passive Income</h3>
+                <p className="text-sm text-[#868f97]">
                   Generate regular cash payments quarterly or monthly without selling shares. A $100,000 portfolio
                   yielding 4% produces $4,000 annually.
                 </p>
               </div>
-              <div className="bg-card/50 p-4 rounded-lg">
-                <h3 className="font-bold mb-2 text-green-400">Total Return</h3>
-                <p className="text-sm text-muted-foreground">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl">
+                <h3 className="font-bold mb-2 text-[#4ebe96]">Total Return</h3>
+                <p className="text-sm text-[#868f97]">
                   Dividends have contributed ~40% of S&P 500 total returns historically. Reinvested dividends
                   compound wealth significantly over time.
                 </p>
               </div>
-              <div className="bg-card/50 p-4 rounded-lg">
-                <h3 className="font-bold mb-2 text-green-400">Lower Volatility</h3>
-                <p className="text-sm text-muted-foreground">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl">
+                <h3 className="font-bold mb-2 text-[#4ebe96]">Lower Volatility</h3>
+                <p className="text-sm text-[#868f97]">
                   Dividend-paying stocks tend to be mature, established companies with stable cash flows,
                   often resulting in lower price volatility.
                 </p>
@@ -264,12 +264,12 @@ export default async function HighDividendYieldPage() {
 
           {/* Stock Table */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Top High Dividend Yield Stocks</h2>
-            <div className="bg-card border border-border rounded-xl overflow-hidden">
+            <h2 className="text-2xl font-bold mb-6 text-balance">Top High Dividend Yield Stocks</h2>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-secondary/50">
-                    <tr className="border-b border-border">
+                  <thead className="bg-white/[0.03]">
+                    <tr className="border-b border-white/[0.08]">
                       <th className="px-4 py-3 text-left text-sm font-semibold">#</th>
                       <th className="px-4 py-3 text-left text-sm font-semibold">Ticker</th>
                       <th className="px-4 py-3 text-left text-sm font-semibold">Company</th>
@@ -280,35 +280,35 @@ export default async function HighDividendYieldPage() {
                       <th className="px-4 py-3 text-right text-sm font-semibold">Market Cap</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-border">
+                  <tbody className="divide-y divide-white/[0.08]">
                     {HIGH_DIVIDEND_STOCKS.map((stock, index) => (
-                      <tr key={stock.ticker} className="hover:bg-secondary/30 transition-colors">
-                        <td className="px-4 py-3 text-sm text-muted-foreground">{index + 1}</td>
+                      <tr key={stock.ticker} className="hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                        <td className="px-4 py-3 text-sm text-[#868f97] tabular-nums">{index + 1}</td>
                         <td className="px-4 py-3">
                           <Link
                             href={`/stock/${stock.ticker.toLowerCase()}`}
-                            className="font-bold text-green-500 hover:text-green-400 hover:underline"
+                            className="font-bold text-[#4ebe96] hover:text-[#4ebe96]/80 hover:underline motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                           >
                             {stock.ticker}
                           </Link>
                         </td>
                         <td className="px-4 py-3 text-sm">
-                          <Link href={`/stock/${stock.ticker.toLowerCase()}`} className="hover:underline">
+                          <Link href={`/stock/${stock.ticker.toLowerCase()}`} className="hover:underline motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                             {stock.name}
                           </Link>
                         </td>
-                        <td className="px-4 py-3 text-sm text-muted-foreground">{stock.sector}</td>
+                        <td className="px-4 py-3 text-sm text-[#868f97]">{stock.sector}</td>
                         <td className="px-4 py-3 text-right">
-                          <span className="font-bold text-green-500">{stock.dividendYield.toFixed(1)}%</span>
+                          <span className="font-bold text-[#4ebe96] tabular-nums">{stock.dividendYield.toFixed(1)}%</span>
                         </td>
-                        <td className="px-4 py-3 text-right text-sm">
-                          <span className={stock.payoutRatio > 80 ? 'text-yellow-500' : ''}>
+                        <td className="px-4 py-3 text-right text-sm tabular-nums">
+                          <span className={stock.payoutRatio > 80 ? 'text-[#ffa16c]' : ''}>
                             {stock.payoutRatio}%
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-right text-sm">
+                        <td className="px-4 py-3 text-right text-sm tabular-nums">
                           {stock.years >= 25 ? (
-                            <span className="text-blue-400" title="Dividend Aristocrat">{stock.years}</span>
+                            <span className="text-[#479ffa]" title="Dividend Aristocrat">{stock.years}</span>
                           ) : (
                             stock.years
                           )}
@@ -324,27 +324,27 @@ export default async function HighDividendYieldPage() {
 
           {/* Screening Criteria Explanation */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Our Screening Criteria</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Our Screening Criteria</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 text-green-400">Dividend Yield &gt; 3%</h3>
-                <p className="text-muted-foreground mb-4">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <h3 className="text-lg font-bold mb-3 text-[#4ebe96]">Dividend Yield &gt; 3%</h3>
+                <p className="text-[#868f97] mb-4">
                   We filter for stocks with dividend yields above 3%, which is approximately double the S&P 500
                   average yield of ~1.5%. This threshold identifies meaningful income producers while excluding
                   extremely high yields that may signal dividend risk.
                 </p>
-                <div className="text-sm bg-secondary/50 p-3 rounded-lg">
+                <div className="text-sm bg-white/[0.03] p-3 rounded-lg">
                   <strong>Formula:</strong> Dividend Yield = (Annual Dividend per Share / Stock Price) x 100
                 </div>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-lg font-bold mb-3 text-blue-400">Quality Indicators</h3>
-                <p className="text-muted-foreground mb-4">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <h3 className="text-lg font-bold mb-3 text-[#479ffa]">Quality Indicators</h3>
+                <p className="text-[#868f97] mb-4">
                   Beyond yield, we consider payout ratio sustainability (below 80% preferred), consecutive years
                   of dividend payments, and company fundamentals. Blue text indicates Dividend Aristocrats with
                   25+ years of consecutive increases.
                 </p>
-                <div className="text-sm bg-secondary/50 p-3 rounded-lg">
+                <div className="text-sm bg-white/[0.03] p-3 rounded-lg">
                   <strong>Watch:</strong> Yields above 8% may indicate dividend cut risk or declining stock price.
                 </div>
               </div>
@@ -353,8 +353,8 @@ export default async function HighDividendYieldPage() {
 
           {/* Dividend Aristocrats Section */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Dividend Aristocrats in This Screen</h2>
-            <p className="text-muted-foreground mb-4">
+            <h2 className="text-2xl font-bold mb-6 text-balance">Dividend Aristocrats in This Screen</h2>
+            <p className="text-[#868f97] mb-4">
               These stocks have increased dividends for 25+ consecutive years, demonstrating exceptional commitment
               to returning capital to shareholders through various economic cycles.
             </p>
@@ -363,14 +363,14 @@ export default async function HighDividendYieldPage() {
                 <Link
                   key={stock.ticker}
                   href={`/stock/${stock.ticker.toLowerCase()}`}
-                  className="bg-card p-4 rounded-xl border border-border hover:border-blue-500/50 transition-colors"
+                  className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="font-bold text-blue-400">{stock.ticker}</span>
-                    <span className="text-sm text-green-500">{stock.dividendYield}%</span>
+                    <span className="font-bold text-[#479ffa]">{stock.ticker}</span>
+                    <span className="text-sm text-[#4ebe96] tabular-nums">{stock.dividendYield}%</span>
                   </div>
-                  <p className="text-sm text-muted-foreground">{stock.name}</p>
-                  <p className="text-xs text-blue-400 mt-1">{stock.years} years of increases</p>
+                  <p className="text-sm text-[#868f97]">{stock.name}</p>
+                  <p className="text-xs text-[#479ffa] mt-1 tabular-nums">{stock.years} years of increases</p>
                 </Link>
               ))}
             </div>
@@ -378,15 +378,15 @@ export default async function HighDividendYieldPage() {
 
           {/* FAQs */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {faqs.map((faq, index) => (
-                <details key={index} className="bg-card p-6 rounded-xl border border-border group">
+                <details key={index} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl group hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   <summary className="font-bold cursor-pointer list-none flex items-center justify-between">
                     <span>{faq.question}</span>
-                    <span className="text-green-400 group-open:rotate-180 transition-transform">&#9660;</span>
+                    <span className="text-[#4ebe96] group-open:rotate-180 motion-safe:transition-transform motion-safe:duration-150">&#9660;</span>
                   </summary>
-                  <p className="text-muted-foreground mt-4 leading-relaxed">{faq.answer}</p>
+                  <p className="text-[#868f97] mt-4 leading-relaxed">{faq.answer}</p>
                 </details>
               ))}
             </div>
@@ -394,60 +394,60 @@ export default async function HighDividendYieldPage() {
 
           {/* Related Screeners */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Related Stock Screeners</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Related Stock Screeners</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <Link
                 href="/screener/low-pe-ratio"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <p className="text-2xl mb-2">&#128181;</p>
                 <p className="font-bold">Low P/E Ratio</p>
-                <p className="text-xs text-muted-foreground">Value stocks P/E &lt; 15</p>
+                <p className="text-xs text-[#868f97]">Value stocks P/E &lt; 15</p>
               </Link>
               <Link
                 href="/screener/large-cap"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <p className="text-2xl mb-2">&#127942;</p>
                 <p className="font-bold">Large Cap</p>
-                <p className="text-xs text-muted-foreground">Market cap &gt; $100B</p>
+                <p className="text-xs text-[#868f97]">Market cap &gt; $100B</p>
               </Link>
               <Link
                 href="/screener/high-growth"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <p className="text-2xl mb-2">&#128200;</p>
                 <p className="font-bold">High Growth</p>
-                <p className="text-xs text-muted-foreground">Revenue growth &gt; 20%</p>
+                <p className="text-xs text-[#868f97]">Revenue growth &gt; 20%</p>
               </Link>
               <Link
                 href="/screener/small-cap-gems"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-colors text-center"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 <p className="text-2xl mb-2">&#128142;</p>
                 <p className="font-bold">Small Cap Gems</p>
-                <p className="text-xs text-muted-foreground">Quality small caps</p>
+                <p className="text-xs text-[#868f97]">Quality small caps</p>
               </Link>
             </div>
           </section>
 
           {/* CTA */}
-          <section className="bg-gradient-to-br from-green-600/20 to-blue-600/20 p-8 rounded-xl border border-green-500/20 text-center">
-            <h2 className="text-2xl font-bold mb-4">Analyze Dividend Stocks with AI</h2>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-8 rounded-2xl text-center">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Analyze Dividend Stocks with AI</h2>
+            <p className="text-[#868f97] mb-6 max-w-2xl mx-auto">
               Go deeper with our AI-powered analysis. Get dividend sustainability scores, payout ratio trends,
               free cash flow coverage, and personalized dividend portfolio recommendations.
             </p>
             <div className="flex gap-4 justify-center flex-wrap">
               <Link
                 href="/dashboard"
-                className="bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+                className="bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-black px-8 py-3 rounded-2xl font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 Start Dividend Research
               </Link>
               <Link
                 href="/learn/dividend-investing"
-                className="bg-secondary hover:bg-secondary/80 px-8 py-3 rounded-lg font-medium transition-colors"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:bg-white/[0.05] hover:border-white/[0.15] px-8 py-3 rounded-2xl font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 Learn Dividend Investing
               </Link>

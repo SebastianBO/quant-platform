@@ -217,14 +217,14 @@ export default async function NewsPage() {
           __html: JSON.stringify(combinedSchemas),
         }}
       />
-      <main className="min-h-screen bg-background text-white pt-20">
+      <main className="min-h-screen bg-black text-white pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
           <div className="flex gap-8">
             <SEOSidebar />
             <div className="flex-1 min-w-0">
           {/* Breadcrumbs */}
           <nav className="text-sm text-[#868f97] mb-6">
-            <Link href="/" className="hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out">
+            <Link href="/" className="hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded">
               Home
             </Link>
             {' / '}
@@ -328,7 +328,7 @@ export default async function NewsPage() {
                 <Link
                   key={resource.href}
                   href={resource.href}
-                  className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out hover:shadow-lg group"
+                  className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] group"
                 >
                   <div className="text-4xl mb-4">{resource.icon}</div>
                   <h3 className="text-xl font-bold mb-2 group-hover:text-[#4ebe96] motion-safe:transition-colors motion-safe:duration-150 ease-out">
@@ -370,7 +370,7 @@ export default async function NewsPage() {
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white px-8 py-3 rounded-full font-medium motion-safe:transition-colors motion-safe:duration-150 ease-out"
+              className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white px-8 py-3 rounded-full font-medium motion-safe:transition-colors motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
             >
               Start Analyzing Stocks
             </Link>

@@ -140,13 +140,13 @@ export default function PERatioPage() {
         }}
       />
       <Header />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-dvh bg-black text-white pt-20">
         <div className="max-w-4xl mx-auto px-6 py-12">
           {/* Breadcrumbs */}
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-[#479ffa] motion-safe:motion-safe:transition-all motion-safe:duration-150 ease-out motion-safe:duration-150 ease-out">Home</Link>
             {' / '}
-            <Link href="/learn" className="hover:text-foreground">Learn</Link>
+            <Link href="/learn" className="hover:text-[#479ffa] motion-safe:motion-safe:transition-all motion-safe:duration-150 ease-out motion-safe:duration-150 ease-out">Learn</Link>
             {' / '}
             <span>P/E Ratio</span>
           </nav>
@@ -156,7 +156,7 @@ export default function PERatioPage() {
             <h1 className="text-4xl font-bold mb-4">
               What is P/E Ratio? Complete Guide
             </h1>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-xl text-[#868f97]">
               Master the price-to-earnings ratio - one of the most important and widely used metrics
               for stock valuation. Learn how to calculate, interpret, and use P/E ratios effectively.
             </p>
@@ -165,21 +165,21 @@ export default function PERatioPage() {
           {/* What is P/E */}
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-4">What is P/E Ratio?</h2>
-            <p className="text-muted-foreground mb-4">
+            <p className="text-[#868f97] mb-4">
               The Price-to-Earnings (P/E) ratio measures the relationship between a company's stock price and its
               earnings per share. It tells you how much investors are willing to pay for each dollar of earnings
               the company generates.
             </p>
-            <div className="bg-card p-6 rounded-xl border border-border mb-6">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 mb-6">
               <h3 className="text-xl font-bold mb-4 text-center">P/E Ratio Formula</h3>
-              <div className="bg-background p-4 rounded-lg font-mono text-lg text-center mb-4">
+              <div className="bg-black/50 p-4 rounded-2xl font-mono text-lg text-center mb-4">
                 P/E Ratio = Stock Price / Earnings Per Share (EPS)
               </div>
-              <div className="text-center text-sm text-muted-foreground">
+              <div className="text-center text-sm text-[#868f97]">
                 Alternative: P/E Ratio = Market Capitalization / Net Income
               </div>
             </div>
-            <p className="text-muted-foreground">
+            <p className="text-[#868f97]">
               For example, if a stock trades at $100 and the company earned $5 per share in the last year,
               the P/E ratio is 20. This means you're paying $20 for every $1 of annual earnings.
             </p>
@@ -190,14 +190,14 @@ export default function PERatioPage() {
             <h2 className="text-3xl font-bold mb-6">How to Calculate and Use P/E Ratio</h2>
             <div className="space-y-6">
               {howToSteps.map((step, index) => (
-                <div key={index} className="bg-card p-6 rounded-xl border border-border">
+                <div key={index} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
                   <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-10 h-10 bg-green-500 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                    <div className="flex-shrink-0 w-10 h-10 bg-[#4ebe96] text-white rounded-full flex items-center justify-center font-bold text-lg">
                       {index + 1}
                     </div>
                     <div>
                       <h3 className="text-xl font-bold mb-2">{step.name}</h3>
-                      <p className="text-muted-foreground">{step.text}</p>
+                      <p className="text-[#868f97]">{step.text}</p>
                     </div>
                   </div>
                 </div>
@@ -209,56 +209,56 @@ export default function PERatioPage() {
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-6">Trailing P/E vs Forward P/E</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-xl font-bold mb-3 text-green-500">Trailing P/E (TTM)</h3>
-                <p className="text-sm text-muted-foreground mb-4">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
+                <h3 className="text-xl font-bold mb-3 text-[#4ebe96]">Trailing P/E (TTM)</h3>
+                <p className="text-sm text-[#868f97] mb-4">
                   Based on actual earnings from the trailing twelve months (TTM).
                 </p>
                 <div className="mb-4">
                   <div className="text-sm font-bold mb-1">Formula:</div>
-                  <div className="bg-background p-2 rounded text-xs font-mono">
+                  <div className="bg-black/50 p-2 rounded text-xs font-mono">
                     Current Price / EPS (Last 12 Months)
                   </div>
                 </div>
                 <div className="text-sm space-y-2">
                   <div className="flex items-start gap-2">
-                    <span className="text-green-500">✓</span>
-                    <span className="text-muted-foreground">Based on real, reported data</span>
+                    <span className="text-[#4ebe96]">✓</span>
+                    <span className="text-[#868f97]">Based on real, reported data</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <span className="text-green-500">✓</span>
-                    <span className="text-muted-foreground">No estimation bias</span>
+                    <span className="text-[#4ebe96]">✓</span>
+                    <span className="text-[#868f97]">No estimation bias</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <span className="text-red-500">✗</span>
-                    <span className="text-muted-foreground">Backward-looking, may not reflect future</span>
+                    <span className="text-[#ff5c5c]">✗</span>
+                    <span className="text-[#868f97]">Backward-looking, may not reflect future</span>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-xl font-bold mb-3 text-blue-500">Forward P/E</h3>
-                <p className="text-sm text-muted-foreground mb-4">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
+                <h3 className="text-xl font-bold mb-3 text-[#479ffa]">Forward P/E</h3>
+                <p className="text-sm text-[#868f97] mb-4">
                   Based on estimated earnings for the next twelve months.
                 </p>
                 <div className="mb-4">
                   <div className="text-sm font-bold mb-1">Formula:</div>
-                  <div className="bg-background p-2 rounded text-xs font-mono">
+                  <div className="bg-black/50 p-2 rounded text-xs font-mono">
                     Current Price / Estimated EPS (Next 12 Months)
                   </div>
                 </div>
                 <div className="text-sm space-y-2">
                   <div className="flex items-start gap-2">
-                    <span className="text-green-500">✓</span>
-                    <span className="text-muted-foreground">Forward-looking, captures growth</span>
+                    <span className="text-[#4ebe96]">✓</span>
+                    <span className="text-[#868f97]">Forward-looking, captures growth</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <span className="text-green-500">✓</span>
-                    <span className="text-muted-foreground">Better for fast-growing companies</span>
+                    <span className="text-[#4ebe96]">✓</span>
+                    <span className="text-[#868f97]">Better for fast-growing companies</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <span className="text-red-500">✗</span>
-                    <span className="text-muted-foreground">Relies on estimates that may be wrong</span>
+                    <span className="text-[#ff5c5c]">✗</span>
+                    <span className="text-[#868f97]">Relies on estimates that may be wrong</span>
                   </div>
                 </div>
               </div>
@@ -268,31 +268,31 @@ export default function PERatioPage() {
           {/* PEG Ratio */}
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-6">Understanding PEG Ratio</h2>
-            <div className="bg-card p-6 rounded-xl border border-border">
-              <p className="text-muted-foreground mb-4">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
+              <p className="text-[#868f97] mb-4">
                 The PEG ratio improves upon P/E by incorporating growth, making it better for comparing
                 companies with different growth rates.
               </p>
-              <div className="bg-background p-4 rounded-lg font-mono text-center mb-6">
+              <div className="bg-black/50 p-4 rounded-2xl font-mono text-center mb-6">
                 PEG Ratio = P/E Ratio / Annual EPS Growth Rate
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div className="bg-green-500/10 p-4 rounded-lg border border-green-500/20">
-                  <div className="text-2xl font-bold text-green-500 mb-1">PEG &lt; 1.0</div>
-                  <div className="text-sm text-muted-foreground">Potentially undervalued</div>
+                <div className="bg-[#4ebe96]/10 p-4 rounded-2xl border border-#4ebe96]/20">
+                  <div className="text-2xl font-bold text-[#4ebe96] mb-1">PEG &lt; 1.0</div>
+                  <div className="text-sm text-[#868f97]">Potentially undervalued</div>
                 </div>
-                <div className="bg-blue-500/10 p-4 rounded-lg border border-blue-500/20">
-                  <div className="text-2xl font-bold text-blue-500 mb-1">PEG ≈ 1.0</div>
-                  <div className="text-sm text-muted-foreground">Fairly valued</div>
+                <div className="bg-[#479ffa]/10 p-4 rounded-2xl border border-[#479ffa]/20">
+                  <div className="text-2xl font-bold text-[#479ffa] mb-1">PEG ≈ 1.0</div>
+                  <div className="text-sm text-[#868f97]">Fairly valued</div>
                 </div>
-                <div className="bg-red-500/10 p-4 rounded-lg border border-red-500/20">
-                  <div className="text-2xl font-bold text-red-500 mb-1">PEG &gt; 2.0</div>
-                  <div className="text-sm text-muted-foreground">Potentially overvalued</div>
+                <div className="bg-[#ff5c5c]/10 p-4 rounded-2xl border border-[#ff5c5c]/20">
+                  <div className="text-2xl font-bold text-[#ff5c5c] mb-1">PEG &gt; 2.0</div>
+                  <div className="text-sm text-[#868f97]">Potentially overvalued</div>
                 </div>
               </div>
-              <div className="bg-blue-500/10 border border-blue-500/20 rounded p-4">
+              <div className="bg-[#479ffa]/10 border border-[#479ffa]/20 rounded p-4">
                 <p className="text-sm font-bold mb-2">Example:</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-[#868f97]">
                   Company A: P/E = 40, Growth = 40% → PEG = 1.0 (Fairly valued despite high P/E)
                   <br />
                   Company B: P/E = 20, Growth = 5% → PEG = 4.0 (Overvalued despite moderate P/E)
@@ -304,18 +304,18 @@ export default function PERatioPage() {
           {/* Industry Comparison */}
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-6">P/E Ratios by Industry</h2>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-[#868f97] mb-6">
               Different industries have different normal P/E ranges due to growth rates, capital requirements,
               and business models:
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {industryPE.map((item) => (
-                <div key={item.industry} className="bg-card p-4 rounded-xl border border-border">
+                <div key={item.industry} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-bold">{item.industry}</h3>
-                    <span className="text-green-500 font-mono text-sm">{item.avgPE}</span>
+                    <span className="text-[#4ebe96] font-mono text-sm">{item.avgPE}</span>
                   </div>
-                  <p className="text-xs text-muted-foreground">{item.reason}</p>
+                  <p className="text-xs text-[#868f97]">{item.reason}</p>
                 </div>
               ))}
             </div>
@@ -324,7 +324,7 @@ export default function PERatioPage() {
           {/* Example Stocks */}
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-6">Real P/E Ratio Examples</h2>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-[#868f97] mb-6">
               See how P/E ratios vary across different types of companies:
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -332,17 +332,17 @@ export default function PERatioPage() {
                 <Link
                   key={stock.ticker}
                   href={`/stock/${stock.ticker}`}
-                  className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                  className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out group"
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="font-bold text-lg group-hover:text-green-500 transition-colors">
+                    <span className="font-bold text-lg group-hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out">
                       {stock.ticker}
                     </span>
-                    <span className="text-sm font-mono text-green-500">{stock.pe}</span>
+                    <span className="text-sm font-mono text-[#4ebe96]">{stock.pe}</span>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-1">{stock.name}</p>
-                  <p className="text-xs text-muted-foreground">{stock.interpretation}</p>
-                  <div className="mt-2 text-xs text-green-500">View full analysis →</div>
+                  <p className="text-sm text-[#868f97] mb-1">{stock.name}</p>
+                  <p className="text-xs text-[#868f97]">{stock.interpretation}</p>
+                  <div className="mt-2 text-xs text-[#4ebe96]">View full analysis →</div>
                 </Link>
               ))}
             </div>
@@ -352,53 +352,53 @@ export default function PERatioPage() {
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-6">When to Use (and Not Use) P/E Ratio</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-green-500/20">
-                <h3 className="text-lg font-bold mb-4 text-green-500">P/E Ratio Works Well For:</h3>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+              <div className="bg-card p-6 rounded-xl border border-#4ebe96]/20">
+                <h3 className="text-lg font-bold mb-4 text-[#4ebe96]">P/E Ratio Works Well For:</h3>
+                <ul className="space-y-2 text-sm text-[#868f97]">
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">✓</span>
+                    <span className="text-[#4ebe96] mt-1">✓</span>
                     <span>Mature, profitable companies with stable earnings</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">✓</span>
+                    <span className="text-[#4ebe96] mt-1">✓</span>
                     <span>Comparing companies within the same industry</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">✓</span>
+                    <span className="text-[#4ebe96] mt-1">✓</span>
                     <span>Quick valuation screening</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">✓</span>
+                    <span className="text-[#4ebe96] mt-1">✓</span>
                     <span>Identifying potential value opportunities</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">✓</span>
+                    <span className="text-[#4ebe96] mt-1">✓</span>
                     <span>Historical valuation comparisons</span>
                   </li>
                 </ul>
               </div>
 
               <div className="bg-card p-6 rounded-xl border border-red-500/20">
-                <h3 className="text-lg font-bold mb-4 text-red-500">Avoid P/E Ratio For:</h3>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <h3 className="text-lg font-bold mb-4 text-[#ff5c5c]">Avoid P/E Ratio For:</h3>
+                <ul className="space-y-2 text-sm text-[#868f97]">
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">✗</span>
+                    <span className="text-[#ff5c5c] mt-1">✗</span>
                     <span>Unprofitable companies (negative earnings)</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">✗</span>
+                    <span className="text-[#ff5c5c] mt-1">✗</span>
                     <span>Companies with highly cyclical earnings</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">✗</span>
+                    <span className="text-[#ff5c5c] mt-1">✗</span>
                     <span>Companies with one-time earnings spikes/drops</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">✗</span>
+                    <span className="text-[#ff5c5c] mt-1">✗</span>
                     <span>Comparing companies across different industries</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">✗</span>
+                    <span className="text-[#ff5c5c] mt-1">✗</span>
                     <span>As the only valuation metric (use multiple methods)</span>
                   </li>
                 </ul>
@@ -411,9 +411,9 @@ export default function PERatioPage() {
             <h2 className="text-3xl font-bold mb-6">Frequently Asked Questions</h2>
             <div className="space-y-6">
               {faqs.map((faq, index) => (
-                <div key={index} className="bg-card p-6 rounded-xl border border-border">
+                <div key={index} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
                   <h3 className="text-lg font-bold mb-3">{faq.question}</h3>
-                  <p className="text-muted-foreground">{faq.answer}</p>
+                  <p className="text-[#868f97]">{faq.answer}</p>
                 </div>
               ))}
             </div>
@@ -425,23 +425,23 @@ export default function PERatioPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Link
                 href="/learn/stock-analysis"
-                className="bg-card p-6 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out group"
               >
-                <h3 className="text-xl font-bold mb-2 group-hover:text-green-500 transition-colors">
+                <h3 className="text-xl font-bold mb-2 group-hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   Complete Stock Analysis Guide
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-[#868f97]">
                   Learn all aspects of stock analysis beyond just P/E ratios.
                 </p>
               </Link>
               <Link
                 href="/learn/dcf-valuation"
-                className="bg-card p-6 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out group"
               >
-                <h3 className="text-xl font-bold mb-2 group-hover:text-green-500 transition-colors">
+                <h3 className="text-xl font-bold mb-2 group-hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   DCF Valuation
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-[#868f97]">
                   Learn intrinsic value calculation using discounted cash flow analysis.
                 </p>
               </Link>
@@ -449,17 +449,17 @@ export default function PERatioPage() {
           </section>
 
           {/* CTA */}
-          <section className="bg-gradient-to-br from-green-500/10 to-blue-500/10 p-8 rounded-xl border border-green-500/20 text-center">
+          <section className="bg-gradient-to-br from-[#4ebe96]/10 to-[#479ffa]/10 p-8 rounded-xl border border-#4ebe96]/20 text-center">
             <h2 className="text-2xl font-bold mb-4">
               Analyze P/E Ratios Instantly
             </h2>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-[#868f97] mb-6">
               Get instant P/E ratios, PEG ratios, and comprehensive valuation analysis for any stock.
               Compare to industry peers and historical averages automatically.
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+              className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black px-8 py-3 rounded-full font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
             >
               Start Free Analysis
             </Link>

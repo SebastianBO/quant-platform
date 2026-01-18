@@ -114,7 +114,7 @@ export default function ETFInvestingPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-background">
+      <main className="min-h-dvh bg-black">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -125,40 +125,40 @@ export default function ETFInvestingPage() {
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           {/* Breadcrumb */}
           <nav className="text-sm mb-6">
-            <ol className="flex items-center gap-2 text-muted-foreground">
-              <li><Link href="/" className="hover:text-foreground">Home</Link></li>
+            <ol className="flex items-center gap-2 text-[#868f97]">
+              <li><Link href="/" className="hover:text-[#479ffa] motion-safe:transition-all motion-safe:duration-150 ease-out">Home</Link></li>
               <li>/</li>
-              <li><Link href="/learn/how-to-invest" className="hover:text-foreground">Learn</Link></li>
+              <li><Link href="/learn/how-to-invest" className="hover:text-[#479ffa] motion-safe:transition-all motion-safe:duration-150 ease-out">Learn</Link></li>
               <li>/</li>
-              <li className="text-foreground">ETF Investing</li>
+              <li className="text-white">ETF Investing</li>
             </ol>
           </nav>
 
           <article className="prose dark:prose-invert max-w-none">
             <h1>ETF Investing Guide: How to Invest in ETFs for Beginners</h1>
 
-            <p className="lead text-xl text-muted-foreground">
+            <p className="lead text-xl text-[#868f97]">
               Exchange-Traded Funds (ETFs) have revolutionized investing by making it easy and affordable for anyone
               to build a diversified portfolio. This guide covers everything you need to know to start investing in ETFs.
             </p>
 
-            <div className="not-prose bg-card border rounded-lg p-6 my-8">
+            <div className="not-prose bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 my-8">
               <h2 className="text-lg font-semibold mb-4">Key Takeaways</h2>
               <ul className="space-y-2 text-sm">
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-0.5">✓</span>
+                  <span className="text-[#4ebe96] mt-0.5">✓</span>
                   <span>ETFs trade like stocks but provide instant diversification</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-0.5">✓</span>
+                  <span className="text-[#4ebe96] mt-0.5">✓</span>
                   <span>Start with broad market ETFs like VTI or VOO for core holdings</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-0.5">✓</span>
+                  <span className="text-[#4ebe96] mt-0.5">✓</span>
                   <span>Low expense ratios (under 0.20%) save thousands over time</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-0.5">✓</span>
+                  <span className="text-[#4ebe96] mt-0.5">✓</span>
                   <span>You can start investing with any amount using fractional shares</span>
                 </li>
               </ul>
@@ -254,14 +254,14 @@ export default function ETFInvestingPage() {
 
             <div className="not-prose space-y-4 my-8">
               {howToSteps.map((step, index) => (
-                <div key={index} className="bg-card border rounded-lg p-4">
+                <div key={index} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4">
                   <h3 className="font-semibold mb-2">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-primary text-primary-foreground rounded-full text-sm mr-2">
+                    <span className="inline-flex items-center justify-center w-6 h-6 bg-[#4ebe96] text-black rounded-full text-sm mr-2">
                       {index + 1}
                     </span>
                     {step.name}
                   </h3>
-                  <p className="text-muted-foreground text-sm">{step.text}</p>
+                  <p className="text-[#868f97] text-sm">{step.text}</p>
                 </div>
               ))}
             </div>
@@ -280,27 +280,27 @@ export default function ETFInvestingPage() {
                 <tbody>
                   <tr className="border-b">
                     <td className="py-2 px-4 font-medium">Trading</td>
-                    <td className="py-2 px-4 text-green-600">Throughout the day</td>
+                    <td className="py-2 px-4 text-[#4ebe96]">Throughout the day</td>
                     <td className="py-2 px-4">End of day only</td>
                   </tr>
                   <tr className="border-b">
                     <td className="py-2 px-4 font-medium">Minimum Investment</td>
-                    <td className="py-2 px-4 text-green-600">$1 (fractional shares)</td>
+                    <td className="py-2 px-4 text-[#4ebe96]">$1 (fractional shares)</td>
                     <td className="py-2 px-4">Often $1,000-3,000</td>
                   </tr>
                   <tr className="border-b">
                     <td className="py-2 px-4 font-medium">Expense Ratio</td>
-                    <td className="py-2 px-4 text-green-600">0.03% - 0.75%</td>
+                    <td className="py-2 px-4 text-[#4ebe96]">0.03% - 0.75%</td>
                     <td className="py-2 px-4">0.50% - 2.00%</td>
                   </tr>
                   <tr className="border-b">
                     <td className="py-2 px-4 font-medium">Tax Efficiency</td>
-                    <td className="py-2 px-4 text-green-600">More efficient</td>
+                    <td className="py-2 px-4 text-[#4ebe96]">More efficient</td>
                     <td className="py-2 px-4">Less efficient</td>
                   </tr>
                   <tr className="border-b">
                     <td className="py-2 px-4 font-medium">Price Transparency</td>
-                    <td className="py-2 px-4 text-green-600">Real-time</td>
+                    <td className="py-2 px-4 text-[#4ebe96]">Real-time</td>
                     <td className="py-2 px-4">End of day NAV</td>
                   </tr>
                 </tbody>
@@ -368,9 +368,9 @@ export default function ETFInvestingPage() {
             <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {faqs.map((faq, index) => (
-                <div key={index} className="bg-card border rounded-lg p-6">
+                <div key={index} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
                   <h3 className="font-semibold mb-2">{faq.question}</h3>
-                  <p className="text-muted-foreground">{faq.answer}</p>
+                  <p className="text-[#868f97]">{faq.answer}</p>
                 </div>
               ))}
             </div>
@@ -380,29 +380,29 @@ export default function ETFInvestingPage() {
           <div className="mt-12">
             <h2 className="text-2xl font-bold mb-6">Related Resources</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              <Link href="/etfs" className="block bg-card border rounded-lg p-4 hover:border-primary transition-colors">
+              <Link href="/etfs" className="block bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 <h3 className="font-semibold mb-1">Browse ETFs</h3>
-                <p className="text-sm text-muted-foreground">Explore ETFs by category and compare options</p>
+                <p className="text-sm text-[#868f97]">Explore ETFs by category and compare options</p>
               </Link>
-              <Link href="/calculators/compound-interest" className="block bg-card border rounded-lg p-4 hover:border-primary transition-colors">
+              <Link href="/calculators/compound-interest" className="block bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 <h3 className="font-semibold mb-1">Investment Calculator</h3>
-                <p className="text-sm text-muted-foreground">Calculate your potential investment growth</p>
+                <p className="text-sm text-[#868f97]">Calculate your potential investment growth</p>
               </Link>
-              <Link href="/learn/how-to-invest" className="block bg-card border rounded-lg p-4 hover:border-primary transition-colors">
+              <Link href="/learn/how-to-invest" className="block bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 <h3 className="font-semibold mb-1">How to Invest</h3>
-                <p className="text-sm text-muted-foreground">Complete beginner&apos;s guide to investing</p>
+                <p className="text-sm text-[#868f97]">Complete beginner&apos;s guide to investing</p>
               </Link>
-              <Link href="/learn/dividend-investing" className="block bg-card border rounded-lg p-4 hover:border-primary transition-colors">
+              <Link href="/learn/dividend-investing" className="block bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 <h3 className="font-semibold mb-1">Dividend Investing</h3>
-                <p className="text-sm text-muted-foreground">Build passive income with dividend ETFs</p>
+                <p className="text-sm text-[#868f97]">Build passive income with dividend ETFs</p>
               </Link>
-              <Link href="/insights/sp500-historical-returns" className="block bg-card border rounded-lg p-4 hover:border-primary transition-colors">
+              <Link href="/insights/sp500-historical-returns" className="block bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 <h3 className="font-semibold mb-1">S&P 500 Returns</h3>
-                <p className="text-sm text-muted-foreground">Historical stock market performance data</p>
+                <p className="text-sm text-[#868f97]">Historical stock market performance data</p>
               </Link>
-              <Link href="/screener" className="block bg-card border rounded-lg p-4 hover:border-primary transition-colors">
+              <Link href="/screener" className="block bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 <h3 className="font-semibold mb-1">Stock Screener</h3>
-                <p className="text-sm text-muted-foreground">Find stocks that match your criteria</p>
+                <p className="text-sm text-[#868f97]">Find stocks that match your criteria</p>
               </Link>
             </div>
           </div>

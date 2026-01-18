@@ -107,36 +107,36 @@ export default async function ConsensusPage({ params }: Props) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }} />
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-dvh bg-black text-white">
         <div className="max-w-4xl mx-auto px-6 py-12">
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded">Home</Link>
             {' / '}
-            <Link href="/dashboard" className="hover:text-foreground">Dashboard</Link>
+            <Link href="/dashboard" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded">Dashboard</Link>
             {' / '}
             <span>{symbol} Consensus</span>
           </nav>
 
-          <h1 className="text-4xl font-bold mb-4">{symbol} Analyst Consensus</h1>
-          <p className="text-xl text-muted-foreground mb-8">{companyName} - Consensus estimates & price targets</p>
+          <h1 className="text-4xl font-bold mb-4 text-balance">{symbol} Analyst Consensus</h1>
+          <p className="text-xl text-[#868f97] mb-8">{companyName} - Consensus estimates & price targets</p>
 
           {/* Current Price Card */}
-          <div className="bg-gradient-to-r from-blue-600/20 to-cyan-600/20 p-8 rounded-xl border border-blue-500/30 mb-8">
+          <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 mb-8 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
               <div>
-                <p className="text-muted-foreground text-sm mb-1">Current Price</p>
-                <p className="text-4xl font-bold">${price.toFixed(2)}</p>
+                <p className="text-[#868f97] text-sm mb-1">Current Price</p>
+                <p className="text-4xl font-bold tabular-nums">${price.toFixed(2)}</p>
               </div>
               <div>
-                <p className="text-muted-foreground text-sm mb-1">Today's Change</p>
-                <p className={`text-3xl font-bold ${snapshot.day_change_percent >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                <p className="text-[#868f97] text-sm mb-1">Today's Change</p>
+                <p className={`text-3xl font-bold tabular-nums ${snapshot.day_change_percent >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                   {snapshot.day_change_percent >= 0 ? '+' : ''}{snapshot.day_change_percent?.toFixed(2)}%
                 </p>
               </div>
               {snapshot.marketCap && (
                 <div>
-                  <p className="text-muted-foreground text-sm mb-1">Market Cap</p>
-                  <p className="text-2xl font-bold">${(snapshot.marketCap / 1e9).toFixed(2)}B</p>
+                  <p className="text-[#868f97] text-sm mb-1">Market Cap</p>
+                  <p className="text-2xl font-bold tabular-nums">${(snapshot.marketCap / 1e9).toFixed(2)}B</p>
                 </div>
               )}
             </div>
@@ -144,27 +144,27 @@ export default async function ConsensusPage({ params }: Props) {
 
           {/* Consensus Overview */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Consensus Estimates Overview</h2>
-            <div className="bg-card p-6 rounded-lg border border-border">
-              <p className="text-muted-foreground mb-4">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Consensus Estimates Overview</h2>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
+              <p className="text-[#868f97] mb-4">
                 Analyst consensus for {companyName} aggregates estimates from multiple Wall Street research analysts
                 to provide market expectations for revenue, earnings, and other key financial metrics.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div className="bg-secondary/50 p-4 rounded-lg">
-                  <p className="font-bold text-sm text-muted-foreground mb-1">EPS Consensus</p>
+                <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
+                  <p className="font-bold text-sm text-[#868f97] mb-1">EPS Consensus</p>
                   <p className="text-lg">Average earnings per share estimates</p>
                 </div>
-                <div className="bg-secondary/50 p-4 rounded-lg">
-                  <p className="font-bold text-sm text-muted-foreground mb-1">Revenue Consensus</p>
+                <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
+                  <p className="font-bold text-sm text-[#868f97] mb-1">Revenue Consensus</p>
                   <p className="text-lg">Average revenue forecasts</p>
                 </div>
-                <div className="bg-secondary/50 p-4 rounded-lg">
-                  <p className="font-bold text-sm text-muted-foreground mb-1">Price Target</p>
+                <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
+                  <p className="font-bold text-sm text-[#868f97] mb-1">Price Target</p>
                   <p className="text-lg">12-month consensus price target</p>
                 </div>
-                <div className="bg-secondary/50 p-4 rounded-lg">
-                  <p className="font-bold text-sm text-muted-foreground mb-1">Rating Distribution</p>
+                <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
+                  <p className="font-bold text-sm text-[#868f97] mb-1">Rating Distribution</p>
                   <p className="text-lg">Buy, hold, and sell ratings</p>
                 </div>
               </div>
@@ -173,7 +173,7 @@ export default async function ConsensusPage({ params }: Props) {
 
           {/* Consensus Metrics */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Key Consensus Metrics</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Key Consensus Metrics</h2>
             <div className="space-y-3">
               {[
                 { title: 'Earnings Consensus', desc: 'Average EPS estimates for current and future quarters' },
@@ -183,31 +183,31 @@ export default async function ConsensusPage({ params }: Props) {
                 { title: 'Margin Consensus', desc: 'Average estimates for profit margins' },
                 { title: 'Estimate Dispersion', desc: 'Variation in analyst estimates indicating uncertainty' },
               ].map((item, i) => (
-                <div key={i} className="bg-card p-4 rounded-lg border border-border">
+                <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
                   <p className="font-bold mb-1">{item.title}</p>
-                  <p className="text-sm text-muted-foreground">{item.desc}</p>
+                  <p className="text-sm text-[#868f97]">{item.desc}</p>
                 </div>
               ))}
             </div>
           </section>
 
           {/* CTA Section */}
-          <section className="bg-gradient-to-r from-green-600/20 to-emerald-600/20 p-8 rounded-xl border border-green-500/30 text-center mb-12">
-            <h2 className="text-2xl font-bold mb-4">Full {symbol} Analysis</h2>
-            <p className="text-muted-foreground mb-6">View detailed analyst ratings and estimates</p>
-            <Link href={`/dashboard?ticker=${symbol}`} className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 text-center mb-12 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Full {symbol} Analysis</h2>
+            <p className="text-[#868f97] mb-6">View detailed analyst ratings and estimates</p>
+            <Link href={`/dashboard?ticker=${symbol}`} className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:ring-offset-2 focus-visible:ring-offset-black">
               View Full Analysis
             </Link>
           </section>
 
           {/* FAQ Section */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {consensusFaqs.map((faq, i) => (
-                <div key={i} className="bg-card p-5 rounded-lg border border-border">
-                  <h3 className="font-bold text-lg mb-2">{faq.question}</h3>
-                  <p className="text-muted-foreground">{faq.answer}</p>
+                <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
+                  <h3 className="font-bold text-lg mb-2 text-balance">{faq.question}</h3>
+                  <p className="text-[#868f97]">{faq.answer}</p>
                 </div>
               ))}
             </div>

@@ -162,25 +162,25 @@ export default function BiotechScreenerPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema]) }}
       />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-screen bg-black text-foreground pt-20">
         <div className="max-w-6xl mx-auto px-6 py-12">
           <div className="flex gap-8">
             <SEOSidebar />
             <div className="flex-1 min-w-0">
               {/* Breadcrumb */}
-              <nav className="text-sm text-muted-foreground mb-6">
-                <Link href="/" className="hover:text-foreground">Home</Link>
+              <nav className="text-sm text-[#868f97] mb-6">
+                <Link href="/" className="hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out">Home</Link>
                 {' / '}
-                <Link href="/screener" className="hover:text-foreground">Screener</Link>
+                <Link href="/screener" className="hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out">Screener</Link>
                 {' / '}
                 <span>Biotech Catalysts</span>
               </nav>
 
               {/* Header */}
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              <h1 className="text-4xl md:text-5xl font-bold mb-4 text-balance">
                 Biotech Stock Screener
               </h1>
-              <p className="text-xl text-muted-foreground mb-8">
+              <p className="text-xl text-[#868f97] mb-8">
                 Screen biotech and pharmaceutical stocks by FDA catalysts, PDUFA dates, and clinical trial readouts.
                 Find high-impact investment opportunities in biotechnology.
               </p>
@@ -192,31 +192,31 @@ export default function BiotechScreenerPage() {
 
               {/* Screening Strategies */}
               <section className="mb-12">
-                <h2 className="text-3xl font-bold mb-6">Biotech Screening Strategies</h2>
+                <h2 className="text-3xl font-bold mb-6 text-balance">Biotech Screening Strategies</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {screeningStrategies.map((strategy, i) => (
-                    <div key={i} className="bg-card p-5 rounded-xl border border-border">
+                    <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
                       <h3 className="text-lg font-bold mb-2">{strategy.name}</h3>
-                      <p className="text-sm text-muted-foreground mb-3">{strategy.description}</p>
+                      <p className="text-sm text-[#868f97] mb-3">{strategy.description}</p>
                       <div className="space-y-2 text-sm mb-3">
                         <div className="flex justify-between">
-                          <span className="text-muted-foreground">Filters:</span>
-                          <span className="font-medium text-green-500">{strategy.filters}</span>
+                          <span className="text-[#868f97]">Filters:</span>
+                          <span className="font-medium text-[#4ebe96]">{strategy.filters}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-muted-foreground">Risk:</span>
+                          <span className="text-[#868f97]">Risk:</span>
                           <span className={`font-medium ${
-                            strategy.risk === 'Very High' ? 'text-red-500' :
-                            strategy.risk === 'High' ? 'text-orange-500' :
-                            'text-yellow-500'
+                            strategy.risk === 'Very High' ? 'text-[#ff5c5c]' :
+                            strategy.risk === 'High' ? 'text-[#ffa16c]' :
+                            'text-[#ffa16c]'
                           }`}>{strategy.risk}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-muted-foreground">Potential Reward:</span>
-                          <span className="font-medium text-green-500">{strategy.reward}</span>
+                          <span className="text-[#868f97]">Potential Reward:</span>
+                          <span className="font-medium text-[#4ebe96] tabular-nums">{strategy.reward}</span>
                         </div>
                       </div>
-                      <p className="text-xs text-muted-foreground border-t border-border pt-3">
+                      <p className="text-xs text-[#868f97] border-t border-white/[0.08] pt-3">
                         <span className="font-medium">Strategy: </span>{strategy.strategy}
                       </p>
                     </div>
@@ -226,15 +226,15 @@ export default function BiotechScreenerPage() {
 
               {/* Key Metrics */}
               <section className="mb-12">
-                <h2 className="text-3xl font-bold mb-6">Understanding Screener Metrics</h2>
+                <h2 className="text-3xl font-bold mb-6 text-balance">Understanding Screener Metrics</h2>
                 <div className="space-y-4">
                   {keyMetrics.map((item, i) => (
-                    <div key={i} className="bg-card p-5 rounded-xl border border-border">
-                      <h3 className="text-lg font-bold text-green-500 mb-2">{item.metric}</h3>
-                      <p className="text-sm text-muted-foreground mb-2">{item.description}</p>
+                    <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
+                      <h3 className="text-lg font-bold text-[#4ebe96] mb-2">{item.metric}</h3>
+                      <p className="text-sm text-[#868f97] mb-2">{item.description}</p>
                       <p className="text-sm">
                         <span className="font-medium">Why it matters: </span>
-                        <span className="text-muted-foreground">{item.importance}</span>
+                        <span className="text-[#868f97]">{item.importance}</span>
                       </p>
                     </div>
                   ))}
@@ -243,14 +243,14 @@ export default function BiotechScreenerPage() {
 
               {/* Risk Warning */}
               <section className="mb-12">
-                <div className="bg-gradient-to-br from-red-600/10 to-red-600/5 p-6 rounded-xl border border-red-500/20">
-                  <h3 className="text-lg font-bold text-red-500 mb-3">Biotech Investment Risk Warning</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
+                <div className="bg-gradient-to-br from-[#ff5c5c]/10 to-[#ff5c5c]/5 p-6 rounded-2xl border border-[#ff5c5c]/20">
+                  <h3 className="text-lg font-bold text-[#ff5c5c] mb-3">Biotech Investment Risk Warning</h3>
+                  <p className="text-sm text-[#868f97] mb-4">
                     Biotech stocks are among the most volatile investments. Clinical trials have high failure rates
-                    (only 10% of drugs in Phase 1 reach FDA approval), and binary events can cause 50-70% losses
+                    (only <span className="tabular-nums">10%</span> of drugs in Phase 1 reach FDA approval), and binary events can cause <span className="tabular-nums">50-70%</span> losses
                     overnight. This screener is for educational purposes only and does not constitute investment advice.
                   </p>
-                  <ul className="text-sm text-muted-foreground space-y-1">
+                  <ul className="text-sm text-[#868f97] space-y-1">
                     <li>• Never invest more than you can afford to lose in any single biotech position</li>
                     <li>• Diversify across multiple stocks, therapeutic areas, and development stages</li>
                     <li>• Consider using options for defined-risk binary event exposure</li>
@@ -261,15 +261,15 @@ export default function BiotechScreenerPage() {
 
               {/* FAQs */}
               <section className="mb-12">
-                <h2 className="text-3xl font-bold mb-6">Frequently Asked Questions</h2>
+                <h2 className="text-3xl font-bold mb-6 text-balance">Frequently Asked Questions</h2>
                 <div className="space-y-4">
                   {faqs.map((faq, i) => (
-                    <details key={i} className="bg-card p-6 rounded-xl border border-border group">
-                      <summary className="font-bold cursor-pointer list-none flex items-center justify-between">
+                    <details key={i} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 group motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
+                      <summary className="font-bold cursor-pointer list-none flex items-center justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded">
                         <span>{faq.question}</span>
-                        <span className="text-green-500 group-open:rotate-180 transition-transform">▼</span>
+                        <span className="text-[#4ebe96] group-open:rotate-180 motion-safe:transition-transform motion-safe:duration-150 ease-out">▼</span>
                       </summary>
-                      <p className="text-muted-foreground mt-4 leading-relaxed">
+                      <p className="text-[#868f97] mt-4 leading-relaxed">
                         {faq.answer}
                       </p>
                     </details>
@@ -278,27 +278,27 @@ export default function BiotechScreenerPage() {
               </section>
 
               {/* CTA */}
-              <section className="bg-gradient-to-br from-green-600/20 to-green-600/5 p-8 rounded-xl border border-green-500/20 text-center mb-12">
-                <h2 className="text-2xl font-bold mb-4">Track More Biotech Catalysts</h2>
-                <p className="text-muted-foreground mb-6">
+              <section className="bg-gradient-to-br from-[#4ebe96]/20 to-[#4ebe96]/5 p-8 rounded-2xl border border-[#4ebe96]/20 text-center mb-12">
+                <h2 className="text-2xl font-bold mb-4 text-balance">Track More Biotech Catalysts</h2>
+                <p className="text-[#868f97] mb-6">
                   View the full FDA calendar and get detailed stock analysis for any biotech company
                 </p>
                 <div className="flex flex-wrap justify-center gap-3">
                   <Link
                     href="/biotech/fda-calendar"
-                    className="bg-green-600 hover:bg-green-500 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                    className="bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-white px-6 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                   >
                     FDA Calendar
                   </Link>
                   <Link
                     href="/biotech"
-                    className="bg-secondary hover:bg-secondary/80 px-6 py-3 rounded-lg font-medium transition-colors"
+                    className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:bg-white/[0.05] hover:border-white/[0.15] px-6 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                   >
                     Biotech Overview
                   </Link>
                   <Link
                     href="/screener"
-                    className="bg-secondary hover:bg-secondary/80 px-6 py-3 rounded-lg font-medium transition-colors"
+                    className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] hover:bg-white/[0.05] hover:border-white/[0.15] px-6 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                   >
                     General Screener
                   </Link>
@@ -306,19 +306,19 @@ export default function BiotechScreenerPage() {
               </section>
 
               {/* Related Links */}
-              <section className="border-t border-border pt-8">
+              <section className="border-t border-white/[0.08] pt-8">
                 <h3 className="text-lg font-bold mb-4">Related Screeners & Tools</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  <Link href="/screener" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors text-center text-sm">
+                  <Link href="/screener" className="px-4 py-2 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-lg hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                     Stock Screener
                   </Link>
-                  <Link href="/biotech/fda-calendar" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors text-center text-sm">
+                  <Link href="/biotech/fda-calendar" className="px-4 py-2 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-lg hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                     FDA Calendar
                   </Link>
-                  <Link href="/biotech" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors text-center text-sm">
+                  <Link href="/biotech" className="px-4 py-2 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-lg hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                     Biotech Catalysts
                   </Link>
-                  <Link href="/earnings" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors text-center text-sm">
+                  <Link href="/earnings" className="px-4 py-2 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-lg hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out text-center text-sm focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                     Earnings Calendar
                   </Link>
                 </div>

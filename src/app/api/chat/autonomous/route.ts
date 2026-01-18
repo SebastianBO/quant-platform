@@ -15,7 +15,7 @@ import { createGateway } from 'ai'
 import { Agent } from '@/lib/ai/agent'
 import { logger } from '@/lib/logger'
 
-export const maxDuration = 120 // Longer timeout for autonomous research
+export const maxDuration = 60 // Reduced from 120 to save on Vercel billing
 
 // Vercel AI Gateway
 const gateway = createGateway({

@@ -109,46 +109,46 @@ export default async function EVEBITDAPage({ params }: Props) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }} />
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-black text-white">
         <div className="max-w-4xl mx-auto px-6 py-12">
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none rounded">Home</Link>
             {' / '}
-            <Link href="/dashboard" className="hover:text-foreground">Stocks</Link>
+            <Link href="/dashboard" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none rounded">Stocks</Link>
             {' / '}
             <span>{symbol} EV/EBITDA</span>
           </nav>
 
-          <h1 className="text-4xl font-bold mb-4">{symbol} EV/EBITDA Ratio</h1>
-          <p className="text-xl text-muted-foreground mb-8">{companyName} - Enterprise value to EBITDA multiple analysis</p>
+          <h1 className="text-4xl font-bold mb-4 text-balance">{symbol} EV/EBITDA Ratio</h1>
+          <p className="text-xl text-[#868f97] mb-8">{companyName} - Enterprise value to EBITDA multiple analysis</p>
 
           {/* EV/EBITDA Card */}
-          <div className="bg-gradient-to-r from-cyan-600/20 to-blue-600/20 p-8 rounded-xl border border-cyan-500/30 mb-8">
+          <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 mb-8">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
               <div>
-                <p className="text-muted-foreground text-sm mb-1">EV/EBITDA</p>
-                <p className="text-4xl font-bold">{evEbitda.toFixed(2)}x</p>
+                <p className="text-[#868f97] text-sm mb-1">EV/EBITDA</p>
+                <p className="text-4xl font-bold tabular-nums">{evEbitda.toFixed(2)}x</p>
               </div>
               <div>
-                <p className="text-muted-foreground text-sm mb-1">Enterprise Value</p>
-                <p className="text-3xl font-bold">${(enterpriseValue / 1e9).toFixed(2)}B</p>
+                <p className="text-[#868f97] text-sm mb-1">Enterprise Value</p>
+                <p className="text-3xl font-bold tabular-nums">${(enterpriseValue / 1e9).toFixed(2)}B</p>
               </div>
               <div>
-                <p className="text-muted-foreground text-sm mb-1">Current Price</p>
-                <p className="text-3xl font-bold">${price.toFixed(2)}</p>
+                <p className="text-[#868f97] text-sm mb-1">Current Price</p>
+                <p className="text-3xl font-bold tabular-nums">${price.toFixed(2)}</p>
               </div>
             </div>
           </div>
 
           {/* What is EV/EBITDA */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">What is EV/EBITDA?</h2>
-            <div className="bg-card p-6 rounded-lg border border-border">
-              <p className="text-muted-foreground mb-4">
+            <h2 className="text-2xl font-bold mb-4 text-balance">What is EV/EBITDA?</h2>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
+              <p className="text-[#868f97] mb-4">
                 EV/EBITDA (Enterprise Value to Earnings Before Interest, Taxes, Depreciation, and Amortization) is a valuation
                 multiple that compares a company's total value to its operating earnings.
               </p>
-              <p className="text-muted-foreground">
+              <p className="text-[#868f97]">
                 This ratio is preferred by many analysts because it's capital-structure neutral (accounts for debt),
                 eliminates accounting differences from depreciation, and provides a clearer view of operating performance.
               </p>
@@ -157,29 +157,29 @@ export default async function EVEBITDAPage({ params }: Props) {
 
           {/* EV/EBITDA Benchmarks */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">EV/EBITDA Benchmarks</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">EV/EBITDA Benchmarks</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-card p-5 rounded-lg border border-border">
-                <div className="text-green-500 text-2xl font-bold mb-2">&lt; 10x</div>
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <div className="text-[#4ebe96] text-2xl font-bold mb-2 tabular-nums">&lt; 10x</div>
                 <p className="font-bold mb-1">Attractive Valuation</p>
-                <p className="text-sm text-muted-foreground">May indicate value opportunity or distress</p>
+                <p className="text-sm text-[#868f97]">May indicate value opportunity or distress</p>
               </div>
-              <div className="bg-card p-5 rounded-lg border border-border">
-                <div className="text-yellow-500 text-2xl font-bold mb-2">10x - 15x</div>
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <div className="text-[#ffa16c] text-2xl font-bold mb-2 tabular-nums">10x - 15x</div>
                 <p className="font-bold mb-1">Fair Valuation</p>
-                <p className="text-sm text-muted-foreground">Typical range for established companies</p>
+                <p className="text-sm text-[#868f97]">Typical range for established companies</p>
               </div>
-              <div className="bg-card p-5 rounded-lg border border-border">
-                <div className="text-orange-500 text-2xl font-bold mb-2">&gt; 15x</div>
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <div className="text-[#ffa16c] text-2xl font-bold mb-2 tabular-nums">&gt; 15x</div>
                 <p className="font-bold mb-1">Premium Valuation</p>
-                <p className="text-sm text-muted-foreground">High growth expectations or sector premium</p>
+                <p className="text-sm text-[#868f97]">High growth expectations or sector premium</p>
               </div>
             </div>
           </section>
 
           {/* Advantages */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Why EV/EBITDA is Powerful</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Why EV/EBITDA is Powerful</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
                 { title: 'Capital Structure Neutral', desc: 'Accounts for both equity and debt financing' },
@@ -187,31 +187,31 @@ export default async function EVEBITDAPage({ params }: Props) {
                 { title: 'Operating Focus', desc: 'Excludes non-operating items like D&A' },
                 { title: 'M&A Standard', desc: 'Industry standard for acquisition valuations' },
               ].map((item, i) => (
-                <div key={i} className="bg-card p-4 rounded-lg border border-border">
+                <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   <p className="font-bold mb-1">{item.title}</p>
-                  <p className="text-sm text-muted-foreground">{item.desc}</p>
+                  <p className="text-sm text-[#868f97]">{item.desc}</p>
                 </div>
               ))}
             </div>
           </section>
 
           {/* CTA */}
-          <section className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 p-8 rounded-xl border border-purple-500/30 text-center mb-12">
-            <h2 className="text-2xl font-bold mb-4">Full EBITDA Analysis for {symbol}</h2>
-            <p className="text-muted-foreground mb-6">View detailed EBITDA trends, margins, and comprehensive valuation metrics</p>
-            <Link href={`/dashboard?ticker=${symbol}&tab=financials`} className="inline-block bg-purple-600 hover:bg-purple-500 text-white px-8 py-3 rounded-lg font-medium">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 text-center mb-12">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Full EBITDA Analysis for {symbol}</h2>
+            <p className="text-[#868f97] mb-6">View detailed EBITDA trends, margins, and comprehensive valuation metrics</p>
+            <Link href={`/dashboard?ticker=${symbol}&tab=financials`} className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/90 text-black px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none">
               View EBITDA Details
             </Link>
           </section>
 
           {/* FAQ */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {evEbitdaFaqs.map((faq, i) => (
-                <div key={i} className="bg-card p-5 rounded-lg border border-border">
-                  <h3 className="font-bold text-lg mb-2">{faq.question}</h3>
-                  <p className="text-muted-foreground">{faq.answer}</p>
+                <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5">
+                  <h3 className="font-bold text-lg mb-2 text-balance">{faq.question}</h3>
+                  <p className="text-[#868f97]">{faq.answer}</p>
                 </div>
               ))}
             </div>

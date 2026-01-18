@@ -161,37 +161,37 @@ export default async function BullCasePage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
       />
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-black text-white">
         <div className="max-w-4xl mx-auto px-6 py-12">
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Home</Link>
             {' / '}
-            <Link href="/dashboard" className="hover:text-foreground">Stocks</Link>
+            <Link href="/dashboard" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Stocks</Link>
             {' / '}
             <span>{symbol} Bull Case</span>
           </nav>
 
-          <h1 className="text-4xl font-bold mb-4">
+          <h1 className="text-4xl font-bold mb-4 text-balance">
             {symbol} Bull Case
           </h1>
-          <p className="text-xl text-muted-foreground mb-8">
+          <p className="text-xl text-[#868f97] mb-8">
             Why {companyName} stock could soar
           </p>
 
           {/* Bull Case Strength */}
-          <div className="bg-green-500/10 border-green-500/30 p-8 rounded-xl border mb-8">
+          <div className="bg-white/[0.03] backdrop-blur-[10px] border border-[#4ebe96]/30 p-8 rounded-2xl mb-8">
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-muted-foreground mb-2">Bull Case Strength</p>
-                <p className="text-5xl font-bold text-green-500">{bullRating}</p>
-                <p className="text-sm text-muted-foreground mt-2">
+                <p className="text-[#868f97] mb-2">Bull Case Strength</p>
+                <p className="text-5xl font-bold text-[#4ebe96]">{bullRating}</p>
+                <p className="text-sm text-[#868f97] mt-2 tabular-nums">
                   Conviction Score: {bullStrength.toFixed(1)}/6.5
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-muted-foreground mb-1">Current Price</p>
-                <p className="text-4xl font-bold">${price.toFixed(2)}</p>
-                <p className="text-sm text-green-500 mt-2">
+                <p className="text-[#868f97] mb-1">Current Price</p>
+                <p className="text-4xl font-bold tabular-nums">${price.toFixed(2)}</p>
+                <p className="text-sm text-[#4ebe96] mt-2">
                   Potential: +25% to +100%
                 </p>
               </div>
@@ -200,53 +200,53 @@ export default async function BullCasePage({ params }: Props) {
 
           {/* Upside Scenarios */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Upside Price Scenarios</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Upside Price Scenarios</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-card p-6 rounded-lg border border-green-500/30">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                  <p className="text-sm text-muted-foreground">Conservative</p>
+                  <div className="w-3 h-3 rounded-full bg-[#4ebe96]"></div>
+                  <p className="text-sm text-[#868f97]">Conservative</p>
                 </div>
-                <p className="text-3xl font-bold text-green-500">${conservativeUpside.toFixed(2)}</p>
-                <p className="text-sm text-green-400 mt-1">+25% upside</p>
-                <p className="text-xs text-muted-foreground mt-2">Modest growth continuation</p>
+                <p className="text-3xl font-bold text-[#4ebe96] tabular-nums">${conservativeUpside.toFixed(2)}</p>
+                <p className="text-sm text-[#4ebe96] mt-1">+25% upside</p>
+                <p className="text-xs text-[#868f97] mt-2">Modest growth continuation</p>
               </div>
 
-              <div className="bg-green-500/10 p-6 rounded-lg border border-green-500/30">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-[#4ebe96]/30 p-6 rounded-2xl hover:bg-white/[0.05] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                  <p className="text-sm text-muted-foreground">Moderate (Base)</p>
+                  <div className="w-3 h-3 rounded-full bg-[#4ebe96]"></div>
+                  <p className="text-sm text-[#868f97]">Moderate (Base)</p>
                 </div>
-                <p className="text-3xl font-bold text-green-500">${moderateUpside.toFixed(2)}</p>
-                <p className="text-sm text-green-400 mt-1">+50% upside</p>
-                <p className="text-xs text-muted-foreground mt-2">Strong execution & market recognition</p>
+                <p className="text-3xl font-bold text-[#4ebe96] tabular-nums">${moderateUpside.toFixed(2)}</p>
+                <p className="text-sm text-[#4ebe96] mt-1">+50% upside</p>
+                <p className="text-xs text-[#868f97] mt-2">Strong execution & market recognition</p>
               </div>
 
-              <div className="bg-card p-6 rounded-lg border border-green-500/30">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                  <p className="text-sm text-muted-foreground">Aggressive</p>
+                  <div className="w-3 h-3 rounded-full bg-[#4ebe96]"></div>
+                  <p className="text-sm text-[#868f97]">Aggressive</p>
                 </div>
-                <p className="text-3xl font-bold text-green-500">${aggressiveUpside.toFixed(2)}</p>
-                <p className="text-sm text-green-400 mt-1">+100% upside</p>
-                <p className="text-xs text-muted-foreground mt-2">All cylinders firing, multiple expansion</p>
+                <p className="text-3xl font-bold text-[#4ebe96] tabular-nums">${aggressiveUpside.toFixed(2)}</p>
+                <p className="text-sm text-[#4ebe96] mt-1">+100% upside</p>
+                <p className="text-xs text-[#868f97] mt-2">All cylinders firing, multiple expansion</p>
               </div>
             </div>
           </section>
 
           {/* Growth Catalysts */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Key Growth Catalysts</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Key Growth Catalysts</h2>
             <div className="space-y-4">
               {revenueGrowth > 0.1 && (
-                <div className="bg-card p-6 rounded-lg border border-border">
+                <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-1">
-                      <span className="text-green-500">1</span>
+                    <div className="w-8 h-8 rounded-full bg-[#4ebe96]/20 flex items-center justify-center flex-shrink-0 mt-1">
+                      <span className="text-[#4ebe96]">1</span>
                     </div>
                     <div>
                       <h3 className="font-bold mb-2">Revenue Momentum</h3>
-                      <p className="text-muted-foreground">
+                      <p className="text-[#868f97]">
                         Exceptional {(revenueGrowth * 100).toFixed(1)}% revenue growth demonstrates strong market demand.
                         If this accelerates or sustains, it could drive significant multiple expansion and stock appreciation.
                       </p>
@@ -255,14 +255,14 @@ export default async function BullCasePage({ params }: Props) {
                 </div>
               )}
 
-              <div className="bg-card p-6 rounded-lg border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-green-500">{revenueGrowth > 0.1 ? '2' : '1'}</span>
+                  <div className="w-8 h-8 rounded-full bg-[#4ebe96]/20 flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-[#4ebe96]">{revenueGrowth > 0.1 ? '2' : '1'}</span>
                   </div>
                   <div>
                     <h3 className="font-bold mb-2">Market Expansion</h3>
-                    <p className="text-muted-foreground">
+                    <p className="text-[#868f97]">
                       {sector ? `The ${sector} sector is experiencing secular growth trends. ` : ''}
                       {companyName} is well-positioned to capture market share through innovation, geographic expansion,
                       and new product launches. Total addressable market expansion could drive years of growth.
@@ -272,14 +272,14 @@ export default async function BullCasePage({ params }: Props) {
               </div>
 
               {pe > 0 && pe < 25 && (
-                <div className="bg-card p-6 rounded-lg border border-border">
+                <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-1">
-                      <span className="text-green-500">{revenueGrowth > 0.1 ? '3' : '2'}</span>
+                    <div className="w-8 h-8 rounded-full bg-[#4ebe96]/20 flex items-center justify-center flex-shrink-0 mt-1">
+                      <span className="text-[#4ebe96]">{revenueGrowth > 0.1 ? '3' : '2'}</span>
                     </div>
                     <div>
                       <h3 className="font-bold mb-2">Valuation Re-rating</h3>
-                      <p className="text-muted-foreground">
+                      <p className="text-[#868f97]">
                         At a P/E of {pe.toFixed(1)}, {symbol} trades below market averages. As the market recognizes
                         the quality of earnings and growth trajectory, the stock could re-rate higher. Even modest
                         multiple expansion to 30-35x earnings would drive substantial appreciation.
@@ -289,14 +289,14 @@ export default async function BullCasePage({ params }: Props) {
                 </div>
               )}
 
-              <div className="bg-card p-6 rounded-lg border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-green-500">{(revenueGrowth > 0.1 ? 1 : 0) + (pe < 25 ? 1 : 0) + 3}</span>
+                  <div className="w-8 h-8 rounded-full bg-[#4ebe96]/20 flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-[#4ebe96]">{(revenueGrowth > 0.1 ? 1 : 0) + (pe < 25 ? 1 : 0) + 3}</span>
                   </div>
                   <div>
                     <h3 className="font-bold mb-2">Margin Expansion</h3>
-                    <p className="text-muted-foreground">
+                    <p className="text-[#868f97]">
                       Operating leverage, economies of scale, and efficiency improvements could drive margin expansion.
                       Even 200-300 basis points of margin improvement would significantly boost earnings and
                       justify higher valuations.
@@ -305,14 +305,14 @@ export default async function BullCasePage({ params }: Props) {
                 </div>
               </div>
 
-              <div className="bg-card p-6 rounded-lg border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-green-500">{(revenueGrowth > 0.1 ? 1 : 0) + (pe < 25 ? 1 : 0) + 4}</span>
+                  <div className="w-8 h-8 rounded-full bg-[#4ebe96]/20 flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-[#4ebe96]">{(revenueGrowth > 0.1 ? 1 : 0) + (pe < 25 ? 1 : 0) + 4}</span>
                   </div>
                   <div>
                     <h3 className="font-bold mb-2">Competitive Advantages</h3>
-                    <p className="text-muted-foreground">
+                    <p className="text-[#868f97]">
                       {marketCap > 50e9 ? 'Market leadership, ' : ''}{sector === 'Technology' ? 'technological innovation, ' : ''}
                       {industry ? `${industry} expertise, ` : ''}and brand strength create sustainable competitive moats.
                       These advantages compound over time, driving long-term outperformance.
@@ -325,32 +325,32 @@ export default async function BullCasePage({ params }: Props) {
 
           {/* Bull Case Timeline */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Potential Timeline to Upside</h2>
-            <div className="bg-card p-6 rounded-lg border border-border">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Potential Timeline to Upside</h2>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-6 rounded-2xl">
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
-                  <div className="text-green-500 font-bold">6-12M</div>
+                  <div className="text-[#4ebe96] font-bold tabular-nums">6-12M</div>
                   <div className="flex-1">
                     <h4 className="font-bold mb-1">Near-Term Catalysts</h4>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-[#868f97]">
                       Earnings beats, positive guidance, new product announcements, analyst upgrades
                     </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
-                  <div className="text-green-500 font-bold">1-2Y</div>
+                  <div className="text-[#4ebe96] font-bold tabular-nums">1-2Y</div>
                   <div className="flex-1">
                     <h4 className="font-bold mb-1">Medium-Term Growth</h4>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-[#868f97]">
                       Market share gains, margin expansion, multiple re-rating, sustained growth demonstration
                     </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
-                  <div className="text-green-500 font-bold">3-5Y</div>
+                  <div className="text-[#4ebe96] font-bold tabular-nums">3-5Y</div>
                   <div className="flex-1">
                     <h4 className="font-bold mb-1">Long-Term Value Creation</h4>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-[#868f97]">
                       Market leadership solidified, compounding returns, potential inclusion in major indices
                     </p>
                   </div>
@@ -361,36 +361,36 @@ export default async function BullCasePage({ params }: Props) {
 
           {/* What Could Go Right */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Best Case Scenario</h2>
-            <div className="bg-green-500/10 p-6 rounded-lg border border-green-500/30">
-              <p className="text-muted-foreground leading-relaxed mb-4">
-                In the best case scenario, {symbol} could reach ${aggressiveUpside.toFixed(2)} (100% upside) through:
+            <h2 className="text-2xl font-bold mb-4 text-balance">Best Case Scenario</h2>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-[#4ebe96]/30 p-6 rounded-2xl">
+              <p className="text-[#868f97] leading-relaxed mb-4">
+                In the best case scenario, {symbol} could reach <span className="tabular-nums">${aggressiveUpside.toFixed(2)}</span> (100% upside) through:
               </p>
-              <ul className="space-y-2 text-muted-foreground">
+              <ul className="space-y-2 text-[#868f97]">
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-1">✓</span>
+                  <span className="text-[#4ebe96] mt-1">✓</span>
                   <span>Revenue growth accelerates to {(Math.max(revenueGrowth * 1.5, 0.25) * 100).toFixed(0)}%+ annually</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-1">✓</span>
+                  <span className="text-[#4ebe96] mt-1">✓</span>
                   <span>Profit margins expand by 300-500 basis points</span>
                 </li>
                 {pe > 0 && pe < 30 && (
                   <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">✓</span>
+                    <span className="text-[#4ebe96] mt-1">✓</span>
                     <span>P/E multiple expands from {pe.toFixed(1)} to 35-40x on growth recognition</span>
                   </li>
                 )}
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-1">✓</span>
+                  <span className="text-[#4ebe96] mt-1">✓</span>
                   <span>New products/services exceed expectations</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-1">✓</span>
+                  <span className="text-[#4ebe96] mt-1">✓</span>
                   <span>Strategic partnerships or M&A create value</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500 mt-1">✓</span>
+                  <span className="text-[#4ebe96] mt-1">✓</span>
                   <span>{sector ? `${sector} sector` : 'Market'} tailwinds strengthen</span>
                 </li>
               </ul>
@@ -398,21 +398,21 @@ export default async function BullCasePage({ params }: Props) {
           </section>
 
           {/* CTA */}
-          <section className="bg-gradient-to-r from-green-600/20 to-blue-600/20 p-8 rounded-xl border border-green-500/30 text-center mb-12">
-            <h2 className="text-2xl font-bold mb-4">Balance Risk & Reward for {symbol}</h2>
-            <p className="text-muted-foreground mb-6">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-8 rounded-2xl text-center mb-12">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Balance Risk & Reward for {symbol}</h2>
+            <p className="text-[#868f97] mb-6">
               Every bull case has risks. See the full picture with our complete analysis
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href={`/bear-case/${symbol.toLowerCase()}`}
-                className="inline-block bg-red-600 hover:bg-red-500 text-white px-8 py-3 rounded-lg font-medium"
+                className="inline-block bg-[#ff5c5c] hover:bg-[#ff5c5c]/80 text-white px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#ff5c5c]"
               >
                 View Bear Case
               </Link>
               <Link
                 href={`/stock/${symbol.toLowerCase()}`}
-                className="inline-block bg-secondary hover:bg-secondary/80 px-8 py-3 rounded-lg font-medium"
+                className="inline-block bg-white/[0.03] hover:bg-white/[0.05] border border-white/[0.08] hover:border-white/[0.15] px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 Full Analysis
               </Link>
@@ -421,19 +421,19 @@ export default async function BullCasePage({ params }: Props) {
 
           {/* FAQ Section */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {faqs.map((faq, index) => (
-                <div key={index} className="bg-card p-5 rounded-lg border border-border">
+                <div key={index} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-5 rounded-2xl hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   <h3 className="font-bold text-lg mb-2">{faq.question}</h3>
-                  <p className="text-muted-foreground">{faq.answer}</p>
+                  <p className="text-[#868f97]">{faq.answer}</p>
                 </div>
               ))}
             </div>
           </section>
 
           {/* Disclaimer */}
-          <div className="text-xs text-muted-foreground bg-secondary/30 p-4 rounded-lg mb-8">
+          <div className="text-xs text-[#868f97] bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] p-4 rounded-2xl mb-8">
             <p><strong>Disclaimer:</strong> This bull case presents an optimistic scenario and should not be considered financial advice. Actual results may differ significantly. The upside potential described assumes favorable outcomes that may not materialize. Always consider both bull and bear cases, conduct your own research, and consult a financial advisor before making investment decisions. Past performance does not guarantee future results.</p>
           </div>
 

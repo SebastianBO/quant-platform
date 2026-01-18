@@ -414,24 +414,24 @@ export default function StockPredictions2026Page() {
           __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema, itemListSchema, howToSchema]),
         }}
       />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-screen bg-black text-white pt-20">
         <div className="max-w-5xl mx-auto px-6 py-12">
           {/* Breadcrumb */}
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white">Home</Link>
             {' / '}
-            <Link href="/insights" className="hover:text-foreground">Insights</Link>
+            <Link href="/insights" className="hover:text-white">Insights</Link>
             {' / '}
             <span>Stock Predictions 2026</span>
           </nav>
 
           {/* Hero Section */}
           <header className="mb-12">
-            <p className="text-green-500 font-medium mb-2">Last Updated: January 7, 2026</p>
+            <p className="text-[#4ebe96] font-medium mb-2">Last Updated: January 7, 2026</p>
             <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
               Stock Market Predictions 2026: Complete Guide
             </h1>
-            <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+            <p className="text-xl text-[#868f97] mb-8 leading-relaxed">
               Comprehensive analysis of the stock market outlook for 2026. Our AI-powered research covers the S&P 500 forecast,
               top 10 stocks to buy, sectors to watch, stocks to avoid, and our prediction methodology. Based on fundamental
               analysis, quantitative models, and expert insights.
@@ -439,36 +439,36 @@ export default function StockPredictions2026Page() {
 
             {/* Key Stats Summary */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              <div className="bg-green-600/20 p-4 rounded-lg border border-green-500/30 text-center">
-                <p className="text-3xl font-bold text-green-500">6,900</p>
-                <p className="text-sm text-muted-foreground">S&P 500 Target</p>
+              <div className="bg-[#4ebe96]/20 p-4 rounded-2xl border border-[#4ebe96]/30 text-center">
+                <p className="text-3xl font-bold text-[#4ebe96]">6,900</p>
+                <p className="text-sm text-[#868f97]">S&P 500 Target</p>
               </div>
-              <div className="bg-green-600/20 p-4 rounded-lg border border-green-500/30 text-center">
-                <p className="text-3xl font-bold text-green-500">+16%</p>
-                <p className="text-sm text-muted-foreground">Expected Return</p>
+              <div className="bg-[#4ebe96]/20 p-4 rounded-2xl border border-[#4ebe96]/30 text-center">
+                <p className="text-3xl font-bold text-[#4ebe96]">+16%</p>
+                <p className="text-sm text-[#868f97]">Expected Return</p>
               </div>
-              <div className="bg-green-600/20 p-4 rounded-lg border border-green-500/30 text-center">
-                <p className="text-3xl font-bold text-green-500">+11%</p>
-                <p className="text-sm text-muted-foreground">Earnings Growth</p>
+              <div className="bg-[#4ebe96]/20 p-4 rounded-2xl border border-[#4ebe96]/30 text-center">
+                <p className="text-3xl font-bold text-[#4ebe96]">+11%</p>
+                <p className="text-sm text-[#868f97]">Earnings Growth</p>
               </div>
-              <div className="bg-green-600/20 p-4 rounded-lg border border-green-500/30 text-center">
-                <p className="text-3xl font-bold text-green-500">3.50%</p>
-                <p className="text-sm text-muted-foreground">Fed Funds Target</p>
+              <div className="bg-[#4ebe96]/20 p-4 rounded-2xl border border-[#4ebe96]/30 text-center">
+                <p className="text-3xl font-bold text-[#4ebe96]">3.50%</p>
+                <p className="text-sm text-[#868f97]">Fed Funds Target</p>
               </div>
             </div>
           </header>
 
           {/* Table of Contents */}
-          <nav className="bg-card p-6 rounded-xl border border-border mb-12">
+          <nav className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] mb-12">
             <h2 className="font-bold text-lg mb-4">Table of Contents</h2>
             <ol className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {tableOfContents.map((item, index) => (
                 <li key={item.id}>
                   <a
                     href={`#${item.id}`}
-                    className="text-muted-foreground hover:text-green-500 transition-colors flex items-center gap-2"
+                    className="text-[#868f97] hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out flex items-center gap-2"
                   >
-                    <span className="text-green-500 font-mono text-sm">{index + 1}.</span>
+                    <span className="text-[#4ebe96] font-mono text-sm">{index + 1}.</span>
                     {item.title}
                   </a>
                 </li>
@@ -481,19 +481,19 @@ export default function StockPredictions2026Page() {
             <h2 className="text-3xl font-bold mb-6">2026 Market Outlook</h2>
 
             <div className="prose prose-invert max-w-none mb-8">
-              <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+              <p className="text-lg text-[#868f97] leading-relaxed mb-6">
                 The 2026 stock market outlook is <strong>cautiously optimistic</strong>. We project the S&P 500 to reach
                 approximately 6,900 points by year-end, representing a 16% gain from current levels. This forecast is
                 supported by several converging tailwinds: Federal Reserve rate cuts, AI-driven corporate productivity gains,
                 resilient consumer spending, and continued earnings growth.
               </p>
-              <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+              <p className="text-lg text-[#868f97] leading-relaxed mb-6">
                 The macroeconomic backdrop favors equities in 2026. The Federal Reserve is expected to cut interest rates
                 by 75-100 basis points as inflation continues declining toward the 2% target. Lower rates reduce corporate
                 borrowing costs, support housing activity, and increase the present value of future cash flows - benefiting
                 growth stocks in particular.
               </p>
-              <p className="text-lg text-muted-foreground leading-relaxed">
+              <p className="text-lg text-[#868f97] leading-relaxed">
                 Artificial intelligence represents the most significant driver of corporate earnings growth in 2026.
                 Enterprises are moving from AI experimentation to production deployment, generating tangible productivity
                 gains. Technology spending on AI infrastructure, software, and services is growing 25%+ annually, creating
@@ -502,8 +502,8 @@ export default function StockPredictions2026Page() {
             </div>
 
             {/* Market Forecasts Table */}
-            <div className="bg-card rounded-xl border border-border overflow-hidden mb-8">
-              <div className="p-4 bg-secondary/50 border-b border-border">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] rounded-2xl border border-white/[0.08] overflow-hidden mb-8">
+              <div className="p-4 bg-white/[0.03]/50 border-b border-white/[0.08]">
                 <h3 className="font-bold text-lg">Key Market Forecasts for 2026</h3>
               </div>
               <div className="divide-y divide-border">
@@ -513,38 +513,38 @@ export default function StockPredictions2026Page() {
                       <div>
                         <h4 className="font-bold text-lg">{forecast.metric}</h4>
                         <div className="flex flex-wrap gap-4 text-sm mt-1">
-                          <span className="text-muted-foreground">Current: <span className="text-foreground">{forecast.current}</span></span>
-                          <span className="text-muted-foreground">Target Range: <span className="text-green-500 font-medium">{forecast.targetRange}</span></span>
-                          <span className="text-muted-foreground">Base Case: <span className="text-green-500 font-medium">{forecast.baseCase}</span></span>
+                          <span className="text-[#868f97]">Current: <span className="text-foreground">{forecast.current}</span></span>
+                          <span className="text-[#868f97]">Target Range: <span className="text-[#4ebe96] font-medium">{forecast.targetRange}</span></span>
+                          <span className="text-[#868f97]">Base Case: <span className="text-[#4ebe96] font-medium">{forecast.baseCase}</span></span>
                         </div>
                       </div>
                     </div>
-                    <p className="text-sm text-muted-foreground">{forecast.commentary}</p>
+                    <p className="text-sm text-[#868f97]">{forecast.commentary}</p>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-green-600/20 to-green-600/5 p-6 rounded-xl border border-green-500/20">
+            <div className="bg-gradient-to-br from-green-600/20 to-green-600/5 p-6 rounded-2xl border border-green-500/20">
               <h3 className="font-bold text-xl mb-3 flex items-center gap-2">
-                <span className="text-green-500">Base Case Scenario: S&P 500 at 6,900 (+16%)</span>
+                <span className="text-[#4ebe96]">Base Case Scenario: S&P 500 at 6,900 (+16%)</span>
               </h3>
-              <p className="text-muted-foreground mb-4">
+              <p className="text-[#868f97] mb-4">
                 Our base case assumes 11% corporate earnings growth, Fed rate cuts of 75-100 bps, P/E multiple stable at 20x,
                 and no recession. Technology and healthcare lead performance while defensive sectors lag.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                <div className="bg-green-500/10 p-3 rounded-lg">
-                  <p className="font-medium text-green-500">Bull Case: 7,400</p>
-                  <p className="text-muted-foreground">+24% if AI earnings exceed expectations</p>
+                <div className="bg-[#4ebe96]/10 p-3 rounded-2xl">
+                  <p className="font-medium text-[#4ebe96]">Bull Case: 7,400</p>
+                  <p className="text-[#868f97]">+24% if AI earnings exceed expectations</p>
                 </div>
-                <div className="bg-yellow-500/10 p-3 rounded-lg">
-                  <p className="font-medium text-yellow-500">Base Case: 6,900</p>
-                  <p className="text-muted-foreground">+16% with stable growth trajectory</p>
+                <div className="bg-[#ffa16c]/10 p-3 rounded-2xl">
+                  <p className="font-medium text-[#ffa16c]">Base Case: 6,900</p>
+                  <p className="text-[#868f97]">+16% with stable growth trajectory</p>
                 </div>
-                <div className="bg-red-500/10 p-3 rounded-lg">
-                  <p className="font-medium text-red-500">Bear Case: 5,800</p>
-                  <p className="text-muted-foreground">-3% in recession scenario</p>
+                <div className="bg-[#ff5c5c]/10 p-3 rounded-2xl">
+                  <p className="font-medium text-[#ff5c5c]">Bear Case: 5,800</p>
+                  <p className="text-[#868f97]">-3% in recession scenario</p>
                 </div>
               </div>
             </div>
@@ -554,7 +554,7 @@ export default function StockPredictions2026Page() {
           <section id="top-10-stocks" className="mb-16 scroll-mt-24">
             <h2 className="text-3xl font-bold mb-6">Top 10 Stocks to Buy in 2026</h2>
 
-            <p className="text-lg text-muted-foreground mb-8">
+            <p className="text-lg text-[#868f97] mb-8">
               Our top 10 stock picks for 2026 combine strong fundamentals, clear growth catalysts, reasonable valuations,
               and manageable risk profiles. Each recommendation includes bull/base/bear price targets based on scenario analysis.
             </p>
@@ -563,74 +563,74 @@ export default function StockPredictions2026Page() {
               {top10Stocks.map((stock) => (
                 <div
                   key={stock.ticker}
-                  className="bg-card p-6 rounded-xl border border-border hover:border-green-500/50 transition-colors"
+                  className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out"
                 >
                   <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-4">
                     <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0 w-14 h-14 bg-green-600/20 rounded-xl flex items-center justify-center">
-                        <span className="text-2xl font-bold text-green-500">#{stock.rank}</span>
+                      <div className="flex-shrink-0 w-14 h-14 bg-[#4ebe96]/20 rounded-2xl flex items-center justify-center">
+                        <span className="text-2xl font-bold text-[#4ebe96]">#{stock.rank}</span>
                       </div>
                       <div>
                         <div className="flex flex-wrap items-center gap-3 mb-1">
                           <h3 className="text-2xl font-bold">{stock.ticker}</h3>
-                          <span className="text-sm px-3 py-1 bg-secondary rounded-full">{stock.sector}</span>
+                          <span className="text-sm px-3 py-1 bg-white/[0.03] rounded-full">{stock.sector}</span>
                         </div>
-                        <p className="text-muted-foreground">{stock.name}</p>
+                        <p className="text-[#868f97]">{stock.name}</p>
                       </div>
                     </div>
                     <div className="flex gap-2 text-sm">
-                      <div className="bg-green-500/20 px-3 py-1 rounded-lg text-center">
-                        <p className="text-xs text-muted-foreground">Bull</p>
-                        <p className="font-bold text-green-500">${stock.priceTarget.bull}</p>
+                      <div className="bg-[#4ebe96]/20 px-3 py-1 rounded-2xl text-center">
+                        <p className="text-xs text-[#868f97]">Bull</p>
+                        <p className="font-bold text-[#4ebe96]">${stock.priceTarget.bull}</p>
                       </div>
-                      <div className="bg-yellow-500/20 px-3 py-1 rounded-lg text-center">
-                        <p className="text-xs text-muted-foreground">Base</p>
-                        <p className="font-bold text-yellow-500">${stock.priceTarget.base}</p>
+                      <div className="bg-[#ffa16c]/20 px-3 py-1 rounded-2xl text-center">
+                        <p className="text-xs text-[#868f97]">Base</p>
+                        <p className="font-bold text-[#ffa16c]">${stock.priceTarget.base}</p>
                       </div>
-                      <div className="bg-red-500/20 px-3 py-1 rounded-lg text-center">
-                        <p className="text-xs text-muted-foreground">Bear</p>
-                        <p className="font-bold text-red-500">${stock.priceTarget.bear}</p>
+                      <div className="bg-[#ff5c5c]/20 px-3 py-1 rounded-2xl text-center">
+                        <p className="text-xs text-[#868f97]">Bear</p>
+                        <p className="font-bold text-[#ff5c5c]">${stock.priceTarget.bear}</p>
                       </div>
                     </div>
                   </div>
 
-                  <p className="text-muted-foreground mb-4 leading-relaxed">{stock.thesis}</p>
+                  <p className="text-[#868f97] mb-4 leading-relaxed">{stock.thesis}</p>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div>
-                      <p className="text-sm font-medium text-green-500 mb-2">Key Catalysts</p>
+                      <p className="text-sm font-medium text-[#4ebe96] mb-2">Key Catalysts</p>
                       <div className="flex flex-wrap gap-1.5">
                         {stock.catalysts.map((catalyst, i) => (
-                          <span key={i} className="text-xs px-2 py-1 bg-green-500/20 rounded-lg">{catalyst}</span>
+                          <span key={i} className="text-xs px-2 py-1 bg-[#4ebe96]/20 rounded-2xl">{catalyst}</span>
                         ))}
                       </div>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-red-500 mb-2">Key Risks</p>
+                      <p className="text-sm font-medium text-[#ff5c5c] mb-2">Key Risks</p>
                       <div className="flex flex-wrap gap-1.5">
                         {stock.risks.map((risk, i) => (
-                          <span key={i} className="text-xs px-2 py-1 bg-red-500/20 rounded-lg">{risk}</span>
+                          <span key={i} className="text-xs px-2 py-1 bg-[#ff5c5c]/20 rounded-2xl">{risk}</span>
                         ))}
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap gap-2 pt-4 border-t border-border">
+                  <div className="flex flex-wrap gap-2 pt-4 border-t border-white/[0.08]">
                     <Link
                       href={`/prediction/${stock.ticker.toLowerCase()}`}
-                      className="text-sm px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 transition-colors font-medium"
+                      className="text-sm px-4 py-2 bg-green-600 text-white rounded-2xl hover:bg-green-500 motion-safe:transition-all motion-safe:duration-150 ease-out font-medium"
                     >
                       View {stock.ticker} Prediction
                     </Link>
                     <Link
                       href={`/stock/${stock.ticker.toLowerCase()}`}
-                      className="text-sm px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors"
+                      className="text-sm px-4 py-2 bg-white/[0.03] rounded-2xl hover:bg-white/[0.03]/80 motion-safe:transition-all motion-safe:duration-150 ease-out"
                     >
                       Full Analysis
                     </Link>
                     <Link
                       href={`/should-i-buy/${stock.ticker.toLowerCase()}`}
-                      className="text-sm px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors"
+                      className="text-sm px-4 py-2 bg-white/[0.03] rounded-2xl hover:bg-white/[0.03]/80 motion-safe:transition-all motion-safe:duration-150 ease-out"
                     >
                       Should I Buy {stock.ticker}?
                     </Link>
@@ -640,17 +640,17 @@ export default function StockPredictions2026Page() {
             </div>
 
             {/* Quick Reference Grid */}
-            <div className="mt-8 p-6 bg-card rounded-xl border border-border">
+            <div className="mt-8 p-6 bg-white/[0.03] backdrop-blur-[10px] rounded-2xl border border-white/[0.08]">
               <h3 className="font-bold text-lg mb-4">Quick Reference: All Top 10 Picks</h3>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                 {top10Stocks.map((stock) => (
                   <Link
                     key={stock.ticker}
                     href={`/prediction/${stock.ticker.toLowerCase()}`}
-                    className="bg-secondary p-3 rounded-lg hover:bg-green-600/20 hover:border-green-500/50 transition-colors group text-center"
+                    className="bg-white/[0.03] p-3 rounded-2xl hover:bg-[#4ebe96]/20 hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out group text-center"
                   >
-                    <p className="text-xs text-muted-foreground mb-1">#{stock.rank}</p>
-                    <p className="font-bold group-hover:text-green-500 transition-colors">{stock.ticker}</p>
+                    <p className="text-xs text-[#868f97] mb-1">#{stock.rank}</p>
+                    <p className="font-bold group-hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out">{stock.ticker}</p>
                   </Link>
                 ))}
               </div>
@@ -661,38 +661,38 @@ export default function StockPredictions2026Page() {
           <section id="sectors-to-watch" className="mb-16 scroll-mt-24">
             <h2 className="text-3xl font-bold mb-6">Sectors to Watch in 2026</h2>
 
-            <p className="text-lg text-muted-foreground mb-8">
+            <p className="text-lg text-[#868f97] mb-8">
               Sector allocation is crucial for portfolio performance. Technology and healthcare are positioned to outperform,
               while defensive sectors may lag in a risk-on environment. Here is our detailed sector-by-sector analysis.
             </p>
 
             <div className="space-y-6">
               {sectorPredictions.map((sector) => (
-                <div key={sector.sector} className="bg-card p-6 rounded-xl border border-border">
+                <div key={sector.sector} className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
                     <div>
                       <h3 className="text-2xl font-bold">{sector.sector}</h3>
                       <div className="flex items-center gap-3 mt-1">
                         <span className={`text-sm font-medium px-3 py-1 rounded-full ${
-                          sector.outlook === 'Bullish' ? 'bg-green-500/20 text-green-500' :
-                          sector.outlook === 'Neutral to Bullish' ? 'bg-green-500/10 text-green-400' :
-                          sector.outlook === 'Selective' ? 'bg-yellow-500/20 text-yellow-500' :
-                          'bg-yellow-500/10 text-yellow-400'
+                          sector.outlook === 'Bullish' ? 'bg-[#4ebe96]/20 text-[#4ebe96]' :
+                          sector.outlook === 'Neutral to Bullish' ? 'bg-[#4ebe96]/10 text-green-400' :
+                          sector.outlook === 'Selective' ? 'bg-[#ffa16c]/20 text-[#ffa16c]' :
+                          'bg-[#ffa16c]/10 text-yellow-400'
                         }`}>
                           {sector.outlook}
                         </span>
-                        <span className="text-green-500 font-bold">{sector.expectedReturn}</span>
+                        <span className="text-[#4ebe96] font-bold">{sector.expectedReturn}</span>
                       </div>
                     </div>
                     <Link
                       href={`/sectors/${sector.slug}`}
-                      className="text-sm px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors whitespace-nowrap"
+                      className="text-sm px-4 py-2 bg-white/[0.03] rounded-2xl hover:bg-white/[0.03]/80 motion-safe:transition-all motion-safe:duration-150 ease-out whitespace-nowrap"
                     >
                       View {sector.sector} Stocks
                     </Link>
                   </div>
 
-                  <p className="text-muted-foreground mb-4 leading-relaxed">{sector.analysis}</p>
+                  <p className="text-[#868f97] mb-4 leading-relaxed">{sector.analysis}</p>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -702,7 +702,7 @@ export default function StockPredictions2026Page() {
                           <Link
                             key={ticker}
                             href={`/prediction/${ticker.toLowerCase()}`}
-                            className="text-sm px-3 py-1.5 bg-green-500/20 text-green-500 rounded-lg hover:bg-green-500/30 transition-colors font-medium"
+                            className="text-sm px-3 py-1.5 bg-[#4ebe96]/20 text-[#4ebe96] rounded-2xl hover:bg-green-500/30 motion-safe:transition-all motion-safe:duration-150 ease-out font-medium"
                           >
                             {ticker}
                           </Link>
@@ -716,7 +716,7 @@ export default function StockPredictions2026Page() {
                           <Link
                             key={ticker}
                             href={`/stock/${ticker.toLowerCase()}`}
-                            className="text-sm px-3 py-1.5 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors"
+                            className="text-sm px-3 py-1.5 bg-white/[0.03] rounded-2xl hover:bg-white/[0.03]/80 motion-safe:transition-all motion-safe:duration-150 ease-out"
                           >
                             {ticker}
                           </Link>
@@ -733,56 +733,56 @@ export default function StockPredictions2026Page() {
           <section id="stocks-to-avoid" className="mb-16 scroll-mt-24">
             <h2 className="text-3xl font-bold mb-6">Stocks to Avoid in 2026</h2>
 
-            <p className="text-lg text-muted-foreground mb-8">
+            <p className="text-lg text-[#868f97] mb-8">
               Not every stock is a buy. These companies face structural challenges, execution risks, or unfavorable
               risk/reward profiles that warrant caution in 2026. Understanding bear cases is essential for risk management.
             </p>
 
             <div className="space-y-4">
               {stocksToAvoid.map((stock) => (
-                <div key={stock.ticker} className="bg-card p-6 rounded-xl border border-red-500/20">
+                <div key={stock.ticker} className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-[#ff5c5c]/20">
                   <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-3">
                     <div>
                       <div className="flex items-center gap-3 mb-1">
                         <h3 className="text-xl font-bold">{stock.ticker}</h3>
-                        <span className="text-sm px-2 py-0.5 bg-red-500/20 text-red-500 rounded-full">Avoid</span>
+                        <span className="text-sm px-2 py-0.5 bg-[#ff5c5c]/20 text-[#ff5c5c] rounded-full">Avoid</span>
                       </div>
-                      <p className="text-muted-foreground">{stock.name}</p>
+                      <p className="text-[#868f97]">{stock.name}</p>
                     </div>
                     <Link
                       href={`/bear-case/${stock.ticker.toLowerCase()}`}
-                      className="text-sm px-4 py-2 bg-red-500/20 text-red-500 rounded-lg hover:bg-red-500/30 transition-colors whitespace-nowrap"
+                      className="text-sm px-4 py-2 bg-[#ff5c5c]/20 text-[#ff5c5c] rounded-2xl hover:bg-red-500/30 motion-safe:transition-all motion-safe:duration-150 ease-out whitespace-nowrap"
                     >
                       Full Bear Case
                     </Link>
                   </div>
-                  <p className="text-red-400 font-medium mb-2">{stock.reason}</p>
-                  <p className="text-muted-foreground text-sm">{stock.analysis}</p>
+                  <p className="text-[#ff5c5c] font-medium mb-2">{stock.reason}</p>
+                  <p className="text-[#868f97] text-sm">{stock.analysis}</p>
                 </div>
               ))}
             </div>
 
-            <div className="mt-8 p-6 bg-yellow-500/10 rounded-xl border border-yellow-500/20">
-              <h3 className="font-bold text-lg mb-3 text-yellow-500">General Categories to Avoid or Underweight</h3>
-              <ul className="space-y-2 text-muted-foreground">
+            <div className="mt-8 p-6 bg-[#ffa16c]/10 rounded-2xl border border-[#ffa16c]/20">
+              <h3 className="font-bold text-lg mb-3 text-[#ffa16c]">General Categories to Avoid or Underweight</h3>
+              <ul className="space-y-2 text-[#868f97]">
                 <li className="flex items-start gap-2">
-                  <span className="text-yellow-500 mt-1">!</span>
+                  <span className="text-[#ffa16c] mt-1">!</span>
                   <span><strong>High-leverage companies</strong> - Elevated interest rates pressure debt-heavy balance sheets</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-yellow-500 mt-1">!</span>
+                  <span className="text-[#ffa16c] mt-1">!</span>
                   <span><strong>Unprofitable growth stocks</strong> - Path to profitability matters more than revenue growth alone</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-yellow-500 mt-1">!</span>
+                  <span className="text-[#ffa16c] mt-1">!</span>
                   <span><strong>Legacy media companies</strong> - Cord-cutting and streaming competition create structural headwinds</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-yellow-500 mt-1">!</span>
+                  <span className="text-[#ffa16c] mt-1">!</span>
                   <span><strong>Regional banks with CRE exposure</strong> - Commercial real estate stress continues</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-yellow-500 mt-1">!</span>
+                  <span className="text-[#ffa16c] mt-1">!</span>
                   <span><strong>SPACs and speculative plays</strong> - Focus on fundamentals over narrative</span>
                 </li>
               </ul>
@@ -793,7 +793,7 @@ export default function StockPredictions2026Page() {
           <section id="methodology" className="mb-16 scroll-mt-24">
             <h2 className="text-3xl font-bold mb-6">How We Make Predictions</h2>
 
-            <p className="text-lg text-muted-foreground mb-8">
+            <p className="text-lg text-[#868f97] mb-8">
               Transparency builds trust. Here is our systematic methodology for generating stock market predictions.
               Our approach combines quantitative analysis, fundamental research, and continuous refinement based on
               prediction accuracy tracking.
@@ -801,43 +801,43 @@ export default function StockPredictions2026Page() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
               {methodologySteps.map((step, index) => (
-                <div key={step.name} className="bg-card p-6 rounded-xl border border-border">
+                <div key={step.name} className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                   <div className="flex items-center gap-3 mb-3">
-                    <span className="flex-shrink-0 w-8 h-8 bg-green-600/20 rounded-full flex items-center justify-center text-green-500 font-bold text-sm">
+                    <span className="flex-shrink-0 w-8 h-8 bg-[#4ebe96]/20 rounded-full flex items-center justify-center text-[#4ebe96] font-bold text-sm">
                       {index + 1}
                     </span>
                     <h3 className="font-bold">{step.name}</h3>
                   </div>
-                  <p className="text-muted-foreground text-sm">{step.text}</p>
+                  <p className="text-[#868f97] text-sm">{step.text}</p>
                 </div>
               ))}
             </div>
 
-            <div className="bg-gradient-to-br from-green-600/20 to-green-600/5 p-6 rounded-xl border border-green-500/20">
+            <div className="bg-gradient-to-br from-green-600/20 to-green-600/5 p-6 rounded-2xl border border-green-500/20">
               <h3 className="font-bold text-xl mb-4">Our Prediction Accuracy</h3>
-              <p className="text-muted-foreground mb-4">
+              <p className="text-[#868f97] mb-4">
                 We track the accuracy of all predictions to continuously improve our models. Transparency about past
                 performance helps you calibrate confidence in our forecasts.
               </p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                <div className="bg-background/50 p-3 rounded-lg">
-                  <p className="text-2xl font-bold text-green-500">67%</p>
-                  <p className="text-xs text-muted-foreground">Directional Accuracy</p>
+                <div className="bg-background/50 p-3 rounded-2xl">
+                  <p className="text-2xl font-bold text-[#4ebe96]">67%</p>
+                  <p className="text-xs text-[#868f97]">Directional Accuracy</p>
                 </div>
-                <div className="bg-background/50 p-3 rounded-lg">
-                  <p className="text-2xl font-bold text-green-500">+18%</p>
-                  <p className="text-xs text-muted-foreground">Avg Return (Hits)</p>
+                <div className="bg-background/50 p-3 rounded-2xl">
+                  <p className="text-2xl font-bold text-[#4ebe96]">+18%</p>
+                  <p className="text-xs text-[#868f97]">Avg Return (Hits)</p>
                 </div>
-                <div className="bg-background/50 p-3 rounded-lg">
-                  <p className="text-2xl font-bold text-green-500">84%</p>
-                  <p className="text-xs text-muted-foreground">Hit Rate (Top 10)</p>
+                <div className="bg-background/50 p-3 rounded-2xl">
+                  <p className="text-2xl font-bold text-[#4ebe96]">84%</p>
+                  <p className="text-xs text-[#868f97]">Hit Rate (Top 10)</p>
                 </div>
-                <div className="bg-background/50 p-3 rounded-lg">
-                  <p className="text-2xl font-bold text-green-500">2.1x</p>
-                  <p className="text-xs text-muted-foreground">vs S&P 500</p>
+                <div className="bg-background/50 p-3 rounded-2xl">
+                  <p className="text-2xl font-bold text-[#4ebe96]">2.1x</p>
+                  <p className="text-xs text-[#868f97]">vs S&P 500</p>
                 </div>
               </div>
-              <p className="text-xs text-muted-foreground mt-4">
+              <p className="text-xs text-[#868f97] mt-4">
                 * Historical performance based on 2024-2025 predictions. Past performance does not guarantee future results.
               </p>
             </div>
@@ -851,39 +851,39 @@ export default function StockPredictions2026Page() {
               {faqs.map((faq, index) => (
                 <details
                   key={index}
-                  className="bg-card p-6 rounded-xl border border-border group"
+                  className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] group"
                 >
                   <summary className="font-bold cursor-pointer list-none flex items-center justify-between">
                     <span className="pr-4">{faq.question}</span>
-                    <span className="text-green-500 group-open:rotate-180 transition-transform flex-shrink-0">
+                    <span className="text-[#4ebe96] group-open:rotate-180 motion-safe:transition-all motion-safe:duration-150 ease-out flex-shrink-0">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </span>
                   </summary>
-                  <p className="text-muted-foreground mt-4 leading-relaxed">{faq.answer}</p>
+                  <p className="text-[#868f97] mt-4 leading-relaxed">{faq.answer}</p>
                 </details>
               ))}
             </div>
           </section>
 
           {/* CTA Section */}
-          <section className="bg-gradient-to-br from-green-600/20 to-green-600/5 p-8 rounded-xl border border-green-500/20 text-center mb-12">
+          <section className="bg-gradient-to-br from-green-600/20 to-green-600/5 p-8 rounded-2xl border border-green-500/20 text-center mb-12">
             <h2 className="text-2xl font-bold mb-4">Get Personalized Stock Predictions</h2>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+            <p className="text-[#868f97] mb-6 max-w-2xl mx-auto">
               Our AI-powered platform provides real-time analysis, DCF valuations, and price predictions for any stock.
               Research individual companies with the same methodology used in this guide.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link
                 href="/dashboard"
-                className="bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+                className="bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-white px-8 py-3 rounded-2xl font-medium motion-safe:transition-all motion-safe:duration-150 ease-out"
               >
                 Start Research
               </Link>
               <Link
                 href="/screener"
-                className="bg-secondary hover:bg-secondary/80 px-8 py-3 rounded-lg font-medium transition-colors"
+                className="bg-white/[0.03] hover:bg-white/[0.03]/80 px-8 py-3 rounded-2xl font-medium motion-safe:transition-all motion-safe:duration-150 ease-out"
               >
                 Stock Screener
               </Link>
@@ -891,56 +891,56 @@ export default function StockPredictions2026Page() {
           </section>
 
           {/* Related Content */}
-          <section className="border-t border-border pt-8">
+          <section className="border-t border-white/[0.08] pt-8">
             <h3 className="text-lg font-bold mb-4">Related Insights</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
               <Link
                 href="/insights/best-stocks-2026"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-colors"
+                className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-2xl border border-white/[0.08] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out"
               >
                 <p className="font-bold mb-1">Best Stocks 2026</p>
-                <p className="text-sm text-muted-foreground">Top 20 stock picks ranked by potential</p>
+                <p className="text-sm text-[#868f97]">Top 20 stock picks ranked by potential</p>
               </Link>
               <Link
                 href="/insights/ai-stocks-2026"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-colors"
+                className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-2xl border border-white/[0.08] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out"
               >
                 <p className="font-bold mb-1">AI Stocks 2026</p>
-                <p className="text-sm text-muted-foreground">Best artificial intelligence investments</p>
+                <p className="text-sm text-[#868f97]">Best artificial intelligence investments</p>
               </Link>
               <Link
                 href="/insights/dividend-stocks-2026"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-colors"
+                className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-2xl border border-white/[0.08] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out"
               >
                 <p className="font-bold mb-1">Dividend Stocks 2026</p>
-                <p className="text-sm text-muted-foreground">Top income-generating investments</p>
+                <p className="text-sm text-[#868f97]">Top income-generating investments</p>
               </Link>
             </div>
 
             <div className="flex flex-wrap gap-2">
-              <Link href="/best-stocks/tech" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors text-sm">
+              <Link href="/best-stocks/tech" className="px-4 py-2 bg-white/[0.03] rounded-2xl hover:bg-white/[0.03]/80 motion-safe:transition-all motion-safe:duration-150 ease-out text-sm">
                 Tech Stocks
               </Link>
-              <Link href="/best-stocks/healthcare" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors text-sm">
+              <Link href="/best-stocks/healthcare" className="px-4 py-2 bg-white/[0.03] rounded-2xl hover:bg-white/[0.03]/80 motion-safe:transition-all motion-safe:duration-150 ease-out text-sm">
                 Healthcare Stocks
               </Link>
-              <Link href="/best-stocks/growth" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors text-sm">
+              <Link href="/best-stocks/growth" className="px-4 py-2 bg-white/[0.03] rounded-2xl hover:bg-white/[0.03]/80 motion-safe:transition-all motion-safe:duration-150 ease-out text-sm">
                 Growth Stocks
               </Link>
-              <Link href="/best-stocks/value" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors text-sm">
+              <Link href="/best-stocks/value" className="px-4 py-2 bg-white/[0.03] rounded-2xl hover:bg-white/[0.03]/80 motion-safe:transition-all motion-safe:duration-150 ease-out text-sm">
                 Value Stocks
               </Link>
-              <Link href="/compare/nvda-vs-amd" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors text-sm">
+              <Link href="/compare/nvda-vs-amd" className="px-4 py-2 bg-white/[0.03] rounded-2xl hover:bg-white/[0.03]/80 motion-safe:transition-all motion-safe:duration-150 ease-out text-sm">
                 NVDA vs AMD
               </Link>
-              <Link href="/compare/msft-vs-googl" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors text-sm">
+              <Link href="/compare/msft-vs-googl" className="px-4 py-2 bg-white/[0.03] rounded-2xl hover:bg-white/[0.03]/80 motion-safe:transition-all motion-safe:duration-150 ease-out text-sm">
                 MSFT vs GOOGL
               </Link>
             </div>
           </section>
 
           {/* Disclaimer */}
-          <section className="mt-12 p-4 bg-secondary/50 rounded-lg text-xs text-muted-foreground">
+          <section className="mt-12 p-4 bg-white/[0.03]/50 rounded-2xl text-xs text-[#868f97]">
             <p className="font-medium mb-2">Disclaimer</p>
             <p>
               This content is for informational purposes only and does not constitute financial advice. Stock predictions

@@ -251,12 +251,12 @@ export default function BestStocks2026Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbSchema, articleSchema, faqSchema, itemListSchema]) }}
       />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-screen bg-black text-white pt-20">
         <div className="max-w-5xl mx-auto px-6 py-12">
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Home</Link>
             {' / '}
-            <Link href="/insights" className="hover:text-foreground">Insights</Link>
+            <Link href="/insights" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out">Insights</Link>
             {' / '}
             <span>Best Stocks 2026</span>
           </nav>
@@ -264,7 +264,7 @@ export default function BestStocks2026Page() {
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Best Stocks to Buy for 2026
           </h1>
-          <p className="text-xl text-muted-foreground mb-8">
+          <p className="text-xl text-[#868f97] mb-8">
             Top 20 stock picks for 2026 with comprehensive analysis. AI-powered insights on technology leaders,
             healthcare innovators, financial giants, and quality consumer stocks.
           </p>
@@ -272,11 +272,11 @@ export default function BestStocks2026Page() {
           {/* Selection Criteria */}
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-4">Our Selection Criteria</h2>
-            <div className="bg-card p-6 rounded-xl border border-border">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {selectionCriteria.map((criterion, i) => (
                   <li key={i} className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">✓</span>
+                    <span className="text-[#4ebe96] mt-1">✓</span>
                     <span>{criterion}</span>
                   </li>
                 ))}
@@ -289,26 +289,26 @@ export default function BestStocks2026Page() {
             <h2 className="text-3xl font-bold mb-6">Top 20 Stock Rankings</h2>
             <div className="space-y-4">
               {topStocks.map((stock) => (
-                <div key={stock.ticker} className="bg-card p-6 rounded-xl border border-border hover:border-green-500/50 transition-colors">
+                <div key={stock.ticker} className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
                     <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0 w-12 h-12 bg-green-600/20 rounded-lg flex items-center justify-center">
-                        <span className="text-xl font-bold text-green-500">#{stock.rank}</span>
+                      <div className="flex-shrink-0 w-12 h-12 bg-[#4ebe96]/20 rounded-2xl flex items-center justify-center">
+                        <span className="text-xl font-bold text-[#4ebe96] tabular-nums">#{stock.rank}</span>
                       </div>
                       <div>
                         <div className="flex items-center gap-3 mb-1">
                           <h3 className="text-2xl font-bold">{stock.ticker}</h3>
-                          <span className="text-xs px-2 py-1 bg-secondary rounded-full">{stock.sector}</span>
+                          <span className="text-xs px-2 py-1 bg-white/[0.03] rounded-full">{stock.sector}</span>
                         </div>
-                        <p className="text-muted-foreground">{stock.why}</p>
+                        <p className="text-[#868f97]">{stock.why}</p>
                       </div>
                     </div>
                   </div>
                   <div className="mb-4">
-                    <span className="text-sm font-medium text-muted-foreground mb-2 block">Key Catalysts:</span>
+                    <span className="text-sm font-medium text-[#868f97] mb-2 block">Key Catalysts:</span>
                     <div className="flex flex-wrap gap-2">
                       {stock.catalysts.map((catalyst, i) => (
-                        <span key={i} className="text-xs px-3 py-1 bg-secondary rounded-full">
+                        <span key={i} className="text-xs px-3 py-1 bg-white/[0.03] rounded-full">
                           {catalyst}
                         </span>
                       ))}
@@ -317,19 +317,19 @@ export default function BestStocks2026Page() {
                   <div className="flex flex-wrap gap-2">
                     <Link
                       href={`/dashboard?ticker=${stock.ticker}`}
-                      className="text-sm px-4 py-2 bg-green-600/20 text-green-500 rounded-lg hover:bg-green-600/30 transition-colors font-medium"
+                      className="text-sm px-4 py-2 bg-[#4ebe96]/20 text-[#4ebe96] rounded-full hover:bg-[#4ebe96]/30 motion-safe:transition-all motion-safe:duration-150 ease-out font-medium focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
                     >
                       Full Analysis
                     </Link>
                     <Link
                       href={`/should-i-buy/${stock.ticker.toLowerCase()}`}
-                      className="text-sm px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors"
+                      className="text-sm px-4 py-2 bg-white/[0.03] rounded-full hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out"
                     >
                       Should I Buy?
                     </Link>
                     <Link
                       href={`/prediction/${stock.ticker.toLowerCase()}`}
-                      className="text-sm px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors"
+                      className="text-sm px-4 py-2 bg-white/[0.03] rounded-full hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out"
                     >
                       Price Target
                     </Link>
@@ -347,13 +347,13 @@ export default function BestStocks2026Page() {
                 <Link
                   key={stock}
                   href={`/dashboard?ticker=${stock}`}
-                  className="bg-card p-4 rounded-lg border border-border hover:border-green-500/50 transition-colors group"
+                  className="bg-white/[0.03] backdrop-blur-[10px] p-4 rounded-2xl border border-white/[0.08] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out group"
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-muted-foreground">#{i + 1}</span>
-                    <span className="text-xs text-green-500 opacity-0 group-hover:opacity-100 transition-opacity">View</span>
+                    <span className="text-xs text-[#868f97] tabular-nums">#{i + 1}</span>
+                    <span className="text-xs text-[#4ebe96] opacity-0 group-hover:opacity-100 motion-safe:transition-all motion-safe:duration-150 ease-out">View</span>
                   </div>
-                  <p className="text-lg font-bold group-hover:text-green-500 transition-colors">{stock}</p>
+                  <p className="text-lg font-bold group-hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out">{stock}</p>
                 </Link>
               ))}
             </div>
@@ -363,9 +363,9 @@ export default function BestStocks2026Page() {
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-6">Investment Strategies for 2026</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                 <h3 className="text-xl font-bold mb-3">🚀 Growth Portfolio</h3>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-sm text-[#868f97] mb-4">
                   For aggressive investors seeking maximum upside
                 </p>
                 <div className="space-y-1 text-sm">
@@ -374,9 +374,9 @@ export default function BestStocks2026Page() {
                   <div>10% Consumer: AMZN, TSLA</div>
                 </div>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                 <h3 className="text-xl font-bold mb-3">⚖️ Balanced Portfolio</h3>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-sm text-[#868f97] mb-4">
                   Mix of growth and stability with dividends
                 </p>
                 <div className="space-y-1 text-sm">
@@ -386,9 +386,9 @@ export default function BestStocks2026Page() {
                   <div>10% Consumer: COST, HD</div>
                 </div>
               </div>
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08]">
                 <h3 className="text-xl font-bold mb-3">💰 Income Portfolio</h3>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-sm text-[#868f97] mb-4">
                   Focus on dividends and capital preservation
                 </p>
                 <div className="space-y-1 text-sm">
@@ -406,12 +406,12 @@ export default function BestStocks2026Page() {
             <h2 className="text-3xl font-bold mb-6">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {faqs.map((faq, i) => (
-                <details key={i} className="bg-card p-6 rounded-xl border border-border group">
+                <details key={i} className="bg-white/[0.03] backdrop-blur-[10px] p-6 rounded-2xl border border-white/[0.08] group">
                   <summary className="font-bold cursor-pointer list-none flex items-center justify-between">
                     <span>{faq.question}</span>
-                    <span className="text-green-500 group-open:rotate-180 transition-transform">▼</span>
+                    <span className="text-[#4ebe96] group-open:rotate-180 motion-safe:transition-all motion-safe:duration-150 ease-out">▼</span>
                   </summary>
-                  <p className="text-muted-foreground mt-4 leading-relaxed">
+                  <p className="text-[#868f97] mt-4 leading-relaxed">
                     {faq.answer}
                   </p>
                 </details>
@@ -420,36 +420,36 @@ export default function BestStocks2026Page() {
           </section>
 
           {/* CTA */}
-          <section className="bg-gradient-to-br from-green-600/20 to-green-600/5 p-8 rounded-xl border border-green-500/20 text-center">
+          <section className="bg-gradient-to-br from-[#4ebe96]/20 to-[#4ebe96]/5 p-8 rounded-2xl border border-[#4ebe96]/20 text-center">
             <h2 className="text-2xl font-bold mb-4">Research These Stocks in Detail</h2>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-[#868f97] mb-6">
               Get AI-powered analysis, DCF valuations, and financial insights for any stock on our platform
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg font-medium"
+              className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-black px-8 py-3 rounded-full font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
             >
               Start Your Analysis
             </Link>
           </section>
 
           {/* Related Links */}
-          <section className="mt-12 border-t border-border pt-8">
+          <section className="mt-12 border-t border-white/[0.08] pt-8">
             <h3 className="text-lg font-bold mb-4">More Stock Insights</h3>
             <div className="flex flex-wrap gap-2">
-              <Link href="/insights/2026-stock-predictions" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors">
+              <Link href="/insights/2026-stock-predictions" className="px-4 py-2 bg-white/[0.03] rounded-2xl hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 Market Predictions 2026
               </Link>
-              <Link href="/insights/ai-stocks-2026" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors">
+              <Link href="/insights/ai-stocks-2026" className="px-4 py-2 bg-white/[0.03] rounded-2xl hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 Best AI Stocks 2026
               </Link>
-              <Link href="/insights/dividend-stocks-2026" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors">
+              <Link href="/insights/dividend-stocks-2026" className="px-4 py-2 bg-white/[0.03] rounded-2xl hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 Best Dividend Stocks 2026
               </Link>
-              <Link href="/best-stocks/tech" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors">
+              <Link href="/best-stocks/tech" className="px-4 py-2 bg-white/[0.03] rounded-2xl hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 Technology Stocks
               </Link>
-              <Link href="/best-stocks/growth" className="px-4 py-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors">
+              <Link href="/best-stocks/growth" className="px-4 py-2 bg-white/[0.03] rounded-2xl hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 Growth Stocks
               </Link>
             </div>

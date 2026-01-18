@@ -418,14 +418,14 @@ export default function DividendsPage() {
           __html: JSON.stringify([breadcrumbSchema, eventSchema, faqSchema]),
         }}
       />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-dvh bg-black text-foreground pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           <div className="flex gap-8">
             <SEOSidebar />
             <div className="flex-1 min-w-0">
           {/* Breadcrumbs */}
-          <nav className="text-sm text-muted-foreground mb-6" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-foreground transition-colors">
+          <nav className="text-sm mb-6" style={{ color: '#868f97' }} aria-label="Breadcrumb">
+            <Link href="/" className="motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded" style={{ color: '#479ffa' }}>
               Home
             </Link>
             {' / '}
@@ -437,7 +437,7 @@ export default function DividendsPage() {
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
               Dividend Calendar 2025
             </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl">
+            <p className="text-lg sm:text-xl max-w-3xl" style={{ color: '#868f97' }}>
               Track upcoming ex-dividend dates, payment schedules, and record dates for dividend stocks.
               Find the best high yield dividend stocks, dividend aristocrats, and monthly dividend payers for income investing.
             </p>
@@ -449,45 +449,45 @@ export default function DividendsPage() {
               Important Dividend Dates Explained
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <div className="w-12 h-12 rounded-lg bg-green-500/20 flex items-center justify-center mb-4">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style={{ backgroundColor: 'rgba(78, 190, 150, 0.2)' }}>
                   <span className="text-2xl">📅</span>
                 </div>
-                <h3 className="text-lg font-bold mb-2 text-green-500">Declaration Date</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="text-lg font-bold mb-2" style={{ color: '#4ebe96' }}>Declaration Date</h3>
+                <p className="text-sm" style={{ color: '#868f97' }}>
                   When the company announces the dividend amount and payment schedule.
                   The board of directors approves the dividend.
                 </p>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <div className="w-12 h-12 rounded-lg bg-green-500/20 flex items-center justify-center mb-4">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style={{ backgroundColor: 'rgba(78, 190, 150, 0.2)' }}>
                   <span className="text-2xl">⭐</span>
                 </div>
-                <h3 className="text-lg font-bold mb-2 text-green-500">Ex-Dividend Date</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="text-lg font-bold mb-2" style={{ color: '#4ebe96' }}>Ex-Dividend Date</h3>
+                <p className="text-sm" style={{ color: '#868f97' }}>
                   <strong>Most important!</strong> You must own the stock before this date to receive the dividend.
                   Stock price typically drops by the dividend amount.
                 </p>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <div className="w-12 h-12 rounded-lg bg-green-500/20 flex items-center justify-center mb-4">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style={{ backgroundColor: 'rgba(78, 190, 150, 0.2)' }}>
                   <span className="text-2xl">📋</span>
                 </div>
-                <h3 className="text-lg font-bold mb-2 text-green-500">Record Date</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="text-lg font-bold mb-2" style={{ color: '#4ebe96' }}>Record Date</h3>
+                <p className="text-sm" style={{ color: '#868f97' }}>
                   The date when the company checks its records to see who owns shares.
                   Usually 1-2 business days after the ex-dividend date.
                 </p>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <div className="w-12 h-12 rounded-lg bg-green-500/20 flex items-center justify-center mb-4">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style={{ backgroundColor: 'rgba(78, 190, 150, 0.2)' }}>
                   <span className="text-2xl">💰</span>
                 </div>
-                <h3 className="text-lg font-bold mb-2 text-green-500">Payment Date</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="text-lg font-bold mb-2" style={{ color: '#4ebe96' }}>Payment Date</h3>
+                <p className="text-sm" style={{ color: '#868f97' }}>
                   When the dividend cash is deposited into your brokerage account.
                   Typically 2-4 weeks after the record date.
                 </p>
@@ -500,10 +500,10 @@ export default function DividendsPage() {
             <h2 className="text-2xl sm:text-3xl font-bold mb-6">
               Upcoming Ex-Dividend Dates
             </h2>
-            <div className="bg-card rounded-xl border border-border overflow-hidden">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-secondary/50">
+                  <thead className="bg-white/[0.05]">
                     <tr>
                       <th className="px-6 py-4 text-left text-sm font-semibold">Symbol</th>
                       <th className="px-6 py-4 text-left text-sm font-semibold">Company</th>
@@ -514,26 +514,27 @@ export default function DividendsPage() {
                       <th className="px-6 py-4 text-left text-sm font-semibold">Type</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-border">
+                  <tbody className="divide-y divide-white/[0.08]">
                     {upcomingDividends.map((dividend) => (
-                      <tr key={dividend.ticker} className="hover:bg-secondary/30 transition-colors">
+                      <tr key={dividend.ticker} className="hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out">
                         <td className="px-6 py-4">
                           <Link
                             href={`/stock/${dividend.ticker}`}
-                            className="font-bold text-green-500 hover:text-green-400 transition-colors"
+                            className="font-bold motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] rounded"
+                            style={{ color: '#4ebe96' }}
                           >
                             {dividend.ticker}
                           </Link>
                         </td>
                         <td className="px-6 py-4 text-sm">{dividend.company}</td>
                         <td className="px-6 py-4 text-sm font-medium">{formatDate(dividend.exDate)}</td>
-                        <td className="px-6 py-4 text-sm text-muted-foreground">{formatDate(dividend.paymentDate)}</td>
-                        <td className="px-6 py-4 text-right font-medium">${dividend.amount.toFixed(2)}</td>
+                        <td className="px-6 py-4 text-sm" style={{ color: '#868f97' }}>{formatDate(dividend.paymentDate)}</td>
+                        <td className="px-6 py-4 text-right font-medium tabular-nums">${dividend.amount.toFixed(2)}</td>
                         <td className="px-6 py-4 text-right">
-                          <span className="text-green-500 font-medium">{dividend.yield.toFixed(2)}%</span>
+                          <span className="font-medium tabular-nums" style={{ color: '#4ebe96' }}>{dividend.yield.toFixed(2)}%</span>
                         </td>
                         <td className="px-6 py-4">
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-500/20 text-green-500">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" style={{ backgroundColor: 'rgba(78, 190, 150, 0.2)', color: '#4ebe96' }}>
                             {dividend.type}
                           </span>
                         </td>
@@ -550,7 +551,7 @@ export default function DividendsPage() {
             <h2 className="text-2xl sm:text-3xl font-bold mb-6">
               Dividend Aristocrats & Kings
             </h2>
-            <p className="text-muted-foreground mb-6">
+            <p className="mb-6" style={{ color: '#868f97' }}>
               Companies that have increased their dividends for 25+ consecutive years (Aristocrats) or 50+ years (Kings).
               These stocks represent the highest quality dividend investments with proven track records.
             </p>
@@ -559,32 +560,32 @@ export default function DividendsPage() {
                 <Link
                   key={stock.ticker}
                   href={`/stock/${stock.ticker}`}
-                  className="bg-card p-6 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                  className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] group"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <h3 className="font-bold text-lg group-hover:text-green-500 transition-colors">
+                      <h3 className="font-bold text-lg">
                         {stock.ticker}
                       </h3>
-                      <p className="text-sm text-muted-foreground">{stock.company}</p>
+                      <p className="text-sm" style={{ color: '#868f97' }}>{stock.company}</p>
                     </div>
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-500/20 text-yellow-500">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" style={{ backgroundColor: 'rgba(255, 161, 108, 0.2)', color: '#ffa16c' }}>
                       {stock.category}
                     </span>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-xs text-muted-foreground mb-1">Dividend Yield</p>
-                      <p className="text-lg font-bold text-green-500">{stock.yield.toFixed(2)}%</p>
+                      <p className="text-xs mb-1" style={{ color: '#868f97' }}>Dividend Yield</p>
+                      <p className="text-lg font-bold tabular-nums" style={{ color: '#4ebe96' }}>{stock.yield.toFixed(2)}%</p>
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground mb-1">Years of Growth</p>
-                      <p className="text-lg font-bold">{stock.years}</p>
+                      <p className="text-xs mb-1" style={{ color: '#868f97' }}>Years of Growth</p>
+                      <p className="text-lg font-bold tabular-nums">{stock.years}</p>
                     </div>
                   </div>
-                  <div className="mt-4 pt-4 border-t border-border">
-                    <p className="text-sm text-muted-foreground">
-                      Current Price: <span className="font-medium text-foreground">${stock.price.toFixed(2)}</span>
+                  <div className="mt-4 pt-4 border-t border-white/[0.08]">
+                    <p className="text-sm" style={{ color: '#868f97' }}>
+                      Current Price: <span className="font-medium text-foreground tabular-nums">${stock.price.toFixed(2)}</span>
                     </p>
                   </div>
                 </Link>
@@ -597,7 +598,7 @@ export default function DividendsPage() {
             <h2 className="text-2xl sm:text-3xl font-bold mb-6">
               High Yield Dividend Stocks
             </h2>
-            <p className="text-muted-foreground mb-6">
+            <p className="mb-6" style={{ color: '#868f97' }}>
               Stocks offering above-average dividend yields (4%+). High yields can provide substantial income,
               but always verify the dividend is sustainable by checking the payout ratio and company financials.
             </p>
@@ -606,32 +607,32 @@ export default function DividendsPage() {
                 <Link
                   key={stock.ticker}
                   href={`/stock/${stock.ticker}`}
-                  className="bg-card p-6 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                  className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] group"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <h3 className="font-bold text-lg group-hover:text-green-500 transition-colors">
+                      <h3 className="font-bold text-lg">
                         {stock.ticker}
                       </h3>
-                      <p className="text-sm text-muted-foreground">{stock.company}</p>
+                      <p className="text-sm" style={{ color: '#868f97' }}>{stock.company}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-2xl font-bold text-green-500">{stock.yield.toFixed(1)}%</p>
-                      <p className="text-xs text-muted-foreground">Yield</p>
+                      <p className="text-2xl font-bold tabular-nums" style={{ color: '#4ebe96' }}>{stock.yield.toFixed(1)}%</p>
+                      <p className="text-xs" style={{ color: '#868f97' }}>Yield</p>
                     </div>
                   </div>
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Sector:</span>
+                      <span style={{ color: '#868f97' }}>Sector:</span>
                       <span className="font-medium">{stock.sector}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Type:</span>
+                      <span style={{ color: '#868f97' }}>Type:</span>
                       <span className="font-medium">{stock.type}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Price:</span>
-                      <span className="font-medium">${stock.price.toFixed(2)}</span>
+                      <span style={{ color: '#868f97' }}>Price:</span>
+                      <span className="font-medium tabular-nums">${stock.price.toFixed(2)}</span>
                     </div>
                   </div>
                 </Link>
@@ -644,7 +645,7 @@ export default function DividendsPage() {
             <h2 className="text-2xl sm:text-3xl font-bold mb-6">
               Monthly Dividend Stocks
             </h2>
-            <p className="text-muted-foreground mb-6">
+            <p className="mb-6" style={{ color: '#868f97' }}>
               Stocks that pay dividends every month instead of quarterly. Perfect for investors seeking
               regular monthly income to cover living expenses or reinvest more frequently.
             </p>
@@ -653,36 +654,36 @@ export default function DividendsPage() {
                 <Link
                   key={stock.ticker}
                   href={`/stock/${stock.ticker}`}
-                  className="bg-card p-6 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                  className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] group"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <h3 className="font-bold text-xl group-hover:text-green-500 transition-colors">
+                      <h3 className="font-bold text-xl">
                         {stock.ticker}
                       </h3>
-                      <p className="text-sm text-muted-foreground">{stock.company}</p>
+                      <p className="text-sm" style={{ color: '#868f97' }}>{stock.company}</p>
                     </div>
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-500/20 text-blue-500">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium" style={{ backgroundColor: 'rgba(71, 159, 250, 0.2)', color: '#479ffa' }}>
                       Monthly
                     </span>
                   </div>
                   <div className="grid grid-cols-3 gap-4">
                     <div>
-                      <p className="text-xs text-muted-foreground mb-1">Annual Yield</p>
-                      <p className="text-lg font-bold text-green-500">{stock.yield.toFixed(1)}%</p>
+                      <p className="text-xs mb-1" style={{ color: '#868f97' }}>Annual Yield</p>
+                      <p className="text-lg font-bold tabular-nums" style={{ color: '#4ebe96' }}>{stock.yield.toFixed(1)}%</p>
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground mb-1">Monthly Payout</p>
-                      <p className="text-lg font-bold">${stock.monthlyDividend.toFixed(3)}</p>
+                      <p className="text-xs mb-1" style={{ color: '#868f97' }}>Monthly Payout</p>
+                      <p className="text-lg font-bold tabular-nums">${stock.monthlyDividend.toFixed(3)}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground mb-1">Price</p>
-                      <p className="text-lg font-bold">${stock.price.toFixed(2)}</p>
+                      <p className="text-xs mb-1" style={{ color: '#868f97' }}>Price</p>
+                      <p className="text-lg font-bold tabular-nums">${stock.price.toFixed(2)}</p>
                     </div>
                   </div>
-                  <div className="mt-4 pt-4 border-t border-border">
-                    <p className="text-sm text-muted-foreground">
-                      Annual Income per Share: <span className="font-medium text-green-500">${(stock.monthlyDividend * 12).toFixed(2)}</span>
+                  <div className="mt-4 pt-4 border-t border-white/[0.08]">
+                    <p className="text-sm" style={{ color: '#868f97' }}>
+                      Annual Income per Share: <span className="font-medium tabular-nums" style={{ color: '#4ebe96' }}>${(stock.monthlyDividend * 12).toFixed(2)}</span>
                     </p>
                   </div>
                 </Link>
@@ -696,16 +697,16 @@ export default function DividendsPage() {
               Dividend Investing Strategies
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
                 <div className="text-3xl mb-3">📈</div>
-                <h3 className="text-xl font-bold mb-3 text-green-500">
+                <h3 className="text-xl font-bold mb-3" style={{ color: '#4ebe96' }}>
                   Dividend Growth Investing
                 </h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="mb-4" style={{ color: '#868f97' }}>
                   Focus on companies that consistently increase dividends over time. Even with lower
                   initial yields (2-3%), dividend growth compounds to generate substantial future income.
                 </p>
-                <ul className="list-disc list-inside text-muted-foreground space-y-2 text-sm">
+                <ul className="list-disc list-inside space-y-2 text-sm" style={{ color: '#868f97' }}>
                   <li>Target Dividend Aristocrats and Kings</li>
                   <li>Look for 5-10% annual dividend growth</li>
                   <li>Payout ratios under 60% indicate room for growth</li>
@@ -713,16 +714,16 @@ export default function DividendsPage() {
                 </ul>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
                 <div className="text-3xl mb-3">💰</div>
-                <h3 className="text-xl font-bold mb-3 text-green-500">
+                <h3 className="text-xl font-bold mb-3" style={{ color: '#4ebe96' }}>
                   High Yield Income Strategy
                 </h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="mb-4" style={{ color: '#868f97' }}>
                   Prioritize current income by investing in stocks with high dividend yields (5%+).
                   Common in retirement portfolios where regular cash flow is needed.
                 </p>
-                <ul className="list-disc list-inside text-muted-foreground space-y-2 text-sm">
+                <ul className="list-disc list-inside space-y-2 text-sm" style={{ color: '#868f97' }}>
                   <li>REITs, utilities, and telecoms offer high yields</li>
                   <li>Verify dividend sustainability (payout ratio, cash flow)</li>
                   <li>Diversify to manage risk of dividend cuts</li>
@@ -730,16 +731,16 @@ export default function DividendsPage() {
                 </ul>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6">
                 <div className="text-3xl mb-3">🔄</div>
-                <h3 className="text-xl font-bold mb-3 text-green-500">
+                <h3 className="text-xl font-bold mb-3" style={{ color: '#4ebe96' }}>
                   Dividend Reinvestment (DRIP)
                 </h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="mb-4" style={{ color: '#868f97' }}>
                   Automatically reinvest dividends to buy more shares, accelerating compound growth.
                   One of the most powerful wealth-building strategies over time.
                 </p>
-                <ul className="list-disc list-inside text-muted-foreground space-y-2 text-sm">
+                <ul className="list-disc list-inside space-y-2 text-sm" style={{ color: '#868f97' }}>
                   <li>Compound returns without additional capital</li>
                   <li>Buy fractional shares with dividends</li>
                   <li>No transaction fees with most brokers</li>
@@ -750,18 +751,18 @@ export default function DividendsPage() {
           </section>
 
           {/* How to Build a Dividend Portfolio */}
-          <section className="mb-12 bg-card p-6 sm:p-8 rounded-xl border border-border">
+          <section className="mb-12 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 sm:p-8">
             <h2 className="text-2xl sm:text-3xl font-bold mb-6">
               How to Build a Dividend Portfolio
             </h2>
             <div className="space-y-4">
               <div className="flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center font-bold">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full text-white flex items-center justify-center font-bold" style={{ backgroundColor: '#4ebe96' }}>
                   1
                 </div>
                 <div>
                   <h3 className="font-bold text-lg mb-2">Set Your Income Goal</h3>
-                  <p className="text-muted-foreground">
+                  <p style={{ color: '#868f97' }}>
                     Determine how much annual dividend income you want. A portfolio yielding 4% generates
                     $4,000 per year for every $100,000 invested. Consider both current yield and dividend growth.
                   </p>
@@ -769,12 +770,12 @@ export default function DividendsPage() {
               </div>
 
               <div className="flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center font-bold">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full text-white flex items-center justify-center font-bold" style={{ backgroundColor: '#4ebe96' }}>
                   2
                 </div>
                 <div>
                   <h3 className="font-bold text-lg mb-2">Diversify Across Sectors</h3>
-                  <p className="text-muted-foreground">
+                  <p style={{ color: '#868f97' }}>
                     Spread investments across consumer staples, healthcare, financials, utilities, and REITs.
                     Sector diversification protects against dividend cuts if one industry struggles.
                   </p>
@@ -782,12 +783,12 @@ export default function DividendsPage() {
               </div>
 
               <div className="flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center font-bold">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full text-white flex items-center justify-center font-bold" style={{ backgroundColor: '#4ebe96' }}>
                   3
                 </div>
                 <div>
                   <h3 className="font-bold text-lg mb-2">Balance Yield and Growth</h3>
-                  <p className="text-muted-foreground">
+                  <p style={{ color: '#868f97' }}>
                     Allocate 40% to dividend aristocrats (stability), 30% to high-yield stocks (income),
                     20% to dividend growth stocks (future income), and 10% to REITs (diversification and monthly income).
                   </p>
@@ -795,12 +796,12 @@ export default function DividendsPage() {
               </div>
 
               <div className="flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center font-bold">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full text-white flex items-center justify-center font-bold" style={{ backgroundColor: '#4ebe96' }}>
                   4
                 </div>
                 <div>
                   <h3 className="font-bold text-lg mb-2">Verify Dividend Safety</h3>
-                  <p className="text-muted-foreground">
+                  <p style={{ color: '#868f97' }}>
                     Check payout ratios (should be under 60-70% for most stocks), free cash flow coverage,
                     debt levels, and dividend history. Avoid stocks with payout ratios above 100% unless they're REITs.
                   </p>
@@ -808,12 +809,12 @@ export default function DividendsPage() {
               </div>
 
               <div className="flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center font-bold">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full text-white flex items-center justify-center font-bold" style={{ backgroundColor: '#4ebe96' }}>
                   5
                 </div>
                 <div>
                   <h3 className="font-bold text-lg mb-2">Reinvest and Rebalance</h3>
-                  <p className="text-muted-foreground">
+                  <p style={{ color: '#868f97' }}>
                     Reinvest dividends during accumulation phase for compound growth. Rebalance annually to
                     maintain sector allocation and replace underperforming dividend stocks. Take cash dividends when you need income.
                   </p>
@@ -831,15 +832,15 @@ export default function DividendsPage() {
               {dividendFAQs.map((faq, index) => (
                 <details
                   key={index}
-                  className="bg-card p-6 rounded-xl border border-border group"
+                  className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 group"
                 >
                   <summary className="text-lg font-bold cursor-pointer list-none flex items-center justify-between">
                     <span>{faq.question}</span>
-                    <span className="text-green-500 group-open:rotate-180 transition-transform">
+                    <span className="group-open:rotate-180 motion-safe:transition-all motion-safe:duration-150 ease-out" style={{ color: '#4ebe96' }}>
                       ▼
                     </span>
                   </summary>
-                  <p className="text-muted-foreground mt-4 leading-relaxed">
+                  <p className="mt-4 leading-relaxed" style={{ color: '#868f97' }}>
                     {faq.answer}
                   </p>
                 </details>
@@ -855,52 +856,52 @@ export default function DividendsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Link
                 href="/earnings"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] group"
               >
                 <div className="text-2xl mb-2">📅</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors">
+                <h3 className="font-bold">
                   Earnings Calendar
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm" style={{ color: '#868f97' }}>
                   Upcoming earnings reports
                 </p>
               </Link>
 
               <Link
                 href="/screener"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] group"
               >
                 <div className="text-2xl mb-2">🔍</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors">
+                <h3 className="font-bold">
                   Stock Screener
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm" style={{ color: '#868f97' }}>
                   Filter by dividend yield
                 </p>
               </Link>
 
               <Link
                 href="/sectors"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] group"
               >
                 <div className="text-2xl mb-2">🏢</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors">
+                <h3 className="font-bold">
                   Sectors
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm" style={{ color: '#868f97' }}>
                   Browse by industry
                 </p>
               </Link>
 
               <Link
                 href="/dashboard"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] group"
               >
                 <div className="text-2xl mb-2">📊</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors">
+                <h3 className="font-bold">
                   Stock Analysis
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm" style={{ color: '#868f97' }}>
                   AI-powered research
                 </p>
               </Link>
@@ -908,17 +909,18 @@ export default function DividendsPage() {
           </section>
 
           {/* CTA Section */}
-          <section className="bg-gradient-to-r from-green-600 to-emerald-600 p-8 sm:p-12 rounded-xl text-white text-center">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 sm:p-12 text-center" style={{ background: 'linear-gradient(to right, rgba(78, 190, 150, 0.15), rgba(78, 190, 150, 0.1))' }}>
             <h2 className="text-2xl sm:text-3xl font-bold mb-4">
               Analyze Dividend Stocks with AI
             </h2>
-            <p className="text-lg mb-6 opacity-90 max-w-2xl mx-auto">
+            <p className="text-lg mb-6 max-w-2xl mx-auto" style={{ color: '#868f97' }}>
               Get detailed dividend analysis, payout ratio calculations, yield history, and AI-powered
               insights for any dividend stock in the market.
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-white text-green-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-bold transition-colors"
+              className="inline-block bg-white/[0.08] border border-white/[0.15] hover:bg-white/[0.12] hover:border-white/[0.2] px-8 py-3 rounded-full font-bold motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
+              style={{ color: '#4ebe96' }}
             >
               Start Analyzing Dividend Stocks Free
             </Link>

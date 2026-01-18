@@ -100,31 +100,31 @@ function getShortLevel(shortPercent: number): {
   if (shortPercent >= 40) {
     return {
       level: 'Extreme',
-      color: 'text-red-500',
+      color: 'text-[#ff5c5c]',
       description: 'Very high short interest - potential squeeze candidate'
     }
   } else if (shortPercent >= 30) {
     return {
       level: 'Very High',
-      color: 'text-orange-500',
+      color: 'text-[#ffa16c]',
       description: 'Heavily shorted - high squeeze potential'
     }
   } else if (shortPercent >= 20) {
     return {
       level: 'High',
-      color: 'text-yellow-500',
+      color: 'text-[#ffa16c]',
       description: 'Significant short interest - monitor closely'
     }
   } else if (shortPercent >= 10) {
     return {
       level: 'Moderate',
-      color: 'text-blue-500',
+      color: 'text-[#479ffa]',
       description: 'Above average short interest'
     }
   } else {
     return {
       level: 'Low',
-      color: 'text-green-500',
+      color: 'text-[#4ebe96]',
       description: 'Low short interest'
     }
   }
@@ -230,18 +230,18 @@ export default async function ShortInterestPage() {
           ]),
         }}
       />
-      <main className="min-h-screen bg-background text-foreground pt-20">
+      <main className="min-h-screen bg-black text-white pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           <div className="flex gap-8">
             <SEOSidebar />
             <div className="flex-1 min-w-0">
           {/* Breadcrumbs */}
-          <nav className="text-sm text-muted-foreground mb-6" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-foreground transition-colors">
+          <nav className="text-sm text-[#868f97] mb-6" aria-label="Breadcrumb">
+            <Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none rounded">
               Home
             </Link>
             {' / '}
-            <span className="text-foreground">Short Interest</span>
+            <span className="text-white">Short Interest</span>
           </nav>
 
           {/* Hero Section */}
@@ -249,11 +249,11 @@ export default async function ShortInterestPage() {
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
               Short Interest Tracker
             </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mb-4">
+            <p className="text-lg sm:text-xl text-[#868f97] max-w-3xl mb-4">
               Track the most shorted stocks and identify short squeeze candidates with real-time
               FINRA data. Monitor short interest percentages, days to cover, and borrow rates.
             </p>
-            <p className="text-base text-muted-foreground max-w-3xl">
+            <p className="text-base text-[#868f97] max-w-3xl">
               High short interest indicates bearish sentiment but also creates potential for
               explosive short squeezes when shorts are forced to cover their positions.
             </p>
@@ -261,39 +261,39 @@ export default async function ShortInterestPage() {
 
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 sm:mb-12">
-            <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-2">Stocks Tracked</p>
-              <p className="text-2xl sm:text-3xl font-bold text-green-500">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 sm:p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+              <p className="text-sm text-[#868f97] mb-2">Stocks Tracked</p>
+              <p className="text-2xl sm:text-3xl font-bold tabular-nums text-[#4ebe96]">
                 {mostShorted.length}
               </p>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-xs text-[#868f97] mt-1">
                 With short data
               </p>
             </div>
-            <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-2">High Short Interest</p>
-              <p className="text-2xl sm:text-3xl font-bold text-orange-500">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 sm:p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+              <p className="text-sm text-[#868f97] mb-2">High Short Interest</p>
+              <p className="text-2xl sm:text-3xl font-bold tabular-nums text-[#ffa16c]">
                 {highShortCount}
               </p>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-xs text-[#868f97] mt-1">
                 Above 20% shorted
               </p>
             </div>
-            <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-2">Extreme Shorts</p>
-              <p className="text-2xl sm:text-3xl font-bold text-red-500">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 sm:p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+              <p className="text-sm text-[#868f97] mb-2">Extreme Shorts</p>
+              <p className="text-2xl sm:text-3xl font-bold tabular-nums text-[#ff5c5c]">
                 {extremeShortCount}
               </p>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-xs text-[#868f97] mt-1">
                 Above 40% shorted
               </p>
             </div>
-            <div className="bg-card p-4 sm:p-6 rounded-xl border border-border">
-              <p className="text-sm text-muted-foreground mb-2">Average Short %</p>
-              <p className="text-2xl sm:text-3xl font-bold">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 sm:p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+              <p className="text-sm text-[#868f97] mb-2">Average Short %</p>
+              <p className="text-2xl sm:text-3xl font-bold tabular-nums">
                 {avgShortPercent.toFixed(1)}%
               </p>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-xs text-[#868f97] mt-1">
                 Market average
               </p>
             </div>
@@ -305,15 +305,15 @@ export default async function ShortInterestPage() {
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h2 className="text-2xl sm:text-3xl font-bold">Extreme Short Interest</h2>
-                  <p className="text-muted-foreground mt-1">
+                  <p className="text-[#868f97] mt-1">
                     Stocks with 40%+ short interest - highest squeeze potential
                   </p>
                 </div>
               </div>
-              <div className="bg-card rounded-xl border border-red-500/30 overflow-hidden">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-[#ff5c5c]/30 rounded-2xl overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-red-500/10 border-b border-border">
+                    <thead className="bg-[#ff5c5c]/10 border-b border-white/[0.08]">
                       <tr>
                         <th className="text-left p-3 text-sm font-medium">Rank</th>
                         <th className="text-left p-3 text-sm font-medium">Symbol</th>
@@ -329,30 +329,30 @@ export default async function ShortInterestPage() {
                         return (
                           <tr
                             key={`extreme-${stock.symbol}`}
-                            className="border-b border-border hover:bg-muted/30 transition-colors"
+                            className="border-b border-white/[0.08] hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out"
                           >
-                            <td className="p-3 text-muted-foreground">#{index + 1}</td>
+                            <td className="p-3 text-[#868f97]">#{index + 1}</td>
                             <td className="p-3">
                               <Link
                                 href={`/stock/${stock.symbol}`}
-                                className="font-bold text-red-500 hover:text-red-400 transition-colors"
+                                className="font-bold text-[#ff5c5c] hover:text-[#ff8080] motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none rounded"
                               >
                                 {stock.symbol}
                               </Link>
                             </td>
                             <td className="p-3 text-right">
-                              <span className="text-lg font-bold text-red-500">
+                              <span className="text-lg font-bold tabular-nums text-[#ff5c5c]">
                                 {stock.short_percent.toFixed(1)}%
                               </span>
                             </td>
-                            <td className="p-3 text-right text-sm text-muted-foreground hidden sm:table-cell">
+                            <td className="p-3 text-right text-sm tabular-nums text-[#868f97] hidden sm:table-cell">
                               {formatNumber(stock.short_volume)}
                             </td>
-                            <td className="p-3 text-right text-sm text-muted-foreground hidden md:table-cell">
+                            <td className="p-3 text-right text-sm tabular-nums text-[#868f97] hidden md:table-cell">
                               {formatNumber(stock.total_volume)}
                             </td>
                             <td className="p-3 text-right">
-                              <span className={`text-xs px-2 py-1 rounded ${shortInfo.color} bg-current/10`}>
+                              <span className={`text-xs px-2 py-1 rounded-full ${shortInfo.color} bg-current/10`}>
                                 {shortInfo.level}
                               </span>
                             </td>
@@ -371,7 +371,7 @@ export default async function ShortInterestPage() {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-2xl sm:text-3xl font-bold">Short Squeeze Candidates</h2>
-                <p className="text-muted-foreground mt-1">
+                <p className="text-[#868f97] mt-1">
                   High short interest combined with strong volume
                 </p>
               </div>
@@ -383,34 +383,34 @@ export default async function ShortInterestPage() {
                   <Link
                     key={`squeeze-${stock.symbol}`}
                     href={`/stock/${stock.symbol}`}
-                    className="bg-card p-5 rounded-xl border border-border hover:border-orange-500/50 transition-all group"
+                    className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 hover:bg-white/[0.05] hover:border-[#ffa16c]/50 motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none group"
                   >
                     <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-xl font-bold group-hover:text-orange-500 transition-colors">
+                      <h3 className="text-xl font-bold group-hover:text-[#ffa16c] motion-safe:transition-all motion-safe:duration-150 ease-out">
                         {stock.symbol}
                       </h3>
-                      <span className={`text-xs px-2 py-1 rounded ${shortInfo.color} bg-current/10`}>
+                      <span className={`text-xs px-2 py-1 rounded-full ${shortInfo.color} bg-current/10`}>
                         {shortInfo.level}
                       </span>
                     </div>
                     <div className="space-y-2">
                       <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">Short Interest</span>
-                        <span className="font-bold text-orange-500 text-lg">
+                        <span className="text-sm text-[#868f97]">Short Interest</span>
+                        <span className="font-bold tabular-nums text-[#ffa16c] text-lg">
                           {stock.short_percent.toFixed(1)}%
                         </span>
                       </div>
                       <div className="flex justify-between items-center text-sm">
-                        <span className="text-muted-foreground">Short Volume</span>
-                        <span className="font-medium">{formatNumber(stock.short_volume)}</span>
+                        <span className="text-[#868f97]">Short Volume</span>
+                        <span className="font-medium tabular-nums">{formatNumber(stock.short_volume)}</span>
                       </div>
                       <div className="flex justify-between items-center text-sm">
-                        <span className="text-muted-foreground">Total Volume</span>
-                        <span className="font-medium">{formatNumber(stock.total_volume)}</span>
+                        <span className="text-[#868f97]">Total Volume</span>
+                        <span className="font-medium tabular-nums">{formatNumber(stock.total_volume)}</span>
                       </div>
                     </div>
-                    <div className="mt-3 pt-3 border-t border-border">
-                      <p className="text-xs text-muted-foreground">{shortInfo.description}</p>
+                    <div className="mt-3 pt-3 border-t border-white/[0.08]">
+                      <p className="text-xs text-[#868f97]">{shortInfo.description}</p>
                     </div>
                   </Link>
                 )
@@ -421,10 +421,10 @@ export default async function ShortInterestPage() {
           {/* Most Shorted Stocks - Comprehensive Table */}
           <section className="mb-12">
             <h2 className="text-2xl sm:text-3xl font-bold mb-6">Most Shorted Stocks</h2>
-            <div className="bg-card rounded-xl border border-border overflow-hidden">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-muted/50 border-b border-border">
+                  <thead className="bg-white/[0.05] border-b border-white/[0.08]">
                     <tr>
                       <th className="text-left p-3 text-sm font-medium">Rank</th>
                       <th className="text-left p-3 text-sm font-medium">Symbol</th>
@@ -441,29 +441,29 @@ export default async function ShortInterestPage() {
                       return (
                         <tr
                           key={stock.symbol}
-                          className="border-b border-border hover:bg-muted/30 transition-colors"
+                          className="border-b border-white/[0.08] hover:bg-white/[0.05] motion-safe:transition-all motion-safe:duration-150 ease-out"
                         >
-                          <td className="p-3 text-muted-foreground">#{index + 1}</td>
+                          <td className="p-3 text-[#868f97]">#{index + 1}</td>
                           <td className="p-3">
                             <Link
                               href={`/stock/${stock.symbol}`}
-                              className={`font-bold hover:underline transition-colors ${shortInfo.color}`}
+                              className={`font-bold hover:underline motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none rounded ${shortInfo.color}`}
                             >
                               {stock.symbol}
                             </Link>
                           </td>
                           <td className="p-3 text-right">
-                            <span className={`font-bold ${shortInfo.color}`}>
+                            <span className={`font-bold tabular-nums ${shortInfo.color}`}>
                               {stock.short_percent.toFixed(1)}%
                             </span>
                           </td>
-                          <td className="p-3 text-right text-sm text-muted-foreground hidden md:table-cell">
+                          <td className="p-3 text-right text-sm tabular-nums text-[#868f97] hidden md:table-cell">
                             {formatNumber(stock.short_volume)}
                           </td>
-                          <td className="p-3 text-right text-sm text-muted-foreground hidden lg:table-cell">
+                          <td className="p-3 text-right text-sm tabular-nums text-[#868f97] hidden lg:table-cell">
                             {formatNumber(stock.total_volume)}
                           </td>
-                          <td className="p-3 text-right text-sm text-muted-foreground hidden sm:table-cell">
+                          <td className="p-3 text-right text-sm text-[#868f97] hidden sm:table-cell">
                             {new Date(stock.trade_date).toLocaleDateString('en-US', {
                               month: 'short',
                               day: 'numeric',
@@ -472,7 +472,7 @@ export default async function ShortInterestPage() {
                           <td className="p-3 text-right">
                             <Link
                               href={`/stock/${stock.symbol}`}
-                              className="text-sm text-green-500 hover:underline"
+                              className="text-sm text-[#4ebe96] hover:underline focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none rounded"
                             >
                               Analyze
                             </Link>
@@ -492,16 +492,16 @@ export default async function ShortInterestPage() {
               Understanding Short Interest
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-xl font-bold mb-3 text-green-500">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <h3 className="text-xl font-bold mb-3 text-[#4ebe96]">
                   What is Short Selling?
                 </h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="text-[#868f97] mb-4">
                   Short selling is when investors borrow shares and sell them, hoping to buy them
                   back later at a lower price. Short interest measures how many shares have been
                   borrowed and sold but not yet repurchased.
                 </p>
-                <ul className="list-disc list-inside text-muted-foreground space-y-2">
+                <ul className="list-disc list-inside text-[#868f97] space-y-2">
                   <li>Indicates bearish sentiment on a stock</li>
                   <li>Can predict future price declines</li>
                   <li>Creates potential for short squeezes</li>
@@ -509,16 +509,16 @@ export default async function ShortInterestPage() {
                 </ul>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-xl font-bold mb-3 text-green-500">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <h3 className="text-xl font-bold mb-3 text-[#4ebe96]">
                   Short Squeeze Mechanics
                 </h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="text-[#868f97] mb-4">
                   A short squeeze occurs when a heavily shorted stock rises, forcing shorts to buy
                   shares to limit losses. This buying creates more upward pressure, potentially
                   causing exponential price increases.
                 </p>
-                <ul className="list-disc list-inside text-muted-foreground space-y-2">
+                <ul className="list-disc list-inside text-[#868f97] space-y-2">
                   <li>Rising prices force short sellers to cover</li>
                   <li>Covering creates buying pressure</li>
                   <li>Can lead to rapid price acceleration</li>
@@ -526,11 +526,11 @@ export default async function ShortInterestPage() {
                 </ul>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-xl font-bold mb-3 text-green-500">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <h3 className="text-xl font-bold mb-3 text-[#4ebe96]">
                   Key Metrics to Monitor
                 </h3>
-                <ul className="list-disc list-inside text-muted-foreground space-y-2">
+                <ul className="list-disc list-inside text-[#868f97] space-y-2">
                   <li>
                     <strong>Short Interest %:</strong> Percentage of float sold short
                   </li>
@@ -549,11 +549,11 @@ export default async function ShortInterestPage() {
                 </ul>
               </div>
 
-              <div className="bg-card p-6 rounded-xl border border-border">
-                <h3 className="text-xl font-bold mb-3 text-green-500">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <h3 className="text-xl font-bold mb-3 text-[#4ebe96]">
                   Trading Short Interest
                 </h3>
-                <ul className="list-disc list-inside text-muted-foreground space-y-2">
+                <ul className="list-disc list-inside text-[#868f97] space-y-2">
                   <li>
                     <strong>Contrarian:</strong> Buy heavily shorted stocks expecting squeeze
                   </li>
@@ -575,19 +575,19 @@ export default async function ShortInterestPage() {
           </section>
 
           {/* Short Interest Levels Guide */}
-          <section className="mb-12 bg-card p-6 sm:p-8 rounded-xl border border-border">
+          <section className="mb-12 bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 sm:p-8">
             <h2 className="text-2xl sm:text-3xl font-bold mb-6">
               Short Interest Level Guide
             </h2>
             <div className="space-y-4">
               <div className="flex gap-4 items-start">
                 <div className="flex-shrink-0 w-24 text-center">
-                  <div className="text-2xl font-bold text-red-500">40%+</div>
-                  <div className="text-xs text-muted-foreground">Extreme</div>
+                  <div className="text-2xl font-bold tabular-nums text-[#ff5c5c]">40%+</div>
+                  <div className="text-xs text-[#868f97]">Extreme</div>
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-bold text-lg mb-2 text-red-500">Extreme Short Interest</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="font-bold text-lg mb-2 text-[#ff5c5c]">Extreme Short Interest</h3>
+                  <p className="text-[#868f97]">
                     Very high bearish sentiment. Prime short squeeze candidates if positive catalyst
                     emerges. Shorts may have difficulty exiting positions. Exercise extreme caution -
                     either significant downside or explosive upside potential.
@@ -597,12 +597,12 @@ export default async function ShortInterestPage() {
 
               <div className="flex gap-4 items-start">
                 <div className="flex-shrink-0 w-24 text-center">
-                  <div className="text-2xl font-bold text-orange-500">30-40%</div>
-                  <div className="text-xs text-muted-foreground">Very High</div>
+                  <div className="text-2xl font-bold tabular-nums text-[#ffa16c]">30-40%</div>
+                  <div className="text-xs text-[#868f97]">Very High</div>
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-bold text-lg mb-2 text-orange-500">Very High Short Interest</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="font-bold text-lg mb-2 text-[#ffa16c]">Very High Short Interest</h3>
+                  <p className="text-[#868f97]">
                     Heavily shorted with strong bearish conviction. Moderate squeeze potential if
                     momentum shifts. Monitor for changes in sentiment or fundamental improvements
                     that could trigger covering.
@@ -612,12 +612,12 @@ export default async function ShortInterestPage() {
 
               <div className="flex gap-4 items-start">
                 <div className="flex-shrink-0 w-24 text-center">
-                  <div className="text-2xl font-bold text-yellow-500">20-30%</div>
-                  <div className="text-xs text-muted-foreground">High</div>
+                  <div className="text-2xl font-bold tabular-nums text-[#ffa16c]">20-30%</div>
+                  <div className="text-xs text-[#868f97]">High</div>
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-bold text-lg mb-2 text-yellow-500">High Short Interest</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="font-bold text-lg mb-2 text-[#ffa16c]">High Short Interest</h3>
+                  <p className="text-[#868f97]">
                     Significant bearish bets but still manageable. Common for value traps or
                     companies with known issues. Watch for catalysts that could shift sentiment
                     and trigger short covering.
@@ -627,12 +627,12 @@ export default async function ShortInterestPage() {
 
               <div className="flex gap-4 items-start">
                 <div className="flex-shrink-0 w-24 text-center">
-                  <div className="text-2xl font-bold text-blue-500">10-20%</div>
-                  <div className="text-xs text-muted-foreground">Moderate</div>
+                  <div className="text-2xl font-bold tabular-nums text-[#479ffa]">10-20%</div>
+                  <div className="text-xs text-[#868f97]">Moderate</div>
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-bold text-lg mb-2 text-blue-500">Moderate Short Interest</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="font-bold text-lg mb-2 text-[#479ffa]">Moderate Short Interest</h3>
+                  <p className="text-[#868f97]">
                     Above average but not extreme. Normal for stocks with mixed sentiment or
                     transition stories. Shorts present but not overwhelming. Limited squeeze
                     potential unless strong catalyst emerges.
@@ -642,12 +642,12 @@ export default async function ShortInterestPage() {
 
               <div className="flex gap-4 items-start">
                 <div className="flex-shrink-0 w-24 text-center">
-                  <div className="text-2xl font-bold text-green-500">&lt;10%</div>
-                  <div className="text-xs text-muted-foreground">Low</div>
+                  <div className="text-2xl font-bold tabular-nums text-[#4ebe96]">&lt;10%</div>
+                  <div className="text-xs text-[#868f97]">Low</div>
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-bold text-lg mb-2 text-green-500">Low Short Interest</h3>
-                  <p className="text-muted-foreground">
+                  <h3 className="font-bold text-lg mb-2 text-[#4ebe96]">Low Short Interest</h3>
+                  <p className="text-[#868f97]">
                     Normal levels of short selling. Limited bearish sentiment. Minimal squeeze
                     potential. Stock price movements driven primarily by fundamentals and market
                     conditions rather than short covering dynamics.
@@ -666,15 +666,15 @@ export default async function ShortInterestPage() {
               {faqs.map((faq, index) => (
                 <details
                   key={index}
-                  className="bg-card p-6 rounded-xl border border-border group"
+                  className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out group"
                 >
                   <summary className="text-lg font-bold cursor-pointer list-none flex items-center justify-between">
                     <span>{faq.question}</span>
-                    <span className="text-green-500 group-open:rotate-180 transition-transform">
+                    <span className="text-[#4ebe96] group-open:rotate-180 motion-safe:transition-all motion-safe:duration-150 ease-out">
                       ▼
                     </span>
                   </summary>
-                  <p className="text-muted-foreground mt-4 leading-relaxed">
+                  <p className="text-[#868f97] mt-4 leading-relaxed">
                     {faq.answer}
                   </p>
                 </details>
@@ -690,52 +690,52 @@ export default async function ShortInterestPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Link
                 href="/insider-trading"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none group"
               >
                 <div className="text-2xl mb-2">📊</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors">
+                <h3 className="font-bold group-hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   Insider Trading
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-[#868f97]">
                   Track insider buys and sells
                 </p>
               </Link>
 
               <Link
                 href="/institutional"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none group"
               >
                 <div className="text-2xl mb-2">🏢</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors">
+                <h3 className="font-bold group-hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   Institutional Ownership
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-[#868f97]">
                   13F filings and holdings
                 </p>
               </Link>
 
               <Link
                 href="/markets/most-active"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none group"
               >
                 <div className="text-2xl mb-2">🔥</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors">
+                <h3 className="font-bold group-hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   Most Active
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-[#868f97]">
                   High volume stocks
                 </p>
               </Link>
 
               <Link
                 href="/screener"
-                className="bg-card p-4 rounded-xl border border-border hover:border-green-500/50 transition-all group"
+                className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.05] hover:border-[#4ebe96]/50 motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:outline-none group"
               >
                 <div className="text-2xl mb-2">🔍</div>
-                <h3 className="font-bold group-hover:text-green-500 transition-colors">
+                <h3 className="font-bold group-hover:text-[#4ebe96] motion-safe:transition-all motion-safe:duration-150 ease-out">
                   Stock Screener
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-[#868f97]">
                   Find stocks by criteria
                 </p>
               </Link>
@@ -743,7 +743,7 @@ export default async function ShortInterestPage() {
           </section>
 
           {/* CTA Section */}
-          <section className="bg-gradient-to-r from-green-600 to-emerald-600 p-8 sm:p-12 rounded-xl text-white text-center">
+          <section className="bg-gradient-to-r from-[#4ebe96] to-[#3da77d] p-8 sm:p-12 rounded-2xl text-white text-center">
             <h2 className="text-2xl sm:text-3xl font-bold mb-4">
               Find Your Next Short Squeeze
             </h2>
@@ -753,7 +753,7 @@ export default async function ShortInterestPage() {
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-white text-green-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-bold transition-colors"
+              className="inline-block bg-white text-black hover:bg-white/90 px-8 py-3 rounded-full font-bold motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
             >
               Start Analyzing Stocks Free
             </Link>

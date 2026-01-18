@@ -107,42 +107,42 @@ export default async function GMVPage({ params }: Props) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }} />
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-black text-white">
         <div className="max-w-4xl mx-auto px-6 py-12">
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:rounded">Home</Link>
             {' / '}
-            <Link href="/dashboard" className="hover:text-foreground">Marketplace Metrics</Link>
+            <Link href="/dashboard" className="hover:text-white motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96] focus-visible:rounded">Marketplace Metrics</Link>
             {' / '}
             <span>{symbol} GMV</span>
           </nav>
 
-          <h1 className="text-4xl font-bold mb-4">{symbol} Gross Merchandise Value (GMV)</h1>
-          <p className="text-xl text-muted-foreground mb-8">{companyName} - Total marketplace transaction volume & trends</p>
+          <h1 className="text-4xl font-bold mb-4 text-balance">{symbol} Gross Merchandise Value (GMV)</h1>
+          <p className="text-xl text-[#868f97] mb-8">{companyName} - Total marketplace transaction volume & trends</p>
 
           {/* Price Card */}
-          <div className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 p-8 rounded-xl border border-purple-500/30 mb-8">
+          <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 mb-8 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div>
-                <p className="text-muted-foreground text-sm mb-1">Current Price</p>
-                <p className="text-4xl font-bold">${price.toFixed(2)}</p>
+                <p className="text-[#868f97] text-sm mb-1">Current Price</p>
+                <p className="text-4xl font-bold tabular-nums">${price.toFixed(2)}</p>
               </div>
               <div>
-                <p className="text-muted-foreground text-sm mb-1">Today's Change</p>
-                <p className={`text-3xl font-bold ${snapshot.day_change_percent >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                <p className="text-[#868f97] text-sm mb-1">Today's Change</p>
+                <p className={`text-3xl font-bold tabular-nums ${snapshot.day_change_percent >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                   {snapshot.day_change_percent >= 0 ? '+' : ''}{snapshot.day_change_percent?.toFixed(2)}%
                 </p>
               </div>
               {snapshot.yearHigh && (
                 <div>
-                  <p className="text-muted-foreground text-sm mb-1">52W High</p>
-                  <p className="text-2xl font-bold">${snapshot.yearHigh.toFixed(2)}</p>
+                  <p className="text-[#868f97] text-sm mb-1">52W High</p>
+                  <p className="text-2xl font-bold tabular-nums">${snapshot.yearHigh.toFixed(2)}</p>
                 </div>
               )}
               {snapshot.yearLow && (
                 <div>
-                  <p className="text-muted-foreground text-sm mb-1">52W Low</p>
-                  <p className="text-2xl font-bold">${snapshot.yearLow.toFixed(2)}</p>
+                  <p className="text-[#868f97] text-sm mb-1">52W Low</p>
+                  <p className="text-2xl font-bold tabular-nums">${snapshot.yearLow.toFixed(2)}</p>
                 </div>
               )}
             </div>
@@ -150,11 +150,11 @@ export default async function GMVPage({ params }: Props) {
 
           {/* GMV Overview */}
           <section className="mb-12">
-            <div className="bg-card p-8 rounded-lg border border-border">
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
               <div className="text-6xl mb-4">📊</div>
-              <h2 className="text-2xl font-bold mb-2">GMV Analysis</h2>
-              <p className="text-muted-foreground mb-6">Track {symbol}'s gross merchandise value, marketplace volume trends, and transaction growth metrics</p>
-              <Link href={`/dashboard?ticker=${symbol}&tab=financials`} className="inline-block bg-purple-600 hover:bg-purple-500 text-white px-8 py-3 rounded-lg font-medium">
+              <h2 className="text-2xl font-bold mb-2 text-balance">GMV Analysis</h2>
+              <p className="text-[#868f97] mb-6">Track {symbol}'s gross merchandise value, marketplace volume trends, and transaction growth metrics</p>
+              <Link href={`/dashboard?ticker=${symbol}&tab=financials`} className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-white px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
                 View Full Marketplace Metrics
               </Link>
             </div>
@@ -162,7 +162,7 @@ export default async function GMVPage({ params }: Props) {
 
           {/* GMV Metrics */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Key GMV Metrics</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Key GMV Metrics</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
                 { name: 'Total GMV', desc: 'Gross merchandise value' },
@@ -172,9 +172,9 @@ export default async function GMVPage({ params }: Props) {
                 { name: 'GMV by Category', desc: 'Transaction volume breakdown' },
                 { name: 'GMV by Geography', desc: 'Regional marketplace activity' },
               ].map((metric, i) => (
-                <div key={i} className="bg-card p-4 rounded-lg border border-border">
+                <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-4 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
                   <p className="font-bold">{metric.name}</p>
-                  <p className="text-sm text-muted-foreground">{metric.desc}</p>
+                  <p className="text-sm text-[#868f97]">{metric.desc}</p>
                 </div>
               ))}
             </div>
@@ -182,7 +182,7 @@ export default async function GMVPage({ params }: Props) {
 
           {/* What GMV Tells You */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">What GMV Tells You</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">What GMV Tells You</h2>
             <div className="space-y-3">
               {[
                 'Growing GMV indicates increasing marketplace scale and user engagement',
@@ -191,30 +191,30 @@ export default async function GMVPage({ params }: Props) {
                 'Investors compare GMV across marketplace competitors to assess market share and growth',
               ].map((point, i) => (
                 <div key={i} className="flex gap-3 items-start">
-                  <span className="text-purple-500 text-lg">✓</span>
-                  <p className="text-muted-foreground">{point}</p>
+                  <span className="text-[#4ebe96] text-lg">✓</span>
+                  <p className="text-[#868f97]">{point}</p>
                 </div>
               ))}
             </div>
           </section>
 
           {/* CTA */}
-          <section className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 p-8 rounded-xl border border-purple-500/30 text-center mb-12">
-            <h2 className="text-2xl font-bold mb-4">Complete Marketplace Analysis</h2>
-            <p className="text-muted-foreground mb-6">Get AI-powered analysis of {symbol} GMV trends and marketplace performance</p>
-            <Link href={`/dashboard?ticker=${symbol}&tab=financials`} className="inline-block bg-purple-600 hover:bg-purple-500 text-white px-8 py-3 rounded-lg font-medium">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 text-center mb-12 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Complete Marketplace Analysis</h2>
+            <p className="text-[#868f97] mb-6">Get AI-powered analysis of {symbol} GMV trends and marketplace performance</p>
+            <Link href={`/dashboard?ticker=${symbol}&tab=financials`} className="inline-block bg-[#4ebe96] hover:bg-[#4ebe96]/80 text-white px-8 py-3 rounded-lg font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ebe96]">
               Analyze {symbol} Marketplace
             </Link>
           </section>
 
           {/* FAQ */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {gmvFaqs.map((faq, i) => (
-                <div key={i} className="bg-card p-5 rounded-lg border border-border">
-                  <h3 className="font-bold text-lg mb-2">{faq.question}</h3>
-                  <p className="text-muted-foreground">{faq.answer}</p>
+                <div key={i} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 motion-safe:transition-all motion-safe:duration-150 ease-out hover:bg-white/[0.05] hover:border-white/[0.15]">
+                  <h3 className="font-bold text-lg mb-2 text-balance">{faq.question}</h3>
+                  <p className="text-[#868f97]">{faq.answer}</p>
                 </div>
               ))}
             </div>

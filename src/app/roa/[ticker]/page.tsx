@@ -59,27 +59,27 @@ async function getStockData(ticker: string) {
 function getRatingLabel(roa: number): { label: string; color: string; description: string } {
   if (roa >= 0.15) return {
     label: 'Excellent',
-    color: 'text-green-500',
+    color: 'text-[#4ebe96]',
     description: 'Outstanding asset efficiency'
   }
   if (roa >= 0.10) return {
     label: 'Very Good',
-    color: 'text-green-400',
+    color: 'text-[#4ebe96]',
     description: 'Strong asset utilization'
   }
   if (roa >= 0.05) return {
     label: 'Good',
-    color: 'text-blue-500',
+    color: 'text-[#479ffa]',
     description: 'Solid asset returns'
   }
   if (roa >= 0.02) return {
     label: 'Fair',
-    color: 'text-yellow-500',
+    color: 'text-[#ffa16c]',
     description: 'Below average efficiency'
   }
   return {
     label: 'Poor',
-    color: 'text-red-500',
+    color: 'text-[#ff5c5c]',
     description: 'Low asset efficiency'
   }
 }
@@ -190,95 +190,95 @@ export default async function ROAPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
       />
-      <main className="min-h-screen bg-background text-foreground">
+      <main className="min-h-screen bg-black text-white">
         <div className="max-w-4xl mx-auto px-6 py-12">
-          <nav className="text-sm text-muted-foreground mb-6">
-            <Link href="/" className="hover:text-foreground">Home</Link>
+          <nav className="text-sm text-[#868f97] mb-6">
+            <Link href="/" className="hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out">Home</Link>
             {' / '}
-            <Link href="/dashboard" className="hover:text-foreground">Stocks</Link>
+            <Link href="/dashboard" className="hover:text-white motion-safe:transition-colors motion-safe:duration-150 ease-out">Stocks</Link>
             {' / '}
             <span>{symbol} ROA</span>
           </nav>
 
-          <h1 className="text-4xl font-bold mb-4">
+          <h1 className="text-4xl font-bold mb-4 text-balance">
             {symbol} ROA - Return on Assets
           </h1>
-          <p className="text-xl text-muted-foreground mb-8">
+          <p className="text-xl text-[#868f97] mb-8">
             Asset efficiency analysis for {companyName}
           </p>
 
           {/* Current Price & ROA Overview */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-            <div className="bg-card p-6 rounded-xl border border-border">
-              <p className="text-muted-foreground mb-1">Stock Price</p>
-              <p className="text-4xl font-bold">${snapshot.price?.toFixed(2)}</p>
-              <p className={`text-sm mt-2 ${snapshot.day_change_percent >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+              <p className="text-[#868f97] mb-1">Stock Price</p>
+              <p className="text-4xl font-bold tabular-nums">${snapshot.price?.toFixed(2)}</p>
+              <p className={`text-sm mt-2 tabular-nums ${snapshot.day_change_percent >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                 {snapshot.day_change_percent >= 0 ? '+' : ''}{snapshot.day_change_percent?.toFixed(2)}% today
               </p>
             </div>
-            <div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 p-6 rounded-xl border border-blue-500/30">
-              <p className="text-muted-foreground mb-1">Return on Assets (ROA)</p>
-              <p className={`text-4xl font-bold ${roaRating.color}`}>{(roa * 100).toFixed(1)}%</p>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+              <p className="text-[#868f97] mb-1">Return on Assets (ROA)</p>
+              <p className={`text-4xl font-bold tabular-nums ${roaRating.color}`}>{(roa * 100).toFixed(1)}%</p>
               <p className="text-sm mt-2">{roaRating.label} - {roaRating.description}</p>
             </div>
           </div>
 
           {/* Key Metrics */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Key Efficiency Metrics</h2>
+            <h2 className="text-2xl font-bold mb-4 text-balance">Key Efficiency Metrics</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-card p-6 rounded-lg border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                  <p className="text-sm text-muted-foreground">Return on Assets</p>
+                  <div className="w-3 h-3 rounded-full bg-[#479ffa]"></div>
+                  <p className="text-sm text-[#868f97]">Return on Assets</p>
                 </div>
-                <p className="text-3xl font-bold">{(roa * 100).toFixed(1)}%</p>
-                <p className="text-xs text-muted-foreground mt-2">Profit per dollar of assets</p>
+                <p className="text-3xl font-bold tabular-nums">{(roa * 100).toFixed(1)}%</p>
+                <p className="text-xs text-[#868f97] mt-2">Profit per dollar of assets</p>
               </div>
-              <div className="bg-card p-6 rounded-lg border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                  <p className="text-sm text-muted-foreground">Return on Equity</p>
+                  <div className="w-3 h-3 rounded-full bg-[#4ebe96]"></div>
+                  <p className="text-sm text-[#868f97]">Return on Equity</p>
                 </div>
-                <p className="text-3xl font-bold">{(roe * 100).toFixed(1)}%</p>
-                <p className="text-xs text-muted-foreground mt-2">Profit per dollar of equity</p>
+                <p className="text-3xl font-bold tabular-nums">{(roe * 100).toFixed(1)}%</p>
+                <p className="text-xs text-[#868f97] mt-2">Profit per dollar of equity</p>
               </div>
-              <div className="bg-card p-6 rounded-lg border border-border">
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-3 h-3 rounded-full bg-purple-500"></div>
-                  <p className="text-sm text-muted-foreground">Return on Invested Capital</p>
+                  <p className="text-sm text-[#868f97]">Return on Invested Capital</p>
                 </div>
-                <p className="text-3xl font-bold">{(roic * 100).toFixed(1)}%</p>
-                <p className="text-xs text-muted-foreground mt-2">Profit per dollar invested</p>
+                <p className="text-3xl font-bold tabular-nums">{(roic * 100).toFixed(1)}%</p>
+                <p className="text-xs text-[#868f97] mt-2">Profit per dollar invested</p>
               </div>
             </div>
           </section>
 
           {/* Industry Comparison */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Industry Comparison</h2>
-            <div className="bg-card p-6 rounded-lg border border-border">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Industry Comparison</h2>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                  <p className="text-sm text-muted-foreground mb-1">{symbol} ROA</p>
-                  <p className={`text-3xl font-bold ${roaRating.color}`}>{(roa * 100).toFixed(1)}%</p>
+                  <p className="text-sm text-[#868f97] mb-1">{symbol} ROA</p>
+                  <p className={`text-3xl font-bold tabular-nums ${roaRating.color}`}>{(roa * 100).toFixed(1)}%</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground mb-1">{sector || 'Industry'} Average</p>
-                  <p className="text-3xl font-bold text-muted-foreground">{(industryAvgROA * 100).toFixed(1)}%</p>
+                  <p className="text-sm text-[#868f97] mb-1">{sector || 'Industry'} Average</p>
+                  <p className="text-3xl font-bold tabular-nums text-[#868f97]">{(industryAvgROA * 100).toFixed(1)}%</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground mb-1">Difference</p>
-                  <p className={`text-3xl font-bold ${vsIndustry > 0 ? 'text-green-500' : 'text-red-500'}`}>
+                  <p className="text-sm text-[#868f97] mb-1">Difference</p>
+                  <p className={`text-3xl font-bold tabular-nums ${vsIndustry > 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                     {vsIndustry > 0 ? '+' : ''}{(vsIndustry * 100).toFixed(1)}%
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <p className="text-xs text-[#868f97] mt-1 tabular-nums">
                     {vsIndustry > 0 ? 'Above' : 'Below'} industry by {Math.abs(parseFloat(vsIndustryPercent))}%
                   </p>
                 </div>
               </div>
-              <div className="mt-6 pt-6 border-t border-border">
-                <p className="text-sm text-muted-foreground">
+              <div className="mt-6 pt-6 border-t border-white/[0.08]">
+                <p className="text-sm text-[#868f97]">
                   {vsIndustry > 0
                     ? `${symbol} is outperforming ${sector || 'industry'} peers with superior asset efficiency.`
                     : `${symbol} is underperforming ${sector || 'industry'} peers, suggesting room for operational improvements.`
@@ -290,31 +290,31 @@ export default async function ROAPage({ params }: Props) {
 
           {/* ROA Components */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">ROA Breakdown</h2>
-            <div className="bg-card p-6 rounded-lg border border-border">
-              <p className="text-sm text-muted-foreground mb-6">
+            <h2 className="text-2xl font-bold mb-4 text-balance">ROA Breakdown</h2>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+              <p className="text-sm text-[#868f97] mb-6">
                 ROA can be decomposed into two key components:
                 <br />
                 <span className="font-mono text-xs mt-2 block">ROA = Net Profit Margin × Asset Turnover</span>
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-secondary/30 p-4 rounded-lg">
-                  <p className="text-xs text-muted-foreground mb-1">Net Profit Margin</p>
-                  <p className="text-2xl font-bold">{(netMargin * 100).toFixed(1)}%</p>
-                  <p className="text-xs text-muted-foreground mt-2">
+                <div className="bg-white/[0.03] p-4 rounded-2xl border border-white/[0.08]">
+                  <p className="text-xs text-[#868f97] mb-1">Net Profit Margin</p>
+                  <p className="text-2xl font-bold tabular-nums">{(netMargin * 100).toFixed(1)}%</p>
+                  <p className="text-xs text-[#868f97] mt-2">
                     {netMargin > 0.15 ? 'Strong pricing power' : netMargin > 0.05 ? 'Moderate profitability' : 'Thin margins'}
                   </p>
                 </div>
-                <div className="bg-secondary/30 p-4 rounded-lg">
-                  <p className="text-xs text-muted-foreground mb-1">Asset Turnover</p>
-                  <p className="text-2xl font-bold">{assetTurnover.toFixed(2)}x</p>
-                  <p className="text-xs text-muted-foreground mt-2">
+                <div className="bg-white/[0.03] p-4 rounded-2xl border border-white/[0.08]">
+                  <p className="text-xs text-[#868f97] mb-1">Asset Turnover</p>
+                  <p className="text-2xl font-bold tabular-nums">{assetTurnover.toFixed(2)}x</p>
+                  <p className="text-xs text-[#868f97] mt-2">
                     {assetTurnover > 1 ? 'Efficient asset use' : 'Capital intensive'}
                   </p>
                 </div>
               </div>
-              <div className="mt-6 p-4 bg-secondary/20 rounded-lg">
-                <p className="text-sm font-mono">
+              <div className="mt-6 p-4 bg-white/[0.03] rounded-2xl border border-white/[0.08]">
+                <p className="text-sm font-mono tabular-nums">
                   {(roa * 100).toFixed(1)}% = {(netMargin * 100).toFixed(1)}% × {assetTurnover.toFixed(2)}
                 </p>
               </div>
@@ -323,15 +323,15 @@ export default async function ROAPage({ params }: Props) {
 
           {/* What ROA Means for Investors */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">What ROA Means for Investors</h2>
-            <div className="bg-card p-6 rounded-lg border border-border space-y-4">
+            <h2 className="text-2xl font-bold mb-4 text-balance">What ROA Means for Investors</h2>
+            <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out space-y-4">
               <div className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0 mt-1">
-                  <span className="text-blue-500 text-xs font-bold">1</span>
+                <div className="w-6 h-6 rounded-full bg-[#479ffa]/20 flex items-center justify-center flex-shrink-0 mt-1">
+                  <span className="text-[#479ffa] text-xs font-bold">1</span>
                 </div>
                 <div>
                   <h3 className="font-bold mb-1">Asset Efficiency</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-[#868f97]">
                     {roa > 0.10
                       ? `${symbol}'s high ROA of ${(roa * 100).toFixed(1)}% indicates excellent asset efficiency. The company generates strong returns from its asset base.`
                       : roa > 0
@@ -342,12 +342,12 @@ export default async function ROAPage({ params }: Props) {
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0 mt-1">
-                  <span className="text-green-500 text-xs font-bold">2</span>
+                <div className="w-6 h-6 rounded-full bg-[#4ebe96]/20 flex items-center justify-center flex-shrink-0 mt-1">
+                  <span className="text-[#4ebe96] text-xs font-bold">2</span>
                 </div>
                 <div>
                   <h3 className="font-bold mb-1">Capital Requirements</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-[#868f97]">
                     {roa > 0.10
                       ? `High ROA means ${companyName} requires less capital to generate profits, making it more capital-efficient than peers.`
                       : `Lower ROA suggests ${symbol} may be more capital-intensive, requiring significant asset investments to maintain growth.`
@@ -361,7 +361,7 @@ export default async function ROAPage({ params }: Props) {
                 </div>
                 <div>
                   <h3 className="font-bold mb-1">Operational Excellence</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-[#868f97]">
                     {vsIndustry > 0.02
                       ? `ROA above industry average indicates ${companyName} has operational advantages in managing its asset base efficiently.`
                       : vsIndustry < -0.02
@@ -377,25 +377,25 @@ export default async function ROAPage({ params }: Props) {
           {/* Financial Data */}
           {(netIncome || totalAssets) && (
             <section className="mb-12">
-              <h2 className="text-2xl font-bold mb-4">ROA Calculation Data</h2>
-              <div className="bg-card p-6 rounded-lg border border-border">
-                <p className="text-sm text-muted-foreground mb-4">Most Recent Quarter</p>
+              <h2 className="text-2xl font-bold mb-4 text-balance">ROA Calculation Data</h2>
+              <div className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-6 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                <p className="text-sm text-[#868f97] mb-4">Most Recent Quarter</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-muted-foreground">Net Income</p>
-                    <p className={`text-2xl font-bold ${netIncome >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                    <p className="text-sm text-[#868f97]">Net Income</p>
+                    <p className={`text-2xl font-bold tabular-nums ${netIncome >= 0 ? 'text-[#4ebe96]' : 'text-[#ff5c5c]'}`}>
                       ${netIncome >= 0 ? '' : '-'}${(Math.abs(netIncome) / 1e9).toFixed(2)}B
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Total Assets</p>
-                    <p className="text-2xl font-bold">
+                    <p className="text-sm text-[#868f97]">Total Assets</p>
+                    <p className="text-2xl font-bold tabular-nums">
                       ${(totalAssets / 1e9).toFixed(2)}B
                     </p>
                   </div>
                 </div>
-                <div className="mt-4 p-4 bg-secondary/20 rounded-lg">
-                  <p className="text-xs text-muted-foreground mb-1">Formula</p>
+                <div className="mt-4 p-4 bg-white/[0.03] rounded-2xl border border-white/[0.08]">
+                  <p className="text-xs text-[#868f97] mb-1">Formula</p>
                   <p className="text-sm font-mono">
                     ROA = (Net Income / Total Assets) × 100
                   </p>
@@ -405,21 +405,21 @@ export default async function ROAPage({ params }: Props) {
           )}
 
           {/* CTA */}
-          <section className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 p-8 rounded-xl border border-blue-500/30 text-center mb-12">
-            <h2 className="text-2xl font-bold mb-4">Analyze {symbol} in Depth</h2>
-            <p className="text-muted-foreground mb-6">
+          <section className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-8 text-center mb-12 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+            <h2 className="text-2xl font-bold mb-4 text-balance">Analyze {symbol} in Depth</h2>
+            <p className="text-[#868f97] mb-6">
               View complete financial statements, quant models, and AI-powered insights
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href={`/stock/${symbol.toLowerCase()}`}
-                className="inline-block bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-lg font-medium"
+                className="inline-block bg-[#479ffa] hover:bg-[#479ffa]/80 text-white px-8 py-3 rounded-2xl font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 Full Stock Analysis
               </Link>
               <Link
                 href={`/financials/${symbol.toLowerCase()}`}
-                className="inline-block bg-secondary hover:bg-secondary/80 px-8 py-3 rounded-lg font-medium"
+                className="inline-block bg-white/[0.03] hover:bg-white/[0.05] border border-white/[0.08] hover:border-white/[0.15] px-8 py-3 rounded-2xl font-medium motion-safe:transition-all motion-safe:duration-150 ease-out focus-visible:ring-2 focus-visible:ring-[#4ebe96]"
               >
                 View Financials
               </Link>
@@ -428,19 +428,19 @@ export default async function ROAPage({ params }: Props) {
 
           {/* FAQ Section */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold mb-6 text-balance">Frequently Asked Questions</h2>
             <div className="space-y-4">
               {roaFaqs.map((faq, index) => (
-                <div key={index} className="bg-card p-5 rounded-lg border border-border">
-                  <h3 className="font-bold text-lg mb-2">{faq.question}</h3>
-                  <p className="text-muted-foreground">{faq.answer}</p>
+                <div key={index} className="bg-white/[0.03] backdrop-blur-[10px] border border-white/[0.08] rounded-2xl p-5 hover:bg-white/[0.05] hover:border-white/[0.15] motion-safe:transition-all motion-safe:duration-150 ease-out">
+                  <h3 className="font-bold text-lg mb-2 text-balance">{faq.question}</h3>
+                  <p className="text-[#868f97]">{faq.answer}</p>
                 </div>
               ))}
             </div>
           </section>
 
           {/* Disclaimer */}
-          <div className="text-xs text-muted-foreground bg-secondary/30 p-4 rounded-lg mb-8">
+          <div className="text-xs text-[#868f97] bg-white/[0.03] border border-white/[0.08] p-4 rounded-2xl mb-8">
             <p><strong>Disclaimer:</strong> ROA analysis is based on publicly available financial data and should not be considered financial advice. Asset efficiency metrics should be analyzed in the context of industry norms and business models. Always conduct your own research before making investment decisions.</p>
           </div>
 
