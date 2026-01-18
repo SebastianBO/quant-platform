@@ -253,6 +253,42 @@ The `/api/chat/autonomous` endpoint has:
 
 ---
 
+## FINAL ROOT CAUSE (CONFIRMED)
+
+On January 18, 2026, Vercel sent notification:
+```
+Your free team finance-liciancoms-projects has used 6095% of the
+included free tier usage for Fluid Provisioned Memory (360 GB Hrs).
+Your account has been paused.
+```
+
+**Calculation:**
+- 6095% of 360 GB-hrs = 21,942 GB-hrs used
+- Overage: 21,582 GB-hrs × $0.0106/GB-hr = $228.77
+- Plus base charges ≈ $250 total
+
+---
+
+## COST PREVENTION CHECKLIST
+
+### Before Deploying to Vercel
+- [ ] Set `maxDuration` to minimum needed (30s default, 60s max for complex)
+- [ ] Use `export const dynamic = 'force-static'` where possible
+- [ ] Set `revalidate` to 3600+ (hourly) not 300 (5 min)
+- [ ] Avoid cron jobs on Vercel (use GitHub Actions)
+
+### After Deploying
+- [ ] Set spend limit immediately: Dashboard → Billing → Spend Management
+- [ ] Monitor usage weekly: Dashboard → Usage tab
+- [ ] Set up usage alerts in Vercel
+
+### For High-Traffic Sites
+- [ ] Consider dedicated hosting (Railway, Render, VPS)
+- [ ] Use edge caching aggressively
+- [ ] Move data-heavy operations to background jobs
+
+---
+
 ## Sources
 - [Vercel Pricing](https://vercel.com/pricing)
 - [Vercel Functions Usage & Pricing](https://vercel.com/docs/functions/usage-and-pricing)
