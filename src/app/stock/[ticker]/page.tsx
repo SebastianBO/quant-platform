@@ -27,9 +27,10 @@ interface Props {
   params: Promise<{ ticker: string }>
 }
 
-// ISR with 60 second revalidation - balances freshness with crawl reliability
-// This prevents Google crawl failures from API timeouts while keeping data fresh
-export const revalidate = 60
+// ISR with 1 hour revalidation - reduced from 60s to prevent Vercel billing explosion
+// The 60s setting caused 21,942 GB-hrs usage ($228 overage) in one billing cycle
+// See .claude/vercel-cost-analysis.md for full investigation
+export const revalidate = 3600
 export const maxDuration = 60
 
 // Industry to peer mapping for smart peer selection

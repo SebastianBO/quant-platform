@@ -21,8 +21,8 @@ interface Props {
   params: Promise<{ ticker: string }>
 }
 
-// ISR with 5 minute revalidation - balances freshness with crawl reliability
-export const revalidate = 300
+// ISR with 1 hour revalidation - increased from 300s to reduce Vercel costs
+export const revalidate = 3600
 export const maxDuration = 60
 
 // Fetch stock data for rich metadata

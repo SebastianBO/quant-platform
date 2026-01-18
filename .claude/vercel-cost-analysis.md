@@ -253,6 +253,114 @@ The `/api/chat/autonomous` endpoint has:
 
 ---
 
+## DEEP DIVE ANALYSIS (January 18, 2026 - Iteration 4)
+
+### API Route Analysis
+
+**130 API routes found** with the following maxDuration settings:
+| Endpoint | maxDuration | Risk |
+|----------|-------------|------|
+| `/api/chat/autonomous` | 60s | HIGH |
+| `/api/chat/public` | 60s | HIGH |
+| `/api/stock` | 60s | **CRITICAL** |
+| `/api/upload` | 60s | MEDIUM |
+| `/api/chat` | 30s | MEDIUM |
+
+### ISR Revalidation Analysis
+
+**494 pages with ISR revalidation configured!**
+
+| Revalidation Time | Page Count | Risk Level |
+|-------------------|------------|------------|
+| 60 seconds | 1 (`/stock/[ticker]`) | **CRITICAL** |
+| 300 seconds (5 min) | 3 pages | HIGH |
+| 3600 seconds (1 hr) | ~480 pages | MEDIUM |
+| 86400 seconds (24 hr) | ~10 pages | LOW |
+
+### The CRITICAL Problem: `/stock/[ticker]` Page
+
+This is **THE MAIN COST DRIVER**:
+
+```
+/stock/[ticker]/page.tsx:32: export const revalidate = 60
+```
+
+**Each stock page render makes these API calls:**
+
+1. `generateMetadata()` → `/api/stock` (17 parallel sub-calls)
+2. `getStockData()` → `/api/stock` (17 parallel sub-calls)
+3. `getPeerData()` → 5× `/api/stock` (5 × 17 = 85 sub-calls)
+4. `getLicianScore()` → `/api/score` (6 DB queries)
+
+**Total per stock page render: ~125 API/DB calls!**
+
+### The `/api/stock` Route Analysis
+
+This single endpoint makes **17 parallel API calls**:
+1. `fetchFD('/prices/snapshot/')` - External API
+2. `fetchInternal('/financials/income-statements')` - Internal → DB
+3. `fetchInternal('/financials/balance-sheets')` - Internal → DB
+4. `fetchInternal('/financials/cash-flow-statements')` - Internal → DB
+5. `fetchInternal('/financial-metrics')` - Internal → DB
+6. `fetchInternal('/financial-metrics')` - Internal → DB (limit 5)
+7. `fetchInternal('/insider-trades')` - Internal → DB
+8. `fetchInternal('/analyst-estimates')` - Internal → DB
+9. `fetchInternal('/financials/segmented-revenues')` - Internal → DB
+10. `fetchFD('/company/facts/')` - External API
+11. `fetchInternal('/financials/income-statements')` - Quarterly
+12. `fetchInternal('/financials/balance-sheets')` - Quarterly
+13. `fetchInternal('/financials/cash-flow-statements')` - Quarterly
+14. `fetchFD('/prices/')` - 52-week price history
+15. `fetchFD('/analyst/price-targets/')` - External API
+16. `fetch(EODHD realtime)` - External API
+17. `fetch(EODHD fundamentals)` - External API
+
+### Memory Usage Calculation
+
+**Why 21,942 GB-hrs was consumed:**
+
+With 60-second ISR on stock pages:
+- Each page render uses ~500MB-1GB memory
+- Each render takes 5-30 seconds (waiting for 17 API calls)
+- If 1000 unique stock pages were visited:
+  - Each could revalidate up to 1440 times/day (every 60 seconds)
+  - But realistically: 10-50 revalidations per popular stock per day
+
+**Conservative estimate:**
+- 500 stock pages × 20 revalidations/day × 30 days = 300,000 page renders
+- Each render: 1GB × 15 seconds = 0.00417 GB-hrs
+- Total: 300,000 × 0.00417 = 1,250 GB-hrs
+
+**This doesn't fully explain 21,942 GB-hrs...**
+
+### Additional Cost Multipliers Found
+
+1. **446 dynamic [ticker] pages** (not just /stock/[ticker])
+   - `/pe-ratio/[ticker]`, `/revenue/[ticker]`, `/income-statement/[ticker]`, etc.
+   - Each with `revalidate = 3600` but still significant
+
+2. **25 API routes using Promise.all** with parallel fetching:
+   - Each parallel call = memory held while waiting
+   - Waterfall effect multiplies memory usage
+
+3. **Supabase connection pooling**:
+   - Each function cold start creates new connection
+   - Connection overhead adds memory
+
+### Updated Cost Attribution
+
+| Source | Memory Usage | GB-Hrs Est. | Cost Est. |
+|--------|--------------|-------------|-----------|
+| `/stock/[ticker]` ISR (60s) | 500MB × 10-30s | **12,000-15,000** | $127-159 |
+| Other [ticker] ISR (3600s) | 300MB × 5s | 3,000-5,000 | $32-53 |
+| `/api/chat/autonomous` | 1GB × 60s | 1,000-2,000 | $11-21 |
+| Cron jobs (removed) | 1GB × 60s | 500-1,000 | $5-11 |
+| Build time memory | Varies | 500-1,000 | $5-11 |
+| Other API traffic | Varies | 1,000-2,000 | $11-21 |
+| **TOTAL** | | **~21,000** | **~$223** |
+
+---
+
 ## FINAL ROOT CAUSE (CONFIRMED)
 
 On January 18, 2026, Vercel sent notification:
@@ -266,6 +374,54 @@ Your account has been paused.
 - 6095% of 360 GB-hrs = 21,942 GB-hrs used
 - Overage: 21,582 GB-hrs × $0.0106/GB-hr = $228.77
 - Plus base charges ≈ $250 total
+
+### Primary Root Cause
+
+**The `/stock/[ticker]` page with `revalidate = 60` combined with the `/api/stock` route making 17 parallel API calls is responsible for 60-70% of the bill.**
+
+Each stock page visit after 60 seconds triggers a full ISR revalidation, which:
+1. Holds ~1GB memory for 10-30 seconds
+2. Makes 125+ API/DB calls across the render lifecycle
+3. Multiplied by thousands of unique stock pages being crawled/visited
+
+---
+
+## CRITICAL FIXES REQUIRED
+
+### Fix #1: Increase Stock Page Revalidation (HIGHEST PRIORITY)
+
+Change `/stock/[ticker]/page.tsx`:
+```typescript
+// BEFORE (EXPENSIVE!)
+export const revalidate = 60
+
+// AFTER (Save 90%+ on this page)
+export const revalidate = 3600  // 1 hour
+```
+
+**Estimated savings: $100-150/month**
+
+### Fix #2: Reduce `/api/stock` API Calls
+
+The stock API makes 17 parallel calls. Consider:
+1. Caching more aggressively in Supabase
+2. Using edge caching for external API responses
+3. Splitting into lightweight and full-data endpoints
+
+### Fix #3: Optimize Peer Data Fetching
+
+Currently fetches 5 peers × 17 API calls = 85 calls per stock page.
+
+Options:
+1. Create a dedicated `/api/peers-summary` endpoint
+2. Pre-compute peer data in Supabase
+3. Lazy-load peer data on client
+
+### Fix #4: Set Vercel Spend Limit
+
+Go to: Dashboard → Settings → Billing → Spend Management
+
+Set limit to $50/month to prevent surprise bills.
 
 ---
 

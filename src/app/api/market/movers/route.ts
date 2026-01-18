@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { logger } from '@/lib/logger'
 
-// Cache for 5 minutes during market hours
-export const revalidate = 300
+// Cache for 1 hour - increased from 300s to reduce Vercel costs
+export const revalidate = 3600
 
 const EODHD_API_KEY = process.env.EODHD_API_KEY || ''
 
