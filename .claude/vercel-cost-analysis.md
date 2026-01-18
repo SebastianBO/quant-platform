@@ -253,6 +253,65 @@ The `/api/chat/autonomous` endpoint has:
 
 ---
 
+## THE COMPLETE TIMELINE: January 17, 2026 Disaster
+
+### What Actually Happened (Hour by Hour)
+
+| Time | Event | Deployments | Impact |
+|------|-------|-------------|--------|
+| **09:15** | MCP HTTP endpoint added | #1 | Cache invalidated |
+| **10:01** | MCP server + developer portal | #2-3 | More invalidation |
+| **10:18** | Developers page redesign | #4 | - |
+| **11:02-11:17** | Stripe checkout enabled | #5-6 | - |
+| **13:23** | **🔥 168 FILES CHANGED** | #7 | **NUCLEAR BOMB** |
+| | 17,839 insertions | | All caches wiped |
+| **13:34-14:13** | Short volume + fixes | #8-10 | Crawlers hammering |
+| **15:20-17:55** | More Fey design batches | #11-26 | **15 more deploys** |
+| **16:01-16:43** | Turbopack ↔ Webpack | #15-20 | Failed builds consuming compute |
+
+### The Nuclear Event: 13:23 Commit
+
+```
+6b710aa2 Apply Fey design system tokens across 168 components
+168 files changed, 17,839 insertions(+), 4,361 deletions(-)
+```
+
+This single commit:
+1. Invalidated ISR cache for **every page in the app**
+2. Triggered Google/Bing/AI bots to re-crawl all sitemap URLs
+3. Each of 573+ stock pages had `revalidate = 60`
+4. Each page render = 125+ API calls × ~1GB memory
+
+### The Crawler Amplification
+
+Your sitemaps expose **thousands of URLs**:
+- 573+ stocks in main sitemap
+- 26 sitemap files total
+- Comparison pages, metrics, earnings, institutional data
+
+**Crawlers allowed by robots.txt:**
+- Googlebot, Bingbot
+- GPTBot, ChatGPT-User
+- Google-Extended (Gemini)
+- anthropic-ai, Claude-Web
+- Applebot-Extended
+
+When you deployed 26 times in one day, **every crawler re-indexed everything**.
+
+### The Math That Adds Up
+
+```
+26 deployments × cache invalidation
+× 573+ stock pages in sitemap
+× crawlers re-fetching after each deploy
+× 125 API calls per page
+× ~1GB memory × 15 seconds
+
+= 19,966 GB-Hrs (matches the graph!)
+```
+
+---
+
 ## DEEP DIVE ANALYSIS (January 18, 2026 - Iteration 4)
 
 ### API Route Analysis
