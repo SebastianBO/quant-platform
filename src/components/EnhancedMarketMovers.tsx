@@ -168,7 +168,7 @@ function MoverCard({
 
   return (
     <Link
-      href={`/${mover.symbol}`}
+      href={`/${mover.symbol}-stock`}
       className={cn(
         "flex-shrink-0 flex items-center gap-3 px-3 py-2 rounded-2xl motion-safe:transition-all motion-safe:duration-150 ease-out hover:scale-[1.02]",
         "border border-transparent",

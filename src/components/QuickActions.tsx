@@ -165,7 +165,7 @@ export default function QuickActions() {
               {portfolio.holdings.slice(0, 3).map((holding) => (
                 <Link
                   key={holding.symbol}
-                  href={`/${holding.symbol}`}
+                  href={`/${holding.symbol}-stock`}
                   className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/[0.08] motion-safe:transition-colors motion-safe:duration-100"
                 >
                   <StockLogo symbol={holding.symbol} size="sm" />

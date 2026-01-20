@@ -73,7 +73,7 @@ export function StockSearchCommand() {
   }, [query])
 
   const handleSelect = (symbol: string) => {
-    router.push(`/${symbol}`)
+    router.push(`/${symbol}-stock`)
     setOpen(false)
     setQuery("")
     setResults([])
