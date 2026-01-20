@@ -20,7 +20,7 @@ const CACHE_S_MAXAGE = 604800 // 7 days CDN cache
 const CACHE_STALE_WHILE_REVALIDATE = 86400 // 1 day stale-while-revalidate
 
 interface Props {
-  params: Promise<{ ticker: string }>
+  params: Promise<{ symbol: string }>
 }
 
 interface CompanyAssets {
@@ -68,8 +68,8 @@ const TICKER_TO_DOMAIN: Record<string, string> = {
 }
 
 export async function GET(request: NextRequest, { params }: Props) {
-  const { ticker } = await params
-  const upperTicker = ticker.toUpperCase()
+  const { symbol } = await params
+  const upperTicker = symbol.toUpperCase()
 
   try {
     // Query company_assets table
@@ -188,8 +188,8 @@ export async function GET(request: NextRequest, { params }: Props) {
 
 // HEAD request for cache validation
 export async function HEAD(request: NextRequest, { params }: Props) {
-  const { ticker } = await params
-  const upperTicker = ticker.toUpperCase()
+  const { symbol } = await params
+  const upperTicker = symbol.toUpperCase()
 
   const { data: asset } = await supabase
     .from("company_assets")

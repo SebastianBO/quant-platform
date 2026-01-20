@@ -1,0 +1,56 @@
+# Coolify Environment Variables
+# Copy these into Coolify Dashboard → Your App → Environment Variables
+
+# =============================================================================
+# BUILD ARGUMENTS (set as "Build Variable" in Coolify)
+# =============================================================================
+NEXT_PUBLIC_APP_URL=https://lician.com
+NEXT_PUBLIC_API_URL=https://lician.com/api
+NEXT_PUBLIC_SUPABASE_URL=https://wcckhqxkmhyzfpynthte.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+NEXT_PUBLIC_POSTHOG_KEY=phc_xxxxxxxxxxxx
+NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
+
+# =============================================================================
+# RUNTIME VARIABLES (set as "Runtime Variable" in Coolify)
+# =============================================================================
+NODE_ENV=production
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+# AI Provider (OpenRouter - get key from openrouter.ai)
+OPENROUTER_API_KEY=sk-or-v1-xxxxxxxx
+
+# Payments
+STRIPE_SECRET_KEY=sk_live_xxxxxxxx
+STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxx
+
+# Market Data APIs
+EODHD_API_KEY=your-eodhd-key
+FINANCIAL_DATASETS_API_KEY=your-fd-key
+
+# Web Scraping
+FIRECRAWL_API_KEY=fc-xxxxxxxx
+
+# Email
+ELASTIC_EMAIL_API_KEY=your-elastic-email-key
+
+# Cron Authentication
+CRON_SECRET=generate-random-32-char-string
+
+# =============================================================================
+# NOTES
+# =============================================================================
+#
+# 1. Build Variables: These are embedded in the Next.js bundle at build time
+#    Must be prefixed with NEXT_PUBLIC_ to be accessible in browser
+#
+# 2. Runtime Variables: These are only available on the server
+#    Never prefix with NEXT_PUBLIC_ for secrets!
+#
+# 3. To generate CRON_SECRET:
+#    openssl rand -hex 32
+#
+# 4. Coolify will automatically set:
+#    - PORT=3000
+#    - HOSTNAME=0.0.0.0
