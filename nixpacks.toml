@@ -1,0 +1,12 @@
+# Force Node.js provider instead of Deno detection
+[phases.setup]
+nixPkgs = ["nodejs_22", "npm"]
+
+[phases.install]
+cmds = ["npm install --legacy-peer-deps"]
+
+[phases.build]
+cmds = ["next build"]
+
+[start]
+cmd = "npm start"
